@@ -18,6 +18,7 @@ import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.monitoringofficer.resource.LegacyMonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.testdata.builders.data.ProjectData;
 import org.innovateuk.ifs.testdata.services.CsvUtils;
@@ -35,6 +36,7 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
@@ -58,6 +60,13 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
                 Long applicationId = applicationRepository.findByName(projectName).get(0).getId();
                 doAs(compAdmin(), () -> data.setApplication(applicationService.getApplicationById(applicationId).getSuccess()));
                 data.setLeadApplicant(baseUserService.getUserById(retrieveLeadApplicant(applicationId).getUser()).getSuccess());
+            });
+
+            doAs(compAdmin(), () -> {
+                Optional<ProjectResource> existingProject = projectService.getByApplicationId(data.getApplication().getId()).getOptionalSuccessObject();
+                if (!existingProject.isPresent()) {
+                    projectService.createProjectFromApplication(data.getApplication().getId());
+                }
             });
 
             doAs(data.getLeadApplicant(), () ->
@@ -94,9 +103,10 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
             Organisation organisation = retrieveOrganisationByName(organisationName);
 
             UserResource partnerUser = findAnyPartnerForOrganisation(data, organisation.getId());
-
-            doAs(partnerUser, () -> projectDetailsService.updateFinanceContact(new ProjectOrganisationCompositeId(data.getProject().getId(), organisation.getId()), financeContact.getId()).
-                    getSuccess());
+            if (partnerUser != null) {
+                doAs(partnerUser, () -> projectDetailsService.updateFinanceContact(new ProjectOrganisationCompositeId(data.getProject().getId(), organisation.getId()), financeContact.getId()).
+                        getSuccess());
+            }
         });
     }
 
@@ -285,7 +295,10 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
     private UserResource findAnyPartnerForOrganisation(ProjectData data, Long organisationId) {
         return testService.doWithinTransaction(() -> {
             List<ProjectUser> organisationPartners = projectUserRepository.findByProjectIdAndOrganisationId(data.getProject().getId(), organisationId);
-            return retrieveUserById(organisationPartners.get(0).getUser().getId());
+            if(!organisationPartners.isEmpty()) {
+                return retrieveUserById(organisationPartners.get(0).getUser().getId());
+            }
+            return null;
         });
     }
 

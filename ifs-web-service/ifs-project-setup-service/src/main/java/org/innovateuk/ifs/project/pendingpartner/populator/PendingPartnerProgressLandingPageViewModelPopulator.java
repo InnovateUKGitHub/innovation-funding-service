@@ -53,6 +53,6 @@ public class PendingPartnerProgressLandingPageViewModelPopulator {
                 progress,
                 !competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum()),
                 subsidyBasisRequired,
-                subsidyQuestionId);
+                subsidyQuestionId, competition);
     }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:tgh="http://www.thymeleaf.org">
 <!--/*@thymesVar id="model" type="org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel.YourProjectCostsViewModel"*/-->
 <!--/*@thymesVar id="form" type="org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm"*/-->
 
@@ -13,6 +13,7 @@
 <th:block th:fragment="labour"
           th:with="financeRowType=${model.getLabourFinanceRowType()}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
+        <input type="hidden" name="thirdPartyOfgem" th:value="${model.thirdPartyOfgem}" />
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-1">
@@ -38,63 +39,70 @@
                     <p class="govuk-body">
                         Be specific and add each role separately.
                     </p>
-                    <details class="govuk-details" role="group">
-                        <summary class="govuk-details__summary">
-                            <span class="govuk-details__summary-text">Labour costs guidance</span>
-                        </summary>
-                        <div class="govuk-details__text">
-                            <p class="govuk-body">If your application is awarded funding, you will need to account for
-                                all your labour costs<span
-                                    th:if="${!model.isProcurementCompetition()}"> as they occur</span>. For example, you
-                                must keep timesheets and payroll records. These must show the actual hours worked by
-                                individuals and paid by the organisation.</p>
-                            <p class="govuk-body">You can include the following labour costs, based on your PAYE
-                                records:</p>
-                            <ul class="govuk-list govuk-list--bullet">
-                                <li>gross salary</li>
-                                <li>National Insurance</li>
-                                <li>company pension contribution</li>
-                                <li>life insurance</li>
-                                <li>other non-discretionary package costs</li>
-                            </ul>
-                            <p class="govuk-body">You cannot include:</p>
-                            <ul class="govuk-list govuk-list--bullet">
-                                <li>discretionary bonuses</li>
-                                <li>performance related payments of any kind</li>
-                            </ul>
-                            <p class="govuk-body">You may include the total number of working days for staff but do not
-                                include:</p>
-                            <ul class="govuk-list govuk-list--bullet">
-                                <li>sick days</li>
-                                <li>waiting time</li>
-                                <li>training days</li>
-                                <li>non-productive time</li>
-                            </ul>
-                            <p class="govuk-body">Enter the total number of working days in the year. List the total
-                                days worked by all categories of staff on your project. Describe their roles.</p>
-                            <p class="govuk-body">
-                                <th:block th:unless="${model.isOfGemCompetition()}">
-                                    We
-                                    <span th:if="${!model.isProcurementCompetition()}">will</span>
-                                    <span th:if="${model.isProcurementCompetition()}">may</span>
-                                    review the total amount of time and cost of labour before we approve your application.
-                                    <span th:if="${!model.isProcurementCompetition()}"> The terms and conditions of the grant include compliance with these points.</span>
-                                </th:block>
-                            </p>
-                        </div>
-                    </details>
+                    <th:block th:unless="${model.isThirdPartyOfgem()}">
+                        <details class="govuk-details" role="group">
+                            <summary class="govuk-details__summary">
+                                <span class="govuk-details__summary-text">Labour costs guidance</span>
+                            </summary>
+                            <div class="govuk-details__text">
+                                <p class="govuk-body">If your application is awarded funding, you will need to account for
+                                    all your labour costs<span
+                                            th:if="${!model.isProcurementCompetition()}"> as they occur</span>. For example, you
+                                    must keep timesheets and payroll records. These must show the actual hours worked by
+                                    individuals and paid by the organisation.</p>
+                                <p class="govuk-body">You can include the following labour costs, based on your PAYE
+                                    records:</p>
+                                <ul class="govuk-list govuk-list--bullet">
+                                    <li>gross salary</li>
+                                    <li>National Insurance</li>
+                                    <li>company pension contribution</li>
+                                    <li>life insurance</li>
+                                    <li>other non-discretionary package costs</li>
+                                </ul>
+                                <p class="govuk-body">You cannot include:</p>
+                                <ul class="govuk-list govuk-list--bullet">
+                                    <li>discretionary bonuses</li>
+                                    <li>performance related payments of any kind</li>
+                                </ul>
+                                <p class="govuk-body">You may include the total number of working days for staff but do not
+                                    include:</p>
+                                <ul class="govuk-list govuk-list--bullet">
+                                    <li>sick days</li>
+                                    <li>waiting time</li>
+                                    <li>training days</li>
+                                    <li>non-productive time</li>
+                                </ul>
+                                <p class="govuk-body">Enter the total number of working days in the year. List the total
+                                    days worked by all categories of staff on your project. Describe their roles.</p>
+                                <p class="govuk-body">
+                                    <th:block th:unless="${model.isOfGemCompetition()}">
+                                        We
+                                        <span th:if="${!model.isProcurementCompetition()}">will</span>
+                                        <span th:if="${model.isProcurementCompetition()}">may</span>
+                                        review the total amount of time and cost of labour before we approve your application.
+                                        <span th:if="${!model.isProcurementCompetition()}"> The terms and conditions of the grant include compliance with these points.</span>
+                                    </th:block>
+                                </p>
+                            </div>
+                        </details>
+                    </th:block>
                 </th:block>
-                <div class="govuk-form-group inline">
-                    <label class="govuk-label" th:for="working-days-per-year">
-                        Working days per year
-                    </label>
-                    <th:block
-                        th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=labour.workingDaysPerYear)"/>
-                    <input type="number" class="govuk-input govuk-input--width-4"
-                           id="working-days-per-year" th:field="*{labour.workingDaysPerYear}"
-                           th:errorclass="govuk-input--error"
-                           placeholder="0" min="1" max="365" required="required">
-                </div>
+                <th:block th:unless="${model.isThirdPartyOfgem()}">
+                    <div class="govuk-form-group inline">
+                        <label class="govuk-label" th:for="working-days-per-year">
+                            Working days per year
+                        </label>
+                        <th:block
+                                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=labour.workingDaysPerYear)"/>
+                        <input type="number" class="govuk-input govuk-input--width-4"
+                               id="working-days-per-year" th:field="*{labour.workingDaysPerYear}"
+                               th:errorclass="govuk-input--error"
+                               placeholder="0" min="1" max="365" required="required">
+                    </div>
+                </th:block>
+                <th:block h:if="${model.isThirdPartyOfgem()}">
+                    <input type="hidden" name="labour.workingDaysPerYear" th:value="${#numbers.formatInteger(1,0,'DEFAULT')}"/>
+                </th:block>
                 <h3 class="govuk-heading-s">Number of staff and roles within the project</h3>
                 <div class="govuk-form-group table-overflow">
                     <table id="labour-costs-table" class="govuk-table">
@@ -103,17 +111,21 @@
                             <th class="govuk-table__header" id="labour-role" scope="col">Role within
                                 project
                             </th>
-                            <th id="labour-salary" scope="col"
-                                class="govuk-table__header govuk-table__header--numeric width-100">Gross
-                                employee cost
-                            </th>
+                            <th:block th:unless="${model.isThirdPartyOfgem()}">
+                                <th id="labour-salary" scope="col"
+                                    class="govuk-table__header govuk-table__header--numeric width-100">Gross
+                                    employee cost
+                                </th>
+                            </th:block>
                             <th id="labour-rate" scope="col"
-                                class="govuk-table__header govuk-table__header--numeric width-80">Rate
+                                class="govuk-table__header govuk-table__header--numeric width-80" th:classappend="${model.isThirdPartyOfgem()} ? 'cell-nowrap'">Rate
                                 (£/day)
                             </th>
                             <th id="labour-days" scope="col"
-                                class="govuk-table__header govuk-table__header--numeric width-100">Days
-                                to be spent by all staff at this grade
+                                class="govuk-table__header govuk-table__header--numeric "
+                                th:classappend="${model.isThirdPartyOfgem()} ? 'width-150' : 'width-100'"
+                                th:text="${model.isThirdPartyOfgem() ? 'Days to be spent on the project' : 'Days to be spent by all staff at this grade'}">
+                                Days to be spent by all staff at this grade
                             </th>
                             <th scope="col"
                                 class="govuk-table__header govuk-table__header--numeric width-150">Total
@@ -127,7 +139,7 @@
                         <tbody class="govuk-table__body">
                         <th:block th:each="entry : *{labour.rows}">
                             <th:block
-                                th:insert="application/your-project-costs-fragments :: labour_row (${entry.key}, ${entry.value})"/>
+                                th:insert="application/your-project-costs-fragments :: labour_row (${entry.key}, ${entry.value}, ${model.isThirdPartyOfgem()})"/>
                         </th:block>
                         </tbody>
                     </table>
@@ -163,13 +175,14 @@
 
 <th:block th:fragment="ajax_labour_row">
     <th:block th:object="${form}">
-        <th:block th:insert="application/your-project-costs-fragments :: labour_row (${id}, ${row})"/>
+        <th:block th:insert="application/your-project-costs-fragments :: labour_row (${id}, ${row}, ${thirdPartyOfgem})"/>
     </th:block>
 </th:block>
 
-<th:block th:fragment="labour_row (id, row)">
+<th:block th:fragment="labour_row (id, row, thirdPartyOfgem)">
     <tr th:with="path=${'labour.rows[__${id}__]'}" th:attr="data-repeatable-row=${path}" th:id="${path}" class="form-group-row-validated"
         th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path)} ? 'govuk-form-group--error'">
+        <input type="hidden" th:name="__${path}__.thirdPartyOfgem" th:value="${thirdPartyOfgem}"/>
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.role">
@@ -185,29 +198,52 @@
                    required="required"
                    maxlength="255">
         </td>
-        <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
-            <label th:for="__${path}__.gross">
-                <span class="govuk-visually-hidden">Gross employee cost</span>
-            </label>
-            <th:block
-                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.gross)"/>
-            <input type="number"
-                   th:id="__${path}__.gross"
-                   th:field="*{__${path}__.gross}"
-                   th:errorclass="govuk-input--error"
-                   class="govuk-input"
-                   placeholder="0"
-                   required="required"
-                   min="1"
-                   max="9999999999999999999"
-                   data-field-errormessage="This field can only accept whole numbers.">
-        </td>
-        <td class="govuk-table__cell govuk-table__cell--numeric"
-            data-calculation-operations="/"
-            th:attr="data-calculation-fields=|[id='__${path}__.gross'],[id='working-days-per-year']|,
-                                                     data-calculation-rawValue=${row.rate == null ? 0 : row.rate}"
-            th:text="'£' + ${#numbers.formatInteger(row.rate == null ? 0 : row.rate, 0, 'DEFAULT')}">
-        </td>
+        <th:block th:unless="${thirdPartyOfgem}">
+            <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
+                <label th:for="__${path}__.gross">
+                    <span class="govuk-visually-hidden">Gross employee cost</span>
+                </label>
+                <th:block
+                        th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.gross)"/>
+                <input type="number"
+                       th:id="__${path}__.gross"
+                       th:field="*{__${path}__.gross}"
+                       th:errorclass="govuk-input--error"
+                       class="govuk-input"
+                       placeholder="0"
+                       required="required"
+                       min="1"
+                       max="9999999999999999999"
+                       data-field-errormessage="This field can only accept whole numbers.">
+            </td>
+            <td class="govuk-table__cell govuk-table__cell--numeric"
+                data-calculation-operations="/"
+                th:attr="data-calculation-fields=|[id='__${path}__.gross'],[id='working-days-per-year']|,
+                                                         data-calculation-rawValue=${row.rate == null ? 0 : row.rate}"
+                th:text="'£' + ${#numbers.formatInteger(row.rate == null ? 0 : row.rate, 0, 'DEFAULT')}">
+            </td>
+            <input type="hidden" th:name="__${path}__.rate" th:value="${#numbers.formatInteger(1,0,'DEFAULT')}"/>
+        </th:block>
+        <th:block th:if="${thirdPartyOfgem}">
+            <input type="hidden" th:name="__${path}__.gross" th:value="${#numbers.formatInteger(1,0,'DEFAULT')}"/>
+            <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
+                <label th:for="__${path}__.rate">
+                    <span class="govuk-visually-hidden">Rate (£/day)</span>
+                </label>
+                <th:block
+                        th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.rate)"/>
+                <input type="number"
+                       th:id="__${path}__.rate"
+                       th:field="*{__${path}__.rate}"
+                       th:errorclass="govuk-input--error"
+                       class="govuk-input"
+                       placeholder="0"
+                       required="required"
+                       min="1"
+                       max="9999999999999999999"
+                       data-field-errormessage="This field can only accept whole numbers.">
+            </td>
+        </th:block>
         <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
             <label th:for="__${path}__.days">
                 <span class="govuk-visually-hidden">Days to be spent by all staff at this grade</span>
@@ -225,15 +261,28 @@
                    max="999999999"
                    data-max-errormessage="You must enter a value less than 10 digits.">
         </td>
-        <td class="govuk-table__cell govuk-table__cell--numeric labour-totals"
+        <th:block th:unless="${thirdPartyOfgem}">
+            <td class="govuk-table__cell govuk-table__cell--numeric labour-totals"
+                th:id="__${path}__.labourTotalCost"
+                data-calculation-operations="/,*"
+                th:attr="data-calculation-fields=|[id='__${path}__.gross'],[id='working-days-per-year'],[id='__${path}__.days']|,
+                                            data-calculation-rawvalue=${row.total}">
+                &pound;<th:block
+                    th:text="${#numbers.formatInteger(row.total, 0, 'DEFAULT')}">0
+            </th:block>
+            </td>
+        </th:block>
+        <th:block th:if="${thirdPartyOfgem}">
+            <td class="govuk-table__cell govuk-table__cell--numeric labour-totals"
             th:id="__${path}__.labourTotalCost"
-            data-calculation-operations="/,*"
-            th:attr="data-calculation-fields=|[id='__${path}__.gross'],[id='working-days-per-year'],[id='__${path}__.days']|,
+            data-calculation-operations="*"
+            th:attr="data-calculation-fields=|[id='__${path}__.rate'],[id='__${path}__.days']|,
                                             data-calculation-rawvalue=${row.total}">
             &pound;<th:block
             th:text="${#numbers.formatInteger(row.total, 0, 'DEFAULT')}">0
-        </th:block>
+            </th:block>
         </td>
+        </th:block>
         <td class="govuk-table__cell buttoncolumn alignright">
             <button type="submit"
                     th:name="remove_row"
@@ -245,35 +294,43 @@
 </th:block>
 
 <th:block th:fragment="labour_read_only">
-    <dl class="standard-definition-list">
-        <dt>Working days per year</dt>
-        <dd th:text="${form.labour.workingDaysPerYear}">232</dd>
-    </dl>
+    <th:block th:unless="${model.isThirdPartyOfgem()}">
+        <dl class="standard-definition-list">
+            <dt>Working days per year</dt>
+            <dd th:text="${form.labour.workingDaysPerYear}">232</dd>
+        </dl>
+    </th:block>
     <p class="govuk-body">Number of staff and roles within the project</p>
     <div class="table-overflow">
         <table class="govuk-table labour-costs-table">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
                 <th class="govuk-table__header" scope="col">Role within project</th>
-                <th class="govuk-table__header govuk-table__header--numeric" scope="col">Gross employee cost (&pound;)
+                <th:block th:unless="${model.isThirdPartyOfgem()}">
+                    <th class="govuk-table__header govuk-table__header--numeric" scope="col">Gross employee cost (&pound;)
+                    </th>
+                </th:block>
+                <th class="govuk-table__header govuk-table__header--numeric" th:classappend="${model.isThirdPartyOfgem()} ? 'cell-nowrap'" scope="col">Rate (&pound;/day)</th>
+                <th class="govuk-table__header govuk-table__header--numeric" scope="col"
+                    th:classappend="${model.isThirdPartyOfgem()} ? 'width-150' : 'width-100'"
+                    th:text="${model.isThirdPartyOfgem() ? 'Days to be spent on the project' : 'Days to be spent by all staff at this grade'}">
+                    Days to be spent by all staff at this grade
                 </th>
-                <th class="govuk-table__header govuk-table__header--numeric" scope="col">Rate (&pound;/day)</th>
-                <th class="govuk-table__header govuk-table__header--numeric" scope="col">Days to be spent by all staff
-                    at this grade
-                </th>
-                <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total costs</th>
+                <th class="govuk-table__header govuk-table__header--numeric govuk-table__header-span" scope="col" th:colspan="${model.isThirdPartyOfgem() ? 2 : 1}">Total costs</th>
             </tr>
             </thead>
             <tbody class="govuk-table__body">
             <th:block th:each="entry : *{labour.rows}" th:with="cost=${entry.value}">
                 <tr class="govuk-table__row" th:unless="${cost.blank}">
                     <td class="govuk-table__cell" th:text="${cost.role}"></td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric"
-                        th:text="${cost.gross != null ? #numbers.formatInteger(cost.gross,0,'DEFAULT') : '0'}"></td>
+                    <th:block th:unless="${model.isThirdPartyOfgem()}">
+                        <td class="govuk-table__cell govuk-table__cell--numeric"
+                            th:text="${cost.gross != null ? #numbers.formatInteger(cost.gross,0,'DEFAULT') : '0'}"></td>
+                    </th:block>
                     <td class="govuk-table__cell govuk-table__cell--numeric"
                         th:text="${cost.rate != null ? #numbers.formatInteger(cost.rate,0,'DEFAULT') : '0'}"></td>
                     <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${cost.days}"></td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:colspan="${model.isThirdPartyOfgem() ? 2 : 1}">&pound;<th:block
                         th:text="${cost.total != null ? #numbers.formatInteger(cost.total, 0, 'DEFAULT') : '0'}"/>
                     </td>
                 </tr>

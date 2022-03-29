@@ -7,11 +7,13 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.util.Collections;
 import java.util.Map;
 
 import static org.innovateuk.ifs.finance.builder.AssociateSalaryCostBuilder.newAssociateSalaryCost;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 public class YourProjectCostsFormTest {
 
@@ -112,5 +114,58 @@ public class YourProjectCostsFormTest {
         assertTrue(form.getFecModelEnabled());
         assertNotNull(form.getOrganisationFinanceTotal());
         assertEquals(expected, form.getOrganisationFinanceTotal());
+    }
+
+    @Test
+    public void recalculateTotals_labourCost() {
+        LabourRowForm labourRowForm = new LabourRowForm();
+        labourRowForm.setThirdPartyOfgem(false);
+        labourRowForm.setGross(BigDecimal.valueOf(500));
+        labourRowForm.setDays(7);
+
+        Map<String, LabourRowForm> labourRowFormMap = asMap("labour_costs-1", labourRowForm);
+
+        LabourForm labourForm = new LabourForm();
+        labourForm.setWorkingDaysPerYear(365);
+        labourForm.setRows(labourRowFormMap);
+
+        YourProjectCostsForm form = new YourProjectCostsForm();
+        form.setLabour(labourForm);
+
+        form.recalculateTotals();
+
+        assertNotNull(form.getLabour());
+        assertEquals(1, form.getLabour().getRows().size());
+
+        LabourRowForm returnedLabourRowForm = form.getLabour().getRows().get("labour_costs-1");
+
+        assertNotNull(returnedLabourRowForm);
+        assertEquals(BigDecimal.valueOf(1.36986), returnedLabourRowForm.getRate());
+    }
+
+    @Test
+    public void recalculateTotals_labourCost_for_thirdPartyOfgem() {
+        LabourRowForm labourRowForm = new LabourRowForm();
+        labourRowForm.setThirdPartyOfgem(true);
+        labourRowForm.setRate(BigDecimal.ONE);
+
+        Map<String, LabourRowForm> labourRowFormMap = asMap("labour_costs-1", labourRowForm);
+
+        LabourForm labourForm = new LabourForm();
+        labourForm.setRows(labourRowFormMap);
+
+        YourProjectCostsForm form = new YourProjectCostsForm();
+        form.setLabour(labourForm);
+
+        form.recalculateTotals();
+
+        assertNotNull(form.getLabour());
+        assertEquals(1, form.getLabour().getRows().size());
+
+        LabourRowForm returnedLabourRowForm = form.getLabour().getRows().get("labour_costs-1");
+
+        assertNotNull(returnedLabourRowForm);
+        assertEquals(0, BigDecimal.ONE.compareTo(returnedLabourRowForm.getRate()));
+        //assertEquals(BigDecimal.ONE, returnedLabourRowForm.getRate());
     }
 }
