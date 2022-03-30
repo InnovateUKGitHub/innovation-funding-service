@@ -517,8 +517,9 @@ public class ProjectFinanceChecksController {
                     competition.getFundingType() == FundingType.KTP,
                     ktpPhase2Enabled,
                     canEditProjectCosts,
+                    competition.isThirdPartyOfgem(),
                     competition.isHorizonEuropeGuarantee()));
-            model.addAttribute("form", formPopulator.populateForm(project.getId(), organisation.getId()));
+            model.addAttribute("form", formPopulator.populateForm(project.getId(), organisation.getId(), competition.isThirdPartyOfgem()));
         } else {
             model.addAttribute("academicCostForm", projectAcademicCostFormPopulator.populate(new AcademicCostForm(), project.getId(), organisation.getId()));
         }

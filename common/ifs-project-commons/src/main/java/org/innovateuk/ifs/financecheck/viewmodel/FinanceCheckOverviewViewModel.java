@@ -129,4 +129,14 @@ public class FinanceCheckOverviewViewModel {
     public boolean isHecpCompetition() {
         return hecpCompetition;
     }
+
+    @JsonIgnore
+    public boolean isFundingLevelFirst() {
+        return !isThirdPartyOfgem;
+    }
+
+    @JsonIgnore
+    public boolean isFundingSoughtFirst() {
+        return !isFundingLevelFirst();
+    }
 }

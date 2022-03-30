@@ -109,6 +109,6 @@ public class TermsAndConditionsModelPopulatorTest {
 
     private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionResource competition) {
         return new GeneralSetupViewModel(false, false, competition, CompetitionSetupSection.TERMS_AND_CONDITIONS,
-                CompetitionSetupSection.values(), true, false);
+                CompetitionSetupSection.values(), true, false, true);
     }
 }

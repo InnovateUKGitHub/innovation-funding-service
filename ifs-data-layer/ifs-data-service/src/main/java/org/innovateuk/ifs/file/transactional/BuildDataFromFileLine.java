@@ -10,7 +10,7 @@ public class BuildDataFromFileLine {
     private static final Integer EXTERNAL_APPLICATION_ID = 3;
     private static final Integer EXTERNAL_APPLICANT_NAME = 4;
     private static final Integer QUESTION_NAME = 5;
-    private static final Integer RESPONSE = 6;
+    private static final Integer RESPONSE_KEY = 6;
 
     private String competitionName;
     private String externalCompId;
@@ -27,7 +27,7 @@ public class BuildDataFromFileLine {
         this.externalApplicationId = inputData.get(EXTERNAL_APPLICATION_ID);
         this.externalApplicantName = inputData.get(EXTERNAL_APPLICANT_NAME);
         this.questionName = inputData.get(QUESTION_NAME);
-        this.response = inputData.get(RESPONSE);
+        this.response = inputData.get(RESPONSE_KEY);
     }
 
     public String getCompetitionName() {

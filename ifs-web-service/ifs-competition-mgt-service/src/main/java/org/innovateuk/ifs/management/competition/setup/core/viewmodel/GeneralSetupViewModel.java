@@ -38,10 +38,16 @@ public class GeneralSetupViewModel {
     private boolean isInitialComplete;
     private CompetitionStateSetupViewModel state;
     private boolean ifsAdmin;
+    private boolean isAssessmentStageEnabled;
 
-    public GeneralSetupViewModel(boolean editable, boolean firstTimeInForm, CompetitionResource competition,
+    public GeneralSetupViewModel(boolean editable,
+                                 boolean firstTimeInForm,
+                                 CompetitionResource competition,
                                  CompetitionSetupSection section,
-                                 CompetitionSetupSection[] allSections, boolean isInitialComplete, boolean ifsAdmin) {
+                                 CompetitionSetupSection[] allSections,
+                                 boolean isInitialComplete,
+                                 boolean ifsAdmin,
+                                 boolean isAssessmentStageEnabled) {
         this.editable = editable;
         this.firstTimeInForm = firstTimeInForm;
         this.competition = competition;
@@ -49,6 +55,7 @@ public class GeneralSetupViewModel {
         this.allSections = allSections;
         this.isInitialComplete = isInitialComplete;
         this.ifsAdmin = ifsAdmin;
+        this.isAssessmentStageEnabled = isAssessmentStageEnabled;
     }
 
     public void setCurrentSectionFragment(String currentSectionFragment) {
@@ -97,6 +104,10 @@ public class GeneralSetupViewModel {
 
     public boolean isIfsAdmin() {
         return ifsAdmin;
+    }
+
+    public boolean isAssessmentStageEnabled() {
+        return isAssessmentStageEnabled;
     }
 
     public static List<CompetitionSetupSection> getPublishSections() {
