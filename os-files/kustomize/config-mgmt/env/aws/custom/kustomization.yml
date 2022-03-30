@@ -1,0 +1,11 @@
+commonAnnotations:
+  deployedWith: kustomize
+  environment: custom
+
+resources:
+  - ../../../base
+
+patchesStrategicMerge:
+  - mail-config.yml
+  - shibboleth-config.yml
+  - web-config.yml
