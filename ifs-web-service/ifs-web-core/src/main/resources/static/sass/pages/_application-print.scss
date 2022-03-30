@@ -101,11 +101,6 @@
       margin-top:0;
     }
   }
-
-  .complete-edi-status,
-  .incomplete-edi-status {
-    font-weight: normal;
-  }
 }
 
 @media print {
@@ -204,11 +199,6 @@
 
     .form-group {
       page-break-inside : avoid;
-    }
-
-    .complete-edi-status,
-    .incomplete-edi-status {
-      font-weight: normal;
     }
   }
 
