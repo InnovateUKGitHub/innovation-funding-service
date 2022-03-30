@@ -4,11 +4,11 @@ metadata:
   name: innovation-funding-service
 build:
   artifacts:
-    - image: data-service
+    - image: application-service
       context: .
       jib:
         type: gradle
-        project: ifs-data-layer:ifs-data-service
+        project: ifs-web-service:ifs-application-service
   local:
     useDockerCLI: false
     useBuildkit: false
