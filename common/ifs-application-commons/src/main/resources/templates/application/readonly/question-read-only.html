@@ -276,10 +276,11 @@
                 <td class="govuk-table__cell ifs-table__email"
                     th:text="${row.email}"
                     th:classappend="${row.invite ? 'hint' : ''}"></td>
-                <td class="govuk-table__cell"
-                    th:if="${model.ediUpdateEnabled}"
-                    th:text="${row.ediStatus}"
-                    ></td>
+                <td class="govuk-table__cell">
+                    <span  th:if="${model.ediUpdateEnabled}"
+                           th:text="${row.ediStatus}"
+                           th:classappend="${row.ediCompleted ? 'yes' : 'edit'}"></span>
+                </td>
             </tr>
             </tbody>
         </table>
