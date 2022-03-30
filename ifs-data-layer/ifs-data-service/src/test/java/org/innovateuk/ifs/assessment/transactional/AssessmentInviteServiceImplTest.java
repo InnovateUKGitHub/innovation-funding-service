@@ -33,6 +33,7 @@ import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
+import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
@@ -93,6 +94,7 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
+import static org.innovateuk.ifs.user.builder.AgreementBuilder.newAgreement;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.AffiliationType.EMPLOYER;
@@ -1277,6 +1279,11 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         int pageSize = 1;
         String assessorFilter = "";
 
+        Agreement agreement = newAgreement()
+                .withCurrent(true)
+                .withModifiedOn(now().minusHours(1))
+                .build();
+
         List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource()
                 .withName("Emerging Tech and Industries")
                 .build(1);
@@ -1307,7 +1314,9 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withInnovationArea(innovationArea)
                 .withBusinessType(BUSINESS, ACADEMIC)
                 .withAgreementSignedDate(now())
+                .withAgreement(agreement)
                 .build(2);
+
         List<User> assessors = newUser()
                 .withId(4L, 8L)
                 .withFirstName("Jeremy", "Felix")

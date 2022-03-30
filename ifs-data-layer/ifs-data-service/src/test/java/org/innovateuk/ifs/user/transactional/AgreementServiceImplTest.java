@@ -34,7 +34,7 @@ public class AgreementServiceImplTest extends BaseServiceUnitTest<AgreementServi
     }
 
     @Test
-    public void getCurrent() throws Exception {
+    public void getCurrent() {
         Agreement agreement = newAgreement().build();
         AgreementResource agreementResource = newAgreementResource().build();
 
@@ -50,7 +50,7 @@ public class AgreementServiceImplTest extends BaseServiceUnitTest<AgreementServi
     }
 
     @Test
-    public void getCurrent_notFound() throws Exception {
+    public void getCurrent_notFound() {
         Agreement agreement = newAgreement().build();
         AgreementResource agreementResource = newAgreementResource().build();
 
