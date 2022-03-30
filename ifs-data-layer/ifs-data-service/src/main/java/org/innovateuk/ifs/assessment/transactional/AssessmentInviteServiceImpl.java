@@ -278,7 +278,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
         availableAssessor.setBusinessType(profile.getBusinessType());
         availableAssessor.setCompliant(profile.isCompliant(assessor));
         availableAssessor.setValidAgreement(profile.isAgreementValid());
-        availableAssessor.setValidDoi(profile.isDoiValid(assessor));
+        availableAssessor.setValidDoi(Profile.isAffiliationsComplete(assessor));
         availableAssessor.setInnovationAreas(simpleMap(profile.getInnovationAreas(), innovationAreaMapper::mapToResource));
 
         return availableAssessor;
