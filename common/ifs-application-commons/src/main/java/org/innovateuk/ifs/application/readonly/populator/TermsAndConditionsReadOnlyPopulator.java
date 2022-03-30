@@ -63,7 +63,8 @@ public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyView
                 getPartners(data.getApplication(), data.getCompetition(), question),
                 termsAndConditionsTerminology(data.getCompetition()),
                 data.getCompetition().getTermsAndConditions().isProcurementThirdParty(),
-                competitionThirdPartyConfigRestService.findOneByCompetitionId(data.getCompetition().getId()).getSuccess().getTermsAndConditionsLabel()
+                competitionThirdPartyConfigRestService.findOneByCompetitionId(data.getCompetition().getId()).getSuccess().getTermsAndConditionsLabel(),
+                data.getCompetition().getCompetitionThirdPartyConfigResource()
         );
     }
 
