@@ -1,0 +1,877 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="model" type="org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel.YourProjectCostsViewModel"*/-->
+<!--/*@thymesVar id="form" type="org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm"*/-->
+
+<!--/***************************
+
+            LABOUR
+
+*********************************/-->
+
+<!--/*<editor-fold defaultstate="collapsed">*/-->
+<th:block th:fragment="labour" th:with="financeRowType=${model.getLabourFinanceRowType()}">
+    <div class="govuk-body" th:if="${model.financeRowTypes.contains(financeRowType)}">
+
+        <span class="govuk-visually-hidden" data-mirror="#section-total-labour"></span>
+        <span th:if="${model.internal}" class="govuk-visually-hidden" data-calculation-format="percentage"
+              data-calculation-operations="/,*"
+              data-calculation-fields="100, #total-cost, #section-total-labour"
+              th:text="${#ifsUtil.calculatePercentage(form.totalLabourCosts, form.organisationFinanceTotal) + '%'}"></span>
+
+        <th:block th:if="${model.isReadOnly()}">
+            <th:block th:insert="application/your-project-costs-fragments :: labour_read_only"/>
+        </th:block>
+
+        <th:block th:unless="${model.isReadOnly()}">
+            <input type="hidden" class="govuk-input govuk-input--width-4"
+                   id="working-days-per-year" th:field="*{labour.workingDaysPerYear}"
+                   th:errorclass="govuk-input--error"
+                   placeholder="0" min="1" max="365" required="required">
+            <input type="hidden"
+                   data-calculation-fields=".labour-totals"
+                   data-calculation-operations="+"
+                   id="section-total-labour"
+                   th:attr="data-calculation-rawvalue=${form.totalLabourCosts}"
+                   th:value="'£' + ${#numbers.formatInteger(form.totalLabourCosts, 0,'DEFAULT')}"/>
+
+            <th:block th:each="entry : *{labour.rows}">
+                <th:block th:insert="application/hecp-eligibility-costs-fragments :: labour_row (${entry.key}, ${entry.value})"/>
+            </th:block>
+
+        </th:block>
+
+    </div>
+</th:block>
+
+<th:block th:fragment="labour_row (id, row)">
+    <div class="govuk-form-group"
+        th:with="path=${'labour.rows[__${id}__]'}" th:attr="data-repeatable-row=${path}" th:id="${path}"
+        th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path)} ? 'govuk-form-group--error'">
+        <input type="hidden" th:field="*{__${path}__.costId}"/>
+            <label th:for="__${path}__.role">
+                <span class="govuk-visually-hidden">Role within project</span>
+            </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.role)"/>
+            <input type="hidden"
+                   class="govuk-input"
+                   th:id="__${path}__.role"
+                   th:field="*{__${path}__.role}"
+                   th:errorclass="govuk-input--error"
+                   required="required"
+                   maxlength="255">
+
+            <label th:for="__${path}__.gross">
+                <span class="govuk-label govuk-label--s">Personnel costs</span>
+            </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.gross)"/>
+            <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
+            <input type="number"
+                   th:id="__${path}__.gross"
+                   th:field="*{__${path}__.gross}"
+                   th:errorclass="govuk-input--error"
+                   class="govuk-input govuk-input--width-10 cost-total"
+                   placeholder="0"
+                   required="required"
+                   min="1"
+                   max="9999999999999999999"
+                   data-field-errormessage="This field can only accept whole numbers.">
+
+            <label th:for="__${path}__.days">
+                <span class="govuk-visually-hidden">Days to be spent by all staff at this grade</span>
+            </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.days)"/>
+            <input type="hidden"
+                   class="govuk-input govuk-input--width-4"
+                   th:id="__${path}__.days"
+                   th:field="*{__${path}__.days}"
+                   th:errorclass="govuk-input--error"
+                   value="200" placeholder="0"
+                   required="required"
+                   min="1"
+                   max="999999999"
+                   data-max-errormessage="You must enter a value less than 10 digits.">
+
+        <div class="govuk-visually-hidden"
+            th:id="__${path}__.labourTotalCost"
+            data-calculation-operations="/,*"
+            th:attr="data-calculation-fields=|[id='__${path}__.gross'],[id='working-days-per-year'],[id='__${path}__.days']|,
+                                            data-calculation-rawvalue=${row.total}">
+            &pound;<th:block th:text="${#numbers.formatInteger(row.total, 0, 'DEFAULT')}">0</th:block>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="labour_read_only">
+    <div class="govuk-form-group">
+        <label>
+            <span class="govuk-label govuk-label--s">Personnel costs</span>
+        </label>
+        <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
+        <span class="govuk-body labour-total" id="section-total-labour"
+            th:attr="data-calculation-rawvalue=${form.totalLabourCosts}">
+            <th:block th:text="${#numbers.formatInteger(form.totalLabourCosts, 0, 'DEFAULT')}"/>
+        </span>
+    </div>
+</th:block>
+<!--/*</editor-fold>*/-->
+
+<!--/***************************
+
+            OVERHEADS
+
+*********************************/-->
+
+<!--/*<editor-fold defaultstate="collapsed">*/-->
+<th:block th:fragment="overheads" th:with="financeRowType=${model.getOverheadsFinanceRowType()}">
+    <div class="govuk-body" th:if="${model.financeRowTypes.contains(financeRowType)}">
+        <span class="govuk-visually-hidden" data-mirror="#section-total-overhead"></span>
+        <span th:if="${model.internal}" class="govuk-visually-hidden" data-calculation-format="percentage"
+              data-calculation-operations="/,*"
+              data-calculation-fields="100, #total-cost, #section-total-overhead"
+              th:text="${#ifsUtil.calculatePercentage(form.totalOverheadCosts, form.organisationFinanceTotal) + '%'}"></span>
+
+        <th:block th:if="${model.isReadOnly()}">
+            <th:block th:insert="application/hecp-eligibility-costs-fragments :: overheads_read_only"/>
+        </th:block>
+        <div class="govuk-form-group" th:unless="${model.isReadOnly()}">
+
+            <input type="hidden" th:field="*{overhead.costId}"/>
+
+            <input id="overhead-rate-type-total"
+                   class="govuk-radios__input overhead-radio"
+                   type="hidden"
+                   required="required"
+                   th:field="*{overhead.rateType}"
+                   th:value="${model.getTotalOverheadRateType()}"/>
+
+            <input type="hidden" id="section-total-overhead"
+                   th:value="|£${#numbers.formatInteger(form.totalOverheadCosts,0, 'DEFAULT')}|"/>
+
+            <input type="hidden" value="£0" data-calculation-rawvalue="0" id="total-overhead-none"/>
+
+            <input type="hidden"
+                   id="total-overhead-default"
+                   data-calculation-fields="[id='section-total-labour'],0.2"
+                   th:attr="data-calculation-rawvalue=${form.totalOverheadCosts}"
+                   data-calculation-operations="*"
+                   th:value="|£${#numbers.formatInteger(form.totalOverheadCosts, 0, 'DEFAULT')}|"/>
+
+            <label>
+                <span class="govuk-label govuk-label--s">Indirect costs</span>
+            </label>
+            <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
+            <input id="overhead.totalSpreadsheet"
+                   th:field="*{overhead.totalSpreadsheet}"
+                   th:errorclass="govuk-input--error"
+                   type="number"
+                   class="govuk-input govuk-input--width-10"
+                   min="0"
+                   max="999999999"
+                   step="1"/>
+            <input type="hidden"
+                   readonly="readonly"
+                   id="total-overhead-calculated"
+                   data-calculation-fields="[id='overhead.totalSpreadsheet'],1"
+                   data-calculation-operations="*"
+                   th:attr="data-calculation-rawvalue=${form.totalOverheadCosts}"
+                   th:value="|£${#numbers.formatInteger(form.totalOverheadCosts, 0, 'DEFAULT')}|"/>
+        </div>
+
+    </div>
+</th:block>
+
+<th:block th:fragment="overheads_read_only">
+    <div class="govuk-form-group">
+        <label>
+            <span class="govuk-label govuk-label--s">Indirect costs</span>
+        </label>
+        <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
+        <span class="govuk-body" th:attr="data-calculation-rawvalue=${form.totalOverheadCosts}" id="section-total-overhead">
+            <th:block th:text="${#numbers.formatInteger(form.totalOverheadCosts,0, 'DEFAULT')}">0</th:block>
+        </span>
+    </div>
+</th:block>
+
+<!--/*</editor-fold>*/-->
+
+<!--/***************************
+
+            MATERIALS
+
+*********************************/-->
+
+<!--/*<editor-fold defaultstate="collapsed">*/-->
+<th:block th:fragment="materials" th:with="financeRowType=${model.getMaterialsFinanceRowType()}">
+    <div class="govuk-body"  th:if="${model.financeRowTypes.contains(financeRowType)}">
+
+        <span class="govuk-visually-hidden" data-mirror="#section-total-material"></span>
+        <span th:if="${model.internal}" class="govuk-visually-hidden" data-calculation-format="percentage"
+              data-calculation-operations="/,*"
+              data-calculation-fields="100, #total-cost, #section-total-material"
+              th:text="${#ifsUtil.calculatePercentage(form.totalMaterialCosts, form.organisationFinanceTotal) + '%'}"></span>
+
+
+        <th:block th:if="${model.isReadOnly()}">
+            <th:block th:insert="application/hecp-eligibility-costs-fragments :: materials_read_only"/>
+        </th:block>
+        <th:block th:unless="${model.isReadOnly()}">
+            <th:block th:each="entry : *{materialRows}">
+                <th:block th:insert="application/hecp-eligibility-costs-fragments :: materials_row (${entry.key}, ${entry.value})"/>
+            </th:block>
+
+            <span class="govuk-visually-hidden"
+                  data-mirror='#section-total-material'
+                  th:text="'£' + ${#numbers.formatInteger(form.totalMaterialCosts, 0,'DEFAULT')}"></span>
+            <input type="hidden"
+                   data-calculation-fields=".material-totals"
+                   data-calculation-operations="+"
+                   id="section-total-material"
+                   th:attr="data-calculation-rawvalue=${form.totalMaterialCosts}"
+                   th:value="'£' + ${#numbers.formatInteger(form.totalMaterialCosts, 0,'DEFAULT')}"/>
+        </th:block>
+
+    </div>
+</th:block>
+
+<th:block th:fragment="materials_row (id, row)">
+    <div class="govuk-form-group"
+        th:with="path=${'materialRows[__${id}__]'}"
+        th:attr="data-repeatable-row=${path}" th:id="${path}"
+        th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path)} ? 'govuk-form-group--error'">
+        <input type="hidden" th:field="*{__${path}__.costId}"/>
+
+        <label th:for="__${path}__.item">
+            <span class="govuk-visually-hidden">Item</span>
+        </label>
+        <input type="hidden"
+               class="govuk-input"
+               th:id="__${path}__.item"
+               th:field="*{__${path}__.item}"
+               th:errorclass="govuk-input--error"
+               required="required"
+               maxlength="255"/>
+
+        <label th:for="__${path}__.quantity">
+            <span class="govuk-visually-hidden">Quantity</span>
+        </label>
+        <input type="hidden"
+               class="govuk-input"
+               th:id="__${path}__.quantity"
+               th:field="*{__${path}__.quantity}"
+               th:errorclass="govuk-input--error"
+               placeholder="0"
+               min="1"
+               max="999999999"
+               step="1"
+               required="required"
+               th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}"/>
+
+        <label th:for="__${path}__.cost">
+            <span class="govuk-label govuk-label--s">Equipment</span>
+        </label>
+        <th:block
+            th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.cost)"/>
+        <span class="govuk-body govuk-!-padding-right-1">£</span>
+        <input type="number"
+               class="govuk-input govuk-input--width-10"
+               th:id="__${path}__.cost"
+               th:field="*{__${path}__.cost}"
+               th:errorclass="govuk-input--error"
+               placeholder="0"
+               min="1"
+               max="9999999999999999999"
+               step="1"
+               required="required"
+               th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
+
+        <label th:for="__${path}__.total">
+            <span class="govuk-visually-hidden">Total</span>
+        </label>
+        <input type="hidden"
+               class="alignright govuk-input material-totals"
+               th:id="__${path}__.total"
+               th:value="'£' + ${#numbers.formatInteger(row.total, 0, 'DEFAULT')}"
+               th:attr="data-calculation-fields=|[id='__${path}__.quantity'],[id='__${path}__.cost']|,data-calculation-rawvalue=${row.total}"
+               data-calculation-operations="*"
+               readonly="readonly"/>
+    </div>
+</th:block>
+
+<th:block th:fragment="materials_read_only">
+    <th:block th:each="entry : *{materialRows}" th:with="cost=${entry.value}">
+        <div class="govuk-form-group" th:unless="${cost.blank}">
+            <label>
+                <span class="govuk-label govuk-label--s">Equipment</span>
+            </label>
+            <span class="govuk-body govuk-!-padding-right-1">£</span>
+            <span class="govuk-body">
+                <th:block th:text="${cost.total != null ? #numbers.formatInteger(cost.total,0,'DEFAULT') : '0'}"/>
+            </span>
+        </div>
+    </th:block>
+
+    <span id="section-total-material" th:attr="data-calculation-rawvalue=${form.totalMaterialCosts}"
+        class="govuk-visually-hidden">
+        &pound;<th:block th:text="${#numbers.formatInteger(form.totalMaterialCosts, 0,'DEFAULT')}"/>
+    </span>
+</th:block>
+<!--/*</editor-fold>*/-->
+
+<!--/***************************
+
+            CAPITAL USAGE
+
+*********************************/-->
+
+<!--/*<editor-fold defaultstate="collapsed">*/-->
+<th:block th:fragment="capital_usage" th:with="financeRowType=${model.getCapitalUsageFinanceRowType()}">
+    <div class="govuk-body"  th:if="${model.financeRowTypes.contains(financeRowType)}">
+
+        <span class="govuk-visually-hidden" data-mirror="#section-total-capital-usage"></span>
+        <span th:if="${model.internal}" class="govuk-visually-hidden" data-calculation-format="percentage"
+              data-calculation-operations="/,*"
+              data-calculation-fields="100, #total-cost, #section-total-capital-usage"
+              th:text="${#ifsUtil.calculatePercentage(form.totalCapitalUsageCosts, form.organisationFinanceTotal) + '%'}"></span>
+
+        <th:block th:if="${model.isReadOnly()}">
+            <th:block th:insert="application/hecp-eligibility-costs-fragments :: capital_usage_read_only"/>
+        </th:block>
+        <th:block th:unless="${model.isReadOnly()}">
+            <div id="capital-usage">
+                <th:block th:each="entry : *{capitalUsageRows}">
+                    <th:block th:insert="application/hecp-eligibility-costs-fragments :: capital_usage_row (${entry.key}, ${entry.value})"/>
+                </th:block>
+            </div>
+
+            <span class="govuk-visually-hidden"
+                  data-mirror='#section-total-capital-usage'
+                  th:text="'£' + ${#numbers.formatInteger(form.totalCapitalUsageCosts, 0,'DEFAULT')}"></span>
+            <input type="hidden"
+                   data-calculation-fields=".capital-usage-totals"
+                   data-calculation-operations="+"
+                   id="section-total-capital-usage"
+                   th:attr="data-calculation-rawvalue=${form.totalCapitalUsageCosts}"
+                   th:value="'£' + ${#numbers.formatInteger(form.totalCapitalUsageCosts, 0,'DEFAULT')}"/>
+        </th:block>
+
+    </div>
+</th:block>
+
+<th:block th:fragment="capital_usage_row (id, row)">
+    <div th:with="path=${'capitalUsageRows[__${id}__]'}" th:attr="data-repeatable-row=${path}"
+         th:id="${path}">
+        <input type="hidden" th:field="*{__${path}__.costId}"/>
+        <div class="govuk-visually-hidden" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.item')} ? 'govuk-form-group--error'">
+            <label class="govuk-label govuk-label--s"
+                   th:for="__${path}__.item">
+                <span>Item description</span>
+            </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.item)"/>
+            <textarea
+                class="govuk-textarea"
+                th:id="__${path}__.item"
+                th:field="*{__${path}__.item}"
+                th:errorclass="govuk-input--error"
+                maxlength="255"
+                rows="4"
+                required="required">
+                                </textarea>
+        </div>
+        <div class="govuk-visually-hidden" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.newItem')} ? 'govuk-form-group--error'">
+            <fieldset class="govuk-fieldset">
+                <legend th:id="__${path}__.newItem" class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    <h3 class="govuk-fieldset__heading">New or existing item</h3>
+                </legend>
+                <th:block
+                    th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.newItem)"/>
+                <div class="govuk-radios govuk-radios--inline">
+                    <div class="govuk-radios__item">
+                        <input th:id="__${path}__.newItem.new"
+                               th:field="*{__${path}__.newItem}"
+                               th:errorclass="govuk-input--error"
+                               class="govuk-radios__input"
+                               type="radio"
+                               value="true"
+                               required="required"/>
+                        <label th:for="__${path}__.newItem.new"
+                               class="govuk-label govuk-radios__label">
+                            New
+                        </label>
+                    </div>
+                    <div class="govuk-radios__item">
+                        <input th:id="__${path}__.newItem.existing"
+                               th:field="*{__${path}__.newItem}"
+                               th:errorclass="govuk-input--error"
+                               class="govuk-radios__input"
+                               type="radio"
+                               value="false"
+                               required="required"/>
+                        <label th:for="__${path}__.newItem.existing"
+                               class="govuk-label govuk-radios__label">
+                            Existing
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="govuk-visually-hidden" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.deprecation')} ? 'govuk-form-group--error'">
+            <label th:for="__${path}__.deprecation" class="govuk-label govuk-label--s">
+                Depreciation period (months)
+            </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.deprecation)"/>
+            <input th:id="__${path}__.deprecation"
+                   th:field="*{__${path}__.deprecation}"
+                   th:errorclass="govuk-input--error"
+                   type="number"
+                   class="govuk-input govuk-input--width-4 form-finances-capital-usage-depreciation"
+                   placeholder="0"
+                   min="1"
+                   max="999999999"
+                   step="1"
+                   required="required"
+                   th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}"
+            />
+        </div>
+        <div class="govuk-form-group" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.netValue')} ? 'govuk-form-group--error'">
+            <label th:for="__${path}__.netValue">
+                <span class="govuk-label govuk-label--s">Other goods, works and services</span>
+            </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.netValue)"/>
+            <span class="govuk-body govuk-!-padding-right-1">£</span>
+            <input th:id="__${path}__.netValue"
+                   th:field="*{__${path}__.netValue}"
+                   th:errorclass="govuk-input--error"
+                   type="number"
+                   class="govuk-input govuk-input--width-10 form-finances-capital-usage-npv"
+                   placeholder="0"
+                   min="1"
+                   step="1"
+                   max="9999999999999999999"
+                   required="required"
+                   th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
+
+        </div>
+        <div class="govuk-visually-hidden" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.residualValue')} ? 'govuk-form-group--error'">
+            <label th:for="__${path}__.residualValue" class="govuk-label govuk-label--s">
+                Residual value at end of project (&pound;)
+            </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.residualValue)"/>
+            <input th:id="__${path}__.residualValue"
+                   th:field="*{__${path}__.residualValue}"
+                   th:errorclass="govuk-input--error"
+                   type="number"
+                   class="govuk-input govuk-input--width-10 form-finances-capital-usage-residual-value"
+                   placeholder="0"
+                   min="0"
+                   max="9999999999999999999"
+                   step="1"
+                   required="required"
+                   th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
+        </div>
+
+        <div class="govuk-visually-hidden" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.utilisation')} ? 'govuk-form-group--error'">
+            <label th:for="__${path}__.utilisation" class="govuk-label govuk-label--s">
+                Utilisation (&percnt;)
+            </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.utilisation)"/>
+            <input th:id="__${path}__.utilisation"
+                   th:field="*{__${path}__.utilisation}"
+                   th:errorclass="govuk-input--error"
+                   type="number"
+                   class="govuk-input govuk-input--width-4 form-finances-capital-usage-utilisation"
+                   placeholder="0"
+                   min="0"
+                   max="100"
+                   step="1"
+                   required="required"/>
+        </div>
+
+        <div class="govuk-visually-hidden">
+            <label th:for="__${path}__.cost" class="govuk-label govuk-label--s">
+                Net cost
+            </label>
+            <input type="text"
+                   class="govuk-input capital-usage-totals"
+                   th:attr="data-calculation-fields=|[id='__${path}__.netValue'],[id='__${path}__.residualValue'],[id='__${path}__.utilisation'],100|,data-calculation-rawvalue=${row.total}"
+                   data-calculation-operations="-,*,/,negativeRoundUp"
+                   readonly="readonly"
+                   th:value="'£' + ${#numbers.formatInteger(row.total, 0, 'DEFAULT')}"
+            />
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="capital_usage_read_only">
+    <div class="govuk-form-group">
+        <th:block th:each="entry : *{capitalUsageRows}" th:with="cost=${entry.value}">
+            <th:block th:unless="${cost.blank}">
+                <label>
+                    <span class="govuk-label govuk-label--s">Other goods, works and services</span>
+                </label>
+                <span class="govuk-body govuk-!-padding-right-1">£</span>
+                <span class="govuk-body">
+                    <th:block th:text="${cost.total &lt; 0 ? 0 : #numbers.formatInteger(cost.total, 0, 'DEFAULT')}"/>
+                </span>
+            </th:block>
+        </th:block>
+
+        <span class="govuk-visually-hidden" id="section-total-capital-usage"
+            th:attr="data-calculation-rawvalue=${form.totalCapitalUsageCosts}">
+            &pound;<th:block
+            th:text="${#numbers.formatInteger(form.totalCapitalUsageCosts, 0, 'DEFAULT')}"/>
+        </span>
+    </div>
+</th:block>
+<!--/*</editor-fold>*/-->
+
+<!--/***************************
+
+            SUB CONTRACTING
+
+*********************************/-->
+
+<!--/*<editor-fold defaultstate="collapsed">*/-->
+<th:block th:fragment="subcontracting_costs" th:with="financeRowType=${model.getSubContractingCostsFinanceRowType()}">
+    <div class="govuk-body"  th:if="${model.financeRowTypes.contains(financeRowType)}">
+
+        <span class="govuk-visually-hidden" data-mirror="#section-total-subcontracting"></span>
+        <span th:if="${model.internal}" class="govuk-visually-hidden" data-calculation-format="percentage"
+              data-calculation-operations="/,*"
+              data-calculation-fields="100, #total-cost, #section-total-subcontracting"
+              th:text="${#ifsUtil.calculatePercentage(form.totalSubcontractingCosts, form.organisationFinanceTotal) + '%'}"></span>
+
+        <th:block th:if="${model.isReadOnly()}">
+            <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs_read_only"/>
+        </th:block>
+
+        <th:block th:unless="${model.isReadOnly()}">
+            <div id="subcontracting">
+                <th:block th:each="entry : *{subcontractingRows}">
+                    <th:block
+                        th:insert="application/hecp-eligibility-costs-fragments :: subcontracting_costs_row (${entry.key}, ${entry.value}, ${model.isThirdPartyOfgem()})"/>
+                </th:block>
+            </div>
+
+            <span class="govuk-visually-hidden"
+                  data-mirror="#section-total-subcontracting"
+                  th:text="'£' + ${#numbers.formatInteger(form.totalSubcontractingCosts, 0,'DEFAULT')}"></span>
+            <input type="hidden"
+                   name="thirdPartyOfgem"
+                   th:value="${model.isThirdPartyOfgem()}"
+                    />
+            <input type="hidden"
+                   data-calculation-fields=".subcontracting-totals"
+                   data-calculation-operations="+"
+                   id="section-total-subcontracting"
+                   th:attr="data-calculation-rawvalue=${form.totalSubcontractingCosts}"
+                   th:value="'£' + ${#numbers.formatInteger(form.totalSubcontractingCosts, 0,'DEFAULT')}"/>
+
+        </th:block>
+    </div>
+
+</th:block>
+
+<th:block th:fragment="subcontracting_costs_row (id, row, thirdPartyOfgem)">
+    <div class="govuk-form-group" th:with="path=${'subcontractingRows[__${id}__]'}" th:attr="data-repeatable-row=${path}"
+         th:id="${path}"
+         th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path)} ? 'govuk-form-group--error'">
+        <input type="hidden" th:field="*{__${path}__.costId}"/>
+
+        <input th:id="__${path}__.name"
+               th:field="*{__${path}__.name}"
+               th:errorclass="govuk-input--error"
+               type="hidden"
+               maxlength="255"
+               required="required"/>
+
+        <input th:id="__${path}__.country"
+               th:field="*{__${path}__.country}"
+               th:errorclass="govuk-input--error"
+               type="hidden"
+               class="govuk-input"
+               maxlength="255"
+               required="required"/>
+
+            <textarea
+                class="govuk-visually-hidden"
+                th:id="__${path}__.role"
+                th:field="*{__${path}__.role}"
+                th:errorclass="govuk-input--error"
+                maxlength="255"
+                rows="4"
+                required="required">
+            </textarea>
+
+        <label th:for="__${path}__.cost">
+            <span class="govuk-label govuk-label--s">Subcontracting costs</span>
+        </label>
+        <th:block
+            th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.cost)"/>
+        <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
+        <input th:id="__${path}__.cost"
+               th:field="*{__${path}__.cost}"
+               th:errorclass="govuk-input--error"
+               type="number"
+               class="govuk-input govuk-input--width-10 subcontracting-totals"
+               placeholder="0"
+               min="1"
+               max="9999999999999999999"
+               step="1"
+               required="required"
+               th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
+
+    </div>
+</th:block>
+
+<th:block th:fragment="subcontracting_costs_read_only">
+    <th:block th:each="entry : *{subcontractingRows}" th:with="cost=${entry.value}">
+        <div class="govuk-form-group" th:unless="${cost.blank}">
+            <label>
+                <span class="govuk-label govuk-label--s">Subcontracting costs</span>
+            </label>
+            <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
+            <span class="govuk-body">
+                <th:block th:text="${cost.cost != null ? #numbers.formatInteger(cost.cost,0,'DEFAULT') : '0'}">150,000</th:block>
+            </span>
+        </div>
+        <span class="govuk-visually-hidden" id="section-total-subcontracting"
+            th:attr="data-calculation-rawvalue=${form.totalSubcontractingCosts}">
+            &pound;<th:block th:text="${#numbers.formatInteger(form.totalSubcontractingCosts, 0, 'DEFAULT')}"/>
+        </span>
+    </th:block>
+
+</th:block>
+<!--/*</editor-fold>*/-->
+
+<!--/***************************
+
+            TRAVEL
+
+*********************************/-->
+
+<!--/*<editor-fold defaultstate="collapsed">*/-->
+<th:block th:fragment="travel" th:with="financeRowType=${model.getTravelFinanceRowType()}">
+    <div class="govuk-body"  th:if="${model.financeRowTypes.contains(financeRowType)}">
+
+        <span class="govuk-visually-hidden" data-mirror="#section-total-travel"></span>
+        <span th:if="${model.internal}" class="govuk-visually-hidden" data-calculation-format="percentage"
+              data-calculation-operations="/,*"
+              data-calculation-fields="100, #total-cost, #section-total-travel"
+              th:text="${#ifsUtil.calculatePercentage(form.totalTravelCosts, form.organisationFinanceTotal) + '%'}"></span>
+
+        <th:block th:if="${model.isReadOnly()}">
+            <th:block th:insert="application/hecp-eligibility-costs-fragments :: travel_read_only"/>
+        </th:block>
+        <th:block th:unless="${model.isReadOnly()}">
+            <th:block th:each="entry : *{travelRows}">
+                <th:block th:insert="application/hecp-eligibility-costs-fragments :: travel_row (${entry.key}, ${entry.value})"/>
+            </th:block>
+
+            <span class="govuk-visually-hidden"
+                  data-mirror="#section-total-travel"
+                  th:text="'£' + ${#numbers.formatInteger(form.totalTravelCosts, 0,'DEFAULT')}"></span>
+            <input type="hidden"
+                   data-calculation-fields=".travel-totals"
+                   data-calculation-operations="+"
+                   id="section-total-travel"
+                   th:attr="data-calculation-rawvalue=${form.totalTravelCosts}"
+                   th:value="'£' + ${#numbers.formatInteger(form.totalTravelCosts, 0,'DEFAULT')}"/>
+        </th:block>
+
+    </div>
+</th:block>
+
+<th:block th:fragment="travel_row (id, row)">
+    <div class="govuk-form-gorup" th:with="path=${'travelRows[__${id}__]'}"
+        th:attr="data-repeatable-row=${path}" th:id="${path}"
+        th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path)} ? 'govuk-form-group--error'">
+        <input type="hidden" th:field="*{__${path}__.costId}"/>
+
+        <label th:for="__${path}__.item">
+            <span class="govuk-visually-hidden">Purpose of journey or description of subsistence cost</span>
+        </label>
+        <th:block
+            th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.item)"/>
+        <input th:id="__${path}__.item"
+               th:field="*{__${path}__.item}"
+               th:errorclass="govuk-input--error"
+               type="hidden"
+               class="govuk-input"
+               required="required"
+               maxlength="255"/>
+
+        <label th:for="__${path}__.times">
+            <span class="govuk-visually-hidden">Number of times</span>
+        </label>
+        <input th:id="__${path}__.times"
+               th:field="*{__${path}__.times}"
+               th:errorclass="govuk-input--error"
+               type="hidden"
+               class="govuk-input"
+               placeholder="0"
+               min="1"
+               max="999999999"
+               step="1"
+               required="required"
+               th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}"/>
+
+        <label th:for="__${path}__.eachCost">
+            <span class="govuk-label govuk-label--s">Travel and subsistence</span>
+        </label>
+        <th:block
+            th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.eachCost)"/>
+        <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
+        <input th:id="__${path}__.eachCost"
+               th:field="*{__${path}__.eachCost}"
+               th:errorclass="govuk-input--error"
+               type="number"
+               class="govuk-input govuk-input--width-10"
+               placeholder="0"
+               min="1"
+               max="9999999999999999999"
+               step="1"
+               required="required"
+               th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
+
+        <label th:for="__${path}__.cost">
+            <span class="govuk-visually-hidden">Total</span>
+        </label>
+        <input type="hidden"
+               th:id="__${path}__.cost"
+               class="alignright govuk-input travel-totals"
+               readonly="readonly"
+               th:attr="data-calculation-fields=|[id='__${path}__.times'],[id='__${path}__.eachCost']|, data-calculation-rawValue=${row.total}"
+               data-calculation-operations="*"
+               th:value="'£' + ${#numbers.formatInteger(row.total, 0, 'DEFAULT')}"/>
+    </div>
+</th:block>
+
+<th:block th:fragment="travel_read_only">
+        <div class="govuk-form-group" th:each="entry : *{travelRows}" th:with="cost=${entry.value}">
+            <th:block th:unless="${cost.blank}">
+                <label>
+                    <span class="govuk-label govuk-label--s">Travel and subsistence</span>
+                </label>
+                <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.eachCost)"/>
+                <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
+                <span class="govuk-body">
+                    <th:block th:text="${#numbers.formatInteger(cost.total, 0, 'DEFAULT')}">1220</th:block>
+                </span>
+            </th:block>
+        </div>
+
+        <span class="govuk-visually-hidden" th:id="section-total-travel"
+            th:attr="data-calculation-rawvalue=${form.totalTravelCosts}">
+            &pound;<th:block th:text="${#numbers.formatInteger(form.totalTravelCosts, 0, 'DEFAULT')}"/>
+</th:block>
+<!--/*</editor-fold>*/-->
+
+<!--/***************************
+
+            OTHER COSTS
+
+*********************************/-->
+
+<!--/*<editor-fold defaultstate="collapsed">*/-->
+<th:block th:fragment="other_costs" th:with="financeRowType=${model.getOtherCostsFinanceRowType()}">
+    <div class="govuk-body"  th:if="${model.financeRowTypes.contains(financeRowType)}">
+        <span class="govuk-visually-hidden" data-mirror="#section-total-other"></span>
+        <span th:if="${model.internal}" class="govuk-visually-hidden" data-calculation-format="percentage"
+              data-calculation-operations="/,*"
+              data-calculation-fields="100, #total-cost, #section-total-other"
+              th:text="${#ifsUtil.calculatePercentage(form.totalOtherCosts, form.organisationFinanceTotal) + '%'}"></span>
+
+        <th:block th:if="${model.isReadOnly()}">
+            <th:block th:insert="application/hecp-eligibility-costs-fragments :: other_costs_read_only"/>
+        </th:block>
+        <th:block th:unless="${model.isReadOnly()}">
+            <th:block th:each="entry : *{otherRows}">
+                <th:block th:insert="application/hecp-eligibility-costs-fragments :: other_costs_row (${entry.key}, ${entry.value})"/>
+            </th:block>
+
+            <span class="govuk-visually-hidden"
+                  data-mirror="#section-total-other"
+                  th:text="'£' + ${#numbers.formatInteger(form.totalOtherCosts, 0,'DEFAULT')}"></span>
+            <input type="hidden"
+                   data-calculation-fields=".other-totals"
+                   data-calculation-operations="+"
+                   id="section-total-other"
+                   th:attr="data-calculation-rawvalue=${form.totalOtherCosts}"
+                   th:value="'£' + ${#numbers.formatInteger(form.totalOtherCosts, 0,'DEFAULT')}"/>
+        </th:block>
+
+    </div>
+</th:block>
+
+<th:block th:fragment="other_costs_row (id, row)">
+    <div class="govuk-form-group" th:with="path=${'otherRows[__${id}__]'}"
+        th:attr="data-repeatable-row=${path}"
+        th:id="${path}"
+        th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path)} ? 'govuk-form-group--error'">
+        <input type="hidden" th:field="*{__${path}__.costId}"/>
+
+        <label th:for="__${path}__.description">
+            <span class="govuk-visually-hidden">Description and justification of the cost</span>
+        </label>
+        <textarea
+            class="govuk-visually-hidden"
+            th:id="__${path}__.description"
+            th:field="*{__${path}__.description}"
+            th:errorclass="govuk-input--error"
+            maxlength="255"
+            rows="4"
+            required="required">
+        </textarea>
+
+        <label th:for="__${path}__.estimate">
+            <span class="govuk-label govuk-label--s">Other cost</span>
+        </label>
+        <th:block
+            th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.estimate)"/>
+        <span class="govuk-body govuk-!-padding-right-1">£</span>
+        <input th:id="__${path}__.estimate"
+               th:field="*{__${path}__.estimate}"
+               th:errorclass="govuk-input--error"
+               type="number"
+               class="govuk-input govuk-input--width-10 other-totals"
+               placeholder="0"
+               min="1"
+               max="9999999999999999999"
+               step="1"
+               required="required"
+               th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
+    </div>
+</th:block>
+
+<th:block th:fragment="other_costs_read_only">
+    <div class="govuk-form-group">
+        <th:block th:each="entry : *{otherRows}" th:with="cost=${entry.value}">
+            <th:block th:unless="${cost.blank}">
+                <label>
+                    <span class="govuk-label govuk-label--s">Other cost</span>
+                </label>
+                <span class="govuk-body govuk-!-padding-right-1">£</span>
+                <span class="govuk-body">
+                    <th:block th:text="${cost.estimate != null ? #numbers.formatInteger(cost.estimate,0,'DEFAULT') : '0'}">1500</th:block>
+                </span>
+            </th:block>
+        </th:block>
+
+        <span class="govuk-visually-hidden" id="section-total-other"
+            th:attr="data-calculation-rawvalue=${form.totalOtherCosts}">
+            &pound;<th:block th:text="${#numbers.formatInteger(form.totalOtherCosts, 0, 'DEFAULT')}"/>
+        </span>
+    </div>
+</th:block>
+<!--/*</editor-fold>*/-->
+
+</html>
