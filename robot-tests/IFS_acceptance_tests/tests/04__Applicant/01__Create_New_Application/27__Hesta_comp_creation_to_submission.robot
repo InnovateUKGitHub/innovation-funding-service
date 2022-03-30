@@ -406,4 +406,3 @@ the user see the print view of the application
   the user should see the element   xpath = //*[contains(text(),'Other goods, works and services (£)')]
   the user should see the element   xpath = //*[contains(text(),'Other costs (£)')]
   the user should see the element   xpath = //*[contains(text(),'Indirect costs (£)')]
-  the user closes the last opened tab
