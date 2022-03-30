@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  * Service to populate the Application Submission form in Competition Setup.
  */
 @Service
-public class ApplicationSubmissionFormPopulator implements CompetitionSetupFormPopulator  {
+public class ApplicationSubmissionFormPopulator implements CompetitionSetupFormPopulator {
 
     @Override
     public CompetitionSetupSection sectionToFill() {

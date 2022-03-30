@@ -16,6 +16,7 @@ import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.management.competition.setup.application.form.LandingPageForm;
+import org.innovateuk.ifs.management.competition.setup.applicationassessment.form.ApplicationAssessmentForm;
 import org.innovateuk.ifs.management.competition.setup.applicationsubmission.form.ApplicationSubmissionForm;
 import org.innovateuk.ifs.management.competition.setup.assessor.form.AssessorsForm;
 import org.innovateuk.ifs.management.competition.setup.completionstage.form.CompletionStageForm;
@@ -305,6 +306,20 @@ public class CompetitionSetupController {
 
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition,
                 CompetitionSetupSection.APPLICATION_SUBMISSION, loggedInUser, model);
+    }
+
+    @PostMapping("/{competitionId}/section/application-assessment")
+    public String submitApplicationAssessmentSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationAssessmentForm competitionSetupForm,
+                                                            BindingResult bindingResult,
+                                                            ValidationHandler validationHandler,
+                                                            @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                            UserResource loggedInUser,
+                                                            Model model) {
+
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition,
+                CompetitionSetupSection.APPLICATION_ASSESSMENT, loggedInUser, model);
     }
 
     @PostMapping("/{competitionId}/section/milestones")

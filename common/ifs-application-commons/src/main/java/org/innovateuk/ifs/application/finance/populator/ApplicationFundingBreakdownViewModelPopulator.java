@@ -108,7 +108,8 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 rows,
                 collaborativeProject,
                 competition.getFundingType() == FundingType.KTP,
-                financeRowTypes);
+                financeRowTypes,
+                competition.isHorizonEuropeGuarantee());
     }
 
     private List<FinanceRowType> filterFinanceRowTypes(CompetitionResource competition,  Map<Long, BaseFinanceResource> finances, long leadOrganisationId) {
@@ -116,6 +117,9 @@ public class ApplicationFundingBreakdownViewModelPopulator {
         List<FinanceRowType> financeRowTypes = competition.getFinanceRowTypes();
         if (competition.isKtp()) {
             financeRowTypes = competition.getFinanceRowTypesByFinance(finance);
+        }
+        if(competition.isHorizonEuropeGuarantee()) {
+            financeRowTypes = FinanceRowType.getHecpSpecificFinanceRowTypes();
         }
 
         return financeRowTypes.stream().filter(FinanceRowType::isCost).collect(toList());

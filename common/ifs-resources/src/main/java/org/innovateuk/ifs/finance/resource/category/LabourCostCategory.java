@@ -40,8 +40,14 @@ public class LabourCostCategory implements FinanceRowCostCategory {
                     .map(c -> ((LabourCost) c).getTotal(workingDaysPerYearCostItem.getLabourDays()))
                     .reduce(BigDecimal.ZERO, BigDecimal::add)
                     .setScale(0, RoundingMode.HALF_UP);
-        } else {
-            total = BigDecimal.ZERO;
+        } else  {
+            total = costs.stream()
+                    .map(c -> {
+                        LabourCost labourCost = (LabourCost) c;
+                        return ((LabourCost) c).isThirdPartyOfgem() ? labourCost.getTotalWithoutWorkingDays() : BigDecimal.ZERO;
+                    })
+                    .reduce(BigDecimal.ZERO, BigDecimal::add)
+                    .setScale(0, RoundingMode.HALF_UP);
         }
     }
 

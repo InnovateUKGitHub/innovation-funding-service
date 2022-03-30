@@ -30,6 +30,14 @@ public enum CompetitionCompletionStage {
     }
 
     public static List<CompetitionCompletionStage> alwaysOpenValues() {
+        return getCompetitionCompletionStages();
+    }
+
+    public static List<CompetitionCompletionStage> assessmentStageOpenValues() {
+        return getCompetitionCompletionStages();
+    }
+
+    private static List<CompetitionCompletionStage> getCompetitionCompletionStages() {
         return Stream.of(values())
                 .filter(completionStage -> (completionStage == RELEASE_FEEDBACK || completionStage == PROJECT_SETUP))
                 .collect(Collectors.toList());

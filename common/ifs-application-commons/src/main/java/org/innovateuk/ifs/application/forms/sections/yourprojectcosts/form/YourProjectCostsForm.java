@@ -64,6 +64,8 @@ public class YourProjectCostsForm {
 
     private BigDecimal grantClaimPercentage;
 
+    private boolean thirdPartyOfgem;
+
     public VatForm getVatForm() {
         return vatForm;
     }
@@ -232,6 +234,14 @@ public class YourProjectCostsForm {
         this.grantClaimPercentage = grantClaimPercentage;
     }
 
+    public boolean isThirdPartyOfgem() {
+        return thirdPartyOfgem;
+    }
+
+    public void setThirdPartyOfgem(boolean thirdPartyOfgem) {
+        this.thirdPartyOfgem = thirdPartyOfgem;
+    }
+
     /* View methods. */
     public BigDecimal getVatTotal() {
         return getOrganisationFinanceTotal().multiply(VAT_RATE).divide(BigDecimal.valueOf(100));
@@ -394,7 +404,11 @@ public class YourProjectCostsForm {
         getLabour().getRows().forEach((id, row) -> {
             LabourCost cost = row.toCost(null);
             row.setTotal(cost.getTotal(getLabour().getWorkingDaysPerYear()));
-            row.setRate(cost.getRate(getLabour().getWorkingDaysPerYear()));
+            if (isThirdPartyOfgem()) {
+                row.setRate(cost.getRate());
+            } else {
+                row.setRate(cost.getRate(getLabour().getWorkingDaysPerYear()));
+           }
         });
         getOverhead().setTotal(getOverhead().getTotal());
         recalculateTotal(getMaterialRows());
