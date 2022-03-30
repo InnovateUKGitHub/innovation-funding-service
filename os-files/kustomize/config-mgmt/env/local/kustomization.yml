@@ -1,0 +1,7 @@
+commonAnnotations:
+  deployedWith: kustomize
+  environment: custom
+
+resources:
+  - ../../base
+  - idp-metadata.yml
