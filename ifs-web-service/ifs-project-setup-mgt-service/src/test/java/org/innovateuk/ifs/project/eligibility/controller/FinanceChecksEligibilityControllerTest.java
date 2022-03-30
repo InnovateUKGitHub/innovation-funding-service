@@ -706,6 +706,16 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         LabourRowForm row = new LabourRowForm();
         row.setCostId(Long.valueOf(rowId));
         FinanceRowType type = FinanceRowType.LABOUR;
+        CompetitionResource competition = newCompetitionResource()
+                .withId(123L)
+                .withFinanceRowTypes(FinanceRowType.getNonFecSpecificFinanceRowTypes())
+                .withCompetitionTypeEnum(CompetitionTypeEnum.OFGEM)
+                .withFundingType(FundingType.THIRDPARTY)
+                .build();
+        YourProjectCostsForm yourProjectCostsForm = new YourProjectCostsForm();
+
+        when(competitionRestService.getCompetitionForProject(projectId)).thenReturn(restSuccess(competition));
+        when(formPopulator.populateForm(anyLong(), anyLong(), anyBoolean())).thenReturn(yourProjectCostsForm);
 
         doAnswer((invocation) -> {
             YourProjectCostsForm form = (YourProjectCostsForm) invocation.getArguments()[0];
@@ -718,6 +728,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                 .andExpect(view().name("application/your-project-costs-fragments :: ajax_labour_row"))
                 .andExpect(model().attribute("row", row))
                 .andExpect(model().attribute("id", rowId))
+                .andExpect(model().attribute("thirdPartyOfgem", true))
                 .andExpect(status().isOk());
 
         verify(yourProjectCostsSaver).addRowForm(any(YourProjectCostsForm.class), eq(type));
