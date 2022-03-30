@@ -8,8 +8,10 @@ import org.innovateuk.ifs.finance.resource.cost.KtpTravelCost;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.finance.resource.cost.OverheadRateType.*;
 
@@ -297,6 +299,14 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     public List<FinanceRowType> getOrderedAccordionFinanceRowTypes() {
         return financeRowTypes.stream().filter(FinanceRowType::isAppearsInProjectCostsAccordion).collect(Collectors.toList());
+    }
+
+    public List<FinanceRowType> getOrderedHecpFinanceRowTypes() {
+        return getOrderedAccordionFinanceRowTypes().stream().sorted((o1, o2) -> {
+            List<FinanceRowType> hecpFinanceRowOrder = Stream.of(FinanceRowType.LABOUR, FinanceRowType.SUBCONTRACTING_COSTS, FinanceRowType.TRAVEL, FinanceRowType.MATERIALS, FinanceRowType.CAPITAL_USAGE,
+            FinanceRowType.OTHER_COSTS, FinanceRowType.OVERHEADS).collect(Collectors.toList());
+            return (hecpFinanceRowOrder.contains(o1) ? hecpFinanceRowOrder.indexOf(o1) : hecpFinanceRowOrder.size()) - (hecpFinanceRowOrder.contains(o2) ? hecpFinanceRowOrder.indexOf(o2) : hecpFinanceRowOrder.size());
+        }).collect(Collectors.toList());
     }
 
     public String getStateAidCheckboxLabelFragment() {
