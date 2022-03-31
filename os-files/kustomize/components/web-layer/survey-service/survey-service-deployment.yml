@@ -49,13 +49,13 @@ spec:
           env:
               - name: IFS_WEB_SYSTEM_USER_UID
                 valueFrom:
-                  configMapKeyRef:
-                    name: web-config
+                  secretKeyRef:
+                    name: web-secrets
                     key: IFS_WEB_SYSTEM_USER_UID
               - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
                 valueFrom:
-                  configMapKeyRef:
-                    name: web-config
+                  secretKeyRef:
+                    name: web-secrets
                     key: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
               - name: SPRING_APPLICATION_JSON
                 valueFrom:
@@ -70,7 +70,7 @@ spec:
               - name: JAVA_TOOL_OPTIONS
                 value: -Xms400m -Xmx400m -javaagent:/newrelic.jar
               - name: NEW_RELIC_APP_NAME
-                value: "ifs-survey-service"
+                value: 'ifs-$(NEW_RELIC_ENV)-survey-service'
           ports:
             - containerPort: 8080
           resources:

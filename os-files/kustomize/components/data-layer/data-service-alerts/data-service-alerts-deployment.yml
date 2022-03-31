@@ -46,23 +46,23 @@ spec:
           - name: JAVA_TOOL_OPTIONS
             value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
-            value: "ifs-data-service-alerts"
+            value: 'ifs-$(NEW_RELIC_ENV)-data-service-alerts'
           - name: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
             value: "100"
           - name: SPRING_DATASOURCE_URL
             valueFrom:
-              configMapKeyRef:
-                name: db-config
+              secretKeyRef:
+                name: db-secrets
                 key: DB_URL
           - name: SPRING_DATASOURCE_USERNAME
             valueFrom:
-              configMapKeyRef:
-                name: db-config
+              secretKeyRef:
+                name: db-secrets
                 key: DB_USER
           - name: SPRING_DATASOURCE_PASSWORD
             valueFrom:
-              configMapKeyRef:
-                name: db-config
+              secretKeyRef:
+                name: db-secrets
                 key: DB_PASS
         ports:
           - containerPort: 8080

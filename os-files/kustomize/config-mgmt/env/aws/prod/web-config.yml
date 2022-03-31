@@ -1,0 +1,11 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: web-config
+data:
+  SPRING_APPLICATION_JSON: '{"logout":{"url": "https://apply-for-innovation-funding.service.gov.uk/Logout/"}}'
+  IFS_LIVE_PROJECTS_LANDING_PAGE_URL: "https://acc.apply-for-innovation-funding.service.gov.uk/projects/dashboard"
+  IFS_EARLY_METRICS_URL: "http://go.innovateuk.ukri.org/ICL_Strand2"
+  IFS_WEB_BASEURL: 'https://apply-for-innovation-funding.service.gov.uk'
+  IFS_LOANS_SALESFORCE_PAGE_URL: 'https://innovateuk.force.com/LoansCommunity/s'
+  IFS_EDI_SALESFORCE_PAGE_URL: ""
