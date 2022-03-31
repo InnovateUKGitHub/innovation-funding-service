@@ -170,9 +170,11 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                         competition.get().isOverheadsAlwaysTwenty(),
                         competition.get().getFundingType() == FundingType.KTP,
                         ktpPhase2Enabled,
-                        canEditProjectCosts));
+                        canEditProjectCosts,
+                        competition.get().isThirdPartyOfgem()));
                 if (form == null) {
-                    future = async(() -> model.addAttribute("form", formPopulator.populateForm(projectId, organisation.get().getId())));
+                    future = async(() -> model.addAttribute("form", formPopulator.populateForm(projectId,
+                            organisation.get().getId(), competition.get().isThirdPartyOfgem())));
                 }
                 else {
                     form.recalculateTotals();
@@ -307,12 +309,15 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     @PostMapping("add-row/{rowType}")
     public String ajaxAddRow(Model model,
                              @PathVariable long projectId,
+                             @PathVariable long organisationId,
                              @PathVariable FinanceRowType rowType) throws InstantiationException, IllegalAccessException {
-        YourProjectCostsForm form = new YourProjectCostsForm();
+        CompetitionResource competition = competitionRestService.getCompetitionForProject(projectId).getSuccess();
+        YourProjectCostsForm form = formPopulator.populateForm(projectId, organisationId, competition.isThirdPartyOfgem());
         Map.Entry<String, AbstractCostRowForm> entry = yourProjectCostsSaver.addRowForm(form, rowType);
         model.addAttribute("form", form);
         model.addAttribute("id", entry.getKey());
         model.addAttribute("row", entry.getValue());
+        model.addAttribute("thirdPartyOfgem", competition.isThirdPartyOfgem());
         return String.format("application/your-project-costs-fragments :: ajax_%s_row", rowType.name().toLowerCase());
     }
 

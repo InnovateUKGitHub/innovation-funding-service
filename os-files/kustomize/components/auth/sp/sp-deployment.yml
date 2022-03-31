@@ -94,8 +94,8 @@ spec:
                   key: MPM_MAXCONNECTIONSPERCHILD
             - name: MEMCACHE_ENDPOINT
               valueFrom:
-                configMapKeyRef:
-                  name: shibboleth-config
+                secretKeyRef:
+                  name: shibboleth-secrets
                   key: MEMCACHE_ENDPOINT
             - name: HTTPS_PORT
               value: "9443"
