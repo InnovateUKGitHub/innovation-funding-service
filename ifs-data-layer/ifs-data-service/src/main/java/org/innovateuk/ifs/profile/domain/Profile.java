@@ -157,10 +157,6 @@ public class Profile extends AuditableEntity {
         return agreementSignedDate.isAfter(agreement.getModifiedOn());
     }
 
-    public boolean isDoiValid(User user) {
-        return isAffiliationsComplete(user);
-    }
-
     public static boolean isAffiliationsComplete(User user) {
         Optional<ZonedDateTime> doiLastSignedDateTime = user.getAffiliations().stream().findAny().map(AuditableEntity::getModifiedOn);
         return doiLastSignedDateTime.isPresent() &&
