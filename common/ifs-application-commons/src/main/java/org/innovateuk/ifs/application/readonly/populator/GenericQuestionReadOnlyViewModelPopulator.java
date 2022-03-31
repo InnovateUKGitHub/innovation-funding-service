@@ -13,6 +13,7 @@ import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.horizon.resource.ApplicationHorizonWorkProgrammeResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -63,6 +64,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
                 .findAny();
 
         Map<Long, List<FormInputResponseResource>> formInputIdToFormInputResponses = data.getFormInputIdToFormInputResponses();
+        Optional<List<ApplicationHorizonWorkProgrammeResource>> workProgrammeResource = data.getApplicationHorizonWorkProgrammeResource();
         boolean multipleStatuses = Boolean.TRUE.equals(question.hasMultipleStatuses());
         String answer;
         List<GenericQuestionAnswerRowReadOnlyViewModel> answers;
@@ -72,7 +74,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
             answers = answerMapForMultipleStatuses(question, answerInput, formInputIdToFormInputResponses, data.getApplicationProcessRoles(), data.getApplication());
         } else {
             answers = null;
-            answer = answerForNotMultipleStatuses(answerInput, formInputIdToFormInputResponses);
+            answer = answerForNotMultipleStatuses(answerInput, formInputIdToFormInputResponses, workProgrammeResource);
         }
 
         Optional<FormInputResponseResource> appendixResponse = appendix
@@ -106,7 +108,6 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
                                                                                          ApplicationResource application) {
 
         Optional<List<FormInputResponseResource>> textResponses = answerInput.map(input -> formInputIdToFormInputResponses.get(input.getId()));
-
         List<ProcessRoleResource> applicantProcessRoles = applicationProcessRoles.stream()
                 .filter(pr -> pr.getRole().isCollaborator() || pr.getRole().isLeadApplicant())
                 .collect(Collectors.toList());
@@ -161,10 +162,15 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
         return pr -> seen.putIfAbsent(pr.getOrganisationId(), Boolean.TRUE) == null;
     }
 
-    private String answerForNotMultipleStatuses(Optional<FormInputResource> answerInput, Map<Long, List<FormInputResponseResource>> formInputIdToFormInputResponses) {
+    private String answerForNotMultipleStatuses(Optional<FormInputResource> answerInput,
+                                                Map<Long, List<FormInputResponseResource>> formInputIdToFormInputResponses,
+                                                Optional<List<ApplicationHorizonWorkProgrammeResource>> workProgrammeResources) {
         Optional<FormInputResponseResource> textResponse = answerInput.map(input -> firstOrNull(formInputIdToFormInputResponses.get(input.getId())));
         if (textResponse.isPresent()) {
             return answerInput.map(input -> getAnswer(input, textResponse.get())).orElse(null);
+        }
+        if (workProgrammeResources.isPresent()) {
+            return workProgrammeResources.get().toString();
         }
         return null;
     }
