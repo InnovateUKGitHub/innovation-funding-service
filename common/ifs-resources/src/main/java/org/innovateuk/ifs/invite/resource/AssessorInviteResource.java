@@ -94,6 +94,8 @@ public abstract class AssessorInviteResource {
 
         return new EqualsBuilder()
                 .append(compliant, that.compliant)
+                .append(validAgreement, that.validAgreement)
+                .append(validDoi, that.validDoi)
                 .append(id, that.id)
                 .append(name, that.name)
                 .append(innovationAreas, that.innovationAreas)
@@ -107,6 +109,8 @@ public abstract class AssessorInviteResource {
                 .append(name)
                 .append(innovationAreas)
                 .append(compliant)
+                .append(validAgreement)
+                .append(validDoi)
                 .toHashCode();
     }
 }
