@@ -1,0 +1,11 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: data-service-config
+data:
+  IFS_DATA_SERVICE_FILE_STORAGE_BASE: "/mnt/ifs_storage"
+  IFS_SYSTEM_EMAIL_ADDRESS: "noreply-ifs@innovateuk.org"
+  IFS_DATA_SERVICE_FILE_STORAGE_VIRUS_SCANNING_ENABLED: "true"
+  IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAINS: "iuk.ukri.org,iuk.ukri.test,innovateuk.ukri.test,innovateuk.test"
+  IFS_SYSTEM_KTA_USER_EMAIL_DOMAIN: "ktn-uk.org"
+  IFS_DATA_COMPANIES_HOUSE_LOOKUP_ENABLED: "true"

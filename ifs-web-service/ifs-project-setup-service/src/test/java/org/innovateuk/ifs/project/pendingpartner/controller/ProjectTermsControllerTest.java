@@ -52,7 +52,8 @@ public class ProjectTermsControllerTest extends BaseControllerMockMVCTest<Projec
 
     @Test
     public void getTerms() throws Exception {
-        ProjectTermsViewModel viewModel = new ProjectTermsViewModel(project.getId(), project.getName(), organisation.getId(), competitionTermsTemplate, termsAccepted, null, false, empty());
+        ProjectTermsViewModel viewModel = new ProjectTermsViewModel(project.getId(), project.getName(), organisation.getId(), competitionTermsTemplate, termsAccepted, null, false, empty(),
+                false, null, null, 1L);
 
         when(projectTermsModelPopulator.populate(project.getId(), organisation.getId())).thenReturn(viewModel);
 
