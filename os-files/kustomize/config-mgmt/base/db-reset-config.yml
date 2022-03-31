@@ -1,0 +1,9 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: db-reset-config
+data:
+  ONLY_DELETE_IFS_USERS: "false"
+  ONLY_SYNC_LDAP: "false"
+  PERFORMANCE_APPLICANT_USERS: "0"
+  PERFORMANCE_h2020_USERS: "0"

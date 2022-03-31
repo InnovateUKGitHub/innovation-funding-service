@@ -2,9 +2,6 @@ commonAnnotations:
   deployedWith: kustomize
   environment: local-dev
 
-bases:
-  - ../local-base
-
 components:
   - ../../../../components/data-layer
   - ../../../../components/registration-service
@@ -12,6 +9,10 @@ components:
   - ../../../../components/sil-stub
   - ../../../../patches/
   - ../patches/
+
+resources:
+  - ../../../../config-mgmt/env/local
+  - ../../../../secrets-mgmt/env/local
 
 patchesStrategicMerge:
   - registration-service/registration-deployment.yml

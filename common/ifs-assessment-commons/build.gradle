@@ -15,4 +15,5 @@ dependencies {
     testImplementation "junit:junit"
     testImplementation "org.mockito:mockito-core"
     testImplementation "org.springframework:spring-web"
+    testImplementation "org.springframework:spring-test"
 }

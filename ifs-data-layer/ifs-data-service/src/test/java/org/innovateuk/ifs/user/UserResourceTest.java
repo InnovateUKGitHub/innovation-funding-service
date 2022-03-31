@@ -22,7 +22,7 @@ public class UserResourceTest {
                 .withLastName("Watts")
                 .withEmail("james.watts@email.co.uk")
                 .withRoleGlobal(Role.APPLICANT)
-                .withUID("2aerg234-aegaeb-23aer").build();
+                .withUid("2aerg234-aegaeb-23aer").build();
         ServiceResult<UserResource> result = serviceSuccess(user);
 
         ServiceResult<UserResource> copy = SerializationUtils.clone(result);

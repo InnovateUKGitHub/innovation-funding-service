@@ -32,7 +32,23 @@
                   th:with="pageTitle='Project manager',subTitle=${model.projectName},size='govuk-heading-xl'"/>
 
         <p class="govuk-body">Select your project manager so that your monitoring
-            officer can make contact. You can change your project manager at any time until project setup is complete.</p>
+            officer can make contact. You can change your project manager at any time until project setup is complete.
+            <th:block th:if="${model.hecpCompetition}"> The project manager will be required to:</th:block>
+        </p>
+
+        <th:block th:if="${model.hecpCompetition}">
+            <p class="govuk-body">
+            <ul class="govuk-list govuk-list--bullet">
+                <li>create and lead the team</li>
+                <li>monitor project progress and set deadlines</li>
+                <li>solve issues that arise</li>
+                <li>manage the funds</li>
+                <li>ensure stakeholder satisfaction</li>
+                <li>evaluate project performance</li>
+            </ul>
+            </p>
+            <p class="govuk-body">The project manager and the finance contact can be the same person.</p>
+        </th:block>
 
         <form id="project-manager-form" method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate"
               th:object="${form}">

@@ -2,8 +2,9 @@ commonAnnotations:
   deployedWith: kustomize
   environment: local-dev
 
-bases:
-  - ../../local-base
+resources:
+  - ../../../../../config-mgmt/env/local
+  - ../../../../../secrets-mgmt/env/local
 
 components:
   - ../../../../../components/sil-stub

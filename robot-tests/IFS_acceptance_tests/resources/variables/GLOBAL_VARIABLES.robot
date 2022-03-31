@@ -267,6 +267,8 @@ ${CURRENTLY_WAITING_UNTIL}                                          false
 # Organisation variables
 ${EMPIRE_LTD_NAME}                    Empire Ltd
 ${EMPIRE_LTD_ID}                      ${organisation_ids["${EMPIRE_LTD_NAME}"]}
+${asosName}                           ASOS PLC
+${asosId}                             ${organisation_ids["${asosName}"]}
 ${organisationLudlowName}             Ludlow
 ${organisationLudlowId}               ${organisation_ids["${organisationLudlowName}"]}
 ${organisationEggsName}               EGGS
@@ -309,7 +311,7 @@ ${compType_HESTA}      Horizon Europe Guarantee
 @{EOI_questions}                          Business opportunity and potential market  Innovation  Project team  Funding and adding value
 @{APC_questions}                          How innovative is your project?   Your approach regarding innovation.   Your technical approach.
 @{project_details}                        Project summary  Public description  Scope
-@{Hesta_questions}                        How innovative is your project?  Your approach regarding innovation.  Your technical approach.
+@{Hesta_questions}                        Tell us where your organisation is based  What EIC call have you been successfully evaluated for?
 @{Thirdparty_questions}                   How innovative is your project?  Your approach regarding innovation.  Your technical approach.
 
 #SBRI Type 1 competition milestones

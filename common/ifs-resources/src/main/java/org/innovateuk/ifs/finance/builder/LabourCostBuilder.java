@@ -49,6 +49,10 @@ public class LabourCostBuilder extends BaseBuilder<LabourCost, LabourCostBuilder
         return withArraySetFieldByReflection("total", value);
     }
 
+    public LabourCostBuilder withThirdPartyOfgem(boolean... value) {
+        return withArraySetFieldByReflection("thirdPartyOfgem", value);
+    }
+
     private LabourCostBuilder(List<BiConsumer<Integer, LabourCost>> multiActions) {
         super(multiActions);
     }

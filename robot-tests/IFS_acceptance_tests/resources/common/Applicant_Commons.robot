@@ -864,11 +864,12 @@ the user selected organisation if available
 the user selects a knowledge based organisation
     [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
     wait until keyword succeeds without screenshots         10s    200ms   input text      id = knowledgeBase        ${knowledgeBase}
-    wait until page contains element without screenshots    css=[id="knowledgeBase"][class="autocomplete__input autocomplete__input--focused autocomplete__input--default"]  5s
-    wait until keyword succeeds without screenshots         10s    200ms   click element   jQuery = ul li:contains("${completeKBOrganisartionName}")
+    #wait until page contains element without screenshots    css=[id="knowledgeBase"][class="autocomplete__input autocomplete__input--focused autocomplete__input--default"]  5s
+    #wait until keyword succeeds without screenshots         10s    200ms   click element   jQuery = ul li:contains("${completeKBOrganisartionName}")
+    Execute Javascript                                      document.evaluate("//li[text()='${completeKBOrganisartionName}']",document.body,null,9,null).singleNodeValue.click();
     mouse out                                               id = knowledgeBase
-    Set Focus To Element    link=GOV.UK
-    wait until page contains element without screenshots    css=[id="knowledgeBase"][class="autocomplete__input autocomplete__input--default"]    5s
+    #Set Focus To Element    link=GOV.UK
+    #wait until page contains element without screenshots    css=[id="knowledgeBase"][class="autocomplete__input autocomplete__input--default"]    5s
     #the user clicks the button/link     jQuery = ul li:contains("${completeKBOrganisartionName}")
 
 the user apply with knowledge base organisation

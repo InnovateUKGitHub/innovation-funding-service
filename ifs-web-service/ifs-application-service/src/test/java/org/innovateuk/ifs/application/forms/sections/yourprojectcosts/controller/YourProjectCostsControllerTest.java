@@ -9,8 +9,14 @@ import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.Appl
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.YourProjectCostsAutosaver;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.validator.YourProjectCostsFormValidator;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -25,10 +31,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.mockito.Mockito.*;
@@ -48,6 +56,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
     private static final long SECTION_ID = 2L;
     private static final long PROCESS_ROLE_ID = 3L;
     private static final long ORGANISATION_ID = 4L;
+    private static final long COMPETITION_ID = 5L;
     private static final String VIEW = "application/sections/your-project-costs/your-project-costs";
 
     @Mock
@@ -71,18 +80,55 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
     @Mock
     private YourProjectCostsFormValidator yourFundingFormValidator;
 
+    @Mock
+    private ApplicationRestService applicationRestService;
+
+    @Mock
+    private CompetitionRestService competitionRestService;
+
     @Test
     public void viewYourProjectCosts() throws Exception {
         YourProjectCostsViewModel viewModel = mockViewModel();
 
-        OrganisationResource organisationResource = newOrganisationResource()
-                .withId(ORGANISATION_ID)
+        ApplicationResource applicationResource = newApplicationResource()
+                .withId(APPLICATION_ID)
+                .withCompetition(COMPETITION_ID)
+                .build();
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withFundingType(FundingType.GRANT)
+                .withCompetitionTypeEnum(CompetitionTypeEnum.GENERIC)
                 .build();
 
-        when(formPopulator.populateForm(APPLICATION_ID, ORGANISATION_ID)).thenReturn(new YourProjectCostsForm());
+        when(applicationRestService.getApplicationById(anyLong())).thenReturn(restSuccess(applicationResource));
+        when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
+        when(formPopulator.populateForm(APPLICATION_ID, ORGANISATION_ID, false)).thenReturn(new YourProjectCostsForm());
 
         mockMvc.perform(get(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID))
+                .andExpect(model().attribute("model", viewModel))
+                .andExpect(view().name(VIEW))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void viewYourProjectCostsForThirdPartyOfgem() throws Exception {
+        YourProjectCostsViewModel viewModel = mockViewModel();
+
+        ApplicationResource applicationResource = newApplicationResource()
+                .withId(APPLICATION_ID)
+                .withCompetition(COMPETITION_ID)
+                .build();
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withFundingType(FundingType.THIRDPARTY)
+                .withCompetitionTypeEnum(CompetitionTypeEnum.OFGEM)
+                .build();
+
+        when(applicationRestService.getApplicationById(anyLong())).thenReturn(restSuccess(applicationResource));
+        when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
+        when(formPopulator.populateForm(APPLICATION_ID, ORGANISATION_ID, true)).thenReturn(new YourProjectCostsForm());
+
+        mockMvc.perform(get(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}",
+                        APPLICATION_ID, ORGANISATION_ID, SECTION_ID))
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name(VIEW))
                 .andExpect(status().isOk());
@@ -94,7 +140,18 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
 
         YourProjectCostsViewModel viewModel = mockViewModel();
 
-        when(formPopulator.populateForm(APPLICATION_ID, ORGANISATION_ID)).thenReturn(new YourProjectCostsForm());
+        ApplicationResource applicationResource = newApplicationResource()
+                .withId(APPLICATION_ID)
+                .withCompetition(COMPETITION_ID)
+                .build();
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withFundingType(FundingType.GRANT)
+                .withCompetitionTypeEnum(CompetitionTypeEnum.GENERIC)
+                .build();
+
+        when(applicationRestService.getApplicationById(anyLong())).thenReturn(restSuccess(applicationResource));
+        when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
+        when(formPopulator.populateForm(APPLICATION_ID, ORGANISATION_ID, false)).thenReturn(new YourProjectCostsForm());
 
         mockMvc.perform(get(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID))
@@ -233,6 +290,18 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
         LabourRowForm row = new LabourRowForm();
         row.setCostId(Long.valueOf(rowId));
         FinanceRowType type = FinanceRowType.LABOUR;
+        ApplicationResource applicationResource = newApplicationResource()
+                .withId(APPLICATION_ID)
+                .withCompetition(COMPETITION_ID)
+                .build();
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withFundingType(FundingType.GRANT)
+                .withCompetitionTypeEnum(CompetitionTypeEnum.GENERIC)
+                .build();
+
+        when(applicationRestService.getApplicationById(anyLong())).thenReturn(restSuccess(applicationResource));
+        when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
+        when(formPopulator.populateForm(APPLICATION_ID, ORGANISATION_ID, false)).thenReturn(new YourProjectCostsForm());
 
         doAnswer((invocation) -> {
             YourProjectCostsForm form = (YourProjectCostsForm) invocation.getArguments()[0];
@@ -245,11 +314,47 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
                 .andExpect(view().name("application/your-project-costs-fragments :: ajax_labour_row"))
                 .andExpect(model().attribute("row", row))
                 .andExpect(model().attribute("id", rowId))
+                .andExpect(model().attribute("thirdPartyOfgem", false))
                 .andExpect(status().isOk());
 
         verify(saver).addRowForm(any(YourProjectCostsForm.class), eq(type));
     }
 
+    @Test
+    public void ajaxAddRowForThirdPartyOfgem() throws Exception {
+        String rowId = "123";
+        LabourRowForm row = new LabourRowForm();
+        row.setCostId(Long.valueOf(rowId));
+        FinanceRowType type = FinanceRowType.LABOUR;
+        ApplicationResource applicationResource = newApplicationResource()
+                .withId(APPLICATION_ID)
+                .withCompetition(COMPETITION_ID)
+                .build();
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withFundingType(FundingType.THIRDPARTY)
+                .withCompetitionTypeEnum(CompetitionTypeEnum.OFGEM)
+                .build();
+
+        when(applicationRestService.getApplicationById(anyLong())).thenReturn(restSuccess(applicationResource));
+        when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
+        when(formPopulator.populateForm(APPLICATION_ID, ORGANISATION_ID, true)).thenReturn(new YourProjectCostsForm());
+
+        doAnswer((invocation) -> {
+            YourProjectCostsForm form = (YourProjectCostsForm) invocation.getArguments()[0];
+            form.getLabour().getRows().put(rowId, row);
+            return form.getLabour().getRows().entrySet().iterator().next();
+        }).when(saver).addRowForm(any(YourProjectCostsForm.class), eq(type));
+
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}/add-row/{type}",
+                        APPLICATION_ID, ORGANISATION_ID, SECTION_ID, type))
+                .andExpect(view().name("application/your-project-costs-fragments :: ajax_labour_row"))
+                .andExpect(model().attribute("row", row))
+                .andExpect(model().attribute("id", rowId))
+                .andExpect(model().attribute("thirdPartyOfgem", true))
+                .andExpect(status().isOk());
+
+        verify(saver).addRowForm(any(YourProjectCostsForm.class), eq(type));
+    }
 
     private YourProjectCostsViewModel mockViewModel() {
         YourProjectCostsViewModel viewModel = mock(YourProjectCostsViewModel.class);
