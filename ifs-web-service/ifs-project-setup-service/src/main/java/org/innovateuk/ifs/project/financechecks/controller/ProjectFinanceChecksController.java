@@ -510,8 +510,10 @@ public class ProjectFinanceChecksController {
             Optional<ProjectFinanceResource> organisationProjectFinance = projectFinances.stream()
                     .filter(projectFinance -> projectFinance.getOrganisation().equals(organisation.getId()))
                     .findFirst();
-            model.addAttribute("model", new FinanceChecksProjectCostsViewModel(application.getId(), competition.getFinanceRowTypesByFinance(organisationProjectFinance), competition.isOverheadsAlwaysTwenty(), competition.getName(), competition.getFundingType() == FundingType.KTP, ktpPhase2Enabled, canEditProjectCosts));
-            model.addAttribute("form", formPopulator.populateForm(project.getId(), organisation.getId()));
+            model.addAttribute("model", new FinanceChecksProjectCostsViewModel(application.getId(), competition.getFinanceRowTypesByFinance(organisationProjectFinance),
+                    competition.isOverheadsAlwaysTwenty(), competition.getName(), competition.getFundingType() == FundingType.KTP,
+                    ktpPhase2Enabled, canEditProjectCosts, competition.isThirdPartyOfgem()));
+            model.addAttribute("form", formPopulator.populateForm(project.getId(), organisation.getId(), competition.isThirdPartyOfgem()));
         } else {
             model.addAttribute("academicCostForm", projectAcademicCostFormPopulator.populate(new AcademicCostForm(), project.getId(), organisation.getId()));
         }
