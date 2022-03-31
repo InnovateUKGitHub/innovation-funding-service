@@ -13,6 +13,9 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11299 HECP Phase 1 - EIC - New GOL Template
 ...
+...               IFS-11366 HECP Phase 2 - Custom Question - Work Programme
+...
+
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -50,11 +53,11 @@ Comp admin can view Hesta competition type in Initial details read only view
 Comp admin creates Hesta competition
     [Documentation]  IFS-8751  IFS-11486
     Given the user clicks the button/link                            link = Back to competition details
-    Then the competition admin creates Hesta competition             ${BUSINESS_TYPE_ID}  ${hestaCompetitionName}  ${compType_HESTA}  ${compType_HESTA}  STATE_AID  GRANT  RELEASE_FEEDBACK  no  1  false  single-or-collaborative
+    Then the competition admin creates Hesta competition             ${BUSINESS_TYPE_ID}  ${hestaCompetitionName}  ${compType_HESTA}  ${compType_HESTA}  STATE_AID  Horizon Europe Guarantee  RELEASE_FEEDBACK  no  1  false  single-or-collaborative
     [Teardown]  Get competition id and set open date to yesterday    ${hestaCompetitionName}
 
 Lead applicant can submit application
-    [Documentation]  IFS-8751  IFS-11269
+    [Documentation]  IFS-8751  IFS-11269  IFS-11366
     Given the user logs out if they are logged in
     When the user successfully completes application          tim   timmy   ${leadApplicantEmail}   ${hestaApplicationName}
     And the user clicks the button/link                       link = Your project finances
@@ -219,6 +222,7 @@ the user successfully completes application
     the user completes the application details section              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
     the applicant completes Application Team                        COMPLETE  ${email}
     the user completes the application research category            Feasibility studies
+    the user complete the work programme
     The user is able to complete horizon grant agreement section
     the lead applicant marks the application question as complete   1. Tell us where your organisation is based  My organisation is based in the UK or a British Overseas Territory
     the lead applicant marks the application question as complete   2. What EIC call have you been successfully evaluated for?  EIC Transition
@@ -380,3 +384,12 @@ the user completes all project setup sections
     Internal user approves bank details
     The user is able to complete and submit the spend profile
     IFS admin approves the spend profiles for hestaApplication                  ${hestaProjectID}
+
+the user complete the work programme
+    the user clicks the button/link                jQuery = a:contains("Work programme")
+    the user clicks the button twice               jQuery = label:contains("Culture, Creativity and Inclusive Society (CL2)")
+    the user clicks the button/link                jQuery = button:contains("Save and continue")
+    the user clicks the button twice               jQuery = label:contains("HORIZON-CL2-2021-DEMOCRACY-01")
+    the user clicks the button/link                jQuery = button:contains("Save and continue")
+    the user can mark the question as complete
+    the user should see the element                jQuery = li:contains("Work programme") > .task-status-complete
