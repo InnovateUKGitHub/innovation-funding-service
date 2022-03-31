@@ -59,13 +59,13 @@ spec:
                 key: IFS_ALWAYS_OPEN_COMPETITION_ENABLED
           - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
             valueFrom:
-              configMapKeyRef:
-                name: web-config
+              secretKeyRef:
+                name: web-secrets
                 key: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
           - name: IFS_WEB_SYSTEM_USER_UID
             valueFrom:
-              configMapKeyRef:
-                name: web-config
+              secretKeyRef:
+                name: web-secrets
                 key: IFS_WEB_SYSTEM_USER_UID
           - name: SPRING_APPLICATION_JSON
             valueFrom:
@@ -115,7 +115,7 @@ spec:
           - name: JAVA_TOOL_OPTIONS
             value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
-            value: "ifs-competition-mgt-service"
+            value: 'ifs-$(NEW_RELIC_ENV)-competition-mgt-service'
         ports:
           - containerPort: 8080
         resources:

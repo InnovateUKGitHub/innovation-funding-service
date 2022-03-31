@@ -69,20 +69,20 @@ spec:
             - name: JAVA_TOOL_OPTIONS
               value: -Xms384M -Xmx768M -javaagent:/newrelic.jar
             - name: NEW_RELIC_APP_NAME
-              value: "ifs-idp-service"
+              value: 'ifs-$(NEW_RELIC_ENV)-idp-service'
             - name: HTTPS_PORT
               value: "9443"
             - name: HTTP_PORT
               value: "9080"
             - name: MEMCACHE_ENDPOINT
               valueFrom:
-                configMapKeyRef:
-                  name: shibboleth-config
+                secretKeyRef:
+                  name: shibboleth-secrets
                   key: MEMCACHE_ENDPOINT
             - name: LDAP_URL
               valueFrom:
-                configMapKeyRef:
-                  name: ldap-config
+                secretKeyRef:
+                  name: ldap-secrets
                   key: LDAP_URL
             - name: LDAP_PORT
               valueFrom:
@@ -111,8 +111,8 @@ spec:
                   key: LDAP_BINDDN
             - name: LDAP_BINDDNCREDENTIAL
               valueFrom:
-                configMapKeyRef:
-                  name: ldap-config
+                secretKeyRef:
+                  name: ldap-secrets
                   key: LDAP_PASSWORD
             - name: LDAP_USERFILTER
               valueFrom:
@@ -136,8 +136,8 @@ spec:
                   key: LDAP_AUTHENTICATOR
             - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
               valueFrom:
-                configMapKeyRef:
-                  name: web-config
+                secretKeyRef:
+                  name: web-secrets
                   key: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
             - name: RESOURCE_DOMAIN
               valueFrom:

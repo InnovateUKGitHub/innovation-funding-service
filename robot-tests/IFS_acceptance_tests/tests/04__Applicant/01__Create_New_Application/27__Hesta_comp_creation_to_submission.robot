@@ -375,7 +375,6 @@ IFS admin approves the spend profiles for hestaApplication
     the user clicks the button/link  id = submit-button
 
 the user completes all project setup sections
-    Requesting IDs of this Hesta application
     Requesting IDs of this Asos Organisation
     the internal team mark the application as successful / unsuccessful         ${hestaApplicationID}  FUNDED
     the user clicks the button/link                                             link = Competition
@@ -397,13 +396,13 @@ the user completes all project setup sections
     IFS admin approves the spend profiles for hestaApplication                  ${hestaProjectID}
 
 the user see the print view of the application
-  the user clicks the button/link   link = Print your application
-  Select Window                     title = Print Application - Innovation Funding Service
-  the user should see the element   xpath = //*[contains(text(),'Personnel costs (£)')]
-  the user should see the element   xpath = //*[contains(text(),'Subcontracting costs (£)')]
-  the user should see the element   xpath = //*[contains(text(),'Travel and subsistence (£)')]
-  the user should see the element   xpath = //*[contains(text(),'Equipment (£)')]
-  the user should see the element   xpath = //*[contains(text(),'Other goods, works and services (£)')]
-  the user should see the element   xpath = //*[contains(text(),'Other costs (£)')]
-  the user should see the element   xpath = //*[contains(text(),'Indirect costs (£)')]
-  the user closes the last opened tab
+  Requesting IDs of this Hesta application
+  the user navigates to the page without the usual headers      ${SERVER}/application/${hestaApplicationID}/print?noprint
+  the user should see the element                               xpath = //*[contains(text(),'Personnel costs (£)')]
+  the user should see the element                               xpath = //*[contains(text(),'Subcontracting costs (£)')]
+  the user should see the element                               xpath = //*[contains(text(),'Travel and subsistence (£)')]
+  the user should see the element                               xpath = //*[contains(text(),'Equipment (£)')]
+  the user should see the element                               xpath = //*[contains(text(),'Other goods, works and services (£)')]
+  the user should see the element                               xpath = //*[contains(text(),'Other costs (£)')]
+  the user should see the element                               xpath = //*[contains(text(),'Indirect costs (£)')]
+  the user navigates to the page                                ${SERVER}/application/${hestaApplicationID}
