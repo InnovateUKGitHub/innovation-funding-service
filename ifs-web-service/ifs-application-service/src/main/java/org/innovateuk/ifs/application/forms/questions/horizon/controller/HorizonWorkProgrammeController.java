@@ -86,18 +86,14 @@ public class HorizonWorkProgrammeController {
             }
         }
 
-        HorizonWorkProgramme existingSelection = cookieService.getHorizonWorkProgrammeSelectionData(request)
-                .map(HorizonWorkProgrammeSelectionData::getWorkProgramme)
-                .orElse(null);
-
         form.setAllOptions(newArrayList(workProgrammes));
-        form.setSelected(existingSelection);
+        form.setSelected(cookieSelectionData.get().getWorkProgramme());
         model.addAttribute("form", form);
 
         HorizonWorkProgrammeViewModel viewModel = getPopulate(applicationId, questionId, user, false, emptyMap());
 
         if (viewModel.isComplete() || readOnly) {
-            viewModel = getPopulate(applicationId, questionId, user, false, getReadOnlyMap(applicationId, request));
+            viewModel.setReadOnlyMap(getReadOnlyMap(applicationId, request));
         }
 
         model.addAttribute("form", form);
@@ -123,7 +119,7 @@ public class HorizonWorkProgrammeController {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             HorizonWorkProgrammeSelectionData horizonWorkProgrammeSelectionData = new HorizonWorkProgrammeSelectionData(applicationId);
             horizonWorkProgrammeSelectionData.setWorkProgramme(form.getSelected());
-            cookieService.saveWorkProgrammeSelectionData(horizonWorkProgrammeSelectionData, response);
+            saveSelectionToCookie(horizonWorkProgrammeSelectionData, response);
 
             if (this.workflow.isEmpty()) {
                 setWorkflow(selectWorkProgramme);
@@ -176,10 +172,14 @@ public class HorizonWorkProgrammeController {
 
             HorizonWorkProgrammeSelectionData horizonWorkProgrammeSelectionData = cookieService.getHorizonWorkProgrammeSelectionData(request).get();
             horizonWorkProgrammeSelectionData.setCallId(form.getSelected());
-            cookieService.saveWorkProgrammeSelectionData(horizonWorkProgrammeSelectionData, response);
+            saveSelectionToCookie(horizonWorkProgrammeSelectionData, response);
 
             return completeWorkflow(applicationId, questionId);
         });
+    }
+
+    private void saveSelectionToCookie(HorizonWorkProgrammeSelectionData horizonWorkProgrammeSelectionData, HttpServletResponse response) {
+        cookieService.saveWorkProgrammeSelectionData(horizonWorkProgrammeSelectionData, response);
     }
 
     private void setWorkflow(List<HorizonWorkProgramme> selectedWorkProgramme) {
@@ -207,7 +207,7 @@ public class HorizonWorkProgrammeController {
         Optional<HorizonWorkProgrammeSelectionData> workProgrammeSelectionData = cookieService.getHorizonWorkProgrammeSelectionData(request);
         List<HorizonWorkProgramme> savedSelections = (workProgrammeSelectionData.isPresent() && !workProgrammeSelectionData.get().getAllSelections().isEmpty()) ?
                 workProgrammeSelectionData.get().getAllSelections() :
-                horizonWorkProgrammeRestService.findAllWithApplicationId(applicationId).getSuccess()
+                horizonWorkProgrammeRestService.findSelected(applicationId).getSuccess()
                         .stream()
                         .map(e -> HorizonWorkProgramme.valueOf(e.getWorkProgramme()))
                         .collect(toList());

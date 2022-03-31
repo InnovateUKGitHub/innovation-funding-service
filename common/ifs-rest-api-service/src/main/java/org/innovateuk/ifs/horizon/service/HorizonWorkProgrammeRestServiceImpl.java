@@ -27,7 +27,7 @@ public class HorizonWorkProgrammeRestServiceImpl extends BaseRestService impleme
     }
 
     @Override
-    public RestResult<List<ApplicationHorizonWorkProgrammeResource>> findAllWithApplicationId(long applicationId) {
+    public RestResult<List<ApplicationHorizonWorkProgrammeResource>> findSelected(long applicationId) {
         return getWithRestResult(REST_URL + "/find-selected/" + applicationId,
                 applicationHorizonWorkProgrammeResourceListType());
     }

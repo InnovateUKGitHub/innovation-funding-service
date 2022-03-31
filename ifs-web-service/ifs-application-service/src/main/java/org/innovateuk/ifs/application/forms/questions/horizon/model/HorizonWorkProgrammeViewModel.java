@@ -1,10 +1,14 @@
 package org.innovateuk.ifs.application.forms.questions.horizon.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.innovateuk.ifs.horizon.resource.HorizonWorkProgramme;
 
 import java.util.List;
 import java.util.Map;
 
+@Setter
+@Getter
 public class HorizonWorkProgrammeViewModel {
 
     private final String applicationName;
@@ -12,7 +16,7 @@ public class HorizonWorkProgrammeViewModel {
     private final boolean complete;
     private final boolean open;
     private final boolean leadApplicant;
-    private final Map<String, List<HorizonWorkProgramme>> readOnlyMap;
+    private Map<String, List<HorizonWorkProgramme>> readOnlyMap;
     private final boolean readOnly;
     private final String pageTitle;
     private final boolean isCallId;
@@ -47,52 +51,8 @@ public class HorizonWorkProgrammeViewModel {
         this.readOnlyMap = readOnlyMap;
     }
 
-    public String getApplicationName() {
-        return applicationName;
-    }
-
-    public Long getApplicationId() {
-        return applicationId;
-    }
-
-    public String getPageTitle() {
-        return pageTitle;
-    }
-
-    public boolean isComplete() {
-        return complete;
-    }
-
-    public boolean isOpen() {
-        return open;
-    }
-
-    public boolean isLeadApplicant() {
-        return leadApplicant;
-    }
-
-    public Map<String, List<HorizonWorkProgramme>> getReadOnlyMap() {
-        return readOnlyMap;
-    }
-
-    public boolean isReadOnly() {
-        return readOnly;
-    }
-
     public boolean isCallId() {
         return isCallId;
-    }
-
-    public long getQuestionId() {
-        return questionId;
-    }
-
-    public boolean isAllReadOnly() {
-        return allReadOnly;
-    }
-
-    public String getLeadApplicantName() {
-        return leadApplicantName;
     }
 
     public boolean showQuestionAssignedBanner() {
