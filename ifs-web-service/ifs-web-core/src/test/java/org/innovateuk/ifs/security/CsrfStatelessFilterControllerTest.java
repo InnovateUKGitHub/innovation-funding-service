@@ -85,7 +85,7 @@ public class CsrfStatelessFilterControllerTest {
 
     @Before
     public void setUp() {
-        final UserResource user = newUserResource().withId(-1L).withUID(UID).build();
+        final UserResource user = newUserResource().withId(-1L).withUid(UID).build();
         SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(user));
 
         mockMvc = MockMvcBuilders.webAppContextSetup(context)

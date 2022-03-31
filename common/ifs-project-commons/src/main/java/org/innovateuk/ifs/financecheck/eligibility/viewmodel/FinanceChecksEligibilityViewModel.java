@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.financecheck.eligibility.viewmodel;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -271,6 +272,16 @@ public class FinanceChecksEligibilityViewModel {
 
     public boolean isThirdPartyOfgem() {
         return isThirdPartyOfgem;
+    }
+
+    @JsonIgnore
+    public boolean isFundingLevelFirst() {
+        return !isThirdPartyOfgem;
+    }
+
+    @JsonIgnore
+    public boolean isFundingSoughtFirst() {
+        return !isFundingLevelFirst();
     }
 
     private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {

@@ -66,7 +66,7 @@ public class Project implements ProcessActivity {
     private List<ProjectUser> projectUsers = new ArrayList<>();
 
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = MonitoringOfficer.class)
-    private List<MonitoringOfficer> monitoringOfficers = new ArrayList<>();;
+    private List<MonitoringOfficer> monitoringOfficers = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL, targetEntity = FinanceReviewer.class,
             mappedBy = "project", fetch = FetchType.LAZY, orphanRemoval = true)

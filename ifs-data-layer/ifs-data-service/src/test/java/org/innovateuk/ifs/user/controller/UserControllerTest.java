@@ -269,7 +269,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         ZonedDateTime fixedClock = ZonedDateTime.parse("2021-10-12T00:00:00.0Z");
         TimeMachine.useFixedClockAt(fixedClock);
 
-        UserResource testUser1 = newUserResource().withUID("aebr34-ab345g-234gae-agewg").withId(1L)
+        UserResource testUser1 = newUserResource().withUid("aebr34-ab345g-234gae-agewg").withId(1L)
                 .withFirstName("test").withLastName("User1").withEmail("email1@email.nl").withEdiStatus(EDIStatus.COMPLETE)
                 .withEdiStatusReviewDate(fixedClock).build();
 

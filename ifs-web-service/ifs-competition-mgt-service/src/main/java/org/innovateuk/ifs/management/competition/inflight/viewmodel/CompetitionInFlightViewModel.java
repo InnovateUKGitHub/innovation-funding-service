@@ -34,7 +34,7 @@ public class CompetitionInFlightViewModel {
     private boolean readOnly;
     private boolean assessmentPanelEnabled;
     private boolean interviewPanelEnabled;
-    private boolean competitionHasAssessmentStage;
+    private boolean hasAssessmentStage;
     private AssessorFinanceView assessorFinanceView;
     private CompetitionCompletionStage competitionCompletionStage;
     private boolean supporterEnabled;
@@ -68,7 +68,7 @@ public class CompetitionInFlightViewModel {
         this.assessmentPanelEnabled = competitionAssessmentConfigResource.getHasAssessmentPanel() != null ? competitionAssessmentConfigResource.getHasAssessmentPanel() : false;
         this.interviewPanelEnabled = competitionAssessmentConfigResource.getHasInterviewStage() != null ? competitionAssessmentConfigResource.getHasInterviewStage() : false;
         this.assessorFinanceView = competitionAssessmentConfigResource.getAssessorFinanceView();
-        this.competitionHasAssessmentStage = competitionResource.isHasAssessmentStage();
+        this.hasAssessmentStage = competitionResource.isHasAssessmentStage();
         this.supporterEnabled = competitionResource.isKtp();
         this.alwaysOpen = competitionResource.isAlwaysOpen();
     }
@@ -156,7 +156,7 @@ public class CompetitionInFlightViewModel {
     }
 
     public boolean isFundingDecisionEnabled() {
-        return fundingDecisionAllowedBeforeAssessment
+        return fundingDecisionAllowedBeforeAssessment && !asList(READY_TO_OPEN).contains(competitionStatus)
                 || !asList(READY_TO_OPEN, OPEN, CLOSED, IN_ASSESSMENT).contains(competitionStatus)
                 || (alwaysOpen && hasAClosedAssessmentPeriod());
     }
@@ -167,7 +167,7 @@ public class CompetitionInFlightViewModel {
     }
 
     public boolean isInviteAssessorsLinkEnabled() {
-        return competitionHasAssessmentStage &&
+        return hasAssessmentStage &&
                 !asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(competitionStatus);
     }
 
@@ -193,9 +193,13 @@ public class CompetitionInFlightViewModel {
                 .anyMatch(m -> m.getMilestoneType() == MilestoneType.ASSESSMENT_CLOSED && m.isPassed());
     }
 
+    public boolean isHasAssessmentStage() {
+        return hasAssessmentStage;
+    }
+
     public boolean isManageAssessmentLinkEnabled() {
         return competitionStatus != READY_TO_OPEN
-                && (competitionStatus != OPEN || alwaysOpen);
+                && (competitionStatus != OPEN || alwaysOpen && hasAssessmentStage);
     }
 
     @JsonIgnore

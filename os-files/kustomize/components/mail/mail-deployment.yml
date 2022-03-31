@@ -18,12 +18,9 @@ spec:
         - image: docker-ifs.devops.innovateuk.org/releases/mail-sink:1.0.1
           name: mail
           imagePullPolicy: IfNotPresent
-          env:
-            - name: FQDN
-              valueFrom:
-                configMapKeyRef:
-                  key: MAIL_FQDN
-                  name: mail-config
+          envFrom:
+            - configMapRef:
+                name: mail-config
           ports:
             - containerPort: 8025
             - containerPort: 4443

@@ -45,6 +45,7 @@ public class AlwaysOpenCloseCompetitionViewModelPopulator {
         return new AlwaysOpenCloseCompetitionViewModel(competitionId,
                 competition.getName(),
                 submissionDate,
-                submittedApplications);
+                submittedApplications,
+                competition.isHasAssessmentStage());
     }
 }
