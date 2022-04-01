@@ -222,7 +222,7 @@ the user successfully completes application
     the user completes the application details section              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
     the applicant completes Application Team                        COMPLETE  ${email}
     the user completes the application research category            Feasibility studies
-    the user complete the work programme
+    the user complete the work programme                            Culture, Creativity and Inclusive Society (CL2)  HORIZON-CL2-2021-DEMOCRACY-01
     The user is able to complete horizon grant agreement section
     the lead applicant marks the application question as complete   1. Tell us where your organisation is based  My organisation is based in the UK or a British Overseas Territory
     the lead applicant marks the application question as complete   2. What EIC call have you been successfully evaluated for?  EIC Transition
@@ -386,10 +386,11 @@ the user completes all project setup sections
     IFS admin approves the spend profiles for hestaApplication                  ${hestaProjectID}
 
 the user complete the work programme
+    [Arguments]  ${label_category}  ${label1_category}
     the user clicks the button/link                jQuery = a:contains("Work programme")
-    the user clicks the button twice               jQuery = label:contains("Culture, Creativity and Inclusive Society (CL2)")
+    the user selects the radio button              selected  ${label_category}
     the user clicks the button/link                jQuery = button:contains("Save and continue")
-    the user clicks the button twice               jQuery = label:contains("HORIZON-CL2-2021-DEMOCRACY-01")
+    the user selects the radio button              selected  ${label1_category}
     the user clicks the button/link                jQuery = button:contains("Save and continue")
     the user can mark the question as complete
     the user should see the element                jQuery = li:contains("Work programme") > .task-status-complete
