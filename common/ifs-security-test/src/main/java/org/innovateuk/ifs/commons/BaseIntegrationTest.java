@@ -10,6 +10,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static org.innovateuk.ifs.IfsProfileConstants.*;
+
 /**
  * This is the base class for all integration tests against a configured Spring application.  This superclass also
  * provides a running server against which tests can be run, or can simply be used as a non-web-based integration
@@ -17,7 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("integration-test")
+@ActiveProfiles({INTEGRATION_TEST, SIMPLE_CACHE})
 public abstract class BaseIntegrationTest extends BaseTest {
 
     /**
