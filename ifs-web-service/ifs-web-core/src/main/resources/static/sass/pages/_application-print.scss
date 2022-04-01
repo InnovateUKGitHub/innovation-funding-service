@@ -101,6 +101,11 @@
       margin-top:0;
     }
   }
+
+  .complete-edi-status,
+  .incomplete-edi-status {
+    font-weight: normal;
+  }
 }
 
 @media print {
