@@ -1,13 +1,10 @@
+apply from: rootProject.file("common/gradle-support/java.gradle")
+
 // This will be shared and imported by all libraries and services.
 // Only really used or sharing system wide constants at present
-// although anything shared over all modules with no dependencies can go in here.
-
-apply plugin: 'java'
-
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
-
-
+// although anything shared over api and service modules with no dependencies can go in here.
 dependencies {
-    // This needs to have zero dependencies to fulfil its purpose
+    // This needs to have zero non-test dependencies to fulfil its purpose
 }
+
+
