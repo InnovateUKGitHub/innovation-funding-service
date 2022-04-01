@@ -224,7 +224,7 @@ the user successfully completes application
     the user completes the application details section              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
     the applicant completes Application Team                        COMPLETE  ${email}
     the user completes the application research category            Feasibility studies
-    the user complete the work programme                            Culture, Creativity and Inclusive Society (CL2)  HORIZON-CL2-2021-DEMOCRACY-01
+    the user complete the work programme
     The user is able to complete horizon grant agreement section
     the lead applicant marks the application question as complete   1. Tell us where your organisation is based  My organisation is based in the UK or a British Overseas Territory
     the lead applicant marks the application question as complete   2. What EIC call have you been successfully evaluated for?  EIC Transition
@@ -399,23 +399,49 @@ the user completes all project setup sections
     IFS admin approves the spend profiles for hestaApplication                  ${hestaProjectID}
 
 the user complete the work programme
-    [Arguments]  ${label_category}  ${label1_category}
     the user clicks the button/link                jQuery = a:contains("Work programme")
-    the user selects the radio button              selected  ${label_category}
+    the user should see a summary error
+    the user should see read only view of work program part
     the user clicks the button/link                jQuery = button:contains("Save and continue")
-    the user selects the radio button              selected  ${label1_category}
+    the user should see a field and summary error  You must select an option.
+    the user clicks the button/link                id = "selected1"
+    the user clicks the button/link                jQuery = button:contains("Save and continue")
+    the user should see read only view of call ID
+    the user clicks the button/link                jQuery = button:contains("Save and continue")
+    The user should see a field and summary error  You must select an option.
+    the user clicks the button/link                id = "selected1"
     the user clicks the button/link                jQuery = button:contains("Save and continue")
     the user can mark the question as complete
     the user should see the element                jQuery = li:contains("Work programme") > .task-status-complete
 
 the user see the print view of the application
-  Requesting IDs of this Hesta application
-  the user navigates to the page without the usual headers      ${SERVER}/application/${hestaApplicationID}/print?noprint
-  the user should see the element                               xpath = //*[contains(text(),'Personnel costs (£)')]
-  the user should see the element                               xpath = //*[contains(text(),'Subcontracting costs (£)')]
-  the user should see the element                               xpath = //*[contains(text(),'Travel and subsistence (£)')]
-  the user should see the element                               xpath = //*[contains(text(),'Equipment (£)')]
-  the user should see the element                               xpath = //*[contains(text(),'Other goods, works and services (£)')]
-  the user should see the element                               xpath = //*[contains(text(),'Other costs (£)')]
-  the user should see the element                               xpath = //*[contains(text(),'Indirect costs (£)')]
-  the user navigates to the page                                ${SERVER}/application/${hestaApplicationID}
+    Requesting IDs of this Hesta application
+    the user navigates to the page without the usual headers      ${SERVER}/application/${hestaApplicationID}/print?noprint
+    the user should see the element                               xpath = //*[contains(text(),'Personnel costs (£)')]
+    the user should see the element                               xpath = //*[contains(text(),'Subcontracting costs (£)')]
+    the user should see the element                               xpath = //*[contains(text(),'Travel and subsistence (£)')]
+    the user should see the element                               xpath = //*[contains(text(),'Equipment (£)')]
+    the user should see the element                               xpath = //*[contains(text(),'Other goods, works and services (£)')]
+    the user should see the element                               xpath = //*[contains(text(),'Other costs (£)')]
+    the user should see the element                               xpath = //*[contains(text(),'Indirect costs (£)')]
+    the user navigates to the page                                ${SERVER}/application/${hestaApplicationID}
+
+the user should see read only view of work program part
+    the user should see the element    jQuery = label:contains("Culture, Creativity and Inclusive Society (CL2)")
+    the user should see the element    jQuery = label:contains("Civil Security for Society (CL3)")
+    the user should see the element    jQuery = label:contains("Digital, Industry and Space (CL4 & EUSPA)")
+    the user should see the element    jQuery = label:contains("Climate, Energy and Mobility (CL5)")
+    the user should see the element    jQuery = label:contains("Food, Bioeconomy, Natural Resources, Agriculture and Environment (CL6)")
+    the user should see the element    jQuery = label:contains("EIC (EIC)")
+    the user should see the element    jQuery = label:contains("European Innovation Ecosystems (EIE)")
+    the user should see the element    jQuery = label:contains("Health (HLTH)")
+    the user should see the element    jQuery = label:contains("Research Infrastructures (INFRA)")
+    the user should see the element    jQuery = label:contains("Missions (MISS)")
+    the user should see the element    jQuery = label:contains("Widening Participation and Strengthening the European Research Area (WIDERA)")
+
+the user should see read only view of call ID
+    the user should see the element    jQuery = label:contains("HORIZON-CL2-2021-DEMOCRACY-01")
+    the user should see the element    jQuery = label:contains("HORIZON-CL2-2021-HERITAGE-01")
+    the user should see the element    jQuery = label:contains("HORIZON-CL2-2021-HERITAGE-02")
+    the user should see the element    jQuery = label:contains("HORIZON-CL2-2021-TRANSFORMATIONS-01")
+
