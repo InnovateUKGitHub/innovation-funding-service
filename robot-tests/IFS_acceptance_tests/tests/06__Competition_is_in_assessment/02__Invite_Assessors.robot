@@ -72,10 +72,9 @@ Filtering in the Invite Pending and declined page
     [Tags]
     Given the user filter assessors by name status and DOI
     Then the user should see the element    jQuery = td:contains("Josephine Peters") ~ td:nth-of-type(5):contains(No)
-    And the user should see the element     jQuery = td:contains("Josephine Peters") ~ td:nth-of-type(5):contains(Yes)
+    And the user should see the element     jQuery = td:contains("Josephine Peters") ~ td:nth-of-type(6):contains(Yes)
     And the user should see the element     jQuery = th:contains("Contract")
     And the user should see the element     jQuery = th:contains("DOI")
-    #Then the user should not see the element   jQuery = td:contains("No")
 
 CLearing the filters on Pending and declined page
     [Documentation]    INFUND-6453  IFS-5915  IFS-11698
@@ -251,9 +250,8 @@ the user should see assessor details
     the user should see the element    jQuery = th:contains("Contract")
     the user should see the element    jQuery = th:contains("DOI")
     the user should see the element    jQuery = td:contains("${invitedAssessor}")
-    the user should see the element    jQuery = td:contains("Will Smith") ~ td:nth-of-type(5):contains(No)
+    the user should see the element    jQuery = td:contains("Will Smith") ~ td:nth-of-type(4):contains(No)
     the user should see the element    jQuery = td:contains("Will Smith") ~ td:nth-of-type(5):contains(Yes)
-    #the user should see the element    jQuery = td:contains("Will Smith") ~ td .yes
     the user should see the element    jQuery = td:contains("Will Smith") ~ td:nth-child(3):contains("Precision medicine")
     the user should see the element    jQuery = td:contains("Will Smith") ~ td:nth-child(3):contains("Nanotechnology / nanomaterials")
     the user should see the element    jQuery = td:contains("Will Smith") ~ td:nth-child(3):contains("Energy systems")
@@ -306,8 +304,7 @@ the user should see assessors details on pending and declined tab
     the user should see the element    jQuery = th:contains("Contract")
     the user should see the element    jQuery = th:contains("DOI")
     the user should see the element    jQuery = td:contains("Josephine Peters") ~ td:nth-of-type(5):contains(No)
-    the user should see the element    jQuery = td:contains("Josephine Peters") ~ td:nth-of-type(5):contains(Yes)
-    #the user should see the element    jQuery = td:contains("Josephine Peters") ~ td:contains("Yes")
+    the user should see the element    jQuery = td:contains("Josephine Peters") ~ td:nth-of-type(6):contains(Yes)
     the user should see the element    jQuery = td:contains("Josephine Peters") ~ td:contains("Invite declined: not available")
     the user should see the element    jQuery = td:contains("Josephine Peters") ~ td:contains("Assembly / disassembly / joining")
     the user should see the element    jQuery = td:contains("${assessor_to_add}") ~ td:nth-of-type(7):contains("Awaiting response")
