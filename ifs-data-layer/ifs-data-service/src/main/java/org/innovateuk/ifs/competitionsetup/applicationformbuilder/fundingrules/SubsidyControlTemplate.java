@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingrules;
 
+import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
@@ -84,7 +85,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
     }
 
     private boolean generatingWebtestDataForComp(Competition competition) {
-        return Arrays.stream(environment.getActiveProfiles()).anyMatch(profile -> "integration-test".equals(profile))
+        return Arrays.stream(environment.getActiveProfiles()).anyMatch(profile -> IfsProfileConstants.INTEGRATION_TEST.equals(profile))
                 && competition.getName().contains("Subsidy control tactical");
     }
 

@@ -14,6 +14,12 @@ public class IfsProfileConstants {
     public static final String NOT_STUBDEV = "!" + STUBDEV;
 
     /**
+     * Used for local k8s builds via skaffold
+     */
+    public static final String DEV = "dev";
+    public static final String NOT_DEV = "!" + DEV;
+
+    /**
      * Use in test scope to denote integration tests
      */
     public static final String INTEGRATION_TEST = "integration-test";
@@ -25,5 +31,14 @@ public class IfsProfileConstants {
      */
     public static final String AMQP_PROFILE = "AMQP";
     public static final String NOT_AMQP_PROFILE = "!" + AMQP_PROFILE;
+
+    /**
+     * Used to enable simple and redis caching.
+     */
+    public static final String SIMPLE_CACHE = "SIMPLE_CACHE";
+    public static final String REDIS_STANDALONE_CACHE = "REDIS_STANDALONE_CACHE";
+    public static final String REDIS_CLUSTER_CACHE = "REDIS_CLUSTER_CACHE";
+
+
 
 }

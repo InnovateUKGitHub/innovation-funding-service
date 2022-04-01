@@ -4,7 +4,6 @@ package org.innovateuk.ifs.starters.audit.cfg.rabbit;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.starters.audit.AuditChannel;
-import org.innovateuk.ifs.starters.audit.cfg.AuditAutoConfiguration;
 import org.innovateuk.ifs.starters.audit.cfg.AuditConfigurationProperties;
 import org.innovateuk.ifs.starters.audit.rabbit.RabbitAuditChannel;
 import org.springframework.amqp.core.Binding;
