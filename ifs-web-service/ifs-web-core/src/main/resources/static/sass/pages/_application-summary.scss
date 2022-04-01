@@ -18,6 +18,26 @@
     overflow: hidden;
     margin: 20px 0;
   }
+
+  .incomplete-edi-status {
+    @extend %action-required;
+    background-position: left center;
+    @include govuk-font(19);
+    font-weight: normal;
+    padding-left: 20px;
+    vertical-align: middle;
+  }
+
+  .complete-edi-status {
+    @extend %icon-tick;
+    background-position: left center;
+    @include govuk-font(19);
+    background-size: 14px;
+    color: $govuk-button-colour;
+    font-weight: normal;
+    padding-left: 20px;
+    vertical-align: middle;
+  }
 }
 
 .no-js {
