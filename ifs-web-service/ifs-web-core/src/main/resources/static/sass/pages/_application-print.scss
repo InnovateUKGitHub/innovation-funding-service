@@ -205,6 +205,11 @@
     .form-group {
       page-break-inside : avoid;
     }
+
+    .complete-edi-status,
+    .incomplete-edi-status {
+      font-weight: normal;
+    }
   }
 
   .govuk-heading-l {
