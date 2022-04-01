@@ -1292,6 +1292,8 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withId(4L, 8L)
                 .withName("Jeremy Alufson", "Felix Wilson")
                 .withCompliant(true)
+                .withValidAgreement(true)
+                .withValidDoi(true)
                 .withEmail("worth.email.test+assessor1@gmail.com", "felix.wilson@gmail.com")
                 .withBusinessType(BUSINESS, ACADEMIC)
                 .withInnovationAreas(innovationAreaResources)
