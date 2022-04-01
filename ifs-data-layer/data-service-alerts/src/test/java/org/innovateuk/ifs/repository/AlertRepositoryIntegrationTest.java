@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.repository;
 
+import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.domain.Alert;
 import org.junit.Assert;
 import org.junit.Test;
@@ -22,7 +23,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-@ActiveProfiles("integration-test")
+@ActiveProfiles(IfsProfileConstants.INTEGRATION_TEST)
 public class AlertRepositoryIntegrationTest {
 
     @Autowired

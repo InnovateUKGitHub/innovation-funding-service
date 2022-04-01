@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.cfg;
 
 import org.innovateuk.ifs.Application;
+import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.config.audit.AuditConfig;
 import org.innovateuk.ifs.config.repository.RefreshableCrudRepositoryImpl;
@@ -50,7 +51,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 @SpringBootTest
 @Import({AuditConfig.class})
 @RunWith(SpringRunner.class)
-@ActiveProfiles({"integration-test"})
+@ActiveProfiles({IfsProfileConstants.INTEGRATION_TEST, IfsProfileConstants.SIMPLE_CACHE})
 @EntityScan(basePackageClasses = Application.class)
 @EnableJpaRepositories(basePackageClasses = Application.class, repositoryBaseClass = RefreshableCrudRepositoryImpl.class)
 @EnableAutoConfiguration(exclude = {RedisAutoConfiguration.class})
