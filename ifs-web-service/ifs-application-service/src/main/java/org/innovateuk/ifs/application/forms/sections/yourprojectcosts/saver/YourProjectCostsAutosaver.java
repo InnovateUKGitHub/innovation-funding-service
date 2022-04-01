@@ -256,6 +256,9 @@ public class YourProjectCostsAutosaver {
             case "days":
                 cost.setLabourDays(Integer.parseInt(value));
                 break;
+            case "rate":
+                cost.setRate(new BigDecimal(value));
+                break;
             default:
                 throw new IFSRuntimeException(format("Auto save labour field not handled %s", rowField), emptyList());
         }

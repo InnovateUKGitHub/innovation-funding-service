@@ -168,7 +168,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, boolean thirdPartyProcurementCompetition,
                                      boolean ktpCompetition, boolean ktpPhase2Enabled, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty,
-                                     String competitionName, long applicationId) {
+                                     String competitionName, long applicationId, boolean thirdPartyOfgem) {
         this.open = open;
         this.internal = internal;
         this.procurementCompetition = procurementCompetition;
@@ -199,7 +199,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.grantClaimPercentage = BigDecimal.ZERO;
         this.thirdPartyProjectCostGuidanceLink = null;
         this.ofGemCompetition = false;
-        this.thirdPartyOfgem = false;
+        this.thirdPartyOfgem = thirdPartyOfgem;
     }
 
     @Override

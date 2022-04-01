@@ -1,0 +1,17 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ldap-config
+data:
+  LDAP_PORT: "389"
+  LDAP_DOMAIN: "dc=int,dc=g2g3digital,dc=net"
+  LDAP_SCHEME: "ldap"
+  IDP_LDAP_PORT: "8389"
+  LDAP_USESTARTTLS: "false"
+  LDAP_USESSL: "true"
+  LDAP_BASEDN: "dc=nodomain"
+  LDAP_BINDDN: "cn=admin,dc=nodomain"
+  LDAP_USERFILTER: "(&(mail={user})(!(employeeType=inactive)))"
+  LDAP_ATTRIBUTE_SEARCHFILTER: "(mail=$resolutionContext.principal)"
+  LDAP_RETURNATTRIBUTES: "mail,uid"
+  LDAP_AUTHENTICATOR: "anonSearchAuthenticator"

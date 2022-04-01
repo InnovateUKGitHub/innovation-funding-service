@@ -839,6 +839,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         return FundingType.KTP == fundingType;
     }
 
+    public boolean isThirdPartyOfgem() {
+        return FundingType.THIRDPARTY == fundingType
+                && getCompetitionTypeEnum() == CompetitionTypeEnum.OFGEM;
+    }
 
     public void releaseFeedback(ZonedDateTime date) {
         setMilestoneDate(MilestoneType.FEEDBACK_RELEASED, date);

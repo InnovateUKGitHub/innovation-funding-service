@@ -296,4 +296,16 @@ public class CompetitionTest {
 
         assertTrue(competition.isHorizonEuropeGuarantee());
     }
+
+    @Test
+    public void isThirdPartyOfgem_forThirdPartyFundingType_forOfgemCompetitionType() {
+        CompetitionType competitionType = newCompetitionType()
+                .withName("Ofgem")
+                .build();
+
+        competition.setFundingType(FundingType.THIRDPARTY);
+        competition.setCompetitionType(competitionType);
+
+        assertTrue(competition.isThirdPartyOfgem());
+    }
 }

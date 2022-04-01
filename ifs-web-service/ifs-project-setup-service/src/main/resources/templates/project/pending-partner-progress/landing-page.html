@@ -69,9 +69,9 @@
             <li>
                 <div class="task">
                     <h3 class="govuk-heading-s">
-                        <span th:if="${model.completed}">Award terms and conditions</span>
+                        <span th:if="${model.completed}" th:text="${model.getThirdPartyOfgemLabel()}"></span>
                         <a th:if="${!model.completed}" th:href="@{/project/{projectId}/organisation/{organisationId}/terms-and-conditions(projectId=${model.projectId},organisationId=${model.organisationId})}"
-                           class="govuk-link">Award terms and conditions</a>
+                           class="govuk-link" th:text="${model.getThirdPartyOfgemLabel()}"></a>
                     </h3>
                 </div>
                 <div th:if="${model.termsAndConditionsComplete}"

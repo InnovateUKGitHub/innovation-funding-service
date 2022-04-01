@@ -19,13 +19,14 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
     private final boolean open;
     private final boolean ktpCompetition;
     private final boolean procurementMilestones;
+    private final boolean hecpCompetition;
 
     public FinanceReadOnlyViewModel(long applicationId, boolean fullyFunded, long financeSectionId,
                                     ApplicationProcurementMilestonesSummaryViewModel applicationProcurementMilestonesSummaryViewModel,
                                     ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel,
                                     ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel,
                                     ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
-                                    boolean collaborativeProject, boolean ktpCompetition, boolean procurementMilestones) {
+                                    boolean collaborativeProject, boolean ktpCompetition, boolean procurementMilestones, boolean hecpCompetition) {
         this.applicationId = applicationId;
         this.fullyFunded = fullyFunded;
         this.financeSectionId = financeSectionId;
@@ -37,6 +38,7 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
         this.open = !applicationFinanceSummaryViewModel.isReadOnly();
         this.ktpCompetition = ktpCompetition;
         this.procurementMilestones = procurementMilestones;
+        this.hecpCompetition = hecpCompetition;
     }
 
     @Override
@@ -87,6 +89,10 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
 
     public boolean isProcurementMilestones() {
         return procurementMilestones;
+    }
+
+    public boolean isHecpCompetition() {
+        return hecpCompetition;
     }
 
     @Override

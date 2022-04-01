@@ -15,7 +15,8 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11366 HECP Phase 2 - Custom Question - Work Programme
 ...
-
+...               IFS-11618 HECP Phase 2 - Cost categories - Application view additional updates
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -57,12 +58,13 @@ Comp admin creates Hesta competition
     [Teardown]  Get competition id and set open date to yesterday    ${hestaCompetitionName}
 
 Lead applicant can submit application
-    [Documentation]  IFS-8751  IFS-11269  IFS-11366
+    [Documentation]  IFS-8751  IFS-11269  IFS-11618  IFS-11366
     Given the user logs out if they are logged in
     When the user successfully completes application          tim   timmy   ${leadApplicantEmail}   ${hestaApplicationName}
     And the user clicks the button/link                       link = Your project finances
     Then the user completes hecp project finances             ${hestaApplicationName}  no
-    Then the user can submit the application
+    And the user see the print view of the application
+    And the user can submit the application
 
 Lead applicant should get a confirmation email after application submission
     [Documentation]    IFS-10694
@@ -308,21 +310,33 @@ the user completes hecp project finances
     the user should see all finance subsections complete
     the user clicks the button/link  link = Back to application overview
     the user should see the element  jQuery = li:contains("Your project finances") > .task-status-complete
+    the user clicks the button/link  link = Finances overview
+    the user should see the element  jQuery = th:contains("Personnel costs (£)")
+    the user should see the element  jQuery = th:contains("Subcontracting costs (£)")
+    the user should see the element  jQuery = th:contains("Travel and subsistence (£)")
+    the user should see the element  jQuery = th:contains("Equipment (£)")
+    the user should see the element  jQuery = th:contains("Other goods, works and services (£)")
+    the user should see the element  jQuery = th:contains("Other costs (£)")
+    the user should see the element  jQuery = th:contains("Indirect costs (£)")
+    the user clicks the button/link  link = Application overview
 
 The user is able to complete hecp project costs
     the user clicks the button/link           link = Your project costs
     the user should see the element           jQuery = h1:contains("Your project costs")
     the user should see the element           jQuery = span:contains("Personnel costs")
+    the user should see the element           jQuery = span:contains("Subcontracting costs")
+    the user should see the element           jQuery = span:contains("Travel and subsistence")
     the user should see the element           jQuery = span:contains("Equipment")
-    the user should see the element           jQuery = span:contains("Indirect costs")
     the user should see the element           jQuery = span:contains("Other goods, works and services")
+    the user should see the element           jQuery = span:contains("Other costs")
+    the user should see the element           jQuery = span:contains("Indirect costs")
     the user enters text to a text field      id = labour  50000
-    the user enters text to a text field      id = overhead  40000
+    the user enters text to a text field      id = subcontracting  50000
+    the user enters text to a text field      id = travel  10000
     the user enters text to a text field      id = material  30000
     the user enters text to a text field      id = capital  20000
-    the user enters text to a text field      id = subcontracting  15000
-    the user enters text to a text field      id = travel  10000
-    the user enters text to a text field      id = other  0
+    the user enters text to a text field      id = other  40000
+    the user enters text to a text field      id = overhead  0
     the user clicks the button/link           jQuery = button:contains("Mark")
     the user should see the element           jQuery = li:contains("Your project costs") > .task-status-complete
 
@@ -364,7 +378,6 @@ IFS admin approves the spend profiles for hestaApplication
     the user clicks the button/link  id = submit-button
 
 the user completes all project setup sections
-    Requesting IDs of this Hesta application
     Requesting IDs of this Asos Organisation
     the internal team mark the application as successful / unsuccessful         ${hestaApplicationID}  FUNDED
     the user clicks the button/link                                             link = Competition
@@ -394,3 +407,15 @@ the user complete the work programme
     the user clicks the button/link                jQuery = button:contains("Save and continue")
     the user can mark the question as complete
     the user should see the element                jQuery = li:contains("Work programme") > .task-status-complete
+
+the user see the print view of the application
+  Requesting IDs of this Hesta application
+  the user navigates to the page without the usual headers      ${SERVER}/application/${hestaApplicationID}/print?noprint
+  the user should see the element                               xpath = //*[contains(text(),'Personnel costs (£)')]
+  the user should see the element                               xpath = //*[contains(text(),'Subcontracting costs (£)')]
+  the user should see the element                               xpath = //*[contains(text(),'Travel and subsistence (£)')]
+  the user should see the element                               xpath = //*[contains(text(),'Equipment (£)')]
+  the user should see the element                               xpath = //*[contains(text(),'Other goods, works and services (£)')]
+  the user should see the element                               xpath = //*[contains(text(),'Other costs (£)')]
+  the user should see the element                               xpath = //*[contains(text(),'Indirect costs (£)')]
+  the user navigates to the page                                ${SERVER}/application/${hestaApplicationID}

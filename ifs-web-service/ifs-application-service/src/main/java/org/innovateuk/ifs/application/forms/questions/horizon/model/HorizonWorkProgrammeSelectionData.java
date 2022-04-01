@@ -1,11 +1,15 @@
 package org.innovateuk.ifs.application.forms.questions.horizon.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.innovateuk.ifs.horizon.resource.HorizonWorkProgramme;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Setter
+@Getter
 public class HorizonWorkProgrammeSelectionData {
 
     long applicationId;
@@ -31,27 +35,4 @@ public class HorizonWorkProgrammeSelectionData {
                 .collect(Collectors.toList());
     }
 
-    public long getApplicationId() {
-        return applicationId;
-    }
-
-    public void setApplicationId(long applicationId) {
-        this.applicationId = applicationId;
-    }
-
-    public HorizonWorkProgramme getWorkProgramme() {
-        return workProgramme;
-    }
-
-    public void setWorkProgramme(HorizonWorkProgramme workProgramme) {
-        this.workProgramme = workProgramme;
-    }
-
-    public HorizonWorkProgramme getCallId() {
-        return callId;
-    }
-
-    public void setCallId(HorizonWorkProgramme callId) {
-        this.callId = callId;
-    }
 }

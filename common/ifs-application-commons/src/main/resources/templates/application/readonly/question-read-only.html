@@ -414,7 +414,13 @@
                         <li th:text="${nonAcceptedPartner.partnerName}">Non accepted partner organisation</li>
                     </th:block> 
                 </ul>
-                <p class="govuk-body">This application cannot be submitted until all partners accept our terms and conditions.</p>
+               <th:block
+                        th:with="thirdPartyLabel=${model.thirdPartyProcurementCompetition}
+                                 ? ${model.thirdPartyConfig.termsAndConditionsLabel}
+                                 : 'terms and conditions'">
+                    <p class="govuk-body"
+                       th:text="|This application cannot be submitted until all partners accept our ${thirdPartyLabel}.|"></p>
+                </th:block>
             </div>
         </th:block>
         <th:block th:insert="this :: terms-and-conditions-partner-table (${model.applicationId}, ${model.questionId}, ${model.partners}, ${model.includeFundingRules}, ${model.displayCompleteStatus}, ${model.thirdPartyProcurementCompetition}, ${model.thirdPartyProcurementHeader})" />

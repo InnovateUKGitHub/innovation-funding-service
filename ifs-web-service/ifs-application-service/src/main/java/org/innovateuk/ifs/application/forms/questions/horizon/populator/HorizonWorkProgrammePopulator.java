@@ -27,6 +27,9 @@ import static org.innovateuk.ifs.user.resource.ProcessRoleType.applicantProcessR
 @Component
 public class HorizonWorkProgrammePopulator {
 
+    public static final String CALL_ID = "Call ID";
+    public static final String WORK_PROGRAMME = "Enter the Horizon Europe Work programme Part";
+
     @Autowired
     private ApplicationRestService applicationRestService;
 
@@ -105,7 +108,7 @@ public class HorizonWorkProgrammePopulator {
 
     private String getPageTitle(boolean isCallId) {
         return isCallId ?
-                "Call ID" :
-                "Enter the Horizon Europe Work programme Part";
+                CALL_ID :
+                WORK_PROGRAMME;
     }
 }
