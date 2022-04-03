@@ -22,7 +22,6 @@ import javax.servlet.ServletException;
 @EnableScheduling
 @EnableSpringDataWebSupport
 @EnableJpaRepositories(repositoryBaseClass = RefreshableCrudRepositoryImpl.class)
-@EnableCaching
 public class Application extends SpringBootServletInitializer {
 
     @Override

@@ -10,5 +10,5 @@ public interface HorizonWorkProgrammeRestService {
 
     RestResult<Void> updateWorkProgrammeForApplication(List<HorizonWorkProgramme> selectedProgrammes, long applicationId);
 
-    RestResult<List<ApplicationHorizonWorkProgrammeResource>> findAllWithApplicationId(long applicationId);
+    RestResult<List<ApplicationHorizonWorkProgrammeResource>> findSelected(long applicationId);
 }
