@@ -173,6 +173,9 @@ public class ApplicationFinanceRowServiceImpl extends BaseTransactionalService i
         if (newCost.getQuantity() != null) {
             currentCost.setQuantity(newCost.getQuantity());
         }
+        if (newCost.getName() != null) {
+            currentCost.setName(newCost.getName());
+        }
 
         return currentCost;
     }

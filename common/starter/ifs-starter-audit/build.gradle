@@ -12,6 +12,7 @@ dependencies {
     // exported
     api project(":common:api:audit-api")
 
+    implementation project(":common:starter:ifs-starter-common")
     implementation "org.springframework.boot:spring-boot-starter"
     implementation "org.springframework.boot:spring-boot-starter-amqp"
     implementation "org.springframework.boot:spring-boot-starter-json"
