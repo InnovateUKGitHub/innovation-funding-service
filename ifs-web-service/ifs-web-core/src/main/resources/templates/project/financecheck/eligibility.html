@@ -231,15 +231,6 @@
                   novalidate="novalidate"
                   enctype="multipart/form-data"
                   th:attr="data-row-operation-url=@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">
-                <!--
-                <div th:if="${summaryModel.hecpCompetition}">
-                    <div class="govuk-body" id="accordion-finances">
-                        <th:block th:each="type : ${model.orderedHecpFinanceRowTypes}">
-                            <th:block th:insert="application/hecp-eligibility-costs-fragments :: __${type.name().toLowerCase()}__"/>
-                        </th:block>
-                    </div>
-                </div>
-                -->
                 <div th:if="${summaryModel.hecpCompetition}">
                     <div class="govuk-body" id="accordion-finances">
                         <th:block th:insert="application/hecp-costs-fragments :: hecp-costs" />
