@@ -117,7 +117,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         Future<List<ProcessRoleResource>> processRolesFuture = async(() -> getProcessRoles(application));
         Future<List<ApplicationAssessmentResource>> assessorResponseFuture = async(() -> getAssessmentResponses(application, settings));
         Future<List<SupporterAssignmentResource>> supporterResponseFuture = async(() -> getSupporterFeedbackResponses(application, settings));
-        Future<List<ApplicationHorizonWorkProgrammeResource>> workProgrammeFuture = async(() -> horizonWorkProgrammeRestService.findAllWithApplicationId(application.getId()).getSuccess());
+        Future<List<ApplicationHorizonWorkProgrammeResource>> workProgrammeFuture = async(() -> horizonWorkProgrammeRestService.findSelected(application.getId()).getSuccess());
 
         List<ProcessRoleResource> processRoles = resolve(processRolesFuture);
 
