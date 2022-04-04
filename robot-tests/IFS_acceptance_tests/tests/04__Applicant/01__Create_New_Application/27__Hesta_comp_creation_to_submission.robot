@@ -15,6 +15,8 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11618 HECP Phase 2 - Cost categories - Application view additional updates
 ...
+...               IFS-11688 HECP Phase 2 - Template update
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -56,7 +58,7 @@ Comp admin creates Hesta competition
     [Teardown]  Get competition id and set open date to yesterday    ${hestaCompetitionName}
 
 Lead applicant can submit application
-    [Documentation]  IFS-8751  IFS-11269  IFS-11618
+    [Documentation]  IFS-8751  IFS-11269  IFS-11618  IFS-11688
     Given the user logs out if they are logged in
     When the user successfully completes application          tim   timmy   ${leadApplicantEmail}   ${hestaApplicationName}
     And the user clicks the button/link                       link = Your project finances
@@ -221,10 +223,9 @@ the user successfully completes application
     the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user completes the application details section              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
     the applicant completes Application Team                        COMPLETE  ${email}
-    the user completes the application research category            Feasibility studies
+    #the user completes the application research category            Feasibility studies
     The user is able to complete horizon grant agreement section
-    the lead applicant marks the application question as complete   1. Tell us where your organisation is based  My organisation is based in the UK or a British Overseas Territory
-    the lead applicant marks the application question as complete   2. What EIC call have you been successfully evaluated for?  EIC Transition
+    the lead applicant fills all the questions and marks as complete(Hecp)
     the user accept the competition terms and conditions            Back to application overview
 
 the user is presented with the Application Summary page
@@ -258,8 +259,7 @@ the application summary page must not include the reopen application link
 the user marks the Hesta application question as done
     the user clicks the button/link                                 link = Application
     the user marks each question as complete                        Application details
-    the user fills in the CS Application section hecp question      Tell us where your organisation is based
-    the user fills in the CS Application section hecp question      What EIC call have you been successfully evaluated for?
+    the assessed questions are marked complete(HECP type)
     the user clicks the button/link                                 jQuery = .govuk-heading-s a:contains("Finances")
     the user clicks the button/link                                 jQuery = button:contains("Done")
     the user clicks the button/link                                 jQuery = button:contains("Done")

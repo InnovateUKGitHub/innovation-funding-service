@@ -60,9 +60,9 @@ the lead applicant fills all the questions and marks as complete(thirdparty)
     :FOR  ${ELEMENT}    IN    @{Thirdparty_questions}
      \     the lead applicant marks every question as complete    ${ELEMENT}
 
-#the lead applicant fills all the questions and marks as complete(Hesta)
-#    :FOR  ${ELEMENT}    IN    @{Hesta_questions}
-#     \     the lead applicant marks every question as complete    ${ELEMENT}
+the lead applicant fills all the questions and marks as complete(Hecp)
+    :FOR  ${ELEMENT}    IN    @{Hecp_questions}
+     \     the lead applicant marks the questions as complete (hecp)    ${ELEMENT}
 
 the lead completes the questions with multiple answer choice and multiple appendices
     :FOR  ${ELEMENT}    IN    @{other_questions_procurement_ati}
@@ -99,6 +99,19 @@ the lead applicant marks the questions as complete (multiple appendices and mult
     Run Keyword If  '${question_link}' == 'Technical approach'                     the user uploads the file           css = input[name="appendix"]    ${excel_file}
     Run Keyword If  '${question_link}' == 'Project team'                           wait until keyword succeeds without screenshots   10s    200ms     input text       id = multipleChoiceOptionId  answer7
     Run Keyword If  '${question_link}' == 'Project team'                           Execute Javascript                  document.evaluate("//li[text()='answer7']",document.body,null,9,null).singleNodeValue.click();
+    the user clicks the button/link     name = complete
+    the user clicks the button/link     link = Back to application overview
+
+the lead applicant marks the questions as complete (hecp)
+    [Arguments]  ${question_link}
+    the user clicks the button/link     jQuery = h3 a:contains("${question_link}")
+    the user can't complete the question without selecting answer (validation error messages check)
+    Run Keyword If  '${question_link}' == 'Tell us where your organisation is based'                    the user clicks the button twice   jQuery = label:contains("My organisation is based in the UK or a British Overseas Territory")
+    Run Keyword If  '${question_link}' == 'What EIC call have you been successfully evaluated for?'     the user clicks the button twice   jQuery = label:contains("EIC Transition")
+    Run Keyword If  '${question_link}' == 'Have the tasks assigned to your institution changed significantly since the original application?'      the user clicks the button twice   jQuery = label:contains("Yes")
+    Run Keyword If  '${question_link}' == 'Will you, as a UK institution, be employing PhD students as part of this project?'      the user clicks the button twice   jQuery = label:contains("Yes")
+    Run Keyword If  '${question_link}' == 'Participating Organisation project region'                    wait until keyword succeeds without screenshots   10s    200ms     input text       id = multipleChoiceOptionId  London
+    Run Keyword If  '${question_link}' == 'Participating Organisation project region'                    Execute Javascript                  document.evaluate("//li[text()='answer7']",document.body,null,9,null).singleNodeValue.click();
     the user clicks the button/link     name = complete
     the user clicks the button/link     link = Back to application overview
 
