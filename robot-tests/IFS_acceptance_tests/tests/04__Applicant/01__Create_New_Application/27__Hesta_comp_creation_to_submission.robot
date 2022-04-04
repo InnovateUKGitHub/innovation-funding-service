@@ -410,6 +410,7 @@ the user complete the work programme
     the user should see a field and summary error  You must select an option.
     the user clicks the button/link                id = selected1
     the user clicks the button/link                jQuery = button:contains("Save and continue")
+    the user should see the element                jQuery = p:contains("This question is marked as complete.")
     the user can mark the question as complete
     the user should see the element                jQuery = li:contains("Work programme") > .task-status-complete
 
