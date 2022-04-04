@@ -15,6 +15,8 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11618 HECP Phase 2 - Cost categories - Application view additional updates
 ...
+...               HECP Phase 2 - Remove content from 'View application feedback' link
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -104,7 +106,7 @@ the user should not see any references to assessment and release feedback on clo
     And the element should be disabled    jQuery = button:contains("Close competition")
 
 Internal user can view hecp GOL template
-    [Documentation]  IFS-11299
+    [Documentation]  IFS-11299  IFS-11510
     Given the user completes all project setup sections
     When the user clicks the button/link                            jQuery = td:contains("Review")
     And user clicks on View the grant offer letter page
@@ -382,6 +384,8 @@ the user completes all project setup sections
     the user refreshes until element appears on page                            jQuery = td:contains("${hestaApplicationID}") ~ td:contains("Sent")
     log in as a different user                                                  ${leadApplicantEmail}    ${short_password}
     the user clicks the button/link                                             link = ${hestaApplicationName}
+    ##Check to see the view application link is without 'feedback'
+    The user should see the text in the element                                 link = view application  view application
     the user is able to complete project details section
     the user completes the project team details
     the user is able to complete the Documents section
