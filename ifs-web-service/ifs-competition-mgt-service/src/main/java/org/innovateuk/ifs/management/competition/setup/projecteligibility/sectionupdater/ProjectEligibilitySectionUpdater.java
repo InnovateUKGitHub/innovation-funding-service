@@ -40,15 +40,7 @@ public class ProjectEligibilitySectionUpdater extends AbstractSectionUpdater imp
     ) {
         ProjectEligibilityForm projectEligibilityForm = (ProjectEligibilityForm) competitionSetupForm;
 
-        if (competition.isNonFinanceType()) {
-            competition.setMaxResearchRatio(NONE.getAmount());
-        } else {
-            ResearchParticipationAmount amount = ResearchParticipationAmount.fromId(projectEligibilityForm.getResearchParticipationAmountId());
-
-            if (amount != null) {
-                competition.setMaxResearchRatio(amount.getAmount());
-            }
-        }
+        competition.setMaxResearchRatio(projectEligibilityForm.getResearchParticipationPercentage());
 
         boolean multiStream = "yes".equals(projectEligibilityForm.getMultipleStream());
         competition.setMultiStream(multiStream);

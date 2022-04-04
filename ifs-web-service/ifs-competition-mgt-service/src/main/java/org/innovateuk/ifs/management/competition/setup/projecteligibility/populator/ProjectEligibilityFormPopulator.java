@@ -1,13 +1,14 @@
 package org.innovateuk.ifs.management.competition.setup.projecteligibility.populator;
 
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupFormPopulator;
 import org.innovateuk.ifs.management.competition.setup.core.util.CompetitionUtils;
 import org.innovateuk.ifs.management.competition.setup.projecteligibility.form.ProjectEligibilityForm;
-import org.innovateuk.ifs.management.funding.form.enumerable.ResearchParticipationAmount;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,9 +28,10 @@ public class ProjectEligibilityFormPopulator implements CompetitionSetupFormPopu
     public CompetitionSetupForm populateForm(CompetitionResource competitionResource) {
         ProjectEligibilityForm competitionSetupForm = new ProjectEligibilityForm();
 
-        ResearchParticipationAmount amount = ResearchParticipationAmount.fromAmount(competitionResource.getMaxResearchRatio());
-        if (amount != null) {
-            competitionSetupForm.setResearchParticipationAmountId(amount.getId());
+        if (competitionResource.getMaxResearchRatio() == null) {
+            competitionSetupForm.setResearchParticipationPercentage(0);
+        } else {
+            competitionSetupForm.setResearchParticipationPercentage(competitionResource.getMaxResearchRatio());
         }
 
         competitionSetupForm.setMultipleStream("no");

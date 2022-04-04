@@ -262,6 +262,7 @@ public class CompetitionSetupController {
                                                   Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
+        validateResearchParticipationPercentage(competitionSetupForm, bindingResult);
         if ("yes".equals(competitionSetupForm.getMultipleStream()) && ObjectUtils.isEmpty(competitionSetupForm.getStreamName())) {
             bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "streamName", "A stream name is required"));
         }
@@ -450,5 +451,12 @@ public class CompetitionSetupController {
         node.put("success", success ? "true" : "false");
 
         return node;
+    }
+    private void validateResearchParticipationPercentage(ProjectEligibilityForm competitionSetupForm, BindingResult bindingResult) {
+        Integer researchParticipationPercentage = competitionSetupForm.getResearchParticipationPercentage();
+        if (researchParticipationPercentage == null || researchParticipationPercentage > 100 || researchParticipationPercentage < 0) {
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "researchParticipationPercentage",
+                    "You must enter a number between 0 to 100."));
+        }
     }
 }

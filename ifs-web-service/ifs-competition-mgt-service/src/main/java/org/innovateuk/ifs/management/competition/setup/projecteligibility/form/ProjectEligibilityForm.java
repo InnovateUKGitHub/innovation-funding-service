@@ -1,14 +1,13 @@
 package org.innovateuk.ifs.management.competition.setup.projecteligibility.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.commons.validation.predicate.BiPredicateProvider;
 import org.innovateuk.ifs.finance.resource.FundingLevel;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.funding.form.enumerable.ResearchParticipationAmount;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.List;
 import java.util.function.BiPredicate;
 
@@ -29,8 +28,7 @@ public class ProjectEligibilityForm extends CompetitionSetupForm {
 
     private List<Long> leadApplicantTypes;
 
-    @NotNull(message = "{validation.eligibilityform.researchparticipationamountId.required}")
-    private int researchParticipationAmountId = ResearchParticipationAmount.NONE.getId();
+    private int researchParticipationPercentage = 0;
 
     @NotBlank(message = "{validation.eligibilityform.resubmission.required}")
     private String resubmission;
@@ -77,12 +75,12 @@ public class ProjectEligibilityForm extends CompetitionSetupForm {
         this.leadApplicantTypes = leadApplicantTypes;
     }
 
-    public int getResearchParticipationAmountId() {
-        return researchParticipationAmountId;
+    public int getResearchParticipationPercentage() {
+        return researchParticipationPercentage;
     }
 
-    public void setResearchParticipationAmountId(int researchParticipationAmountId) {
-        this.researchParticipationAmountId = researchParticipationAmountId;
+    public void setResearchParticipationPercentage(int researchParticipationPercentage) {
+        this.researchParticipationPercentage = researchParticipationPercentage;
     }
 
     public boolean isKtpCompetition() {
@@ -121,5 +119,14 @@ public class ProjectEligibilityForm extends CompetitionSetupForm {
             }
             return true;
         }
+    }
+
+    @JsonIgnore
+    public String getResearchParticipationPercentageDisplayName() {
+        String researchParticipationPercentageDisplayName = "None";
+        if (researchParticipationPercentage != 0) {
+            researchParticipationPercentageDisplayName = String.valueOf(researchParticipationPercentage) + "%";
+        }
+        return  researchParticipationPercentageDisplayName;
     }
 }
