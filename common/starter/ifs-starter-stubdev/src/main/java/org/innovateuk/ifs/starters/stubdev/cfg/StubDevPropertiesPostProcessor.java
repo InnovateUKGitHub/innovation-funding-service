@@ -13,28 +13,18 @@ import org.springframework.core.io.Resource;
 import java.io.IOException;
 import java.util.Arrays;
 
+import static org.innovateuk.ifs.starter.common.util.ProfileUtils.profileMatches;
+import static org.innovateuk.ifs.starter.common.util.YamlPropertyLoader.registerPropertySource;
+
 public class StubDevPropertiesPostProcessor implements EnvironmentPostProcessor {
 
     public static final String AUTOCONFIG_STUBDEV_YML = "autoconfig-stubdev.yml";
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
-        if (Arrays.stream(environment.getActiveProfiles()).anyMatch(s -> s.equals(IfsProfileConstants.STUBDEV))) {
-            Resource resource = new ClassPathResource(AUTOCONFIG_STUBDEV_YML);
-            if (resource.exists()) {
-                registerPropertySource(environment, resource);
-            }
+        if (profileMatches(environment, IfsProfileConstants.STUBDEV)) {
+            registerPropertySource(environment, new ClassPathResource(AUTOCONFIG_STUBDEV_YML));
         }
     }
 
-    protected void registerPropertySource(ConfigurableEnvironment environment, Resource resource) {
-        PropertySourceLoader loader = new YamlPropertySourceLoader();
-        try {
-            OriginTrackedMapPropertySource propertyFileSource = (OriginTrackedMapPropertySource) loader
-                    .load(AUTOCONFIG_STUBDEV_YML, resource).get(0);
-            environment.getPropertySources().addFirst(propertyFileSource);
-        } catch (IOException ex) {
-            throw new IllegalStateException("Failed to load properties from " + resource, ex);
-        }
-    }
 }

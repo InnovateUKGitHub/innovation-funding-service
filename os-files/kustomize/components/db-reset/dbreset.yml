@@ -25,43 +25,43 @@ spec:
       env:
         - name: DB_HOST
           valueFrom:
-            configMapKeyRef:
-              name: db-config
+            secretKeyRef:
+              name: db-secrets
               key: DB_HOST
         - name: DB_PORT
           valueFrom:
-            configMapKeyRef:
-              name: db-config
+            secretKeyRef:
+              name: db-secrets
               key: DB_PORT
         - name: DB_NAME
           valueFrom:
-            configMapKeyRef:
-              name: db-config
+            secretKeyRef:
+              name: db-secrets
               key: DB_NAME
         - name: DB_USER
           valueFrom:
-            configMapKeyRef:
-              name: db-config
+            secretKeyRef:
+              name: db-secrets
               key: DB_USER
         - name: DB_PASS
           valueFrom:
-            configMapKeyRef:
-              name: db-config
+            secretKeyRef:
+              name: db-secrets
               key: DB_PASS
         - name: PERFORMANCE_APPLICANT_USERS
           valueFrom:
             configMapKeyRef:
-              name: performance-config
+              name: db-reset-config
               key: PERFORMANCE_APPLICANT_USERS
         - name: PERFORMANCE_h2020_USERS
           valueFrom:
             configMapKeyRef:
-              name: performance-config
+              name: db-reset-config
               key: PERFORMANCE_h2020_USERS
         - name: LDAP_HOST
           valueFrom:
-            configMapKeyRef:
-              name: ldap-config
+            secretKeyRef:
+              name: ldap-secrets
               key: LDAP_HOST
         - name: LDAP_PORT
           valueFrom:
@@ -70,8 +70,8 @@ spec:
               key: LDAP_PORT
         - name: LDAP_PASSWORD
           valueFrom:
-            configMapKeyRef:
-              name: ldap-config
+            secretKeyRef:
+              name: ldap-secrets
               key: LDAP_PASSWORD
         - name: LDAP_DOMAIN
           valueFrom:
@@ -81,12 +81,12 @@ spec:
         - name: ONLY_SYNC_LDAP
           valueFrom:
             configMapKeyRef:
-              name: ldap-config
+              name: db-reset-config
               key: ONLY_SYNC_LDAP
         - name: ONLY_DELETE_IFS_USERS
           valueFrom:
             configMapKeyRef:
-              name: ldap-config
+              name: db-reset-config
               key: ONLY_DELETE_IFS_USERS
         - name: LDAP_SCHEME
           valueFrom:
@@ -100,8 +100,8 @@ spec:
               key: FLYWAY_TABLE
         - name: SYSTEM_USER_UUID
           valueFrom:
-            configMapKeyRef:
-              name: flyway-config
+            secretKeyRef:
+              name: flyway-secrets
               key: SYSTEM_USER_UUID
         - name: IFS_TEST_USER_PASSWORD
           value: "%%IFS_TEST_USER_PASSWORD%%"
