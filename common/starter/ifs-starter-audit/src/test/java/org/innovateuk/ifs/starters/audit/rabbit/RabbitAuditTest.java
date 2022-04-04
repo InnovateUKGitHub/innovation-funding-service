@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.starters.audit.rabbit;
 
+import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.api.audit.Audit;
 import org.innovateuk.ifs.api.audit.AuditMessageBuilder;
 import org.innovateuk.ifs.api.audit.AuditType;
@@ -11,7 +12,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-@ActiveProfiles({"AMQP"})
+@ActiveProfiles({IfsProfileConstants.AMQP_PROFILE})
 @SpringBootTest(classes = {RabbitAuditTestConfiguration.class})
 @EnableConfigurationProperties(AuditConfigurationProperties.class)
 public class RabbitAuditTest {
