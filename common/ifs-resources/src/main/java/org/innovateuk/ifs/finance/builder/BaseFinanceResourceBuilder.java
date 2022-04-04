@@ -247,6 +247,21 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
         );
     }
 
+    public S withIndustrialCostsForThirdPartyOfgem() {
+        return withFinanceOrganisationDetails(asMap(
+                        FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
+                                        newLabourCost().
+                                                withId(1L).
+                                                withRate(BigDecimal.TEN).
+                                                withDescription("Developers").
+                                                withLabourDays(100).
+                                                withThirdPartyOfgem(true).
+                                                build(1)).
+                                build()
+                )
+        );
+    }
+
     public S withEmptyIndirectCosts() {
         return withFinanceOrganisationDetails(asMap(
                 FinanceRowType.INDIRECT_COSTS, newDefaultCostCategory()

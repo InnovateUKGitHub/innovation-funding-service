@@ -8,6 +8,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -109,5 +110,25 @@ public class LabourCostCategoryTest {
     public void checkCostCategorySetToExcludeFromTotalCosts() {
 
         assertFalse(labourCostCategory.excludeFromTotalCost());
+    }
+
+    @Test
+    public void getTotalForThirdPartyOfgem() {
+
+        labourCost = newLabourCost()
+                .withLabourDays(100)
+                .withRate(BigDecimal.ONE)
+                .withRole("Developer")
+                .withThirdPartyOfgem(true)
+                .build();
+
+        costs = Collections.singletonList(labourCost);
+        labourCostCategory = newLabourCostCategory()
+                .withCosts(costs)
+                .build();
+
+        labourCostCategory.calculateTotal();
+
+        assertEquals(0, new BigDecimal(100).compareTo(labourCostCategory.getTotal()));
     }
 }

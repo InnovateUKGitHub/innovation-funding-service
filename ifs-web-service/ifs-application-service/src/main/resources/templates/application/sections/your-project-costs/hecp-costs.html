@@ -62,17 +62,38 @@
             </div>
 
             <div class="govuk-form-group"
-                 th:classappend="${#fields.hasErrors('overhead')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-label--s" th:for="overhead">
-                    <span>Indirect costs</span>
+                 th:classappend="${#fields.hasErrors('subcontracting')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s" th:for="subcontracting">
+                    <span>Subcontracting costs</span>
                 </label>
                 <th:block
-                        th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=overhead)"/>
+                        th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=subcontracting)"/>
                 <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
                 <input type="number"
                        data-prevent-input-non-number
                        class="govuk-input govuk-input--width-10 cost-total"
-                       th:field="*{overhead}"
+                       th:field="*{subcontracting}"
+                       min="0"
+                       th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
+                       placeholder="0"
+                       step="1"
+                       th:readonly="${model.readOnly}"
+                       th:errorclass="govuk-input--error"/>
+            </div>
+
+            <div class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('travel')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s" th:for="travel">
+                    <span>Travel and subsistence</span>
+                </label>
+                <th:block
+                        th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=travel)"/>
+
+                <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
+                <input type="number"
+                       data-prevent-input-non-number
+                       class="govuk-input govuk-input--width-10 cost-total"
+                       th:field="*{travel}"
                        min="0"
                        th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                        placeholder="0"
@@ -122,47 +143,6 @@
             </div>
 
             <div class="govuk-form-group"
-                 th:classappend="${#fields.hasErrors('subcontracting')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-label--s" th:for="subcontracting">
-                    <span>Subcontracting costs</span>
-                </label>
-                <th:block
-                        th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=subcontracting)"/>
-                <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
-                <input type="number"
-                       data-prevent-input-non-number
-                       class="govuk-input govuk-input--width-10 cost-total"
-                       th:field="*{subcontracting}"
-                       min="0"
-                       th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
-                       placeholder="0"
-                       step="1"
-                       th:readonly="${model.readOnly}"
-                       th:errorclass="govuk-input--error"/>
-            </div>
-
-            <div class="govuk-form-group"
-                 th:classappend="${#fields.hasErrors('travel')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-label--s" th:for="travel">
-                    <span>Travel and subsistence</span>
-                </label>
-                <th:block
-                        th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=travel)"/>
-
-                <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
-                <input type="number"
-                       data-prevent-input-non-number
-                       class="govuk-input govuk-input--width-10 cost-total"
-                       th:field="*{travel}"
-                       min="0"
-                       th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
-                       placeholder="0"
-                       step="1"
-                       th:readonly="${model.readOnly}"
-                       th:errorclass="govuk-input--error"/>
-            </div>
-
-            <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('other')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" th:for="other">
                     <span>Other costs</span>
@@ -174,6 +154,26 @@
                        data-prevent-input-non-number
                        class="govuk-input govuk-input--width-10 cost-total"
                        th:field="*{other}"
+                       min="0"
+                       th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
+                       placeholder="0"
+                       step="1"
+                       th:readonly="${model.readOnly}"
+                       th:errorclass="govuk-input--error"/>
+            </div>
+
+            <div class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('overhead')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s" th:for="overhead">
+                    <span>Indirect costs</span>
+                </label>
+                <th:block
+                        th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=overhead)"/>
+                <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
+                <input type="number"
+                       data-prevent-input-non-number
+                       class="govuk-input govuk-input--width-10 cost-total"
+                       th:field="*{overhead}"
                        min="0"
                        th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                        placeholder="0"

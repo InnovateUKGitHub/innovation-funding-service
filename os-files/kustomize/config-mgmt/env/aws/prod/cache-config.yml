@@ -1,0 +1,7 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: cache-config
+data:
+  IFS_DATA_SERVICE_CACHE_PREFIX: "prod:"
+  IFS_DATA_SERVICE_REDIS_SSL: "true"

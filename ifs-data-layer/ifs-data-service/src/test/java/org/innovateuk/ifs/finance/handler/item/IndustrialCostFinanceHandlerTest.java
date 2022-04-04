@@ -153,7 +153,7 @@ public class IndustrialCostFinanceHandlerTest {
                 .withFecModelEnabled(true)
                 .build();
 
-        List<ApplicationFinanceRow> costs = initialiseFinanceTypesAndCost(applicationFinance);
+        List<ApplicationFinanceRow> costs = initialiseFinanceTypesAndCost(applicationFinance, false);
 
         when(applicationFinanceRepository.findById(any())).thenReturn(Optional.ofNullable(applicationFinance));
         when(financeRowRepositoryMock.findByTargetId(applicationFinance.getId())).thenReturn(costs);
@@ -161,7 +161,7 @@ public class IndustrialCostFinanceHandlerTest {
                 .thenAnswer(invocation -> invocation.getArgument(1));
     }
 
-    private List<ApplicationFinanceRow> initialiseFinanceTypesAndCost(ApplicationFinance applicationFinance) {
+    private List<ApplicationFinanceRow> initialiseFinanceTypesAndCost(ApplicationFinance applicationFinance, boolean thirdPartyOfgem) {
         List<ApplicationFinanceRow> costs = new ArrayList<>();
 
         Iterable<ApplicationFinanceRow> init;
@@ -212,7 +212,7 @@ public class IndustrialCostFinanceHandlerTest {
         subContractingCost2.setTarget(applicationFinance);
         costs.add((ApplicationFinanceRow) subContractingCost2);
 
-        LabourCost labour = buildLabourCost();
+        LabourCost labour = getLabourCost(thirdPartyOfgem);
         FinanceRow labourCost = industrialCostFinanceHandler.toApplicationDomain(labour);
         labourCost.setTarget(applicationFinance);
         costs.add((ApplicationFinanceRow) labourCost);
@@ -228,6 +228,18 @@ public class IndustrialCostFinanceHandlerTest {
         costs.add((ApplicationFinanceRow) vatCost);
 
         return costs;
+    }
+
+    private LabourCost getLabourCost(boolean thirdPartyOfgem) {
+        LabourCost labour;
+
+        if (thirdPartyOfgem) {
+            labour = buildLabourCostForThirdPartyOfgem();
+        } else {
+            labour = buildLabourCost();
+        }
+
+        return labour;
     }
 
     private Vat buildVat(Finance finance) {
@@ -252,6 +264,16 @@ public class IndustrialCostFinanceHandlerTest {
                 .withGrossEmployeeCost(BigDecimal.valueOf(50000))
                 .withRole("Developer")
                 .withDescription("")
+                .build();
+    }
+
+    private LabourCost buildLabourCostForThirdPartyOfgem() {
+        return newLabourCost()
+                .withName("third-party-ofgem")
+                .withLabourDays(300)
+                .withRole("Developer")
+                .withRate(BigDecimal.ONE)
+                .withThirdPartyOfgem(true)
                 .build();
     }
 
@@ -655,5 +677,38 @@ public class IndustrialCostFinanceHandlerTest {
         assertEquals(1, defaultCostCategory.getCosts().size());
         assertEquals(INDIRECT_COSTS, defaultCostCategory.getCosts().get(0).getCostType());
         assertEquals(0, BigDecimal.ONE.compareTo(defaultCostCategory.getCosts().get(0).getTotal()));
+    }
+
+    private void setupThirdPartyOfgemCompetitionFinance() {
+        Competition competition = newCompetition()
+                .withFundingType(FundingType.THIRDPARTY)
+                .withCompetitionType(newCompetitionType().withName("Ofgem").build())
+                .withFinanceRowTypes(Arrays.stream(FinanceRowType.values()).collect(Collectors.toList()))
+                .build();
+
+        Application application = newApplication().withCompetition(competition).build();
+        applicationFinance = newApplicationFinance()
+                .withApplication(application)
+                .withFecModelEnabled(false)
+                .build();
+
+        List<ApplicationFinanceRow> costs = initialiseFinanceTypesAndCost(applicationFinance, true);
+
+        when(applicationFinanceRepository.findById(any())).thenReturn(Optional.ofNullable(applicationFinance));
+        when(financeRowRepositoryMock.findByTargetId(applicationFinance.getId())).thenReturn(costs);
+        when(ktpFecFilterMock.filterKtpFecCostCategoriesIfRequired(applicationFinance, costs))
+                .thenAnswer(invocation -> invocation.getArgument(1));
+    }
+
+    @Test
+    public void getOrganisationFinancesLabourForThirdPartyOfgem() {
+        setupThirdPartyOfgemCompetitionFinance();
+
+        Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = industrialCostFinanceHandler.getOrganisationFinances(applicationFinance.getId());
+        LabourCostCategory labourCategory = (LabourCostCategory) organisationFinances.get(LABOUR);
+        labourCategory.calculateTotal();
+        assertEquals(0, new BigDecimal(300).compareTo(labourCategory.getTotal()));
+        assertEquals("Testing equality for; " + LABOUR.getType(), new BigDecimal(300).setScale(5),
+                organisationFinances.get(LABOUR).getTotal().setScale(5));
     }
 }

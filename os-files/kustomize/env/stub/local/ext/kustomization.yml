@@ -2,12 +2,8 @@ commonAnnotations:
   deployedWith: kustomize
   environment: local
 
-bases:
-  - ../../stub-base
-
 components:
   - ../../../../components/auth
-  - ../../../../components/cache-provider
   - ../../../../components/ifs-database
   - ../../../../components/mail
   - ../../../../patches/new-relic-env-vars-patch
@@ -15,20 +11,10 @@ components:
   - ../../../../patches/spring-profile-patch
 
 resources:
-  - config-maps/spring-config.yml
-  - secrets/ldap-keys-secrets.yml
-  - secrets/registration-keys-secrets.yml
-  - secrets/sp-keys-secrets.yml
-  - secrets/idp-keys-secrets.yml
-  - secrets/sp-secrets.yml
-  - config-maps/idp-config.yml
-  - config-maps/idp-metadata.yml
-  - config-maps/ldap-config.yml
-  - config-maps/shibboleth-config.yml
-  - config-maps/web-config.yml
+  - ../../../../config-mgmt/env/local
+  - ../../../../secrets-mgmt/env/local
 
 patchesStrategicMerge:
-  - mail/mail-config.yml
   - mail/mail.yml
   - ifs-database/ifs-database.yml
   - auth/idp/idp.yml

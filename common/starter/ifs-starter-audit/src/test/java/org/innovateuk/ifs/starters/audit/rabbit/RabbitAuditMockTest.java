@@ -2,6 +2,7 @@ package org.innovateuk.ifs.starters.audit.rabbit;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.api.audit.Audit;
 import org.innovateuk.ifs.api.audit.AuditMessageBuilder;
 import org.innovateuk.ifs.api.audit.AuditType;
@@ -19,7 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@ActiveProfiles({"AMQP"})
+@ActiveProfiles({IfsProfileConstants.AMQP_PROFILE})
 @SpringBootTest(classes = {RabbitAuditTestConfiguration.class})
 @EnableConfigurationProperties(AuditConfigurationProperties.class)
 public class RabbitAuditMockTest {

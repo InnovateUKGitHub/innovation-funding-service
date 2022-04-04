@@ -2,6 +2,7 @@ package org.innovateuk.ifs.starters.stubdev;
 
 import com.google.common.collect.ImmutableList;
 import org.innovateuk.ifs.IfsProfileConstants;
+import org.innovateuk.ifs.starter.common.util.ProfileUtils;
 import org.innovateuk.ifs.starters.stubdev.cfg.StubDevConfigurationProperties;
 import org.innovateuk.ifs.starters.stubdev.filter.RewriteFilter;
 import org.innovateuk.ifs.starters.stubdev.security.StubUidSupplier;
@@ -22,6 +23,8 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.innovateuk.ifs.IfsProfileConstants.SIMPLE_CACHE;
+import static org.innovateuk.ifs.IfsProfileConstants.STUBDEV;
 import static org.innovateuk.ifs.starters.stubdev.cfg.StubDevConfigurationProperties.STUB_DEV_PROPS_PREFIX;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -42,12 +45,10 @@ public class IfsStubDevAutoConfigurationTest {
             TimerAspect.class
     );
 
-    private static final String PROFILE_PROP = AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME + "=" + IfsProfileConstants.STUBDEV;
-
     @Test
     public void testConfigWithDevtoolsAndProfileAndThymleafDebug() {
         new ApplicationContextRunner()
-                .withSystemProperties(PROFILE_PROP)
+                .withSystemProperties(ProfileUtils.activeProfilesString(STUBDEV))
                 .withSystemProperties(
                         STUB_DEV_PROPS_PREFIX + ".validateHtml=true",
                         STUB_DEV_PROPS_PREFIX + ".enableClientMethodTiming=true",
@@ -65,7 +66,7 @@ public class IfsStubDevAutoConfigurationTest {
     @Test
     public void testConfigWithDevtoolsAndWrongProfile() {
         new ApplicationContextRunner()
-                .withSystemProperties(AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME + "=" + IfsProfileConstants.AMQP_PROFILE)
+                .withSystemProperties(ProfileUtils.activeProfilesString(IfsProfileConstants.AMQP_PROFILE))
                 .withConfiguration(
                         AutoConfigurations.of(LocalDevToolsAutoConfiguration.class, IfsStubDevAutoConfiguration.class)
                 ).run((context) -> {
@@ -78,7 +79,7 @@ public class IfsStubDevAutoConfigurationTest {
     public void testConfigWithDevtoolsAndProfile() {
         new ApplicationContextRunner()
                 .withSystemProperties(
-                    PROFILE_PROP,
+                    ProfileUtils.activeProfilesString(STUBDEV),
                     STUB_DEV_PROPS_PREFIX + ".defaultUuid=123-456-789"
                 )
                 .withConfiguration(

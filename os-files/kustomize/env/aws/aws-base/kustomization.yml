@@ -5,14 +5,10 @@ commonAnnotations:
   aws-base: aws-base
 
 bases:
-  - ../../env-base
+  - ../../../base
 
 components:
   - ../../../components/sba
   - ../../../components/registration-service
   - ../../../components/data-layer/
   - ../../../components/web-layer
-
-resources:
-  - config-maps/finance-db-config.yml
-  - config-maps/survey-db-config.yml
