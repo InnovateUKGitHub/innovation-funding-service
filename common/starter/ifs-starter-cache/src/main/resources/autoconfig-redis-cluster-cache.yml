@@ -1,0 +1,17 @@
+## Redis Config -  defaults not set via env variables (k8s config-map) 
+## (SYSINT, PERF, UAT, DEMO and PROD)
+spring:
+  cache:
+    type: REDIS
+  redis:
+    clientType: LETTUCE
+    timeout: 1s
+    enable-statistics: true
+    cluster:
+      # Seems to be required as this is a list
+      nodes: ${SPRING_REDIS_CLUSTER_NODES}
+      maxRedirects: 3
+  data:
+    redis:
+      repositories:
+        enabled: false
