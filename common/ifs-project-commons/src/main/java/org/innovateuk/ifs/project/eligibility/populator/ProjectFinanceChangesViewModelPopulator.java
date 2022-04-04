@@ -126,7 +126,9 @@ public class ProjectFinanceChangesViewModelPopulator {
             }
 
             String section = sectionName(competition, rowType);
-            CostChangeViewModel costChange = new CostChangeViewModel(section,
+            CostChangeViewModel costChange = new CostChangeViewModel(
+                    rowType,
+                    section,
                     financeRowAppCostCategoryTotal,
                     financeRowProjectCostCategory.getTotal());
 
@@ -137,6 +139,7 @@ public class ProjectFinanceChangesViewModelPopulator {
             }
         }
 
+        sectionDifferences = competition.isHorizonEuropeGuarantee() ? sortHecpSectionDifferences(sectionDifferences) : sectionDifferences;
         boolean appVatRegistered = appFinance.isVatRegistered();
         boolean projectVatRegistered = projectFinance.isVatRegistered();
         ProjectFinanceChangesProjectFinancesViewModel projectFinanceChangesProjectFinancesViewModel = new ProjectFinanceChangesProjectFinancesViewModel(sectionDifferences, appVatRegistered, projectVatRegistered, vat);
@@ -321,4 +324,18 @@ public class ProjectFinanceChangesViewModelPopulator {
                 .collect(Collectors.toList());
     }
 
+    private List<CostChangeViewModel> sortHecpSectionDifferences(List<CostChangeViewModel> sectionDifferences) {
+        return sectionDifferences.stream().sorted((o1, o2) -> {
+            List<FinanceRowType> hecpFinanceRowOrder = Stream.of(
+                    FinanceRowType.LABOUR,
+                    FinanceRowType.SUBCONTRACTING_COSTS,
+                    FinanceRowType.TRAVEL,
+                    FinanceRowType.MATERIALS,
+                    FinanceRowType.CAPITAL_USAGE,
+                    FinanceRowType.OTHER_COSTS,
+                    FinanceRowType.OVERHEADS).collect(Collectors.toList());
+            return (hecpFinanceRowOrder.contains(o1.getFinanceRowType()) ? hecpFinanceRowOrder.indexOf(o1.getFinanceRowType()) : hecpFinanceRowOrder.size()) -
+                    (hecpFinanceRowOrder.contains(o2.getFinanceRowType()) ? hecpFinanceRowOrder.indexOf(o2.getFinanceRowType()) : hecpFinanceRowOrder.size());
+        }).collect(Collectors.toList());
+    }
 }

@@ -31,6 +31,7 @@ import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.financechecks.form.FinanceChecksQueryConstraints;
 import org.innovateuk.ifs.project.financechecks.form.FinanceChecksQueryResponseForm;
+import org.innovateuk.ifs.project.financechecks.populator.FinanceChecksEligibilityHecpCostsFormPopulator;
 import org.innovateuk.ifs.project.financechecks.populator.FinanceChecksEligibilityProjectCostsFormPopulator;
 import org.innovateuk.ifs.project.financechecks.populator.ProjectFinanceChecksReadOnlyPopulator;
 import org.innovateuk.ifs.project.financechecks.viewmodel.FinanceChecksProjectCostsViewModel;
@@ -142,6 +143,9 @@ public class ProjectFinanceChecksController {
 
     @Autowired
     private ProjectFinanceChecksReadOnlyPopulator projectFinanceChecksReadOnlyPopulator;
+
+    @Autowired
+    private FinanceChecksEligibilityHecpCostsFormPopulator hecpCostsFormPopulator;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping
@@ -519,7 +523,9 @@ public class ProjectFinanceChecksController {
                     canEditProjectCosts,
                     competition.isThirdPartyOfgem(),
                     competition.isHorizonEuropeGuarantee()));
-            model.addAttribute("form", formPopulator.populateForm(project.getId(), organisation.getId(), competition.isThirdPartyOfgem()));
+            model.addAttribute("form", competition.isHorizonEuropeGuarantee() ?
+                    hecpCostsFormPopulator.populate(project.getId(), organisation.getId()) :
+                    formPopulator.populateForm(project.getId(), organisation.getId(), competition.isThirdPartyOfgem()));
         } else {
             model.addAttribute("academicCostForm", projectAcademicCostFormPopulator.populate(new AcademicCostForm(), project.getId(), organisation.getId()));
         }
