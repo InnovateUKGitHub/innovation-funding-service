@@ -105,13 +105,17 @@ the lead applicant marks the questions as complete (multiple appendices and mult
 the lead applicant marks the questions as complete (hecp)
     [Arguments]  ${question_link}
     the user clicks the button/link     jQuery = h3 a:contains("${question_link}")
-    the user can't complete the question without selecting answer (validation error messages check)
     Run Keyword If  '${question_link}' == 'Tell us where your organisation is based'                    the user clicks the button twice   jQuery = label:contains("My organisation is based in the UK or a British Overseas Territory")
     Run Keyword If  '${question_link}' == 'What EIC call have you been successfully evaluated for?'     the user clicks the button twice   jQuery = label:contains("EIC Transition")
+    Run Keyword If  '${question_link}' == 'Application reference number'     the user enters text to a text field    css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
+    Run Keyword If  '${question_link}' == 'UK Funding contribution applied for (GBP)'     the user enters text to a text field    css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
+    Run Keyword If  '${question_link}' == 'If this amount has changed please tell us how?'     the user enters text to a text field    css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
+    Run Keyword If  '${question_link}' == 'If so, how many PhD students will be employed at your institution on this project?'     the user enters text to a text field    css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
+    Run Keyword If  '${question_link}' == 'How much budget is allocated for PhD students employed at your institution on this project?'     the user enters text to a text field    css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
     Run Keyword If  '${question_link}' == 'Have the tasks assigned to your institution changed significantly since the original application?'      the user clicks the button twice   jQuery = label:contains("Yes")
     Run Keyword If  '${question_link}' == 'Will you, as a UK institution, be employing PhD students as part of this project?'      the user clicks the button twice   jQuery = label:contains("Yes")
-    Run Keyword If  '${question_link}' == 'Participating Organisation project region'                    wait until keyword succeeds without screenshots   10s    200ms     input text       id = multipleChoiceOptionId  London
-    Run Keyword If  '${question_link}' == 'Participating Organisation project region'                    Execute Javascript                  document.evaluate("//li[text()='answer7']",document.body,null,9,null).singleNodeValue.click();
+    Run Keyword If  '${question_link}' == 'Participating Organisation project region'       run keywords    wait until keyword succeeds without screenshots   10s    200ms     input text       id = multipleChoiceOptionId  London
+   ...                                            AND                                       Execute Javascript                  document.evaluate("//li[text()='London']",document.body,null,9,null).singleNodeValue.click();
     the user clicks the button/link     name = complete
     the user clicks the button/link     link = Back to application overview
 

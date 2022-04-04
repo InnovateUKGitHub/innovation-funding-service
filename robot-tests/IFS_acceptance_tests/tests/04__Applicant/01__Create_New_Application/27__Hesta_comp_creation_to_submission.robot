@@ -303,7 +303,7 @@ the user completes hecp project finances
     the user enters the project location
     Run Keyword if  '${Project_growth_table}' == 'no'    the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
     Run Keyword if  '${Project_growth_table}' == 'yes'  the user fills the organisation details with Project growth table  ${Application}  ${SMALL_ORGANISATION_SIZE}
-    the user checks Your Funding section        ${Application}
+    the user completes your funding section        ${Application}
     the user should see all finance subsections complete
     the user clicks the button/link  link = Back to application overview
     the user should see the element  jQuery = li:contains("Your project finances") > .task-status-complete
@@ -406,3 +406,8 @@ the user see the print view of the application
   the user should see the element                               xpath = //*[contains(text(),'Other costs (£)')]
   the user should see the element                               xpath = //*[contains(text(),'Indirect costs (£)')]
   the user navigates to the page                                ${SERVER}/application/${hestaApplicationID}
+
+the user completes your funding section
+    [Arguments]  ${Application}
+    the user clicks the button/link             link = Your funding
+    the user fills in the funding information   ${Application}   no
