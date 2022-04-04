@@ -68,7 +68,7 @@ public class FinanceChecksEligibilityHecpCostsSaver {
             cost.setRateType(OverheadRateType.NONE);
             cost.setRate(0);
         } else {
-            cost.setRateType(OverheadRateType.HORIZON_2020_TOTAL);
+            cost.setRateType(OverheadRateType.HORIZON_EUROPE_GUARANTEE_TOTAL);
             cost.setRate(form.getOverhead().intValue());
         }
         financeRowRestService.update(cost);
