@@ -21,7 +21,6 @@ import static com.google.common.collect.Sets.newHashSet;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.*;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.FormInputBuilder.aFormInput;
-import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.GuidanceRowBuilder.aGuidanceRow;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.MultipleChoiceOptionBuilder.aMultipleChoiceOption;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aQuestion;
 
@@ -117,13 +116,12 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                                         aMultipleChoiceOption()
                                                 .withText("My organisation is based in the UK or a British Overseas Territory"),
                                         aMultipleChoiceOption()
-                                                .withText("My organisation is based in the UK or a British Overseas Territory")
+                                                .withText("My organisation is NOT based in the UK or a British Overseas Territory")
                                 )),
                         aFormInput()
                                 .withType(FormInputType.TEXTAREA)
                                 .withScope(FormInputScope.APPLICATION)
-                                .withActive(false)
-                                .withWordCount(400),
+                                .withActive(false),
                         aFormInput()
                                 .withType(FormInputType.TEMPLATE_DOCUMENT)
                                 .withScope(FormInputScope.APPLICATION)
@@ -139,6 +137,7 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                         aFormInput()
                                 .withType(FormInputType.TEXTAREA)
                                 .withScope(FormInputScope.ASSESSMENT)
+                                .withWordCount(100)
                                 .withActive(false)
                 ));
     }
@@ -192,8 +191,7 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                         aFormInput()
                                 .withType(FormInputType.TEXTAREA)
                                 .withScope(FormInputScope.APPLICATION)
-                                .withActive(false)
-                                .withWordCount(400),
+                                .withActive(false),
                         aFormInput()
                                 .withType(FormInputType.TEMPLATE_DOCUMENT)
                                 .withScope(FormInputScope.APPLICATION)
@@ -209,6 +207,7 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                         aFormInput()
                                 .withType(FormInputType.TEXTAREA)
                                 .withScope(FormInputScope.ASSESSMENT)
+                                .withWordCount(100)
                                 .withActive(false)
                 ));
     }
@@ -242,8 +241,7 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                         aFormInput()
                                 .withType(FormInputType.TEXTAREA)
                                 .withScope(FormInputScope.APPLICATION)
-                                .withActive(false)
-                                .withWordCount(400),
+                                .withActive(false),
                         aFormInput()
                                 .withType(FormInputType.FILEUPLOAD)
                                 .withScope(FormInputScope.APPLICATION)
@@ -259,6 +257,7 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                         aFormInput()
                                 .withType(FormInputType.TEXTAREA)
                                 .withScope(FormInputScope.ASSESSMENT)
+                                .withWordCount(100)
                                 .withActive(false)
                 ));
     }
@@ -304,6 +303,7 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                         aFormInput()
                                 .withType(FormInputType.TEXTAREA)
                                 .withScope(FormInputScope.ASSESSMENT)
+                                .withWordCount(100)
                                 .withActive(false)
                 ));
     }
@@ -354,6 +354,7 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                         aFormInput()
                                 .withType(FormInputType.TEXTAREA)
                                 .withScope(FormInputScope.ASSESSMENT)
+                                .withWordCount(100)
                                 .withActive(false)
                 ));
     }
@@ -385,8 +386,7 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                         aFormInput()
                                 .withType(FormInputType.TEXTAREA)
                                 .withScope(FormInputScope.APPLICATION)
-                                .withActive(false)
-                                .withWordCount(400),
+                                .withActive(false),
                         aFormInput()
                                 .withType(FormInputType.TEMPLATE_DOCUMENT)
                                 .withScope(FormInputScope.APPLICATION)
@@ -402,6 +402,7 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                         aFormInput()
                                 .withType(FormInputType.TEXTAREA)
                                 .withScope(FormInputScope.ASSESSMENT)
+                                .withWordCount(100)
                                 .withActive(false)
                 ));
     }
@@ -452,9 +453,8 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                         aFormInput()
                                 .withType(FormInputType.TEXTAREA)
                                 .withScope(FormInputScope.ASSESSMENT)
-                                .withActive(false)
                                 .withWordCount(100)
-                                .withGuidanceRows(Collections.emptyList())
+                                .withActive(false)
                 ));
     }
 
@@ -485,8 +485,7 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                         aFormInput()
                                 .withType(FormInputType.TEXTAREA)
                                 .withScope(FormInputScope.APPLICATION)
-                                .withActive(false)
-                                .withWordCount(400),
+                                .withActive(false),
                         aFormInput()
                                 .withType(FormInputType.TEMPLATE_DOCUMENT)
                                 .withScope(FormInputScope.APPLICATION)
@@ -502,6 +501,7 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                         aFormInput()
                                 .withType(FormInputType.TEXTAREA)
                                 .withScope(FormInputScope.ASSESSMENT)
+                                .withWordCount(100)
                                 .withActive(false)
                 ));
     }
@@ -544,9 +544,8 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                         aFormInput()
                                 .withType(FormInputType.TEXTAREA)
                                 .withScope(FormInputScope.ASSESSMENT)
-                                .withActive(false)
                                 .withWordCount(100)
-                                .withGuidanceRows(Collections.emptyList())
+                                .withActive(false)
                 ));
     }
 
@@ -588,9 +587,8 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                         aFormInput()
                                 .withType(FormInputType.TEXTAREA)
                                 .withScope(FormInputScope.ASSESSMENT)
-                                .withActive(false)
                                 .withWordCount(100)
-                                .withGuidanceRows(Collections.emptyList())
+                                .withActive(false)
                 ));
     }
 }
