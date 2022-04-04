@@ -133,9 +133,9 @@ function initialiseTestEnvironment() {
       else
         section "=> RESTARTING LDAP and cache-provider"
         k8s_delete ldap
-        k8s_delete cache-provider
+#        k8s_delete cache-provider
         k8s_wait ldap
-        k8s_wait cache-provider
+#        k8s_wait cache-provider
 
         section "=> STARTING SELENIUM GRID, INJECTING ENVIRONMENT PARAMETERS, RESETTING DATABASE STATE"
         ./gradlew :robot-tests:deployHub :robot-tests:deployChrome :robot-tests:robotTestsFilter :ifs-data-layer:ifs-data-service:flywayClean :ifs-data-layer:ifs-data-service:flywayMigrate -Pinitialise=true --configure-on-demand
