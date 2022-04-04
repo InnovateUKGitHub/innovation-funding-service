@@ -399,28 +399,15 @@
                 <div class="govuk-radios govuk-radios--inline">
                     <div class="govuk-radios__item">
                         <input th:id="__${path}__.newItem.new"
-                               th:field="*{__${path}__.newItem}"
+                               th:name="__${path}__.newItem"
                                th:errorclass="govuk-input--error"
                                class="govuk-radios__input"
-                               type="radio"
+                               type="hidden"
                                value="true"
                                required="required"/>
                         <label th:for="__${path}__.newItem.new"
                                class="govuk-label govuk-radios__label">
                             New
-                        </label>
-                    </div>
-                    <div class="govuk-radios__item">
-                        <input th:id="__${path}__.newItem.existing"
-                               th:field="*{__${path}__.newItem}"
-                               th:errorclass="govuk-input--error"
-                               class="govuk-radios__input"
-                               type="radio"
-                               value="false"
-                               required="required"/>
-                        <label th:for="__${path}__.newItem.existing"
-                               class="govuk-label govuk-radios__label">
-                            Existing
                         </label>
                     </div>
                 </div>
