@@ -10,13 +10,11 @@ import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetu
 import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.CompetitionSetupSectionUpdater;
 import org.innovateuk.ifs.management.competition.setup.core.util.CompetitionUtils;
 import org.innovateuk.ifs.management.competition.setup.projecteligibility.form.ProjectEligibilityForm;
-import org.innovateuk.ifs.management.funding.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.PROJECT_ELIGIBILITY;
-import static org.innovateuk.ifs.management.funding.form.enumerable.ResearchParticipationAmount.NONE;
 
 /**
  * Competition setup section saver for the eligibility section.

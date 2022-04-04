@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.commons.validation.predicate.BiPredicateProvider;
 import org.innovateuk.ifs.finance.resource.FundingLevel;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
-import org.innovateuk.ifs.management.funding.form.enumerable.ResearchParticipationAmount;
 
 import javax.validation.constraints.*;
 import java.util.List;
