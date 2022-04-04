@@ -59,10 +59,9 @@ The user enters text to a text field
     Wait Until Element Is Visible Without Screenshots    ${TEXT_FIELD}
     Clear Element Text    ${TEXT_FIELD}
     Wait Until Keyword Succeeds Without Screenshots    10s    200ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
-    Wait for autosave
     Mouse Out             ${TEXT_FIELD}
     Set Focus To Element    link=GOV.UK
-    #Wait for autosave
+    Wait for autosave
 
 The user enters text to a docusign field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
