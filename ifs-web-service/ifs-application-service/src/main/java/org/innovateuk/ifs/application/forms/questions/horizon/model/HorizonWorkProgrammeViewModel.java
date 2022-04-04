@@ -17,7 +17,7 @@ public class HorizonWorkProgrammeViewModel {
     private final boolean open;
     private final boolean leadApplicant;
     private Map<String, List<HorizonWorkProgramme>> readOnlyMap;
-    private final boolean readOnly;
+    private boolean readOnly;
     private final String pageTitle;
     private final boolean isCallId;
     private final long questionId;
