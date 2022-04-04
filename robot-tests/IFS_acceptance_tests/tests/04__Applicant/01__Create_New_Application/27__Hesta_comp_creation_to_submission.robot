@@ -54,7 +54,7 @@ Comp admin can view Hesta competition type in Initial details read only view
 Comp admin creates Hesta competition
     [Documentation]  IFS-8751  IFS-11486
     Given the user clicks the button/link                            link = Back to competition details
-    Then the competition admin creates Hesta competition             ${BUSINESS_TYPE_ID}  ${hestaCompetitionName}  ${compType_HESTA}  ${compType_HESTA}  STATE_AID  Horizon Europe Guarantee  RELEASE_FEEDBACK  no  1  false  single-or-collaborative
+    Then the competition admin creates Hesta competition             ${BUSINESS_TYPE_ID}  ${hestaCompetitionName}  ${compType_HESTA}  ${compType_HESTA}  STATE_AID  HECP  RELEASE_FEEDBACK  no  1  false  single-or-collaborative
     [Teardown]  Get competition id and set open date to yesterday    ${hestaCompetitionName}
 
 Lead applicant can submit application
@@ -400,17 +400,17 @@ the user completes all project setup sections
 
 the user complete the work programme
     the user clicks the button/link                jQuery = a:contains("Work programme")
-    the user should see a summary error
     the user should see read only view of work program part
     the user clicks the button/link                jQuery = button:contains("Save and continue")
     the user should see a field and summary error  You must select an option.
-    the user clicks the button/link                id = "selected1"
+    the user clicks the button/link                id = selected1
     the user clicks the button/link                jQuery = button:contains("Save and continue")
     the user should see read only view of call ID
     the user clicks the button/link                jQuery = button:contains("Save and continue")
-    The user should see a field and summary error  You must select an option.
-    the user clicks the button/link                id = "selected1"
+    the user should see a field and summary error  You must select an option.
+    the user clicks the button/link                id = selected1
     the user clicks the button/link                jQuery = button:contains("Save and continue")
+    the user should see the element                jQuery = p:contains("This question is marked as complete.")
     the user can mark the question as complete
     the user should see the element                jQuery = li:contains("Work programme") > .task-status-complete
 
