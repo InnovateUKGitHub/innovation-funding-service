@@ -78,7 +78,6 @@ public class ProjectEligibilityModelPopulatorTest {
                 competition
         );
 
-        assertArrayEquals(ResearchParticipationAmount.values(), viewModel.getResearchParticipationAmounts());
         assertArrayEquals(CollaborationLevel.values(), viewModel.getCollaborationLevels());
         assertEquals(researchCategories, viewModel.getResearchCategories());
         assertEquals("Business, Research", viewModel.getLeadApplicantTypesText());
@@ -112,7 +111,6 @@ public class ProjectEligibilityModelPopulatorTest {
                 competition
         );
 
-        assertArrayEquals(new ResearchParticipationAmount[]{}, viewModel.getResearchParticipationAmounts());
     }
 
     @Test
@@ -151,7 +149,6 @@ public class ProjectEligibilityModelPopulatorTest {
                 competition
         );
 
-        assertArrayEquals(ResearchParticipationAmount.values(), viewModel.getResearchParticipationAmounts());
         assertArrayEquals(CollaborationLevel.values(), viewModel.getCollaborationLevels());
         assertEquals(researchCategories, viewModel.getResearchCategories());
         assertEquals(1, viewModel.getLeadApplicantTypes().size());
