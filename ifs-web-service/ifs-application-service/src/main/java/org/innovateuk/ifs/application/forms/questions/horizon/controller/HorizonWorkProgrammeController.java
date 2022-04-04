@@ -92,9 +92,7 @@ public class HorizonWorkProgrammeController {
 
         HorizonWorkProgrammeViewModel viewModel = getPopulate(applicationId, questionId, user, false, emptyMap());
 
-        if (viewModel.isComplete() || readOnly) {
-            viewModel.setReadOnlyMap(getReadOnlyMap(applicationId, request));
-        }
+        getReadOnlyMapIfApplicable(applicationId, request, readOnly, viewModel);
 
         model.addAttribute("form", form);
         model.addAttribute("model", viewModel);
@@ -178,6 +176,16 @@ public class HorizonWorkProgrammeController {
         });
     }
 
+    private void getReadOnlyMapIfApplicable(long applicationId, HttpServletRequest request, boolean readOnly, HorizonWorkProgrammeViewModel viewModel) {
+        if (viewModel.isComplete() || readOnly) {
+            viewModel.setReadOnlyMap(getReadOnlyMapIfApplicable(applicationId, request));
+
+            if (!viewModel.getReadOnlyMap().isEmpty()) {
+                viewModel.setReadOnly(true);
+            }
+        }
+    }
+
     private void saveSelectionToCookie(HorizonWorkProgrammeSelectionData horizonWorkProgrammeSelectionData, HttpServletResponse response) {
         cookieService.saveWorkProgrammeSelectionData(horizonWorkProgrammeSelectionData, response);
     }
@@ -202,7 +210,7 @@ public class HorizonWorkProgrammeController {
         return builder.toUriString();
     }
 
-    private Map<String, List<HorizonWorkProgramme>> getReadOnlyMap(long applicationId, HttpServletRequest request) {
+    private Map<String, List<HorizonWorkProgramme>> getReadOnlyMapIfApplicable(long applicationId, HttpServletRequest request) {
 
         Optional<HorizonWorkProgrammeSelectionData> workProgrammeSelectionData = cookieService.getHorizonWorkProgrammeSelectionData(request);
         List<HorizonWorkProgramme> savedSelections = (workProgrammeSelectionData.isPresent() && !workProgrammeSelectionData.get().getAllSelections().isEmpty()) ?
