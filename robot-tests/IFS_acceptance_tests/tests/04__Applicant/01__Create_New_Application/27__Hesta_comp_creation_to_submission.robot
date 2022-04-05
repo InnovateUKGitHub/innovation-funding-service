@@ -111,7 +111,7 @@ Internal user can view hecp GOL template
     When the user clicks the button/link                            jQuery = td:contains("Review")
     And user clicks on View the grant offer letter page
     And Select Window                                               NEW
-    Then the user should see the element                            xpath = //h2[text()='Accepting your award ']
+    Then the user should see the element                            xpath = //h2[text()='Annex 1: acceptance of award']
     [Teardown]  the user closes the last opened tab
 
 
