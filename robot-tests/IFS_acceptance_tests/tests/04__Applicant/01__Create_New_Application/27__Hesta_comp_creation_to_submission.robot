@@ -105,6 +105,11 @@ the user should not see any references to assessment and release feedback on clo
     And the user should see the element   jQuery = p:contains("Once this competition is closed you will no longer be able to add funding decisions.")
     And the element should be disabled    jQuery = button:contains("Close competition")
 
+Applicant can view application when in project setup
+    Given Internal user notifies the applicant on status of application
+    When the applicant navigates to project set up
+    Then the user can see view application link
+
 Internal user can view hecp GOL template
     [Documentation]  IFS-11299  IFS-11510
     Given the user completes all project setup sections
@@ -376,16 +381,22 @@ IFS admin approves the spend profiles for hestaApplication
     the user clicks the button/link  id = radio-spendprofile-approve
     the user clicks the button/link  id = submit-button
 
-the user completes all project setup sections
+Internal user notifies the applicant on status of application
     Requesting IDs of this Asos Organisation
     the internal team mark the application as successful / unsuccessful         ${hestaApplicationID}  FUNDED
     the user clicks the button/link                                             link = Competition
     the internal team notifies all applicants                                   ${hestaApplicationID}
     the user refreshes until element appears on page                            jQuery = td:contains("${hestaApplicationID}") ~ td:contains("Sent")
+
+the applicant navigates to project set up
     log in as a different user                                                  ${leadApplicantEmail}    ${short_password}
     the user clicks the button/link                                             link = ${hestaApplicationName}
+
+the user can see view application link
     ##Check to see the view application link is without 'feedback'
     The user should see the text in the element                                 link = view application  view application
+
+the user completes all project setup sections
     the user is able to complete project details section
     the user completes the project team details
     the user is able to complete the Documents section
