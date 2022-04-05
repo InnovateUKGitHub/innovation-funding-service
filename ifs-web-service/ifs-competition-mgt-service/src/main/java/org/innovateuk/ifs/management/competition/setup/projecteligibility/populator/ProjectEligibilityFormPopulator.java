@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.management.competition.setup.projecteligibility.populator;
 
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupFormPopulator;
 import org.innovateuk.ifs.management.competition.setup.core.util.CompetitionUtils;

@@ -86,7 +86,7 @@ public class ProjectEligibilitySectionSaverTest {
 
         service.saveSection(competition, competitionSetupForm, loggedInUser).getSuccess();
 
-        assertEquals(new Integer(30), competition.getMaxResearchRatio());
+        assertEquals(new Integer(0), competition.getMaxResearchRatio());
 
         verify(competitionSetupRestService).update(competition);
     }
@@ -114,7 +114,7 @@ public class ProjectEligibilitySectionSaverTest {
     @Test
     public void saveSection_defaultsMaxResearchRatioToNoneForCompetitionsWithNoFinances() {
         ProjectEligibilityForm competitionSetupForm = new ProjectEligibilityForm();
-        competitionSetupForm.setResearchParticipationPercentage(100);
+        competitionSetupForm.setResearchParticipationPercentage(0);
 
         List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource().build(2);
 

@@ -454,7 +454,7 @@ public class CompetitionSetupController {
     }
     private void validateResearchParticipationPercentage(ProjectEligibilityForm competitionSetupForm, BindingResult bindingResult) {
         Integer researchParticipationPercentage = competitionSetupForm.getResearchParticipationPercentage();
-        if (researchParticipationPercentage == null || researchParticipationPercentage > 100 || researchParticipationPercentage < 0) {
+        if (researchParticipationPercentage > 100 || researchParticipationPercentage < 0) {
             bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "researchParticipationPercentage",
                     "You must enter a number between 0 to 100."));
         }
