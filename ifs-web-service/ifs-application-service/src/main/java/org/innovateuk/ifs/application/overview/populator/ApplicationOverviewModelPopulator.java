@@ -169,7 +169,10 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                 }
                 break;
             case APPLICATION_QUESTIONS:
-                if (!competition.isKtp() || !competition.isHasAssessmentStage()) {
+                if (competition.isHorizonEuropeGuarantee()) {
+                    messageCode = "ifs.section.hecpApplicationQuestions.description";
+                    break;
+                } else if (!competition.isKtp() || competition.isHasAssessmentStage()) {
                     messageCode = "ifs.section.applicationQuestions.description";
                     break;
                 }
