@@ -56,10 +56,8 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
         return updateCostCategory(LabourCostCategory.class, FinanceRowType.LABOUR,
                 labourCostCategory -> {
                     LabourCost workingDaysCost = labourCostCategory.getWorkingDaysPerYearCostItem();
-                    if (workingDaysCost != null) {
-                        workingDaysCost.setLabourDays(workingDays);
-                        financeRowCostsService.update(workingDaysCost.getId(), workingDaysCost);
-                    }
+                    workingDaysCost.setLabourDays(workingDays);
+                    financeRowCostsService.update(workingDaysCost.getId(), workingDaysCost);
                 });
     }
 
