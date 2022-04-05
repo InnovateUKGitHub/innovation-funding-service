@@ -106,12 +106,13 @@ the user should not see any references to assessment and release feedback on clo
     And the element should be disabled    jQuery = button:contains("Close competition")
 
 Applicant can view application when in project setup
+    [Documentation]  IFS-11510
     Given Internal user notifies the applicant on status of application
     When the applicant navigates to project set up
     Then the user can see view application link
 
 Internal user can view hecp GOL template
-    [Documentation]  IFS-11299  IFS-11510
+    [Documentation]  IFS-11299
     Given the user completes all project setup sections
     When the user clicks the button/link                            jQuery = td:contains("Review")
     And user clicks on View the grant offer letter page
