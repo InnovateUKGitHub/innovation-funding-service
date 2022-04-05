@@ -94,7 +94,7 @@ public class FinanceChecksEligibilityHecpCostsSaver {
         DefaultCostCategory category = (DefaultCostCategory) projectFinance.getFinanceOrganisationDetails().get(FinanceRowType.CAPITAL_USAGE);
         Optional<CapitalUsage> cost = category.getCosts().stream().findAny().map(CapitalUsage.class::cast);
 
-        if (nullOrZero(form.getMaterial())) {
+        if (nullOrZero(form.getCapital())) {
             cost.map(CapitalUsage::getId).ifPresent(financeRowRestService::delete);
         } else {
             CapitalUsage capitalUsage = cost.orElseGet(() -> newCost(new CapitalUsage(projectFinance.getId())));

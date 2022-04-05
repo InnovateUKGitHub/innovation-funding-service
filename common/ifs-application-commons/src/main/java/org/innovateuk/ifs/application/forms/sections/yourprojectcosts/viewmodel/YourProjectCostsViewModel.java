@@ -301,14 +301,6 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         return financeRowTypes.stream().filter(FinanceRowType::isAppearsInProjectCostsAccordion).collect(Collectors.toList());
     }
 
-    public List<FinanceRowType> getOrderedHecpFinanceRowTypes() {
-        return getOrderedAccordionFinanceRowTypes().stream().sorted((o1, o2) -> {
-            List<FinanceRowType> hecpFinanceRowOrder = Stream.of(FinanceRowType.LABOUR, FinanceRowType.SUBCONTRACTING_COSTS, FinanceRowType.TRAVEL, FinanceRowType.MATERIALS, FinanceRowType.CAPITAL_USAGE,
-            FinanceRowType.OTHER_COSTS, FinanceRowType.OVERHEADS).collect(Collectors.toList());
-            return (hecpFinanceRowOrder.contains(o1) ? hecpFinanceRowOrder.indexOf(o1) : hecpFinanceRowOrder.size()) - (hecpFinanceRowOrder.contains(o2) ? hecpFinanceRowOrder.indexOf(o2) : hecpFinanceRowOrder.size());
-        }).collect(Collectors.toList());
-    }
-
     public String getStateAidCheckboxLabelFragment() {
         return isKtpCompetition() ? "ktp_state_aid_checkbox_label" : "state_aid_checkbox_label";
     }

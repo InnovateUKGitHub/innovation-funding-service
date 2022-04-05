@@ -93,7 +93,7 @@ public class HorizonEuropeGuaranteeCostsSaver {
         DefaultCostCategory category = (DefaultCostCategory) applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.CAPITAL_USAGE);
         Optional<CapitalUsage> cost = category.getCosts().stream().findAny().map(CapitalUsage.class::cast);
 
-        if (nullOrZero(form.getMaterial())) {
+        if (nullOrZero(form.getCapital())) {
             cost.map(CapitalUsage::getId).ifPresent(financeRowRestService::delete);
         } else {
             CapitalUsage capitalUsage = cost.orElseGet(() -> newCost(new CapitalUsage(applicationFinance.getId())));

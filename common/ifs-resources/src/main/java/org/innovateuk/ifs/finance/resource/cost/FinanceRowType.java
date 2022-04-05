@@ -98,6 +98,23 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
         return displayName;
     }
 
+    public String getHecpDisplayName() {
+        switch (this) {
+            case LABOUR:
+                return "Personnel costs";
+            case SUBCONTRACTING_COSTS:
+                return "Subcontracting costs";
+            case MATERIALS:
+                return "Equipment";
+            case CAPITAL_USAGE:
+                return "Other goods, works and services";
+            case OVERHEADS:
+                return "Indirect costs";
+            default:
+                return getDisplayName();
+        }
+    }
+
     public static Optional<FinanceRowType> getByName(String name) {
         return simpleFindFirst(
                 FinanceRowType.values(),
