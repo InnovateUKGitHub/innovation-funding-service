@@ -49,7 +49,7 @@ Invite Assessors
     Then The user should see the element    link = Pending and declined
     And the user should see the element     link = Find
     And the user should see the element     link = Invite
-    [Teardown]    The user clicks the button/link    link = Competition
+    [Teardown]    The user clicks the button/link    link = Back to competition
 
 Notify Assessors
     [Documentation]  INFUND-6458 INFUND-7362
@@ -83,7 +83,7 @@ get the expected values from the invite page
     Set Test Variable    ${Invited}
     ${Accepted}=    Get text    css = div:nth-child(2) > div > span
     Set Test Variable    ${Accepted}
-    The user clicks the button/link    link = Competition
+    The user clicks the button/link    link = Back to competition
     The user clicks the button/link    link = Manage assessments
     The user clicks the button/link    jQuery = a:contains("Allocate applications")
     Get the total number of submitted applications

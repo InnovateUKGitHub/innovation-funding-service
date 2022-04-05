@@ -3,6 +3,7 @@ package org.innovateuk.ifs.user.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.user.domain.Agreement;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -37,6 +38,10 @@ public class AgreementBuilder extends BaseBuilder<Agreement, AgreementBuilder> {
 
     public AgreementBuilder withText(String... texts) {
         return withArray((text, agreement) -> setField("text", text, agreement), texts);
+    }
+
+    public AgreementBuilder withModifiedOn(ZonedDateTime... dates) {
+        return withArray((modifiedOn, agreement) -> setField("modifiedOn", modifiedOn, agreement), dates);
     }
 
     @Override
