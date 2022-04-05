@@ -1,0 +1,18 @@
+commonAnnotations:
+  deployedWith: kustomize
+  environment: demo
+
+resources:
+  - ../../../base
+
+patchesStrategicMerge:
+  - spring-profile-env.yml
+  - cache-config.yml
+  - data-service-config.yml
+  - db-reset-config.yml
+  - feature-toggle-config.yml
+  - flyway-config.yml
+  - ldap-config.yml
+  - shibboleth-config.yml
+  - web-config.yml
+  - new-relic-config.yml

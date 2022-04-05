@@ -150,7 +150,6 @@ k8s_clean_all() {
   kubectl delete deployment --all
   kubectl delete svc application-svc
   kubectl delete svc assessment-svc
-  kubectl delete svc cache-provider
   kubectl delete svc competition-mgt-svc
   kubectl delete svc data-service
   kubectl delete svc data-service-alerts
@@ -167,12 +166,8 @@ k8s_clean_all() {
   kubectl delete svc survey-data-svc
   kubectl delete svc survey-svc
   kubectl delete configmap cache-config
-  kubectl delete configmap cache-provider-config
   kubectl delete configmap data-service-config
-  kubectl delete configmap db-config
-  kubectl delete configmap docusign-config
   kubectl delete configmap feature-toggle-config
-  kubectl delete configmap finance-data-service-config
   kubectl delete configmap flyway-config
   kubectl delete configmap idp-config
   kubectl delete configmap ldap-config
@@ -181,8 +176,18 @@ k8s_clean_all() {
   kubectl delete configmap  performance-config
   kubectl delete configmap  shibboleth-config
   kubectl delete configmap  spring-config
-  kubectl delete configmap  survey-data-service-config
   kubectl delete configmap  web-config
+  kubectl delete secrets db-secrets
+  kubectl delete secrets data-service-secrets
+  kubectl delete secrets docusign-secrets
+  kubectl delete secrets ldap-secrets
+  kubectl delete secrets new-relic-secrets
+  kubectl delete secrets shibboleth-secrets
+  kubectl delete secrets survey-data-service-secrets
+  kubectl delete secrets finance-data-service-secrets
+  kubectl delete secrets cache-secrets
+  kubectl delete secrets flyway-secrets
+  kubectl delete secrets web-secrets
   kubectl delete secrets idp-keys-secrets
   kubectl delete secrets ldap-keys-secrets
   kubectl delete secrets sp-secrets
@@ -199,7 +204,6 @@ skaffold_help () {
     echo '    skaffold_dev [file] runs fast dev mode on specified skaffold file'
     echo '    skaffold_debug [file] runs fast debug mode on specified skaffold file'
     echo ''
-    echo '    skaffold_cx - runs services configured via skaffold-CUSTOM.yml (editable)'
     echo '    It is quite easy to create ad-hoc configurations for any dev/ops purpose'
     echo '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
 }

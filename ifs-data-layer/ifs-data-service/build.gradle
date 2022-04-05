@@ -35,6 +35,8 @@ dependencies {
     implementation project(":common:ifs-security")
     implementation project(":common:ifs-rest-util")
 
+    implementation project(":common:starter:ifs-starter-cache")
+
     if (isStubDevMode()) {
         developmentOnly "org.springframework.boot:spring-boot-devtools"
         developmentOnly project(":common:starter:ifs-starter-stubdev")
@@ -45,8 +47,6 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-validation"
     implementation "org.springframework.security:spring-security-crypto"
     implementation "org.springframework.boot:spring-boot-starter-security"
-    implementation "org.springframework.boot:spring-boot-starter-data-redis"
-    implementation "org.springframework.boot:spring-boot-starter-cache"
     implementation "org.springframework.boot:spring-boot-starter-web"
 
     implementation "org.springframework.statemachine:spring-statemachine-core:2.1.3.RELEASE"
