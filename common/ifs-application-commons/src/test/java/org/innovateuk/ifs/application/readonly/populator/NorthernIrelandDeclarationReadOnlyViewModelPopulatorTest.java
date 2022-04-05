@@ -110,7 +110,7 @@ public class NorthernIrelandDeclarationReadOnlyViewModelPopulatorTest {
                 .build();
 
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), emptyList(), emptyList(),
-                asList(textarea), asList(textareaResponse), emptyList(), emptyList(), emptyList());
+                asList(textarea), asList(textareaResponse), emptyList(), emptyList(), emptyList(), Optional.empty());
 
         String questionStr = "Will the project, including any related activities you want Innovate UK to fund, affect trade between Northern Ireland and the EU?";
         String answerStr = "No";
@@ -122,6 +122,7 @@ public class NorthernIrelandDeclarationReadOnlyViewModelPopulatorTest {
                         questionStr,
                         false,
                         answerStr,
+                        emptyList(),
                         emptyList(),
                         false,
                         emptyList(),

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.readonly.viewmodel;
 
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.horizon.resource.ApplicationHorizonWorkProgrammeResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 import java.math.BigDecimal;
@@ -17,6 +18,7 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     private final boolean multipleStatuses;
     private final String answer;
     private final List<GenericQuestionAnswerRowReadOnlyViewModel> answers;
+    private final List<ApplicationHorizonWorkProgrammeResource> workProgrammeAnswers;
     private final boolean statusDetailPresent;
     private final List<GenericQuestionFileViewModel> appendices;
     private final GenericQuestionFileViewModel templateFile;
@@ -29,6 +31,7 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     private final int totalScope;
     private final boolean hasScope;
     private final boolean isLoanPartBEnabled;
+    private final boolean isHecpCompetition;
 
     public GenericQuestionReadOnlyViewModel(ApplicationReadOnlyData data,
                                             QuestionResource questionResource,
@@ -37,6 +40,7 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
                                             boolean multipleStatuses,
                                             String answer,
                                             List<GenericQuestionAnswerRowReadOnlyViewModel> answers,
+                                            List<ApplicationHorizonWorkProgrammeResource> workProgrammeAnswers,
                                             boolean statusDetailPresent,
                                             List<GenericQuestionFileViewModel> appendices,
                                             GenericQuestionFileViewModel templateFile,
@@ -53,6 +57,7 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
         this.multipleStatuses = multipleStatuses;
         this.answer = answer;
         this.answers = answers;
+        this.workProgrammeAnswers = workProgrammeAnswers;
         this.statusDetailPresent = statusDetailPresent;
         this.appendices = appendices;
         this.templateFile = templateFile;
@@ -65,6 +70,7 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
         this.totalScope = totalScope;
         this.hasScope = hasScope;
         this.isLoanPartBEnabled = isLoanPartBEnabled;
+        this.isHecpCompetition = data.getCompetition().isHorizonEuropeGuarantee();
     }
 
     public int getInScope() { return inScope; }
@@ -92,6 +98,9 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     }
 
     public boolean hasAnswerNotMarkedAsComplete() {
+        if(isHecpCompetition()) {
+            return workProgrammeAnswers == null;
+        }
         return answers.stream().anyMatch(a -> !a.isMarkedAsComplete());
     }
 
@@ -155,6 +164,14 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     public boolean isLoanPartBEnabled() { return isLoanPartBEnabled; }
 
     public QuestionResource getQuestionResource() { return questionResource; }
+
+    public boolean isHecpCompetition() {
+        return isHecpCompetition;
+    }
+
+    public List<ApplicationHorizonWorkProgrammeResource> getWorkProgrammeAnswers() {
+        return workProgrammeAnswers;
+    }
 
     public int getAssessorMaximumScore() {
         if(!hasScore()) {

@@ -23,6 +23,7 @@ public class NorthernIrelandDeclarationReadOnlyViewModel extends GenericQuestion
                 genericQuestionReadOnlyViewModel.isMultipleStatuses(),
                 genericQuestionReadOnlyViewModel.getAnswer(),
                 genericQuestionReadOnlyViewModel.getAnswers(),
+                genericQuestionReadOnlyViewModel.getWorkProgrammeAnswers(),
                 genericQuestionReadOnlyViewModel.isStatusDetailPresent(),
                 genericQuestionReadOnlyViewModel.getAppendices(),
                 genericQuestionReadOnlyViewModel.getTemplateFile(),
