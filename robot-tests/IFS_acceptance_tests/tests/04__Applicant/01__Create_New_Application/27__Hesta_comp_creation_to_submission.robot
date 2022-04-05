@@ -223,7 +223,6 @@ the user successfully completes application
     the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user completes the application details section              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
     the applicant completes Application Team                        COMPLETE  ${email}
-    the user completes the application research category            Feasibility studies
     the user complete the work programme
     The user is able to complete horizon grant agreement section
     the lead applicant marks the application question as complete   1. Tell us where your organisation is based  My organisation is based in the UK or a British Overseas Territory
@@ -410,9 +409,13 @@ the user complete the work programme
     the user should see a field and summary error  You must select an option.
     the user clicks the button/link                id = selected1
     the user clicks the button/link                jQuery = button:contains("Save and continue")
-    the user should see the element                jQuery = p:contains("This question is marked as complete.")
-    the user can mark the question as complete
+    the user can mark the question as complete for work programme
     the user should see the element                jQuery = li:contains("Work programme") > .task-status-complete
+
+the user can mark the question as complete for work programme
+    the user clicks the button/link     id = application-question-complete
+    the user should see the element     jQuery = p:contains("This question is marked as complete.")
+    the user clicks the button/link     link = Back to application overview
 
 the user see the print view of the application
     Requesting IDs of this Hesta application
