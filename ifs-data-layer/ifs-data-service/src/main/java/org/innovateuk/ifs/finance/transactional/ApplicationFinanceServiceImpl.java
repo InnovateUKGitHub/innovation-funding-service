@@ -119,7 +119,7 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
 
     private ServiceResult<ApplicationFinanceResource> createApplicationFinance(long applicationId, long organisationId) {
         if (organisationExists(applicationId, organisationId)) {
-            return getOpenApplication(applicationId).andOnSuccess(application ->
+            return getOpenOrLaterApplication(applicationId).andOnSuccess(application ->
                     find(organisation(organisationId)).andOnSuccess(organisation -> {
                         ApplicationFinance applicationFinance = applicationFinanceRepository.save(new ApplicationFinance(application, organisation));
                         initialiseFinancialYearData(applicationFinance);
