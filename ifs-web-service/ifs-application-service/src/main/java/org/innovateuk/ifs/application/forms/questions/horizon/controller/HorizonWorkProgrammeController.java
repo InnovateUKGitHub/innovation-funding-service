@@ -86,8 +86,12 @@ public class HorizonWorkProgrammeController {
             }
         }
 
+        HorizonWorkProgramme existingSelection = cookieSelectionData
+                .map(HorizonWorkProgrammeSelectionData::getWorkProgramme)
+                .orElse(null);
+
         form.setAllOptions(newArrayList(workProgrammes));
-        form.setSelected(cookieSelectionData.get().getWorkProgramme());
+        form.setSelected(existingSelection);
         model.addAttribute("form", form);
 
         HorizonWorkProgrammeViewModel viewModel = getPopulate(applicationId, questionId, user, false, emptyMap());
