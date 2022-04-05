@@ -15,7 +15,7 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11618 HECP Phase 2 - Cost categories - Application view additional updates
 ...
-...               HECP Phase 2 - Remove content from 'View application feedback' link
+...               IFS-11510 HECP Phase 2 - Remove content from 'View application feedback' link
 ...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -109,7 +109,7 @@ Applicant can view application when in project setup
     [Documentation]  IFS-11510
     Given Internal user notifies the applicant on status of application
     When the applicant navigates to project set up
-    Then the user can see view application link
+    Then The user should see the text in the element               link = view application  view application
 
 Internal user can view hecp GOL template
     [Documentation]  IFS-11299
@@ -393,9 +393,6 @@ the applicant navigates to project set up
     log in as a different user                                                  ${leadApplicantEmail}    ${short_password}
     the user clicks the button/link                                             link = ${hestaApplicationName}
 
-the user can see view application link
-    ##Check to see the view application link is without 'feedback'
-    The user should see the text in the element                                 link = view application  view application
 
 the user completes all project setup sections
     the user is able to complete project details section
