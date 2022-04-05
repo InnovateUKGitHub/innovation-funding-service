@@ -40,7 +40,13 @@
             <p class="govuk-body">Only your organisation can see this level of detail. All members of your
                 organisation can access and edit your project finances. We recommend assigning completion of your project finances
                 to one member of your team.</p>
-
+            <th:block th:unless="${model.readOnly}">
+                <div class="message-alert">
+                    <p class="govuk-body">Complete your project costs using the information in your
+                        <a href="https://www.ukri.org/publications/horizon-europe-guarantee-notice-and-guidance/" target="_blank" class="govuk-link">funding conversion spreadsheet (opens in new window)</a>.
+                        This will convert your Horizon Europe spend details to use for your project costs in the finance section. It is vital that you keep a copy of the spreadsheet. You will need it to finish setting up your project.</p>
+                </div>
+            </th:block>
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('labour')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" th:for="labour">
