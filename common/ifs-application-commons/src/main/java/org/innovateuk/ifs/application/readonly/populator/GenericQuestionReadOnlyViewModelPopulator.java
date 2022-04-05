@@ -74,7 +74,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
         List<GenericQuestionAnswerRowReadOnlyViewModel> answers;
         List<ApplicationHorizonWorkProgrammeResource> workProgrammeAnswers;
 
-        if (data.getCompetition().isHorizonEuropeGuarantee()) {
+        if (data.getCompetition().isHorizonEuropeGuarantee() && question.getQuestionSetupType().equals(HORIZON_WORK_PROGRAMME)) {
             workProgrammeAnswers = horizonWorkProgrammeRestService.findSelected(data.getApplicationId()).getSuccess();
             answer = null;
             answers = null;
@@ -95,6 +95,9 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
         Optional<FormInputResponseResource> templateDocumentResponse = templateDocument
                 .map(input -> firstOrNull(formInputIdToFormInputResponses.get(input.getId())));
 
+
+
+
         return new GenericQuestionReadOnlyViewModel(data, question, questionName(question),
                 question.getName(),
                 multipleStatuses,
@@ -110,8 +113,17 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
                 inScope(data, settings),
                 totalScope(data, settings),
                 hasScope(data, question),
-                isLoanPartBEnabled
+                isLoanPartBEnabled,
+                Boolean.TRUE.equals(isWorkProgrammeQuestionMarkedAsComplete(question, data.getApplicationId()))
             );
+    }
+
+    private Boolean isWorkProgrammeQuestionMarkedAsComplete(QuestionResource question, Long applicationId) {
+        if (question.getQuestionSetupType().equals(HORIZON_WORK_PROGRAMME)) {
+            List<QuestionStatusResource> questionStatusesForOrg = questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(question.getId(), applicationId).getSuccess();
+            return questionStatusesForOrg != null && questionStatusesForOrg.stream().anyMatch(status -> Boolean.TRUE.equals(status.getMarkedAsComplete()));
+        }
+        return false;
     }
 
     private List<GenericQuestionAnswerRowReadOnlyViewModel> answerMapForMultipleStatuses(QuestionResource question,

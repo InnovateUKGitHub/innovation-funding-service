@@ -22,20 +22,20 @@
                     <p>We will make our decision based on the suitability of your business and the quality of the project.</p>
 
             </div>
-<!--            <th:block th:unless="${model.isCompletedLoanBusinessAndFinancialInformation()}">-->
-<!--                <th:block th:if="${model.hecpCompetition}">-->
-<!--                    <th:block th:if="${model.hasAnswerNotMarkedAsComplete()}">-->
-<!--                        <p class="govuk-body">Answer yet to be provided</p>-->
-<!--                    </th:block>-->
-<!--                    <th:block th:unless="${model.hasAnswerNotMarkedAsComplete()}">-->
-<!--                        <dl class="govuk-list govuk-!-font-size-16">-->
-<!--                            <dt>Enter the Horizon Europe Work programme Part you applied to, e.g. CL2.</dt>-->
-<!--                            <dd class="govuk-!-margin-top-4" th:text="${model.workProgrammeAnswers.get(0).workProgramme}"></dd>-->
-<!--                            <dt>Select the call you applied to.</dt>-->
-<!--                            <dd class="govuk-!-margin-top-4" th:text="${model.workProgrammeAnswers.get(1).workProgramme}"></dd>-->
-<!--                        </dl>-->
-<!--                    </th:block>-->
-<!--                </th:block>-->
+            <th:block th:unless="${model.isCompletedLoanBusinessAndFinancialInformation()}">
+                <th:block th:if="${model.hecpCompetition && model.isWorkProgrammeQuestion()}">
+                    <th:block th:if="${model.isWorkProgrammeQuestionMarkedAsComplete()}">
+                        <dl class="govuk-list govuk-!-font-size-16">
+                            <dt>Enter the Horizon Europe Work programme Part you applied to, e.g. CL2.</dt>
+                            <dd class="govuk-!-margin-top-4" th:text="${model.workProgrammeAnswers.get(0).workProgramme}"></dd>
+                            <dt>Select the call you applied to.</dt>
+                            <dd class="govuk-!-margin-top-4" th:text="${model.workProgrammeAnswers.get(1).workProgramme}"></dd>
+                        </dl>
+                    </th:block>
+                    <th:block th:unless="${model.isWorkProgrammeQuestionMarkedAsComplete()}">
+                        <p class="govuk-body">Answer yet to be provided</p>
+                    </th:block>
+                </th:block>
 
                     <th:block th:if="${model.multipleStatuses}">
 
@@ -79,7 +79,7 @@
                         </table>
                     </th:block>
 
-                    <p th:unless="${model.multipleStatuses || model.hecpCompetition}" data-md-to-html=""
+                    <p th:unless="${model.multipleStatuses || (model.hecpCompetition && model.isWorkProgrammeQuestion())}" data-md-to-html=""
                        class="govuk-body wysiwyg-styles" th:text="${model.answer != null ? model.answer  :
                                 model.isInCompleteLoanBusinessAndFinancialInformation() ? 'Information not yet provided' :'Answer yet to be provided'}">Answer</p>
             </th:block>

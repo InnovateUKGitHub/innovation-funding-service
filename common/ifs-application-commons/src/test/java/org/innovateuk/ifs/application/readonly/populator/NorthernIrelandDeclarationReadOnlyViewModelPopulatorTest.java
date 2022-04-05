@@ -130,7 +130,7 @@ public class NorthernIrelandDeclarationReadOnlyViewModelPopulatorTest {
                         "",
                         emptyList(),
                         emptyList(),
-                        0 ,0, false , false));
+                        0 ,0, false , false, false));
         when(applicationSubsidyBasisPopulator.populate(question, data.getApplication().getId()))
                 .thenReturn(new ApplicationSubsidyBasisViewModel(emptyList()));
 

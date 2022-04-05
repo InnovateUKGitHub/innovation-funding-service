@@ -17,7 +17,7 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     private final String question;
     private final boolean multipleStatuses;
     private final String answer;
-    private final List<GenericQuestionAnswerRowReadOnlyViewModel> answers;
+    private final List<GenericQuestionAnswerRowReadOnlyViewModel>  answers;
     private final List<ApplicationHorizonWorkProgrammeResource> workProgrammeAnswers;
     private final boolean statusDetailPresent;
     private final List<GenericQuestionFileViewModel> appendices;
@@ -32,6 +32,7 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     private final boolean hasScope;
     private final boolean isLoanPartBEnabled;
     private final boolean isHecpCompetition;
+    private final boolean isWorkProgrammeQuestionMarkedAsComplete;
 
     public GenericQuestionReadOnlyViewModel(ApplicationReadOnlyData data,
                                             QuestionResource questionResource,
@@ -50,7 +51,8 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
                                             int inScope,
                                             int totalScope,
                                             boolean hasScope,
-                                            boolean isLoanPartBEnabled) {
+                                            boolean isLoanPartBEnabled,
+                                            boolean isWorkProgrammeQuestionMarkedAsComplete) {
         super(data, questionResource);
         this.displayName = displayName;
         this.question = question;
@@ -71,6 +73,7 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
         this.hasScope = hasScope;
         this.isLoanPartBEnabled = isLoanPartBEnabled;
         this.isHecpCompetition = data.getCompetition().isHorizonEuropeGuarantee();
+        this.isWorkProgrammeQuestionMarkedAsComplete = isWorkProgrammeQuestionMarkedAsComplete;
     }
 
     public int getInScope() { return inScope; }
@@ -98,9 +101,6 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     }
 
     public boolean hasAnswerNotMarkedAsComplete() {
-        if(isHecpCompetition()) {
-            return workProgrammeAnswers == null;
-        }
         return answers.stream().anyMatch(a -> !a.isMarkedAsComplete());
     }
 
@@ -173,6 +173,10 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
         return workProgrammeAnswers;
     }
 
+    public boolean isWorkProgrammeQuestionMarkedAsComplete() {
+        return isWorkProgrammeQuestionMarkedAsComplete;
+    }
+
     public int getAssessorMaximumScore() {
         if(!hasScore()) {
             return 0;
@@ -207,5 +211,9 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
                 questionResource != null &&
                 QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION == questionResource.getQuestionSetupType() &&
                 !isComplete();
+    }
+
+    public boolean isWorkProgrammeQuestion() {
+        return isHecpCompetition && questionResource != null && questionResource.getQuestionSetupType() == QuestionSetupType.HORIZON_WORK_PROGRAMME;
     }
 }
