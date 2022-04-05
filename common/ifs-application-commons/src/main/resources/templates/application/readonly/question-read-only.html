@@ -9,7 +9,7 @@
     <div class="govuk-form-group">
 
         <th:block th:unless="${model.isKtpAssessmentQuestion()}">
-            <label th:if="${model.question != null}" class="govuk-label">
+            <label th:if="${(model.question != null) and !model.isWorkProgrammeQuestion()}" class="govuk-label">
                 <span th:unless="${model.isCompletedLoanBusinessAndFinancialInformation()}" th:text="${model.question}" class="govuk-heading-s"></span>
                 <th:block th:if="${model.isCompletedLoanBusinessAndFinancialInformation()}">
                     <span>Thanks for submitting Part B of your loan application.</span><br/><br/>
