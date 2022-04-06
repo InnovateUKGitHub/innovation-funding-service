@@ -63,6 +63,8 @@ public class CompetitionInviteAssessorsFindModelPopulator extends CompetitionInv
                 availableAssessorResource.getName(),
                 availableAssessorResource.getInnovationAreas(),
                 availableAssessorResource.isCompliant(),
+                availableAssessorResource.isValidAgreement(),
+                availableAssessorResource.isValidDoi(),
                 availableAssessorResource.getEmail(),
                 availableAssessorResource.getBusinessType()
         );

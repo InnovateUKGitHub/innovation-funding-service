@@ -17,8 +17,10 @@ public class InterviewAvailableAssessorRowViewModel extends InviteAssessorsRowVi
                                                   String name,
                                                   List<InnovationAreaResource> innovationAreas,
                                                   boolean compliant,
+                                                  boolean validAgreement,
+                                                  boolean validDoi,
                                                   BusinessType businessType) {
-        super(id, name, innovationAreas, compliant);
+        super(id, name, innovationAreas, compliant, validAgreement, validDoi);
         this.businessType = businessType;
     }
 

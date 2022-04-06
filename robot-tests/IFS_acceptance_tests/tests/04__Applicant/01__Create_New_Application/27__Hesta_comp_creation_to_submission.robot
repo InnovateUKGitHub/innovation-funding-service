@@ -17,6 +17,8 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11618 HECP Phase 2 - Cost categories - Application view additional updates
 ...
+...               IFS-11510 HECP Phase 2 - Remove content from 'View application feedback' link
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -85,7 +87,7 @@ Lead applicant receives email notifiction when internal user marks application u
     [Documentation]  IFS-10695  IFS-11341  IFS-11486
     Given the user logs out if they are logged in
     And Requesting IDs of this competition                                          ${hestaCompetitionName}
-    And the user successfully completes application                                 barry   barrington   ${newLeadApplicantEmail}   ${newHestaApplicationName}
+    And the user successfully completes applications                                barry   barrington   ${newLeadApplicantEmail}   ${newHestaApplicationName}
     And the user clicks the button/link                                             link = Your project finances
     And the user completes hecp project finances                                    ${hestaApplicationName}  no
     And the user can submit the application
@@ -104,6 +106,12 @@ the user should not see any references to assessment and release feedback on clo
     And the user should see the element   jQuery = li:contains("All funding decision notifications have been sent.")
     And the user should see the element   jQuery = p:contains("Once this competition is closed you will no longer be able to add funding decisions.")
     And the element should be disabled    jQuery = button:contains("Close competition")
+
+Applicant can view application when in project setup
+    [Documentation]  IFS-11510
+    Given Internal user notifies the applicant on status of application
+    When the applicant navigates to project set up
+    Then The user should see the text in the element               link = view application  view application
 
 Internal user can view hecp GOL template
     [Documentation]  IFS-11299
@@ -223,8 +231,30 @@ the user successfully completes application
     the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user completes the application details section              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
     the applicant completes Application Team                        COMPLETE  ${email}
-    the user completes the application research category            Feasibility studies
     the user complete the work programme
+    The user is able to complete horizon grant agreement section
+    the lead applicant marks the application question as complete   1. Tell us where your organisation is based  My organisation is based in the UK or a British Overseas Territory
+    the lead applicant marks the application question as complete   2. What EIC call have you been successfully evaluated for?  EIC Transition
+    the user accept the competition terms and conditions            Back to application overview
+
+the user successfully completes applications
+    [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
+    the user select the competition and starts application          ${hestaCompetitionName}
+    the user clicks the button/link                                 link = Continue and create an account
+    user selects where is organisation based                        isNotInternational
+    the user selects the radio button                               organisationTypeId    radio-1
+    the user clicks the button/link                                 jQuery = .govuk-button:contains("Save and continue")
+    the user selects his organisation in Companies House            ASOS  ASOS PLC
+    the user should be redirected to the correct page               ${SERVER}/registration/register
+    the user enters the details and clicks the create account       ${firstName}  ${lastName}  ${email}  ${short_password}
+    the user reads his email and clicks the link                    ${email}  Please verify your email address  Once verified you can sign into your account.
+    the user should be redirected to the correct page               ${REGISTRATION_VERIFIED}
+    the user clicks the button/link                                 link = Sign in
+    Logging in and Error Checking                                   ${email}  ${short_password}
+    the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user completes the application details section              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
+    the applicant completes Application Team                        COMPLETE  ${email}
+    the user complete the work programmes
     The user is able to complete horizon grant agreement section
     the lead applicant marks the application question as complete   1. Tell us where your organisation is based  My organisation is based in the UK or a British Overseas Territory
     the lead applicant marks the application question as complete   2. What EIC call have you been successfully evaluated for?  EIC Transition
@@ -377,14 +407,19 @@ IFS admin approves the spend profiles for hestaApplication
     the user clicks the button/link  id = radio-spendprofile-approve
     the user clicks the button/link  id = submit-button
 
-the user completes all project setup sections
+Internal user notifies the applicant on status of application
     Requesting IDs of this Asos Organisation
     the internal team mark the application as successful / unsuccessful         ${hestaApplicationID}  FUNDED
     the user clicks the button/link                                             link = Competition
     the internal team notifies all applicants                                   ${hestaApplicationID}
     the user refreshes until element appears on page                            jQuery = td:contains("${hestaApplicationID}") ~ td:contains("Sent")
+
+the applicant navigates to project set up
     log in as a different user                                                  ${leadApplicantEmail}    ${short_password}
     the user clicks the button/link                                             link = ${hestaApplicationName}
+
+
+the user completes all project setup sections
     the user is able to complete project details section
     the user completes the project team details
     the user is able to complete the Documents section
@@ -410,9 +445,22 @@ the user complete the work programme
     the user should see a field and summary error  You must select an option.
     the user clicks the button/link                id = selected1
     the user clicks the button/link                jQuery = button:contains("Save and continue")
-    the user should see the element                jQuery = p:contains("This question is marked as complete.")
-    the user can mark the question as complete
+    the user can mark the question as complete for work programme
     the user should see the element                jQuery = li:contains("Work programme") > .task-status-complete
+
+the user complete the work programmes
+    the user clicks the button/link                jQuery = a:contains("Work programme")
+    the user clicks the button/link                id = selected1
+    the user clicks the button/link                jQuery = button:contains("Save and continue")
+    the user clicks the button/link                id = selected1
+    the user clicks the button/link                jQuery = button:contains("Save and continue")
+    the user can mark the question as complete for work programme
+    the user should see the element                jQuery = li:contains("Work programme") > .task-status-complete
+
+the user can mark the question as complete for work programme
+    the user clicks the button/link     id = application-question-complete
+    the user should see the element     jQuery = p:contains("This question is marked as complete.")
+    the user clicks the button/link     link = Back to application overview
 
 the user see the print view of the application
     Requesting IDs of this Hesta application

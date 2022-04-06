@@ -20,11 +20,13 @@ public class OverviewAssessorRowViewModel extends InviteAssessorsRowViewModel {
                                         String name,
                                         List<InnovationAreaResource> innovationAreas,
                                         boolean compliant,
+                                        boolean validAgreement,
+                                        boolean validDoi,
                                         BusinessType businessType,
                                         ParticipantStatusResource status,
                                         String details,
                                         Long inviteId) {
-        super(id, name, innovationAreas, compliant);
+        super(id, name, innovationAreas, compliant, validAgreement, validDoi);
         this.businessType = businessType;
         this.status = status;
         this.details = details;

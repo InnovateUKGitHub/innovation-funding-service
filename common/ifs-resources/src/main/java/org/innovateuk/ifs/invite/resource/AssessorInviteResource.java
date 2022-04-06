@@ -15,16 +15,25 @@ public abstract class AssessorInviteResource {
     private String name;
     private List<InnovationAreaResource> innovationAreas;
     private boolean compliant;
+    private boolean validAgreement;
+    private boolean validDoi;
 
 
     protected AssessorInviteResource() {
     }
 
-    protected AssessorInviteResource(Long id, String name, List<InnovationAreaResource> innovationAreas, boolean compliant) {
+    protected AssessorInviteResource(Long id,
+                                     String name,
+                                     List<InnovationAreaResource> innovationAreas,
+                                     boolean compliant,
+                                     boolean validAgreement,
+                                     boolean validDoi) {
         this.id = id;
         this.name = name;
         this.innovationAreas = innovationAreas;
         this.compliant = compliant;
+        this.validAgreement = validAgreement;
+        this.validDoi = validDoi;
     }
 
     public Long getId() {
@@ -59,6 +68,22 @@ public abstract class AssessorInviteResource {
         this.compliant = compliant;
     }
 
+    public boolean isValidAgreement() {
+        return validAgreement;
+    }
+
+    public void setValidAgreement(boolean validAgreement) {
+        this.validAgreement = validAgreement;
+    }
+
+    public boolean isValidDoi() {
+        return validDoi;
+    }
+
+    public void setValidDoi(boolean validDoi) {
+        this.validDoi = validDoi;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -69,6 +94,8 @@ public abstract class AssessorInviteResource {
 
         return new EqualsBuilder()
                 .append(compliant, that.compliant)
+                .append(validAgreement, that.validAgreement)
+                .append(validDoi, that.validDoi)
                 .append(id, that.id)
                 .append(name, that.name)
                 .append(innovationAreas, that.innovationAreas)
@@ -82,6 +109,8 @@ public abstract class AssessorInviteResource {
                 .append(name)
                 .append(innovationAreas)
                 .append(compliant)
+                .append(validAgreement)
+                .append(validDoi)
                 .toHashCode();
     }
 }

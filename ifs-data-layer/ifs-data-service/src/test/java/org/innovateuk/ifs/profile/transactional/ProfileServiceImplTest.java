@@ -608,10 +608,18 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
 
     @Test
     public void getUserProfileStatus_complete() {
+
+        Agreement agreement = newAgreement()
+                .withCurrent(true)
+                .withModifiedOn(now().minusHours(1))
+                .build();
+
         Profile profile = newProfile()
                 .withSkillsAreas("skills")
                 .withAgreementSignedDate(now())
+                .withAgreement(agreement)
                 .build();
+
         User user = newUser()
                 .withAffiliations( newAffiliation().withModifiedOn(now().minusYears(0)).build(1) )
                 .withProfileId(profile.getId())
@@ -695,8 +703,15 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
 
     @Test
     public void getUserProfileStatus_agreementComplete() {
+
+        Agreement agreement = newAgreement()
+                .withCurrent(true)
+                .withModifiedOn(now().minusHours(1))
+                .build();
+
         Profile profile = newProfile()
                 .withAgreementSignedDate(now())
+                .withAgreement(agreement)
                 .build();
         User user = newUser()
                 .withProfileId(profile.getId())
