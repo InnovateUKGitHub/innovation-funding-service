@@ -51,6 +51,8 @@ public class InterviewInviteAssessorsInviteModelPopulator extends InterviewInvit
                 assessorCreatedInviteResource.getName(),
                 assessorCreatedInviteResource.getInnovationAreas(),
                 assessorCreatedInviteResource.isCompliant(),
+                assessorCreatedInviteResource.isValidAgreement(),
+                assessorCreatedInviteResource.isValidDoi(),
                 assessorCreatedInviteResource.getEmail(),
                 assessorCreatedInviteResource.getInviteId()
         );

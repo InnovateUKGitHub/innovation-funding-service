@@ -30,7 +30,7 @@ Cancel returns you back to the dashboard
 
 Back button takes you to the previous page
     [Documentation]    INFUND-8009
-    Given the user clicks the button/link                     link = ${ASSESSOR_DASHBOARD_TITLE}
+    Given the user clicks the button/link                     link = Back to assessments
     Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
 
 Assessor agreement

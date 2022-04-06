@@ -87,6 +87,8 @@ public class AssessorInviteOverviewMapper {
         assessorInviteOverviewResource.setId(user.getId());
         assessorInviteOverviewResource.setBusinessType(profile.getBusinessType());
         assessorInviteOverviewResource.setCompliant(profile.isCompliant(user));
+        assessorInviteOverviewResource.setValidAgreement(profile.isAgreementValid());
+        assessorInviteOverviewResource.setValidDoi(Profile.isAffiliationsComplete(user));
         assessorInviteOverviewResource.setInnovationAreas(simpleMap(
                 profile.getInnovationAreas(),
                 innovationAreaMapper::mapToResource

@@ -56,6 +56,8 @@ public class InterviewInviteAssessorsFindModelPopulator extends InterviewInviteA
                 assessorInviteOverviewResource.getName(),
                 assessorInviteOverviewResource.getInnovationAreas(),
                 assessorInviteOverviewResource.isCompliant(),
+                assessorInviteOverviewResource.isValidAgreement(),
+                assessorInviteOverviewResource.isValidDoi(),
                 assessorInviteOverviewResource.getBusinessType()
         );
     }

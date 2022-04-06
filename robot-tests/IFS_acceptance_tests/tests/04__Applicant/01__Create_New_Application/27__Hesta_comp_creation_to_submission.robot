@@ -17,7 +17,8 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11618 HECP Phase 2 - Cost categories - Application view additional updates
 ...
-
+...               IFS-11510 HECP Phase 2 - Remove content from 'View application feedback' link
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -105,6 +106,12 @@ the user should not see any references to assessment and release feedback on clo
     And the user should see the element   jQuery = li:contains("All funding decision notifications have been sent.")
     And the user should see the element   jQuery = p:contains("Once this competition is closed you will no longer be able to add funding decisions.")
     And the element should be disabled    jQuery = button:contains("Close competition")
+
+Applicant can view application when in project setup
+    [Documentation]  IFS-11510
+    Given Internal user notifies the applicant on status of application
+    When the applicant navigates to project set up
+    Then The user should see the text in the element               link = view application  view application
 
 Internal user can view hecp GOL template
     [Documentation]  IFS-11299
@@ -400,14 +407,19 @@ IFS admin approves the spend profiles for hestaApplication
     the user clicks the button/link  id = radio-spendprofile-approve
     the user clicks the button/link  id = submit-button
 
-the user completes all project setup sections
+Internal user notifies the applicant on status of application
     Requesting IDs of this Asos Organisation
     the internal team mark the application as successful / unsuccessful         ${hestaApplicationID}  FUNDED
     the user clicks the button/link                                             link = Competition
     the internal team notifies all applicants                                   ${hestaApplicationID}
     the user refreshes until element appears on page                            jQuery = td:contains("${hestaApplicationID}") ~ td:contains("Sent")
+
+the applicant navigates to project set up
     log in as a different user                                                  ${leadApplicantEmail}    ${short_password}
     the user clicks the button/link                                             link = ${hestaApplicationName}
+
+
+the user completes all project setup sections
     the user is able to complete project details section
     the user completes the project team details
     the user is able to complete the Documents section
