@@ -95,9 +95,6 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
         Optional<FormInputResponseResource> templateDocumentResponse = templateDocument
                 .map(input -> firstOrNull(formInputIdToFormInputResponses.get(input.getId())));
 
-
-
-
         return new GenericQuestionReadOnlyViewModel(data, question, questionName(question),
                 question.getName(),
                 multipleStatuses,
