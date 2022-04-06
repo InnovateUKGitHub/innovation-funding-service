@@ -17,6 +17,9 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11688 HECP Phase 2 - Template update
 ...
+...               IFS-11510 HECP Phase 2 - Remove content from 'View application feedback' link
+...
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -57,13 +60,20 @@ Comp admin creates Hesta competition
     Then the competition admin creates Hesta competition             ${BUSINESS_TYPE_ID}  ${hestaCompetitionName}  ${compType_HESTA}  ${compType_HESTA}  STATE_AID  HECP  PROJECT_SETUP  no  1  false  single-or-collaborative
     [Teardown]  Get competition id and set open date to yesterday    ${hestaCompetitionName}
 
-Lead applicant can submit application
-    [Documentation]  IFS-8751  IFS-11269  IFS-11618  IFS-11688
+Lead applicant can view funding conversion tool in project costs
+    [Documentation]  IFS-11508
     Given the user logs out if they are logged in
-    When the user successfully completes application          tim   timmy   ${leadApplicantEmail}   ${hestaApplicationName}
-    And the user clicks the button/link                       link = Your project finances
-    Then the user completes hecp project finances             ${hestaApplicationName}  no
-    And the user see the print view of the application
+    And the user successfully completes application     tim   timmy   ${leadApplicantEmail}   ${hestaApplicationName}
+    When the user clicks the button/link                link = Your project finances
+    And the user clicks the button/link                 link = Your project costs
+    Then the user should see the element                jQuery = a:contains("Horizon Europe guarantee notice and guidance – UKRI")
+    And the user should see the element                 jQuery = a:contains("heguarantee@iuk.ukri.org")
+
+Lead applicant completes project finances and submits an application
+    [Documentation]  IFS-8751  IFS-11269  IFS-11618
+    Given the user clicks the button/link                     link = Your project finances
+    When the user completes hecp project finances             ${hestaApplicationName}  no
+    Then the user see the print view of the application
     And the user can submit the application
 
 Lead applicant should get a confirmation email after application submission
@@ -104,6 +114,12 @@ the user should not see any references to assessment and release feedback on clo
     And the user should see the element   jQuery = li:contains("All funding decision notifications have been sent.")
     And the user should see the element   jQuery = p:contains("Once this competition is closed you will no longer be able to add funding decisions.")
     And the element should be disabled    jQuery = button:contains("Close competition")
+
+Applicant can view application when in project setup
+    [Documentation]  IFS-11510
+    Given Internal user notifies the applicant on status of application
+    When the applicant navigates to project set up
+    Then The user should see the text in the element               link = view application  view application
 
 Internal user can view hecp GOL template
     [Documentation]  IFS-11299
@@ -374,14 +390,18 @@ IFS admin approves the spend profiles for hestaApplication
     the user clicks the button/link  id = radio-spendprofile-approve
     the user clicks the button/link  id = submit-button
 
-the user completes all project setup sections
+Internal user notifies the applicant on status of application
     Requesting IDs of this Asos Organisation
     the internal team mark the application as successful / unsuccessful         ${hestaApplicationID}  FUNDED
     the user clicks the button/link                                             link = Competition
     the internal team notifies all applicants                                   ${hestaApplicationID}
     the user refreshes until element appears on page                            jQuery = td:contains("${hestaApplicationID}") ~ td:contains("Sent")
+
+the applicant navigates to project set up
     log in as a different user                                                  ${leadApplicantEmail}    ${short_password}
     the user clicks the button/link                                             link = ${hestaApplicationName}
+
+the user completes all project setup sections
     the user is able to complete project details section
     the user completes the project team details
     the user is able to complete the Documents section
