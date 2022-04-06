@@ -176,8 +176,8 @@
             </th:block>
             <p class="govuk-body">
                 <th:block th:unless="${competition.competitionStatus.isFeedbackReleased()}">You have been successful in this round of funding.</th:block>
-                <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">Scores and written feedback from each assessor can be found below.</th:block>
-                <th:block th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}"
+                <th:block th:if="${competition.competitionStatus.isFeedbackReleased() || competition.hasAssessmentStage }">Scores and written feedback from each assessor can be found below.</th:block>
+                <th:block th:if="${(!competition.alwaysOpen) and (competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}"
                           th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.releaseFeedbackDate, 'd MMMM yyyy') +'.'}"/>
             </p>
             <p class="govuk-body" th:if="${currentProject}">
