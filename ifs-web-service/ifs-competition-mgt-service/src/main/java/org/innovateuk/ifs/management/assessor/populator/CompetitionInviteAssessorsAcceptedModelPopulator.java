@@ -61,6 +61,8 @@ public class CompetitionInviteAssessorsAcceptedModelPopulator extends Competitio
                 assessorInviteOverviewResource.getName(),
                 assessorInviteOverviewResource.getInnovationAreas(),
                 assessorInviteOverviewResource.isCompliant(),
+                assessorInviteOverviewResource.isValidAgreement(),
+                assessorInviteOverviewResource.isValidDoi(),
                 assessorInviteOverviewResource.getBusinessType(),
                 assessorInviteOverviewResource.getStatus(),
                 assessorInviteOverviewResource.getDetails(),
