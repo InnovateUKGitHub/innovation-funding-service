@@ -18,6 +18,7 @@ import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestServic
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -26,6 +27,8 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
+import org.innovateuk.ifs.horizon.resource.ApplicationHorizonWorkProgrammeResource;
+import org.innovateuk.ifs.horizon.service.HorizonWorkProgrammeRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
@@ -49,6 +52,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectations;
@@ -119,15 +123,29 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
     @Mock
     private SupporterAssignmentRestService supporterAssignmentRestService;
 
+    @Mock
+    private HorizonWorkProgrammeRestService horizonWorkProgrammeRestService;
+
+    private final long applicationId = 1L;
+    private final long assessmentId = 2L;
+    private final QuestionReadOnlyViewModelPopulator mockPopulator = mock(QuestionReadOnlyViewModelPopulator.class);
+    private List<FormInputResource> formInputs = new ArrayList<>();
+    private List<FormInputResponseResource> responses = new ArrayList<>();
+    private List<ApplicationHorizonWorkProgrammeResource> workProgrammeFuture = new ArrayList<>();
+
+
     @Before
     public void setupExpectations() {
         setupAsyncExpectations(futuresGeneratorMock);
+
+        formInputs = newFormInputResource().withQuestion(2L).build(1);
+        responses = newFormInputResponseResource().withFormInputs(formInputs.get(0).getId()).build(1);
+        workProgrammeFuture = singletonList(new ApplicationHorizonWorkProgrammeResource());
+
     }
 
     @Test
     public void populate() {
-        long applicationId = 1L;
-        long assessmentId = 2L;
         UserResource user = newUserResource()
                 .withRoleGlobal(Role.APPLICANT)
                 .build();
@@ -136,7 +154,6 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .setIncludeStatuses(true)
                 .setAssessmentId(assessmentId);
 
-        QuestionReadOnlyViewModelPopulator mockPopulator = mock(QuestionReadOnlyViewModelPopulator.class);
         setField(populator, "populatorMap", asMap(QuestionSetupType.APPLICATION_TEAM, mockPopulator));
         setField(populator, "asyncFuturesGenerator", futuresGeneratorMock);
 
@@ -154,8 +171,6 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         List<QuestionResource> questions = newQuestionResource()
                 .withQuestionSetupType(QuestionSetupType.APPLICATION_TEAM)
                 .build(1);
-        List<FormInputResource> formInputs = newFormInputResource().withQuestion(2L).build(1);
-        List<FormInputResponseResource> responses = newFormInputResponseResource().withFormInputs(formInputs.get(0).getId()).build(1);
         List<QuestionStatusResource> questionStatuses = newQuestionStatusResource()
                 .withQuestion(questions.get(0).getId())
                 .build(1);
@@ -183,7 +198,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .build();
 
         ApplicationReadOnlyData expectedData = new ApplicationReadOnlyData(application, competition, user, newArrayList(processRole),
-                questions, formInputs, responses, questionStatuses, singletonList(assessorResponseFuture), emptyList(), Optional.empty());
+                questions, formInputs, responses, questionStatuses, singletonList(assessorResponseFuture), emptyList(), Optional.of(workProgrammeFuture));
         ApplicationQuestionReadOnlyViewModel expectedRowModel = mock(ApplicationQuestionReadOnlyViewModel.class);
         FinanceReadOnlyViewModel expectedFinanceSummary = mock(FinanceReadOnlyViewModel.class);
 
@@ -198,6 +213,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         when(sectionRestService.getByCompetition(competition.getId())).thenReturn(restSuccess(sections));
         when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(newArrayList(processRole)));
         when(assessorFormInputResponseRestService.getApplicationAssessment(applicationId, assessmentId)).thenReturn(restSuccess(assessorResponseFuture));
+        when(horizonWorkProgrammeRestService.findSelected(applicationId)).thenReturn(restSuccess(workProgrammeFuture));
 
         when(mockPopulator.populate(questions.get(0), expectedData, settings)).thenReturn(expectedRowModel);
 
@@ -223,11 +239,9 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
 
     @Test
     public void populateKtp() {
-        long applicationId = 1L;
-        long assessmentId = 2L;
         OrganisationResource organisation = newOrganisationResource().build();
         UserResource user = newUserResource()
-                .withRolesGlobal(Arrays.asList(Role.KNOWLEDGE_TRANSFER_ADVISER, Role.ASSESSOR))
+                .withRolesGlobal(asList(Role.KNOWLEDGE_TRANSFER_ADVISER, Role.ASSESSOR))
                 .build();
         ApplicationReadOnlySettings settings = ApplicationReadOnlySettings.defaultSettings()
                 .setIncludeQuestionLinks(true)
@@ -236,7 +250,6 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .setIncludeAllAssessorFeedback(true)
                 .setIncludeAllSupporterFeedback(true);
 
-        QuestionReadOnlyViewModelPopulator mockPopulator = mock(QuestionReadOnlyViewModelPopulator.class);
         setField(populator, "populatorMap", asMap(QuestionSetupType.KTP_ASSESSMENT, mockPopulator));
         setField(populator, "asyncFuturesGenerator", futuresGeneratorMock);
 
@@ -255,8 +268,6 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         List<QuestionResource> questions = newQuestionResource()
                 .withQuestionSetupType(QuestionSetupType.KTP_ASSESSMENT)
                 .build(1);
-        List<FormInputResource> formInputs = newFormInputResource().withQuestion(2L).build(1);
-        List<FormInputResponseResource> responses = newFormInputResponseResource().withFormInputs(formInputs.get(0).getId()).build(1);
         List<QuestionStatusResource> questionStatuses = newQuestionStatusResource()
                 .withQuestion(questions.get(0).getId())
                 .build(1);
@@ -296,7 +307,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .build(5);
 
         ApplicationReadOnlyData expectedData = new ApplicationReadOnlyData(application, competition, user, newArrayList(processRole),
-                questions, formInputs, responses, questionStatuses, singletonList(assessorResponseFuture), supporterResponseFuture, Optional.empty());
+                questions, formInputs, responses, questionStatuses, singletonList(assessorResponseFuture), supporterResponseFuture, Optional.of(workProgrammeFuture));
         ApplicationQuestionReadOnlyViewModel expectedRowModel = mock(ApplicationQuestionReadOnlyViewModel.class);
         FinanceReadOnlyViewModel expectedFinanceSummary = mock(FinanceReadOnlyViewModel.class);
 
@@ -312,6 +323,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(newArrayList(processRole)));
         when(assessorFormInputResponseRestService.getApplicationAssessment(applicationId, assessmentId)).thenReturn(restSuccess(assessorResponseFuture));
         when(supporterAssignmentRestService.getAssignmentsByApplicationId(applicationId)).thenReturn(restSuccess(supporterResponseFuture));
+        when(horizonWorkProgrammeRestService.findSelected(applicationId)).thenReturn(restSuccess(workProgrammeFuture));
 
         when(mockPopulator.populate(questions.get(0), expectedData, settings)).thenReturn(expectedRowModel);
 
@@ -371,4 +383,83 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         verify(mockPopulator).populate(questions.get(0), expectedData, settings);
     }
 
+    @Test
+    public void populateHecp() {
+        UserResource user = newUserResource()
+                .withRoleGlobal(Role.APPLICANT)
+                .build();
+        ApplicationReadOnlySettings settings = ApplicationReadOnlySettings.defaultSettings()
+                .setIncludeQuestionLinks(true)
+                .setIncludeStatuses(true);
+
+        setField(populator, "populatorMap", asMap(QuestionSetupType.HORIZON_WORK_PROGRAMME, mockPopulator));
+        setField(populator, "asyncFuturesGenerator", futuresGeneratorMock);
+
+        GrantTermsAndConditionsResource grantTermsAndConditionsResource = newGrantTermsAndConditionsResource()
+                .withName("Horizon Europe Guarantee")
+                .build();
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.HECP)
+                .withTermsAndConditions(grantTermsAndConditionsResource)
+                .withCompetitionTypeEnum(CompetitionTypeEnum.HORIZON_EUROPE_GUARANTEE)
+                .build();
+        ApplicationResource application = newApplicationResource()
+                .withId(applicationId)
+                .withCompetition(competition.getId())
+                .build();
+        List<QuestionResource> questions = newQuestionResource()
+                .withQuestionSetupType(QuestionSetupType.HORIZON_WORK_PROGRAMME)
+                .withName("Work programme")
+                .withShortName("Work programme")
+                .build(1);
+        List<QuestionStatusResource> questionStatuses = newQuestionStatusResource()
+                .withQuestion(questions.get(0).getId())
+                .build(1);
+        OrganisationResource organisation = newOrganisationResource().build();
+        List<SectionResource> sections = newSectionResource()
+                .withName("Section with questions", "Finance section")
+                .withChildSections(Collections.emptyList(), Collections.singletonList(1L))
+                .withQuestions(questions.stream().map(QuestionResource::getId).collect(Collectors.toList()), emptyList())
+                .withType(SectionType.PROJECT_DETAILS, SectionType.FINANCE)
+                .build(2);
+
+        workProgrammeFuture = asList(new ApplicationHorizonWorkProgrammeResource(applicationId, "CL6"),
+                new ApplicationHorizonWorkProgrammeResource(applicationId, "HORIZON_CL6_2021_GOVERNANCE_01"));
+
+        ProcessRoleResource processRole = newProcessRoleResource().withRole(ProcessRoleType.LEADAPPLICANT).withUser(user).build();
+
+        ApplicationReadOnlyData expectedData = new ApplicationReadOnlyData(application, competition, user, newArrayList(processRole),
+                questions, formInputs, responses, questionStatuses, emptyList(), emptyList(), Optional.of(workProgrammeFuture));
+        ApplicationQuestionReadOnlyViewModel expectedRowModel = mock(ApplicationQuestionReadOnlyViewModel.class);
+        FinanceReadOnlyViewModel expectedFinanceSummary = mock(FinanceReadOnlyViewModel.class);
+
+        when(financeSummaryViewModelPopulator.populate(expectedData)).thenReturn(expectedFinanceSummary);
+        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(questionRestService.findByCompetition(competition.getId())).thenReturn(restSuccess(questions));
+        when(formInputRestService.getByCompetitionId(competition.getId())).thenReturn(restSuccess(formInputs));
+        when(formInputResponseRestService.getResponsesByApplicationId(application.getId())).thenReturn(restSuccess(responses));
+        when(organisationRestService.getByUserAndApplicationId(user.getId(), applicationId)).thenReturn(restSuccess(organisation));
+        when(questionStatusRestService.findByApplicationAndOrganisation(applicationId, organisation.getId())).thenReturn(restSuccess(questionStatuses));
+        when(sectionRestService.getByCompetition(competition.getId())).thenReturn(restSuccess(sections));
+        when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(newArrayList(processRole)));
+        when(horizonWorkProgrammeRestService.findSelected(applicationId)).thenReturn(restSuccess(workProgrammeFuture));
+
+        when(mockPopulator.populate(questions.get(0), expectedData, settings)).thenReturn(expectedRowModel);
+
+        ApplicationReadOnlyViewModel viewModel = populator.populate(applicationId, user, settings);
+
+        assertEquals(viewModel.getSettings(), settings);
+        assertEquals(viewModel.getSections().size(), 2);
+
+        Iterator<ApplicationSectionReadOnlyViewModel> iterator = viewModel.getSections().iterator();
+        ApplicationSectionReadOnlyViewModel sectionWithQuestion = iterator.next();
+
+        assertEquals(sectionWithQuestion.getName(), "Section with questions");
+        assertEquals(sectionWithQuestion.getQuestions().iterator().next(), expectedRowModel);
+
+        assertEquals(workProgrammeFuture, expectedData.getApplicationHorizonWorkProgrammeResource().get());
+
+        verify(mockPopulator).populate(questions.get(0), expectedData, settings);
+    }
 }
