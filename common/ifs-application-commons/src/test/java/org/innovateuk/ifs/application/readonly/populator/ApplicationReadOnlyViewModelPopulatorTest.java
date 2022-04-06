@@ -183,7 +183,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .build();
 
         ApplicationReadOnlyData expectedData = new ApplicationReadOnlyData(application, competition, user, newArrayList(processRole),
-                questions, formInputs, responses, questionStatuses, singletonList(assessorResponseFuture), emptyList());
+                questions, formInputs, responses, questionStatuses, singletonList(assessorResponseFuture), emptyList(), Optional.empty());
         ApplicationQuestionReadOnlyViewModel expectedRowModel = mock(ApplicationQuestionReadOnlyViewModel.class);
         FinanceReadOnlyViewModel expectedFinanceSummary = mock(FinanceReadOnlyViewModel.class);
 
@@ -296,7 +296,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .build(5);
 
         ApplicationReadOnlyData expectedData = new ApplicationReadOnlyData(application, competition, user, newArrayList(processRole),
-                questions, formInputs, responses, questionStatuses, singletonList(assessorResponseFuture), supporterResponseFuture);
+                questions, formInputs, responses, questionStatuses, singletonList(assessorResponseFuture), supporterResponseFuture, Optional.empty());
         ApplicationQuestionReadOnlyViewModel expectedRowModel = mock(ApplicationQuestionReadOnlyViewModel.class);
         FinanceReadOnlyViewModel expectedFinanceSummary = mock(FinanceReadOnlyViewModel.class);
 
