@@ -411,8 +411,10 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
                     List<CostCategory> costCategories = spendProfile.getCostCategoryType().getCostCategories();
                     if (project.getApplication().getCompetition().isHorizonEuropeGuarantee()) {
-                        Set<String> hecpDisplayNames = FinanceRowType.getHecpSpecificFinanceRowTypes().stream().map(FinanceRowType::getHecpDisplayName).collect(Collectors.toSet());
-                        costCategories = costCategories.stream().filter(costCategory -> hecpDisplayNames.contains(costCategory.getName())).collect(Collectors.toList());
+                        List<String> hecpFinanceRowOrder = FinanceRowType.getHecpSpecificFinanceRowTypes().stream().map(FinanceRowType::getDisplayName).collect(Collectors.toList());
+                        costCategories = costCategories.stream().filter(costCategory -> hecpFinanceRowOrder.contains(costCategory.getName()))
+                                .sorted((c1, c2) -> hecpFinanceRowOrder.indexOf(c1.getName()) - hecpFinanceRowOrder.indexOf(c2.getName()))
+                                .collect(Collectors.toList());
                     }
 
                     Organisation organisation = organisationRepository.findById(projectOrganisationCompositeId.getOrganisationId()).get();
