@@ -31,6 +31,20 @@ public class HorizonEuropeGuaranteeTemplateTest {
     public void questions() {
         List<SectionBuilder> sections = horizonEuropeGuaranteeTemplate.sections();
 
+        Optional<SectionBuilder> optionalProjectDetails = sections.stream()
+                .filter(section -> section.getType() == SectionType.PROJECT_DETAILS)
+                .findFirst();
+
+        assertTrue(optionalProjectDetails.isPresent());
+
+        SectionBuilder projectDetails = optionalProjectDetails.get();
+
+        Optional<QuestionBuilder> optionalResearchCategory = projectDetails.getQuestions().stream()
+                .filter(question -> question.getQuestionSetupType() == QuestionSetupType.RESEARCH_CATEGORY)
+                .findFirst();
+
+        assertTrue(optionalResearchCategory.isPresent());
+
         Optional<SectionBuilder> optionalApplicationQuestions = sections.stream()
                 .filter(section -> section.getType() == SectionType.APPLICATION_QUESTIONS)
                 .findFirst();
