@@ -56,6 +56,7 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                 projectDetails()
                         .withQuestions(newArrayList(
                                 applicationDetails(),
+                                researchCategory(),
                                 applicationTeam(),
                                 grantAgreement(),
                                 equalityDiversityAndInclusion()
