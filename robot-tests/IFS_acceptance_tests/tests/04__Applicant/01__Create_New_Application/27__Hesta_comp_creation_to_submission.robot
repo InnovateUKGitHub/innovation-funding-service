@@ -59,28 +59,6 @@ Comp admin creates Hesta competition
     Then the competition admin creates Hesta competition             ${BUSINESS_TYPE_ID}  ${hestaCompetitionName}  ${compType_HESTA}  ${compType_HESTA}  STATE_AID  GRANT  RELEASE_FEEDBACK  no  1  false  single-or-collaborative
     [Teardown]  Get competition id and set open date to yesterday    ${hestaCompetitionName}
 
-Com admin invite assessor to assess the competition
-    [Documentation]  IFS-11511
-    Given log in as a different user             &{Comp_admin1_credentials}
-    When the user clicks the button/link         link = ${hestaCompetitionName}
-    And the user clicks the button/link          link = Invite assessors to assess the competition
-    And the user enters text to a text field     id = assessorNameFilter   Paul Plum
-    And the user clicks the button/link          jQuery = .govuk-button:contains("Filter")
-    Then the user clicks the button/link         jQuery = tr:contains("Paul Plum") label[for^="assessor-row"]
-    And the user clicks the button/link          jQuery = .govuk-button:contains("Add selected to invite list")
-    And the user clicks the button/link          link = Invite
-    And the user clicks the button/link          link = Review and send invites
-    And the user enters text to a text field     id = message    This is custom text
-    And the user clicks the button/link          jQuery = .govuk-button:contains("Send invitation")
-
-The assessor accept the invitation to assess the HECP Competition
-    [Documentation]  IFS-11511
-    Given log in as a different user               &{assessor_credentials}
-    And the user clicks the assessment tile if displayed
-    When the user clicks the button/link           link = ${hestaCompetitionName}
-    And the user selects the radio button          acceptInvitation   true
-    Then the user clicks the button/link           jQuery = button:contains("Confirm")
-
 Lead applicant can submit application
     [Documentation]  IFS-8751  IFS-11269  IFS-11618
     Given the user logs out if they are logged in
@@ -143,6 +121,20 @@ Internal user can view hecp GOL template
     And Select Window                                               NEW
     Then the user should see the element                            xpath = //h2[text()='Accepting your award ']
     [Teardown]  the user closes the last opened tab
+
+Lead Applicant can view banner message for a successfull application
+    [Documentation]  IFS-11511
+    Given log in as a different user         ${leadApplicantEmail}  ${short_password}
+    When the user clicks the button/link     link = ${hestaApplicationName}
+    And the user clicks the button/link      link = view application
+    Then the user should see the element     jQuery = h2:contains("Congratulations, your application has been successful")
+    And the user should see the element      jQuery = p:contains("You have been successful in this round of funding.")
+
+Lead Applicant can view banner message for a unsuccessfull application
+    [Documentation]  IFS-11511
+    Given log in as a different user         ${newLeadApplicantEmail}  ${short_password}
+    When the user clicks the button/link     link = ${newHestaApplicationName}
+    Then the user should see the element     jQuery = h2:contains("Your application has not been successful in this competition.")
 
 
 *** Keywords ***
