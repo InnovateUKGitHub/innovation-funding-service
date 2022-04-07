@@ -1,8 +1,9 @@
 package org.innovateuk.ifs.organisation.resource;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class OrganisationExecutiveOfficerResource {
+public class OrganisationExecutiveOfficerResource implements Serializable {
 
     private static final long serialVersionUID = 6318064923671344867L;
 
