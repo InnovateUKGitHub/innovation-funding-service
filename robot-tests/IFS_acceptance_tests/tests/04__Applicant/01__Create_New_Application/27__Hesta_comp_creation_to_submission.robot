@@ -54,7 +54,7 @@ Comp admin can view Hesta competition type in Initial details read only view
 Comp admin creates Hesta competition
     [Documentation]  IFS-8751  IFS-11486
     Given the user clicks the button/link                            link = Back to competition details
-    Then the competition admin creates Hesta competition             ${BUSINESS_TYPE_ID}  ${hestaCompetitionName}  ${compType_HESTA}  ${compType_HESTA}  STATE_AID  GRANT  RELEASE_FEEDBACK  no  1  false  single-or-collaborative
+    Then the competition admin creates Hesta competition             ${BUSINESS_TYPE_ID}  ${hestaCompetitionName}  ${compType_HESTA}  ${compType_HESTA}  STATE_AID  HECP  PROJECT_SETUP  no  1  false  single-or-collaborative
     [Teardown]  Get competition id and set open date to yesterday    ${hestaCompetitionName}
 
 Lead applicant can view funding conversion tool in project costs
