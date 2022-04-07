@@ -30,6 +30,8 @@ public class ProjectEligibilitySectionUpdater extends AbstractSectionUpdater imp
         return PROJECT_ELIGIBILITY;
     }
 
+    private static final int NON_FINANCE_RESEARCH_PARTICIPATION_DEFAULT_PERCENTAGE = 0;
+
     @Override
     protected ServiceResult<Void> doSaveSection(
             CompetitionResource competition,
@@ -38,7 +40,11 @@ public class ProjectEligibilitySectionUpdater extends AbstractSectionUpdater imp
     ) {
         ProjectEligibilityForm projectEligibilityForm = (ProjectEligibilityForm) competitionSetupForm;
 
-        competition.setMaxResearchRatio(projectEligibilityForm.getResearchParticipationPercentage());
+        if (competition.isNonFinanceType()) {
+            competition.setMaxResearchRatio(NON_FINANCE_RESEARCH_PARTICIPATION_DEFAULT_PERCENTAGE);
+        } else {
+            competition.setMaxResearchRatio(projectEligibilityForm.getResearchParticipationPercentage());
+        }
 
         boolean multiStream = "yes".equals(projectEligibilityForm.getMultipleStream());
         competition.setMultiStream(multiStream);

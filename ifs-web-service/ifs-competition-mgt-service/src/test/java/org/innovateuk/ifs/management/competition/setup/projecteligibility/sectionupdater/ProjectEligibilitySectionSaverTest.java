@@ -72,7 +72,6 @@ public class ProjectEligibilitySectionSaverTest {
     @Test
     public void saveSection_withoutResearchParticipationAmountIdDefaultsToNone() {
         ProjectEligibilityForm competitionSetupForm = new ProjectEligibilityForm();
-        competitionSetupForm.setResearchParticipationPercentage(0);
         List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource()
                 .build(2);
 
@@ -115,7 +114,7 @@ public class ProjectEligibilitySectionSaverTest {
     @Test
     public void saveSection_defaultsMaxResearchRatioToNoneForCompetitionsWithNoFinances() {
         ProjectEligibilityForm competitionSetupForm = new ProjectEligibilityForm();
-        competitionSetupForm.setResearchParticipationPercentage(0);
+        competitionSetupForm.setResearchParticipationPercentage(100);
 
         List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource().build(2);
 

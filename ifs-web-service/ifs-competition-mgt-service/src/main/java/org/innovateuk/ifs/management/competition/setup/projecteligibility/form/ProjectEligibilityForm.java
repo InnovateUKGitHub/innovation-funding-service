@@ -27,8 +27,7 @@ public class ProjectEligibilityForm extends CompetitionSetupForm {
 
     private List<Long> leadApplicantTypes;
 
-    //default - 30%
-    private int researchParticipationPercentage = 30;
+    private int researchParticipationPercentage = 0;
 
     @NotBlank(message = "{validation.eligibilityform.resubmission.required}")
     private String resubmission;

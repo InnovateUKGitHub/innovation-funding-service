@@ -32,7 +32,6 @@ public class ProjectEligibilityFormPopulator implements CompetitionSetupFormPopu
         } else {
             competitionSetupForm.setResearchParticipationPercentage(competitionResource.getMaxResearchRatio());
         }
-
         competitionSetupForm.setMultipleStream("no");
 
         CollaborationLevel level = competitionResource.getCollaborationLevel();

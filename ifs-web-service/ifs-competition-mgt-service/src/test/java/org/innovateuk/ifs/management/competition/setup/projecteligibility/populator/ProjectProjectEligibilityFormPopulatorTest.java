@@ -150,6 +150,6 @@ public class ProjectProjectEligibilityFormPopulatorTest {
 
         assertTrue(result instanceof ProjectEligibilityForm);
         ProjectEligibilityForm form = (ProjectEligibilityForm) result;
-        assertEquals(0, form.getResearchParticipationPercentage());
+        assertEquals(30, form.getResearchParticipationPercentage());
     }
 }
