@@ -68,6 +68,22 @@ Lead applicant can submit application
     And the user see the print view of the application
     And the user can submit the application
 
+Lead applicant can view funding conversion tool in project costs
+    [Documentation]  IFS-11508
+    Given the user logs out if they are logged in
+    And the user successfully completes application     tim   timmy   ${leadApplicantEmail}   ${hestaApplicationName}
+    When the user clicks the button/link                link = Your project finances
+    And the user clicks the button/link                 link = Your project costs
+    Then the user should see the element                jQuery = a:contains("Horizon Europe guarantee notice and guidance – UKRI")
+    And the user should see the element                 jQuery = a:contains("heguarantee@iuk.ukri.org")
+
+Lead applicant completes project finances and submits an application
+    [Documentation]  IFS-8751  IFS-11269  IFS-11618
+    Given the user clicks the button/link                     link = Your project finances
+    When the user completes hecp project finances             ${hestaApplicationName}  no
+    Then the user see the print view of the application
+    And the user can submit the application
+
 Lead applicant should get a confirmation email after application submission
     [Documentation]    IFS-10694
     Given Requesting IDs of this application    ${hestaApplicationName}
