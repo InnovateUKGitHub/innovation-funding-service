@@ -17,6 +17,8 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11688 HECP Phase 2 - Template update
 ...
+...               IFS-11551 HECP Phase 2 - Spend profile - Content change
+...
 ...               IFS-11510 HECP Phase 2 - Remove content from 'View application feedback' link
 ...
 ...
@@ -121,13 +123,31 @@ Applicant can view application when in project setup
     When the applicant navigates to project set up
     Then The user should see the text in the element               link = view application  view application
 
+Applicants will see hecp related spend profile content
+    [Documentation]  IFS-11551
+    Given the user completes all project setup sections except spendprofile
+    And log in as a different user                       ${leadApplicantEmail}    ${short_password}
+    When the user navigates to the page                  ${server}/project-setup/project/${hestaProjectID}/partner-organisation/${asosId}/spend-profile/review
+    Then the user should see the element                 jQuery = p:contains("We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners ​which estimates how you think costs will be spread out over the duration of your project")
+    And the user should see the element                  jQuery = p:contains("If you require further assistance in filling out your spend profile, contact your monitoring officer.")
+    And the user should see the element                  jQuery = p:contains("You need to mark this section as complete. You can then send completed spend profiles to Innovate UK.")
+
+Lead applicant submits spen profile to internal user for review
+    [Documentation]  IFS-11551
+    Given the user clicks the button/link   id = spend-profile-mark-as-complete-button
+    And the user clicks the button/link     link = Review and submit project spend profile
+    And the user clicks the button/link     id = submit-project-spend-profile-button
+    When the user clicks the button/link    id = submit-send-all-spend-profiles
+    And the user navigates to the page      ${server}/project-setup/project/${hestaProjectID}/partner-organisation/${asosId}/spend-profile/review
+    Then the user should see the element    jQuery = p:contains("We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners ​which estimates how you think costs will be spread out over the duration of your project")
+
 Internal user can view hecp GOL template
     [Documentation]  IFS-11299
-    Given the user completes all project setup sections
-    When the user clicks the button/link                            jQuery = td:contains("Review")
+    Given IFS admin approves the spend profiles for hestaApplication    ${hestaProjectID}
+    When the user clicks the button/link                                jQuery = td:contains("Review")
     And user clicks on View the grant offer letter page
-    And Select Window                                               NEW
-    Then the user should see the element                            xpath = //h2[text()='Annex 1: acceptance of award']
+    And Select Window                                                   NEW
+    Then the user should see the element                                xpath = //h2[text()='Annex 1: acceptance of award']
     [Teardown]  the user closes the last opened tab
 
 
@@ -163,14 +183,6 @@ Internal user approves bank details
     the user navigates to the page                      ${server}/project-setup-management/project/${hestaProjectID}/organisation/${asosId}/review-bank-details
     the user clicks the button/link                     jQuery = button:contains("Approve bank account details")
     the user clicks the button/link                     id = submit-approve-bank-details
-
-The user is able to complete and submit the spend profile
-    Log in as a different user                          ${leadApplicantEmail}    ${short_password}
-    the user navigates to the page                      ${server}/project-setup/project/${hestaProjectID}/partner-organisation/${asosId}/spend-profile/review
-    the user clicks the button/link                      id = spend-profile-mark-as-complete-button
-    the user clicks the button/link                      link = Review and submit project spend profile
-    the user clicks the button/link                      id = submit-project-spend-profile-button
-    the user clicks the button/link                      id = submit-send-all-spend-profiles
 
 the user can view Hesta competition type in Initial details read only view
     the user should see the element     jQuery = ${hestaCompTypeSelector}
@@ -226,7 +238,6 @@ the user successfully completes application
     [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
     the user select the competition and starts application          ${hestaCompetitionName}
     the user clicks the button/link                                 link = Continue and create an account
-    #user selects where is organisation based                        isNotInternational
     the user selects the radio button                               organisationTypeId    radio-1
     the user clicks the button/link                                 jQuery = .govuk-button:contains("Save and continue")
     the user selects his organisation in Companies House            ASOS  ASOS PLC
@@ -401,19 +412,17 @@ the applicant navigates to project set up
     log in as a different user                                                  ${leadApplicantEmail}    ${short_password}
     the user clicks the button/link                                             link = ${hestaApplicationName}
 
-the user completes all project setup sections
+the user completes all project setup sections except spendprofile
     the user is able to complete project details section
     the user completes the project team details
     the user is able to complete the Documents section
     the user fills in bank details
     log in as a different user                                                  &{internal_finance_credentials}
-    internal user assigns MO to application                                     ${hestaApplicationID}    ${hestaApplicationName}    Orvill  Orville Gibbs
     Requesting Project ID of this Project
+    internal user assigns MO to application                                     ${hestaApplicationID}    ${hestaApplicationName}    Orvill  Orville Gibbs
     project finance approves eligibility and generates the Spend Profile        ${asosId}  ${hestaProjectID}
     Internal user reviews and approves documents
     Internal user approves bank details
-    The user is able to complete and submit the spend profile
-    IFS admin approves the spend profiles for hestaApplication                  ${hestaProjectID}
 
 the user see the print view of the application
     Requesting IDs of this Hesta application
