@@ -543,6 +543,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         switch (financeRow.category) {
             case "Working days per year":
                 return builder.withWorkingDaysPerYear(Integer.valueOf(financeRow.metadata.get(0)));
+            case "Grant claim amount":
+                return builder.withGrantClaimAmount(Integer.valueOf(financeRow.metadata.get(0)));
             case "Grant claim":
                 return builder.withGrantClaim(BigDecimal.valueOf(Integer.valueOf(financeRow.metadata.get(0))));
             case "Organisation size":

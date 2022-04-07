@@ -60,6 +60,8 @@ public class InterviewInviteAssessorsOverviewModelPopulator extends InterviewInv
                 assessorInviteOverviewResource.getName(),
                 assessorInviteOverviewResource.getInnovationAreas(),
                 assessorInviteOverviewResource.isCompliant(),
+                assessorInviteOverviewResource.isValidAgreement(),
+                assessorInviteOverviewResource.isValidDoi(),
                 assessorInviteOverviewResource.getBusinessType(),
                 assessorInviteOverviewResource.getStatus(),
                 assessorInviteOverviewResource.getDetails(),

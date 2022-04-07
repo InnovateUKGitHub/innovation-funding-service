@@ -200,7 +200,7 @@ public class ProfileServiceImpl extends BaseTransactionalService implements Prof
                         user.getId(),
                         profile != null && profile.getSkillsAreas() != null,
                         Profile.isAffiliationsComplete(user),
-                        profile != null && profile.getAgreementSignedDate() != null
+                        profile != null && profile.isAgreementValid()
                 )
         );
     }

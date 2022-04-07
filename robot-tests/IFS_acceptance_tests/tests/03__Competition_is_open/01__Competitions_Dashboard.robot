@@ -80,7 +80,7 @@ Get the expected values for the open counts
     Set Test Variable    ${Invited}
     ${Accepted} =     Get text         css = div:nth-child(2) > div > span
     Set Test Variable    ${Accepted}
-    The user clicks the button/link    link = Competition
+    The user clicks the button/link    link = Back to competition
     The user clicks the button/link    jQuery = a:contains(Applications)
     The user clicks the button/link    jQuery = a:contains(All applications)
     ${Applications started} =     Get text    css = li:nth-child(2) > div > span
@@ -112,7 +112,7 @@ Get the expected values for the Ready to open counts
     Set Test Variable    ${Invited}
     ${Accepted} =     Get text         css = div:nth-child(2) > div > span
     Set Test Variable    ${Accepted}
-    The user clicks the button/link    link = Competition
+    The user clicks the button/link    link = Back to competition
 
 the counts of the Ready to open statistics should be correct
     ${INVITED_COUNT} =     Get text     css = ul:nth-child(3) > li:nth-child(1) > div > span

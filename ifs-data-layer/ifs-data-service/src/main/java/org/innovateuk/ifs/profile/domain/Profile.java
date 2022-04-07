@@ -145,8 +145,16 @@ public class Profile extends AuditableEntity {
     public boolean isCompliant(User user) {
         boolean skillsComplete = skillsAreas != null;
         boolean affiliationsComplete = isAffiliationsComplete(user);
-        boolean agreementComplete = agreementSignedDate != null;
+        boolean agreementComplete = isAgreementValid();
         return skillsComplete && affiliationsComplete && agreementComplete;
+    }
+
+    public boolean isAgreementValid() {
+        if (agreementSignedDate == null || !agreement.isCurrent()) {
+            return false;
+        }
+
+        return agreementSignedDate.isAfter(agreement.getModifiedOn());
     }
 
     public static boolean isAffiliationsComplete(User user) {

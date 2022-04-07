@@ -40,6 +40,15 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...               IFS-3943 Assessor profile view - Internal
 ...
 ...               IFS-5915 Assessor Filter Option
+...
+...               IFS-11693 Assessor Assessment page changes
+...
+...               IFS-11689 Invite Assessor Journey changes
+...
+...               IFS-11691 Assessment Panel Journey changes
+...
+...               IFS-11692 Interview Panel Journey changes
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom teardown
 Force Tags        CompAdmin  Assessor
@@ -59,15 +68,21 @@ Check the initial key statistics
     And the user clicks the button/link    link = Pending and declined
 
 Filtering in the Invite Pending and declined page
-    [Documentation]    INFUND-6453  IFS-5915
+    [Documentation]    INFUND-6453  IFS-5915  IFS-11698
     [Tags]
     Given the user filter assessors by name status and DOI
-    Then the user should not see the element   jQuery = td:contains("No")
+    Then the user should see the element    jQuery = td:contains("Josephine Peters") ~ td:nth-of-type(5):contains(No)
+    And the user should see the element     jQuery = td:contains("Josephine Peters") ~ td:nth-of-type(6):contains(Yes)
+    And the user should see the element     jQuery = th:contains("Contract")
+    And the user should see the element     jQuery = th:contains("DOI")
+
+CLearing the filters on Pending and declined page
+    [Documentation]    INFUND-6453  IFS-5915  IFS-11698
     When the user clicks the button/link       jQuery = a:contains("Clear filters")
     Then the user should see the element       jQuery = td:contains("David")
 
 The User can Add and Remove Assessors
-    [Documentation]    INFUND-6602 INFUND-6604 INFUND-6392 INFUND-6412 INFUND-6388
+    [Documentation]    INFUND-6602 INFUND-6604 INFUND-6392 INFUND-6412 INFUND-6388  IFS-11698  IFS-11691  IFS-11692  IFS-11693
     [Tags]
     Given the user add assessor to invite list
     Then the user should see assessor details
@@ -125,17 +140,21 @@ Invite non-registered users
     Then the user should see an assessor details
 
 Assessor overview information
-    [Documentation]    INFUND-6450 INFUND-6449
+    [Documentation]    INFUND-6450 INFUND-6449  IFS-11698  IFS-11691  IFS-11692  IFS-11693
     [Tags]
     Given The user clicks the button/link  link = Pending and declined
     Then the user should see assessors details on pending and declined tab
 
 Assessor accepted information
-    [Documentation]  IFS-1445
+    [Documentation]  IFS-1445  IFS-11698  IFS-11691  IFS-11692  IFS-11693
     [Tags]
     Given the user clicks the button/link  link = Accepted
     And the user clicks the button/link    jQuery = .pagination-label:contains("Next")
     Then the user should see the element   jQuery = td:contains("Paul Plum")
+    And the user should see the element    jQuery = th:contains("Contract")
+    And the user should see the element    jQuery = th:contains("DOI")
+    And the user should see the element    jQuery = td:contains("Paul Plum") ~ td:nth-of-type(5):contains(Yes)
+    And the user should see the element    jQuery = td:contains("Paul Plum") ~ td:nth-of-type(5):contains(Yes)
 
 Select to add all assessors to invite list
     [Documentation]  IFS-33
@@ -228,8 +247,11 @@ the user add assessor to invite list
     the user clicks the button/link    jQuery = button:contains("Add selected to invite list")
 
 the user should see assessor details
-    the user should see the element   jQuery = td:contains("${invitedAssessor}")
-    the user should see the element    jQuery = td:contains("Will Smith") ~ td .yes
+    the user should see the element    jQuery = th:contains("Contract")
+    the user should see the element    jQuery = th:contains("DOI")
+    the user should see the element    jQuery = td:contains("${invitedAssessor}")
+    the user should see the element    jQuery = td:contains("Will Smith") ~ td:nth-of-type(4):contains(No)
+    the user should see the element    jQuery = td:contains("Will Smith") ~ td:nth-of-type(5):contains(Yes)
     the user should see the element    jQuery = td:contains("Will Smith") ~ td:nth-child(3):contains("Precision medicine")
     the user should see the element    jQuery = td:contains("Will Smith") ~ td:nth-child(3):contains("Nanotechnology / nanomaterials")
     the user should see the element    jQuery = td:contains("Will Smith") ~ td:nth-child(3):contains("Energy systems")
@@ -277,10 +299,13 @@ the user should see an assessor details
     the user should see the element       jQuery = td:contains("Olivier Giroud") ~ td .button-clear:contains("Remove")
 
 the user should see assessors details on pending and declined tab
-    the user should see the element    jQuery = td:contains("Josephine Peters") ~ td:nth-of-type(6):contains("Invite declined")
+    the user should see the element    jQuery = td:contains("Josephine Peters") ~ td:nth-of-type(7):contains("Invite declined")
     the user should see the element    jQuery = td:contains("Josephine Peters") ~ td:contains("Academic")
-    the user should see the element    jQuery = td:contains("Josephine Peters") ~ td:contains("Yes")
+    the user should see the element    jQuery = th:contains("Contract")
+    the user should see the element    jQuery = th:contains("DOI")
+    the user should see the element    jQuery = td:contains("Josephine Peters") ~ td:nth-of-type(5):contains(No)
+    the user should see the element    jQuery = td:contains("Josephine Peters") ~ td:nth-of-type(6):contains(Yes)
     the user should see the element    jQuery = td:contains("Josephine Peters") ~ td:contains("Invite declined: not available")
     the user should see the element    jQuery = td:contains("Josephine Peters") ~ td:contains("Assembly / disassembly / joining")
-    the user should see the element    jQuery = td:contains("${assessor_to_add}") ~ td:nth-of-type(6):contains("Awaiting response")
-    the user should see the element    jQuery = td:contains("${assessor_to_add}") ~ td:nth-of-type(7):contains("Invite sent:")
+    the user should see the element    jQuery = td:contains("${assessor_to_add}") ~ td:nth-of-type(7):contains("Awaiting response")
+    the user should see the element    jQuery = td:contains("${assessor_to_add}") ~ td:nth-of-type(8):contains("Invite sent:")
