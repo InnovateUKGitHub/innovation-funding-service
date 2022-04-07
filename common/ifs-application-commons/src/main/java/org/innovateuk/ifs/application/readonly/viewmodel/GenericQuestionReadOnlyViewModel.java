@@ -213,7 +213,7 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
                 !isComplete();
     }
 
-    public boolean isWorkProgrammeQuestion() {
+    public boolean isHecpWorkProgrammeQuestion() {
         return isHecpCompetition && questionResource != null && questionResource.getQuestionSetupType() == QuestionSetupType.HORIZON_WORK_PROGRAMME;
     }
 }
