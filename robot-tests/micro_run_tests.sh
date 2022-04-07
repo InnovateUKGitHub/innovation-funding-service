@@ -133,9 +133,7 @@ function initialiseTestEnvironment() {
       else
         section "=> RESTARTING LDAP and cache-provider"
         k8s_delete ldap
-#        k8s_delete cache-provider
         k8s_wait ldap
-#        k8s_wait cache-provider
 
         k8s_wait ldap
 
