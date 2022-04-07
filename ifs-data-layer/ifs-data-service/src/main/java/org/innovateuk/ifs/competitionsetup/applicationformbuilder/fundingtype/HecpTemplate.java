@@ -33,12 +33,12 @@ public class HecpTemplate implements FundingTypeTemplate {
         List<FinanceRowType> types =
                 newArrayList(
                         LABOUR,
-                        OVERHEADS,
-                        MATERIALS,
-                        CAPITAL_USAGE,
                         SUBCONTRACTING_COSTS,
                         TRAVEL,
+                        MATERIALS,
+                        CAPITAL_USAGE,
                         OTHER_COSTS,
+                        OVERHEADS,
                         FINANCE,
                         OTHER_FUNDING,
                         YOUR_FINANCE);
