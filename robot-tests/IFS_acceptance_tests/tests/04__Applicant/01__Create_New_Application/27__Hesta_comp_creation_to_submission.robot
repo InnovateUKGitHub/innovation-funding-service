@@ -114,6 +114,12 @@ the user should not see any references to assessment and release feedback on clo
     And the user should see the element   jQuery = p:contains("Once this competition is closed you will no longer be able to add funding decisions.")
     And the element should be disabled    jQuery = button:contains("Close competition")
 
+Applicant can view application when in project setup
+    [Documentation]  IFS-11510
+    Given Internal user notifies the applicant on status of application
+    When the applicant navigates to project set up
+    Then The user should see the text in the element               link = view application  view application
+
 Applicants will see hecp related spend profile content
     [Documentation]  IFS-11551
     Given the user completes all project setup sections except spendprofile
@@ -131,12 +137,6 @@ Lead applicant submits spen profile to internal user for review
     When the user clicks the button/link    id = submit-send-all-spend-profiles
     And the user navigates to the page      ${server}/project-setup/project/${hestaProjectID}/partner-organisation/${asosId}/spend-profile/review
     Then the user should see the element    jQuery = p:contains("We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners ​which estimates how you think costs will be spread out over the duration of your project")
-
-Applicant can view application when in project setup
-    [Documentation]  IFS-11510
-    Given Internal user notifies the applicant on status of application
-    When the applicant navigates to project set up
-    Then The user should see the text in the element               link = view application  view application
 
 Internal user can view hecp GOL template
     [Documentation]  IFS-11299
@@ -418,8 +418,8 @@ the user completes all project setup sections except spendprofile
     the user is able to complete the Documents section
     the user fills in bank details
     log in as a different user                                                  &{internal_finance_credentials}
-    internal user assigns MO to application                                     ${hestaApplicationID}    ${hestaApplicationName}    Orvill  Orville Gibbs
     Requesting Project ID of this Project
+    internal user assigns MO to application                                     ${hestaApplicationID}    ${hestaApplicationName}    Orvill  Orville Gibbs
     project finance approves eligibility and generates the Spend Profile        ${asosId}  ${hestaProjectID}
     Internal user reviews and approves documents
     Internal user approves bank details
