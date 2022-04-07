@@ -59,15 +59,6 @@ Comp admin creates Hesta competition
     Then the competition admin creates Hesta competition             ${BUSINESS_TYPE_ID}  ${hestaCompetitionName}  ${compType_HESTA}  ${compType_HESTA}  STATE_AID  HECP  RELEASE_FEEDBACK  no  1  false  single-or-collaborative
     [Teardown]  Get competition id and set open date to yesterday    ${hestaCompetitionName}
 
-Lead applicant can submit application
-    [Documentation]  IFS-8751  IFS-11269  IFS-11618  IFS-11366
-    Given the user logs out if they are logged in
-    When the user successfully completes application          tim   timmy   ${leadApplicantEmail}   ${hestaApplicationName}
-    And the user clicks the button/link                       link = Your project finances
-    Then the user completes hecp project finances             ${hestaApplicationName}  no
-    And the user see the print view of the application
-    And the user can submit the application
-
 Lead applicant can view funding conversion tool in project costs
     [Documentation]  IFS-11508
     Given the user logs out if they are logged in
@@ -78,7 +69,7 @@ Lead applicant can view funding conversion tool in project costs
     And the user should see the element                 jQuery = a:contains("heguarantee@iuk.ukri.org")
 
 Lead applicant completes project finances and submits an application
-    [Documentation]  IFS-8751  IFS-11269  IFS-11618
+    [Documentation]  IFS-8751  IFS-11269  IFS-11618  IFS-11366
     Given the user clicks the button/link                     link = Your project finances
     When the user completes hecp project finances             ${hestaApplicationName}  no
     Then the user see the print view of the application
