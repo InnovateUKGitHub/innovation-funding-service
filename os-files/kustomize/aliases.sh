@@ -150,7 +150,6 @@ k8s_clean_all() {
   kubectl delete deployment --all
   kubectl delete svc application-svc
   kubectl delete svc assessment-svc
-  kubectl delete svc cache-provider
   kubectl delete svc competition-mgt-svc
   kubectl delete svc data-service
   kubectl delete svc data-service-alerts
@@ -167,7 +166,6 @@ k8s_clean_all() {
   kubectl delete svc survey-data-svc
   kubectl delete svc survey-svc
   kubectl delete configmap cache-config
-  kubectl delete configmap cache-provider-config
   kubectl delete configmap data-service-config
   kubectl delete configmap feature-toggle-config
   kubectl delete configmap flyway-config

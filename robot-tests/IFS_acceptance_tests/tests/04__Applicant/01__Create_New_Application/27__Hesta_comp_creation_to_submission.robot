@@ -17,6 +17,8 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11551 HECP Phase 2 - Spend profile - Content change
 ...
+...               IFS-11510 HECP Phase 2 - Remove content from 'View application feedback' link
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -57,13 +59,20 @@ Comp admin creates Hesta competition
     Then the competition admin creates Hesta competition             ${BUSINESS_TYPE_ID}  ${hestaCompetitionName}  ${compType_HESTA}  ${compType_HESTA}  STATE_AID  GRANT  RELEASE_FEEDBACK  no  1  false  single-or-collaborative
     [Teardown]  Get competition id and set open date to yesterday    ${hestaCompetitionName}
 
-Lead applicant can submit application
-    [Documentation]  IFS-8751  IFS-11269  IFS-11618
+Lead applicant can view funding conversion tool in project costs
+    [Documentation]  IFS-11508
     Given the user logs out if they are logged in
-    When the user successfully completes application          tim   timmy   ${leadApplicantEmail}   ${hestaApplicationName}
-    And the user clicks the button/link                       link = Your project finances
-    Then the user completes hecp project finances             ${hestaApplicationName}  no
-    And the user see the print view of the application
+    And the user successfully completes application     tim   timmy   ${leadApplicantEmail}   ${hestaApplicationName}
+    When the user clicks the button/link                link = Your project finances
+    And the user clicks the button/link                 link = Your project costs
+    Then the user should see the element                jQuery = a:contains("Horizon Europe guarantee notice and guidance – UKRI")
+    And the user should see the element                 jQuery = a:contains("heguarantee@iuk.ukri.org")
+
+Lead applicant completes project finances and submits an application
+    [Documentation]  IFS-8751  IFS-11269  IFS-11618
+    Given the user clicks the button/link                     link = Your project finances
+    When the user completes hecp project finances             ${hestaApplicationName}  no
+    Then the user see the print view of the application
     And the user can submit the application
 
 Lead applicant should get a confirmation email after application submission
@@ -122,6 +131,12 @@ Lead applicant submits spen profile to internal user for review
     When the user clicks the button/link    id = submit-send-all-spend-profiles
     And the user navigates to the page      ${server}/project-setup/project/${hestaProjectID}/partner-organisation/${asosId}/spend-profile/review
     Then the user should see the element    jQuery = p:contains("We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners ​which estimates how you think costs will be spread out over the duration of your project")
+
+Applicant can view application when in project setup
+    [Documentation]  IFS-11510
+    Given Internal user notifies the applicant on status of application
+    When the applicant navigates to project set up
+    Then The user should see the text in the element               link = view application  view application
 
 Internal user can view hecp GOL template
     [Documentation]  IFS-11299
@@ -386,14 +401,18 @@ IFS admin approves the spend profiles for hestaApplication
     the user clicks the button/link  id = radio-spendprofile-approve
     the user clicks the button/link  id = submit-button
 
-the user completes all project setup sections except spendprofile
+Internal user notifies the applicant on status of application
     Requesting IDs of this Asos Organisation
     the internal team mark the application as successful / unsuccessful         ${hestaApplicationID}  FUNDED
     the user clicks the button/link                                             link = Competition
     the internal team notifies all applicants                                   ${hestaApplicationID}
     the user refreshes until element appears on page                            jQuery = td:contains("${hestaApplicationID}") ~ td:contains("Sent")
+
+the applicant navigates to project set up
     log in as a different user                                                  ${leadApplicantEmail}    ${short_password}
     the user clicks the button/link                                             link = ${hestaApplicationName}
+
+the user completes all project setup sections except spendprofile
     the user is able to complete project details section
     the user completes the project team details
     the user is able to complete the Documents section
@@ -406,13 +425,13 @@ the user completes all project setup sections except spendprofile
     Internal user approves bank details
 
 the user see the print view of the application
-  Requesting IDs of this Hesta application
-  the user navigates to the page without the usual headers      ${SERVER}/application/${hestaApplicationID}/print?noprint
-  the user should see the element                               xpath = //*[contains(text(),'Personnel costs (£)')]
-  the user should see the element                               xpath = //*[contains(text(),'Subcontracting costs (£)')]
-  the user should see the element                               xpath = //*[contains(text(),'Travel and subsistence (£)')]
-  the user should see the element                               xpath = //*[contains(text(),'Equipment (£)')]
-  the user should see the element                               xpath = //*[contains(text(),'Other goods, works and services (£)')]
-  the user should see the element                               xpath = //*[contains(text(),'Other costs (£)')]
-  the user should see the element                               xpath = //*[contains(text(),'Indirect costs (£)')]
-  the user navigates to the page                                ${SERVER}/application/${hestaApplicationID}
+    Requesting IDs of this Hesta application
+    the user navigates to the page without the usual headers      ${SERVER}/application/${hestaApplicationID}/print?noprint
+    the user should see the element                               xpath = //*[contains(text(),'Personnel costs (£)')]
+    the user should see the element                               xpath = //*[contains(text(),'Subcontracting costs (£)')]
+    the user should see the element                               xpath = //*[contains(text(),'Travel and subsistence (£)')]
+    the user should see the element                               xpath = //*[contains(text(),'Equipment (£)')]
+    the user should see the element                               xpath = //*[contains(text(),'Other goods, works and services (£)')]
+    the user should see the element                               xpath = //*[contains(text(),'Other costs (£)')]
+    the user should see the element                               xpath = //*[contains(text(),'Indirect costs (£)')]
+    the user navigates to the page                                ${SERVER}/application/${hestaApplicationID}

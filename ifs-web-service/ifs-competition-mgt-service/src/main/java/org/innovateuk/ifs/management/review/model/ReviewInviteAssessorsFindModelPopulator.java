@@ -56,6 +56,8 @@ public class ReviewInviteAssessorsFindModelPopulator extends ReviewInviteAssesso
                 assessorInviteOverviewResource.getName(),
                 assessorInviteOverviewResource.getInnovationAreas(),
                 assessorInviteOverviewResource.isCompliant(),
+                assessorInviteOverviewResource.isValidAgreement(),
+                assessorInviteOverviewResource.isValidDoi(),
                 assessorInviteOverviewResource.getBusinessType()
         );
     }
