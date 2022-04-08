@@ -86,7 +86,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
                 answers = null;
                 answer = answerForNotMultipleStatuses(answerInput, formInputIdToFormInputResponses);
             }
-        workProgrammeAnswers = null;
+            workProgrammeAnswers = null;
         }
 
         Optional<FormInputResponseResource> appendixResponse = appendix
@@ -111,7 +111,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
                 totalScope(data, settings),
                 hasScope(data, question),
                 isLoanPartBEnabled,
-                Boolean.TRUE.equals(isWorkProgrammeQuestionMarkedAsComplete(question, data.getApplicationId()))
+                isWorkProgrammeQuestionMarkedAsComplete(question, data.getApplicationId())
             );
     }
 

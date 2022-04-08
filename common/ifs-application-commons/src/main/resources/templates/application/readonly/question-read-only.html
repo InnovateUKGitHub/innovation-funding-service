@@ -9,7 +9,7 @@
     <div class="govuk-form-group">
 
         <th:block th:unless="${model.isKtpAssessmentQuestion()}">
-            <label th:if="${(model.question != null) and !model.isWorkProgrammeQuestion()}" class="govuk-label">
+            <label th:if="${(model.question != null) and !model.isHecpWorkProgrammeQuestion()}" class="govuk-label">
                 <span th:unless="${model.isCompletedLoanBusinessAndFinancialInformation()}" th:text="${model.question}" class="govuk-heading-s"></span>
                 <th:block th:if="${model.isCompletedLoanBusinessAndFinancialInformation()}">
                     <span>Thanks for submitting Part B of your loan application.</span><br/><br/>
@@ -23,7 +23,7 @@
 
             </div>
             <th:block th:unless="${model.isCompletedLoanBusinessAndFinancialInformation()}">
-                <th:block th:if="${model.hecpCompetition && model.isWorkProgrammeQuestion()}">
+                <th:block th:if="${model.isHecpWorkProgrammeQuestion()}">
                     <th:block th:if="${model.isWorkProgrammeQuestionMarkedAsComplete()}">
                         <dl class="govuk-list govuk-!-font-size-16">
                             <dt>Enter the Horizon Europe Work programme Part you applied to, e.g. CL2.</dt>
@@ -37,24 +37,24 @@
                     </th:block>
                 </th:block>
 
-                    <th:block th:if="${model.multipleStatuses}">
+                <th:block th:if="${model.multipleStatuses}">
 
-                        <th:block th:if="${model.hasAnswerNotMarkedAsComplete()}">
-                            <div class="warning-alert">
-                                <p class="govuk-body">The following organisations have not yet marked this question as
-                                    complete:</p>
-                                <ul class="govuk-list govuk-list--bullet">
-                                    <th:block
-                                            th:each="nonMarkedAsCompletePartner : ${model.nonMarkedAsCompletePartners}">
-                                        <li th:text="${nonMarkedAsCompletePartner.partnerName}">Non marked as complete
-                                            partner organisation
-                                        </li>
-                                    </th:block>
-                                </ul>
-                                <p class="govuk-body">This application cannot be submitted until all partners mark this
-                                    question as complete.</p>
-                            </div>
-                        </th:block>
+                    <th:block th:if="${model.hasAnswerNotMarkedAsComplete()}">
+                        <div class="warning-alert">
+                            <p class="govuk-body">The following organisations have not yet marked this question as
+                                complete:</p>
+                            <ul class="govuk-list govuk-list--bullet">
+                                <th:block
+                                        th:each="nonMarkedAsCompletePartner : ${model.nonMarkedAsCompletePartners}">
+                                    <li th:text="${nonMarkedAsCompletePartner.partnerName}">Non marked as complete
+                                        partner organisation
+                                    </li>
+                                </th:block>
+                            </ul>
+                            <p class="govuk-body">This application cannot be submitted until all partners mark this
+                                question as complete.</p>
+                        </div>
+                    </th:block>
 
                         <table class="govuk-table">
 
@@ -79,7 +79,7 @@
                         </table>
                     </th:block>
 
-                    <p th:unless="${model.multipleStatuses || (model.hecpCompetition && model.isWorkProgrammeQuestion())}" data-md-to-html=""
+                    <p th:unless="${model.multipleStatuses or model.isHecpWorkProgrammeQuestion()}" data-md-to-html=""
                        class="govuk-body wysiwyg-styles" th:text="${model.answer != null ? model.answer  :
                                 model.isInCompleteLoanBusinessAndFinancialInformation() ? 'Information not yet provided' :'Answer yet to be provided'}">Answer</p>
             </th:block>
