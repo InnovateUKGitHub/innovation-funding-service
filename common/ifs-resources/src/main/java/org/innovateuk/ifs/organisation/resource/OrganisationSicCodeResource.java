@@ -1,8 +1,12 @@
 package org.innovateuk.ifs.organisation.resource;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class OrganisationSicCodeResource {
+public class OrganisationSicCodeResource implements Serializable {
+
+    private static final long serialVersionUID = 2127249431392351362L;
+
     private Long id;
     private Long organisation;
     private String sicCode;

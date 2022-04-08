@@ -5,13 +5,16 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 /**
  * Represents a pending organisation joining a project.
  */
 @Entity
-public class PendingPartnerProgress {
+public class PendingPartnerProgress implements Serializable {
+
+    private static final long serialVersionUID = -3160711449846748940L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
