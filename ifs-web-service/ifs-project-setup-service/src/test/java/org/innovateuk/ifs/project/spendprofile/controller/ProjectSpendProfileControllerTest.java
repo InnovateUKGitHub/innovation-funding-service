@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.project.spendprofile.controller;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
@@ -31,6 +34,7 @@ import org.innovateuk.ifs.spendprofile.OrganisationReviewDetails;
 import org.innovateuk.ifs.spendprofile.SpendProfileService;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -49,17 +53,22 @@ import java.util.stream.IntStream;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.HECP;
+import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.HORIZON_EUROPE_GUARANTEE;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.builder.SpendProfileResourceBuilder.newSpendProfileResource;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
@@ -217,6 +226,64 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         assertTrue(expectedViewModel.isIncludeFinancialYearTable());
 
+    }
+
+    @Test
+    public void viewSpendProfileSuccessfulViewModelPopulationForHecpCompetition() throws Exception {
+        long organisationId = 1L;
+        long projectId = 1L;
+        long competitionId = 1L;
+
+        UserResource userResource = newUserResource().build();
+
+        ProjectResource projectResource = newProjectResource()
+                .withName("projectName1")
+                .withTargetStartDate(LocalDate.of(2018, 3, 1))
+                .withDuration(3L)
+                .withId(projectId)
+                .withCompetition(competitionId)
+                .build();
+
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionTypeName(HORIZON_EUROPE_GUARANTEE.getText())
+                .withFundingType(HECP)
+                .build();
+
+        OrganisationResource organisation = newOrganisationResource().withId(organisationId).withOrganisationType(1L).build();
+        ProjectUserResource projectUser = newProjectUserResource().withProject(projectResource.getId()).withUser(userResource.getId()).withOrganisation(organisation.getId()).withRole(PROJECT_MANAGER).build();
+        SpendProfileTableResource expectedTable = buildSpendProfileTableResource(projectResource);
+        ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
+        Map<Long, BigDecimal> expectedCategoryToActualTotal = new LinkedHashMap<>();
+        expectedCategoryToActualTotal.put(1L, new BigDecimal("100"));
+        expectedCategoryToActualTotal.put(2L, new BigDecimal("180"));
+        Map<Long, List<BigDecimal>> TABLE_DATA = ImmutableMap.<Long, List<BigDecimal>>builder()
+                .put(1L, singletonList(new BigDecimal("100")))
+                .put(2L, singletonList(new BigDecimal("180")))
+                .build();
+
+        List<BigDecimal> expectedTotalForEachMonth = asList(new BigDecimal("100"), new BigDecimal("180"));
+
+        List<SpendProfileSummaryYearModel> years = createSpendProfileSummaryYears();
+        SpendProfileSummaryModel summary = new SpendProfileSummaryModel(years);
+
+        when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
+        when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(expectedTable);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+        when(spendProfileTableCalculator.calculateRowTotal(expectedTable.getMonthlyCostsPerCategoryMap())).thenReturn(expectedCategoryToActualTotal);
+        when(spendProfileTableCalculator.calculateMonthlyTotals(expectedTable.getMonthlyCostsPerCategoryMap(), expectedTable.getMonths().size())).thenReturn(expectedTotalForEachMonth);
+        when(spendProfileTableCalculator.calculateTotalOfAllActualTotals(expectedTable.getMonthlyCostsPerCategoryMap())).thenReturn(BigDecimal.valueOf(280));
+        when(spendProfileTableCalculator.calculateTotalOfAllEligibleTotals(expectedTable.getEligibleCostPerCategoryMap())).thenReturn(BigDecimal.valueOf(280));
+
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(singletonList(projectUser));
+        when(projectService.getLeadPartners(projectId)).thenReturn(singletonList(projectUser));
+        when(spendProfileTableCalculator.createSpendProfileSummary(projectResource, TABLE_DATA, expectedTable.getMonths())).thenReturn(summary);
+
+        when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
+
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/review", projectResource.getId(), organisationId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/spend-profile"));
     }
 
     @Test
@@ -738,7 +805,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         List<ProjectUserResource> leadUserResources = newProjectUserResource()
                 .withUser(1L)
-                .withRole(ProjectParticipantRole.PROJECT_MANAGER)
+                .withRole(PROJECT_MANAGER)
                 .withOrganisation(organisationId)
                 .build(1);
         ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
@@ -809,7 +876,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         List<ProjectUserResource> leadUserResources = newProjectUserResource()
                 .withUser(1L)
-                .withRole(ProjectParticipantRole.PROJECT_MANAGER)
+                .withRole(PROJECT_MANAGER)
                 .withOrganisation(organisationId)
                 .build(1);
         ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
@@ -902,7 +969,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         List<ProjectUserResource> leadUserResources = newProjectUserResource()
                 .withUser(1L)
-                .withRole(ProjectParticipantRole.PROJECT_MANAGER)
+                .withRole(PROJECT_MANAGER)
                 .withOrganisation(organisationId)
                 .build(1);
         ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
@@ -1101,7 +1168,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 summary, false, expectedCategoryToActualTotal, expectedTotalForEachMonth,
                 expectedTotalOfAllActualTotals, expectedTotalOfAllEligibleTotals, false, null,
                 null ,false, true, false,
-                false, false, competitionResource.isKtp());
+                false, false, competitionResource.isKtp(), competitionResource.isHorizonEuropeGuarantee());
     }
 
     private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears() {
