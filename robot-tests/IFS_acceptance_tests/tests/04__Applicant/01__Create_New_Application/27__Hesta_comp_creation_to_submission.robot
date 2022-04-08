@@ -15,6 +15,8 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11618 HECP Phase 2 - Cost categories - Application view additional updates
 ...
+...               IFS-11511 HECP Phase 2 - Notification banners
+...
 ...               IFS-11510 HECP Phase 2 - Remove content from 'View application feedback' link
 ...
 ...               IFS-11407 HECP Phase 2 - Cost categories - Project Setup views
@@ -170,6 +172,20 @@ Internal user can view hecp GOL template
     And Select Window                                               NEW
     Then the user should see the element                            xpath = //h2[text()='Accepting your award ']
     [Teardown]  the user closes the last opened tab
+
+Lead Applicant can view banner message for a successfull application
+    [Documentation]  IFS-11511
+    Given log in as a different user         ${leadApplicantEmail}  ${short_password}
+    When the user clicks the button/link     link = ${hestaApplicationName}
+    And the user clicks the button/link      link = view application
+    Then the user should see the element     jQuery = h2:contains("Congratulations, your application has been successful")
+    And the user should see the element      jQuery = p:contains("You have been successful in this round of funding.")
+
+Lead Applicant can view banner message for a unsuccessfull application
+    [Documentation]  IFS-11511
+    Given log in as a different user         ${newLeadApplicantEmail}  ${short_password}
+    When the user clicks the button/link     link = ${newHestaApplicationName}
+    Then the user should see the element     jQuery = h2:contains("Your application has not been successful in this competition.")
 
 
 *** Keywords ***
