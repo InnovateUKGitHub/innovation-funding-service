@@ -48,6 +48,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_C
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.LEAD_ACTION_REQUIRED;
+import static org.innovateuk.ifs.util.CollectionFunctions.containsAll;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**

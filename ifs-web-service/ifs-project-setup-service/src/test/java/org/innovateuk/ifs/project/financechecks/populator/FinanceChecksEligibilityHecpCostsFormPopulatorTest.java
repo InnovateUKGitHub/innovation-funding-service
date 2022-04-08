@@ -1,10 +1,9 @@
-package org.innovateuk.ifs.application.forms.sections.horizoneuropeguaranteecosts.populator;
+package org.innovateuk.ifs.project.financechecks.populator;
 
 import org.innovateuk.ifs.application.forms.hecpcosts.form.HorizonEuropeGuaranteeCostsForm;
-import org.innovateuk.ifs.application.forms.sections.hecpcosts.populator.HorizonEuropeGuaranteeCostsFormPopulator;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -12,28 +11,27 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
+import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class HorizonEuropeGuaranteeCostsFormPopulatorTest {
-
-    private static final long APPLICATION_ID = 1L;
+public class FinanceChecksEligibilityHecpCostsFormPopulatorTest {
+    private static final long PROJECT_ID = 1L;
     private static final long ORGANISATION_ID = 2L;
 
     @InjectMocks
-    private HorizonEuropeGuaranteeCostsFormPopulator populator;
+    private FinanceChecksEligibilityHecpCostsFormPopulator populator;
 
     @Mock
-    private ApplicationFinanceRestService applicationFinanceRestService;
+    private ProjectFinanceRestService projectFinanceRestService;
 
     @Test
     public void populate() {
-        ApplicationFinanceResource finance = newApplicationFinanceResource().withIndustrialCosts().build();
-        when(applicationFinanceRestService.getFinanceDetails(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(finance));
+        ProjectFinanceResource finance = newProjectFinanceResource().withIndustrialCosts().build();
+        when(projectFinanceRestService.getProjectFinance(PROJECT_ID, ORGANISATION_ID)).thenReturn(restSuccess(finance));
 
-        HorizonEuropeGuaranteeCostsForm form = populator.populate(APPLICATION_ID, ORGANISATION_ID);
+        HorizonEuropeGuaranteeCostsForm form = populator.populate(PROJECT_ID, ORGANISATION_ID);
 
         assertEquals(form.getLabour(), finance.getFinanceOrganisationDetails().get(FinanceRowType.LABOUR).getTotal().toBigInteger());
         assertEquals(form.getOverhead(), finance.getFinanceOrganisationDetails().get(FinanceRowType.OVERHEADS).getTotal().toBigInteger());

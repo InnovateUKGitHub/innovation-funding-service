@@ -5,3 +5,6 @@ commonAnnotations:
 resources:
   - ../../base
   - idp-metadata.yml
+
+patchesStrategicMerge:
+  - spring-profile-env.yml

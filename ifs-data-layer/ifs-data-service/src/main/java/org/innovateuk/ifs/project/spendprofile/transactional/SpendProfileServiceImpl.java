@@ -9,6 +9,7 @@ import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -78,6 +79,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.resource.ApprovalType.APPROVED;
 import static org.innovateuk.ifs.project.resource.ApprovalType.REJECTED;
@@ -408,6 +410,13 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                 andOnSuccess((spendProfile, project) -> {
 
                     List<CostCategory> costCategories = spendProfile.getCostCategoryType().getCostCategories();
+                    if (project.getApplication().getCompetition().isHorizonEuropeGuarantee()) {
+                        List<String> hecpFinanceRowOrder = FinanceRowType.getHecpSpecificFinanceRowTypes().stream().map(FinanceRowType::getDisplayName).collect(Collectors.toList());
+                        costCategories = costCategories.stream().filter(costCategory -> hecpFinanceRowOrder.contains(costCategory.getName()))
+                                .sorted((c1, c2) -> hecpFinanceRowOrder.indexOf(c1.getName()) - hecpFinanceRowOrder.indexOf(c2.getName()))
+                                .collect(Collectors.toList());
+                    }
+
                     Organisation organisation = organisationRepository.findById(projectOrganisationCompositeId.getOrganisationId()).get();
                     CostGroup eligibleCosts = spendProfile.getEligibleCosts();
                     CostGroup spendProfileFigures = spendProfile.getSpendProfileFigures();
@@ -735,17 +744,22 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         monthsRow.add(CSV_ELIGIBLE_COST_TOTAL);
 
         final int[] columnSize = new int[1];
+        boolean hecpCompetition = getProject(projectOrganisationCompositeId.getProjectId()).getSuccess().getApplication().getCompetition().isHorizonEuropeGuarantee();
+
         spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values) -> {
 
             CostCategory cc = costCategoryRepository.findById(category).get();
             if (isResearch) {
                 byCategory.add(cc.getLabel());
+            } else if (hecpCompetition) {
+                byCategory.add(FinanceRowType.getByName(cc.getName()).get().getHecpDisplayName());
+            } else {
+                byCategory.add(String.valueOf(cc.getName()));
             }
-
-            byCategory.add(String.valueOf(cc.getName()));
             values.forEach(val ->
                     byCategory.add(val.toString())
             );
+
             byCategory.add(categoryToActualTotal.get(category).toString());
             byCategory.add(spendProfileTableResource.getEligibleCostPerCategoryMap().get(category).toString());
 
@@ -787,6 +801,8 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
             if (isResearch) {
                 rows.add(calculateQuarterly(cc.getLabel(), cc.getName(), values).toArray(new String[0]));
+            } else if (hecpCompetition) {
+                rows.add(calculateQuarterly(FinanceRowType.getByName(cc.getName()).get().getHecpDisplayName(), values).toArray(new String[0]));
             } else {
                 rows.add(calculateQuarterly(cc.getName(), values).toArray(new String[0]));
             }

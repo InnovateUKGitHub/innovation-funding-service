@@ -21,6 +21,10 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11510 HECP Phase 2 - Remove content from 'View application feedback' link
 ...
+...               IFS-11407 HECP Phase 2 - Cost categories - Project Setup views
+...
+...               IFS-11695 HECP Phase 2 - Cost categories - Spend profile updates
+...
 ...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -117,23 +121,57 @@ the user should not see any references to assessment and release feedback on clo
     And the user should see the element   jQuery = p:contains("Once this competition is closed you will no longer be able to add funding decisions.")
     And the element should be disabled    jQuery = button:contains("Close competition")
 
-Applicant can view application when in project setup
+Applicant can view application link when in project setup
     [Documentation]  IFS-11510
     Given Internal user notifies the applicant on status of application
     When the applicant navigates to project set up
     Then The user should see the text in the element               link = view application  view application
 
-Applicants will see hecp related spend profile content
-    [Documentation]  IFS-11551
-    Given the user completes all project setup sections except spendprofile
-    And log in as a different user                       ${leadApplicantEmail}    ${short_password}
-    When the user navigates to the page                  ${server}/project-setup/project/${hestaProjectID}/partner-organisation/${asosId}/spend-profile/review
-    Then the user should see the element                 jQuery = p:contains("We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners ​which estimates how you think costs will be spread out over the duration of your project")
-    And the user should see the element                  jQuery = p:contains("If you require further assistance in filling out your spend profile, contact your monitoring officer.")
-    And the user should see the element                  jQuery = p:contains("You need to mark this section as complete. You can then send completed spend profiles to Innovate UK.")
+Lead applicant views hecp related cost categoires in project setup finances
+    [Documentation]  IFS-11407
+    Given the user is able to complete project details section
+    And the user completes the project team details
+    And the user is able to complete the Documents section
+    And the user fills in bank details
+    When the user clicks the button/link                        link = Finance checks
+    And the user clicks the button/link                         link = your project finances
+    Then the user should see hecp project cost categories
+    And the user should see readonly detailed hecp finances
+
+Internal users can edit the project costs
+    [Documentation]  IFS-11407
+    Given log in as a different user            &{internal_finance_credentials}
+    And Requesting Project ID of this Project
+    When the user navigates to the page         ${server}/project-setup-management/project/${hestaProjectID}/finance-check/organisation/${asosId}/eligibility
+    And the user clicks the button/link         name = edit-project-costs
+    And the user enters text to a text field    id = overhead  10000
+    And the user enters text to a text field    id = travel  20000
+    And the user clicks the button/link         id = save-eligibility
+    Then the user should see the element        jQuery = label:contains("Travel and subsistence") ~ span:contains("20,000")
+    And the user should see the element         jQuery = label:contains("Indirect costs") ~ span:contains("10,000")
+    And the user should see the element         css = [id="total-cost"][value="£220,000"]
+
+Lead applicant views hecp project cost categories in spendprofile
+    [Documentation]  IFS-11695  IFS-11551
+    Given project finance approves eligibility and generates the Spend Profile      ${asosId}  ${hestaProjectID}
+    And internal user assigns MO to application                                     ${hestaApplicationID}    ${hestaApplicationName}    Orvill  Orville Gibbs
+    And Internal user reviews and approves documents
+    And Internal user approves bank details
+    When Log in as a different user                                                 ${leadApplicantEmail}    ${short_password}
+    And the user navigates to the page                                              ${server}/project-setup/project/${hestaProjectID}/partner-organisation/${asosId}/spend-profile/review
+    Then the user should see hecp project cost categories
+    And the user should see the element                                             jQuery = p:contains("We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners ​which estimates how you think costs will be spread out over the duration of your project")
+    And the user should see the element                                             jQuery = p:contains("If you require further assistance in filling out your spend profile, contact your monitoring officer.")
+    And the user should see the element                                             jQuery = p:contains("You need to mark this section as complete. You can then send completed spend profiles to Innovate UK.")
+
+Lead applicant views hecp project cost categories in edit spendprofile page
+    [Documentation]  IFS-11695
+    When the user clicks the button/link                    link = Edit spend profile
+    Then the user should see hecp project cost categories
 
 Lead applicant submits spen profile to internal user for review
     [Documentation]  IFS-11551
+    Given the user clicks the button/link   jQuery = button:contains("Save and return to spend profile overview")
     Given the user clicks the button/link   id = spend-profile-mark-as-complete-button
     And the user clicks the button/link     link = Review and submit project spend profile
     And the user clicks the button/link     id = submit-project-spend-profile-button
@@ -143,7 +181,7 @@ Lead applicant submits spen profile to internal user for review
 
 Internal user can view hecp GOL template
     [Documentation]  IFS-11299
-    Given IFS admin approves the spend profiles for hestaApplication    ${hestaProjectID}
+    Given ifs admin approves the spend profiles for hestaApplication    ${hestaProjectID}
     When the user clicks the button/link                                jQuery = td:contains("Review")
     And user clicks on View the grant offer letter page
     And Select Window                                                   NEW
@@ -170,19 +208,20 @@ The user fills in bank details
     the user clicks the button/link                      id = postcode-lookup
     the user selects the index from the drop-down menu   1  id=addressForm.selectedPostcodeIndex
     applicant user enters bank details
+    the user clicks the button/link                      link = Set up your project
 
 Internal user reviews and approves documents
-    log in as a different user                          &{ifs_admin_user_credentials}
-    the user navigates to the page                      ${server}/project-setup-management/project/${hestaProjectID}/document/all
-    the user clicks the button/link                     link = Exploitation plan
-    the user clicks the button/link                     id = radio-review-approve
-    the user clicks the button/link                     id = submit-button
-    the user clicks the button/link                     id = accept-document
+    log in as a different user        &{ifs_admin_user_credentials}
+    the user navigates to the page    ${server}/project-setup-management/project/${hestaProjectID}/document/all
+    the user clicks the button/link   link = Exploitation plan
+    the user clicks the button/link   id = radio-review-approve
+    the user clicks the button/link   id = submit-button
+    the user clicks the button/link   id = accept-document
 
 Internal user approves bank details
-    the user navigates to the page                      ${server}/project-setup-management/project/${hestaProjectID}/organisation/${asosId}/review-bank-details
-    the user clicks the button/link                     jQuery = button:contains("Approve bank account details")
-    the user clicks the button/link                     id = submit-approve-bank-details
+    the user navigates to the page      ${server}/project-setup-management/project/${hestaProjectID}/organisation/${asosId}/review-bank-details
+    the user clicks the button/link     jQuery = button:contains("Approve bank account details")
+    the user clicks the button/link     id = submit-approve-bank-details
 
 the user can view Hesta competition type in Initial details read only view
     the user should see the element     jQuery = ${hestaCompTypeSelector}
@@ -347,13 +386,7 @@ the user completes hecp project finances
 The user is able to complete hecp project costs
     the user clicks the button/link           link = Your project costs
     the user should see the element           jQuery = h1:contains("Your project costs")
-    the user should see the element           jQuery = span:contains("Personnel costs")
-    the user should see the element           jQuery = span:contains("Subcontracting costs")
-    the user should see the element           jQuery = span:contains("Travel and subsistence")
-    the user should see the element           jQuery = span:contains("Equipment")
-    the user should see the element           jQuery = span:contains("Other goods, works and services")
-    the user should see the element           jQuery = span:contains("Other costs")
-    the user should see the element           jQuery = span:contains("Indirect costs")
+    the user should see hecp project cost categories
     the user enters text to a text field      id = labour  50000
     the user enters text to a text field      id = subcontracting  50000
     the user enters text to a text field      id = travel  10000
@@ -394,7 +427,7 @@ the lead applicant marks the application question as complete
     the user clicks the button/link     id = application-question-complete
     the user clicks the button/link     link = Back to application overview
 
-IFS admin approves the spend profiles for hestaApplication
+ifs admin approves the spend profiles for hestaApplication
     [Arguments]  ${project}
     log in as a different user       &{ifs_admin_user_credentials}
     the user navigates to the page   ${server}/project-setup-management/project/${project}/spend-profile/approval
@@ -424,6 +457,11 @@ the user completes all project setup sections except spendprofile
     Internal user reviews and approves documents
     Internal user approves bank details
 
+the user completes your funding section
+    [Arguments]  ${Application}
+    the user clicks the button/link             link = Your funding
+    the user fills in the funding information   ${Application}   no
+
 the user see the print view of the application
     Requesting IDs of this Hesta application
     the user navigates to the page without the usual headers      ${SERVER}/application/${hestaApplicationID}/print?noprint
@@ -436,7 +474,21 @@ the user see the print view of the application
     the user should see the element                               xpath = //*[contains(text(),'Indirect costs (£)')]
     the user navigates to the page                                ${SERVER}/application/${hestaApplicationID}
 
-the user completes your funding section
-    [Arguments]  ${Application}
-    the user clicks the button/link             link = Your funding
-    the user fills in the funding information   ${Application}   no
+the user should see hecp project cost categories
+    the user should see the element     jQuery = span:contains("Personnel costs")
+    the user should see the element     jQuery = span:contains("Subcontracting costs")
+    the user should see the element     jQuery = span:contains("Travel and subsistence")
+    the user should see the element     jQuery = span:contains("Equipment")
+    the user should see the element     jQuery = span:contains("Other goods, works and services")
+    the user should see the element     jQuery = span:contains("Other costs")
+    the user should see the element     jQuery = span:contains("Indirect costs")
+
+the user should see readonly detailed hecp finances
+    the user should see the element    jQuery = label:contains("Personnel costs") ~ span:contains("50,000")
+    the user should see the element    jQuery = label:contains("Subcontracting costs") ~ span:contains("50,000")
+    the user should see the element    jQuery = label:contains("Travel and subsistence") ~ span:contains("10,000")
+    the user should see the element    jQuery = label:contains("Equipment") ~ span:contains("30,000")
+    the user should see the element    jQuery = label:contains("Other goods, works and services") ~ span:contains("20,000")
+    the user should see the element    jQuery = label:contains("Other costs") ~ span:contains("40,000")
+    the user should see the element    jQuery = label:contains("Indirect costs") ~ span:contains("0")
+    the user should see the element    css = [id="total-cost"][value="£200,000"]
