@@ -17,8 +17,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
-import java.time.ZonedDateTime;
-
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
@@ -142,9 +140,9 @@ public class ProfileControllerIntegrationTest extends BaseControllerIntegrationT
         Profile profile = newProfile()
                 .withAddress(address)
                 .withCreatedBy(user)
-                .withCreatedOn(ZonedDateTime.now())
+                .withCreatedOn(now())
                 .withModifiedBy(user)
-                .withModifiedOn(ZonedDateTime.now())
+                .withModifiedOn(now())
                 .build();
         profile = profileRepository.save(profile);
         user.setProfileId(profile.getId());
@@ -180,19 +178,23 @@ public class ProfileControllerIntegrationTest extends BaseControllerIntegrationT
 
     @Test
     @Rollback
-    public void testGetUserProfileStatus() {
+    public void getUserProfileStatus() {
         loginPaulPlum();
 
         User user = userRepository.findById(getPaulPlum().getId()).get();
+
+        Agreement agreement = agreementRepository.findByCurrentTrue();
 
         Long userId = user.getId();
         Profile profile = newProfile()
                 .withSkillsAreas("java developer")
                 .withAgreementSignedDate(now())
                 .withCreatedBy(user)
-                .withCreatedOn(ZonedDateTime.now())
+                .withCreatedOn(now())
                 .withModifiedBy(user)
-                .withModifiedOn(ZonedDateTime.now())
+                .withModifiedOn(now())
+                .withAgreement(agreement)
+                .withAgreementSignedDate(now())
                 .build();
         profile = profileRepository.save(profile);
 

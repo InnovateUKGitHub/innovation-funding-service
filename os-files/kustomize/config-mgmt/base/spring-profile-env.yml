@@ -3,4 +3,4 @@ apiVersion: v1
 metadata:
   name: spring-profile-env
 data:
-  SPRING_PROFILES_ACTIVE: "nonnamed,AT,debug"
+  SPRING_PROFILES_ACTIVE: "nonnamed,AT,debug,SIMPLE_CACHE"

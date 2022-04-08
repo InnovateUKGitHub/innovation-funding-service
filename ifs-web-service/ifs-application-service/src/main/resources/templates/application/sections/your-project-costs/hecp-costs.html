@@ -37,10 +37,19 @@
 
             <h2 class="govuk-heading-m govuk-!-margin-0"
                 th:text="|Provide the project costs for '${model.organisationName}'|"></h2>
-            <p class="govuk-body">Only your organisation can see this level of detail. All members of your
-                organisation can access and edit your project finances. We recommend assigning completion of your project finances
-                to one member of your team.</p>
-
+            <p class="govuk-body">
+                Only your organisation can see this level of detail. All members of your organisation can access
+                and edit your project finances. We recommend assigning completion of your project finances to one
+                member of your team.
+                <br>
+                <th:block th:unless="${model.readOnly}">
+                    To assist with the completion of this project costs page, use the IFS Conversion tool found here:
+                    <a href="https://www.ukri.org/publications/horizon-europe-guarantee-notice-and-guidance/"
+                       target="_blank" class="govuk-link">Horizon Europe guarantee notice and guidance – UKRI</a>.
+                    If you have further questions on how to fill out this page, contact <a href="mailto:heguarantee@iuk.ukri.org">heguarantee@iuk.ukri.org</a>.
+                </th:block>
+            </p>
+            </th:block>
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('labour')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" th:for="labour">

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.starters.audit.cfg.audit;
 
+import org.innovateuk.ifs.starter.common.util.ProfileUtils;
 import org.innovateuk.ifs.starters.audit.AuditAdapter;
 import org.innovateuk.ifs.starters.audit.AuditChannel;
 import org.innovateuk.ifs.starters.audit.cfg.AuditAutoConfiguration;
@@ -28,7 +29,7 @@ public class RabbitAuditAutoConfigurationTest {
     @Test
     public void auditContextConfiguration() {
         ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-            .withSystemProperties(AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME + "=" + AMQP_PROFILE)
+            .withSystemProperties(ProfileUtils.activeProfilesString(AMQP_PROFILE))
             .withPropertyValues(AUDIT_CONFIG_PREFIX + ".auditQueueName=audit",
                     AUDIT_CONFIG_PREFIX + ".auditExchangeName=amqp.fanout")
             .withConfiguration(UserConfigurations.of(AuditConfigurationProperties.class))

@@ -17,9 +17,11 @@ public class CompetitionAvailableAssessorRowViewModel extends InviteAssessorsRow
                                                     String name,
                                                     List<InnovationAreaResource> innovationAreas,
                                                     boolean compliant,
+                                                    boolean validAgreement,
+                                                    boolean validDoi,
                                                     String email,
                                                     BusinessType businessType) {
-        super(id, name, innovationAreas, compliant);
+        super(id, name, innovationAreas, compliant, validAgreement, validDoi);
         this.email = email;
         this.businessType = businessType;
     }

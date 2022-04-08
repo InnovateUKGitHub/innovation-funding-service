@@ -17,8 +17,15 @@ public class AssessorCreatedInviteResource extends AssessorInviteResource {
     public AssessorCreatedInviteResource() {
     }
 
-    public AssessorCreatedInviteResource(Long id, String name, List<InnovationAreaResource> innovationAreas, boolean compliant, String email, long inviteId) {
-        super(id, name, innovationAreas, compliant);
+    public AssessorCreatedInviteResource(Long id,
+                                         String name,
+                                         List<InnovationAreaResource> innovationAreas,
+                                         boolean compliant,
+                                         boolean validAgreement,
+                                         boolean validDoi,
+                                         String email,
+                                         long inviteId) {
+        super(id, name, innovationAreas, compliant, validAgreement, validDoi);
         this.email = email;
         this.inviteId = inviteId;
     }

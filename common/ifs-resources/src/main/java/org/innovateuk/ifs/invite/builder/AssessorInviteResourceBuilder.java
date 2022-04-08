@@ -24,4 +24,12 @@ public abstract class AssessorInviteResourceBuilder<T extends AssessorInviteReso
     public S withCompliant(Boolean... value) {
         return withArraySetFieldByReflection("compliant", value);
     }
+
+    public S withValidAgreement(Boolean... value) {
+        return withArraySetFieldByReflection("validAgreement", value);
+    }
+
+    public S withValidDoi(Boolean... value) {
+        return withArraySetFieldByReflection("validDoi", value);
+    }
 }
