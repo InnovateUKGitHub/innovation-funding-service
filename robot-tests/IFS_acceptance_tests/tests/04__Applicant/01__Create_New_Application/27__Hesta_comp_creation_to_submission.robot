@@ -71,7 +71,7 @@ Lead applicant can view funding conversion tool in project costs
     And the user should see the element                 jQuery = a:contains("heguarantee@iuk.ukri.org")
 
 Lead applicant completes project finances and submits an application
-    [Documentation]  IFS-8751  IFS-11269  IFS-11618
+    [Documentation]  IFS-8751  IFS-11269  IFS-11618  IFS-11366
     Given the user clicks the button/link                     link = Your project finances
     When the user completes hecp project finances             ${hestaApplicationName}  no
     Then the user see the print view of the application
@@ -269,6 +269,7 @@ the user successfully completes applications
     the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user completes the application details section              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
     the applicant completes Application Team                        COMPLETE  ${email}
+    the user completes the application research category            Feasibility studies
     the user complete the work programmes
     The user is able to complete horizon grant agreement section
     the lead applicant marks the application question as complete   1. Tell us where your organisation is based  My organisation is based in the UK or a British Overseas Territory

@@ -7,22 +7,18 @@ import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.validator.*;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.SectionType;
-import org.innovateuk.ifs.horizon.domain.ApplicationHorizonWorkProgramme;
 import org.innovateuk.ifs.horizon.resource.ApplicationHorizonWorkProgrammeResource;
 import org.innovateuk.ifs.horizon.transactional.HorizonWorkProgrammeService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -30,11 +26,9 @@ import org.springframework.validation.DataBinder;
 import org.springframework.validation.Validator;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
@@ -57,9 +51,6 @@ public class ApplicationValidationUtil {
 
     @Autowired
     private ApplicationResearchMarkAsCompleteValidator applicationResearchMarkAsCompleteValidator;
-
-    @Autowired
-    private ApplicationHecpWorkProgrammeMarkAsCompleteValidator applicationHecpWorkProgrammeMarkAsCompleteValidator;
 
     @Autowired
     private FormInputResponseRepository formInputResponseRepository;
@@ -111,13 +102,6 @@ public class ApplicationValidationUtil {
         return binder.getBindingResult();
     }
 
-    public BindingResult addWorkProgrammeValidation(List<ApplicationHorizonWorkProgrammeResource> applicationHorizonWorkProgramme, Validator validator) {
-        DataBinder binder = new DataBinder(applicationHorizonWorkProgramme);
-        binder.addValidators(validator);
-        binder.validate();
-        return binder.getBindingResult();
-    }
-
     public ValidationMessages isSectionValid(Long markedAsCompleteById, Section section, Application application) {
         ValidationMessages validationMessages = new ValidationMessages();
         for (Question question : section.fetchAllQuestionsAndChildQuestions()) {
@@ -158,10 +142,8 @@ public class ApplicationValidationUtil {
             validationMessages.addAll(isApplicationDetailsValid(application, question));
         } else if (question.getQuestionSetupType() == QuestionSetupType.RESEARCH_CATEGORY) {
             validationMessages.addAll(isResearchCategoryValid(application, question));
-        } else if (question.getQuestionSetupType() == QuestionSetupType.HORIZON_WORK_PROGRAMME) {
-            if (workProgrammeResource.size() == 0) {
-                validationMessages.addAll(isWorkProgrammeValid(workProgrammeResource));
-            }
+        } else if (question.getQuestionSetupType() == QuestionSetupType.HORIZON_WORK_PROGRAMME && (workProgrammeResource.size() == 0)) {
+            validationMessages.addAll(isWorkProgrammeValid(application.getId()));
         } else {
             for (FormInput formInput : formInputs) {
                 validationMessages.addAll(isSingleStatusFormInputValid(application, formInput));
@@ -200,14 +182,26 @@ public class ApplicationValidationUtil {
         return validationMessages;
     }
 
-        private List<ValidationMessages> isWorkProgrammeValid(List<ApplicationHorizonWorkProgrammeResource> applicationHorizonWorkProgramme) {
+    public List<ValidationMessages> isWorkProgrammeValid(long applicationId) {
         List<ValidationMessages> validationMessages = new ArrayList<>();
-
-        BindingResult bindingResult = addWorkProgrammeValidation(applicationHorizonWorkProgramme, applicationHecpWorkProgrammeMarkAsCompleteValidator);
+        List<BindingResult> bindingResults = validateWorkProgrammeResponse(applicationId);
+        for (BindingResult bindingResult : bindingResults) {
             if (bindingResult.hasErrors()) {
                 validationMessages.add(new ValidationMessages(bindingResult));
             }
-            return validationMessages;
+        }
+        return validationMessages;
+    }
+
+    public List<BindingResult> validateWorkProgrammeResponse(long applicationId) {
+        List<BindingResult> results = new ArrayList<>();
+        List<ApplicationHorizonWorkProgrammeResource> workProgrammeResource = horizonWorkProgrammeService.findSelectedForApplication(applicationId).getSuccess();
+        DataBinder binder = new DataBinder(workProgrammeResource);
+
+        if (workProgrammeResource.isEmpty()) {
+            results.add(binder.getBindingResult());
+        }
+        return results;
     }
 
     public List<ValidationMessages> isApplicationDetailsValid(Application application) {
