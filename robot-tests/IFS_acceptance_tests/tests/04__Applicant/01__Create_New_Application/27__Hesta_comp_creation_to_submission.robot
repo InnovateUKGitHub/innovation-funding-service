@@ -142,8 +142,8 @@ Internal users can edit the project costs
     And the user enters text to a text field    id = overhead  10000
     And the user enters text to a text field    id = travel  20000
     And the user clicks the button/link         id = save-eligibility
-    Then the user should see the element        css = [name="travel"][value="20,000"]
-    And the user should see the element         css = [name="overhead"][value="10,000"]
+    Then the user should see the element        jQuery = label:contains("Travel and subsistence") ~ span:contains("20,000")
+    And the user should see the element         jQuery = label:contains("Indirect costs") ~ span:contains("10,000")
     And the user should see the element         css = [id="total-cost"][value="£220,000"]
 
 Lead applicant views hecp project cost categories in spendprofile
@@ -460,14 +460,14 @@ the user should see hecp project cost categories
     the user should see the element     jQuery = span:contains("Indirect costs")
 
 the user should see readonly detailed hecp finances
-    the user should see the element    css = [name="labour"][value="50,000"]
-    the user should see the element    css = [name="subcontracting"][value="50,000"]
-    the user should see the element    css = [name="travel"][value="10,000"]
-    the user should see the element    css = [name="material"][value="30,000"]
-    the user should see the element    css = [name="capital"][value="20,000"]
-    the user should see the element    css = [name="other"][value="40,000"]
-    the user should see the element    css = [name="overhead"][value="0"]
-    the user should see the element    css = [id="total-cost"][value="£200,000"]
+    the user should see the element    jQuery = label:contains("Personnel costs") ~ span:contains("50,000")
+    the user should see the element    jQuery = label:contains("Subcontracting costs") ~ span:contains("50,000")
+    the user should see the element    jQuery = label:contains("Travel and subsistence") ~ span:contains("20,000")
+    the user should see the element    jQuery = label:contains("Equipment") ~ span:contains("30,000")
+    the user should see the element    jQuery = label:contains("Other goods, works and services") ~ span:contains("20,000")
+    the user should see the element    jQuery = label:contains("Other costs") ~ span:contains("40,000")
+    the user should see the element    jQuery = label:contains("Indirect costs") ~ span:contains("10,000")
+    the user should see the element    css = [id="total-cost"][value="£220,000"]
 
 
 
