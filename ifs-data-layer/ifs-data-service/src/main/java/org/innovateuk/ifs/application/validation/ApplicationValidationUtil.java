@@ -144,10 +144,8 @@ public class ApplicationValidationUtil {
             validationMessages.addAll(isApplicationDetailsValid(application, question));
         } else if (question.getQuestionSetupType() == QuestionSetupType.RESEARCH_CATEGORY) {
             validationMessages.addAll(isResearchCategoryValid(application, question));
-        } else if (question.getQuestionSetupType() == QuestionSetupType.HORIZON_WORK_PROGRAMME) {
-            if (workProgrammeResource.size() == 0) {
-                validationMessages.addAll(isWorkProgrammeValid(application.getId()));
-            }
+        } else if (question.getQuestionSetupType() == QuestionSetupType.HORIZON_WORK_PROGRAMME && (workProgrammeResource.size() == 0)) {
+            validationMessages.addAll(isWorkProgrammeValid(application.getId()));
         } else {
             for (FormInput formInput : formInputs) {
                 validationMessages.addAll(isSingleStatusFormInputValid(application, formInput));
