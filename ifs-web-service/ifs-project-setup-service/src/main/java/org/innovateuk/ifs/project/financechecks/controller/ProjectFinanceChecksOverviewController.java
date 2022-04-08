@@ -81,8 +81,18 @@ public class ProjectFinanceChecksOverviewController {
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModelPopulator.populateFromProject(project, loggedInUser);
 
-        return new FinanceCheckOverviewViewModel(null, getProjectFinanceSummaries(project, partnerOrgs, competition),
-                getProjectFinanceCostBreakdown(project.getId(), partnerOrgs, competition), project.getApplication(), false, competition.isLoan(), competition.isKtp(), false, competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE), applicationFundingBreakdownViewModel, competition.isThirdPartyOfgem());
+        return new FinanceCheckOverviewViewModel(null,
+                getProjectFinanceSummaries(project, partnerOrgs, competition),
+                getProjectFinanceCostBreakdown(project.getId(), partnerOrgs, competition),
+                project.getApplication(),
+                false,
+                competition.isLoan(),
+                competition.isKtp(),
+                false,
+                competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE),
+                applicationFundingBreakdownViewModel,
+                competition.isThirdPartyOfgem(),
+                competition.isHorizonEuropeGuarantee());
     }
 
     private FinanceCheckSummariesViewModel getProjectFinanceSummaries(ProjectResource project, List<PartnerOrganisationResource> partnerOrgs, CompetitionResource competition) {
