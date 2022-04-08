@@ -19,6 +19,8 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11510 HECP Phase 2 - Remove content from 'View application feedback' link
 ...
+...               IFS-11686 HECP Phase 2 - Read only views - Custom Question - Work Programme
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -129,7 +131,6 @@ Internal user can view hecp GOL template
     Then the user should see the element                            xpath = //h2[text()='Accepting your award ']
     [Teardown]  the user closes the last opened tab
 
-
 *** Keywords ***
 user clicks on View the grant offer letter page
     the user clicks the button/link        link = View the grant offer letter page (opens in a new window)
@@ -238,11 +239,18 @@ the user successfully completes application
     the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user completes the application details section              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
     the applicant completes Application Team                        COMPLETE  ${email}
+    the user clicks the button/link                                 link =  Print your application
+    the user can see the read only view of work programme
     the user complete the work programme
     The user is able to complete horizon grant agreement section
     the lead applicant marks the application question as complete   1. Tell us where your organisation is based  My organisation is based in the UK or a British Overseas Territory
     the lead applicant marks the application question as complete   2. What EIC call have you been successfully evaluated for?  EIC Transition
     the user accept the competition terms and conditions            Back to application overview
+
+the user can see the read only view of work programme
+    the user navigates to the page without the usual headers      ${SERVER}/application/${hestaApplicationID}/print?noprint
+    the user should see the element                               xpath = //*[@id="print-questions-heading-1-4"]/span
+    the user should see the element                               xpath = //*[contains(text(),'Subcontracting costs (£)')]
 
 the user successfully completes applications
     [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
@@ -424,7 +432,6 @@ Internal user notifies the applicant on status of application
 the applicant navigates to project set up
     log in as a different user                                                  ${leadApplicantEmail}    ${short_password}
     the user clicks the button/link                                             link = ${hestaApplicationName}
-
 
 the user completes all project setup sections
     the user is able to complete project details section
