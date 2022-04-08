@@ -13,8 +13,6 @@ public class CompletionStageUtils {
     @Value("${ifs.assessment.stage.competition.enabled}")
     private boolean assessmentStageCompetitionEnabled;
 
-    public CompletionStageUtils() {}
-
     public boolean isAlwaysOpenCompetitionEnabled() {
         return alwaysOpenCompetitionEnabled;
     }

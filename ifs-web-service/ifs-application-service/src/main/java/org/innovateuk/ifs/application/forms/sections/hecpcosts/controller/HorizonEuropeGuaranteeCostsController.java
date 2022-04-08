@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.hecpcosts.controller;
 
-import org.innovateuk.ifs.application.forms.sections.hecpcosts.form.HorizonEuropeGuaranteeCostsForm;
+import org.innovateuk.ifs.application.forms.hecpcosts.form.HorizonEuropeGuaranteeCostsForm;
 import org.innovateuk.ifs.application.forms.sections.hecpcosts.populator.HorizonEuropeGuaranteeCostsFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.hecpcosts.saver.HorizonEuropeGuaranteeCostsSaver;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.populator.YourProjectCostsViewModelPopulator;
