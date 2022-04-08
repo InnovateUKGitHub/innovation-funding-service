@@ -15,6 +15,10 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11618 HECP Phase 2 - Cost categories - Application view additional updates
 ...
+...               IFS-11688 HECP Phase 2 - Template update
+...
+...               IFS-11551 HECP Phase 2 - Spend profile - Content change
+...
 ...               IFS-11511 HECP Phase 2 - Notification banners
 ...
 ...               IFS-11510 HECP Phase 2 - Remove content from 'View application feedback' link
@@ -50,7 +54,7 @@ Comp admin can select the competition type option Hesta in Initial details on co
     Given the user logs-in in new browser             &{Comp_admin1_credentials}
     When the user navigates to the page               ${CA_UpcomingComp}
     And the user clicks the button/link               jQuery = .govuk-button:contains("Create competition")
-    Then the user fills in the CS Initial details     ${hestaCompetitionName}  ${month}  ${nextyear}  ${compType_HESTA}  STATE_AID  GRANT
+    Then the user fills in the CS Initial details     ${hestaCompetitionName}  ${month}  ${nextyear}  ${compType_HESTA}  STATE_AID  HECP
 
 Comp admin can view Hesta competition type in Initial details read only view
     [Documentation]  IFS-10688
@@ -149,7 +153,7 @@ Internal users can edit the project costs
     And the user should see the element         css = [id="total-cost"][value="£220,000"]
 
 Lead applicant views hecp project cost categories in spendprofile
-    [Documentation]  IFS-11695
+    [Documentation]  IFS-11695  IFS-11551
     Given project finance approves eligibility and generates the Spend Profile      ${asosId}  ${hestaProjectID}
     And internal user assigns MO to application                                     ${hestaApplicationID}    ${hestaApplicationName}    Orvill  Orville Gibbs
     And Internal user reviews and approves documents
@@ -157,20 +161,32 @@ Lead applicant views hecp project cost categories in spendprofile
     When Log in as a different user                                                 ${leadApplicantEmail}    ${short_password}
     And the user navigates to the page                                              ${server}/project-setup/project/${hestaProjectID}/partner-organisation/${asosId}/spend-profile/review
     Then the user should see hecp project cost categories
+    And the user should see the element                                             jQuery = p:contains("We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners ​which estimates how you think costs will be spread out over the duration of your project")
+    And the user should see the element                                             jQuery = p:contains("If you require further assistance in filling out your spend profile, contact your monitoring officer.")
+    And the user should see the element                                             jQuery = p:contains("You need to mark this section as complete. You can then send completed spend profiles to Innovate UK.")
 
 Lead applicant views hecp project cost categories in edit spendprofile page
     [Documentation]  IFS-11695
     When the user clicks the button/link                    link = Edit spend profile
     Then the user should see hecp project cost categories
 
+Lead applicant submits spen profile to internal user for review
+    [Documentation]  IFS-11551
+    Given the user clicks the button/link   jQuery = button:contains("Save and return to spend profile overview")
+    Given the user clicks the button/link   id = spend-profile-mark-as-complete-button
+    And the user clicks the button/link     link = Review and submit project spend profile
+    And the user clicks the button/link     id = submit-project-spend-profile-button
+    When the user clicks the button/link    id = submit-send-all-spend-profiles
+    And the user navigates to the page      ${server}/project-setup/project/${hestaProjectID}/partner-organisation/${asosId}/spend-profile/review
+    Then the user should see the element    jQuery = p:contains("We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners ​which estimates how you think costs will be spread out over the duration of your project")
+
 Internal user can view hecp GOL template
     [Documentation]  IFS-11299
-    Given the lead applicant submits the spend profile
-    And ifs admin approves the spend profiles for hestaApplication  ${hestaProjectID}
-    When the user clicks the button/link                            jQuery = td:contains("Review")
+    Given ifs admin approves the spend profiles for hestaApplication    ${hestaProjectID}
+    When the user clicks the button/link                                jQuery = td:contains("Review")
     And user clicks on View the grant offer letter page
-    And Select Window                                               NEW
-    Then the user should see the element                            xpath = //h2[text()='Accepting your award ']
+    And Select Window                                                   NEW
+    Then the user should see the element                                xpath = //h2[text()='Annex 1: acceptance of award']
     [Teardown]  the user closes the last opened tab
 
 Lead Applicant can view banner message for a successfull application
@@ -222,13 +238,6 @@ Internal user approves bank details
     the user clicks the button/link     jQuery = button:contains("Approve bank account details")
     the user clicks the button/link     id = submit-approve-bank-details
 
-the lead applicant submits the spend profile
-    the user clicks the button/link     jQuery = button:contains("Save and return to spend profile overview")
-    the user clicks the button/link     id = spend-profile-mark-as-complete-button
-    the user clicks the button/link     link = Review and submit project spend profile
-    the user clicks the button/link     id = submit-project-spend-profile-button
-    the user clicks the button/link     id = submit-send-all-spend-profiles
-
 the user can view Hesta competition type in Initial details read only view
     the user should see the element     jQuery = ${hestaCompTypeSelector}
     the user clicks the button/link     jQuery = button:contains("Edit")
@@ -237,20 +246,20 @@ the user can view Hesta competition type in Initial details read only view
 
 the competition admin creates Hesta competition
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingRule}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
-    the user selects the Terms and Conditions               ${compType}  ${fundingRule}
+    the user selects the Terms and Conditions                   ${compType}  ${fundingRule}
     the user fills in the CS Funding Information
-    the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
-    the user fills in the CS funding eligibility            true   ${compType_HESTA}  ${fundingRule}
-    the user selects the organisational eligibility         true    true
+    the user fills in the CS Project eligibility                ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
+    the user fills in the CS funding eligibility                true   ${compType_HESTA}  ${fundingRule}
+    And the user selects the organisational eligibility to no   false
     the user completes milestones section
     the user marks the Hesta application question as done
-    the user clicks the button/link                         link = Public content
-    the user fills in the Public content and publishes      ${extraKeyword}
-    the user clicks the button/link                         link = Return to setup overview
-    the user clicks the button/link                         jQuery = a:contains("Complete")
-    the user clicks the button/link                         jQuery = button:contains('Done')
-    the user navigates to the page                          ${CA_UpcomingComp}
-    the user should see the element                         jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")
+    the user clicks the button/link                             link = Public content
+    the user fills in the Public content and publishes          ${extraKeyword}
+    the user clicks the button/link                             link = Return to setup overview
+    the user clicks the button/link                             jQuery = a:contains("Complete")
+    the user clicks the button/link                             jQuery = button:contains('Done')
+    the user navigates to the page                              ${CA_UpcomingComp}
+    the user should see the element                             jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")
 
 Requesting IDs of this application
     [Arguments]  ${applicationName}
@@ -283,7 +292,6 @@ the user successfully completes application
     [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
     the user select the competition and starts application          ${hestaCompetitionName}
     the user clicks the button/link                                 link = Continue and create an account
-    user selects where is organisation based                        isNotInternational
     the user selects the radio button                               organisationTypeId    radio-1
     the user clicks the button/link                                 jQuery = .govuk-button:contains("Save and continue")
     the user selects his organisation in Companies House            ASOS  ASOS PLC
@@ -298,8 +306,7 @@ the user successfully completes application
     the applicant completes Application Team                        COMPLETE  ${email}
     the user completes the application research category            Feasibility studies
     The user is able to complete horizon grant agreement section
-    the lead applicant marks the application question as complete   1. Tell us where your organisation is based  My organisation is based in the UK or a British Overseas Territory
-    the lead applicant marks the application question as complete   2. What EIC call have you been successfully evaluated for?  EIC Transition
+    the lead applicant fills all the questions and marks as complete(Hecp)
     the user accept the competition terms and conditions            Back to application overview
 
 the user is presented with the Application Summary page
@@ -333,8 +340,7 @@ the application summary page must not include the reopen application link
 the user marks the Hesta application question as done
     the user clicks the button/link                                 link = Application
     the user marks each question as complete                        Application details
-    the user fills in the CS Application section hecp question      Tell us where your organisation is based
-    the user fills in the CS Application section hecp question      What EIC call have you been successfully evaluated for?
+    the assessed questions are marked complete(HECP type)
     the user clicks the button/link                                 jQuery = .govuk-heading-s a:contains("Finances")
     the user clicks the button/link                                 jQuery = button:contains("Done")
     the user clicks the button/link                                 jQuery = button:contains("Done")
@@ -378,7 +384,7 @@ the user completes hecp project finances
     the user enters the project location
     Run Keyword if  '${Project_growth_table}' == 'no'    the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
     Run Keyword if  '${Project_growth_table}' == 'yes'  the user fills the organisation details with Project growth table  ${Application}  ${SMALL_ORGANISATION_SIZE}
-    the user checks Your Funding section        ${Application}
+    the user completes your funding section        ${Application}
     the user should see all finance subsections complete
     the user clicks the button/link  link = Back to application overview
     the user should see the element  jQuery = li:contains("Your project finances") > .task-status-complete
@@ -454,6 +460,23 @@ the applicant navigates to project set up
     log in as a different user                                                  ${leadApplicantEmail}    ${short_password}
     the user clicks the button/link                                             link = ${hestaApplicationName}
 
+the user completes all project setup sections except spendprofile
+    the user is able to complete project details section
+    the user completes the project team details
+    the user is able to complete the Documents section
+    the user fills in bank details
+    log in as a different user                                                  &{internal_finance_credentials}
+    Requesting Project ID of this Project
+    internal user assigns MO to application                                     ${hestaApplicationID}    ${hestaApplicationName}    Orvill  Orville Gibbs
+    project finance approves eligibility and generates the Spend Profile        ${asosId}  ${hestaProjectID}
+    Internal user reviews and approves documents
+    Internal user approves bank details
+
+the user completes your funding section
+    [Arguments]  ${Application}
+    the user clicks the button/link             link = Your funding
+    the user fills in the funding information   ${Application}   no
+
 the user see the print view of the application
     Requesting IDs of this Hesta application
     the user navigates to the page without the usual headers      ${SERVER}/application/${hestaApplicationID}/print?noprint
@@ -484,6 +507,3 @@ the user should see readonly detailed hecp finances
     the user should see the element    jQuery = label:contains("Other costs") ~ span:contains("40,000")
     the user should see the element    jQuery = label:contains("Indirect costs") ~ span:contains("0")
     the user should see the element    css = [id="total-cost"][value="£200,000"]
-
-
-
