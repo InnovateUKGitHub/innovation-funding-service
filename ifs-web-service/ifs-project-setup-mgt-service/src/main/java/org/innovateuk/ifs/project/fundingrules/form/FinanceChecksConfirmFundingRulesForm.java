@@ -9,9 +9,6 @@ public class FinanceChecksConfirmFundingRulesForm extends BaseBindingResultTarge
     @AssertTrue(message = "{validation.fundingrules.confirm.required}")
     private boolean confirmFundingRules;
 
-    public FinanceChecksConfirmFundingRulesForm() {
-    }
-
     public void setConfirmFundingRules(boolean confirmFundingRules) {
         this.confirmFundingRules = confirmFundingRules;
     }
