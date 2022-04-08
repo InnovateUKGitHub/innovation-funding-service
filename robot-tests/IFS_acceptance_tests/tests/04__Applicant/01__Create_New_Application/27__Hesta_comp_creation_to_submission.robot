@@ -568,18 +568,6 @@ the user should see read only view of call ID
     the user should see the element    jQuery = label:contains("HORIZON-CL2-2021-HERITAGE-02")
     the user should see the element    jQuery = label:contains("HORIZON-CL2-2021-TRANSFORMATIONS-01")
 
-the user see the print view of the application
-    Requesting IDs of this Hesta application
-    the user navigates to the page without the usual headers      ${SERVER}/application/${hestaApplicationID}/print?noprint
-    the user should see the element                               xpath = //*[contains(text(),'Personnel costs (£)')]
-    the user should see the element                               xpath = //*[contains(text(),'Subcontracting costs (£)')]
-    the user should see the element                               xpath = //*[contains(text(),'Travel and subsistence (£)')]
-    the user should see the element                               xpath = //*[contains(text(),'Equipment (£)')]
-    the user should see the element                               xpath = //*[contains(text(),'Other goods, works and services (£)')]
-    the user should see the element                               xpath = //*[contains(text(),'Other costs (£)')]
-    the user should see the element                               xpath = //*[contains(text(),'Indirect costs (£)')]
-    the user navigates to the page                                ${SERVER}/application/${hestaApplicationID}
-
 the user should see hecp project cost categories
     the user should see the element     jQuery = span:contains("Personnel costs")
     the user should see the element     jQuery = span:contains("Subcontracting costs")
@@ -598,3 +586,4 @@ the user should see readonly detailed hecp finances
     the user should see the element    jQuery = label:contains("Other costs") ~ span:contains("40,000")
     the user should see the element    jQuery = label:contains("Indirect costs") ~ span:contains("0")
     the user should see the element    css = [id="total-cost"][value="£200,000"]
+
