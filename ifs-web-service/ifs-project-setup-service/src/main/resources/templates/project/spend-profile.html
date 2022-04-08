@@ -115,7 +115,10 @@
                                 <tr class="govuk-table__row" th:each="row : ${model.table.getMonthlyCostsPerCategoryMap()}"
                                     th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'govuk-form-group--error' : ''}">
                                     <th class="govuk-table__header" scope="row">
-                                        <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"></span>
+                                        <span th:if="${model.hecpCompetition}"
+                                              th:text="${model.table.costCategoryResourceMap.get(row.key).getHecpDisplayName()}"></span>
+                                        <span th:unless="${model.hecpCompetition}"
+                                              th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"></span>
                                         <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}"
                                               class="govuk-error-message">Your total costs are higher than your eligible costs</span>
                                     </th>
@@ -137,10 +140,18 @@
                                     <th class="govuk-table__header"
                                         scope="row"
                                         th:id="|row-${row.key}|">
-                                        <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"></span>
-                                        <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}"
-                                              th:attr="data-errorfield=|row-total-${row.key}|"
-                                              class="govuk-error-message">Your <th:block th:text="${#strings.toLowerCase(model.table.costCategoryResourceMap.get(row.key).getName())}" /> costs are higher than your eligible costs.</span>
+                                        <th:block th:if="${model.hecpCompetition}">
+                                            <span th:text="${model.table.costCategoryResourceMap.get(row.key).getHecpDisplayName()}"></span>
+                                            <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}"
+                                                  th:attr="data-errorfield=|row-total-${row.key}|"
+                                                  class="govuk-error-message">Your <th:block th:text="${#strings.toLowerCase(model.table.costCategoryResourceMap.get(row.key).getHecpDisplayName())}" /> costs are higher than your eligible costs.</span>
+                                        </th:block>
+                                        <th:block th:unless="${model.hecpCompetition}">
+                                            <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"></span>
+                                            <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}"
+                                                  th:attr="data-errorfield=|row-total-${row.key}|"
+                                                  class="govuk-error-message">Your <th:block th:text="${#strings.toLowerCase(model.table.costCategoryResourceMap.get(row.key).getName())}" /> costs are higher than your eligible costs.</span>
+                                        </th:block>
                                         <th:block th:if="${#fields.hasErrors('table.monthlyCostsPerCategoryMap[__${row.key}__]*')}">
                                             <span class="govuk-error-message"
                                                   th:each="error : ${#fields.detailedErrors('table.monthlyCostsPerCategoryMap[__${row.key}__]*')}"

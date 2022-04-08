@@ -43,6 +43,7 @@ public class ProjectSpendProfileViewModel {
     private boolean approved;
     private boolean leadPartner;
     private boolean ktpCompetition;
+    private boolean hecpCompetition;
 
     public ProjectSpendProfileViewModel(ProjectResource project, OrganisationResource organisationResource, SpendProfileTableResource table,
                                         SpendProfileSummaryModel summary, Boolean markedAsComplete,
@@ -50,7 +51,7 @@ public class ProjectSpendProfileViewModel {
                                         BigDecimal totalOfAllActualTotals, BigDecimal totalOfAllEligibleTotals, boolean submitted,
                                         Map<String, List<Map<Long, List<BigDecimal>>>> costCategoryGroupMap,
                                         Map<Long, CostCategoryResource> costCategoryResourceMap, Boolean usingJesFinances, boolean userPartOfThisOrganisation,
-                                        boolean isProjectManager, boolean approved, boolean leadPartner, boolean ktpCompetition) {
+                                        boolean isProjectManager, boolean approved, boolean leadPartner, boolean ktpCompetition, boolean hecpCompetition) {
         this.projectId = project.getId();
         this.organisationId = organisationResource.getId();
         this.projectName = project.getName();
@@ -74,6 +75,7 @@ public class ProjectSpendProfileViewModel {
         this.approved = approved;
         this.leadPartner = leadPartner;
         this.ktpCompetition = ktpCompetition;
+        this.hecpCompetition = hecpCompetition;
     }
 
     public Long getProjectId() {
@@ -234,6 +236,10 @@ public class ProjectSpendProfileViewModel {
 
     public boolean isKtpCompetition() {
         return ktpCompetition;
+    }
+
+    public boolean isHecpCompetition() {
+        return hecpCompetition;
     }
 
     @Override

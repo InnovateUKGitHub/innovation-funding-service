@@ -1,11 +1,10 @@
-package org.innovateuk.ifs.application.forms.sections.horizoneuropeguaranteecosts.saver;
+package org.innovateuk.ifs.project.eligibility.saver;
 
 import org.innovateuk.ifs.application.forms.hecpcosts.form.HorizonEuropeGuaranteeCostsForm;
-import org.innovateuk.ifs.application.forms.sections.hecpcosts.saver.HorizonEuropeGuaranteeCostsSaver;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.*;
-import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
-import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
+import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -19,7 +18,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
+import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.finance.builder.CapitalUsageBuilder.newCapitalUsage;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
@@ -38,19 +37,19 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class HorizonEuropeGuaranteeCostsSaverTest {
+public class FinanceChecksEligibilityHecpCostsSaverTest {
 
-    private static final long APPLICATION_ID = 1L;
+    private static final long PROJECT_ID = 1L;
     private static final long ORGANISATION_ID = 2L;
 
     @InjectMocks
-    private HorizonEuropeGuaranteeCostsSaver saver;
+    private FinanceChecksEligibilityHecpCostsSaver saver;
 
     @Mock
-    private ApplicationFinanceRestService applicationFinanceRestService;
+    private ProjectFinanceRestService projectFinanceRestService;
 
     @Mock
-    private ApplicationFinanceRowRestService financeRowRestService;
+    private ProjectFinanceRowRestService financeRowRestService;
 
     @Test
     public void save() {
@@ -60,9 +59,9 @@ public class HorizonEuropeGuaranteeCostsSaverTest {
                 .withLabourDays(1)
                 .build();
         Overhead overhead = newOverhead()
-                .withRateType(OverheadRateType.NONE)
+                .withRateType(OverheadRateType.HORIZON_EUROPE_GUARANTEE_TOTAL)
                 .build();
-        ApplicationFinanceResource finance = newApplicationFinanceResource().withFinanceOrganisationDetails(asMap(
+        ProjectFinanceResource finance = newProjectFinanceResource().withFinanceOrganisationDetails(asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(singletonList(workingDays)).build(),
                 FinanceRowType.OVERHEADS, newOverheadCostCategory().withCosts(singletonList(overhead)).build(),
                 FinanceRowType.MATERIALS, newDefaultCostCategory().withCosts(emptyList()).build(),
@@ -86,7 +85,7 @@ public class HorizonEuropeGuaranteeCostsSaverTest {
         when(financeRowRestService.create(any(TravelCost.class))).thenReturn(restSuccess(newTravel));
         when(financeRowRestService.create(any(OtherCost.class))).thenReturn(restSuccess(newOther));
 
-        when(applicationFinanceRestService.getFinanceDetails(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(finance));
+        when(projectFinanceRestService.getProjectFinance(PROJECT_ID, ORGANISATION_ID)).thenReturn(restSuccess(finance));
 
         HorizonEuropeGuaranteeCostsForm form = new HorizonEuropeGuaranteeCostsForm();
         form.setLabour(BigInteger.valueOf(1L));
@@ -97,7 +96,7 @@ public class HorizonEuropeGuaranteeCostsSaverTest {
         form.setTravel(BigInteger.valueOf(6L));
         form.setOther(BigInteger.valueOf(7L));
 
-        saver.save(form, APPLICATION_ID, ORGANISATION_ID);
+        saver.save(form, PROJECT_ID, ORGANISATION_ID);
 
         verify(financeRowRestService).update(workingDays);
         verify(financeRowRestService).update(overhead);
@@ -137,9 +136,9 @@ public class HorizonEuropeGuaranteeCostsSaverTest {
                 .withLabourDays(1)
                 .build();
         Overhead overhead = newOverhead()
-                .withRateType(OverheadRateType.HORIZON_2020_TOTAL)
+                .withRateType(OverheadRateType.HORIZON_EUROPE_GUARANTEE_TOTAL)
                 .build();
-        ApplicationFinanceResource finance = newApplicationFinanceResource().withFinanceOrganisationDetails(asMap(
+        ProjectFinanceResource finance = newProjectFinanceResource().withFinanceOrganisationDetails(asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(asList(workingDays, newLabourCost().build())).build(),
                 FinanceRowType.OVERHEADS, newOverheadCostCategory().withCosts(singletonList(overhead)).build(),
                 FinanceRowType.MATERIALS, newDefaultCostCategory().withCosts(newMaterials().build(1)).build(),
@@ -149,7 +148,7 @@ public class HorizonEuropeGuaranteeCostsSaverTest {
                 FinanceRowType.OTHER_COSTS, newDefaultCostCategory().withCosts(newOtherCost().build(1)).build()
         )).build();
 
-        when(applicationFinanceRestService.getFinanceDetails(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(finance));
+        when(projectFinanceRestService.getProjectFinance(PROJECT_ID, ORGANISATION_ID)).thenReturn(restSuccess(finance));
 
         HorizonEuropeGuaranteeCostsForm form = new HorizonEuropeGuaranteeCostsForm();
         form.setLabour(BigInteger.valueOf(0L));
@@ -160,7 +159,7 @@ public class HorizonEuropeGuaranteeCostsSaverTest {
         form.setTravel(BigInteger.valueOf(0L));
         form.setOther(BigInteger.valueOf(0L));
 
-        saver.save(form, APPLICATION_ID, ORGANISATION_ID);
+        saver.save(form, PROJECT_ID, ORGANISATION_ID);
 
         verify(financeRowRestService).update(workingDays);
         verify(financeRowRestService).update(overhead);
