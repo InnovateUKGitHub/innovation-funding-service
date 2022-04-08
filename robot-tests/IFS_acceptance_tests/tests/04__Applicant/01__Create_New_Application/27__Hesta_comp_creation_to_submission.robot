@@ -153,10 +153,16 @@ Lead applicant views hecp related cost categoires in project setup finances
     Then the user should see hecp project cost categories
     And the user should see readonly detailed hecp finances
 
-Internal users can edit the project costs
-    [Documentation]  IFS-11407
+Internal users can view workp programmes section in view application
+    [Documentation]  IFS-11686
     Given log in as a different user            &{internal_finance_credentials}
     And Requesting Project ID of this Project
+    When the user navigates to the page         ${server}/management/competition/${competitionId}/application/${hestaApplicationID}
+    And the user clicks the button/link         jQuery = button:contains("Work programme")
+    Then the user can see the read only view of work programme
+
+Internal users can edit the project costs
+    [Documentation]  IFS-11407
     When the user navigates to the page         ${server}/project-setup-management/project/${hestaProjectID}/finance-check/organisation/${asosId}/eligibility
     And the user clicks the button/link         name = edit-project-costs
     And the user enters text to a text field    id = overhead  10000
