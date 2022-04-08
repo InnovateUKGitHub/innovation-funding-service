@@ -62,7 +62,7 @@ Comp admin creates Hesta competition
     [Teardown]  Get competition id and set open date to yesterday    ${hestaCompetitionName}
 
 Lead applicant can view funding conversion tool in project costs
-    [Documentation]  IFS-11508
+    [Documentation]  IFS-11508  IFS-11686
     Given the user logs out if they are logged in
     And the user successfully completes application     tim   timmy   ${leadApplicantEmail}   ${hestaApplicationName}
     When the user clicks the button/link                link = Your project finances
@@ -239,18 +239,27 @@ the user successfully completes application
     the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user completes the application details section              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
     the applicant completes Application Team                        COMPLETE  ${email}
-    the user clicks the button/link                                 link =  Print your application
-    the user can see the read only view of work programme
+    the user can see the read only view of work programme as answer yet to be provided
     the user complete the work programme
     The user is able to complete horizon grant agreement section
     the lead applicant marks the application question as complete   1. Tell us where your organisation is based  My organisation is based in the UK or a British Overseas Territory
     the lead applicant marks the application question as complete   2. What EIC call have you been successfully evaluated for?  EIC Transition
     the user accept the competition terms and conditions            Back to application overview
+    the user can see the read only view of work programme
+
+the user can see the read only view of work programme as answer yet to be provided
+    the user clicks the button/link    link = Review and submit
+    the user clicks the button/link    jQuery = button:contains("Work programme")
+    the user should see the element    jQuery = p:contains("Answer yet to be provided")
+    the user clicks the button/link    link = Application overview
 
 the user can see the read only view of work programme
-    the user navigates to the page without the usual headers      ${SERVER}/application/${hestaApplicationID}/print?noprint
-    the user should see the element                               xpath = //*[@id="print-questions-heading-1-4"]/span
-    the user should see the element                               xpath = //*[contains(text(),'Subcontracting costs (£)')]
+    the user clicks the button/link    link = Review and submit
+    the user should see the element    jQuery = dt:contains("Enter the Horizon Europe Work programme Part you applied to, e.g. CL2.")
+    the user should see the element    jQuery = dd:contains("CL2")
+    the user should see the element    jQuery = dt:contains("Select the call you applied to.")
+    the user should see the element    jQuery = dd:contains("HORIZON_CL2_2021_DEMOCRACY_01")
+    the user clicks the button/link    link = Application overview
 
 the user successfully completes applications
     [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
@@ -485,6 +494,10 @@ the user see the print view of the application
     the user should see the element                               xpath = //*[contains(text(),'Equipment (£)')]
     the user should see the element                               xpath = //*[contains(text(),'Other goods, works and services (£)')]
     the user should see the element                               xpath = //*[contains(text(),'Other costs (£)')]
+    the user should see the element                               xpath = //*[contains(text(),'Indirect costs (£)')]
+    the user should see the element                               xpath = //*[contains(text(),'Indirect costs (£)')]
+    the user should see the element                               xpath = //*[contains(text(),'Indirect costs (£)')]
+    the user should see the element                               xpath = //*[contains(text(),'Indirect costs (£)')]
     the user should see the element                               xpath = //*[contains(text(),'Indirect costs (£)')]
     the user navigates to the page                                ${SERVER}/application/${hestaApplicationID}
 
