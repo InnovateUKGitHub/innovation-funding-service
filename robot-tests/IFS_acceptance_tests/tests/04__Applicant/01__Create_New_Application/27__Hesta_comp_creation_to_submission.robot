@@ -462,12 +462,12 @@ the user should see hecp project cost categories
 the user should see readonly detailed hecp finances
     the user should see the element    jQuery = label:contains("Personnel costs") ~ span:contains("50,000")
     the user should see the element    jQuery = label:contains("Subcontracting costs") ~ span:contains("50,000")
-    the user should see the element    jQuery = label:contains("Travel and subsistence") ~ span:contains("20,000")
+    the user should see the element    jQuery = label:contains("Travel and subsistence") ~ span:contains("10,000")
     the user should see the element    jQuery = label:contains("Equipment") ~ span:contains("30,000")
     the user should see the element    jQuery = label:contains("Other goods, works and services") ~ span:contains("20,000")
     the user should see the element    jQuery = label:contains("Other costs") ~ span:contains("40,000")
-    the user should see the element    jQuery = label:contains("Indirect costs") ~ span:contains("10,000")
-    the user should see the element    css = [id="total-cost"][value="£220,000"]
+    the user should see the element    jQuery = label:contains("Indirect costs") ~ span:contains("0")
+    the user should see the element    css = [id="total-cost"][value="£200,000"]
 
 
 
