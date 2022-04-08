@@ -28,6 +28,7 @@ import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.horizon.resource.ApplicationHorizonWorkProgrammeResource;
+import org.innovateuk.ifs.horizon.resource.HorizonWorkProgramme;
 import org.innovateuk.ifs.horizon.service.HorizonWorkProgrammeRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
@@ -66,6 +67,8 @@ import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsReso
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.horizon.resource.HorizonWorkProgramme.CL6;
+import static org.innovateuk.ifs.horizon.resource.HorizonWorkProgramme.HORIZON_CL6_2021_GOVERNANCE_01;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.supporter.builder.SupporterAssignmentResourceBuilder.newSupporterAssignmentResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
@@ -423,8 +426,8 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .withType(SectionType.PROJECT_DETAILS, SectionType.FINANCE)
                 .build(2);
 
-        workProgrammeFuture = asList(new ApplicationHorizonWorkProgrammeResource(applicationId, "CL6"),
-                new ApplicationHorizonWorkProgrammeResource(applicationId, "HORIZON_CL6_2021_GOVERNANCE_01"));
+        workProgrammeFuture = asList(new ApplicationHorizonWorkProgrammeResource(applicationId, CL6),
+                new ApplicationHorizonWorkProgrammeResource(applicationId, HORIZON_CL6_2021_GOVERNANCE_01));
 
         ProcessRoleResource processRole = newProcessRoleResource().withRole(ProcessRoleType.LEADAPPLICANT).withUser(user).build();
 

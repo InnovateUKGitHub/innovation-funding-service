@@ -216,4 +216,8 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     public boolean isHecpWorkProgrammeQuestion() {
         return isHecpCompetition && questionResource != null && questionResource.getQuestionSetupType() == QuestionSetupType.HORIZON_WORK_PROGRAMME;
     }
+
+    public boolean isWorkProgrammeQuestionCompleted() {
+        return !getWorkProgrammeAnswers().isEmpty() && isWorkProgrammeQuestionMarkedAsComplete();
+    }
 }
