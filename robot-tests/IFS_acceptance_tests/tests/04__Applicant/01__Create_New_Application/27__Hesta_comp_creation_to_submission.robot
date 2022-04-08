@@ -61,10 +61,24 @@ Comp admin creates Hesta competition
     Then the competition admin creates Hesta competition             ${BUSINESS_TYPE_ID}  ${hestaCompetitionName}  ${compType_HESTA}  ${compType_HESTA}  STATE_AID  HECP  RELEASE_FEEDBACK  no  1  false  single-or-collaborative
     [Teardown]  Get competition id and set open date to yesterday    ${hestaCompetitionName}
 
+the lead applicant can view answer yet to be provodied when work programme question is incomplete in readonly view
+    [Documentation]  IFS-11686
+    Given the user logs out if they are logged in
+    And the user applys to the competition          tim   timmy   ${leadApplicantEmail}   ${hestaApplicationName}
+    When the user clicks the button/link            link = Review and submit
+    And the user clicks the button/link             jQuery = button:contains("Work programme")
+    Then the user should see the element            jQuery = p:contains("Answer yet to be provided")
+
+lead applicant views work programme answers provided in review and submit page
+    [Documentation]  IFS-11686
+    Given the user clicks the button/link                           link = Application overview
+    When the user complete the work programme
+    And the user clicks the button/link                             link = Review and submit
+    Then the user can see the read only view of work programme
+
 Lead applicant can view funding conversion tool in project costs
     [Documentation]  IFS-11508  IFS-11686
-    Given the user logs out if they are logged in
-    And the user successfully completes application     tim   timmy   ${leadApplicantEmail}   ${hestaApplicationName}
+    Given the user successfully completes application   tim   timmy   ${leadApplicantEmail}   ${hestaApplicationName}
     When the user clicks the button/link                link = Your project finances
     And the user clicks the button/link                 link = Your project costs
     Then the user should see the element                jQuery = a:contains("Horizon Europe guarantee notice and guidance – UKRI")
@@ -222,7 +236,7 @@ user selects where is organisation based
     the user selects the radio button     international  ${org_type}
     the user clicks the button/link       id = international-organisation-cta
 
-the user successfully completes application
+the user applys to the competition
     [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
     the user select the competition and starts application          ${hestaCompetitionName}
     the user clicks the button/link                                 link = Continue and create an account
@@ -239,45 +253,24 @@ the user successfully completes application
     the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user completes the application details section              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
     the applicant completes Application Team                        COMPLETE  ${email}
-    the user can see the read only view of work programme as answer yet to be provided
-    the user complete the work programme
+
+the user successfully completes application
+    [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
+    the user clicks the button/link                                 link = Application overview
     The user is able to complete horizon grant agreement section
     the lead applicant marks the application question as complete   1. Tell us where your organisation is based  My organisation is based in the UK or a British Overseas Territory
     the lead applicant marks the application question as complete   2. What EIC call have you been successfully evaluated for?  EIC Transition
     the user accept the competition terms and conditions            Back to application overview
-    the user can see the read only view of work programme
-
-the user can see the read only view of work programme as answer yet to be provided
-    the user clicks the button/link    link = Review and submit
-    the user clicks the button/link    jQuery = button:contains("Work programme")
-    the user should see the element    jQuery = p:contains("Answer yet to be provided")
-    the user clicks the button/link    link = Application overview
 
 the user can see the read only view of work programme
-    the user clicks the button/link    link = Review and submit
     the user should see the element    jQuery = dt:contains("Enter the Horizon Europe Work programme Part you applied to, e.g. CL2.")
     the user should see the element    jQuery = dd:contains("CL2")
     the user should see the element    jQuery = dt:contains("Select the call you applied to.")
     the user should see the element    jQuery = dd:contains("HORIZON_CL2_2021_DEMOCRACY_01")
-    the user clicks the button/link    link = Application overview
 
 the user successfully completes applications
     [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
-    the user select the competition and starts application          ${hestaCompetitionName}
-    the user clicks the button/link                                 link = Continue and create an account
-    user selects where is organisation based                        isNotInternational
-    the user selects the radio button                               organisationTypeId    radio-1
-    the user clicks the button/link                                 jQuery = .govuk-button:contains("Save and continue")
-    the user selects his organisation in Companies House            ASOS  ASOS PLC
-    the user should be redirected to the correct page               ${SERVER}/registration/register
-    the user enters the details and clicks the create account       ${firstName}  ${lastName}  ${email}  ${short_password}
-    the user reads his email and clicks the link                    ${email}  Please verify your email address  Once verified you can sign into your account.
-    the user should be redirected to the correct page               ${REGISTRATION_VERIFIED}
-    the user clicks the button/link                                 link = Sign in
-    Logging in and Error Checking                                   ${email}  ${short_password}
-    the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    the user completes the application details section              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
-    the applicant completes Application Team                        COMPLETE  ${email}
+    the user applys to the competition                              ${firstName}   ${lastName}   ${email}   ${applicationName}
     the user completes the application research category            Feasibility studies
     the user complete the work programmes
     The user is able to complete horizon grant agreement section
