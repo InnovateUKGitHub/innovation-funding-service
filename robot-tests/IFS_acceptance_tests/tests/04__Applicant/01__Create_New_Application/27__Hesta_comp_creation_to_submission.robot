@@ -306,17 +306,16 @@ the user successfully completes application
     the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user completes the application details section              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
     the applicant completes Application Team                        COMPLETE  ${email}
+    the user completes the application research category            Feasibility studies
     the user complete the work programme
-    The user is able to complete horizon grant agreement section
-    the lead applicant marks the application question as complete   1. Tell us where your organisation is based  My organisation is based in the UK or a British Overseas Territory
-    the lead applicant marks the application question as complete   2. What EIC call have you been successfully evaluated for?  EIC Transition
+    the user is able to complete horizon grant agreement section
+    the lead applicant fills all the questions and marks as complete(Hecp)
     the user accept the competition terms and conditions            Back to application overview
 
 the user successfully completes applications
     [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
     the user select the competition and starts application          ${hestaCompetitionName}
     the user clicks the button/link                                 link = Continue and create an account
-    user selects where is organisation based                        isNotInternational
     the user selects the radio button                               organisationTypeId    radio-1
     the user clicks the button/link                                 jQuery = .govuk-button:contains("Save and continue")
     the user selects his organisation in Companies House            ASOS  ASOS PLC
@@ -562,18 +561,6 @@ the user can mark the question as complete for work programme
     the user clicks the button/link     id = application-question-complete
     the user should see the element     jQuery = p:contains("This question is marked as complete.")
     the user clicks the button/link     link = Back to application overview
-
-the user see the print view of the application
-    Requesting IDs of this Hesta application
-    the user navigates to the page without the usual headers      ${SERVER}/application/${hestaApplicationID}/print?noprint
-    the user should see the element                               xpath = //*[contains(text(),'Personnel costs (£)')]
-    the user should see the element                               xpath = //*[contains(text(),'Subcontracting costs (£)')]
-    the user should see the element                               xpath = //*[contains(text(),'Travel and subsistence (£)')]
-    the user should see the element                               xpath = //*[contains(text(),'Equipment (£)')]
-    the user should see the element                               xpath = //*[contains(text(),'Other goods, works and services (£)')]
-    the user should see the element                               xpath = //*[contains(text(),'Other costs (£)')]
-    the user should see the element                               xpath = //*[contains(text(),'Indirect costs (£)')]
-    the user navigates to the page                                ${SERVER}/application/${hestaApplicationID}
 
 the user should see read only view of work program part
     the user should see the element    jQuery = label:contains("Culture, Creativity and Inclusive Society (CL2)")
