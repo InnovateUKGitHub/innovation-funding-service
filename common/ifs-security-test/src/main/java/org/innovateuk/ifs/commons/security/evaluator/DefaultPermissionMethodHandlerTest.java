@@ -36,6 +36,7 @@ public class DefaultPermissionMethodHandlerTest {
             getClass().getDeclaredMethod("readApplicationPermissionMethod3", ApplicationResource.class, UserResource.class));
 
     public DefaultPermissionMethodHandlerTest() throws NoSuchMethodException {
+        //no-op
     }
 
     @Before

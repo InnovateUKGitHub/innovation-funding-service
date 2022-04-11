@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.category.domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -8,7 +9,10 @@ import java.util.List;
  */
 @Entity
 @DiscriminatorValue("INNOVATION_SECTOR")
-public class InnovationSector extends ParentCategory<InnovationArea> {
+public class InnovationSector extends ParentCategory<InnovationArea> implements Serializable {
+
+    private static final long serialVersionUID = -1650198672567248725L;
+
     public static final long NONE = 66;
 
     @OneToMany(mappedBy = "sector", cascade = CascadeType.ALL)
