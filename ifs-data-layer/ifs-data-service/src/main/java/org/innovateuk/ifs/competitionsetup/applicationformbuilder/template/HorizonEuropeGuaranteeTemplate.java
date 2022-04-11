@@ -58,6 +58,7 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                                 applicationDetails(),
                                 researchCategory(),
                                 applicationTeam(),
+                                horizonWorkProgramme(),
                                 grantAgreement(),
                                 equalityDiversityAndInclusion()
                         )),
@@ -210,6 +211,18 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                                 .withWordCount(100)
                                 .withActive(false)
                 ));
+    }
+
+    public static QuestionBuilder horizonWorkProgramme() {
+        return aQuestion()
+                .withShortName("Work programme")
+                .withName("Work programme")
+                .withDescription("Work programme question for Horizon competitions.")
+                .withAssignEnabled(false)
+                .withMarkAsCompletedEnabled(true)
+                .withType(QuestionType.LEAD_ONLY)
+                .withQuestionSetupType(QuestionSetupType.HORIZON_WORK_PROGRAMME)
+                .withFormInputs(newArrayList());
     }
 
     public static QuestionBuilder eic() {
