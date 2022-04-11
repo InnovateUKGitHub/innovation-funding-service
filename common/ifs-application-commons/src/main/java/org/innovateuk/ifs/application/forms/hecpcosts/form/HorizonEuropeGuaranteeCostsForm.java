@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.forms.sections.hecpcosts.form;
+package org.innovateuk.ifs.application.forms.hecpcosts.form;
 
 import lombok.Getter;
 import lombok.Setter;

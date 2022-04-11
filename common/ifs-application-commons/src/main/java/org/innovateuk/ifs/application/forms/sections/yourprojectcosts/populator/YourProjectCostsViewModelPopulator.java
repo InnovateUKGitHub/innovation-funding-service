@@ -114,7 +114,8 @@ public class YourProjectCostsViewModelPopulator {
                     getGrantClaimPercentage(application.getId(), organisation.getId()),
                     getThirdPartyProjectCostGuidanceLink(competition),
                     competition.isOfGemCompetition(),
-                    competition.isThirdPartyOfgem());
+                    competition.isThirdPartyOfgem(),
+                    competition.isHorizonEuropeGuarantee());
         }
     }
 
@@ -163,7 +164,8 @@ public class YourProjectCostsViewModelPopulator {
                 getGrantClaimPercentage(application.getId(), organisation.getId()),
                 getThirdPartyProjectCostGuidanceLink(competition),
                 competition.isOfGemCompetition(),
-                competition.isThirdPartyOfgem());
+                competition.isThirdPartyOfgem(),
+                competition.isHorizonEuropeGuarantee());
     }
 
     private boolean isYourFecCostRequired(List<Long> completedSectionIds, Long yourFecCostSectionId) {

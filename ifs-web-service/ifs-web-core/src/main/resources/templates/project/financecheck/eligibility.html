@@ -231,10 +231,17 @@
                   novalidate="novalidate"
                   enctype="multipart/form-data"
                   th:attr="data-row-operation-url=@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">
-                <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-finances">
-                    <th:block th:each="type : ${model.orderedAccordionFinanceRowTypes}">
-                        <th:block th:insert="application/your-project-costs-fragments :: __${type.name().toLowerCase()}__"/>
-                    </th:block>
+                <div th:if="${summaryModel.hecpCompetition}">
+                    <div class="govuk-body" id="accordion-finances">
+                        <th:block th:insert="application/hecp-costs-fragments :: hecp-costs" />
+                    </div>
+                </div>
+                <div th:unless="${summaryModel.hecpCompetition}">
+                    <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-finances">
+                        <th:block th:each="type : ${model.orderedAccordionFinanceRowTypes}">
+                                <th:block th:insert="application/your-project-costs-fragments :: __${type.name().toLowerCase()}__"/>
+                        </th:block>
+                    </div>
                 </div>
 
                 <div class="govuk-grid-row total-cost">
@@ -279,7 +286,8 @@
                 <div th:if="${model.canEditProjectCosts}">
                     <button id="save-eligibility"
                             class="govuk-button govuk-!-margin-top-9"
-                            name="save-eligibility">
+                            th:name="${summaryModel.hecpCompetition ? 'save-hecp' : 'save-eligibility'}"
+                            name="save-hecp">
                         <a th:ref="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">
                             Save and return to eligibility check
                         </a>

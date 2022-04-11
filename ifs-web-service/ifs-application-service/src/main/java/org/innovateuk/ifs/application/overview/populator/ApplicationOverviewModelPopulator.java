@@ -169,7 +169,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                 }
                 break;
             case APPLICATION_QUESTIONS:
-                if (!competition.isKtp() || !competition.isHasAssessmentStage()) {
+                if (!competition.isKtp() && competition.isHasAssessmentStage()) {
                     messageCode = "ifs.section.applicationQuestions.description";
                     break;
                 }
