@@ -15,7 +15,10 @@ import java.util.Map;
  * Resource object to store the company details, from the companies house api.
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class OrganisationSearchResult implements Serializable{
+public class OrganisationSearchResult implements Serializable {
+
+    private static final long serialVersionUID = -261668259314418735L;
+
     private String organisationSearchId;
     private String name;
     private AddressResource organisationAddress;

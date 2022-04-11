@@ -6,6 +6,8 @@ import org.innovateuk.ifs.user.resource.RoleProfileState;
 
 import javax.persistence.*;
 
+import java.io.Serializable;
+
 import static javax.persistence.EnumType.STRING;
 import static org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE;
 
@@ -14,7 +16,9 @@ import static org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE;
  * unavailable
  */
 @Entity
-public class RoleProfileStatus extends AuditableEntity {
+public class RoleProfileStatus extends AuditableEntity implements Serializable {
+
+    private static final long serialVersionUID = 4820623474620690511L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

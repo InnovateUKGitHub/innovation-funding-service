@@ -2,7 +2,9 @@ package org.innovateuk.ifs.project.spendprofile.controller;
 
 import com.opencsv.CSVWriter;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.builder.SpendProfileResourceBuilder;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -25,7 +27,10 @@ import java.util.stream.IntStream;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.HORIZON_EUROPE_GUARANTEE;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -129,6 +134,38 @@ public class SpendProfileControllerTest extends BaseControllerMockMVCTest<SpendP
                 .andExpect(content().json(toJson(expectedTable)));
     }
 
+    @Test
+    public void getHECPSpendProfileTable() throws Exception {
+        final Long projectId = 1L;
+        final Long organisationId = 1L;
+        final CompetitionResource competition = newCompetitionResource().withId(3L).withCompetitionTypeName(HORIZON_EUROPE_GUARANTEE.getText()).build();
+        final ApplicationResource application = newApplicationResource().withId(2L).withCompetition(competition.getId()).build();
+        final ProjectResource project = newProjectResource().withApplication(application.getId()).withCompetition(competition.getId()).build();
+        final ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        final SpendProfileTableResource expectedTable = new SpendProfileTableResource();
+
+        expectedTable.setMonths(asList(
+                new LocalDateResource(2022, 2, 1),
+                new LocalDateResource(2022, 3, 1),
+                new LocalDateResource(2022, 4, 1)
+        ));
+
+        expectedTable.setEligibleCostPerCategoryMap(asMap(
+                1L, new BigDecimal("100"),
+                2L, new BigDecimal("150"),
+                3L, new BigDecimal("55")));
+
+        expectedTable.setMonthlyCostsPerCategoryMap(asMap(
+                1L, asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("40")),
+                2L, asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
+                3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0"))));
+
+        when(spendProfileService.getSpendProfileTable(eq(projectOrganisationCompositeId))).thenReturn(serviceSuccess(expectedTable));
+
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-table", projectId, organisationId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedTable)));
+    }
 
     @Test
     public void getSpendProfileCsv() throws Exception {

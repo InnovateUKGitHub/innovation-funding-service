@@ -521,7 +521,7 @@ public class IndustrialCostFinanceHandlerTest {
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
-        assertNotNull(financeRowTypes.size());
+        assertFalse(financeRowTypes.isEmpty());
         assertEquals(expectedFinanceRowTypes.size(), financeRowTypes.size());
         assertThat(financeRowTypes, containsInAnyOrder(expectedFinanceRowTypes.toArray()));
     }
@@ -540,7 +540,7 @@ public class IndustrialCostFinanceHandlerTest {
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
-        assertNotNull(financeRowTypes.size());
+        assertFalse(financeRowTypes.isEmpty());
         assertEquals(expectedFinanceRowTypes.size(), financeRowTypes.size());
         assertThat(financeRowTypes, containsInAnyOrder(expectedFinanceRowTypes.toArray()));
     }
@@ -634,7 +634,7 @@ public class IndustrialCostFinanceHandlerTest {
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
-        assertNotNull(financeRowTypes.size());
+        assertFalse(financeRowTypes.isEmpty());
         assertEquals(expectedFinanceRowTypes.size(), financeRowTypes.size());
         assertThat(financeRowTypes, containsInAnyOrder(expectedFinanceRowTypes.toArray()));
     }
@@ -652,7 +652,7 @@ public class IndustrialCostFinanceHandlerTest {
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
-        assertNotNull(financeRowTypes.size());
+        assertFalse(financeRowTypes.isEmpty());
         assertEquals(expectedFinanceRowTypes.size(), financeRowTypes.size());
         assertThat(financeRowTypes, containsInAnyOrder(expectedFinanceRowTypes.toArray()));
     }
