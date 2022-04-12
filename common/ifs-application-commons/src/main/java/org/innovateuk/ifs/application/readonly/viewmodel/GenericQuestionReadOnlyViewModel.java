@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.readonly.viewmodel;
 
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.horizon.resource.ApplicationHorizonWorkProgrammeResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 import java.math.BigDecimal;
@@ -16,7 +17,8 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     private final String question;
     private final boolean multipleStatuses;
     private final String answer;
-    private final List<GenericQuestionAnswerRowReadOnlyViewModel> answers;
+    private final List<GenericQuestionAnswerRowReadOnlyViewModel>  answers;
+    private final List<ApplicationHorizonWorkProgrammeResource> workProgrammeAnswers;
     private final boolean statusDetailPresent;
     private final List<GenericQuestionFileViewModel> appendices;
     private final GenericQuestionFileViewModel templateFile;
@@ -29,6 +31,8 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     private final int totalScope;
     private final boolean hasScope;
     private final boolean isLoanPartBEnabled;
+    private final boolean isHecpCompetition;
+    private final boolean isWorkProgrammeQuestionMarkedAsComplete;
 
     public GenericQuestionReadOnlyViewModel(ApplicationReadOnlyData data,
                                             QuestionResource questionResource,
@@ -37,6 +41,7 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
                                             boolean multipleStatuses,
                                             String answer,
                                             List<GenericQuestionAnswerRowReadOnlyViewModel> answers,
+                                            List<ApplicationHorizonWorkProgrammeResource> workProgrammeAnswers,
                                             boolean statusDetailPresent,
                                             List<GenericQuestionFileViewModel> appendices,
                                             GenericQuestionFileViewModel templateFile,
@@ -46,13 +51,15 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
                                             int inScope,
                                             int totalScope,
                                             boolean hasScope,
-                                            boolean isLoanPartBEnabled) {
+                                            boolean isLoanPartBEnabled,
+                                            boolean isWorkProgrammeQuestionMarkedAsComplete) {
         super(data, questionResource);
         this.displayName = displayName;
         this.question = question;
         this.multipleStatuses = multipleStatuses;
         this.answer = answer;
         this.answers = answers;
+        this.workProgrammeAnswers = workProgrammeAnswers;
         this.statusDetailPresent = statusDetailPresent;
         this.appendices = appendices;
         this.templateFile = templateFile;
@@ -65,6 +72,8 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
         this.totalScope = totalScope;
         this.hasScope = hasScope;
         this.isLoanPartBEnabled = isLoanPartBEnabled;
+        this.isHecpCompetition = data.getCompetition().isHorizonEuropeGuarantee();
+        this.isWorkProgrammeQuestionMarkedAsComplete = isWorkProgrammeQuestionMarkedAsComplete;
     }
 
     public int getInScope() { return inScope; }
@@ -156,6 +165,18 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
 
     public QuestionResource getQuestionResource() { return questionResource; }
 
+    public boolean isHecpCompetition() {
+        return isHecpCompetition;
+    }
+
+    public List<ApplicationHorizonWorkProgrammeResource> getWorkProgrammeAnswers() {
+        return workProgrammeAnswers;
+    }
+
+    public boolean isWorkProgrammeQuestionMarkedAsComplete() {
+        return isWorkProgrammeQuestionMarkedAsComplete;
+    }
+
     public int getAssessorMaximumScore() {
         if(!hasScore()) {
             return 0;
@@ -190,5 +211,13 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
                 questionResource != null &&
                 QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION == questionResource.getQuestionSetupType() &&
                 !isComplete();
+    }
+
+    public boolean isHecpWorkProgrammeQuestion() {
+        return isHecpCompetition && questionResource != null && questionResource.getQuestionSetupType() == QuestionSetupType.HORIZON_WORK_PROGRAMME;
+    }
+
+    public boolean isWorkProgrammeQuestionCompleted() {
+        return !getWorkProgrammeAnswers().isEmpty() && isWorkProgrammeQuestionMarkedAsComplete();
     }
 }

@@ -12,6 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Optional;
+
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
@@ -42,7 +44,7 @@ public class ResearchCategoryReadonlyViewModelPopulatorTest {
                 .withShortName("Research category")
                 .build();
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(),
-                emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
+                emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), Optional.empty());
 
         ResearchCategoryReadOnlyViewModel viewModel = populator.populate(question, data, defaultSettings());
 
