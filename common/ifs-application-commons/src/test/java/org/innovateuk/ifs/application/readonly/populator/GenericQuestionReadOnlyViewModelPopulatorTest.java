@@ -151,7 +151,7 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
 
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), emptyList(), emptyList(),
                 asList(textarea, appendix, templateDocument, feedback, score), asList(textareaResponse, appendixResponse,
-                templateDocumentResponse), emptyList(), singletonList(assessorResponseFuture), emptyList());
+                templateDocumentResponse), emptyList(), singletonList(assessorResponseFuture), emptyList(), Optional.empty());
 
         GenericQuestionReadOnlyViewModel viewModel = populator.populate(question, data,
                 ApplicationReadOnlySettings.defaultSettings().setAssessmentId(3L));
@@ -214,7 +214,7 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
                 .build();
 
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(),
-                asList(appendix, templateDocument), asList(appendixResponse, templateDocumentResponse), emptyList(), emptyList(), emptyList());
+                asList(appendix, templateDocument), asList(appendixResponse, templateDocumentResponse), emptyList(), emptyList(), emptyList(), Optional.empty());
 
         GenericQuestionReadOnlyViewModel viewModel = populator.populate(question, data,
                 ApplicationReadOnlySettings.defaultSettings().setAssessmentId(3L));
@@ -241,7 +241,7 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
                 .build();
 
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(),
-                asList(multipleChoice), asList(multipleChoiceResponse), emptyList(), emptyList(), emptyList());
+                asList(multipleChoice), asList(multipleChoiceResponse), emptyList(), emptyList(), emptyList(), Optional.empty());
 
         GenericQuestionReadOnlyViewModel viewModel = populator.populate(question, data,
                 ApplicationReadOnlySettings.defaultSettings().setAssessmentId(1L));
@@ -272,7 +272,7 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
                 .build(2);
 
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(),
-                emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), assessments, emptyList());
+                emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), assessments, emptyList(), Optional.empty());
 
         ApplicationReadOnlySettings settings = defaultSettings().setIncludeAllAssessorFeedback(true);
 

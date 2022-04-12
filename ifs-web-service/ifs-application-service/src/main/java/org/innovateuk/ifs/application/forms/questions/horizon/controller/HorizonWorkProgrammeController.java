@@ -221,7 +221,7 @@ public class HorizonWorkProgrammeController {
                 workProgrammeSelectionData.get().getAllSelections() :
                 horizonWorkProgrammeRestService.findSelected(applicationId).getSuccess()
                         .stream()
-                        .map(e -> HorizonWorkProgramme.valueOf(e.getWorkProgramme()))
+                        .map(e -> e.getWorkProgramme())
                         .collect(toList());
 
         return savedSelections

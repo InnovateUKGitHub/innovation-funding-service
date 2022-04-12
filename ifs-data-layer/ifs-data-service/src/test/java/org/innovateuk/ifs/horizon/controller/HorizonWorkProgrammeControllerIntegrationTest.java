@@ -68,7 +68,7 @@ public class HorizonWorkProgrammeControllerIntegrationTest extends BaseControlle
 
         List<ApplicationHorizonWorkProgrammeResource> updated = controller.findSelectedForApplication(applicationId).getSuccess();
         assertEquals(2, updated.size());
-        assertEquals("CL2", updated.get(0).getWorkProgramme());
-        assertEquals("HORIZON_CL2_2021_DEMOCRACY_01", updated.get(1).getWorkProgramme());
+        assertEquals(programmes.get(0), updated.get(0).getWorkProgramme());
+        assertEquals(programmes.get(1), updated.get(1).getWorkProgramme());
     }
 }
