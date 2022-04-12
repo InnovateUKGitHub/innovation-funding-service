@@ -7,6 +7,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -448,7 +449,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                     table.setEligibleCostPerCategoryMap(eligibleCostsPerCategory);
                     table.setMonthlyCostsPerCategoryMap(spendFiguresPerCategoryOrderedByMonth);
                     table.setMarkedAsComplete(spendProfile.isMarkedAsComplete());
-                    checkTotalForMonthsAndAddToTable(table);
+                    checkTotalForMonthsAndAddToTable(table, project.getApplication().getCompetition());
 
                     boolean isJes = project.getApplication().getCompetition().applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
                     if (isJes) {
@@ -674,7 +675,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         spendProfileRepository.saveAll(spendProfiles);
     }
 
-    private void checkTotalForMonthsAndAddToTable(SpendProfileTableResource table) {
+    private void checkTotalForMonthsAndAddToTable(SpendProfileTableResource table, Competition competition) {
 
         Map<Long, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
         Map<Long, BigDecimal> eligibleCostPerCategoryMap = table.getEligibleCostPerCategoryMap();
@@ -690,10 +691,15 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
             BigDecimal expectedTotalCost = eligibleCostPerCategoryMap.get(category);
 
             if (actualTotalCost.compareTo(expectedTotalCost) > 0) {
-                String categoryName = categories.get(category).getName();
+                String categoryName = competition.isHorizonEuropeGuarantee() ? categories.get(category).getHecpDisplayName() : categories.get(category).getName();
                 //TODO INFUND-7502 could come up with a better way to send the name to the frontend
                 categoriesWithIncorrectTotal.add(fieldError(String.valueOf(category), actualTotalCost, SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY.getErrorKey(), categoryName));
             }
+        }
+
+        if(competition.isHorizonEuropeGuarantee()) {
+            List<String> hecpFinanceRowOrder = FinanceRowType.getHecpSpecificFinanceRowTypes().stream().map(FinanceRowType::getHecpDisplayName).collect(Collectors.toList());
+            categoriesWithIncorrectTotal = categoriesWithIncorrectTotal.stream().sorted((e1, e2) -> hecpFinanceRowOrder.indexOf(e1.getArguments().get(0)) - hecpFinanceRowOrder.indexOf(e2.getArguments().get(0))).collect(Collectors.toList());
         }
 
         ValidationMessages validationMessages = new ValidationMessages(categoriesWithIncorrectTotal);
