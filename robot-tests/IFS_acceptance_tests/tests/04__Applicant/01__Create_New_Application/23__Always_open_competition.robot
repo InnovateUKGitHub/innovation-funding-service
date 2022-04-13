@@ -55,6 +55,8 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-11486 HECP Phase 2 - Always open functionality to have the the ability to bypass IFS assessment
 ...
+...               IFS-11715 - Always Open Competition Application Overview Banner message
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 
@@ -314,6 +316,13 @@ Comp admin can see the open ended competition in project setup/previous dashboar
     When The user clicks the button/link                       link = Close competition
     And The user clicks the button/link                        jQuery = button:contains("Close competition")
     Then the user should see the competition in project setup/previous dashboard and can not see on live dashboard
+
+Lead Applicant can see the banner message about the application
+    [Documentation]  IFS-11715
+    Given log in as a different user         ${leadApplicantEmail}  ${short_password}
+    When the user clicks the button/link     link = ${applicationName}
+    And the user clicks the button/link      link = view application
+    Then the user should see the element     jQuery = h2:contains("Congratulations, your application has been successful")
 
 Supporter can review open ended ktp competition applications
     [Documentation]  IFS-9785

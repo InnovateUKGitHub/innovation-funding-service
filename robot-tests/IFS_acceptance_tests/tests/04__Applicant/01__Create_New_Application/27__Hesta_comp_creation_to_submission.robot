@@ -31,6 +31,7 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11695 HECP Phase 2 - Cost categories - Spend profile updates
 ...
+
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -40,7 +41,6 @@ Resource          ../../../resources/common/Competition_Commons.robot
 
 *** Variables ***
 ${hestaCompTypeSelector}                        dt:contains("Competition type") ~ dd:contains("${compType_HESTA}")
-${hestaApplicationName1}                        Hesta Application with assessment
 ${hestaApplicationName}                         Hesta application
 ${newHestaApplicationName}                      NEW Hesta application
 ${leadApplicantEmail}                           tim.timmy@heukar.com
@@ -71,12 +71,6 @@ Comp admin creates Hesta competition
     Given the user clicks the button/link                            link = Back to competition details
     Then the competition admin creates Hesta competition             ${BUSINESS_TYPE_ID}  ${hestaCompetitionName}  ${compType_HESTA}  ${compType_HESTA}  STATE_AID  HECP  PROJECT_SETUP  no  1  false  single-or-collaborative
     [Teardown]  Get competition id and set open date to yesterday    ${hestaCompetitionName}
-
-Comp admin creates Hesta competition with assessment
-    [Documentation]  IFS-11715
-    Given the user clicks the button/link                            link = Back to competition details
-    Then the competition admin creates Hesta competition             ${BUSINESS_TYPE_ID}  ${hestaCompetitionName1}  ${compType_HESTA}  ${compType_HESTA}  STATE_AID  HECP  PROJECT_SETUP  Yes  1  false  single-or-collaborative
-    [Teardown]  Get competition id and set open date to yesterday    ${hestaCompetitionName1}
 
 the lead applicant can view answer yet to be provodied when work programme question is incomplete in readonly view
     [Documentation]  IFS-11686
@@ -116,23 +110,6 @@ Lead applicant should get a confirmation email after application submission
     [Documentation]    IFS-10694
     Given Requesting IDs of this application    ${hestaApplicationName}
     Then the user reads his email               ${leadApplicantEmail}  ${ApplicationID}: ${hestaApplicationSubmissionEmailSubject}  ${hestaApplicationSubmissionEmail}
-
-the lead applicant can submit the application
-    [Documentation]  IFS-11715
-    Given the user logs out if they are logged in
-    When the user applys to the competition          tim   timmy   ${leadApplicantEmail}   ${hestaApplicationName1}
-    And the user successfully completes application
-
-the internal team mark the application as successful / unsuccessful
-    [Documentation]  IFS-11715
-    Given Log in as a different user                                                &{Comp_admin1_credentials}
-    And The user clicks the button/link                                             link = ${hestaCompetitionName1}
-    When the internal team mark the application as successful / unsuccessful        ${hestaApplicationName1}   FUNDED
-    And Log in as a different user                                                  email=${leadApplicantEmail}   password=${short_password}
-    And the user clicks the button/link                                             link = ${hestaApplicationName1}
-    And the user clicks the button/link                                             link = view application
-    Then the user should see the element                                            jQuery = h2:contains("Congratulations, your application has been successful")
-    And the user should see the element                                             jQuery = p:contains("You have been successful in this round of funding.")
 
 The Application Summary page must not include the Reopen Application link when the internal team mark the application as successful / unsuccessful
     [Documentation]  IFS-10697  IFS-11406  IFS-11486
@@ -342,6 +319,23 @@ user selects where is organisation based
 the user applys to the competition
     [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
     the user select the competition and starts application          ${hestaCompetitionName}
+    the user clicks the button/link                                 link = Continue and create an account
+    the user selects the radio button                               organisationTypeId    radio-1
+    the user clicks the button/link                                 jQuery = .govuk-button:contains("Save and continue")
+    the user selects his organisation in Companies House            ASOS  ASOS PLC
+    the user should be redirected to the correct page               ${SERVER}/registration/register
+    the user enters the details and clicks the create account       ${firstName}  ${lastName}  ${email}  ${short_password}
+    the user reads his email and clicks the link                    ${email}  Please verify your email address  Once verified you can sign into your account.
+    the user should be redirected to the correct page               ${REGISTRATION_VERIFIED}
+    the user clicks the button/link                                 link = Sign in
+    Logging in and Error Checking                                   ${email}  ${short_password}
+    the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user completes the application details section              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
+    the applicant completes Application Team                        COMPLETE  ${email}
+
+the user applys to the HESTA competition
+    [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
+    the user select the competition and starts application          ${hestaCompetitionName1}
     the user clicks the button/link                                 link = Continue and create an account
     the user selects the radio button                               organisationTypeId    radio-1
     the user clicks the button/link                                 jQuery = .govuk-button:contains("Save and continue")
