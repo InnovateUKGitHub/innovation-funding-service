@@ -82,7 +82,7 @@ public class ProjectProjectEligibilityFormPopulatorTest {
         assertEquals("collaborative", form.getSingleOrCollaborative());
         assertFalse(form.isKtpCompetition());
         assertEquals(asList(2L), form.getLeadApplicantTypes());
-        assertEquals(50, form.getResearchParticipationPercentage());
+        assertEquals(Integer.valueOf(50), form.getResearchParticipationPercentage());
     }
 
     @Test
@@ -120,7 +120,7 @@ public class ProjectProjectEligibilityFormPopulatorTest {
         assertEquals("collaborative", form.getSingleOrCollaborative());
         assertTrue(form.isKtpCompetition());
         assertEquals(0, form.getLeadApplicantTypes().size());
-        assertEquals(50, form.getResearchParticipationPercentage());
+        assertEquals(Integer.valueOf(50), form.getResearchParticipationPercentage());
     }
 
     @Test
@@ -150,6 +150,6 @@ public class ProjectProjectEligibilityFormPopulatorTest {
 
         assertTrue(result instanceof ProjectEligibilityForm);
         ProjectEligibilityForm form = (ProjectEligibilityForm) result;
-        assertEquals(30, form.getResearchParticipationPercentage());
+        assertEquals(Integer.valueOf(30), form.getResearchParticipationPercentage());
     }
 }

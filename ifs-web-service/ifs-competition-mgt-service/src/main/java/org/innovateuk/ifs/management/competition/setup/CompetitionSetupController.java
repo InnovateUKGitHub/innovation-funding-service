@@ -454,7 +454,7 @@ public class CompetitionSetupController {
     }
     private void validateResearchParticipationPercentage(ProjectEligibilityForm competitionSetupForm, BindingResult bindingResult) {
         Integer researchParticipationPercentage = competitionSetupForm.getResearchParticipationPercentage();
-        if (researchParticipationPercentage > 100 || researchParticipationPercentage < 0) {
+        if (researchParticipationPercentage == null || researchParticipationPercentage > 100 || researchParticipationPercentage < 0) {
             bindingResult.rejectValue("researchParticipationPercentage", "validation.projecteligibility.researchParticipationPercentage.required");
         }
     }

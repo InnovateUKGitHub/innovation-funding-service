@@ -27,7 +27,7 @@ public class ProjectEligibilityForm extends CompetitionSetupForm {
 
     private List<Long> leadApplicantTypes;
 
-    private int researchParticipationPercentage = 0;
+    private Integer researchParticipationPercentage;
 
     @NotBlank(message = "{validation.eligibilityform.resubmission.required}")
     private String resubmission;
@@ -74,11 +74,11 @@ public class ProjectEligibilityForm extends CompetitionSetupForm {
         this.leadApplicantTypes = leadApplicantTypes;
     }
 
-    public int getResearchParticipationPercentage() {
+    public Integer getResearchParticipationPercentage() {
         return researchParticipationPercentage;
     }
 
-    public void setResearchParticipationPercentage(int researchParticipationPercentage) {
+    public void setResearchParticipationPercentage(Integer researchParticipationPercentage) {
         this.researchParticipationPercentage = researchParticipationPercentage;
     }
 

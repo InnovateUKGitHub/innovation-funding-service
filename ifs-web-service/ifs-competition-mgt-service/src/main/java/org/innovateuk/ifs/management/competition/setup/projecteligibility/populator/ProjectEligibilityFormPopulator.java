@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 public class ProjectEligibilityFormPopulator implements CompetitionSetupFormPopulator {
 
-    private static final int RESEARCH_PARTICIPATION_DEFAULT_PERCENTAGE = 30;
+    private static final Integer RESEARCH_PARTICIPATION_DEFAULT_PERCENTAGE = 30;
     @Override
     public CompetitionSetupSection sectionToFill() {
         return CompetitionSetupSection.PROJECT_ELIGIBILITY;

@@ -44,7 +44,7 @@ public class ProjectEligibilitySectionSaverTest {
         competitionSetupForm.setMultipleStream("yes");
         competitionSetupForm.setStreamName("streamname");
         competitionSetupForm.setLeadApplicantTypes(asList(1L, 2L));
-        competitionSetupForm.setResearchParticipationPercentage(30);
+        competitionSetupForm.setResearchParticipationPercentage(Integer.valueOf(30));
         competitionSetupForm.setResubmission("yes");
 
         List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource().build(2);
@@ -86,7 +86,7 @@ public class ProjectEligibilitySectionSaverTest {
 
         service.saveSection(competition, competitionSetupForm, loggedInUser).getSuccess();
 
-        assertEquals(new Integer(0), competition.getMaxResearchRatio());
+        assertEquals(null, competition.getMaxResearchRatio());
 
         verify(competitionSetupRestService).update(competition);
     }
@@ -114,7 +114,7 @@ public class ProjectEligibilitySectionSaverTest {
     @Test
     public void saveSection_defaultsMaxResearchRatioToNoneForCompetitionsWithNoFinances() {
         ProjectEligibilityForm competitionSetupForm = new ProjectEligibilityForm();
-        competitionSetupForm.setResearchParticipationPercentage(100);
+        competitionSetupForm.setResearchParticipationPercentage(Integer.valueOf(30));
 
         List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource().build(2);
 
