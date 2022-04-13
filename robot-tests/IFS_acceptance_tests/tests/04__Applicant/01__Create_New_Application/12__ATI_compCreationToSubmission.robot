@@ -57,7 +57,7 @@ ${assessor2_email}                    alexis.colon@gmail.com
 Comp Admin creates an ATI competition
     [Documentation]  IFS-2396  IFS-8779  IFS-8847
     Given The user logs-in in new browser               &{Comp_admin1_credentials}
-    Then the competition admin creates competition      ${business_type_id}  ${ATIcompetitionTitle}  ATI  ${compType_ATI}  SUBSIDY_CONTROL  GRANT  PROJECT_SETUP  yes  1  true  collaborative  No
+    Then the competition admin creates competition      ${business_type_id}  ${ATIcompetitionTitle}  ATI  ${compType_ATI}  SUBSIDY_CONTROL  GRANT  PROJECT_SETUP  yes  30  true  collaborative  No
 
 Applicant applies to newly created ATI competition
     [Documentation]  IFS-2286
