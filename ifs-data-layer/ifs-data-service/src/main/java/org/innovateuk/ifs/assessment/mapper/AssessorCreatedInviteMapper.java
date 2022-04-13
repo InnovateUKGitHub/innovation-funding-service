@@ -76,6 +76,8 @@ public class AssessorCreatedInviteMapper {
             assessorCreatedInvite.setId(competitionInvite.getUser().getId());
             assessorCreatedInvite.setInnovationAreas(mapInnovationAreas(profile));
             assessorCreatedInvite.setCompliant(profile.isCompliant(competitionInvite.getUser()));
+            assessorCreatedInvite.setValidAgreement(profile.isAgreementValid());
+            assessorCreatedInvite.setValidDoi(Profile.isAffiliationsComplete(competitionInvite.getUser()));
         }
 
         return assessorCreatedInvite;

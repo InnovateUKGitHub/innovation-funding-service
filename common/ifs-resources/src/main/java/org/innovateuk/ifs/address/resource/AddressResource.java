@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.List;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -14,7 +15,9 @@ import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
 
-public class AddressResource {
+public class AddressResource implements Serializable {
+
+    private static final long serialVersionUID = 4820623474620690511L;
 
     @NotBlank(message = "{validation.standard.addressline1.required}")
     private String addressLine1;

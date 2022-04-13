@@ -35,9 +35,6 @@ public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget {
     private boolean spendProfileIncomplete;
     private boolean spendProfileAwaitingReview;
 
-    public MonitoringOfficerDashboardForm() {
-    }
-
     public String getKeywordSearch() {
         return keywordSearch;
     }

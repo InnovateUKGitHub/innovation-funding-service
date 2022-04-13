@@ -385,6 +385,11 @@ the assessed questions are marked complete(EOI type)
      \    the user marks each question as complete    ${ELEMENT}
     the user should see the element      jQuery = button:contains("Add question")
 
+the assessed questions are marked complete(HECP type)
+    :FOR   ${ELEMENT}   IN    @{Hecp_questions}
+     \    the user marks each question as complete    ${ELEMENT}
+    the user should see the element      jQuery = button:contains("Add question")
+
 the user marks the Application details section as complete
     [Arguments]  ${compType}
     the user marks each question as complete                Application details

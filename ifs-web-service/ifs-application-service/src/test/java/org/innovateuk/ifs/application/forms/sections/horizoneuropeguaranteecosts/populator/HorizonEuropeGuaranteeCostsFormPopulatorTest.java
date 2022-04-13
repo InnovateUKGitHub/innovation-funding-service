@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.horizoneuropeguaranteecosts.populator;
 
-import org.innovateuk.ifs.application.forms.sections.hecpcosts.form.HorizonEuropeGuaranteeCostsForm;
+import org.innovateuk.ifs.application.forms.hecpcosts.form.HorizonEuropeGuaranteeCostsForm;
 import org.innovateuk.ifs.application.forms.sections.hecpcosts.populator.HorizonEuropeGuaranteeCostsFormPopulator;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;

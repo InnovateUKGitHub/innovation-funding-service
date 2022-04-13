@@ -62,6 +62,8 @@ public class CompetitionInviteAssessorsInviteModelPopulator extends CompetitionI
                 assessorCreatedInviteResource.getName(),
                 assessorCreatedInviteResource.getInnovationAreas(),
                 assessorCreatedInviteResource.isCompliant(),
+                assessorCreatedInviteResource.isValidAgreement(),
+                assessorCreatedInviteResource.isValidDoi(),
                 assessorCreatedInviteResource.getEmail(),
                 assessorCreatedInviteResource.getInviteId()
         );

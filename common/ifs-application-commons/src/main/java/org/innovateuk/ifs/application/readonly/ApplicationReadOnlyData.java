@@ -12,6 +12,7 @@ import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.horizon.resource.ApplicationHorizonWorkProgrammeResource;
 import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -23,6 +24,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
@@ -45,6 +47,7 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
     private final Map<Long, ApplicationAssessmentResource> assessmentToApplicationAssessment;
     /* only included if ApplicationReadOnlySettings.includeAllSupporterFeedback is set. */
     private final Map<Long, SupporterAssignmentResource> feedbackToApplicationSupport;
+    private final Optional<List<ApplicationHorizonWorkProgrammeResource>> applicationHorizonWorkProgrammeResource;
 
     public ApplicationReadOnlyData(ApplicationResource application, CompetitionResource competition,
                                    UserResource user, List<ProcessRoleResource> processRoles,
@@ -52,7 +55,8 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
                                    List<FormInputResponseResource> formInputResponses,
                                    List<QuestionStatusResource> questionStatuses,
                                    List<ApplicationAssessmentResource> assessments,
-                                   List<SupporterAssignmentResource> assignments) {
+                                   List<SupporterAssignmentResource> assignments,
+                                   Optional<List<ApplicationHorizonWorkProgrammeResource>> workProgrammeResources) {
         this.application = application;
         this.competition = competition;
         this.user = user;
@@ -70,12 +74,13 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
                 .filter(input -> ASSESSMENT.equals(input.getScope()))
                 .collect(toMap(FormInputResource::getId, Function.identity()));
         this.formInputIdToFormInputResponses = formInputResponses.stream()
-                .collect(Collectors.groupingBy(FormInputResponseResource::getFormInput));
+                .collect(groupingBy(FormInputResponseResource::getFormInput));
         this.questionToQuestionStatus = Multimaps.index(questionStatuses, QuestionStatusResource::getQuestion);
         this.assessmentToApplicationAssessment = assessments.stream()
                 .collect(toMap(ApplicationAssessmentResource::getAssessmentId, Function.identity()));
         this.feedbackToApplicationSupport = assignments.stream()
                 .collect(toMap(SupporterAssignmentResource::getAssignmentId, Function.identity()));
+        this.applicationHorizonWorkProgrammeResource = workProgrammeResources;
     }
 
     public BigDecimal getApplicationScore() {
@@ -149,6 +154,10 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
         return feedbackToApplicationSupport;
     }
 
+    public Optional<List<ApplicationHorizonWorkProgrammeResource>> getApplicationHorizonWorkProgrammeResource() {
+        return applicationHorizonWorkProgrammeResource;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -169,6 +178,7 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
                 .append(questionToQuestionStatus, that.questionToQuestionStatus)
                 .append(assessmentToApplicationAssessment, that.assessmentToApplicationAssessment)
                 .append(feedbackToApplicationSupport, that.feedbackToApplicationSupport)
+                .append(applicationHorizonWorkProgrammeResource, that.applicationHorizonWorkProgrammeResource)
                 .isEquals();
     }
 
@@ -186,6 +196,7 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
                 .append(questionToQuestionStatus)
                 .append(assessmentToApplicationAssessment)
                 .append(feedbackToApplicationSupport)
+                .append(applicationHorizonWorkProgrammeResource)
                 .toHashCode();
     }
 }
