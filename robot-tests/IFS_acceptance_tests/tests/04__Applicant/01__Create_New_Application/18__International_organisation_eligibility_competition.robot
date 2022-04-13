@@ -103,7 +103,7 @@ Eligibility is changed to project eligibility in pagination
 Comp admin can not complete the competition setup without organisational eligibility category completetion
      [Documentation]  IFS-7195  IFS-8847
      Given the user clicks the button/link          link = Return to setup overview
-     When the user completes all categories except organisational eligibility category     ${business_type_id}  KTP  ${compType_Programme}  PROJECT_SETUP  yes  1  true  collaborative  SUBSIDY_CONTROL  No
+     When the user completes all categories except organisational eligibility category     ${business_type_id}  KTP  ${compType_Programme}  PROJECT_SETUP  yes  30  true  collaborative  SUBSIDY_CONTROL  No
      Then The user should see the element                                                  css = #compCTA[disabled]
 
 Comp admin can access the Organisational eligibility category and check for all required fields
@@ -696,7 +696,7 @@ comp admin sets lead organisation can not lead the international competition
      the user clicks the button/link                                                   jQuery = .govuk-button:contains("Create competition")
      the user fills in the CS Initial details                                          ${ukLeadInternationalCompetition}  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  GRANT
      the user selects the organisational eligibility                                   true    false
-     the user completes all categories except organisational eligibility category      ${business_type_id}  KTP  ${compType_Programme}  PROJECT_SETUP  yes  1  true  collaborative  SUBSIDY_CONTROL  No
+     the user completes all categories except organisational eligibility category      ${business_type_id}  KTP  ${compType_Programme}  PROJECT_SETUP  yes  30  true  collaborative  SUBSIDY_CONTROL  No
      the user clicks the button/link                                                   jQuery = a:contains("Complete")
      the user clicks the button/link                                                   jQuery = button:contains('Done')
 

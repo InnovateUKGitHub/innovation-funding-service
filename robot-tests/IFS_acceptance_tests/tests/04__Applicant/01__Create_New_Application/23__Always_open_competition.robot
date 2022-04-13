@@ -106,7 +106,7 @@ the user creates a new open ended competiton
     [Documentation]  IFS-8848
     Given the user clicks the button/link                       link = Back to public content
     When the user clicks the button/link                        link = Competition details
-    Then the competition admin creates open ended competition   ${business_type_id}  ${openEndedCompName}  Open ended  ${compType_Programme}  STATE_AID  GRANT  PROJECT_SETUP  yes  1  true  collaborative
+    Then the competition admin creates open ended competition   ${business_type_id}  ${openEndedCompName}  Open ended  ${compType_Programme}  STATE_AID  GRANT  PROJECT_SETUP  yes  30  true  collaborative
 
 the user check for valid content on front end for open ended competitions
     [Documentation]  IFS-8848

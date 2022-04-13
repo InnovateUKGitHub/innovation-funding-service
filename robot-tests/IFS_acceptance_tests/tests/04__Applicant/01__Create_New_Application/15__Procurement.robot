@@ -125,166 +125,166 @@ Applicant submits the application
     Given The user clicks the button/link                             jQuery = a:contains("Application overview")
     When the user accept the procurement terms and conditions
     Then the applicant submits the procurement application
-    [Teardown]  update milestone to yesterday                         ${competitionId}  SUBMISSION_DATE
-
-Invite a registered assessor
-    [Documentation]  IFS-2376
-    Given log in as a different user             &{Comp_admin1_credentials}
-    When the user clicks the button/link         link = ${comp_name}
-    And the user clicks the button/link          link = Invite assessors to assess the competition
-    And the user enters text to a text field     id = assessorNameFilter   Paul Plum
-    And the user clicks the button/link          jQuery = .govuk-button:contains("Filter")
-    Then the user clicks the button/link         jQuery = tr:contains("Paul Plum") label[for^="assessor-row"]
-    And the user clicks the button/link          jQuery = .govuk-button:contains("Add selected to invite list")
-    And the user clicks the button/link          link = Invite
-    And the user clicks the button/link          link = Review and send invites
-    And the user enters text to a text field     id = message    This is custom text
-    And the user clicks the button/link          jQuery = .govuk-button:contains("Send invitation")
-
-Allocated assessor accepts invite to assess the competition
-    [Documentation]  IFS-2376
-    Given Log in as a different user                           &{assessor_credentials}
-    When The user clicks the button/link                       Link = ${comp_name}
-    And the user selects the radio button                      acceptInvitation  true
-    And The user clicks the button/link                        jQuery = button:contains("Confirm")
-    Then the user should be redirected to the correct page     ${server}/assessment/assessor/dashboard
-
-Comp Admin allocates assessor to application
-    [Documentation]  IFS-2376
-    Given log in as a different user                 &{Comp_admin1_credentials}
-    When The user clicks the button/link             link = Dashboard
-    And The user clicks the button/link              link = ${comp_name}
-    And The user clicks the button/link              jQuery = a:contains("Manage assessments")
-    And the user clicks the button/link              jQuery = a:contains("Allocate applications")
-    Then the user clicks the button/link             jQuery = tr:contains("${appl_name}") a:contains("Assign")
-    And the user adds an assessor to application     jQuery = tr:contains("Paul Plum") :checkbox
-    When the user navigates to the page              ${server}/management/competition/${competitionId}
-    Then the user clicks the button/link             jQuery = button:contains("Notify assessors")
-
-Allocated assessor assess the application
-    [Documentation]  IFS-2376  IFS-7311  IFS-7703  IFS-9904
-    Given Log in as a different user                                                   &{assessor_credentials}
-    And the user accepts the application to assess
-    And the user should be redirected to the correct page                              ${server}/assessment/assessor/dashboard/competition/${competitionId}
-    When the user clicks the button/link                                               link = ${appl_name}
-    Then the user can see multiple appendices uploaded to the application question
-    And the assessor views summary of payment milestones
-    And the assessor submits the assessment
-
-User migrates application to avoid duplication in IFS PA
-    [Documentation]  IFS-9359
-    When the user checks null for previous application id
-    Then the user migrates application
-
-Comp admin closes the assessment and releases feedback
-    [Documentation]  IFS-2376  IFS-9359
-    Given log in as a different user                     &{Comp_admin1_credentials}
-    When making the application a successful project     ${competitionId}    ${appl_name}
-    And moving competition to Project Setup              ${competitionId}
-    Then the user should not see an error in the page
-    [Teardown]  the user checks migration is successful
-
-Procurement comp moves to project setup tab
-    [Documentation]  IFS-2376  IFS-6368
-    Given the user clicks the button/link       link = Dashboard
-    When the user clicks the button/link        jQuery = a:contains("Project setup")
-    Then the user clicks the button/link        link = ${comp_name}
-    And the user should see the element         jQuery = h1:contains("${comp_name}")
-    And the user should not see the element     jQuery = th:contains("Documents")
-    And the user should not see the element     jQuery = #table-project-status th:contains("${comp_name}") ~ td:contains("Pending")
-
-Applicant completes project setup details
-    [Documentation]  IFS-6368
-    [Setup]  Requesting Project ID of this Project
-    Given the user completes the project details
-    And the user completes the project team details
-    And the user enters bank details
-
-Project finance completes finance checks then reverts them
-    [Documentation]  IFS-8947
-    [Setup]  log in as a different user                               &{internal_finance_credentials}
-    Given the user navigates to the page                              ${server}/project-setup-management/project/${ProjectID}/finance-check
-    When confirm viability and eligibility
-    Then confirm milestone                                            0
-    And the user reverts the milestones eligibility and viability
-
-Project finance completes all project setup steps
-    [Documentation]  IFS-6368  IFS-8947  IFS-8945
-    Given internal user assign MO to loan project
-    And internal user approve bank details
-    And internal user approves the finance checks
-
-Internal user generate the contract
-    [Documentation]  IFS-6368  IFS-8945
-    Given the internal user approve SP and issue contract
-    When Lead applicant upload the contract
-    Then the internal user approve the contract               ${ProjectID}
-
-Monitoring officer views summary of payment milestones
-    [Documentation]  IFS-9904
-    Given log in as a different user                            &{monitoring_officer_one_credentials}
-    And the user clicks the project setup tile if displayed
-    And the user selects the checkbox                           previousProject
-    And the user clicks the button/link                         id = update-documents-results-button
-    And the user clicks the button/link                         link = ${appl_name}
-    When the user clicks the button/link                        link = view application feedback
-    Then the user should see the element                        jQuery = h3:contains("Payment milestones")
-    And the user should see the element                         jQuery = th:contains("Total payment requested")+th:contains("100%")+ th:contains("£72,839")
-
-Internal user makes changes to the finance payment milestones
-    [Documentation]   IFS-8944
-    Given Requesting SBRI Project ID of this Project
-    And log in as a different user                                 &{ifs_admin_user_credentials}
-    When the user navigates to the page                            ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/procurement-milestones
-    And the user makes changes to the payment milestones table
-    Then the user should see the element                           jQuery = td:contains("12,523") ~ td:contains("- 100")
-    And the user should see the element                            jQuery = td:contains("12,121") ~ td:contains("+ 100")
-    And the user should see the element                            jQuery = th:contains("Total payment requested") ~ td:contains("£265,084")
-
-Internal user makes changes to project finances
-    [Documentation]   IFS-8944
-    Given the user navigates to the page                    ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/eligibility
-    When the user makes changes to the project finances
-    And the user navigates to the page                      ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/eligibility/changes
-    Then the user should see the element                    jQuery = td:contains("90,000") + td:contains("80,000") + td:contains("- 10,000")
-    And the user should see the element                     jQuery = td:contains("1,100") + td:contains("11,100") + td:contains("+ 10,000")
-    And the user should see the element                     jQuery = td:contains("£243,484")
-
-Internal user views summary of the payment milestones
-    [Documentation]   IFS-9904
-    [Setup]  get application id by name and set as suite variable     ${appl_name}
-    When the user navigates to the page                               ${server}/management/competition/${competitionId}/application/${application_id}
-    Then the user should see the element                              jQuery = h3:contains("Payment milestones")
-    And the user should see the element                               jQuery = th:contains("Total payment requested")+th:contains("100%")+ th:contains("£72,839")
-    And the user should see the element                               jQuery = div:contains("Crystalrover") a:contains("View finances")
-
-Internal user removes payment milestones
-    [Documentation]   IFS-8944
-    Given the user navigates to the page          ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/procurement-milestones
-    And the user clicks the button/link           link = Edit payment milestones
-    When the user removes a payment milestone
-    Then the user should not see the element      jQuery = button:contains("Milestone for month 21")
-    And the user should see the element           jQuery = h3:contains("Total payment requested") ~ h3:contains("67.84%") ~ h3:contains("£165,171")
-
-Internal user adds payment milestones
-    [Documentation]   IFS-8944
-    Given the user navigates to the page              ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/procurement-milestones
-    And the user clicks the button/link               link = Edit payment milestones
-    And the user clicks the button/link               jQuery = button:contains("Open all")
-    And the user clicks the button/link               jQuery = button:contains("Close all")
-    And the user clicks the button/link               jQuery = button:contains("Add another project milestone")
-    And the user clicks the button/link               jQuery = div[id='accordion-finances'] div:nth-of-type(22)
-    When the user creates a new payment milestone
-    And the user clicks the button/link               jQuery = button:contains("Save and return to payment milestone check")
-    And the user navigates to the page                ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/procurement-milestones
-    Then the user should see the element              jQuery = h3:contains("100%") ~ h3:contains("£243,484")
-
-Applicant can view changes made to project finances
-    [Documentation]  IFS-8944
-    Given Log in as a different user                        &{becky_mason_credentials}
-    When the user navigates to the page                     ${server}/project-setup/project/${SBRI_projectID}/finance-check
-    And the user clicks the button/link                     link = view any changes to finances
-    Then the user should see all project finance changes
+    #[Teardown]  update milestone to yesterday                         ${competitionId}  SUBMISSION_DATE
+#
+#Invite a registered assessor
+#    [Documentation]  IFS-2376
+#    Given log in as a different user             &{Comp_admin1_credentials}
+#    When the user clicks the button/link         link = ${comp_name}
+#    And the user clicks the button/link          link = Invite assessors to assess the competition
+#    And the user enters text to a text field     id = assessorNameFilter   Paul Plum
+#    And the user clicks the button/link          jQuery = .govuk-button:contains("Filter")
+#    Then the user clicks the button/link         jQuery = tr:contains("Paul Plum") label[for^="assessor-row"]
+#    And the user clicks the button/link          jQuery = .govuk-button:contains("Add selected to invite list")
+#    And the user clicks the button/link          link = Invite
+#    And the user clicks the button/link          link = Review and send invites
+#    And the user enters text to a text field     id = message    This is custom text
+#    And the user clicks the button/link          jQuery = .govuk-button:contains("Send invitation")
+#
+#Allocated assessor accepts invite to assess the competition
+#    [Documentation]  IFS-2376
+#    Given Log in as a different user                           &{assessor_credentials}
+#    When The user clicks the button/link                       Link = ${comp_name}
+#    And the user selects the radio button                      acceptInvitation  true
+#    And The user clicks the button/link                        jQuery = button:contains("Confirm")
+#    Then the user should be redirected to the correct page     ${server}/assessment/assessor/dashboard
+#
+#Comp Admin allocates assessor to application
+#    [Documentation]  IFS-2376
+#    Given log in as a different user                 &{Comp_admin1_credentials}
+#    When The user clicks the button/link             link = Dashboard
+#    And The user clicks the button/link              link = ${comp_name}
+#    And The user clicks the button/link              jQuery = a:contains("Manage assessments")
+#    And the user clicks the button/link              jQuery = a:contains("Allocate applications")
+#    Then the user clicks the button/link             jQuery = tr:contains("${appl_name}") a:contains("Assign")
+#    And the user adds an assessor to application     jQuery = tr:contains("Paul Plum") :checkbox
+#    When the user navigates to the page              ${server}/management/competition/${competitionId}
+#    Then the user clicks the button/link             jQuery = button:contains("Notify assessors")
+#
+#Allocated assessor assess the application
+#    [Documentation]  IFS-2376  IFS-7311  IFS-7703  IFS-9904
+#    Given Log in as a different user                                                   &{assessor_credentials}
+#    And the user accepts the application to assess
+#    And the user should be redirected to the correct page                              ${server}/assessment/assessor/dashboard/competition/${competitionId}
+#    When the user clicks the button/link                                               link = ${appl_name}
+#    Then the user can see multiple appendices uploaded to the application question
+#    And the assessor views summary of payment milestones
+#    And the assessor submits the assessment
+#
+#User migrates application to avoid duplication in IFS PA
+#    [Documentation]  IFS-9359
+#    When the user checks null for previous application id
+#    Then the user migrates application
+#
+#Comp admin closes the assessment and releases feedback
+#    [Documentation]  IFS-2376  IFS-9359
+#    Given log in as a different user                     &{Comp_admin1_credentials}
+#    When making the application a successful project     ${competitionId}    ${appl_name}
+#    And moving competition to Project Setup              ${competitionId}
+#    Then the user should not see an error in the page
+#    [Teardown]  the user checks migration is successful
+#
+#Procurement comp moves to project setup tab
+#    [Documentation]  IFS-2376  IFS-6368
+#    Given the user clicks the button/link       link = Dashboard
+#    When the user clicks the button/link        jQuery = a:contains("Project setup")
+#    Then the user clicks the button/link        link = ${comp_name}
+#    And the user should see the element         jQuery = h1:contains("${comp_name}")
+#    And the user should not see the element     jQuery = th:contains("Documents")
+#    And the user should not see the element     jQuery = #table-project-status th:contains("${comp_name}") ~ td:contains("Pending")
+#
+#Applicant completes project setup details
+#    [Documentation]  IFS-6368
+#    [Setup]  Requesting Project ID of this Project
+#    Given the user completes the project details
+#    And the user completes the project team details
+#    And the user enters bank details
+#
+#Project finance completes finance checks then reverts them
+#    [Documentation]  IFS-8947
+#    [Setup]  log in as a different user                               &{internal_finance_credentials}
+#    Given the user navigates to the page                              ${server}/project-setup-management/project/${ProjectID}/finance-check
+#    When confirm viability and eligibility
+#    Then confirm milestone                                            0
+#    And the user reverts the milestones eligibility and viability
+#
+#Project finance completes all project setup steps
+#    [Documentation]  IFS-6368  IFS-8947  IFS-8945
+#    Given internal user assign MO to loan project
+#    And internal user approve bank details
+#    And internal user approves the finance checks
+#
+#Internal user generate the contract
+#    [Documentation]  IFS-6368  IFS-8945
+#    Given the internal user approve SP and issue contract
+#    When Lead applicant upload the contract
+#    Then the internal user approve the contract               ${ProjectID}
+#
+#Monitoring officer views summary of payment milestones
+#    [Documentation]  IFS-9904
+#    Given log in as a different user                            &{monitoring_officer_one_credentials}
+#    And the user clicks the project setup tile if displayed
+#    And the user selects the checkbox                           previousProject
+#    And the user clicks the button/link                         id = update-documents-results-button
+#    And the user clicks the button/link                         link = ${appl_name}
+#    When the user clicks the button/link                        link = view application feedback
+#    Then the user should see the element                        jQuery = h3:contains("Payment milestones")
+#    And the user should see the element                         jQuery = th:contains("Total payment requested")+th:contains("100%")+ th:contains("£72,839")
+#
+#Internal user makes changes to the finance payment milestones
+#    [Documentation]   IFS-8944
+#    Given Requesting SBRI Project ID of this Project
+#    And log in as a different user                                 &{ifs_admin_user_credentials}
+#    When the user navigates to the page                            ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/procurement-milestones
+#    And the user makes changes to the payment milestones table
+#    Then the user should see the element                           jQuery = td:contains("12,523") ~ td:contains("- 100")
+#    And the user should see the element                            jQuery = td:contains("12,121") ~ td:contains("+ 100")
+#    And the user should see the element                            jQuery = th:contains("Total payment requested") ~ td:contains("£265,084")
+#
+#Internal user makes changes to project finances
+#    [Documentation]   IFS-8944
+#    Given the user navigates to the page                    ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/eligibility
+#    When the user makes changes to the project finances
+#    And the user navigates to the page                      ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/eligibility/changes
+#    Then the user should see the element                    jQuery = td:contains("90,000") + td:contains("80,000") + td:contains("- 10,000")
+#    And the user should see the element                     jQuery = td:contains("1,100") + td:contains("11,100") + td:contains("+ 10,000")
+#    And the user should see the element                     jQuery = td:contains("£243,484")
+#
+#Internal user views summary of the payment milestones
+#    [Documentation]   IFS-9904
+#    [Setup]  get application id by name and set as suite variable     ${appl_name}
+#    When the user navigates to the page                               ${server}/management/competition/${competitionId}/application/${application_id}
+#    Then the user should see the element                              jQuery = h3:contains("Payment milestones")
+#    And the user should see the element                               jQuery = th:contains("Total payment requested")+th:contains("100%")+ th:contains("£72,839")
+#    And the user should see the element                               jQuery = div:contains("Crystalrover") a:contains("View finances")
+#
+#Internal user removes payment milestones
+#    [Documentation]   IFS-8944
+#    Given the user navigates to the page          ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/procurement-milestones
+#    And the user clicks the button/link           link = Edit payment milestones
+#    When the user removes a payment milestone
+#    Then the user should not see the element      jQuery = button:contains("Milestone for month 21")
+#    And the user should see the element           jQuery = h3:contains("Total payment requested") ~ h3:contains("67.84%") ~ h3:contains("£165,171")
+#
+#Internal user adds payment milestones
+#    [Documentation]   IFS-8944
+#    Given the user navigates to the page              ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/procurement-milestones
+#    And the user clicks the button/link               link = Edit payment milestones
+#    And the user clicks the button/link               jQuery = button:contains("Open all")
+#    And the user clicks the button/link               jQuery = button:contains("Close all")
+#    And the user clicks the button/link               jQuery = button:contains("Add another project milestone")
+#    And the user clicks the button/link               jQuery = div[id='accordion-finances'] div:nth-of-type(22)
+#    When the user creates a new payment milestone
+#    And the user clicks the button/link               jQuery = button:contains("Save and return to payment milestone check")
+#    And the user navigates to the page                ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/procurement-milestones
+#    Then the user should see the element              jQuery = h3:contains("100%") ~ h3:contains("£243,484")
+#
+#Applicant can view changes made to project finances
+#    [Documentation]  IFS-8944
+#    Given Log in as a different user                        &{becky_mason_credentials}
+#    When the user navigates to the page                     ${server}/project-setup/project/${SBRI_projectID}/finance-check
+#    And the user clicks the button/link                     link = view any changes to finances
+#    Then the user should see all project finance changes
 
 *** Keywords ***
 Custom Suite Setup
