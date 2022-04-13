@@ -61,7 +61,7 @@ ${multiple_choice_answer}     option2
 Comp Admin creates procurement competition
     [Documentation]  IFS-6368   IFS-7310  IFS-7703  IFS-7700  IFS-8779  IFS-9124  IFS-8847
     Given Logging in and Error Checking                          &{Comp_admin1_credentials}
-    Then the competition admin creates competition               ${rto_type_id}  ${comp_name}  procurement  Programme  STATE_AID  PROCUREMENT  PROJECT_SETUP  no  50  false  single-or-collaborative  No
+    Then the competition admin creates competition               ${rto_type_id}  ${comp_name}  procurement  Programme  STATE_AID  PROCUREMENT  PROJECT_SETUP  no  100  false  single-or-collaborative  No
 
 Applicant applies to newly created procurement competition
     [Documentation]  IFS-2688

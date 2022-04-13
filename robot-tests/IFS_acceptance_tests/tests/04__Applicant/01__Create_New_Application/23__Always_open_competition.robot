@@ -106,7 +106,7 @@ the user creates a new open ended competiton
     [Documentation]  IFS-8848
     Given the user clicks the button/link                       link = Back to public content
     When the user clicks the button/link                        link = Competition details
-    Then the competition admin creates open ended competition   ${business_type_id}  ${openEndedCompName}  Open ended  ${compType_Programme}  STATE_AID  GRANT  PROJECT_SETUP  yes  30  true  collaborative
+    Then the competition admin creates open ended competition   ${business_type_id}  ${openEndedCompName}  Open ended  ${compType_Programme}  STATE_AID  GRANT  PROJECT_SETUP  yes  50  true  collaborative
 
 the user check for valid content on front end for open ended competitions
     [Documentation]  IFS-8848
@@ -412,7 +412,7 @@ the competition admin creates open ended competition
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingRule}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user selects the Terms and Conditions               ${compType}  ${fundingRule}
     the user fills in the CS Funding Information
-    the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
+    the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user fills in the CS funding eligibility            ${researchCategory}  ${compType}   ${fundingRule}
     the user selects the organisational eligibility to no   false
     the user marks the application as done                  ${projectGrowth}  ${compType}  ${competition}

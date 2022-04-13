@@ -244,7 +244,7 @@ Requesting project ID of this project
     Set suite variable   ${thirdPartyProjId}
 
 comp admin creates ofgem competition
-    the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}    50   false   single-or-collaborative
+    the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}    100   false   single-or-collaborative
     the user fills in the CS funding eligibility            false   Ofgem   STATE_AID
     the user selects the organisational eligibility to no   false
     the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}  No
