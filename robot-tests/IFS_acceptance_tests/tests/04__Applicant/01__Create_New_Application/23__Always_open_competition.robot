@@ -321,9 +321,9 @@ Lead Applicant can see the banner message about the application
     [Documentation]  IFS-11715
     Given log in as a different user         test.user1@gmail.com  ${short_password}
     When the user clicks the button/link     link = ${applicationName}
-#    And the user clicks the button/link      link = view application
-#    Then the user should see the element     jQuery = h2:contains("Congratulations, your application has been successful")
-#    And the user should see the element      jQuery = p:contains("You have been successful in this round of funding. Scroes and written feedback from each assessor can be found below.")
+    And the user clicks the button/link      link = view application
+    Then the user should see the element     jQuery = h2:contains("Congratulations, your application has been successful")
+    And the user should see the element      jQuery = p:contains("You have been successful in this round of funding. Scroes and written feedback from each assessor can be found below.")
 
 Supporter can review open ended ktp competition applications
     [Documentation]  IFS-9785
