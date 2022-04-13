@@ -319,7 +319,7 @@ Comp admin can see the open ended competition in project setup/previous dashboar
 
 Lead Applicant can see the banner message about the application
     [Documentation]  IFS-11715
-    Given log in as a different user         ${leadApplicantEmail}  ${short_password}
+    Given log in as a different user         test.user1@gmail.com     ${short_password}
     When the user clicks the button/link     link = ${applicationName}
     And the user clicks the button/link      link = view application
     Then the user should see the element     jQuery = h2:contains("Congratulations, your application has been successful")
