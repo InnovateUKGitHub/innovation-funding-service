@@ -4,7 +4,7 @@ jib.to.auth.username = project.hasProperty("nexus_username") ? project.property(
 jib.to.auth.password = project.hasProperty("nexus_password") ? project.property("nexus_password") : ""
 
 jib {
-    // git ifs-app-base-image/openjdk
-    from.image = 'docker-ifs.devops.innovateuk.org/releases/openjdk:1.8.6@sha256:f4736e97234e898a52b30da84c0a878a63ded0aa699ba9101556ab6c881a86da'
+    // git ifs-app-base-image/java11
+    from.image = 'docker-ifs.devops.innovateuk.org/releases/temurin-11:1.0@sha256:421986bc4839c31ba28bf40683bb08bef98e64d85d440809bc2435a22fc11f39'
     // effectively: container.entrypoint = ["/bin/bash", "bootstrap.sh", ";", "java", "-cp", "/app/resources:/app/classes:/app/libs/*", "org.innovateuk.ifs.Application"]
 }
