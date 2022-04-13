@@ -317,6 +317,14 @@ Comp admin can see the open ended competition in project setup/previous dashboar
     And The user clicks the button/link                        jQuery = button:contains("Close competition")
     Then the user should see the competition in project setup/previous dashboard and can not see on live dashboard
 
+Lead Applicant can see the banner message about the application
+    [Documentation]  IFS-11715
+    Given log in as a different user         test.user1@gmail.com     ${short_password}
+    When the user clicks the button/link     link = ${applicationName}
+    And the user clicks the button/link      link = view application
+    Then the user should see the element     jQuery = h2:contains("Congratulations, your application has been successful")
+    And the user should see the element      jQuery = p:contains("You have been successful in this round of funding. Scroes and written feedback from each assessor can be found below.")
+
 Supporter can review open ended ktp competition applications
     [Documentation]  IFS-9785
     Given log in as a different user          &{supporter_credentials}
@@ -336,14 +344,6 @@ Auditor can view j-ES form for the submitted application
     And The user clicks the button/link                  jQuery = a:contains("Your project costs")
     When the user clicks the button/link                 jQuery = a:contains(".pdf (opens in a new window)")
     Then the user should not see an error in the page
-
-Lead Applicant can see the banner message about the application
-    [Documentation]  IFS-11715
-    Given log in as a different user         test.user1@gmail.com     ${short_password}
-    When the user clicks the button/link     link = ${applicationName}
-    And the user clicks the button/link      link = view application
-    Then the user should see the element     jQuery = h2:contains("Congratulations, your application has been successful")
-    And the user should see the element      jQuery = p:contains("You have been successful in this round of funding. Scroes and written feedback from each assessor can be found below.")
 
 
 *** Keywords ***
