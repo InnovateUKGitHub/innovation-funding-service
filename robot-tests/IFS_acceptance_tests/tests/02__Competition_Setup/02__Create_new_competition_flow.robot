@@ -311,7 +311,7 @@ Project eligibility: Mark as Done then Edit again
     Given the user selects the radio button    singleOrCollaborative    single
     And the user selects the checkbox          lead-applicant-type-1  # business
     And the user selects the checkbox          lead-applicant-type-3  # RTOs
-    And the user selects the option from the drop-down menu    50%    name=researchParticipationAmountId
+    And the user enters text to a text field   id = researchParticipationPercentage   50
     And the user selects the radio button      resubmission    no
     When the user clicks the button/link       jQuery = button:contains("Done")
     Then the user should see the element       jQuery = dt:contains("Project type") ~ dd:contains("Single")

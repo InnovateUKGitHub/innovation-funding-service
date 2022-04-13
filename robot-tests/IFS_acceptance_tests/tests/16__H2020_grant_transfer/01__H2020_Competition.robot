@@ -387,7 +387,7 @@ The user fills in the Competition Setup Project eligibility section
     the user clicks the button/link                      link = Project eligibility
     the user clicks the button twice                     css = label[for="single-or-collaborative-single"]
     the user clicks the button twice                     css = label[for="lead-applicant-type-${organisationType}"]
-    the user selects the option from the drop-down menu  None     researchParticipation
+    the user enters text to a text field                 id = researchParticipationPercentage   0
     the user clicks the button twice                     css = label[for="comp-resubmissions-no"]
     the user clicks the button/link                      jQuery = button:contains("Done")
     the user clicks the button/link                      link = Back to competition details
