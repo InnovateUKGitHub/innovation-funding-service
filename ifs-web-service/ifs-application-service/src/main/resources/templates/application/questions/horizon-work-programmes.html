@@ -100,7 +100,7 @@
                         <td class="cell-align-top govuk-form-group">
                             <th:block th:each="programme : ${entry.value}">
                                 <th:block th:if="${programme.getWorkProgramme() == null}">
-                                    <p><strong>Enter the Horizon Europe Work programme Part you applied to, e.g. CL2.</strong></p>
+                                    <p><strong>Select the Horizon Europe Work programme Part you applied to, e.g. CL2.</strong></p>
                                     <p class="govuk-body govuk-!-margin-bottom-0" th:text="${programme.getDisplay()}"></p>
                                 </th:block>
                                 <th:block th:unless="${programme.getWorkProgramme() == null}">
