@@ -31,7 +31,7 @@ ${termaandconditionsHeading}    Innovate UK terms and conditions of an Advanced 
 Comp Admin creates an APC competition
     [Documentation]  IFS-2284, IFS-2286  IFS-8847
     Given The user logs-in in new browser            &{Comp_admin1_credentials}
-    Then the competition admin creates competition   ${business_type_id}  ${apcCompetitionTitle}  APC  ${compType_APC}  SUBSIDY_CONTROL  GRANT  PROJECT_SETUP  yes  30  true  single  No
+    Then the competition admin creates competition   ${business_type_id}  ${apcCompetitionTitle}  APC  ${compType_APC}  SUBSIDY_CONTROL  GRANT  PROJECT_SETUP  yes  50  true  single  No
 
 Applicant applies to newly created APC competition
     [Documentation]  IFS-2286  IFS-4221  IFS-4222

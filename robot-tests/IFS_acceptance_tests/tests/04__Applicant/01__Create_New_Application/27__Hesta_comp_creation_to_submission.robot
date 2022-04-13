@@ -68,7 +68,7 @@ Comp admin can view Hesta competition type in Initial details read only view
 Comp admin creates Hesta competition
     [Documentation]  IFS-8751  IFS-11486
     Given the user clicks the button/link                            link = Back to competition details
-    Then the competition admin creates Hesta competition             ${BUSINESS_TYPE_ID}  ${hestaCompetitionName}  ${compType_HESTA}  ${compType_HESTA}  STATE_AID  HECP  PROJECT_SETUP  no  1  false  single-or-collaborative
+    Then the competition admin creates Hesta competition             ${BUSINESS_TYPE_ID}  ${hestaCompetitionName}  ${compType_HESTA}  ${compType_HESTA}  STATE_AID  HECP  PROJECT_SETUP  no  50  false  single-or-collaborative
     [Teardown]  Get competition id and set open date to yesterday    ${hestaCompetitionName}
 
 the lead applicant can view answer yet to be provodied when work programme question is incomplete in readonly view
@@ -275,9 +275,9 @@ the competition admin creates Hesta competition
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingRule}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user selects the Terms and Conditions                   ${compType}  ${fundingRule}
     the user fills in the CS Funding Information
-    the user fills in the CS Project eligibility                ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
+    the user fills in the CS Project eligibility                ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user fills in the CS funding eligibility                true   ${compType_HESTA}  ${fundingRule}
-    And the user selects the organisational eligibility to no   false
+    the user selects the organisational eligibility to no       false
     the user completes milestones section
     the user marks the Hesta application question as done
     the user clicks the button/link                             link = Public content

@@ -184,7 +184,7 @@ requesting application ID of this application
     Set suite variable    ${ThirdPartyApplicationId}
 
 comp admin creates procurement competition
-    the user fills in the CS Project eligibility              ${BUSINESS_TYPE_ID}    2   false   single-or-collaborative
+    the user fills in the CS Project eligibility              ${BUSINESS_TYPE_ID}    100   false   single-or-collaborative
     the user fills in the CS funding eligibility              false   Programme   NOT_AID
     the user selects the organisational eligibility to no     false
     the user fills in the CS Milestones                       RELEASE_FEEDBACK   ${month}   ${nextyear}  No
