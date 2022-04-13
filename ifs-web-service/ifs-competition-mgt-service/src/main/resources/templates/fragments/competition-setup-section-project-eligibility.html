@@ -89,13 +89,12 @@
                 <span th:if="${#fields.hasErrors('researchParticipationPercentage')}" class="govuk-error-message"
                       th:each="err : ${#fields.errors('researchParticipationPercentage')}" th:text="${err}"/>
 
-                 <input class="govuk-input govuk-input--width-2"
+                <input class="govuk-input govuk-input--width-4 govuk-!-margin-right-1"
                        id="researchParticipationPercentage"
                        th:field="*{__researchParticipationPercentage__}"
                        th:errorclass="govuk-input--error"
                        type="number"
                        required="required"
-                       placeholder="0"
                        data-prevent-input-non-number
                        th:attr="data-required-errormessage=#{validation.projecteligibility.researchParticipationPercentage.required}" />
 
