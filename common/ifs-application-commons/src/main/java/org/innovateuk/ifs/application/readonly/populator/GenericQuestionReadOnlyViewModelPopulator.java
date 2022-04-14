@@ -13,6 +13,9 @@ import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.horizon.resource.ApplicationHorizonWorkProgrammeResource;
+import org.innovateuk.ifs.horizon.resource.HorizonWorkProgramme;
+import org.innovateuk.ifs.horizon.service.HorizonWorkProgrammeRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -46,6 +49,9 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
     @Autowired
     private QuestionStatusRestService questionStatusRestService;
 
+    @Autowired
+    private HorizonWorkProgrammeRestService horizonWorkProgrammeRestService;
+
     @Value("${ifs.loan.partb.enabled}")
     private boolean isLoanPartBEnabled;
 
@@ -66,13 +72,21 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
         boolean multipleStatuses = Boolean.TRUE.equals(question.hasMultipleStatuses());
         String answer;
         List<GenericQuestionAnswerRowReadOnlyViewModel> answers;
+        List<ApplicationHorizonWorkProgrammeResource> workProgrammeAnswers;
 
-        if (multipleStatuses) {
+        if (data.getCompetition().isHorizonEuropeGuarantee() && question.getQuestionSetupType().equals(HORIZON_WORK_PROGRAMME)) {
+            workProgrammeAnswers = horizonWorkProgrammeRestService.findSelected(data.getApplicationId()).getSuccess();
             answer = null;
-            answers = answerMapForMultipleStatuses(question, answerInput, formInputIdToFormInputResponses, data.getApplicationProcessRoles(), data.getApplication());
-        } else {
             answers = null;
-            answer = answerForNotMultipleStatuses(answerInput, formInputIdToFormInputResponses);
+        } else {
+            if (multipleStatuses) {
+                answer = null;
+                answers = answerMapForMultipleStatuses(question, answerInput, formInputIdToFormInputResponses, data.getApplicationProcessRoles(), data.getApplication());
+            } else {
+                answers = null;
+                answer = answerForNotMultipleStatuses(answerInput, formInputIdToFormInputResponses);
+            }
+            workProgrammeAnswers = null;
         }
 
         Optional<FormInputResponseResource> appendixResponse = appendix
@@ -86,6 +100,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
                 multipleStatuses,
                 answer,
                 answers,
+                workProgrammeAnswers,
                 settings.isIncludeStatuses(),
                 appendixResponse.map(resp -> files(resp, question, data, settings)).orElse(Collections.emptyList()),
                 templateDocumentResponse.flatMap(resp -> files(resp, question, data, settings).stream().findFirst()).orElse(null),
@@ -95,8 +110,17 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
                 inScope(data, settings),
                 totalScope(data, settings),
                 hasScope(data, question),
-                isLoanPartBEnabled
+                isLoanPartBEnabled,
+                isWorkProgrammeQuestionMarkedAsComplete(question, data.getApplicationId())
             );
+    }
+
+    private Boolean isWorkProgrammeQuestionMarkedAsComplete(QuestionResource question, Long applicationId) {
+        if (question.getQuestionSetupType().equals(HORIZON_WORK_PROGRAMME)) {
+            List<QuestionStatusResource> questionStatusesForOrg = questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(question.getId(), applicationId).getSuccess();
+            return questionStatusesForOrg != null && questionStatusesForOrg.stream().anyMatch(status -> Boolean.TRUE.equals(status.getMarkedAsComplete()));
+        }
+        return false;
     }
 
     private List<GenericQuestionAnswerRowReadOnlyViewModel> answerMapForMultipleStatuses(QuestionResource question,
@@ -106,7 +130,6 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
                                                                                          ApplicationResource application) {
 
         Optional<List<FormInputResponseResource>> textResponses = answerInput.map(input -> formInputIdToFormInputResponses.get(input.getId()));
-
         List<ProcessRoleResource> applicantProcessRoles = applicationProcessRoles.stream()
                 .filter(pr -> pr.getRole().isCollaborator() || pr.getRole().isLeadApplicant())
                 .collect(Collectors.toList());
@@ -161,7 +184,8 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
         return pr -> seen.putIfAbsent(pr.getOrganisationId(), Boolean.TRUE) == null;
     }
 
-    private String answerForNotMultipleStatuses(Optional<FormInputResource> answerInput, Map<Long, List<FormInputResponseResource>> formInputIdToFormInputResponses) {
+    private String answerForNotMultipleStatuses(Optional<FormInputResource> answerInput,
+                                                Map<Long, List<FormInputResponseResource>> formInputIdToFormInputResponses) {
         Optional<FormInputResponseResource> textResponse = answerInput.map(input -> firstOrNull(formInputIdToFormInputResponses.get(input.getId())));
         if (textResponse.isPresent()) {
             return answerInput.map(input -> getAnswer(input, textResponse.get())).orElse(null);

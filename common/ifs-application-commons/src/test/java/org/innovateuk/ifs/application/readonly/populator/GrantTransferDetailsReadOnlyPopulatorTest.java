@@ -15,6 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -60,7 +61,7 @@ public class GrantTransferDetailsReadOnlyPopulatorTest {
                 .build()));
 
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(),
-                emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
+                emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), Optional.empty());
 
         GrantTransferDetailsReadOnlyViewModel viewModel = populator.populate(question, data, defaultSettings());
 
