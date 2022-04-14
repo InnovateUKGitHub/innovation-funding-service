@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static java.time.ZonedDateTime.now;
@@ -208,8 +209,8 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
                 .newProjectDocumentResource()
                 .withCompetitionDocument(configuredProjectDocuments.get(0))
                 .withStatus(UPLOADED)
-                .withStatusModifiedBy(null)
-                .withStatusModifiedDate(null)
+                .withStatusModifiedBy((UserResource[]) null)
+                .withStatusModifiedDate((ZonedDateTime[]) null)
                 .build();
 
         ProjectResource project = ProjectResourceBuilder
