@@ -25,6 +25,7 @@ import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -47,7 +48,9 @@ import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
  * Competition defines database relations and a model to use client side and server side.
  */
 @Entity
-public class Competition extends AuditableEntity implements ProcessActivity, ApplicationConfiguration, ProjectConfiguration {
+public class Competition extends AuditableEntity implements ProcessActivity, ApplicationConfiguration, ProjectConfiguration, Serializable {
+
+    private static final long serialVersionUID = -3522634301910410207L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -839,6 +842,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         return FundingType.KTP == fundingType;
     }
 
+    public boolean isThirdPartyOfgem() {
+        return FundingType.THIRDPARTY == fundingType
+                && getCompetitionTypeEnum() == CompetitionTypeEnum.OFGEM;
+    }
 
     public void releaseFeedback(ZonedDateTime date) {
         setMilestoneDate(MilestoneType.FEEDBACK_RELEASED, date);

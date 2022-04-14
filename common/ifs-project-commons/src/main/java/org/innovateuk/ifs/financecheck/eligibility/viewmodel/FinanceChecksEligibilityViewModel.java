@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.financecheck.eligibility.viewmodel;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -50,6 +51,7 @@ public class FinanceChecksEligibilityViewModel {
     private final boolean canEditProjectCosts;
     private final boolean isReadOnly;
     private final boolean isThirdPartyOfgem;
+    private final boolean hecpCompetition;
 
     public FinanceChecksEligibilityViewModel(ProjectResource project,
                                              CompetitionResource competition,
@@ -73,7 +75,8 @@ public class FinanceChecksEligibilityViewModel {
                                              boolean showChangesLink,
                                              boolean canEditProjectCosts,
                                              boolean isReadOnly,
-                                             boolean isThirdPartyOfgem) {
+                                             boolean isThirdPartyOfgem,
+                                             boolean hecpCompetition) {
         this.projectName = project.getName();
         this.applicationId = project.getApplication();
         this.projectId = project.getId();
@@ -105,6 +108,7 @@ public class FinanceChecksEligibilityViewModel {
         this.canEditProjectCosts = canEditProjectCosts;
         this.isReadOnly = isReadOnly;
         this.isThirdPartyOfgem = isThirdPartyOfgem;
+        this.hecpCompetition = hecpCompetition;
     }
 
     public boolean isApproved() {
@@ -273,6 +277,16 @@ public class FinanceChecksEligibilityViewModel {
         return isThirdPartyOfgem;
     }
 
+    @JsonIgnore
+    public boolean isFundingLevelFirst() {
+        return !isThirdPartyOfgem;
+    }
+
+    @JsonIgnore
+    public boolean isFundingSoughtFirst() {
+        return !isFundingLevelFirst();
+    }
+
     private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {
         return finances.stream().allMatch(finance ->
             BigDecimal.valueOf(finance.getMaximumFundingLevel()).compareTo(finance.getGrantClaimPercentage()) >=0);
@@ -304,5 +318,9 @@ public class FinanceChecksEligibilityViewModel {
 
     public boolean isReadOnly() {
         return isReadOnly;
+    }
+
+    public boolean isHecpCompetition() {
+        return hecpCompetition;
     }
 }

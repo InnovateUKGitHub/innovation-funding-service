@@ -20,6 +20,7 @@ components:
   - ../../../patches/spring-profile-patch
 
 resources:
+  - ../../../config-mgmt/env/aws/custom
   - routes/mail-route.yml
   - routes/sba-route.yml
   - storage/gluster.yml

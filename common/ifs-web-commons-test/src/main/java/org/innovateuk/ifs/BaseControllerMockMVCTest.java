@@ -61,119 +61,119 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
             .withLastName("Watts")
             .withEmail("james.watts@email.co.uk")
             .withRoleGlobal(Role.APPLICANT)
-            .withUID("2aerg234-aegaeb-23aer").build();
+            .withUid("2aerg234-aegaeb-23aer").build();
 
     protected UserResource assessor = newUserResource().withId(3L)
             .withFirstName("Clark")
             .withLastName("Baker")
             .withEmail("clark.baker@email.co.uk")
             .withRoleGlobal(Role.ASSESSOR)
-            .withUID("2522-34y34ah-hrt4420").build();
+            .withUid("2522-34y34ah-hrt4420").build();
 
     protected UserResource stakeholder = newUserResource().withId(3L)
             .withFirstName("Troy")
             .withLastName("Perez")
             .withEmail("troy.perez@email.co.uk")
             .withRoleGlobal(Role.STAKEHOLDER)
-            .withUID("2522-34y34ah-hrt4420").build();
+            .withUid("2522-34y34ah-hrt4420").build();
 
     protected UserResource knowledgeTransferAdvisor = newUserResource().withId(3L)
             .withFirstName("Itsame")
             .withLastName("Mario")
             .withEmail("Itsame@gmail.com")
             .withRoleGlobal(Role.KNOWLEDGE_TRANSFER_ADVISER)
-            .withUID("2522-34y34ah-hrt4420").build();
+            .withUid("2522-34y34ah-hrt4420").build();
 
     protected UserResource assessorAndApplicant = newUserResource().withId(4L)
             .withFirstName("Fred")
             .withLastName("Smith")
             .withEmail("fred.smith@email.co.uk")
             .withRolesGlobal(asList(Role.APPLICANT, Role.ASSESSOR))
-            .withUID("1234-abcdefgh-abc1234").build();
+            .withUid("1234-abcdefgh-abc1234").build();
 
     protected UserResource innovationLeadAndApplicant = newUserResource().withId(4L)
             .withFirstName("Fred")
             .withLastName("Smith")
             .withEmail("fred.smith@email.co.uk")
             .withRolesGlobal(asList(Role.APPLICANT, Role.INNOVATION_LEAD))
-            .withUID("1234-abcdefgh-abc1234").build();
+            .withUid("1234-abcdefgh-abc1234").build();
 
     protected UserResource liveProjectsAndApplicant = newUserResource().withId(4L)
             .withFirstName("Fred")
             .withLastName("Smith")
             .withEmail("fred.smith@email.co.uk")
             .withRolesGlobal(asList(Role.APPLICANT, Role.LIVE_PROJECTS_USER))
-            .withUID("1234-abcdefgh-abc1234").build();
+            .withUid("1234-abcdefgh-abc1234").build();
 
     protected UserResource stakeholderAndAssessor = newUserResource().withId(4L)
             .withFirstName("Maria")
             .withLastName("Briggs")
             .withEmail("maria.briggs@email.co.uk")
             .withRolesGlobal(asList(Role.ASSESSOR, Role.STAKEHOLDER))
-            .withUID("1234-abcdefgh-abc1234").build();
+            .withUid("1234-abcdefgh-abc1234").build();
 
     protected UserResource stakeholderAndApplicant = newUserResource().withId(4L)
             .withFirstName("Ken")
             .withLastName("Brown")
             .withEmail("ken.brown@email.co.uk")
             .withRolesGlobal(asList(Role.APPLICANT, Role.STAKEHOLDER))
-            .withUID("1234-abcdefgh-abc1234").build();
+            .withUid("1234-abcdefgh-abc1234").build();
 
     protected UserResource assessorAndApplicantAndStakeholder = newUserResource().withId(4L)
             .withFirstName("Ollie")
             .withLastName("Jones")
             .withEmail("ollie.jones@email.co.uk")
             .withRolesGlobal(asList(Role.APPLICANT, Role.ASSESSOR, Role.STAKEHOLDER))
-            .withUID("1234-abcdefgh-abc1234").build();
+            .withUid("1234-abcdefgh-abc1234").build();
 
     protected UserResource collaborator = newUserResource().withId(2L)
             .withFirstName("John")
             .withLastName("Patricks")
             .withEmail("john.patricks@email.co.uk")
             .withRoleGlobal(Role.APPLICANT)
-            .withUID("6573ag-aeg32aeb-23aerr").build();
+            .withUid("6573ag-aeg32aeb-23aerr").build();
 
     protected UserResource support = newUserResource().withId(2L)
             .withFirstName("Support")
             .withLastName("Support")
             .withEmail("support@email.co.uk")
             .withRoleGlobal(Role.SUPPORT)
-            .withUID("6573ag-aeg32aeb-23aerr").build();
+            .withUid("6573ag-aeg32aeb-23aerr").build();
 
     protected UserResource admin = newUserResource().withId(2L)
             .withFirstName("Admin")
             .withLastName("Admin")
             .withEmail("admin@email.co.uk")
             .withRoleGlobal(Role.IFS_ADMINISTRATOR)
-            .withUID("6573ag-aeg32aeb-23aerr").build();
+            .withUid("6573ag-aeg32aeb-23aerr").build();
 
     protected UserResource kta = newUserResource().withId(2L)
             .withFirstName("kta")
             .withLastName("kta")
             .withEmail("kta@email.co.uk")
             .withRoleGlobal(Role.KNOWLEDGE_TRANSFER_ADVISER)
-            .withUID("6573ag-aeg32aeb-23aerr").build();
+            .withUid("6573ag-aeg32aeb-23aerr").build();
 
     protected UserResource supporter = newUserResource().withId(2L)
             .withFirstName("kta")
             .withLastName("kta")
             .withEmail("kta@email.co.uk")
             .withRoleGlobal(Role.SUPPORTER)
-            .withUID("6573ag-aeg32aeb-23aerr").build();
+            .withUid("6573ag-aeg32aeb-23aerr").build();
 
     protected UserResource applicantAndSupporter = newUserResource().withId(4L)
             .withFirstName("Kit")
             .withLastName("Fisto")
             .withEmail("kit.fisto@email.co.uk")
             .withRolesGlobal(asList(Role.APPLICANT, Role.SUPPORTER))
-            .withUID("1234-abcdefgh-abc1234").build();
+            .withUid("1234-abcdefgh-abc1234").build();
 
     protected UserResource monitoringOfficer = newUserResource().withId(18L)
             .withFirstName("Orville")
             .withLastName("Gibbs")
             .withEmail("orville.gibbs@email.co.uk")
             .withRoleGlobal(Role.MONITORING_OFFICER)
-            .withUID("1234-abcdefgh-lae9938").build();
+            .withUid("1234-abcdefgh-lae9938").build();
 
     protected UserResource loggedInUser = applicant;
 

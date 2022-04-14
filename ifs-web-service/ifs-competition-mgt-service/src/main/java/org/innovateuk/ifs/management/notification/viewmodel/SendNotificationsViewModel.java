@@ -22,6 +22,7 @@ public class SendNotificationsViewModel {
     private boolean includeAssessorsScore;
     private boolean alwaysOpen;
     private boolean hesta;
+    private boolean hasAssessmentStage;
 
     public SendNotificationsViewModel(List<FundingDecisionToSendApplicationResource> applications,
                                       long successfulRecipientsCount,
@@ -41,6 +42,7 @@ public class SendNotificationsViewModel {
         this.alwaysOpen = competition.isAlwaysOpen();
         this.includeAssessorsScore = includeAssessorsScore;
         this.hesta = hesta;
+        this.hasAssessmentStage = competition.isHasAssessmentStage();
     }
 
     public long getCompetitionId() {
@@ -80,7 +82,8 @@ public class SendNotificationsViewModel {
     }
 
     public String getPageTitle () {
-        return alwaysOpen ? "Send decision notification and release feedback" : "Send decision notification";
+        return alwaysOpen && hasAssessmentStage
+                ? "Send decision notification and release feedback" : "Send decision notification";
     }
 
     public Map<Long, FundingDecision> getFundingDecisions() {

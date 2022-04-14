@@ -18,6 +18,8 @@ import org.innovateuk.ifs.competition.resource.CovidType;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.horizon.resource.ApplicationHorizonWorkProgrammeResource;
+import org.innovateuk.ifs.horizon.service.HorizonWorkProgrammeRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
@@ -58,6 +60,8 @@ public class ReviewAndSubmitController {
     private QuestionStatusRestService questionStatusRestService;
     @Autowired
     private ProcessRoleRestService processRoleRestService;
+    @Autowired
+    private HorizonWorkProgrammeRestService horizonWorkProgrammeRestService;
 
     @Value("${ifs.early.metrics.url}")
     private String earlyMetricsUrl;
@@ -117,7 +121,11 @@ public class ReviewAndSubmitController {
                                    UserResource user) {
         ProcessRoleResource processRole = processRoleRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         List<ValidationMessages> messages = questionStatusRestService.markAsComplete(questionId, applicationId, processRole.getId()).getSuccess();
-        if (messages.isEmpty()) {
+        long competitionId = applicationRestService.getApplicationById(applicationId).getSuccess().getCompetition();
+        boolean hecpCompetition = competitionRestService.getCompetitionById(competitionId).getSuccess().isHorizonEuropeGuarantee();
+        boolean workProgrammeQuestionIncomplete = hecpCompetition && horizonWorkProgrammeRestService.findSelected(applicationId).getSuccess().isEmpty();
+
+        if (messages.isEmpty() && !workProgrammeQuestionIncomplete) {
             return redirectToReview(applicationId);
         } else {
             return handleMarkAsCompleteFailure(applicationId, questionId, processRole);
@@ -283,6 +291,8 @@ public class ReviewAndSubmitController {
             return "h2020-grant-transfer-track";
         } else if (competition.isLoan()) {
             return "loan-application-track";
+        } else if (competition.isThirdPartyOfgem()) {
+            return "third-party-ofgem-application-track";
         } else {
             return "application-track";
         }

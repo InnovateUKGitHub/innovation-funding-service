@@ -588,7 +588,6 @@ the user should see project setup compeletion status
     the user clicks the button/link      jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(8).status.ok a  # GOL
 
 the user should see live project on dashboard
-    #the user clicks the button/link        id = dashboard-link-APPLICANT
     the user clicks the application tile if displayed
     the user should not see the element    jQuery = .projects-in-setup ul li a:contains("${Elbow_Grease_Title}")
     the user should see the element        jQuery = .previous ul li a:contains("${Elbow_Grease_Title}")

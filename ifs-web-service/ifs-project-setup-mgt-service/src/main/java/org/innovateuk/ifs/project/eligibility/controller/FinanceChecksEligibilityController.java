@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
 import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
+import org.innovateuk.ifs.application.forms.hecpcosts.form.HorizonEuropeGuaranteeCostsForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.validator.YourProjectCostsFormValidator;
@@ -28,8 +29,10 @@ import org.innovateuk.ifs.project.eligibility.form.ResetEligibilityForm;
 import org.innovateuk.ifs.project.eligibility.populator.FinanceChecksEligibilityProjectCostsFormPopulator;
 import org.innovateuk.ifs.project.eligibility.populator.ProjectAcademicCostFormPopulator;
 import org.innovateuk.ifs.project.eligibility.populator.ProjectFinanceChangesViewModelPopulator;
+import org.innovateuk.ifs.project.eligibility.populator.FinanceChecksEligibilityHecpCostsFormPopulator;
 import org.innovateuk.ifs.project.eligibility.saver.FinanceChecksEligibilityProjectCostsSaver;
 import org.innovateuk.ifs.project.eligibility.saver.ProjectAcademicCostsSaver;
+import org.innovateuk.ifs.project.eligibility.saver.FinanceChecksEligibilityHecpCostsSaver;
 import org.innovateuk.ifs.project.eligibility.viewmodel.FinanceChecksProjectCostsViewModel;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
@@ -118,6 +121,12 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     @Autowired
     private GrantOfferLetterService grantOfferLetterService;
 
+    @Autowired
+    private FinanceChecksEligibilityHecpCostsFormPopulator projectHecpCostsFormPopulator;
+
+    @Autowired
+    private FinanceChecksEligibilityHecpCostsSaver projectHecpCostsSaver;
+
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
     @AsyncMethod
@@ -170,11 +179,16 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                         competition.get().isOverheadsAlwaysTwenty(),
                         competition.get().getFundingType() == FundingType.KTP,
                         ktpPhase2Enabled,
-                        canEditProjectCosts));
-                if (form == null) {
-                    future = async(() -> model.addAttribute("form", formPopulator.populateForm(projectId, organisation.get().getId())));
-                }
-                else {
+                        canEditProjectCosts,
+                        competition.get().isThirdPartyOfgem(),
+                        competition.get().isHorizonEuropeGuarantee()));
+
+                if(competition.get().isHorizonEuropeGuarantee()) {
+                    model.addAttribute("form", projectHecpCostsFormPopulator.populate(projectId, organisationId));
+                } else if (form == null) {
+                    future = async(() -> model.addAttribute("form", formPopulator.populateForm(projectId,
+                            organisation.get().getId(), competition.get().isThirdPartyOfgem())));
+                } else {
                     form.recalculateTotals();
                     form.orderAssociateCosts();
                 }
@@ -215,12 +229,15 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                     showChangesLink,
                     canEditProjectCosts,
                     user.hasAuthority(Authority.AUDITOR),
-                    competition.get().isThirdPartyOfgem()
+                    competition.get().isThirdPartyOfgem(),
+                    competition.get().isHorizonEuropeGuarantee()
             ));
 
             model.addAttribute("eligibilityForm", eligibilityForm);
             model.addAttribute("resetForm", resetEligibilityForm);
-            future.get();
+            if(!competition.get().isHorizonEuropeGuarantee()) {
+                future.get();
+            }
 
             return "project/financecheck/eligibility";
         } catch (InterruptedException | ExecutionException e) {
@@ -292,6 +309,38 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PostMapping(params = "save-hecp")
+    @AsyncMethod
+    public String projectFinanceFormSubmit(@PathVariable long projectId,
+                                           @PathVariable long organisationId,
+                                           @Valid @ModelAttribute("form") HorizonEuropeGuaranteeCostsForm form,
+                                           BindingResult bindingResult,
+                                           ValidationHandler validationHandler,
+                                           Model model,
+                                           UserResource user) {
+
+        Supplier<String> successView = () -> getRedirectUrlToEligibility(projectId, organisationId);
+        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, new ResetEligibilityForm(), new YourProjectCostsForm(), null, false, user, true);
+
+        ProjectFinanceResource projectFinance = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionForProject(projectId).getSuccess();
+
+        OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
+
+        List<FinanceRowType> financeRowTypes = competition.getFinanceRowTypesByFinance(Optional.of(projectFinance))
+                .stream()
+                .filter(FinanceRowType::isAppearsInProjectCostsAccordion)
+                .collect(Collectors.toList());
+
+        ProjectResource project = projectService.getById(projectId);
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            validationHandler.addAnyErrors(projectHecpCostsSaver.save(form, projectId, organisationResource.getId()));
+            return validationHandler.failNowOrSucceedWith(failureView, successView);
+        });
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @PostMapping("remove-row/{rowId}")
     public @ResponseBody
     String ajaxRemoveRow(@PathVariable long projectId,
@@ -307,12 +356,15 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     @PostMapping("add-row/{rowType}")
     public String ajaxAddRow(Model model,
                              @PathVariable long projectId,
+                             @PathVariable long organisationId,
                              @PathVariable FinanceRowType rowType) throws InstantiationException, IllegalAccessException {
-        YourProjectCostsForm form = new YourProjectCostsForm();
+        CompetitionResource competition = competitionRestService.getCompetitionForProject(projectId).getSuccess();
+        YourProjectCostsForm form = formPopulator.populateForm(projectId, organisationId, competition.isThirdPartyOfgem());
         Map.Entry<String, AbstractCostRowForm> entry = yourProjectCostsSaver.addRowForm(form, rowType);
         model.addAttribute("form", form);
         model.addAttribute("id", entry.getKey());
         model.addAttribute("row", entry.getValue());
+        model.addAttribute("thirdPartyOfgem", competition.isThirdPartyOfgem());
         return String.format("application/your-project-costs-fragments :: ajax_%s_row", rowType.name().toLowerCase());
     }
 

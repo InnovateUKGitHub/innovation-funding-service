@@ -53,7 +53,7 @@ public abstract class AbstractYourFundingSaver<R extends BaseOtherFunding, T ext
 
         saveGrantClaimAmount(finance, form, messages);
 
-        if (form.getOtherFunding() != null) {
+        if (form.getOtherFunding()) {
             saveOtherFunding(finance, form, messages);
         }
 
@@ -72,7 +72,7 @@ public abstract class AbstractYourFundingSaver<R extends BaseOtherFunding, T ext
             saveGrantClaimPercentage(finance, form, messages);
         }
 
-        if (form.getOtherFunding() != null) {
+        if (form.getOtherFunding()) {
             saveOtherFunding(finance, form, messages);
         }
 

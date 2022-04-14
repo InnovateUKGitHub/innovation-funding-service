@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="model" type="org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel.YourProjectCostsViewModel"*/-->
+<!--/*@thymesVar id="form" type="org.innovateuk.ifs.application.forms.hecpcosts.form.HorizonEuropeGuaranteeCostsForm"*/-->
+
+<!--/***************************
+
+            HECP COSTS
+
+*********************************/-->
+<!--/*<editor-fold defaultstate="collapsed">*/-->
+<th:block th:fragment="hecp-costs">
+    <div class="govuk-form-group"
+         th:classappend="${#fields.hasErrors('labour')} ? 'govuk-form-group--error'">
+        <label class="govuk-label govuk-label--s" th:for="labour">
+            <span>Personnel costs</span>
+        </label>
+        <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=labour)"/>
+        <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
+        <th:block th:if="${model.readOnly}">
+            <span class="govuk-body" th:text="${#numbers.formatInteger(form.labour, 0, 'DEFAULT')}"></span>
+        </th:block>
+        <th:block th:unless="${model.readOnly}">
+            <input type="number"
+                   data-prevent-input-non-number
+                   class="govuk-input govuk-input--width-10 cost-total"
+                   th:field="*{labour}"
+                   min="0"
+                   th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
+                   placeholder="0"
+                   step="1"
+                   th:readonly="${model.readOnly}"
+                   th:errorclass="govuk-input--error"/>
+        </th:block>
+    </div>
+
+    <div class="govuk-form-group"
+         th:classappend="${#fields.hasErrors('subcontracting')} ? 'govuk-form-group--error'">
+        <label class="govuk-label govuk-label--s" th:for="subcontracting">
+            <span>Subcontracting costs</span>
+        </label>
+        <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=subcontracting)"/>
+        <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
+        <th:block th:if="${model.readOnly}">
+            <span class="govuk-body" th:text="${#numbers.formatInteger(form.subcontracting, 0, 'DEFAULT')}"></span>
+        </th:block>
+        <th:block th:unless="${model.readOnly}">
+            <input type="number"
+                   data-prevent-input-non-number
+                   class="govuk-input govuk-input--width-10 cost-total"
+                   th:field="*{subcontracting}"
+                   min="0"
+                   th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
+                   placeholder="0"
+                   step="1"
+                   th:readonly="${model.readOnly}"
+                   th:errorclass="govuk-input--error"/>
+        </th:block>
+    </div>
+
+    <div class="govuk-form-group"
+         th:classappend="${#fields.hasErrors('travel')} ? 'govuk-form-group--error'">
+        <label class="govuk-label govuk-label--s" th:for="travel">
+            <span>Travel and subsistence</span>
+        </label>
+        <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=travel)"/>
+
+        <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
+        <th:block th:if="${model.readOnly}">
+            <span class="govuk-body" th:text="${#numbers.formatInteger(form.travel, 0, 'DEFAULT')}"></span>
+        </th:block>
+        <th:block th:unless="${model.readOnly}">
+            <input type="number"
+                   data-prevent-input-non-number
+                   class="govuk-input govuk-input--width-10 cost-total"
+                   th:field="*{travel}"
+                   min="0"
+                   th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
+                   placeholder="0"
+                   step="1"
+                   th:readonly="${model.readOnly}"
+                   th:errorclass="govuk-input--error"/>
+        </th:block>
+    </div>
+
+    <div class="govuk-form-group"
+         th:classappend="${#fields.hasErrors('material')} ? 'govuk-form-group--error'">
+        <label class="govuk-label govuk-label--s" th:for="material">
+            <span>Equipment</span>
+        </label>
+        <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=material)"/>
+        <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
+        <th:block th:if="${model.readOnly}">
+            <span class="govuk-body" th:text="${#numbers.formatInteger(form.material, 0, 'DEFAULT')}"></span>
+        </th:block>
+        <th:block th:unless="${model.readOnly}">
+            <input type="number"
+                   data-prevent-input-non-number
+                   class="govuk-input govuk-input--width-10 cost-total"
+                   th:field="*{material}"
+                   min="0"
+                   th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
+                   placeholder="0"
+                   step="1"
+                   th:readonly="${model.readOnly}"
+                   th:errorclass="govuk-input--error"/>
+        </th:block>
+    </div>
+
+    <div class="govuk-form-group"
+         th:classappend="${#fields.hasErrors('capital')} ? 'govuk-form-group--error'">
+        <label class="govuk-label govuk-label--s" th:for="capital">
+            <span>Other goods, works and services</span>
+        </label>
+        <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=capital)"/>
+        <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
+        <th:block th:if="${model.readOnly}">
+            <span class="govuk-body" th:text="${#numbers.formatInteger(form.capital, 0, 'DEFAULT')}"></span>
+        </th:block>
+        <th:block th:unless="${model.readOnly}">
+            <input type="number"
+                   data-prevent-input-non-number
+                   class="govuk-input govuk-input--width-10 cost-total"
+                   th:field="*{capital}"
+                   min="0"
+                   th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
+                   placeholder="0"
+                   step="1"
+                   th:readonly="${model.readOnly}"
+                   th:errorclass="govuk-input--error"/>
+        </th:block>
+    </div>
+
+    <div class="govuk-form-group"
+         th:classappend="${#fields.hasErrors('other')} ? 'govuk-form-group--error'">
+        <label class="govuk-label govuk-label--s" th:for="other">
+            <span>Other costs</span>
+        </label>
+        <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=other)"/>
+        <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
+        <th:block th:if="${model.readOnly}">
+            <span class="govuk-body" th:text="${#numbers.formatInteger(form.other, 0, 'DEFAULT')}"></span>
+        </th:block>
+        <th:block th:unless="${model.readOnly}">
+            <input type="number"
+                   data-prevent-input-non-number
+                   class="govuk-input govuk-input--width-10 cost-total"
+                   th:field="*{other}"
+                   min="0"
+                   th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
+                   placeholder="0"
+                   step="1"
+                   th:readonly="${model.readOnly}"
+                   th:errorclass="govuk-input--error"/>
+        </th:block>
+    </div>
+
+    <div class="govuk-form-group"
+         th:classappend="${#fields.hasErrors('overhead')} ? 'govuk-form-group--error'">
+        <label class="govuk-label govuk-label--s" th:for="overhead">
+            <span>Indirect costs</span>
+        </label>
+        <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=overhead)"/>
+        <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
+        <th:block th:if="${model.readOnly}">
+            <span class="govuk-body" th:text="${#numbers.formatInteger(form.overhead, 0, 'DEFAULT')}"></span>
+        </th:block>
+        <th:block th:unless="${model.readOnly}">
+            <input type="number"
+                   data-prevent-input-non-number
+                   class="govuk-input govuk-input--width-10 cost-total"
+                   th:field="*{overhead}"
+                   min="0"
+                   th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
+                   placeholder="0"
+                   step="1"
+                   th:readonly="${model.readOnly}"
+                   th:errorclass="govuk-input--error"/>
+        </th:block>
+    </div>
+</th:block>
+
+<!--/*</editor-fold>*/-->
+
+
+</html>

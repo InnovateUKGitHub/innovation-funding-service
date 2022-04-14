@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FinanceRowOptions.COST;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FinanceRowOptions.INCLUDE_IN_SPEND_PROFILE;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FinanceRowOptions.APPEARS_IN_PROJECT_COSTS_ACCORDION;
@@ -97,6 +98,23 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
         return displayName;
     }
 
+    public String getHecpDisplayName() {
+        switch (this) {
+            case LABOUR:
+                return "Personnel costs";
+            case SUBCONTRACTING_COSTS:
+                return "Subcontracting costs";
+            case MATERIALS:
+                return "Equipment";
+            case CAPITAL_USAGE:
+                return "Other goods, works and services";
+            case OVERHEADS:
+                return "Indirect costs";
+            default:
+                return getDisplayName();
+        }
+    }
+
     public static Optional<FinanceRowType> getByName(String name) {
         return simpleFindFirst(
                 FinanceRowType.values(),
@@ -117,6 +135,10 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
                 .filter(financeRowType -> (financeRowType == FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT
                         || financeRowType == FinanceRowType.INDIRECT_COSTS))
                 .collect(Collectors.toList());
+    }
+
+    public static List<FinanceRowType> getHecpSpecificFinanceRowTypes() {
+        return asList(LABOUR, SUBCONTRACTING_COSTS, TRAVEL, MATERIALS, CAPITAL_USAGE, OTHER_COSTS, OVERHEADS);
     }
 
     public static List<FinanceRowType> getKtpFinanceRowTypes() {

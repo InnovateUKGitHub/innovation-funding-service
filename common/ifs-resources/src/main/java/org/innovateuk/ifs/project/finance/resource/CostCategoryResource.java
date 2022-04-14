@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.finance.resource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
 public class CostCategoryResource {
 
@@ -33,6 +34,11 @@ public class CostCategoryResource {
     @JsonIgnore
     public CostCategoryGroupResource getCostCategoryGroup() {
         return costCategoryGroup;
+    }
+
+    @JsonIgnore
+    public String getHecpDisplayName() {
+        return FinanceRowType.getByName(name).get().getHecpDisplayName();
     }
 
     public void setCostCategoryGroup(CostCategoryGroupResource costCategoryGroup) {

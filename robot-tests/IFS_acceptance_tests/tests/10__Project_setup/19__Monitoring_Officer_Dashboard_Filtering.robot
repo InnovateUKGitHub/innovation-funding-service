@@ -20,11 +20,9 @@ Resource          ../../resources/common/PS_Common.robot
 *** Test Cases ***
 Monitoring officer can filter in-setup projects only
     [Documentation]  IFS-9576
-    #Given the user selects the checkbox                         projectInSetup
-    #When the user clicks the button/link                        id = update-documents-results-button
     Given the user logs-in in new browser                       orville.gibbs@gmail.com  ${short_password}
     When the user clicks the project setup tile if displayed
-    And wait until page contains element without screenshots    id = keywordSearch   5s
+    And wait until search box appears
     Then check correct number of in-setup projects filtered     In setup
 
 Monitoring officer can filter previous projects only
@@ -150,9 +148,6 @@ Monitoring officer can filter based on both keywords and spendprofile status
 *** Keywords ***
 Custom suite setup
     Connect to database  @{database}
-#    the user logs-in in new browser                         orville.gibbs@gmail.com  ${short_password}
-#    the user clicks the project setup tile if displayed
-#    wait until page contains element without screenshots    id = keywordSearch   5s
 
 Custom suite teardown
     Disconnect from database
@@ -226,3 +221,9 @@ Check correct number of combined spend profile and in setup projects displaying
     [Arguments]  ${projectSection}  ${status}
     ${documentStatusPageCount} =    Get Element Count    jQuery = div:nth-child(4):contains("${projectSection}")>ul>li>div>div>div>span:contains("${status}")
     page should contain element     jQuery = h2:contains("${documentStatusPageCount} project")
+
+wait until search box appears
+    ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  id = keywordSearch
+    Run Keyword if  '${status}' == 'FAIL'  runkeywords  log in as a different user   orville.gibbs@gmail.com   ${short_password}
+    ...                             AND                 the user clicks the project setup tile if displayed
+    ...                             AND                 wait until page contains element without screenshots    id = keywordSearch   5s

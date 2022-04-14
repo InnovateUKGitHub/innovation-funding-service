@@ -9,7 +9,7 @@
     <div class="govuk-form-group">
 
         <th:block th:unless="${model.isKtpAssessmentQuestion()}">
-            <label th:if="${model.question != null}" class="govuk-label">
+            <label th:if="${(model.question != null) and !model.isHecpWorkProgrammeQuestion()}" class="govuk-label">
                 <span th:unless="${model.isCompletedLoanBusinessAndFinancialInformation()}" th:text="${model.question}" class="govuk-heading-s"></span>
                 <th:block th:if="${model.isCompletedLoanBusinessAndFinancialInformation()}">
                     <span>Thanks for submitting Part B of your loan application.</span><br/><br/>
@@ -23,43 +23,65 @@
 
             </div>
             <th:block th:unless="${model.isCompletedLoanBusinessAndFinancialInformation()}">
+                <th:block th:if="${model.isHecpWorkProgrammeQuestion()}">
+                    <th:block th:if="${model.isWorkProgrammeQuestionCompleted()}">
+                        <dl class="govuk-list govuk-!-font-size-16">
+                            <dt>Enter the Horizon Europe Work programme Part you applied to, e.g. CL2.</dt>
+                            <dd class="govuk-!-margin-top-4" th:text="${model.workProgrammeAnswers.get(0).workProgramme.getDisplay()}"></dd>
+                            <dt class="govuk-!-margin-top-6">Select the call you applied to.</dt>
+                            <dd class="govuk-!-margin-top-4" th:text="${model.workProgrammeAnswers.get(1).workProgramme.getDisplay()}"></dd>
+                        </dl>
+                    </th:block>
+                    <th:block th:unless="${model.isWorkProgrammeQuestionCompleted()}">
+                        <p class="govuk-body">Answer yet to be provided</p>
+                    </th:block>
+                </th:block>
+
                 <th:block th:if="${model.multipleStatuses}">
 
                     <th:block th:if="${model.hasAnswerNotMarkedAsComplete()}">
                         <div class="warning-alert">
-                            <p class="govuk-body">The following organisations have not yet marked this question as complete:</p>
+                            <p class="govuk-body">The following organisations have not yet marked this question as
+                                complete:</p>
                             <ul class="govuk-list govuk-list--bullet">
-                                <th:block th:each="nonMarkedAsCompletePartner : ${model.nonMarkedAsCompletePartners}">
-                                    <li th:text="${nonMarkedAsCompletePartner.partnerName}">Non marked as complete partner organisation</li>
+                                <th:block
+                                        th:each="nonMarkedAsCompletePartner : ${model.nonMarkedAsCompletePartners}">
+                                    <li th:text="${nonMarkedAsCompletePartner.partnerName}">Non marked as complete
+                                        partner organisation
+                                    </li>
                                 </th:block>
                             </ul>
-                            <p class="govuk-body">This application cannot be submitted until all partners mark this question as complete.</p>
+                            <p class="govuk-body">This application cannot be submitted until all partners mark this
+                                question as complete.</p>
                         </div>
                     </th:block>
 
-                    <table class="govuk-table">
+                        <table class="govuk-table">
 
-                        <thead class="govuk-table__head">
-                        <tr class="govuk-table__row">
-                            <th scope="col" class="govuk-table__header">Partner</th>
-                            <th scope="col" class="govuk-table__header">Answer</th>
-                        </tr>
-                        </thead>
-                        <tbody class="govuk-table__body">
-                        <tr th:each="answerRow : ${model.answers}" class="govuk-table__row">
-                            <td class="govuk-table__cell">
-                                <th:block th:text="${answerRow.partnerName}">Org</th:block><th:block th:if="${answerRow.lead}"> <span class="hint">(Lead)</span></th:block>
-                            </td>
-                            <td class="govuk-table__cell">
-                                <p data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${answerRow.answer}"></p>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </th:block>
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th scope="col" class="govuk-table__header">Partner</th>
+                                <th scope="col" class="govuk-table__header">Answer</th>
+                            </tr>
+                            </thead>
+                            <tbody class="govuk-table__body">
+                            <tr th:each="answerRow : ${model.answers}" class="govuk-table__row">
+                                <td class="govuk-table__cell">
+                                    <th:block th:text="${answerRow.partnerName}">Org</th:block>
+                                    <th:block th:if="${answerRow.lead}"><span class="hint">(Lead)</span></th:block>
+                                </td>
+                                <td class="govuk-table__cell">
+                                    <p data-md-to-html="" class="govuk-body wysiwyg-styles"
+                                       th:text="${answerRow.answer}"></p>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </th:block>
 
-                <p th:unless="${model.multipleStatuses}" data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${model.answer != null ? model.answer  :
-                                model.isInCompleteLoanBusinessAndFinancialInformation() ? 'Information not yet provided' :'Answer yet to be provided'}" >Answer</p>
+                    <p th:unless="${model.multipleStatuses or model.isHecpWorkProgrammeQuestion()}" data-md-to-html=""
+                       class="govuk-body wysiwyg-styles" th:text="${model.answer != null ? model.answer  :
+                                model.isInCompleteLoanBusinessAndFinancialInformation() ? 'Information not yet provided' :'Answer yet to be provided'}">Answer</p>
             </th:block>
 
             <div class="govuk-inset-text govuk-!-margin-bottom-6" th:if="${model.templateFile != null}">
@@ -100,6 +122,21 @@
         </th:block>
     </div>
 </th:block>
+
+<th:block th:fragment="work">
+    <th:block th:if="${model.hecpCompetition}">
+        <th:block th:if="${model.hasAnswerNotMarkedAsComplete()}">
+            <p class="govuk-body">Answer yet to be provided</p>
+        </th:block>
+        <th:block th:unless="${model.hasAnswerNotMarkedAsComplete()}">
+            <dl class="govuk-list govuk-!-font-size-16">
+                <dt>Enter the Horizon Europe Work programme Part you applied to, e.g. CL2.</dt>
+                <dd class="govuk-!-margin-top-4" th:text="${model.workProgrammeAnswers.get(0).workProgramme}"></dd>
+                <dt>Select the call you applied to.</dt>
+                <dd class="govuk-!-margin-top-4" th:text="${model.workProgrammeAnswers.get(1).workProgramme}"></dd>
+            </dl>
+        </th:block>
+    </th:block>
 
 <th:block th:fragment="application-details (model)">
     <div class="govuk-grid-row">
@@ -414,7 +451,13 @@
                         <li th:text="${nonAcceptedPartner.partnerName}">Non accepted partner organisation</li>
                     </th:block> 
                 </ul>
-                <p class="govuk-body">This application cannot be submitted until all partners accept our terms and conditions.</p>
+               <th:block
+                        th:with="thirdPartyLabel=${model.thirdPartyProcurementCompetition}
+                                 ? ${model.thirdPartyConfig.termsAndConditionsLabel}
+                                 : 'terms and conditions'">
+                    <p class="govuk-body"
+                       th:text="|This application cannot be submitted until all partners accept our ${thirdPartyLabel}.|"></p>
+                </th:block>
             </div>
         </th:block>
         <th:block th:insert="this :: terms-and-conditions-partner-table (${model.applicationId}, ${model.questionId}, ${model.partners}, ${model.includeFundingRules}, ${model.displayCompleteStatus}, ${model.thirdPartyProcurementCompetition}, ${model.thirdPartyProcurementHeader})" />

@@ -28,9 +28,6 @@ public class MonitoringOfficerSummaryViewModelPopulator {
     @Value("${ifs.monitoringofficer.dashboard.filter.enabled}")
     private boolean moDashboardFilterEnabled;
 
-    public MonitoringOfficerSummaryViewModelPopulator() {
-    }
-
     public MonitoringOfficerSummaryViewModel populate(UserResource user) {
         List<ProjectResource> projects = monitoringOfficerRestService.getProjectsForMonitoringOfficer(user.getId()).getSuccess();
         return moDashboardFilterEnabled ?

@@ -3,10 +3,15 @@ package org.innovateuk.ifs.sil.experian.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.io.Serializable;
+
 /**
  * Address object used to generate json for SIL.  Nulls are replaced with empty strings.
  */
-public class Address {
+public class Address implements Serializable {
+
+    private static final long serialVersionUID = -8364224000904367724L;
+
     private String organisation;
     private String buildingName;
     private String street;

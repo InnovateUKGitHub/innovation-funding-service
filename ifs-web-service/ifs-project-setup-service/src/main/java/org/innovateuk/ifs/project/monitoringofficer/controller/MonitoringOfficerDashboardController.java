@@ -33,10 +33,6 @@ public class MonitoringOfficerDashboardController {
     @Autowired
     private MonitoringOfficerDashboardViewModelPopulator monitoringOfficerDashboardViewModelPopulator;
 
-    public MonitoringOfficerDashboardController() {
-
-    }
-
     @GetMapping
     public String viewDashboard(Model model,
                                 @ModelAttribute(name = FORM_ATTR_NAME, binding = false) MonitoringOfficerDashboardForm form,

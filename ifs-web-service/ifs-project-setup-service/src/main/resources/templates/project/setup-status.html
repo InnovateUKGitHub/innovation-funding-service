@@ -34,10 +34,21 @@
             </div>
             <div class="govuk-grid-column-one-half">
                 <ul class="govuk-list govuk-list--bullet">
-                    <li th:if="${model.showApplicationSummaryLink}"><a th:href="${'/application/' + model.applicationId + '/summary'}"
-                           class="govuk-link"
-                    th:text="${model.applicationFeedbackAvailable ? 'view application feedback' : 'view application overview'}">
-                        view application feedback</a></li>
+                    <li th:if="${model.showApplicationSummaryLink}">
+                        <th:block th:if="${model.isHasAssessmentStage()}">
+                            <a th:href="${'/application/' + model.applicationId + '/summary'}" class="govuk-link"
+                               th:text="${model.applicationFeedbackAvailable ? 'view application feedback' : 'view application overview'}">
+                                view application feedback
+                            </a>
+                        </th:block>
+
+                        <th:block th:unless="${model.isHasAssessmentStage()}">
+                            <a th:href="${'/application/' + model.applicationId + '/summary'}" class="govuk-link"
+                               th:text="${model.applicationFeedbackAvailable ? 'view application' : 'view application overview'}">
+                                view application feedback
+                            </a>
+                        </th:block>
+                    </li>
                     <li>
                         <a th:href="${'/application/' + model.applicationId + '/summary#terms-and-conditions'}"
                            class="govuk-link">

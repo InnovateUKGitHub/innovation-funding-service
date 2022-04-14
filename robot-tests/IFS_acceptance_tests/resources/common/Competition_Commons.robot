@@ -385,6 +385,11 @@ the assessed questions are marked complete(EOI type)
      \    the user marks each question as complete    ${ELEMENT}
     the user should see the element      jQuery = button:contains("Add question")
 
+the assessed questions are marked complete(HECP type)
+    :FOR   ${ELEMENT}   IN    @{Hecp_questions}
+     \    the user marks each question as complete    ${ELEMENT}
+    the user should see the element      jQuery = button:contains("Add question")
+
 the user marks the Application details section as complete
     [Arguments]  ${compType}
     the user marks each question as complete                Application details
@@ -776,4 +781,18 @@ the user completes application submission page
     the user clicks the button/link       jQuery = span:contains("Application submission")
     the user should see the element       jQuery = p:contains("${isOpenComp}") strong:contains("Will this be an open-ended competition?")
     the user should see the element       jQuery = button:contains("Edit")
-    the user clicks the button/link       jQuery = span:contains("Milestones")
+    ${status} =   Run Keyword and return status    the user should see the element    jQuery = span:contains("Application assessment")
+    Run Keyword If    '${status}' == 'True'   the user clicks the button/link    jQuery = span:contains("Application assessment")
+    ...                ELSE                   the user clicks the button/link    jQuery = span:contains("Milestones")
+
+the user inputs application assessment decision
+    [Arguments]  ${isAssessed}
+    the user should see the element    jQuery = h1:contains("Application assessment")
+    the user clicks the button twice   jQuery = label:contains("${isAssessed}")
+    the user clicks the button/link    jQuery = button:contains("Save and continue")
+    the user clicks the button/link    jQuery = span:contains("Application assessment")
+    the user should see the element    jQuery = p:contains("${isAssessed}") strong:contains("Will this competition be assessed?")
+    the user should see the element    jQuery = button:contains("Edit")
+    the user clicks the button/link    jQuery = span:contains("Milestones")
+
+

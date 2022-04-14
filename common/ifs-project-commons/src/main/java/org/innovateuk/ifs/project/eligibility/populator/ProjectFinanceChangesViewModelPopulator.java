@@ -32,6 +32,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
+
 @Component
 public class ProjectFinanceChangesViewModelPopulator {
 
@@ -123,7 +126,9 @@ public class ProjectFinanceChangesViewModelPopulator {
             }
 
             String section = sectionName(competition, rowType);
-            CostChangeViewModel costChange = new CostChangeViewModel(section,
+            CostChangeViewModel costChange = new CostChangeViewModel(
+                    rowType,
+                    section,
                     financeRowAppCostCategoryTotal,
                     financeRowProjectCostCategory.getTotal());
 
@@ -134,6 +139,7 @@ public class ProjectFinanceChangesViewModelPopulator {
             }
         }
 
+        sectionDifferences = competition.isHorizonEuropeGuarantee() ? sortHecpSectionDifferences(sectionDifferences) : sectionDifferences;
         boolean appVatRegistered = appFinance.isVatRegistered();
         boolean projectVatRegistered = projectFinance.isVatRegistered();
         ProjectFinanceChangesProjectFinancesViewModel projectFinanceChangesProjectFinancesViewModel = new ProjectFinanceChangesProjectFinancesViewModel(sectionDifferences, appVatRegistered, projectVatRegistered, vat);
@@ -163,7 +169,8 @@ public class ProjectFinanceChangesViewModelPopulator {
         if (FinanceRowType.YOUR_FINANCE == rowType) {
             return "Your finance";
         }
-        return rowType.getDisplayName();
+
+        return competition.isHorizonEuropeGuarantee() ? rowType.getHecpDisplayName() : rowType.getDisplayName();
     }
 
     private ProjectFinanceChangesFinanceSummaryViewModel getFinanceSummaryViewModel(CompetitionResource competition, ApplicationFinanceResource appFinanceResource,
@@ -174,8 +181,14 @@ public class ProjectFinanceChangesViewModelPopulator {
         }
         List<CostChangeViewModel> entries = new ArrayList<>();
 
-        entries.add(new CostChangeViewModel("Funding level (%)", appFinanceResource.getGrantClaimPercentage(), eligibilityOverview.getPercentageGrant()));
-        entries.add(new CostChangeViewModel("Funding sought (£)", appFinanceResource.getTotalFundingSought(), eligibilityOverview.getFundingSought()));
+        if(competition.isThirdPartyOfgem()) {
+            entries.add(new CostChangeViewModel("Funding sought (£)", appFinanceResource.getTotalFundingSought(), eligibilityOverview.getFundingSought()));
+            entries.add(new CostChangeViewModel("Funding level (%)", appFinanceResource.getGrantClaimPercentage(), eligibilityOverview.getPercentageGrant()));
+        } else {
+            entries.add(new CostChangeViewModel("Funding level (%)", appFinanceResource.getGrantClaimPercentage(), eligibilityOverview.getPercentageGrant()));
+            entries.add(new CostChangeViewModel("Funding sought (£)", appFinanceResource.getTotalFundingSought(), eligibilityOverview.getFundingSought()));
+        }
+
         entries.add(new CostChangeViewModel("Other funding (£)", appFinanceResource.getTotalOtherFunding(), eligibilityOverview.getOtherPublicSectorFunding()));
         if (competition.isKtp()) {
             if (isLead) {
@@ -296,6 +309,14 @@ public class ProjectFinanceChangesViewModelPopulator {
                     return 1;
                 })
                 .collect(Collectors.toList());
+    }
+
+    private List<CostChangeViewModel> sortHecpSectionDifferences(List<CostChangeViewModel> sectionDifferences) {
+        return sectionDifferences.stream().sorted((o1, o2) -> {
+            List<FinanceRowType> hecpFinanceRowOrder = FinanceRowType.getHecpSpecificFinanceRowTypes();
+            return (hecpFinanceRowOrder.contains(o1.getFinanceRowType()) ? hecpFinanceRowOrder.indexOf(o1.getFinanceRowType()) : hecpFinanceRowOrder.size()) -
+                    (hecpFinanceRowOrder.contains(o2.getFinanceRowType()) ? hecpFinanceRowOrder.indexOf(o2.getFinanceRowType()) : hecpFinanceRowOrder.size());
+        }).collect(Collectors.toList());
     }
 
 }

@@ -5,13 +5,17 @@ import org.innovateuk.ifs.user.resource.AffiliationType;
 
 import javax.persistence.*;
 
+import java.io.Serializable;
+
 import static javax.persistence.EnumType.STRING;
 
 /**
  * An affiliation of a {@link User}. It may be used to describe personal and family appointments held, personal affiliations, other financial interests, and family financial interests depending on the {@link AffiliationType}.
  */
 @Entity
-public class Affiliation extends AuditableEntity {
+public class Affiliation extends AuditableEntity implements Serializable {
+
+    private static final long serialVersionUID = 6251094625418418193L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

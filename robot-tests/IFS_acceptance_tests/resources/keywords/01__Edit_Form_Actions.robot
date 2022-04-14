@@ -58,7 +58,7 @@ The user enters text to a text field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
     Wait Until Element Is Visible Without Screenshots    ${TEXT_FIELD}
     Clear Element Text    ${TEXT_FIELD}
-    Wait Until Keyword Succeeds Without Screenshots    10    200ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
+    Wait Until Keyword Succeeds Without Screenshots    10s    200ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
     Mouse Out             ${TEXT_FIELD}
     Set Focus To Element    link=GOV.UK
     Wait for autosave

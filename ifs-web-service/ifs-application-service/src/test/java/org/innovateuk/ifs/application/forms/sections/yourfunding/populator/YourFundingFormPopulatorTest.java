@@ -33,8 +33,7 @@ import static org.innovateuk.ifs.finance.builder.OtherFundingCostBuilder.newOthe
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostCategoryBuilder.newOtherFundingCostCategory;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundingFormPopulator> {
@@ -132,7 +131,7 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
         YourFundingPercentageForm form = (YourFundingPercentageForm) service.populateForm(APPLICATION_ID, organisation.getId());
 
         assertNull(form.getRequestingFunding());
-        assertNull(form.getOtherFunding());
+        assertFalse(form.getOtherFunding());
     }
 
     @Test
@@ -143,6 +142,6 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
         YourFundingPercentageForm form = (YourFundingPercentageForm) service.populateForm(APPLICATION_ID, organisation.getId());
 
         assertNull(form.getRequestingFunding());
-        assertNull(form.getOtherFunding());
+        assertFalse(form.getOtherFunding());
     }
 }

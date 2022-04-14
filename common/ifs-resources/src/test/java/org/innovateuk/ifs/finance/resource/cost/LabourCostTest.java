@@ -17,6 +17,7 @@ public class LabourCostTest {
     private BigDecimal grossEmployeeCost;
     private Integer labourDays;
     private String description;
+    private BigDecimal rate;
 
     @Before
     public void setUp() throws Exception {
@@ -26,8 +27,9 @@ public class LabourCostTest {
         grossEmployeeCost = new BigDecimal(50000);
         labourDays = 168;
         description = "";
+        rate = BigDecimal.ZERO;
 
-        labourCost = new LabourCost(id, key, role, grossEmployeeCost, labourDays, description, 1L);
+        labourCost = new LabourCost(id, key, role, grossEmployeeCost, labourDays, description, 1L, rate, false);
     }
 
     @Test
@@ -85,5 +87,22 @@ public class LabourCostTest {
         labourCost.setLabourDays(null);
         BigDecimal totalLabourCost = labourCost.getTotal(workingDaysPerYear);
         assertEquals(BigDecimal.ZERO, totalLabourCost);
+    }
+
+    @Test
+    public void getLabourCostForThirdPartyOfgem() throws Exception {
+        key = "";
+        role = "Manager";
+        labourDays = 100;
+        description = "";
+        rate = BigDecimal.ONE;
+
+        Integer workingDaysPerYear = 0;
+
+        labourCost = new LabourCost(id, key, role, grossEmployeeCost, labourDays, description, 1L, rate, true);
+
+        assertEquals("third-party-ofgem", labourCost.getName());
+        assertEquals(0, BigDecimal.ONE.compareTo(labourCost.getRate(workingDaysPerYear)));
+        assertEquals(0, BigDecimal.valueOf(100).compareTo(labourCost.getTotalWithoutWorkingDays()));
     }
 }

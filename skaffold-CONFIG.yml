@@ -1,0 +1,123 @@
+apiVersion: skaffold/v2beta11
+kind: Config
+metadata:
+  name: innovation-funding-service
+profiles:
+  - name: local
+    build:
+      local:
+        useDockerCLI: false
+        useBuildkit: false
+        tryImportMissing: true
+        push: false
+      tagPolicy:
+        gitCommit:
+          ignoreChanges: true
+      artifacts: [ ]
+    deploy:
+      kubeContext: custom
+      kustomize:
+        paths:
+          - os-files/kustomize/config-mgmt/env/local
+
+  - name: custom
+    build:
+      local:
+        useDockerCLI: false
+        useBuildkit: false
+        tryImportMissing: true
+        push: false
+      tagPolicy:
+        gitCommit:
+          ignoreChanges: true
+      artifacts: []
+    deploy:
+      kubeContext: custom
+      kustomize:
+        paths:
+          - os-files/kustomize/config-mgmt/env/aws/custom
+
+  - name: sysint
+    build:
+      local:
+        useDockerCLI: false
+        useBuildkit: false
+        tryImportMissing: true
+        push: false
+      tagPolicy:
+        gitCommit:
+          ignoreChanges: true
+      artifacts: []
+    deploy:
+      kubeContext: sysint
+      kustomize:
+        paths:
+          - os-files/kustomize/config-mgmt/env/aws/sysint
+
+  - name: perf
+    build:
+      local:
+        useDockerCLI: false
+        useBuildkit: false
+        tryImportMissing: true
+        push: false
+      tagPolicy:
+        gitCommit:
+          ignoreChanges: true
+      artifacts: []
+    deploy:
+      kubeContext: perf
+      kustomize:
+        paths:
+          - os-files/kustomize/config-mgmt/env/aws/perf
+
+  - name: uat
+    build:
+      local:
+        useDockerCLI: false
+        useBuildkit: false
+        tryImportMissing: true
+        push: false
+      tagPolicy:
+        gitCommit:
+          ignoreChanges: true
+      artifacts: [ ]
+    deploy:
+      kubeContext: uat
+      kustomize:
+        paths:
+          - os-files/kustomize/config-mgmt/env/aws/uat
+
+  - name: demo
+    build:
+      local:
+        useDockerCLI: false
+        useBuildkit: false
+        tryImportMissing: true
+        push: false
+      tagPolicy:
+        gitCommit:
+          ignoreChanges: true
+      artifacts: [ ]
+    deploy:
+      kubeContext: demo
+      kustomize:
+        paths:
+          - os-files/kustomize/config-mgmt/env/aws/demo
+
+  - name: prod
+    build:
+      local:
+        useDockerCLI: false
+        useBuildkit: false
+        tryImportMissing: true
+        push: false
+      tagPolicy:
+        gitCommit:
+          ignoreChanges: true
+      artifacts: [ ]
+    deploy:
+      kubeContext: prod
+      kustomize:
+        paths:
+          - os-files/kustomize/config-mgmt/env/aws/prod

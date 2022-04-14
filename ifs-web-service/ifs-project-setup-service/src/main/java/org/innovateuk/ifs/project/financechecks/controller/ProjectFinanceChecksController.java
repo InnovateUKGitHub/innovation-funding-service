@@ -31,6 +31,7 @@ import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.financechecks.form.FinanceChecksQueryConstraints;
 import org.innovateuk.ifs.project.financechecks.form.FinanceChecksQueryResponseForm;
+import org.innovateuk.ifs.project.financechecks.populator.FinanceChecksEligibilityHecpCostsFormPopulator;
 import org.innovateuk.ifs.project.financechecks.populator.FinanceChecksEligibilityProjectCostsFormPopulator;
 import org.innovateuk.ifs.project.financechecks.populator.ProjectFinanceChecksReadOnlyPopulator;
 import org.innovateuk.ifs.project.financechecks.viewmodel.FinanceChecksProjectCostsViewModel;
@@ -142,6 +143,9 @@ public class ProjectFinanceChecksController {
 
     @Autowired
     private ProjectFinanceChecksReadOnlyPopulator projectFinanceChecksReadOnlyPopulator;
+
+    @Autowired
+    private FinanceChecksEligibilityHecpCostsFormPopulator hecpCostsFormPopulator;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping
@@ -510,8 +514,18 @@ public class ProjectFinanceChecksController {
             Optional<ProjectFinanceResource> organisationProjectFinance = projectFinances.stream()
                     .filter(projectFinance -> projectFinance.getOrganisation().equals(organisation.getId()))
                     .findFirst();
-            model.addAttribute("model", new FinanceChecksProjectCostsViewModel(application.getId(), competition.getFinanceRowTypesByFinance(organisationProjectFinance), competition.isOverheadsAlwaysTwenty(), competition.getName(), competition.getFundingType() == FundingType.KTP, ktpPhase2Enabled, canEditProjectCosts));
-            model.addAttribute("form", formPopulator.populateForm(project.getId(), organisation.getId()));
+            model.addAttribute("model", new FinanceChecksProjectCostsViewModel(application.getId(),
+                    competition.getFinanceRowTypesByFinance(organisationProjectFinance),
+                    competition.isOverheadsAlwaysTwenty(),
+                    competition.getName(),
+                    competition.getFundingType() == FundingType.KTP,
+                    ktpPhase2Enabled,
+                    canEditProjectCosts,
+                    competition.isThirdPartyOfgem(),
+                    competition.isHorizonEuropeGuarantee()));
+            model.addAttribute("form", competition.isHorizonEuropeGuarantee() ?
+                    hecpCostsFormPopulator.populate(project.getId(), organisation.getId()) :
+                    formPopulator.populateForm(project.getId(), organisation.getId(), competition.isThirdPartyOfgem()));
         } else {
             model.addAttribute("academicCostForm", projectAcademicCostFormPopulator.populate(new AcademicCostForm(), project.getId(), organisation.getId()));
         }
@@ -537,7 +551,8 @@ public class ProjectFinanceChecksController {
                 showChangesLink,
                 false,
                 false,
-                competition.isThirdPartyOfgem()));
+                competition.isThirdPartyOfgem(),
+                competition.isHorizonEuropeGuarantee()));
 
         model.addAttribute("eligibilityForm", eligibilityForm);
 

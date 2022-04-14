@@ -8,15 +8,12 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.viewmodel.InitialDetailsViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
@@ -33,8 +30,6 @@ import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilde
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeResourceBuilder.newCompetitionTypeResource;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.YOUR_FINANCE;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
@@ -71,6 +66,7 @@ public class InitialDetailsModelPopulatorTest {
 
     @Test
     public void populateModel() {
+
         long competitionId = 8L;
         List<FundingType> expectedFundingTypes =
                 newArrayList(
@@ -81,6 +77,7 @@ public class InitialDetailsModelPopulatorTest {
                         FundingType.PROCUREMENT);
 
         ReflectionTestUtils.setField(populator, "thirdPartyOfgemEnabled", false);
+        ReflectionTestUtils.setField(populator, "hecpTcpEnabled", false);
 
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionCode("code")
@@ -134,9 +131,11 @@ public class InitialDetailsModelPopulatorTest {
                         FundingType.KTP,
                         FundingType.LOAN,
                         FundingType.PROCUREMENT,
-                        FundingType.THIRDPARTY);
+                        FundingType.THIRDPARTY,
+                        FundingType.HECP);
 
         ReflectionTestUtils.setField(populator, "thirdPartyOfgemEnabled", true);
+        ReflectionTestUtils.setField(populator, "hecpTcpEnabled", true);
 
         CompetitionResource competition = newCompetitionResource()
                 .withName("Thirdparty ofgem")
@@ -171,7 +170,56 @@ public class InitialDetailsModelPopulatorTest {
         inOrder.verifyNoMoreInteractions();
     }
 
+    @Test
+    public void populateModelHecpFundingType() {
+        long competitionId = 9L;
+        List<FundingType> expectedFundingTypes =
+                newArrayList(
+                        FundingType.GRANT,
+                        FundingType.INVESTOR_PARTNERSHIPS,
+                        FundingType.KTP,
+                        FundingType.LOAN,
+                        FundingType.PROCUREMENT,
+                        FundingType.THIRDPARTY,
+                        FundingType.HECP);
+
+        ReflectionTestUtils.setField(populator, "thirdPartyOfgemEnabled", true);
+        ReflectionTestUtils.setField(populator, "hecpTcpEnabled", true);
+
+        CompetitionResource competition = newCompetitionResource()
+                .withName("Horizon Europe")
+                .withId(competitionId)
+                .withFundingType(FundingType.HECP)
+                .build();
+
+        List<UserResource> compExecs = newUserResource().build(1);
+        List<InnovationSectorResource> innovationSectors = newInnovationSectorResource().build(2);
+        List<InnovationAreaResource> innovationAreas = newInnovationAreaResource().build(2);
+        List<CompetitionTypeResource> competitionTypes = newCompetitionTypeResource().build(2);
+        List<UserResource> leadTechs = newUserResource().build(1);
+
+        when(userRestService.findByUserRole(COMP_ADMIN)).thenReturn(restSuccess(compExecs));
+        when(categoryRestService.getInnovationSectors()).thenReturn(restSuccess(innovationSectors));
+        when(categoryRestService.getInnovationAreas()).thenReturn(restSuccess(innovationAreas));
+        when(competitionRestService.getCompetitionTypes()).thenReturn(restSuccess(competitionTypes));
+        when(userRestService.findByUserRoleAndUserStatus(INNOVATION_LEAD, ACTIVE)).thenReturn(restSuccess(leadTechs));
+        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId())).thenReturn(true);
+
+        InitialDetailsViewModel viewModel =  populator.populateModel(getBasicGeneralSetupView(competition), competition);
+
+        assertThat(viewModel.getFundingTypes(), containsInAnyOrder(expectedFundingTypes.toArray()));
+
+        InOrder inOrder = inOrder(userRestService, categoryRestService, competitionRestService, userRestService, competitionSetupService);
+        inOrder.verify(userRestService).findByUserRole(COMP_ADMIN);
+        inOrder.verify(categoryRestService).getInnovationSectors();
+        inOrder.verify(categoryRestService).getInnovationAreas();
+        inOrder.verify(competitionRestService).getCompetitionTypes();
+        inOrder.verify(userRestService).findByUserRoleAndUserStatus(INNOVATION_LEAD, ACTIVE);
+        inOrder.verify(competitionSetupService).hasInitialDetailsBeenPreviouslySubmitted(competition.getId());
+        inOrder.verifyNoMoreInteractions();
+    }
+
     private static GeneralSetupViewModel getBasicGeneralSetupView(CompetitionResource competition) {
-        return new GeneralSetupViewModel(false, false, competition, CompetitionSetupSection.INITIAL_DETAILS, CompetitionSetupSection.values(), true, false);
+        return new GeneralSetupViewModel(false, false, competition, CompetitionSetupSection.INITIAL_DETAILS, CompetitionSetupSection.values(), true, false, true);
     }
 }

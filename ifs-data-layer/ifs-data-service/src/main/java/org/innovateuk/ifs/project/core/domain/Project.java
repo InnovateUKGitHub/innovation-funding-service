@@ -18,6 +18,7 @@ import org.innovateuk.ifs.user.domain.User;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -34,7 +35,10 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
  *  It stores details specific to project (which are different from application)
  */
 @Entity
-public class Project implements ProcessActivity {
+public class Project implements ProcessActivity, Serializable {
+
+    private static final long serialVersionUID = 7046727981948950101L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -66,7 +70,7 @@ public class Project implements ProcessActivity {
     private List<ProjectUser> projectUsers = new ArrayList<>();
 
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = MonitoringOfficer.class)
-    private List<MonitoringOfficer> monitoringOfficers = new ArrayList<>();;
+    private List<MonitoringOfficer> monitoringOfficers = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL, targetEntity = FinanceReviewer.class,
             mappedBy = "project", fetch = FetchType.LAZY, orphanRemoval = true)
