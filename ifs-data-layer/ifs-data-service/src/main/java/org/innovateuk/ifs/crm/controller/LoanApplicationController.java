@@ -122,7 +122,7 @@ public class LoanApplicationController {
 
             QuestionSetupType questionSetupType = questionService.getQuestionById(ids.questionId).getSuccess().getQuestionSetupType();
             if (questionSetupType.equals(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION)) {
-                return questionStatusService.markAsCompleteNoValidate(ids, user.getId()).handleSuccessOrFailure(
+                return questionStatusService.markAsCompleteNoValidate(ids, processRoleId).handleSuccessOrFailure(
                         failure -> {
                             log.error(logError);
                             return RestResult.restFailure(failure.getErrors(), HttpStatus.BAD_REQUEST);
