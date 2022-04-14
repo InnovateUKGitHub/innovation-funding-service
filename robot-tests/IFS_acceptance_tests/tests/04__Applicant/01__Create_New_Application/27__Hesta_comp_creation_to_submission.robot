@@ -340,7 +340,7 @@ the user can see the read only view of work programme
 
 the user successfully completes application
     the user completes the application research category            Feasibility studies
-    the user complete the work programme
+    the user complete the work programmes
     the user is able to complete horizon grant agreement section
     the lead applicant fills all the questions and marks as complete(Hecp)
     the user accept the competition terms and conditions            Back to application overview
