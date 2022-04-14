@@ -13,7 +13,7 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.GRANT_CLAI
 
 public abstract class AbstractYourFundingForm<R extends BaseOtherFunding, T extends BaseOtherFundingRowForm<R>> {
 
-    private Boolean otherFunding = Boolean.FALSE;
+    private Boolean otherFunding;
 
     private Map<String, T> otherFundingRows = new LinkedHashMap<>();
 
