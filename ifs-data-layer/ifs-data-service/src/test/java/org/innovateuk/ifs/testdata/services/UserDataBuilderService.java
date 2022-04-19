@@ -90,7 +90,10 @@ public class UserDataBuilderService extends BaseDataBuilderService {
 
         UnaryOperator<S> addRoles = builder -> builder.addAdditionalRoles(additionalRoles);
 
-        UnaryOperator<S> addEDIStatus = builder -> builder.addEdiStatus(ediStatus);
+        UnaryOperator<S> addEDIStatus = UnaryOperator.identity();
+        if (newArrayList(APPLICANT, SUPPORTER, KNOWLEDGE_TRANSFER_ADVISER).contains(role)) {
+            addEDIStatus = builder -> builder.addEdiStatus(ediStatus);
+        }
 
         UnaryOperator<S> inactivateUserIfNecessary = builder -> !(line.emailVerified) ? builder.deactivateUser() : builder;
 

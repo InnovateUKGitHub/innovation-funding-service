@@ -718,9 +718,9 @@ public class CsvUtils {
 
         @Override
         protected void processLine(List<String> line, int i) {
+            this.ediStatus = nullableEnum(line.get(i++), EDIStatus::valueOf);
             this.role = nullableEnum(line.get(i++), Role::valueOf);
             this.additionalRoles = nullableSplitOnNewLines(line.get(i++)).stream().map(Role::valueOf).collect(Collectors.toList());
-            this.ediStatus = nullableEnum(line.get(i++), EDIStatus::valueOf);
         }
 
     }
