@@ -31,6 +31,9 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11695 HECP Phase 2 - Cost categories - Spend profile updates
 ...
+...               IFS-11791 HECP Phase 2 - Bug bash changes - Content
+...
+
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -80,22 +83,23 @@ the lead applicant can view answer yet to be provodied when work programme quest
     Then the user should see the element            jQuery = p:contains("Answer yet to be provided")
 
 lead applicant views work programme answers provided in review and submit page
-    [Documentation]  IFS-11686
+    [Documentation]  IFS-11686  IFS-11791
     Given the user clicks the button/link                           link = Application overview
     When the user complete the work programme
     And the user clicks the button/link                             link = Review and submit
     Then the user can see the read only view of work programme
 
 Lead applicant can view funding conversion tool in project costs
-    [Documentation]  IFS-11508  IFS-11686
+    [Documentation]  IFS-11508  IFS-11686  IFS-11791
     Given the user clicks the button/link                                       link = Application overview
     And the user completes the application research category                    Feasibility studies
     And the user is able to complete horizon grant agreement section
+    And the user should see Participating Organisation project region
     And the lead applicant fills all the questions and marks as complete(Hecp)
     And the user accept the competition terms and conditions                    Back to application overview
     When the user clicks the button/link                                        link = Your project finances
     And the user clicks the button/link                                         link = Your project costs
-    Then the user should see the element                                        jQuery = a:contains("Horizon Europe guarantee notice and guidance – UKRI")
+    Then the user should see the element                                        jQuery = a:contains("Horizon Europe guarantee notice and guidance – UKRI (opens in a new window)")
     And the user should see the element                                         jQuery = a:contains("heguarantee@iuk.ukri.org")
 
 Lead applicant completes project finances and submits an application
@@ -581,6 +585,7 @@ the user see the print view of the application
     the user navigates to the page                                ${SERVER}/application/${hestaApplicationID}
 
 the user should see read only view of work program part
+    the user should see the element    jQuery = h1:contains("Select the Horizon Europe Work programme Part")
     the user should see the element    jQuery = label:contains("Culture, Creativity and Inclusive Society (CL2)")
     the user should see the element    jQuery = label:contains("Civil Security for Society (CL3)")
     the user should see the element    jQuery = label:contains("Digital, Industry and Space (CL4 & EUSPA)")
@@ -617,3 +622,8 @@ the user should see readonly detailed hecp finances
     the user should see the element    jQuery = label:contains("Other costs") ~ span:contains("40,000")
     the user should see the element    jQuery = label:contains("Indirect costs") ~ span:contains("0")
     the user should see the element    css = [id="total-cost"][value="£200,000"]
+
+the user should see Participating Organisation project region
+    the user clicks the button/link  jQuery = a:contains("Participating Organisation project region")
+    the user should see the element  jQuery = div:contains("Please type the region your project is being carried out in.")
+    the user clicks the button/link  jQuery = a:contains("Back to application overview")
