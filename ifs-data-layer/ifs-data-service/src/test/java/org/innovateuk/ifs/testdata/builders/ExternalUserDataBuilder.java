@@ -75,8 +75,6 @@ public class ExternalUserDataBuilder extends BaseUserDataBuilder<ExternalUserDat
     }
 
     public ExternalUserDataBuilder withEDIStatus(EDIStatus ediStatus) {
-        return with(data -> {
-            data.setEdiStatus(ediStatus);
-        });
+        return with(data -> data.setEdiStatus(ediStatus));
     }
 }
