@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.testdata.builders.data;
 
+import org.innovateuk.ifs.user.resource.EDIStatus;
 import org.innovateuk.ifs.user.resource.Role;
+
+import java.time.LocalDate;
 
 /**
  * Running data context for generating Applicants
@@ -12,6 +15,8 @@ public class ExternalUserData extends BaseUserData {
     private String emailAddress;
     private Role role;
     private String organisation;
+    private EDIStatus ediStatus;
+    private LocalDate ediReviewDate;
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -51,5 +56,21 @@ public class ExternalUserData extends BaseUserData {
 
     public void setOrganisation(String organisation) {
         this.organisation = organisation;
+    }
+
+    public EDIStatus getEdiStatus() {
+        return ediStatus;
+    }
+
+    public void setEdiStatus(EDIStatus ediStatus) {
+        this.ediStatus = ediStatus;
+    }
+
+    public LocalDate getEdiReviewDate() {
+        return ediReviewDate;
+    }
+
+    public void setEdiReviewDate(LocalDate ediReviewDate) {
+        this.ediReviewDate = ediReviewDate;
     }
 }

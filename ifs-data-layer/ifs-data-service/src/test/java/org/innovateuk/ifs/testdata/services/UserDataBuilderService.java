@@ -55,6 +55,7 @@ public class UserDataBuilderService extends BaseDataBuilderService {
         testService.doWithinTransaction(() -> {
 
             externalUserBuilder.withRole(line.role);
+            externalUserBuilder.withEDIStatus(line.ediStatus);
             createUser(externalUserBuilder, line, line.role, line.organisationName, line.additionalRoles);
         });
     }

@@ -18,10 +18,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerReso
 import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
-import org.innovateuk.ifs.user.resource.BusinessType;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.RoleProfileState;
-import org.innovateuk.ifs.user.resource.UserStatus;
+import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
 import java.io.File;
@@ -714,6 +711,7 @@ public class CsvUtils {
     public static class ExternalUserLine extends UserLine {
         public Role role;
         public List<Role> additionalRoles;
+        public EDIStatus ediStatus;
         private ExternalUserLine(List<String> line) {
             super(line);
         }
@@ -722,6 +720,7 @@ public class CsvUtils {
         protected void processLine(List<String> line, int i) {
             this.role = nullableEnum(line.get(i++), Role::valueOf);
             this.additionalRoles = nullableSplitOnNewLines(line.get(i++)).stream().map(Role::valueOf).collect(Collectors.toList());
+            this.ediStatus = nullableEnum(line.get(i++), EDIStatus::valueOf);
         }
 
     }
