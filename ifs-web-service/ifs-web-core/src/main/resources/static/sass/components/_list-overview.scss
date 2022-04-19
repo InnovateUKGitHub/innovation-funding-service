@@ -276,6 +276,30 @@ ol {
       }
     }
   }
+
+  &.ifs-list--padding {
+
+    > li {
+      padding: 0px 5px;
+
+      > span {
+        line-height:50px;
+      }
+
+      ol {
+        &.ifs-list--padding {
+
+          > li {
+            padding: 5px 0px;
+
+            > p {
+              margin-bottom: 0;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 %definition-list {
