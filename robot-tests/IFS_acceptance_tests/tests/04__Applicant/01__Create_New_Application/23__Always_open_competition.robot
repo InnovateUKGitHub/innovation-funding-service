@@ -323,7 +323,7 @@ Lead Applicant can see the banner message about the application
     When the user clicks the button/link     link = ${webTestAppName}
     And the user clicks the button/link      link = view application feedback
     Then the user should see the element     jQuery = h2:contains("Congratulations, your application has been successful")
-    And the user should see the element      jQuery = p:contains("Scroes and written feedback from each assessor can be found below.")
+    And the user should see the element      jQuery = p:contains("Scores and written feedback from each assessor can be found below.")
 
 Supporter can review open ended ktp competition applications
     [Documentation]  IFS-9785
