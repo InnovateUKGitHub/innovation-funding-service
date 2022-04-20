@@ -317,7 +317,7 @@ Comp admin can see the open ended competition in project setup/previous dashboar
     And The user clicks the button/link                        jQuery = button:contains("Close competition")
     Then the user should see the competition in project setup/previous dashboard and can not see on live dashboard
 
-Lead Applicant can see the banner message about the application
+Lead Applicant can view application successful banner message
     [Documentation]  IFS-11715
     Given log in as a different user         &{lead_applicant_credentials}
     When the user clicks the button/link     link = ${webTestAppName}
