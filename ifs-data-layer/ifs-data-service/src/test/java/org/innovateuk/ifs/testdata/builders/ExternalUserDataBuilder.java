@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.testdata.builders.data.ExternalUserData;
-import org.innovateuk.ifs.user.resource.EDIStatus;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.slf4j.Logger;
@@ -12,9 +11,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static java.time.LocalDate.now;
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.user.resource.EDIStatus.COMPLETE;
 
 /**
  * Generates applicant users via registration
@@ -72,9 +69,5 @@ public class ExternalUserDataBuilder extends BaseUserDataBuilder<ExternalUserDat
 
     public ExternalUserDataBuilder withOrganisation(String organisation) {
         return with(data -> data.setOrganisation(organisation));
-    }
-
-    public ExternalUserDataBuilder withEDIStatus(EDIStatus ediStatus) {
-        return with(data -> data.setEdiStatus(ediStatus));
     }
 }
