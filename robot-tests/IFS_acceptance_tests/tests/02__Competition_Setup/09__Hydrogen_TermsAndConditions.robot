@@ -8,9 +8,9 @@ Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/Competition_Commons.robot
 
 *** Variables ***
-${hydrogenCompetitionName}             Hydrogen Grant Competition
-${hydrogenTermsAndConditionsLink}      Hydrogen Grant (opens in a new window)
-${hydrogenTermsAndConditionsTitle}     Terms and conditions of an BEIS Grant
+${hydrogenCompetitionName}             BEIS Net Zero Competition
+${hydrogenTermsAndConditionsLink}      BEIS Net Zero (opens in a new window)
+${hydrogenTermsAndConditionsTitle}     BEIS Net Zero Hydrogen Fund Terms and Conditions
 
 
 *** Test Cases ***
@@ -20,11 +20,11 @@ Hydrogen Grant erms and conditions not pre selected for any funding or competiti
     And the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
     And the user fills in the CS Initial details     ${hydrogenCompetitionName}  ${month}  ${nextyear}  ${compType_Programme}  STATE_AID  GRANT
     When the user clicks the button/link             link = Terms and conditions
-    Then the user should see the element             css = [id="termsAndConditionsId11"]:not(:checked) ~ label
+    Then the user should see the element             css = [id="termsAndConditionsId7"]:not(:checked) ~ label
 
 Comp admin marks Hydrogen Grant terms and conditions section as complete
     [Documentation]  IFS-11664
-    When the user clicks the button twice     jQuery = label:contains("Hydrogen Grant")
+    When the user clicks the button twice     jQuery = label:contains("BEIS Net Zero")
     And the user clicks the button/link       jQuery = button:contains("Done")
     And the user clicks the button/link       link = Back to competition details
     Then the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete
