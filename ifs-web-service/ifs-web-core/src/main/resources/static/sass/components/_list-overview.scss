@@ -280,14 +280,16 @@ ol {
   &.ifs-list--padding {
 
     > li {
-      padding: 0px 5px;
+      padding: 5px 5px;
+      margin-bottom: 0;
 
-      > span {
-        line-height:50px;
+      > p {
+        margin-bottom: 0;
       }
 
       ol {
         &.ifs-list--padding {
+          margin-top: 5px;
 
           > li {
             padding: 5px 0px;
