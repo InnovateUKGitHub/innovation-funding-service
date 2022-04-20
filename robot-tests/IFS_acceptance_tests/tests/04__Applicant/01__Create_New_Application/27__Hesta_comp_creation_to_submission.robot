@@ -31,7 +31,6 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11695 HECP Phase 2 - Cost categories - Spend profile updates
 ...
-
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -319,23 +318,6 @@ user selects where is organisation based
 the user applys to the competition
     [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
     the user select the competition and starts application          ${hestaCompetitionName}
-    the user clicks the button/link                                 link = Continue and create an account
-    the user selects the radio button                               organisationTypeId    radio-1
-    the user clicks the button/link                                 jQuery = .govuk-button:contains("Save and continue")
-    the user selects his organisation in Companies House            ASOS  ASOS PLC
-    the user should be redirected to the correct page               ${SERVER}/registration/register
-    the user enters the details and clicks the create account       ${firstName}  ${lastName}  ${email}  ${short_password}
-    the user reads his email and clicks the link                    ${email}  Please verify your email address  Once verified you can sign into your account.
-    the user should be redirected to the correct page               ${REGISTRATION_VERIFIED}
-    the user clicks the button/link                                 link = Sign in
-    Logging in and Error Checking                                   ${email}  ${short_password}
-    the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    the user completes the application details section              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
-    the applicant completes Application Team                        COMPLETE  ${email}
-
-the user applys to the HESTA competition
-    [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
-    the user select the competition and starts application          ${hestaCompetitionName1}
     the user clicks the button/link                                 link = Continue and create an account
     the user selects the radio button                               organisationTypeId    radio-1
     the user clicks the button/link                                 jQuery = .govuk-button:contains("Save and continue")
