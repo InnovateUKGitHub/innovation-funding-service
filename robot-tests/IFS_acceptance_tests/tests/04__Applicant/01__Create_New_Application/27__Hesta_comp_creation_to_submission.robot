@@ -337,7 +337,7 @@ the user applys to the competition
     the applicant completes Application Team                        COMPLETE  ${email}
 
 the user can see the read only view of work programme
-    the user should see the element    jQuery = dt:contains("Enter the Horizon Europe Work programme Part you applied to, e.g. CL2.")
+    the user should see the element    jQuery = dt:contains("Select the Horizon Europe Work programme Part you applied to, e.g. CL2.")
     the user should see the element    jQuery = dd:contains("Culture, Creativity and Inclusive Society (CL2)")
     the user should see the element    jQuery = dt:contains("Select the call you applied to.")
     the user should see the element    jQuery = dd:contains("HORIZON-CL2-2021-DEMOCRACY-01")
@@ -578,7 +578,7 @@ the user see the print view of the application
     the user should see the element                               xpath = //*[contains(text(),'Other goods, works and services (£)')]
     the user should see the element                               xpath = //*[contains(text(),'Other costs (£)')]
     the user should see the element                               xpath = //*[contains(text(),'Indirect costs (£)')]
-    the user should see the element                               xpath = //*[contains(text(),'Enter the Horizon Europe Work programme Part you applied to, e.g. CL2.')]
+    the user should see the element                               xpath = //*[contains(text(),'Select the Horizon Europe Work programme Part you applied to, e.g. CL2.')]
     the user should see the element                               xpath = //*[contains(text(),'Culture, Creativity and Inclusive Society (CL2)')]
     the user should see the element                               xpath = //*[contains(text(),'Select the call you applied to.')]
     the user should see the element                               xpath = //*[contains(text(),'HORIZON-CL2-2021-DEMOCRACY-01')]
