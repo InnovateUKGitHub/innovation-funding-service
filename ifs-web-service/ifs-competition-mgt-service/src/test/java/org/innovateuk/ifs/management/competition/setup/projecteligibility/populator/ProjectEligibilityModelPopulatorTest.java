@@ -10,7 +10,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.projecteligibility.viewmodel.ProjectEligibilityViewModel;
 import org.innovateuk.ifs.management.competition.setup.service.CategoryFormatter;
-import org.innovateuk.ifs.management.funding.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.innovateuk.ifs.util.CollectionFunctions;
@@ -79,7 +78,6 @@ public class ProjectEligibilityModelPopulatorTest {
                 competition
         );
 
-        assertArrayEquals(ResearchParticipationAmount.values(), viewModel.getResearchParticipationAmounts());
         assertArrayEquals(CollaborationLevel.values(), viewModel.getCollaborationLevels());
         assertEquals(researchCategories, viewModel.getResearchCategories());
         assertEquals("Business, Research", viewModel.getLeadApplicantTypesText());
@@ -113,7 +111,6 @@ public class ProjectEligibilityModelPopulatorTest {
                 competition
         );
 
-        assertArrayEquals(new ResearchParticipationAmount[]{}, viewModel.getResearchParticipationAmounts());
     }
 
     @Test
@@ -152,7 +149,6 @@ public class ProjectEligibilityModelPopulatorTest {
                 competition
         );
 
-        assertArrayEquals(ResearchParticipationAmount.values(), viewModel.getResearchParticipationAmounts());
         assertArrayEquals(CollaborationLevel.values(), viewModel.getCollaborationLevels());
         assertEquals(researchCategories, viewModel.getResearchCategories());
         assertEquals(1, viewModel.getLeadApplicantTypes().size());
