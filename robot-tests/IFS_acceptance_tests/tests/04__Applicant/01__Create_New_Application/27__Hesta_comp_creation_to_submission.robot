@@ -547,7 +547,7 @@ the user complete the work programme
     the user should see read only view of call ID
     the user clicks the button/link                jQuery = button:contains("Save and continue")
     the user should see a field and summary error  You must select an option.
-    the user clicks the button/link                jQuery = label:contains("HORIZON-CL2-2021-DEMOCRACY-01")
+    the user clicks the button twice               jQuery = label:contains("HORIZON-CL2-2021-DEMOCRACY-01")
     the user clicks the button/link                jQuery = button:contains("Save and continue")
     the user can mark the question as complete for work programme
     the user should see the element                jQuery = li:contains("Work programme") > .task-status-complete
@@ -556,7 +556,7 @@ the user complete the work programmes
     the user clicks the button/link                jQuery = a:contains("Work programme")
     the user clicks the button twice               jQuery = label:contains("Culture, Creativity and Inclusive Society (CL2)")
     the user clicks the button/link                jQuery = button:contains("Save and continue")
-    the user clicks the button/link                jQuery = label:contains("HORIZON-CL2-2021-DEMOCRACY-01")
+    the user clicks the button twice               jQuery = label:contains("HORIZON-CL2-2021-DEMOCRACY-01")
     the user clicks the button/link                jQuery = button:contains("Save and continue")
     the user can mark the question as complete for work programme
     the user should see the element                jQuery = li:contains("Work programme") > .task-status-complete
