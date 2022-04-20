@@ -50,8 +50,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.user.resource.Role.externalRolesToInvite;
-import static org.innovateuk.ifs.user.resource.Role.internalRoles;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -110,7 +109,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
             return serviceFailure(USER_ROLE_INVITE_INVALID);
         }
 
-        if (externalRolesToInvite().contains(role)) {
+        if (externalRolesToInvite().contains(role) || externalRolesIncludingAssessorToInvite().contains(role)) {
             return validateExternalUserEmailDomain(invitedUser.getEmail(), role)
                     .andOnSuccess(() -> validateAndSaveInvite(invitedUser, role, organisation))
                     .andOnSuccess(this::inviteExternalUser);
