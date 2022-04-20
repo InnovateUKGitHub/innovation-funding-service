@@ -22,6 +22,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
@@ -78,13 +80,44 @@ public class LoanApplicationControllerTest extends BaseControllerMockMVCTest<Loa
         when(questionService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), silStatus.getQuestionSetupType()))
                 .thenReturn(serviceSuccess(question));
         when(questionService.getQuestionById(ids.questionId)).thenReturn(serviceSuccess(question));
-        when(questionStatusService.markAsCompleteNoValidate(ids, user.getId())).thenReturn(serviceSuccess());
+        when(questionStatusService.markAsCompleteNoValidate(ids,processRole.getId())).thenReturn(serviceSuccess());
         when(questionStatusService.markAsComplete(ids, processRole.getId(), silStatus.getCompletionDate()))
                 .thenReturn(serviceSuccess(Collections.emptyList()));
 
         mockMvc.perform(patch("/application-update/{applicationId}", applicationId).contentType(APPLICATION_JSON).content(toJson(silStatus)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void updateApplicationFailWhenIncorrectProcessRoleIdIsPassed() throws Exception {
+        long applicationId = 1L;
+        UserResource user = newUserResource().withId(1L).build();
+        ProcessRoleResource processRole = newProcessRoleResource().withId(5L).build();
+        CompetitionResource competition = newCompetitionResource().withId(1L).withFundingType(FundingType.LOAN).build();
+        QuestionResource question = newQuestionResource().withId(1L).withQuestionSetupType(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION).build();
+        QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(question.getId(), applicationId);
+
+        SilLoanApplicationStatus silStatus = new SilLoanApplicationStatus();
+        silStatus.setCompletionStatus(QuestionStatus.COMPLETE);
+        silStatus.setQuestionSetupType(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION);
+        silStatus.setCompletionDate(ZonedDateTime.now(ZoneId.of("UTC")));
+
+        when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
+        when(usersRolesService.getProcessRoleByUserIdAndApplicationId(user.getId(), applicationId))
+                .thenReturn(serviceSuccess(processRole));
+        when(competitionService.getCompetitionByApplicationId(applicationId))
+                .thenReturn(serviceSuccess(competition));
+        when(questionService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), silStatus.getQuestionSetupType()))
+                .thenReturn(serviceSuccess(question));
+        when(questionService.getQuestionById(ids.questionId)).thenReturn(serviceSuccess(question));
+        when(questionStatusService.markAsCompleteNoValidate(ids, processRole.getId())).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
+        when(questionStatusService.markAsComplete(ids, processRole.getId(), silStatus.getCompletionDate()))
+                .thenReturn(serviceSuccess(Collections.emptyList()));
+
+        mockMvc.perform(patch("/application-update/{applicationId}", applicationId).contentType(APPLICATION_JSON).content(toJson(silStatus)))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
