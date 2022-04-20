@@ -50,7 +50,7 @@ public class InviteUserController {
     @Autowired
     private InviteUserModelPopulator inviteUserModelPopulator;
 
-    @Value("${ifs_assessor_pool_enabled}")
+    @Value("${ifs.assessor.pool.enabled}")
     private Boolean isAssessorPoolEnabled;
 
     @GetMapping("/select-external-role")
