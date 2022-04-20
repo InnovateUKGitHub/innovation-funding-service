@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.innovateuk.ifs.user.resource.Role.SUPPORTER;
@@ -49,6 +50,7 @@ public class InviteUserControllerTest extends BaseControllerMockMVCTest<InviteUs
 
     @Test
     public void selectExternalRole() throws Exception {
+        ReflectionTestUtils.setField(controller, "isAssessorPoolEnabled", false);
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/select-external-role"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/select-external-role"));
