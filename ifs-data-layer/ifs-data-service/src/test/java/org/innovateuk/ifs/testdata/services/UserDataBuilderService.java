@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.testdata.builders.ExternalUserDataBuilder.newExternalUserData;
 import static org.innovateuk.ifs.testdata.builders.InternalUserDataBuilder.newInternalUserData;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -91,7 +92,7 @@ public class UserDataBuilderService extends BaseDataBuilderService {
         UnaryOperator<S> addRoles = builder -> builder.addAdditionalRoles(additionalRoles);
 
         UnaryOperator<S> addEDIStatus = UnaryOperator.identity();
-        if (APPLICANT.equals(role)) {
+        if (role.equals(APPLICANT) || additionalRoles.contains(APPLICANT)) {
             addEDIStatus = builder -> builder.addEdiStatus(ediStatus);
         }
 
