@@ -805,13 +805,22 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values) -> {
             CostCategory cc = costCategoryRepository.findById(category).get();
 
-            if (isResearch) {
-                rows.add(calculateQuarterly(cc.getLabel(), cc.getName(), values).toArray(new String[0]));
-            } else if (hecpCompetition) {
-                rows.add(calculateQuarterly(FinanceRowType.getByName(cc.getName()).get().getHecpDisplayName(), values).toArray(new String[0]));
+            if (hecpCompetition) {
+                String hecpName = FinanceRowType.getByName(cc.getName()).get().getHecpDisplayName();
+                if (isResearch) {
+                    rows.add(calculateQuarterly(cc.getLabel(), hecpName, values).toArray(new String[0]));
+                } else {
+                    rows.add(calculateQuarterly(hecpName, values).toArray(new String[0]));
+                }
             } else {
-                rows.add(calculateQuarterly(cc.getName(), values).toArray(new String[0]));
+                if (isResearch) {
+                    rows.add(calculateQuarterly(cc.getLabel(), cc.getName(), values).toArray(new String[0]));
+                } else {
+                    rows.add(calculateQuarterly(cc.getName(), values).toArray(new String[0]));
+                }
             }
+
+
         });
 
         if (isResearch) {
