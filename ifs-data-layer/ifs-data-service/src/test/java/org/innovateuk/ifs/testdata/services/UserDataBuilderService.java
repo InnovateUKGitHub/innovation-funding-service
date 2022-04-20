@@ -91,7 +91,7 @@ public class UserDataBuilderService extends BaseDataBuilderService {
         UnaryOperator<S> addRoles = builder -> builder.addAdditionalRoles(additionalRoles);
 
         UnaryOperator<S> addEDIStatus = UnaryOperator.identity();
-        if (newArrayList(APPLICANT, MONITORING_OFFICER, KNOWLEDGE_TRANSFER_ADVISER).contains(role)) {
+        if (APPLICANT.equals(role)) {
             addEDIStatus = builder -> builder.addEdiStatus(ediStatus);
         }
 
