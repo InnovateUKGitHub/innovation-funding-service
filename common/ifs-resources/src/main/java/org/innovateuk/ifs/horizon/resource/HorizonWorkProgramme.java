@@ -134,7 +134,7 @@ public enum HorizonWorkProgramme {
     }
 
     @JsonIgnore
-    public String getProgrammeDisplayString() {
+    public String getProgrammeDisplayName() {
        return this.getWorkProgramme().getDisplay();
     }
 
