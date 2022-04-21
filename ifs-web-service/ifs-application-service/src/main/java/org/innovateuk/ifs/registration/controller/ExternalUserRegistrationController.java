@@ -3,6 +3,7 @@ package org.innovateuk.ifs.registration.controller;
 import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.service.AddressRestService;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -15,6 +16,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +27,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolation;
+import javax.validation.Valid;
 import javax.validation.Validator;
 import javax.validation.groups.Default;
 import java.util.ArrayList;
@@ -72,7 +75,7 @@ public class ExternalUserRegistrationController {
     @PostMapping("/{inviteHash}/register")
     public String submitYourDetails(Model model,
                                     @PathVariable("inviteHash") String inviteHash,
-                                    @Validated({Default.class, TermsValidationGroup.class}) @ModelAttribute("form") RegistrationForm registrationForm,
+                                    @Validated({Default.class, Primary.class}) @ModelAttribute("form") RegistrationForm registrationForm,
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler,
                                     UserResource loggedInUser) {
@@ -83,6 +86,14 @@ public class ExternalUserRegistrationController {
                     validator.validate(registrationForm, RegistrationForm.PhoneNumberValidationGroup.class);
 
             constraintViolations.forEach(violation ->
+                    bindingResult.addError(new FieldError("form", violation.getPropertyPath().toString(), violation.getMessage())));
+        }
+
+        if (invite.getRole() != Role.ASSESSOR) {
+            Set<ConstraintViolation<RegistrationForm>> tncConstraintViolations =
+                    validator.validate(registrationForm, RegistrationForm.TermsValidationGroup.class);
+
+            tncConstraintViolations.forEach(violation ->
                     bindingResult.addError(new FieldError("form", violation.getPropertyPath().toString(), violation.getMessage())));
         }
 
@@ -156,6 +167,13 @@ public class ExternalUserRegistrationController {
                         .withSubTitle("")
                         .withPostcodeGuidance("")
                         .withGuidance("");
+            }
+            if (invite.getRole() == Role.ASSESSOR) {
+                viewModelBuilder.withPhoneRequired(true)
+                        .withAddressRequired(true)
+                        .withInvitee(true)
+                        .withTermsRequired(false)
+                        .withButtonText("Continue");
             }
             model.addAttribute("model", viewModelBuilder.build());
             return "registration/register";
