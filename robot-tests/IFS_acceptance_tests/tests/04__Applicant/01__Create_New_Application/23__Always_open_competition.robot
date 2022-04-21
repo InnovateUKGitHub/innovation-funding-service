@@ -55,6 +55,8 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-11486 HECP Phase 2 - Always open functionality to have the the ability to bypass IFS assessment
 ...
+...               IFS-11715 - Always Open Competition Application Overview Banner message
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 
@@ -106,7 +108,7 @@ the user creates a new open ended competiton
     [Documentation]  IFS-8848
     Given the user clicks the button/link                       link = Back to public content
     When the user clicks the button/link                        link = Competition details
-    Then the competition admin creates open ended competition   ${business_type_id}  ${openEndedCompName}  Open ended  ${compType_Programme}  STATE_AID  GRANT  PROJECT_SETUP  yes  1  true  collaborative
+    Then the competition admin creates open ended competition   ${business_type_id}  ${openEndedCompName}  Open ended  ${compType_Programme}  STATE_AID  GRANT  PROJECT_SETUP  yes  50  true  collaborative
 
 the user check for valid content on front end for open ended competitions
     [Documentation]  IFS-8848
@@ -315,6 +317,14 @@ Comp admin can see the open ended competition in project setup/previous dashboar
     And The user clicks the button/link                        jQuery = button:contains("Close competition")
     Then the user should see the competition in project setup/previous dashboard and can not see on live dashboard
 
+Lead Applicant can view application successful banner message
+    [Documentation]  IFS-11715
+    Given log in as a different user         &{lead_applicant_credentials}
+    When the user clicks the button/link     link = ${webTestAppName}
+    And the user clicks the button/link      link = view application feedback
+    Then the user should see the element     jQuery = h2:contains("Congratulations, your application has been successful")
+    And the user should see the element      jQuery = p:contains("Scores and written feedback from each assessor can be found below.")
+
 Supporter can review open ended ktp competition applications
     [Documentation]  IFS-9785
     Given log in as a different user          &{supporter_credentials}
@@ -412,7 +422,7 @@ the competition admin creates open ended competition
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingRule}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user selects the Terms and Conditions               ${compType}  ${fundingRule}
     the user fills in the CS Funding Information
-    the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
+    the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user fills in the CS funding eligibility            ${researchCategory}  ${compType}   ${fundingRule}
     the user selects the organisational eligibility to no   false
     the user marks the application as done                  ${projectGrowth}  ${compType}  ${competition}
