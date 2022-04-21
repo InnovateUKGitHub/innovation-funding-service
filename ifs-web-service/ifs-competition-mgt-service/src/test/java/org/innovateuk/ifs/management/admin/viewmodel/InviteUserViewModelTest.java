@@ -56,4 +56,25 @@ public class InviteUserViewModelTest {
         assertTrue(viewModel.isExternal());
         assertEquals(viewModel.getRoles(), Role.externalRolesToInvite().stream().collect(toSet()));
     }
+
+    @Test
+    public void inviteExternalUserViewModelAssessor() {
+
+        InviteUserViewModel viewModel = new InviteUserViewModel(InviteUserView.EXTERNAL_USER, new HashSet<>(Arrays.asList(Role.ASSESSOR)));
+
+        assertEquals(InviteUserView.EXTERNAL_USER, viewModel.getType());
+        assertTrue(Arrays.asList("assessor", "knowledge transfer adviser", "supporter").contains(viewModel.getTypeName()));
+        assertTrue(viewModel.isExternal());
+        assertEquals(viewModel.getRoles(), new HashSet<>(Arrays.asList(Role.ASSESSOR)));
+    }
+
+    @Test
+    public void inviteExternalUserViewModelIncludingAssessor() {
+
+        InviteUserViewModel viewModel = new InviteUserViewModel(InviteUserView.EXTERNAL_USER, Role.externalRolesIncludingAssessorToInvite().stream().collect(toSet()));
+        assertEquals(InviteUserView.EXTERNAL_USER, viewModel.getType());
+        assertTrue(Arrays.asList("assessor", "knowledge transfer adviser", "supporter").contains(viewModel.getTypeName()));
+        assertTrue(viewModel.isExternal());
+        assertEquals(viewModel.getRoles(), Role.externalRolesIncludingAssessorToInvite().stream().collect(toSet()));
+    }
 }

@@ -723,4 +723,52 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         assertEquals("zz@email.com", result.getSuccess().get(4).getEmail());
         assertEquals("Rolls Royce Plc", result.getSuccess().get(4).getOrganisationName());
     }
+
+    @Test
+    public void saveAssessorUserInviteSucceeds() throws Exception {
+        invitedUser = UserResourceBuilder.newUserResource()
+                .withFirstName("Assessor")
+                .withLastName("Test")
+                .withEmail("assessor.test.org")
+                .build();
+
+        Role role = ASSESSOR;
+        RoleInvite expectedRoleInvite = newRoleInvite().
+                withEmail("assessor.test.org").
+                withName("Assessor Test").
+                withRole(role).
+                withStatus(CREATED).
+                withHash("1234").
+                build();
+
+        when(roleInviteRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
+
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
+
+        when(roleInviteRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
+
+        when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
+
+        NotificationTarget notificationTarget = new UserNotificationTarget(expectedRoleInvite.getName(), expectedRoleInvite.getEmail());
+
+        Map<String, Object> emailTemplateArgs = asMap("role", role.getDisplayName().toLowerCase(),
+                "inviteUrl", "base/registration/1234/register");
+
+        Notification expectedNotification = new Notification(systemNotificationSource, notificationTarget, INVITE_EXTERNAL_USER, emailTemplateArgs);
+
+        when(notificationService.sendNotificationWithFlush(expectedNotification, EMAIL)).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, role, "");
+
+        assertTrue(result.isSuccess());
+
+        verify(roleInviteRepositoryMock, times(2)).save(roleInviteArgumentCaptor.capture());
+
+        List<RoleInvite> captured = roleInviteArgumentCaptor.getAllValues();
+        assertEquals("assessor.test.org", captured.get(0).getEmail());
+        assertEquals("Assessor Test", captured.get(0).getName());
+        assertEquals(role, captured.get(0).getTarget());
+        assertEquals(CREATED, captured.get(0).getStatus());
+        assertNotNull(captured.get(1).getSentOn());
+    }
 }
