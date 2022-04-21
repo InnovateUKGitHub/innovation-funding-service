@@ -52,7 +52,7 @@ Assessor can login and sign the contract
 
 Admin can see the new assessor in the system
     [Documentation]  IFS-11788
-    And log in as a different user               &{ifs_admin_user_credentials}
+    Given log in as a different user             &{ifs_admin_user_credentials}
     When the user clicks the button/link         link = Manage users
     And the user enters text to a text field     id = filter  alome.lolome
     When the user clicks the button/link         css = input[type="submit"]
@@ -67,7 +67,13 @@ Admin can view the new assessor in invite assessors page of an existing competit
     And the user clicks the button/link         id = assessor-filter-button
     Then the user should see the element        jQuery = td:contains("alome.lolome") +td+ td:contains("Biosciences")
 
-
+Competiton admin can view new assessor status
+    [Documentation]  IFS-11788
+    Given log in as a different user             &{Comp_admin1_credentials}
+    When the user clicks the button/link         link = Assessor status
+    And the user enters text to a text field     id = filter  alome.lolome@gmail.com
+    When the user clicks the button/link         css = input[type="submit"]
+    Then the user should see the element         link = ${validAssessorEmail}
 
 
 *** Keywords ***
