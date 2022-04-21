@@ -77,12 +77,14 @@
                                     <div class="govuk-radios">
                                         <div class="govuk-radios__item" th:each="workProgramme : *{allOptions}">
                                             <input th:field="*{selected}"
+                                                   th:id="|work-programme-radio-${workProgramme.id}|"
                                                    th:value="${workProgramme}"
                                                    type="radio"
                                                    class="govuk-radios__input"
                                                    required="required"
                                                    th:attr="data-required-errormessage=#{validation.horizon.programme.required}" />
-                                            <label th:text="${workProgramme.display}"
+                                            <label th:for="|work-programme-radio-${workProgramme.id}|"
+                                                    th:text="${workProgramme.display}"
                                                    class="govuk-label govuk-radios__label">Label</label>
                                         </div>
                                     </div>
