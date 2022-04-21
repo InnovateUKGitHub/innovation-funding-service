@@ -107,4 +107,7 @@ public enum Role implements Identifiable {
     public static Set<Role> externalRolesToInvite() {
         return EnumSet.of(KNOWLEDGE_TRANSFER_ADVISER, SUPPORTER);
     }
+    public static Set<Role> externalRolesIncludingAssessorToInvite() {
+        return EnumSet.of(ASSESSOR, KNOWLEDGE_TRANSFER_ADVISER, SUPPORTER);
+    }
 }

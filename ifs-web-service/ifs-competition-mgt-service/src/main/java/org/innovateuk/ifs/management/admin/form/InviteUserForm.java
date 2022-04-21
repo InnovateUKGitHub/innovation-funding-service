@@ -29,6 +29,7 @@ import javax.validation.constraints.Size;
         message = "{validation.standard.email.format}",
         predicate = EmailAddressValidator.NonKtpPredicateProvider.class
 )
+@FieldRequiredIf(required = "innovationArea", argument = "assessor", predicate = true, message = "{validation.invite.assessor.innovationArea.required}")
 public class InviteUserForm extends BaseBindingResultTarget {
 
     @NotBlank(message = "{validation.standard.firstname.required}")
@@ -53,6 +54,9 @@ public class InviteUserForm extends BaseBindingResultTarget {
     private Role role;
 
     private String organisation;
+
+    private Long innovationArea;
+
 
     public InviteUserForm() {
         // for spring form binding
@@ -106,6 +110,18 @@ public class InviteUserForm extends BaseBindingResultTarget {
         return Role.SUPPORTER == role;
     }
 
+    public boolean isAssessor() {
+        return Role.ASSESSOR == role;
+    }
+
+    public Long getInnovationArea() {
+        return innovationArea;
+    }
+
+    public void setInnovationArea(Long innovationArea) {
+        this.innovationArea = innovationArea;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -120,6 +136,7 @@ public class InviteUserForm extends BaseBindingResultTarget {
                 .append(emailAddress, form.emailAddress)
                 .append(role, form.role)
                 .append(organisation, form.organisation)
+                .append(innovationArea, form.innovationArea)
                 .isEquals();
     }
 
@@ -131,6 +148,7 @@ public class InviteUserForm extends BaseBindingResultTarget {
                 .append(emailAddress)
                 .append(role)
                 .append(organisation)
+                .append(innovationArea)
                 .toHashCode();
     }
 }

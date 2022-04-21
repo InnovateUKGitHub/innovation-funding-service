@@ -98,6 +98,33 @@
                                 data-maxlength-errormessage=#{validation.invite.email.length.max(null, 254)},
                                 data-required-errormessage=${model.addingKtaRole} ? #{validation.kta.invite.email.required} : #{validation.invite.email.required}" />
             </div>
+            <div th:if="${model.addingAssessorRole}" class="govuk-form-group" th:classappend="${#fields.hasErrors('*{innovationArea}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s" for="innovationArea">
+                    Innovation area
+                </label>
+                <th:block th:if="${#fields.hasErrors('innovationArea')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('innovationArea')}" th:text="${err}"></span>
+                </th:block>
+                <select th:field="*{innovationArea}"
+                        class="govuk-select"
+                        data-progressive-group-select="Innovation sector"
+                        data-progressive-group-select-instruction="Please select an innovation sector"
+                        data-progressive-group-select-id="innovationArea"
+                        required="required"
+                        th:errorclass="govuk-select--error"
+                        th:attr="data-required-errormessage=#{validation.invite.assessor.innovationArea.required},
+                                                 data-progressive-group-select-errormessage=#{validation.invite.assessor.innovationArea.required}"
+                        aria-labelledby="innovation-area"
+                        id="innovationArea">
+                    <option th:selected="*{innovationArea} == null" value="">Please select an innovation area</option>
+                    <optgroup th:if="${innovationSector.name != 'Open'}" th:each="innovationSector : ${model.innovationSectorOptions}" th:label="${innovationSector.name}">
+                        <option th:each="innovationArea : ${innovationSector.children}"
+                                th:value="${innovationArea.id}"
+                                th:text="${innovationArea.name}"
+                                th:selected="*{innovationArea} == ${innovationArea.id}"></option>
+                    </optgroup>
+                </select>
+            </div>
             <div th:if="${#lists.size(model.roles) > 1}" class="govuk-form-group" th:classappend="${#fields.hasErrors('*{role}')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" for="role">
                     Role
