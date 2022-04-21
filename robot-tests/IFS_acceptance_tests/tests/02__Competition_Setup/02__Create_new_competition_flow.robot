@@ -311,7 +311,7 @@ Project eligibility: Mark as Done then Edit again
     Given the user selects the radio button    singleOrCollaborative    single
     And the user selects the checkbox          lead-applicant-type-1  # business
     And the user selects the checkbox          lead-applicant-type-3  # RTOs
-    And the user selects the option from the drop-down menu    50%    name=researchParticipationAmountId
+    And the user enters text to a text field   id = researchParticipationPercentage   50
     And the user selects the radio button      resubmission    no
     When the user clicks the button/link       jQuery = button:contains("Done")
     Then the user should see the element       jQuery = dt:contains("Project type") ~ dd:contains("Single")
@@ -1010,7 +1010,7 @@ the comp admin creates competition with all sections details
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user selects procurement Terms and Conditions
     ...  ELSE  the user selects the Terms and Conditions    ${compType}  ${fundingRule}
     the user fills in the CS Funding Information
-    the user fills in the CS Project eligibility                                     ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
+    the user fills in the CS Project eligibility                                     ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 50%
     the user fills in the CS funding eligibility                                     ${researchCategory}   ${compType}   ${fundingRule}
     the user selects the organisational eligibility to no                            false
     the user fills in the CS Milestones                                              ${completionStage}   ${month}   ${nextyear}   ${isOpenComp}
