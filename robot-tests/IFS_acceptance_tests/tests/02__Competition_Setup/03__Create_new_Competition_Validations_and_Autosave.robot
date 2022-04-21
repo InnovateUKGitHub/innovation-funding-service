@@ -39,6 +39,8 @@ Documentation     INFUND-2982: Create a Competition: Step 1: Initial details
 ...
 ...               IFS-8847 Always open competitions: new comp setup configuration
 ...
+...               IFS-11684 10% research participation functionality
+...
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -137,15 +139,16 @@ Project eligibility server-side validations
     And The user should see a field and summary error    Please select a resubmission option
 
 Project eligibility client-side validations
-    [Documentation]    INFUND-2986 INFUND-2988 INFUND-3888
+    [Documentation]    INFUND-2986 INFUND-2988 INFUND-3888  IFS-11684
     [Tags]
     Given the user clicks the button/link                link = Return to setup overview
     And the user clicks the button/link                  link = Project eligibility
     When the user selects the radio button               singleOrCollaborative    single
     And the user selects the checkbox                    lead-applicant-type-1  #business
-    And the user selects the option from the drop-down menu    50%    name=researchParticipationAmountId
+    And the user enters text to a text field             id = researchParticipationPercentage   50
     Then the user should not see the element             jQuery = .govuk-error-message:contains("Please select a collaboration level")
     And the user should not see the element              jQuery = .govuk-error-message:contains("Please select a lead applicant type")
+    And the user should not see the element              jQuery = .govuk-error-message:contains("You must enter a number between 0 to 100.")
     And the user selects the radio button                resubmission    no
     And the user should not see the element             jQuery = .govuk-error-message:contains("Please select a resubmission option")
     And the user cannot see a validation error in the page

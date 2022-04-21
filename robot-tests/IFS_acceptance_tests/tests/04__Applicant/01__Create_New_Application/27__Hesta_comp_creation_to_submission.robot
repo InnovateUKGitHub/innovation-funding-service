@@ -13,6 +13,8 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11299 HECP Phase 1 - EIC - New GOL Template
 ...
+...               IFS-11366 HECP Phase 2 - Custom Question - Work Programme
+...
 ...               IFS-11618 HECP Phase 2 - Cost categories - Application view additional updates
 ...
 ...               IFS-11688 HECP Phase 2 - Template update
@@ -23,9 +25,13 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11510 HECP Phase 2 - Remove content from 'View application feedback' link
 ...
+...               IFS-11686 HECP Phase 2 - Read only views - Custom Question - Work Programme
+...
 ...               IFS-11407 HECP Phase 2 - Cost categories - Project Setup views
 ...
 ...               IFS-11695 HECP Phase 2 - Cost categories - Spend profile updates
+...
+...               IFS-11794 HECP Phase 2 - Bug bash changes - Clicking the work programme labels does not select the radio button
 ...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -64,22 +70,40 @@ Comp admin can view Hesta competition type in Initial details read only view
 Comp admin creates Hesta competition
     [Documentation]  IFS-8751  IFS-11486
     Given the user clicks the button/link                            link = Back to competition details
-    Then the competition admin creates Hesta competition             ${BUSINESS_TYPE_ID}  ${hestaCompetitionName}  ${compType_HESTA}  ${compType_HESTA}  STATE_AID  HECP  PROJECT_SETUP  no  1  false  single-or-collaborative
+    Then the competition admin creates Hesta competition             ${BUSINESS_TYPE_ID}  ${hestaCompetitionName}  ${compType_HESTA}  ${compType_HESTA}  STATE_AID  HECP  PROJECT_SETUP  no  50  false  single-or-collaborative
     [Teardown]  Get competition id and set open date to yesterday    ${hestaCompetitionName}
 
-Lead applicant can view funding conversion tool in project costs
-    [Documentation]  IFS-11508
+the lead applicant can view answer yet to be provodied when work programme question is incomplete in readonly view
+    [Documentation]  IFS-11686
     Given the user logs out if they are logged in
-    And the user successfully completes application     tim   timmy   ${leadApplicantEmail}   ${hestaApplicationName}
-    When the user clicks the button/link                link = Your project finances
-    And the user clicks the button/link                 link = Your project costs
-    Then the user should see the element                jQuery = a:contains("Horizon Europe guarantee notice and guidance – UKRI")
-    And the user should see the element                 jQuery = a:contains("heguarantee@iuk.ukri.org")
+    And the user applys to the competition          tim   timmy   ${leadApplicantEmail}   ${hestaApplicationName}
+    When the user clicks the button/link            link = Review and submit
+    And the user clicks the button/link             jQuery = button:contains("Work programme")
+    Then the user should see the element            jQuery = p:contains("Answer yet to be provided")
+
+lead applicant views work programme answers provided in review and submit page
+    [Documentation]  IFS-11686  IFS-11794
+    Given the user clicks the button/link                           link = Application overview
+    When the user complete the work programme
+    And the user clicks the button/link                             link = Review and submit
+    Then the user can see the read only view of work programme
+
+Lead applicant can view funding conversion tool in project costs
+    [Documentation]  IFS-11508  IFS-11686
+    Given the user clicks the button/link                                       link = Application overview
+    And the user completes the application research category                    Feasibility studies
+    And the user is able to complete horizon grant agreement section
+    And the lead applicant fills all the questions and marks as complete(Hecp)
+    And the user accept the competition terms and conditions                    Back to application overview
+    When the user clicks the button/link                                        link = Your project finances
+    And the user clicks the button/link                                         link = Your project costs
+    Then the user should see the element                                        jQuery = a:contains("Horizon Europe guarantee notice and guidance – UKRI")
+    And the user should see the element                                         jQuery = a:contains("heguarantee@iuk.ukri.org")
 
 Lead applicant completes project finances and submits an application
-    [Documentation]  IFS-8751  IFS-11269  IFS-11618
-    Given the user clicks the button/link                     link = Your project finances
-    When the user completes hecp project finances             ${hestaApplicationName}  no
+    [Documentation]  IFS-8751  IFS-11269  IFS-11618  IFS-11366
+    When the user clicks the button/link                                        link = Your project finances
+    And the user completes hecp project finances                                ${hestaApplicationName}  no
     Then the user see the print view of the application
     And the user can submit the application
 
@@ -102,7 +126,8 @@ Lead applicant receives email notifiction when internal user marks application u
     [Documentation]  IFS-10695  IFS-11341  IFS-11486
     Given the user logs out if they are logged in
     And Requesting IDs of this competition                                          ${hestaCompetitionName}
-    And the user successfully completes application                                 barry   barrington   ${newLeadApplicantEmail}   ${newHestaApplicationName}
+    And the user applys to the competition                                          barry   barrington   ${newLeadApplicantEmail}   ${newHestaApplicationName}
+    And the user successfully completes application
     And the user clicks the button/link                                             link = Your project finances
     And the user completes hecp project finances                                    ${hestaApplicationName}  no
     And the user can submit the application
@@ -139,10 +164,15 @@ Lead applicant views hecp related cost categoires in project setup finances
     Then the user should see hecp project cost categories
     And the user should see readonly detailed hecp finances
 
-Internal users can edit the project costs
-    [Documentation]  IFS-11407
+Internal users can view workp programmes section in view application
+    [Documentation]  IFS-11686
     Given log in as a different user            &{internal_finance_credentials}
     And Requesting Project ID of this Project
+    When the user navigates to the page         ${server}/management/competition/${competitionId}/application/${hestaApplicationID}
+    Then the user can see the read only view of work programme
+
+Internal users can edit the project costs
+    [Documentation]  IFS-11407
     When the user navigates to the page         ${server}/project-setup-management/project/${hestaProjectID}/finance-check/organisation/${asosId}/eligibility
     And the user clicks the button/link         name = edit-project-costs
     And the user enters text to a text field    id = overhead  10000
@@ -173,7 +203,7 @@ Lead applicant views hecp project cost categories in edit spendprofile page
 Lead applicant submits spen profile to internal user for review
     [Documentation]  IFS-11551
     Given the user clicks the button/link   jQuery = button:contains("Save and return to spend profile overview")
-    Given the user clicks the button/link   id = spend-profile-mark-as-complete-button
+    And the user clicks the button/link     id = spend-profile-mark-as-complete-button
     And the user clicks the button/link     link = Review and submit project spend profile
     And the user clicks the button/link     id = submit-project-spend-profile-button
     When the user clicks the button/link    id = submit-send-all-spend-profiles
@@ -202,7 +232,6 @@ Lead Applicant can view banner message for a unsuccessfull application
     Given log in as a different user         ${newLeadApplicantEmail}  ${short_password}
     When the user clicks the button/link     link = ${newHestaApplicationName}
     Then the user should see the element     jQuery = h2:contains("Your application has not been successful in this competition.")
-
 
 *** Keywords ***
 user clicks on View the grant offer letter page
@@ -248,9 +277,9 @@ the competition admin creates Hesta competition
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingRule}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user selects the Terms and Conditions                   ${compType}  ${fundingRule}
     the user fills in the CS Funding Information
-    the user fills in the CS Project eligibility                ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
+    the user fills in the CS Project eligibility                ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user fills in the CS funding eligibility                true   ${compType_HESTA}  ${fundingRule}
-    And the user selects the organisational eligibility to no   false
+    the user selects the organisational eligibility to no       false
     the user completes milestones section
     the user marks the Hesta application question as done
     the user clicks the button/link                             link = Public content
@@ -288,7 +317,37 @@ user selects where is organisation based
     the user selects the radio button     international  ${org_type}
     the user clicks the button/link       id = international-organisation-cta
 
+the user applys to the competition
+    [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
+    the user select the competition and starts application          ${hestaCompetitionName}
+    the user clicks the button/link                                 link = Continue and create an account
+    the user selects the radio button                               organisationTypeId    radio-1
+    the user clicks the button/link                                 jQuery = .govuk-button:contains("Save and continue")
+    the user selects his organisation in Companies House            ASOS  ASOS PLC
+    the user should be redirected to the correct page               ${SERVER}/registration/register
+    the user enters the details and clicks the create account       ${firstName}  ${lastName}  ${email}  ${short_password}
+    the user reads his email and clicks the link                    ${email}  Please verify your email address  Once verified you can sign into your account.
+    the user should be redirected to the correct page               ${REGISTRATION_VERIFIED}
+    the user clicks the button/link                                 link = Sign in
+    Logging in and Error Checking                                   ${email}  ${short_password}
+    the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user completes the application details section              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
+    the applicant completes Application Team                        COMPLETE  ${email}
+
+the user can see the read only view of work programme
+    the user should see the element    jQuery = dt:contains("Enter the Horizon Europe Work programme Part you applied to, e.g. CL2.")
+    the user should see the element    jQuery = dd:contains("Culture, Creativity and Inclusive Society (CL2)")
+    the user should see the element    jQuery = dt:contains("Select the call you applied to.")
+    the user should see the element    jQuery = dd:contains("HORIZON-CL2-2021-DEMOCRACY-01")
+
 the user successfully completes application
+    the user completes the application research category            Feasibility studies
+    the user complete the work programmes
+    the user is able to complete horizon grant agreement section
+    the lead applicant fills all the questions and marks as complete(Hecp)
+    the user accept the competition terms and conditions            Back to application overview
+
+the user successfully completes applications
     [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
     the user select the competition and starts application          ${hestaCompetitionName}
     the user clicks the button/link                                 link = Continue and create an account
@@ -305,6 +364,7 @@ the user successfully completes application
     the user completes the application details section              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
     the applicant completes Application Team                        COMPLETE  ${email}
     the user completes the application research category            Feasibility studies
+    the user complete the work programmes
     The user is able to complete horizon grant agreement section
     the lead applicant fills all the questions and marks as complete(Hecp)
     the user accept the competition terms and conditions            Back to application overview
@@ -477,6 +537,35 @@ the user completes your funding section
     the user clicks the button/link             link = Your funding
     the user fills in the funding information   ${Application}   no
 
+the user complete the work programme
+    the user clicks the button/link                jQuery = a:contains("Work programme")
+    the user should see read only view of work program part
+    the user clicks the button/link                jQuery = button:contains("Save and continue")
+    the user should see a field and summary error  You must select an option.
+    the user clicks the button twice               jQuery = label:contains("Culture, Creativity and Inclusive Society (CL2)")
+    the user clicks the button/link                jQuery = button:contains("Save and continue")
+    the user should see read only view of call ID
+    the user clicks the button/link                jQuery = button:contains("Save and continue")
+    the user should see a field and summary error  You must select an option.
+    the user clicks the button twice               jQuery = label:contains("HORIZON-CL2-2021-DEMOCRACY-01")
+    the user clicks the button/link                jQuery = button:contains("Save and continue")
+    the user can mark the question as complete for work programme
+    the user should see the element                jQuery = li:contains("Work programme") > .task-status-complete
+
+the user complete the work programmes
+    the user clicks the button/link                jQuery = a:contains("Work programme")
+    the user clicks the button twice               jQuery = label:contains("Culture, Creativity and Inclusive Society (CL2)")
+    the user clicks the button/link                jQuery = button:contains("Save and continue")
+    the user clicks the button twice               jQuery = label:contains("HORIZON-CL2-2021-DEMOCRACY-01")
+    the user clicks the button/link                jQuery = button:contains("Save and continue")
+    the user can mark the question as complete for work programme
+    the user should see the element                jQuery = li:contains("Work programme") > .task-status-complete
+
+the user can mark the question as complete for work programme
+    the user clicks the button/link     id = application-question-complete
+    the user should see the element     jQuery = p:contains("This question is marked as complete.")
+    the user clicks the button/link     link = Back to application overview
+
 the user see the print view of the application
     Requesting IDs of this Hesta application
     the user navigates to the page without the usual headers      ${SERVER}/application/${hestaApplicationID}/print?noprint
@@ -487,7 +576,30 @@ the user see the print view of the application
     the user should see the element                               xpath = //*[contains(text(),'Other goods, works and services (£)')]
     the user should see the element                               xpath = //*[contains(text(),'Other costs (£)')]
     the user should see the element                               xpath = //*[contains(text(),'Indirect costs (£)')]
+    the user should see the element                               xpath = //*[contains(text(),'Enter the Horizon Europe Work programme Part you applied to, e.g. CL2.')]
+    the user should see the element                               xpath = //*[contains(text(),'Culture, Creativity and Inclusive Society (CL2)')]
+    the user should see the element                               xpath = //*[contains(text(),'Select the call you applied to.')]
+    the user should see the element                               xpath = //*[contains(text(),'HORIZON-CL2-2021-DEMOCRACY-01')]
     the user navigates to the page                                ${SERVER}/application/${hestaApplicationID}
+
+the user should see read only view of work program part
+    the user should see the element    jQuery = label:contains("Culture, Creativity and Inclusive Society (CL2)")
+    the user should see the element    jQuery = label:contains("Civil Security for Society (CL3)")
+    the user should see the element    jQuery = label:contains("Digital, Industry and Space (CL4 & EUSPA)")
+    the user should see the element    jQuery = label:contains("Climate, Energy and Mobility (CL5)")
+    the user should see the element    jQuery = label:contains("Food, Bioeconomy, Natural Resources, Agriculture and Environment (CL6)")
+    the user should see the element    jQuery = label:contains("EIC (EIC)")
+    the user should see the element    jQuery = label:contains("European Innovation Ecosystems (EIE)")
+    the user should see the element    jQuery = label:contains("Health (HLTH)")
+    the user should see the element    jQuery = label:contains("Research Infrastructures (INFRA)")
+    the user should see the element    jQuery = label:contains("Missions (MISS)")
+    the user should see the element    jQuery = label:contains("Widening Participation and Strengthening the European Research Area (WIDERA)")
+
+the user should see read only view of call ID
+    the user should see the element    jQuery = label:contains("HORIZON-CL2-2021-DEMOCRACY-01")
+    the user should see the element    jQuery = label:contains("HORIZON-CL2-2021-HERITAGE-01")
+    the user should see the element    jQuery = label:contains("HORIZON-CL2-2021-HERITAGE-02")
+    the user should see the element    jQuery = label:contains("HORIZON-CL2-2021-TRANSFORMATIONS-01")
 
 the user should see hecp project cost categories
     the user should see the element     jQuery = span:contains("Personnel costs")

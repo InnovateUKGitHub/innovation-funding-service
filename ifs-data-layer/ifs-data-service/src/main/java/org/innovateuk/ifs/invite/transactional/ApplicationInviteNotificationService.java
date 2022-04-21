@@ -76,7 +76,6 @@ class ApplicationInviteNotificationService {
         validator.afterPropertiesSet();
     }
 
-    @Transactional
     ServiceResult<Void> inviteCollaborators(List<ApplicationInvite> invites) {
 
         for (ApplicationInvite invite : invites) {
