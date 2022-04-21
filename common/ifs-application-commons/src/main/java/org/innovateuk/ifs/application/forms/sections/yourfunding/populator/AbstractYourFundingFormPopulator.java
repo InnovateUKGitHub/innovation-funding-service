@@ -71,11 +71,6 @@ public abstract class AbstractYourFundingFormPopulator<R extends BaseOtherFundin
     }
 
     private Boolean isOtherFundingSet(BaseOtherFundingCostCategory otherFundingCategory) {
-        if (otherFundingCategory.getOtherFunding() == null ||
-                isNullOrEmpty(otherFundingCategory.getOtherFunding().getOtherPublicFunding())) {
-            return Boolean.valueOf("false");
-        } else {
-            return otherFundingCategory.otherFundingSet();
-        }
+         return otherFundingCategory.otherFundingSet();
     }
 }
