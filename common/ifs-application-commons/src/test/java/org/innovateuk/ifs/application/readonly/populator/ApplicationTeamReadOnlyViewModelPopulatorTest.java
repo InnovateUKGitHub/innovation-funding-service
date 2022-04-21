@@ -29,6 +29,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -134,7 +135,7 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
         when(applicationOrganisationAddressRestService.getAddress(application.getId(), collaboratorOrganisation.getId(), OrganisationAddressType.INTERNATIONAL)).thenReturn(restSuccess(address));
         when(userRestService.retrieveUserById(anyLong())).thenReturn(restSuccess(newUserResource().withPhoneNumber("999").withEdiStatus(null).build()));
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(),
-                emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
+                emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), Optional.empty());
 
         ApplicationTeamReadOnlyViewModel viewModel = populator.populate(question, data, defaultSettings());
 
@@ -253,7 +254,7 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
         when(competitionRestServiceMock.hasEDIQuestion(anyLong())).thenReturn(restSuccess(Boolean.FALSE));
 
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(),
-                emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
+                emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), Optional.empty());
 
         ApplicationTeamReadOnlyViewModel viewModel = populator.populate(question, data, defaultSettings());
 

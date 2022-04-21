@@ -77,26 +77,28 @@
             </th:block>
 
             <div class="govuk-form-group"
-                 th:classappend="${#fields.hasErrors('researchParticipationAmountId')} ? 'govuk-form-group--error'"
-                 th:if="${!#arrays.isEmpty(model.researchParticipationAmounts)}">
-                <label class="govuk-label govuk-label--s" for="researchParticipation" id="researchParticipationAmountId">
-                    Research participation
-                </label>
-                <span class="govuk-hint">This indicates the maximum level of research participation allowed.</span>
-                <span th:if="${#fields.hasErrors('researchParticipationAmountId')}" class="govuk-error-message"
-                      th:each="err : ${#fields.errors('researchParticipationAmountId')}" th:text="${err}"/>
-                <select class="govuk-select govuk-!-width-one-quarter"
-                        name="researchParticipationAmountId"
-                        id="researchParticipation"
-                        required="required"
-                        th:attr="data-required-errormessage=#{validation.eligibilityform.researchparticipationamountId.required}">
-                    <option th:each="researchParticipationAmount : ${model.researchParticipationAmounts}"
-                            th:text="${researchParticipationAmount.name}"
-                            th:value="${researchParticipationAmount.id}"
-                            th:selected="${competitionSetupForm.researchParticipationAmountId == researchParticipationAmount.id}">
-                        Research participation
-                    </option>
-                </select>
+                 th:classappend="${#fields.hasErrors('*{__researchParticipationPercentage__}')} ? 'govuk-form-group--error'">
+
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="resubmission">
+                    <h2 class="govuk-fieldset__heading">Research participation</h2>
+                </legend>
+                <span class="govuk-hint">This indicates the maximum level of research participation allowed.
+                                         You can only use whole number from 0-100.
+                </span>
+
+                <span th:if="${#fields.hasErrors('researchParticipationPercentage')}" class="govuk-error-message"
+                      th:each="err : ${#fields.errors('researchParticipationPercentage')}" th:text="${err}"/>
+
+                <input class="govuk-input govuk-input--width-4 govuk-!-margin-right-1"
+                       id="researchParticipationPercentage"
+                       th:field="*{__researchParticipationPercentage__}"
+                       th:errorclass="govuk-input--error"
+                       type="number"
+                       required="required"
+                       data-prevent-input-non-number
+                       th:attr="data-required-errormessage=#{validation.projecteligibility.researchParticipationPercentage.required}" />
+
+                <span class="govuk-body govuk-!-padding-left-1">&percnt;</span>
             </div>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('resubmission')} ? 'govuk-form-group--error'">
@@ -153,12 +155,10 @@
                     <dd th:text="${model.leadApplicantTypesText}"></dd>
                 </th:block>
 
-                <th:block th:if="${!#arrays.isEmpty(model.researchParticipationAmounts)}">
+                <th:block>
                     <dt>Research participation</dt>
-                    <dd th:each="(researchParticipationAmount : ${model.researchParticipationAmounts})"
-                        th:if="${researchParticipationAmount.id == competitionSetupForm.researchParticipationAmountId}"
-                        th:text="${researchParticipationAmount.name}">
-                        Research participation amount
+                    <dd  th:text="${competitionSetupForm.getResearchParticipationPercentageDisplayName()}">
+                        Research participation percentage
                     </dd>
                 </th:block>
 

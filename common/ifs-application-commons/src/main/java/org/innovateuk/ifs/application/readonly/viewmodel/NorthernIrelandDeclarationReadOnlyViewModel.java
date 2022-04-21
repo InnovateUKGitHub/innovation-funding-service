@@ -23,6 +23,7 @@ public class NorthernIrelandDeclarationReadOnlyViewModel extends GenericQuestion
                 genericQuestionReadOnlyViewModel.isMultipleStatuses(),
                 genericQuestionReadOnlyViewModel.getAnswer(),
                 genericQuestionReadOnlyViewModel.getAnswers(),
+                genericQuestionReadOnlyViewModel.getWorkProgrammeAnswers(),
                 genericQuestionReadOnlyViewModel.isStatusDetailPresent(),
                 genericQuestionReadOnlyViewModel.getAppendices(),
                 genericQuestionReadOnlyViewModel.getTemplateFile(),
@@ -32,7 +33,8 @@ public class NorthernIrelandDeclarationReadOnlyViewModel extends GenericQuestion
                 genericQuestionReadOnlyViewModel.getInScope(),
                 genericQuestionReadOnlyViewModel.getTotalScope(),
                 genericQuestionReadOnlyViewModel.hasScope(),
-                genericQuestionReadOnlyViewModel.isLoanPartBEnabled()
+                genericQuestionReadOnlyViewModel.isLoanPartBEnabled(),
+                genericQuestionReadOnlyViewModel.isWorkProgrammeQuestionMarkedAsComplete()
         );
         this.applicationSubsidyBasisViewModel = applicationSubsidyBasisViewModel;
     }

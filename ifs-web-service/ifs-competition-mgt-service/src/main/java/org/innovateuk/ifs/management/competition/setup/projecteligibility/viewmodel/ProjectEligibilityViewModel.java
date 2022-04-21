@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.management.competition.setup.projecteligibility.viewmodel;
 
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
-import org.innovateuk.ifs.management.funding.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
@@ -12,7 +11,6 @@ import java.util.List;
 
 public class ProjectEligibilityViewModel extends CompetitionSetupViewModel {
 
-    private ResearchParticipationAmount[] researchParticipationAmounts;
     private CollaborationLevel[] collaborationLevels;
     private List<OrganisationTypeResource> leadApplicantTypes;
     private String leadApplicantTypesText;
@@ -22,7 +20,6 @@ public class ProjectEligibilityViewModel extends CompetitionSetupViewModel {
 
     public ProjectEligibilityViewModel(
             GeneralSetupViewModel generalSetupViewModel,
-            ResearchParticipationAmount[] researchParticipationAmounts,
             CollaborationLevel[] collaborationLevels,
             List<OrganisationTypeResource> leadApplicantTypes,
             String leadApplicantTypesText,
@@ -31,17 +28,12 @@ public class ProjectEligibilityViewModel extends CompetitionSetupViewModel {
             String researchCategoriesFormatted
     ) {
         this.generalSetupViewModel = generalSetupViewModel;
-        this.researchParticipationAmounts = researchParticipationAmounts;
         this.collaborationLevels = collaborationLevels;
         this.leadApplicantTypes = leadApplicantTypes;
         this.leadApplicantTypesText = leadApplicantTypesText;
         this.fundingLevels = fundingLevels;
         this.researchCategories = researchCategories;
         this.researchCategoriesFormatted = researchCategoriesFormatted;
-    }
-
-    public ResearchParticipationAmount[] getResearchParticipationAmounts() {
-        return researchParticipationAmounts;
     }
 
     public CollaborationLevel[] getCollaborationLevels() {
