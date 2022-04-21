@@ -23,7 +23,6 @@ import org.innovateuk.ifs.management.competition.setup.fundinginformation.viewmo
 import org.innovateuk.ifs.management.competition.setup.initialdetail.populator.InitialDetailsModelPopulator;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.viewmodel.InitialDetailsViewModel;
 import org.innovateuk.ifs.management.competition.setup.projecteligibility.viewmodel.ProjectEligibilityViewModel;
-import org.innovateuk.ifs.management.funding.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -114,8 +113,7 @@ public class CompetitionSetupServiceImplTest {
         CompetitionSetupSectionModelPopulator matchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
         when(matchingPopulator.sectionToPopulateModel()).thenReturn(CompetitionSetupSection.PROJECT_ELIGIBILITY);
         when(matchingPopulator.populateModel(nullable(GeneralSetupViewModel.class), nullable(CompetitionResource.class)))
-                .thenReturn(new ProjectEligibilityViewModel(getBasicGeneralSetupView(CompetitionSetupSection.PROJECT_ELIGIBILITY, competition), new ResearchParticipationAmount[]{},
-                        new CollaborationLevel[]{}, emptyList(), "", new FundingLevel[]{}, emptyList(), ""));
+                .thenReturn(new ProjectEligibilityViewModel(getBasicGeneralSetupView(CompetitionSetupSection.PROJECT_ELIGIBILITY, competition), new CollaborationLevel[]{}, emptyList(), "", new FundingLevel[]{}, emptyList(), ""));
         CompetitionSetupSectionModelPopulator notMatchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
         when(notMatchingPopulator.sectionToPopulateModel()).thenReturn(CompetitionSetupSection.MILESTONES);
 

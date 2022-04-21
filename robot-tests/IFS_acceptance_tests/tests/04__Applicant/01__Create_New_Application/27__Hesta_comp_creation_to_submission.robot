@@ -31,6 +31,8 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11695 HECP Phase 2 - Cost categories - Spend profile updates
 ...
+...               IFS-11794 HECP Phase 2 - Bug bash changes - Clicking the work programme labels does not select the radio button
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -68,7 +70,7 @@ Comp admin can view Hesta competition type in Initial details read only view
 Comp admin creates Hesta competition
     [Documentation]  IFS-8751  IFS-11486
     Given the user clicks the button/link                            link = Back to competition details
-    Then the competition admin creates Hesta competition             ${BUSINESS_TYPE_ID}  ${hestaCompetitionName}  ${compType_HESTA}  ${compType_HESTA}  STATE_AID  HECP  PROJECT_SETUP  no  1  false  single-or-collaborative
+    Then the competition admin creates Hesta competition             ${BUSINESS_TYPE_ID}  ${hestaCompetitionName}  ${compType_HESTA}  ${compType_HESTA}  STATE_AID  HECP  PROJECT_SETUP  no  50  false  single-or-collaborative
     [Teardown]  Get competition id and set open date to yesterday    ${hestaCompetitionName}
 
 the lead applicant can view answer yet to be provodied when work programme question is incomplete in readonly view
@@ -80,7 +82,7 @@ the lead applicant can view answer yet to be provodied when work programme quest
     Then the user should see the element            jQuery = p:contains("Answer yet to be provided")
 
 lead applicant views work programme answers provided in review and submit page
-    [Documentation]  IFS-11686
+    [Documentation]  IFS-11686  IFS-11794
     Given the user clicks the button/link                           link = Application overview
     When the user complete the work programme
     And the user clicks the button/link                             link = Review and submit
@@ -275,9 +277,9 @@ the competition admin creates Hesta competition
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingRule}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user selects the Terms and Conditions                   ${compType}  ${fundingRule}
     the user fills in the CS Funding Information
-    the user fills in the CS Project eligibility                ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
+    the user fills in the CS Project eligibility                ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user fills in the CS funding eligibility                true   ${compType_HESTA}  ${fundingRule}
-    And the user selects the organisational eligibility to no   false
+    the user selects the organisational eligibility to no       false
     the user completes milestones section
     the user marks the Hesta application question as done
     the user clicks the button/link                             link = Public content
@@ -540,21 +542,21 @@ the user complete the work programme
     the user should see read only view of work program part
     the user clicks the button/link                jQuery = button:contains("Save and continue")
     the user should see a field and summary error  You must select an option.
-    the user clicks the button/link                id = selected1
+    the user clicks the button twice               jQuery = label:contains("Culture, Creativity and Inclusive Society (CL2)")
     the user clicks the button/link                jQuery = button:contains("Save and continue")
     the user should see read only view of call ID
     the user clicks the button/link                jQuery = button:contains("Save and continue")
     the user should see a field and summary error  You must select an option.
-    the user clicks the button/link                id = selected1
+    the user clicks the button twice               jQuery = label:contains("HORIZON-CL2-2021-DEMOCRACY-01")
     the user clicks the button/link                jQuery = button:contains("Save and continue")
     the user can mark the question as complete for work programme
     the user should see the element                jQuery = li:contains("Work programme") > .task-status-complete
 
 the user complete the work programmes
     the user clicks the button/link                jQuery = a:contains("Work programme")
-    the user clicks the button/link                id = selected1
+    the user clicks the button twice               jQuery = label:contains("Culture, Creativity and Inclusive Society (CL2)")
     the user clicks the button/link                jQuery = button:contains("Save and continue")
-    the user clicks the button/link                id = selected1
+    the user clicks the button twice               jQuery = label:contains("HORIZON-CL2-2021-DEMOCRACY-01")
     the user clicks the button/link                jQuery = button:contains("Save and continue")
     the user can mark the question as complete for work programme
     the user should see the element                jQuery = li:contains("Work programme") > .task-status-complete

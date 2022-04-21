@@ -131,7 +131,7 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
         YourFundingPercentageForm form = (YourFundingPercentageForm) service.populateForm(APPLICATION_ID, organisation.getId());
 
         assertNull(form.getRequestingFunding());
-        assertFalse(form.getOtherFunding());
+        assertNull(form.getOtherFunding());
     }
 
     @Test
@@ -142,6 +142,6 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
         YourFundingPercentageForm form = (YourFundingPercentageForm) service.populateForm(APPLICATION_ID, organisation.getId());
 
         assertNull(form.getRequestingFunding());
-        assertFalse(form.getOtherFunding());
+        assertNull(form.getOtherFunding());
     }
 }
