@@ -29,7 +29,7 @@ Resource          ../../../resources/common/PS_Common.robot
 ${atiSubsidyControl}                 Aerospace Technology Institute (ATI) - Subsidy control (opens in a new window)
 ${atiStateAid}                       Aerospace Technology Institute (ATI) (opens in a new window)
 ${innovateUKSubsidyControl}          Innovate UK - Subsidy control (opens in a new window)
-${innovateUKStateAid}                Innovate UK
+${innovateUKStateAid}                Innovate UK (opens in a new window)
 ${subsidyControlFundingComp}         Subsidy control competition
 ${subsidyControlCompetitionId}       ${competition_ids["${subsidyControlFundingComp}"]}
 ${leadSubsidyControlApplication}     Subsidy control application
@@ -105,7 +105,7 @@ Innovateuk State aid t&c's are correct
     [Documentation]  IFS-8994
     When the user clicks the button/link                 jQuery = button:contains("Done")
     And the user clicks the button/link                  link = ${innovateUKStateAid}
-    And select window                                    title = Terms and conditions of an Innovate UK grant award - Innovation Funding Service
+    And select window                                    title = Terms and conditions of an Innovate UK Grant Award - Innovation Funding Service
     Then the user should see the element                 jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
     And the user should see the element                  jQuery = li:contains("UK Subsidy obligations")
     [Teardown]   the user closes the last opened tab
