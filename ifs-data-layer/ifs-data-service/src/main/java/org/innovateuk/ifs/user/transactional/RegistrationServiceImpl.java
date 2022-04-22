@@ -100,9 +100,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private InviteOrganisationRepository inviteOrganisationRepository;
-//
-//    @Autowired
-//    private RoleProfileStatusRepository roleProfileStatusRepository;
+
+    @Autowired
+    private RoleProfileStatusRepository roleProfileStatusRepository;
 
     @Value("${ifs.edi.update.enabled}")
     private boolean isEdiUpdateEnabled;
@@ -117,10 +117,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         }
         ServiceResult<User> result = userResult
                 .andOnSuccess(savedUser -> createUserWithUid(user));
-
-//        if (user.getRole().isAssessor()) {
-//            roleProfileStatusRepository.save(new RoleProfileStatus(result.getSuccess(), ProfileRole.ASSESSOR));
-//        }
 
         if (shouldSendVerificationEmail(user)) {
             result = result
@@ -138,6 +134,16 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         }
         return result
                 .andOnSuccessReturn(userMapper::mapToResource);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> createUserProfileStatus(long userId) {
+
+        User user = userRepository.findById(userId).get();
+        roleProfileStatusRepository.save(new RoleProfileStatus(user, ProfileRole.ASSESSOR));
+
+        return serviceSuccess();
     }
 
     private boolean shouldImmediatelyActivate(UserCreationResource user) {

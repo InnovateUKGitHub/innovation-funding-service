@@ -122,13 +122,8 @@ public class ExternalUserRegistrationController {
                 });
 
                 if (invite.getRole().isAssessor()) {
-                    RoleProfileStatusResource roleProfileStatusResource = new RoleProfileStatusResource(
-                            result.getSuccess().getId(),
-                            RoleProfileState.ACTIVE,
-                            ProfileRole.ASSESSOR,
-                            null);
-                    roleProfileStatusRestService.updateUserStatus(result.getSuccess().getId(), roleProfileStatusResource);
-//                    roleProfileStatusRestService.createAssessorRoleProfileStatus(result.getSuccess().getId());
+                    long userId = result.getSuccess().getId();
+                    userRestService.createUserProfileStatus(userId);
                 }
 
                 return validationHandler.

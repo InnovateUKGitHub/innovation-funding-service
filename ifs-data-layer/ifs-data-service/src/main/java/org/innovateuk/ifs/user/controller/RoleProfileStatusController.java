@@ -44,11 +44,6 @@ public class RoleProfileStatusController {
         return roleProfileStatusService.updateUserStatus(userId, roleProfileStatusResource).toPutResponse();
     }
 
-    @PostMapping("/role-profile-status/create")
-    public RestResult<Void> createAssessorRoleProfileStatus(@PathVariable long userId) {
-        return roleProfileStatusService.createAssessorRoleProfileStatus(userId).toPostResponse();
-    }
-
     @GetMapping("/role-profile-status/{roleProfileState}/{profileRole}")
     public RestResult<UserPageResource> getByRoleProfileStatus(@PathVariable RoleProfileState roleProfileState,
                                                                @PathVariable ProfileRole profileRole,
