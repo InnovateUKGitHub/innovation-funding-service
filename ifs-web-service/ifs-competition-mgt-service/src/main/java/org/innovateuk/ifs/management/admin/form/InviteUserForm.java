@@ -29,7 +29,7 @@ import javax.validation.constraints.Size;
         message = "{validation.standard.email.format}",
         predicate = EmailAddressValidator.NonKtpPredicateProvider.class
 )
-@FieldRequiredIf(required = "innovationArea", argument = "assessor", predicate = true, message = "{validation.invite.assessor.innovationArea.required}")
+@FieldRequiredIf(required = "selectedInnovationArea", argument = "assessor", predicate = true, message = "{validation.invite.assessor.innovationArea.required}")
 public class InviteUserForm extends BaseBindingResultTarget {
 
     @NotBlank(message = "{validation.standard.firstname.required}")
@@ -55,7 +55,7 @@ public class InviteUserForm extends BaseBindingResultTarget {
 
     private String organisation;
 
-    private Long innovationArea;
+    private Long selectedInnovationArea;
 
 
     public InviteUserForm() {
@@ -114,12 +114,12 @@ public class InviteUserForm extends BaseBindingResultTarget {
         return Role.ASSESSOR == role;
     }
 
-    public Long getInnovationArea() {
-        return innovationArea;
+    public Long getSelectedInnovationArea() {
+        return selectedInnovationArea;
     }
 
-    public void setInnovationArea(Long innovationArea) {
-        this.innovationArea = innovationArea;
+    public void setSelectedInnovationArea(Long selectedInnovationArea) {
+        this.selectedInnovationArea = selectedInnovationArea;
     }
 
     @Override
@@ -136,7 +136,7 @@ public class InviteUserForm extends BaseBindingResultTarget {
                 .append(emailAddress, form.emailAddress)
                 .append(role, form.role)
                 .append(organisation, form.organisation)
-                .append(innovationArea, form.innovationArea)
+                .append(selectedInnovationArea, form.selectedInnovationArea)
                 .isEquals();
     }
 
@@ -148,7 +148,7 @@ public class InviteUserForm extends BaseBindingResultTarget {
                 .append(emailAddress)
                 .append(role)
                 .append(organisation)
-                .append(innovationArea)
+                .append(selectedInnovationArea)
                 .toHashCode();
     }
 }
