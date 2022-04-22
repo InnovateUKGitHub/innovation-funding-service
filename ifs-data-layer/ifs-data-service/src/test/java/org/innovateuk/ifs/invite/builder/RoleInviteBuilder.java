@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.invite.builder;
 
 import org.innovateuk.ifs.Builder;
+import org.innovateuk.ifs.assessment.builder.AssessmentInviteBuilder;
+import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.user.resource.Role;
 
@@ -41,5 +43,9 @@ public class RoleInviteBuilder extends BaseInviteBuilder<Role, RoleInvite, RoleI
     @Override
     public RoleInviteBuilder withTarget(Role... targets) {
         return super.withTarget(targets);
+    }
+
+    public RoleInviteBuilder withInnovationArea(InnovationArea... innovationAreas) {
+        return withArraySetFieldByReflection("innovationArea", innovationAreas);
     }
 }
