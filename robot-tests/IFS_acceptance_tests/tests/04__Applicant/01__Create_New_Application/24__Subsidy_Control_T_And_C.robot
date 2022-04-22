@@ -29,7 +29,7 @@ Resource          ../../../resources/common/PS_Common.robot
 ${atiSubsidyControl}                 Aerospace Technology Institute (ATI) - Subsidy control (opens in a new window)
 ${atiStateAid}                       Aerospace Technology Institute (ATI) (opens in a new window)
 ${innovateUKSubsidyControl}          Innovate UK - Subsidy control (opens in a new window)
-${innovateUKStateAid}                Innovate UK (opens in a new window)
+${innovateUKStateAid}                Innovate UK
 ${subsidyControlFundingComp}         Subsidy control competition
 ${subsidyControlCompetitionId}       ${competition_ids["${subsidyControlFundingComp}"]}
 ${leadSubsidyControlApplication}     Subsidy control application
@@ -87,7 +87,7 @@ Creating a new comp to confirm Innovateuk subsidy control T&C's
     When the user clicks the button/link        link = Terms and conditions
     And the user clicks the button twice        jQuery = label:contains("Innovate UK - Subsidy control")
     And the user clicks the button/link         jQuery = button:contains("Done")
-    And the user selects the radio button       termsAndConditionsId    termsAndConditionsId11
+    And the user selects the radio button       termsAndConditionsId    termsAndConditionsId12
     Then the user clicks the button/link        jQuery = button:contains("Done")
     And the user should see the element         jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Innovate UK - Subsidy control")
     And the user should see the element         jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Innovate UK")
