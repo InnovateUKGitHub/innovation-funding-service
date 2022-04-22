@@ -29,7 +29,7 @@ Resource          ../../../resources/common/PS_Common.robot
 ${atiSubsidyControl}                 Aerospace Technology Institute (ATI) - Subsidy control (opens in a new window)
 ${atiStateAid}                       Aerospace Technology Institute (ATI) (opens in a new window)
 ${innovateUKSubsidyControl}          Innovate UK - Subsidy control (opens in a new window)
-${innovateUKStateAid}                Innovate UK (opens in a new window)
+${innovateUKStateAid}                Innovate UK
 ${subsidyControlFundingComp}         Subsidy control competition
 ${subsidyControlCompetitionId}       ${competition_ids["${subsidyControlFundingComp}"]}
 ${leadSubsidyControlApplication}     Subsidy control application
