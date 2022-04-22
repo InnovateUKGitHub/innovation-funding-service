@@ -153,6 +153,9 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     @Autowired
     private ProjectUserRepository projectUserRepository;
 
+    @Autowired
+    protected RoleProfileStatusService roleProfileStatusService;
+
     private Supplier<String> randomHashSupplier = () -> UUID.randomUUID().toString();
 
     @Override
@@ -425,6 +428,11 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
                 .andOnSuccess(user -> validateEmail(user, grantRoleCommand.getTargetRole()))
                 .andOnSuccessReturn(user -> {
                     user.getRoles().add(grantRoleCommand.getTargetRole());
+
+                    if(grantRoleCommand.getTargetRole().isAssessor()) {
+                        roleProfileStatusService.updateUserStatus(user.getId(),
+                                new RoleProfileStatusResource(user.getId(), ProfileRole.ASSESSOR, RoleProfileState.ACTIVE, ""));
+                    }
                     return user;
                 }).andOnSuccessReturn(userMapper::mapToResource);
     }

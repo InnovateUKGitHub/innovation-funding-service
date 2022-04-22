@@ -11,6 +11,7 @@ import org.innovateuk.ifs.user.resource.UserProfileResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +19,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Comparator;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ADD_ROLE_INVALID_EMAIL;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
@@ -35,6 +38,9 @@ public class ExternalRoleController {
 
     @Autowired
     private ProfileRestService profileRestService;
+
+    @Value("${ifs.assessor.pool.enabled}")
+    private Boolean isAssessorPoolEnabled;
 
     @GetMapping("/external-role")
     public String viewUser(@PathVariable long userId,
@@ -62,6 +68,7 @@ public class ExternalRoleController {
                 UserProfileResource userProfileResource = profileRestService.getUserProfile(userId).getSuccess();
                 userProfileResource.setSimpleOrganisation(form.getOrganisation());
                 validationHandler.addAnyErrors(profileRestService.updateUserProfile(userId, userProfileResource), mappingErrorKeyToField(USER_ADD_ROLE_INVALID_EMAIL, "email"), fieldErrorsToFieldErrors(), asGlobalErrors());
+
                 return validationHandler.failNowOrSucceedWith(failureView,
                         () -> redirectToUserPage(userId));
             });
@@ -73,7 +80,9 @@ public class ExternalRoleController {
                              @ModelAttribute(name = "form") SelectExternalRoleForm form,
                              Model model) {
 
-        model.addAttribute("roles", Role.externalRolesToInvite());
+        UserResource user = userRestService.retrieveUserById(userId).getSuccess();
+        model.addAttribute("roles", (isAssessorPoolEnabled ? Role.externalRolesIncludingAssessorToInvite() : Role.externalRolesToInvite())
+                .stream().filter(role -> !user.hasRole(role)).sorted(Comparator.comparing(Role::getDisplayName)).collect(Collectors.toList()));
         return "admin/select-external-role";
     }
 
