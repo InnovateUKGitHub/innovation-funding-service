@@ -23,12 +23,11 @@ import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerInviteRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.cache.UserUpdate;
+import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserCreationResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserStatus;
+import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
+import org.innovateuk.ifs.user.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -101,6 +100,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private InviteOrganisationRepository inviteOrganisationRepository;
+//
+//    @Autowired
+//    private RoleProfileStatusRepository roleProfileStatusRepository;
 
     @Value("${ifs.edi.update.enabled}")
     private boolean isEdiUpdateEnabled;
@@ -115,6 +117,10 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         }
         ServiceResult<User> result = userResult
                 .andOnSuccess(savedUser -> createUserWithUid(user));
+
+//        if (user.getRole().isAssessor()) {
+//            roleProfileStatusRepository.save(new RoleProfileStatus(result.getSuccess(), ProfileRole.ASSESSOR));
+//        }
 
         if (shouldSendVerificationEmail(user)) {
             result = result

@@ -3,17 +3,15 @@ package org.innovateuk.ifs.registration.controller;
 import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.service.AddressRestService;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
-import org.innovateuk.ifs.registration.form.RegistrationForm.TermsValidationGroup;
 import org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.RegistrationViewModelBuilder;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.service.RoleProfileStatusRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -27,7 +25,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolation;
-import javax.validation.Valid;
 import javax.validation.Validator;
 import javax.validation.groups.Default;
 import java.util.ArrayList;
@@ -58,6 +55,9 @@ public class ExternalUserRegistrationController {
 
     @Autowired
     private AddressRestService addressRestService;
+
+    @Autowired
+    private RoleProfileStatusRestService roleProfileStatusRestService;
 
     @Autowired
     private Validator validator;
@@ -98,6 +98,12 @@ public class ExternalUserRegistrationController {
         }
 
         Supplier<String> failureView = () -> doViewYourDetails(model, invite, loggedInUser);
+        Supplier<String> successView = () -> {
+            if (invite.getRole().isAssessor()) {
+                return "registration/account-created";
+            }
+            return format("redirect:/registration/%s/register/account-created", inviteHash);
+        };
 
         if(loggedInUser != null){
             return failureView.get();
@@ -114,9 +120,19 @@ public class ExternalUserRegistrationController {
                         bindingResult.reject("registration." + error.getErrorKey());
                     }
                 });
+
+                if (invite.getRole().isAssessor()) {
+                    RoleProfileStatusResource roleProfileStatusResource = new RoleProfileStatusResource(
+                            result.getSuccess().getId(),
+                            RoleProfileState.ACTIVE,
+                            ProfileRole.ASSESSOR,
+                            null);
+                    roleProfileStatusRestService.updateUserStatus(result.getSuccess().getId(), roleProfileStatusResource);
+//                    roleProfileStatusRestService.createAssessorRoleProfileStatus(result.getSuccess().getId());
+                }
+
                 return validationHandler.
-                            failNowOrSucceedWith(failureView,
-                                                 () -> format("redirect:/registration/%s/register/account-created", inviteHash));
+                        failNowOrSucceedWith(failureView, successView);
             });
         }
     }
@@ -133,15 +149,14 @@ public class ExternalUserRegistrationController {
         return inviteUserRestService.checkExistingUser(inviteHash).andOnSuccessReturn(userExists -> {
             if (!userExists) {
                 return format("redirect:/registration/%s/register", inviteHash);
-            }
-            else {
+            } else {
                 return "registration/external-account-created";
             }
         }).getSuccess();
     }
 
     private String doViewYourDetails(Model model, RoleInviteResource invite, UserResource loggedInUser) {
-        if(loggedInUser != null) {
+        if (loggedInUser != null) {
             return "registration/error";
         } else {
             RegistrationViewModelBuilder viewModelBuilder = aRegistrationViewModel();

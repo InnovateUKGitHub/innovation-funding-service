@@ -51,6 +51,11 @@ public class RoleProfileStatusRestServiceImpl extends BaseRestService implements
         return getAssessorsWithProfileState(RoleProfileState.DISABLED, filter, pageNumber, pageSize);
     }
 
+    @Override
+    public RestResult<Void> createAssessorRoleProfileStatus(long userId) {
+        return postWithRestResult(USER_REST_URL + "/role-profile-status/create", Void.class);
+    }
+
     private RestResult<UserPageResource> getAssessorsWithProfileState(RoleProfileState state, String filter, int pageNumber, int pageSize) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("filter", filter);
