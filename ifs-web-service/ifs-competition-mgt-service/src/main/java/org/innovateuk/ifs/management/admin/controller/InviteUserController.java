@@ -146,6 +146,10 @@ public class InviteUserController {
         invitedUser.setLastName(form.getLastName());
         invitedUser.setEmail(form.getEmailAddress());
 
-        return new InviteUserResource(invitedUser, form.getOrganisation(), form.getRole());
+        InviteUserResource inviteUserResource = new InviteUserResource(invitedUser, form.getOrganisation(), form.getRole());
+        if (form.getRole().isAssessor()) {
+            inviteUserResource.setInnovationAreaId(form.getSelectedInnovationArea());
+        }
+        return  inviteUserResource;
     }
 }

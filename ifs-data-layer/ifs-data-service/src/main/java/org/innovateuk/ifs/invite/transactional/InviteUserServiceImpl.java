@@ -2,6 +2,9 @@ package org.innovateuk.ifs.invite.transactional;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.category.domain.Category;
+import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
@@ -42,6 +45,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -84,6 +88,9 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     @Autowired
     private SimpleOrganisationRepository simpleOrganisationRepository;
 
+    @Autowired
+    private InnovationAreaRepository innovationAreaRepository;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -103,7 +110,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     @Override
     @Transactional
-    public ServiceResult<Void> saveUserInvite(UserResource invitedUser, Role role, String organisation) {
+    public ServiceResult<Void> saveUserInvite(UserResource invitedUser, Role role, String organisation, Long innovationAreaId) {
         if (StringUtils.isEmpty(invitedUser.getEmail()) || StringUtils.isEmpty(invitedUser.getFirstName())
                 || StringUtils.isEmpty(invitedUser.getLastName()) || role == null){
             return serviceFailure(USER_ROLE_INVITE_INVALID);
@@ -111,21 +118,21 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
         if (externalRolesToInvite().contains(role) || externalRolesIncludingAssessorToInvite().contains(role)) {
             return validateExternalUserEmailDomain(invitedUser.getEmail(), role)
-                    .andOnSuccess(() -> validateAndSaveInvite(invitedUser, role, organisation))
+                    .andOnSuccess(() -> validateAndSaveInvite(invitedUser, role, organisation, innovationAreaId))
                     .andOnSuccess(this::inviteExternalUser);
         } else if (internalRoles().contains(role)) {
             return validateInternalUserEmailDomain(invitedUser.getEmail())
-                    .andOnSuccess(() -> validateAndSaveInvite(invitedUser, role, organisation))
+                    .andOnSuccess(() -> validateAndSaveInvite(invitedUser, role, organisation, innovationAreaId))
                     .andOnSuccess(this::inviteInternalUser);
         } else {
             return serviceFailure(NOT_AN_INTERNAL_USER_ROLE);
         }
     }
 
-    private ServiceResult<RoleInvite> validateAndSaveInvite(UserResource invitedUser, Role role, String organisation) {
+    private ServiceResult<RoleInvite> validateAndSaveInvite(UserResource invitedUser, Role role, String organisation, Long innovationAreaId) {
                 return validateUserEmailAvailable(invitedUser)
                 .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
-                .andOnSuccess(() -> saveInvite(invitedUser, role, organisation));
+                .andOnSuccess(() -> saveInvite(invitedUser, role, organisation, innovationAreaId));
 
     }
 
@@ -169,7 +176,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         return existingInvites.isEmpty() ? serviceSuccess() : serviceFailure(USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED);
     }
 
-    private ServiceResult<RoleInvite> saveInvite(UserResource invitedUser, Role role, String organisation) {
+    private ServiceResult<RoleInvite> saveInvite(UserResource invitedUser, Role role, String organisation, Long innovationAreaId) {
         SimpleOrganisation simpleOrganisation = null;
         if (organisation != null) {
             simpleOrganisation = simpleOrganisationRepository.save(new SimpleOrganisation(organisation));
@@ -181,6 +188,9 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
                 CREATED,
                 simpleOrganisation);
 
+        if( role.isAssessor()) {
+            roleInvite.setInnovationArea(getInnovationArea(innovationAreaId).getSuccess());
+        }
         RoleInvite invite = roleInviteRepository.save(roleInvite);
 
         return serviceSuccess(invite);
@@ -308,7 +318,8 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     public ServiceResult<Void> resendInvite(long inviteId) {
         return findRoleInvite(inviteId)
                 .andOnSuccess(invite -> {
-                    if (externalRolesToInvite().contains(invite.getTarget())) {
+                    if (externalRolesToInvite().contains(invite.getTarget())
+                            || externalRolesIncludingAssessorToInvite().contains(invite.getTarget())) {
                         return inviteExternalUser(invite);
                     } else if (internalRoles().contains(invite.getTarget())) {
                         return inviteInternalUser(invite);
@@ -398,5 +409,9 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     private List<ExternalInviteResource> sortByEmail(List<ExternalInviteResource> extInviteResources) {
         return extInviteResources.stream().sorted(Comparator.comparing(extInviteResource -> extInviteResource.getEmail().toUpperCase())).collect(Collectors.toList());
+    }
+
+    private ServiceResult<InnovationArea> getInnovationArea(long innovationCategoryId) {
+        return find(innovationAreaRepository.findById(innovationCategoryId), notFoundError(Category.class, innovationCategoryId, INNOVATION_AREA));
     }
 }
