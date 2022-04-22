@@ -7,6 +7,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,9 @@ import java.util.List;
  * organisation defines database relations and a model to use client side and server side.
  */
 @Entity
-public class Organisation {
+public class Organisation implements Serializable {
+
+    private static final long serialVersionUID = 7242643323602041945L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

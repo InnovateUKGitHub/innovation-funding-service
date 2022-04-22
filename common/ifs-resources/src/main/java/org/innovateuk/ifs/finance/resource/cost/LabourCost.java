@@ -33,10 +33,8 @@ public class LabourCost extends AbstractFinanceRowItem {
     private BigDecimal grossEmployeeCost;
 
     @NotNull(groups = Default.class, message = NOT_BLANK_MESSAGE)
-    @Min.List({
-            @Min(value = 1, groups = Default.class, message = VALUE_MUST_BE_HIGHER_MESSAGE),
-            @Min(value = 1, groups = LabourCost.YearlyWorkingDays.class, message = VALUE_MUST_BE_HIGHER_MESSAGE)
-    })
+    @Min(value = 1, groups = Default.class, message = VALUE_MUST_BE_HIGHER_MESSAGE)
+    @Min(value = 1, groups = LabourCost.YearlyWorkingDays.class, message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Max(value = 365, groups = LabourCost.YearlyWorkingDays.class, message = VALUE_MUST_BE_LOWER_MESSAGE)
     @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = NO_DECIMAL_VALUES)
     private Integer labourDays;
@@ -58,7 +56,7 @@ public class LabourCost extends AbstractFinanceRowItem {
                       Long targetId, BigDecimal rate, boolean thirdPartyOfgem) {
         super(targetId);
         this.id = id;
-        this.name = addtThirdPartyOfgemKeyIfRequired(name, thirdPartyOfgem);
+        this.name = addThirdPartyOfgemKeyIfRequired(name, thirdPartyOfgem);
         this.role = role;
         if (StringUtils.isNotEmpty(this.name)
                 && this.name.equals(LabourCostCategory.WORKING_DAYS_KEY)
@@ -73,14 +71,14 @@ public class LabourCost extends AbstractFinanceRowItem {
         this.thirdPartyOfgem = thirdPartyOfgem;
     }
 
-    private String addtThirdPartyOfgemKeyIfRequired(String incomingName, boolean thirdPartyOfgem) {
-        String name = incomingName;
+    private String addThirdPartyOfgemKeyIfRequired(String incomingName, boolean thirdPartyOfgem) {
+        String ofgemCheckName = incomingName;
 
-        if (StringUtils.isEmpty(name) && thirdPartyOfgem) {
-            name = THIRDPARTY_OFGEM_NAME_KEY;
+        if (StringUtils.isEmpty(ofgemCheckName) && thirdPartyOfgem) {
+            ofgemCheckName = THIRDPARTY_OFGEM_NAME_KEY;
         }
 
-        return name;
+        return ofgemCheckName;
    }
 
     @Override

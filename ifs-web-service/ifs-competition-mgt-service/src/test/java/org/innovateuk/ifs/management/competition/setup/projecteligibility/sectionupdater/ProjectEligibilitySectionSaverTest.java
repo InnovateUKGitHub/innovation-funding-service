@@ -6,7 +6,6 @@ import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.projecteligibility.form.ProjectEligibilityForm;
-import org.innovateuk.ifs.management.funding.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -45,7 +44,7 @@ public class ProjectEligibilitySectionSaverTest {
         competitionSetupForm.setMultipleStream("yes");
         competitionSetupForm.setStreamName("streamname");
         competitionSetupForm.setLeadApplicantTypes(asList(1L, 2L));
-        competitionSetupForm.setResearchParticipationAmountId(ResearchParticipationAmount.THIRTY.getId());
+        competitionSetupForm.setResearchParticipationPercentage(Integer.valueOf(30));
         competitionSetupForm.setResubmission("yes");
 
         List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource().build(2);
@@ -64,7 +63,7 @@ public class ProjectEligibilitySectionSaverTest {
         assertEquals(asList(BUSINESS.getId(), OrganisationTypeEnum.RESEARCH.getId()), competition.getLeadApplicantTypes());
         assertTrue(competition.isMultiStream());
         assertEquals("streamname", competition.getStreamName());
-        assertEquals(ResearchParticipationAmount.THIRTY.getAmount(), competition.getMaxResearchRatio());
+        assertEquals(new Integer(30), competition.getMaxResearchRatio());
         assertEquals(CollaborationLevel.COLLABORATIVE, competition.getCollaborationLevel());
 
         verify(competitionSetupRestService).update(competition);
@@ -87,7 +86,7 @@ public class ProjectEligibilitySectionSaverTest {
 
         service.saveSection(competition, competitionSetupForm, loggedInUser).getSuccess();
 
-        assertEquals(ResearchParticipationAmount.NONE.getAmount(), competition.getMaxResearchRatio());
+        assertEquals(null, competition.getMaxResearchRatio());
 
         verify(competitionSetupRestService).update(competition);
     }
@@ -115,7 +114,7 @@ public class ProjectEligibilitySectionSaverTest {
     @Test
     public void saveSection_defaultsMaxResearchRatioToNoneForCompetitionsWithNoFinances() {
         ProjectEligibilityForm competitionSetupForm = new ProjectEligibilityForm();
-        competitionSetupForm.setResearchParticipationAmountId(ResearchParticipationAmount.HUNDRED.getId());
+        competitionSetupForm.setResearchParticipationPercentage(Integer.valueOf(30));
 
         List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource().build(2);
 

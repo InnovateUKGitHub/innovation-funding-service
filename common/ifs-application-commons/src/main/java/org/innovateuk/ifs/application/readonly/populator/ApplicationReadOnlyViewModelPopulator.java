@@ -26,6 +26,8 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
+import org.innovateuk.ifs.horizon.resource.ApplicationHorizonWorkProgrammeResource;
+import org.innovateuk.ifs.horizon.service.HorizonWorkProgrammeRestService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
 import org.innovateuk.ifs.supporter.service.SupporterAssignmentRestService;
@@ -88,6 +90,9 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
     @Autowired
     private SupporterAssignmentRestService supporterAssignmentRestService;
 
+    @Autowired
+    private HorizonWorkProgrammeRestService horizonWorkProgrammeRestService;
+
     private Map<QuestionSetupType, QuestionReadOnlyViewModelPopulator<?>> populatorMap;
 
     @Autowired
@@ -112,12 +117,13 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         Future<List<ProcessRoleResource>> processRolesFuture = async(() -> getProcessRoles(application));
         Future<List<ApplicationAssessmentResource>> assessorResponseFuture = async(() -> getAssessmentResponses(application, settings));
         Future<List<SupporterAssignmentResource>> supporterResponseFuture = async(() -> getSupporterFeedbackResponses(application, settings));
+        Future<List<ApplicationHorizonWorkProgrammeResource>> workProgrammeFuture = async(() -> horizonWorkProgrammeRestService.findSelected(application.getId()).getSuccess());
 
         List<ProcessRoleResource> processRoles = resolve(processRolesFuture);
 
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, processRoles,
                 resolve(questionsFuture), resolve(formInputsFuture), resolve(formInputResponsesFuture), resolve(questionStatusesFuture),
-                resolve(assessorResponseFuture), resolve(supporterResponseFuture));
+                resolve(assessorResponseFuture), resolve(supporterResponseFuture),Optional.of(resolve(workProgrammeFuture)));
 
         if (settings.isIncludeAllAssessorFeedback()) {
             settings.setIncludeAllAssessorFeedback(data.getAssessmentToApplicationAssessment().size() > 0);

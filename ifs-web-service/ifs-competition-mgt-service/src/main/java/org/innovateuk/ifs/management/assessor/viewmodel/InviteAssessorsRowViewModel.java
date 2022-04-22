@@ -16,12 +16,21 @@ public abstract class InviteAssessorsRowViewModel {
     private String name;
     private List<InnovationAreaResource> innovationAreas;
     private boolean compliant;
+    private boolean validAgreement;
+    private boolean validDoi;
 
-    protected InviteAssessorsRowViewModel(Long id, String name, List<InnovationAreaResource> innovationAreas, boolean compliant) {
+    protected InviteAssessorsRowViewModel(Long id,
+                                          String name,
+                                          List<InnovationAreaResource> innovationAreas,
+                                          boolean compliant,
+                                          boolean validAgreement,
+                                          boolean validDoi) {
         this.id = id;
         this.name = name;
         this.innovationAreas = innovationAreas;
         this.compliant = compliant;
+        this.validAgreement = validAgreement;
+        this.validDoi = validDoi;
     }
 
     public Long getId() {
@@ -40,5 +49,13 @@ public abstract class InviteAssessorsRowViewModel {
 
     public boolean isCompliant() {
         return compliant;
+    }
+
+    public boolean isValidAgreement() {
+        return validAgreement;
+    }
+
+    public boolean isValidDoi() {
+        return validDoi;
     }
 }

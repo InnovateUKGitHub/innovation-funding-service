@@ -667,7 +667,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("researchCategoriesApplicable", "true")
                 .param("singleOrCollaborative", "collaborative")
                 .param("leadApplicantTypes", "1", "2", "3")
-                .param("researchParticipationAmountId", "1")
+                .param("researchParticipationPercentage","30")
                 .param("resubmission", "yes")
                 .param("overrideFundingRules", "false"))
                 .andExpect(status().is3xxRedirection())
@@ -714,7 +714,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     }
 
     @Test
-    public void submitSectionEligibilityFailsWithoutResearchParticipationIfCompetitionHasFullApplicationFinance() throws Exception {
+    public void submitSectionEligibilityFailsWithMaxResearchParticipationIfCompetitionHasFullApplicationFinance() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
@@ -729,11 +729,11 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("researchCategoryId", "1", "2", "3")
                 .param("singleOrCollaborative", "collaborative")
                 .param("leadApplicantTypes", "1", "2", "3")
-                .param("researchParticipationAmountId", "")
+                .param("researchParticipationPercentage", "1000")
                 .param("resubmission", "no"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup"))
-                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "researchParticipationAmountId"));
+                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "researchParticipationPercentage"));
 
         verify(competitionSetupService, never()).saveCompetitionSetupSection(
                 isA(CompetitionSetupForm.class),
@@ -775,6 +775,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("researchCategoriesApplicable", "true")
                 .param("singleOrCollaborative", "collaborative")
                 .param("leadApplicantTypes", "1", "2", "3")
+                .param("researchParticipationPercentage","30")
                 .param("resubmission", "no")
                 .param("overrideFundingRules", "false"))
                 .andExpect(status().is3xxRedirection())

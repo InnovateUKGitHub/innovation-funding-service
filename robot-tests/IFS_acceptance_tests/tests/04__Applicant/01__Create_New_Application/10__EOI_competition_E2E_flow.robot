@@ -61,7 +61,7 @@ ${applicant_email}          sherlock@holmes.com
 Comp Admin Creates EOI type competition
     [Documentation]  IFS-2192  IFS-8779  IFS-8847
     Given Logging in and Error Checking               &{Comp_admin1_credentials}
-    Then the competition admin creates competition    ${business_type_id}  ${comp_name}  EOI  ${compType_EOI}  SUBSIDY_CONTROL  GRANT  RELEASE_FEEDBACK  no  1  true  collaborative  No
+    Then the competition admin creates competition    ${business_type_id}  ${comp_name}  EOI  ${compType_EOI}  SUBSIDY_CONTROL  GRANT  RELEASE_FEEDBACK  no  50  true  collaborative  No
 
 Applicant applies to newly created EOI competition
     [Documentation]  IFS-2192  IFS-2196  IFS-4046 IFS-4080  IFS-7723  IFS-7724

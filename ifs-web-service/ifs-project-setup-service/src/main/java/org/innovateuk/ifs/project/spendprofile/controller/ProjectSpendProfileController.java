@@ -48,6 +48,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_C
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.LEAD_ACTION_REQUIRED;
+import static org.innovateuk.ifs.util.CollectionFunctions.containsAll;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -349,7 +350,7 @@ public class ProjectSpendProfileController {
                 totalOfAllActualTotals, totalOfAllEligibleTotals, projectResource.getSpendProfileSubmittedDate() != null, spendProfileTableResource.getCostCategoryGroupMap(),
                 spendProfileTableResource.getCostCategoryResourceMap(), isUsingJesFinances, isUserPartOfThisOrganisation,
                 projectService.isProjectManager(loggedInUser.getId(), projectResource.getId()),
-                isApproved(projectResource.getId()), leadPartner, competition.isKtp());
+                isApproved(projectResource.getId()), leadPartner, competition.isKtp(), competition.isHorizonEuropeGuarantee());
     }
 
     private ProjectSpendProfileViewModel buildSpendProfileViewModel(final Long projectId, final Long organisationId, final UserResource loggedInUser) {

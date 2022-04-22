@@ -51,6 +51,8 @@ public class ReviewInviteAssessorsInviteModelPopulator extends ReviewInviteAsses
                 assessorCreatedInviteResource.getName(),
                 assessorCreatedInviteResource.getInnovationAreas(),
                 assessorCreatedInviteResource.isCompliant(),
+                assessorCreatedInviteResource.isValidAgreement(),
+                assessorCreatedInviteResource.isValidDoi(),
                 assessorCreatedInviteResource.getEmail(),
                 assessorCreatedInviteResource.getInviteId()
         );
