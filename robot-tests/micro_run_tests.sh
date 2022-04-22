@@ -133,8 +133,9 @@ function initialiseTestEnvironment() {
       else
         section "=> RESTARTING LDAP and cache-provider"
         k8s_delete ldap
+        k8s_delete data-service
         k8s_wait ldap
-
+        k8s_wait data-service
 
 
         section "=> STARTING SELENIUM GRID, INJECTING ENVIRONMENT PARAMETERS, RESETTING DATABASE STATE"
