@@ -46,10 +46,11 @@ ${hestaApplicationName}                         Hesta application
 ${newHestaApplicationName}                      NEW Hesta application
 ${leadApplicantEmail}                           tim.timmy@heukar.com
 ${newLeadApplicantEmail}                        barry.barrington@heukar.com
-${hestaApplicationSubmissionEmailSubject}       confirmation of your Horizon Europe UK Application Registration
-${hestaApplicationUnsuccessfulEmailSubject}     update about your Horizon Europe UK Application Registration for government-backed funding
-${hestaApplicationSubmissionEmail}              We have received your stage 1 pre-registration to the Horizon Europe UK Application Registration programme
-${hestaApplicationUnsuccessfulEmail}            We have been advised you were unsuccessful in your grant application for Horizon Europe funding from The European Commission
+${hestaApplicationSubmissionEmailSubject}       Successful submission of application
+${hestaApplicationSubmissionEmail}              You have successfully submitted an application for funding to
+${hestaApplicationSuccessfulEmail}              We are pleased to inform you that your application for the Horizon Europe collaborative competition has been successful and passed the technical assessment phase.
+${hestaApplicationUnsuccessfulEmail}            Thank you for submitting your application to Innovate UK for the competition
+${hestaApplicationUnsuccessfulEmailSubject}     update about your Horizon Europe Guarantee application
 ${assessorEmail}                                another.person@gmail.com
 ${webTestAssessor}                              Angel Witt
 ${webTestAssessorEmailAddress}                  angel.witt@gmail.com
@@ -114,12 +115,19 @@ Lead applicant should get a confirmation email after application submission
 
 The Application Summary page must not include the Reopen Application link when the internal team mark the application as successful / unsuccessful
     [Documentation]  IFS-10697  IFS-11406  IFS-11486
+
+Applicant receives successful message of an application
+    [Documentation]  IFS-11554
     Given Log in as a different user                                                &{Comp_admin1_credentials}
     And The user clicks the button/link                                             link = ${hestaCompetitionName}
     When the internal team mark the application as successful / unsuccessful        ${hestaApplicationName}   FUNDED
-    And Log in as a different user                                                  email=${leadApplicantEmail}   password=${short_password}
+    Then the user reads his email                                                   ${leadApplicantEmail}  Important message about your application '${hestaApplicationName}' for the competition '${hestaCompetitionName}'  ${hestaApplicationSuccessfulEmail}
+
+The Application Summary page must not include the Reopen Application link when the internal team mark the application as successful / unsuccessful
+    [Documentation]  IFS-10697  IFS-11406  IFS-11486
+    When Log in as a different user                                                email=${leadApplicantEmail}   password=${short_password}
     Then the application summary page must not include the reopen application link
-    And the user should see the element                                            jQuery = h1:contains("Application status")
+    And the user should see the element                                             jQuery = h1:contains("Application status")
     And the user is presented with the Application Summary page
 
 Lead applicant receives email notifiction when internal user marks application unsuccessful
@@ -137,7 +145,7 @@ Lead applicant receives email notifiction when internal user marks application u
     And the user clicks the button/link                                             link = Competition
     And Requesting IDs of this application                                          ${newHestaApplicationName}
     And the internal team notifies all applicants                                   ${ApplicationID}
-    Then the user reads his email                                                   ${newLeadApplicantEmail}  ${ApplicationID}: ${hestaApplicationUnsuccessfulEmailSubject}  ${hestaApplicationUnsuccessfulEmail}
+    Then the user reads his email                                                   ${newLeadApplicantEmail}  Important message about your application '${newHestaApplicationName}' for the competition '${hestaCompetitionName}'  ${hestaApplicationUnsuccessfulEmail}
 
 the user should not see any references to assessment and release feedback on close competition page
     [Documentation]  IFS-11486
@@ -391,7 +399,7 @@ the internal team notifies all applicants
     the user clicks the button/link                      id = write-and-send-email
     the user clicks the button/link                      id = send-email-to-all-applicants
     the user clicks the button/link                      id = send-email-to-all-applicants-button
-    the user refreshes until element appears on page     jQuery = td:contains("Sent")
+    the user refreshes until element appears on page     jQuery = td:contains("${ApplicationID}") ~ td:contains("Sent")
 
 the application summary page must not include the reopen application link
     the user navigates to the page          ${server}/application/${ApplicationID}/track
