@@ -1,15 +1,12 @@
 package org.innovateuk.ifs.management.assessor.populator;
 
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
-import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorPageResource;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
-import org.innovateuk.ifs.invite.resource.RoleInviteResource;
-import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.management.assessor.viewmodel.CompetitionAvailableAssessorRowViewModel;
 import org.innovateuk.ifs.management.assessor.viewmodel.CompetitionInviteAssessorsFindViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
@@ -17,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController.SELECTION_LIMIT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -36,9 +32,6 @@ public class CompetitionInviteAssessorsFindModelPopulator extends CompetitionInv
 
     @Autowired
     private CompetitionRestService competitionRestService;
-
-    @Autowired
-    private InviteUserRestService inviteUserRestService;
 
     public CompetitionInviteAssessorsFindViewModel populateModel(long competitionId,
                                                                  int page,
@@ -75,11 +68,6 @@ public class CompetitionInviteAssessorsFindModelPopulator extends CompetitionInv
                 availableAssessorResource.getEmail(),
                 availableAssessorResource.getBusinessType()
         );
-    }
-
-    private List<InnovationAreaResource> getExternalAssessorsInnovationAreas(String email) {
-        List<RoleInviteResource> roleInviteResources = inviteUserRestService.findExternalInvitesByEmail(email).getSuccess();
-        return roleInviteResources.stream().map(RoleInviteResource::getInnovationArea).collect(Collectors.toList());
     }
 
     @Override
