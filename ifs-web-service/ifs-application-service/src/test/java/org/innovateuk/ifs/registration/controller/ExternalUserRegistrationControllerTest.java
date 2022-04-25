@@ -46,7 +46,7 @@ public class ExternalUserRegistrationControllerTest extends BaseControllerMockMV
     }
 
     @Test
-    public void testYourDetails() throws Exception {
+    public void yourDetails() throws Exception {
         setLoggedInUser(null);
 
 
@@ -70,7 +70,7 @@ public class ExternalUserRegistrationControllerTest extends BaseControllerMockMV
     }
 
     @Test
-    public void testSubmitYourDetails() throws Exception {
+    public void submitYourDetails() throws Exception {
         setLoggedInUser(null);
         when(inviteUserRestService.getInvite("hash")).thenReturn(restSuccess(newRoleInviteResource()
                 .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER)
@@ -102,11 +102,66 @@ public class ExternalUserRegistrationControllerTest extends BaseControllerMockMV
     }
 
     @Test
-    public void testAccountCreated() throws Exception {
+    public void accountCreated() throws Exception {
         setLoggedInUser(null);
         when(inviteUserRestService.checkExistingUser("hash")).thenReturn(RestResult.restSuccess(true));
         mockMvc.perform(get(URL_PREFIX + "/hash/register/account-created"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("registration/external-account-created"));
+    }
+
+    @Test
+    public void yourDetailsAssessor() throws Exception {
+        setLoggedInUser(null);
+
+
+        when(inviteUserRestService.getInvite("hash")).thenReturn(restSuccess(newRoleInviteResource()
+                .withRole(Role.ASSESSOR)
+                .withEmail("newAssessor@gmail.com")
+                .build()));
+        MvcResult result = mockMvc.perform(get(URL_PREFIX + "/hash/register"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("registration/register"))
+                .andReturn();
+
+        RegistrationForm form = (RegistrationForm) result.getModelAndView().getModel().get("form");
+        assertEquals(form.getEmail(), "newAssessor@gmail.com");
+
+        RegistrationViewModel viewModel = (RegistrationViewModel) result.getModelAndView().getModel().get("model");
+        assertTrue(viewModel.isPhoneRequired());
+        assertTrue(viewModel.isAddressRequired());
+        assertFalse(viewModel.isShowBackLink());
+        assertFalse(viewModel.isTermsRequired());
+        assertEquals("Continue", viewModel.getButtonText());
+    }
+
+    @Test
+    public void submitYourDetailsAssessor() throws Exception {
+        setLoggedInUser(null);
+        when(inviteUserRestService.getInvite("hash")).thenReturn(restSuccess(newRoleInviteResource()
+                .withRole(Role.ASSESSOR)
+                .withEmail("newAssessor@gmail.com")
+                .build()));
+
+        RegistrationForm registrationForm = new RegistrationForm();
+        registrationForm.setEmail("newAssessor@gmail.com");
+        registrationForm.setFirstName("Bob");
+        registrationForm.setLastName("Person");
+        registrationForm.setPassword("password1357");
+        registrationForm.setPhoneNumber("123123123123");
+        when(userRestService.createUser(refEq(registrationForm.constructUserCreationResource()
+                .withInviteHash("hash")
+                .withRole(Role.ASSESSOR)
+                .build())))
+                .thenReturn(restSuccess(new UserResource()));
+        mockMvc.perform(post(URL_PREFIX + "/hash/register")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("firstName", registrationForm.getFirstName())
+                        .param("lastName", registrationForm.getLastName())
+                        .param("password", registrationForm.getPassword())
+                        .param("email", registrationForm.getEmail())
+                        .param("phoneNumber", registrationForm.getPhoneNumber()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/registration/hash/register/account-created"));
     }
 }

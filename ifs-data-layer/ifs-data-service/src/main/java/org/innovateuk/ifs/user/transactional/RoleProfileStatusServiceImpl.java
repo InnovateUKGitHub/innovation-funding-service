@@ -38,6 +38,9 @@ public class RoleProfileStatusServiceImpl implements RoleProfileStatusService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private RegistrationService registrationService;
+
     @Override
     @Transactional
     public ServiceResult<Void> updateUserStatus(long userId, RoleProfileStatusResource roleProfileStatusResource) {
@@ -65,6 +68,15 @@ public class RoleProfileStatusServiceImpl implements RoleProfileStatusService {
                 roleProfileStatusRepository.findByRoleProfileStateAndProfileRoleAndUserEmailContainingAndUserStatus(state, profileRole, filter, UserStatus.ACTIVE, pageable)
                         .map(RoleProfileStatus::getUser)
         );
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> createAssessorRoleProfileStatus(long userId) {
+        User user = userRepository.findById(userId).get();
+        roleProfileStatusRepository.save(new RoleProfileStatus(user, ProfileRole.ASSESSOR));
+//        registrationService.saveAssessorRoleProfile(user);
+            return serviceSuccess();
     }
 
     private ServiceResult<UserPageResource> userPageResource(Page<User> pagedResult) {

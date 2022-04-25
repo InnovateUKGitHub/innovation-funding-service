@@ -68,5 +68,10 @@ public class InviteUserController {
                                                                         @RequestParam(value = "searchCategory") final SearchCategory searchCategory) {
         return inviteUserService.findExternalInvites(searchString, searchCategory).toGetResponse();
     }
+
+    @GetMapping("/get-by-email/{email}")
+    public RestResult<List<RoleInviteResource>> findExternalInvitesByEmail(@PathVariable("email") String email) {
+        return inviteUserService.findExternalInvitesByEmail(email).toGetResponse();
+    }
 }
 
