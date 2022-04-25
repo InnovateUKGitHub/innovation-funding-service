@@ -53,7 +53,7 @@ public interface UserService {
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'AGREE_TERMS')")
     ServiceResult<UserResource> agreeNewTermsAndConditions(long userId);
 
-    // @PreAuthorize("hasPermission(#grantRoleCommand, 'GRANT_ROLE')")
+    @PreAuthorize("hasPermission(#grantRoleCommand, 'GRANT_ROLE')")
     ServiceResult<UserResource> grantRole(GrantRoleCommand grantRoleCommand);
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'UPDATE_USER_EMAIL')")
