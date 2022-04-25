@@ -132,7 +132,7 @@ The competition admin creates a competition for
     the user fills in the CS Initial details                  ${competition}  ${month}  ${nextyear}  ${compType_Generic}  SUBSIDY_CONTROL  GRANT
     the user selects the Terms and Conditions                 ${compType_Generic}  SUBSIDY_CONTROL
     the user fills in the CS Funding Information
-    the user fills in the CS Project eligibility              ${orgType}  1  true  collaborative     # 1 means 30%
+    the user fills in the CS Project eligibility              ${orgType}  50  true  collaborative
     the user fills in the CS funding eligibility              true   ${compType_Generic}  SUBSIDY_CONTROL
     the user selects the organisational eligibility to no     false
     the user fills in the CS Milestones                       PROJECT_SETUP   ${month}   ${nextyear}   No

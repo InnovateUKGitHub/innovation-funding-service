@@ -25,7 +25,7 @@ HECP KICs terms and conditions not pre selected for any funding or competition t
     And the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
     And the user fills in the CS Initial details     ${hecpCompetitionName}  ${month}  ${nextyear}  ${compType_HESTA}  STATE_AID  GRANT
     When the user clicks the button/link             link = Terms and conditions
-    Then the user should see the element             css = [id="termsAndConditionsId10"]:not(:checked) ~ label
+    Then the user should see the element             css = [id="termsAndConditionsId11"]:not(:checked) ~ label
 
 Comp admin marks HECP terms and conditions section as complete
     [Documentation]  IFS-10926
@@ -48,11 +48,11 @@ HECP terms and conditions not pre selected for any funding or competition type
     And the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
     And the user fills in the CS Initial details     ${hecpKICsCompetitionName}  ${month}  ${nextyear}  ${compType_HESTA}  STATE_AID  GRANT
     When the user clicks the button/link             link = Terms and conditions
-    Then the user should see the element             css = [id="termsAndConditionsId9"]:checked ~ label
+    Then the user should see the element             css = [id="termsAndConditionsId10"]:checked ~ label
 
 Comp admin marks HECP terms and conditions section as complete
     [Documentation]  IFS-10926
-    When the user selects the radio button    termsAndConditionsId    termsAndConditionsId9
+    When the user selects the radio button    termsAndConditionsId    termsAndConditionsId10
     Then the user clicks the button/link      jQuery = button:contains("Done")
     And the user clicks the button/link       link = Back to competition details
     Then the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete

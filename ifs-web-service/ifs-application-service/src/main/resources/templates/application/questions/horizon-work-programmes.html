@@ -77,12 +77,14 @@
                                     <div class="govuk-radios">
                                         <div class="govuk-radios__item" th:each="workProgramme : *{allOptions}">
                                             <input th:field="*{selected}"
+                                                   th:id="|work-programme-radio-${workProgramme.id}|"
                                                    th:value="${workProgramme}"
                                                    type="radio"
                                                    class="govuk-radios__input"
                                                    required="required"
                                                    th:attr="data-required-errormessage=#{validation.horizon.programme.required}" />
-                                            <label th:text="${workProgramme.display}"
+                                            <label th:for="|work-programme-radio-${workProgramme.id}|"
+                                                    th:text="${workProgramme.display}"
                                                    class="govuk-label govuk-radios__label">Label</label>
                                         </div>
                                     </div>
@@ -103,7 +105,11 @@
                                     <p><strong>Select the Horizon Europe Work programme Part you applied to, e.g. CL2.</strong></p>
                                     <p class="govuk-body govuk-!-margin-bottom-0" th:text="${programme.getDisplay()}"></p>
                                 </th:block>
+=======
+>>>>>>> 8b64e3d4994e19c7dc8541c178ab9c785ccca9ff
                                 <th:block th:unless="${programme.getWorkProgramme() == null}">
+                                    <p><strong>Enter the Horizon Europe Work programme Part you applied to, e.g. CL2.</strong></p>
+                                    <p class="govuk-body govuk-!-margin-bottom-0" th:text="${programme.getProgrammeDisplayName()}"></p>
                                     <p><strong>Select the call you applied to.</strong></p>
                                     <p class="govuk-body govuk-!-margin-bottom-0" th:text="${programme.getDisplay()}"></p>
                                 </th:block>
