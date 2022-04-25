@@ -111,7 +111,7 @@ public enum Role implements Identifiable {
 
     public static Set<Role> externalRolesExcludingAssessor() {
         return externalRolesToInvite().stream()
-                                 .filter(role -> role.isAssessor())
+                                 .filter(role -> !role.isAssessor())
                                  .collect(toSet());
     }
 }
