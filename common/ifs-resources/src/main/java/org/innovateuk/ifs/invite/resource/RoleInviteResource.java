@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.invite.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.user.resource.Role;
 
 import static org.innovateuk.ifs.user.resource.Role.externalRolesToInvite;
@@ -12,16 +13,18 @@ public class RoleInviteResource extends InviteResource {
     private String hash;
     private Role role;
     private String organisation;
+    private InnovationAreaResource innovationArea;
 
     public RoleInviteResource() {
     }
 
-    public RoleInviteResource(Long id, String name, String email, String hash, String organisation) {
+    public RoleInviteResource(Long id, String name, String email, String hash, String organisation, InnovationAreaResource innovationArea) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.hash = hash;
         this.organisation = organisation;
+        this.innovationArea = innovationArea;
     }
 
     public Long getId() {
@@ -70,6 +73,14 @@ public class RoleInviteResource extends InviteResource {
 
     public void setOrganisation(String organisation) {
         this.organisation = organisation;
+    }
+
+    public InnovationAreaResource getInnovationArea() {
+        return innovationArea;
+    }
+
+    public void setInnovationArea(InnovationAreaResource innovationArea) {
+        this.innovationArea = innovationArea;
     }
 
     @JsonIgnore

@@ -40,4 +40,7 @@ public interface InviteUserService {
     @PreAuthorize("hasAuthority('ifs_administrator')")
     @SecuredBySpring(value = "RESEND_USER_INVITES", description = "Only the IFS Administrators can resend user invites")
     ServiceResult<Void> resendInvite(long inviteId);
+
+    @PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator', 'comp_admin')")
+    ServiceResult<List<RoleInviteResource>> findExternalInvitesByEmail(String email);
 }
