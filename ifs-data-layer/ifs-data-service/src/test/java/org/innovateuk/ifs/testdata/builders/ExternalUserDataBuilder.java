@@ -30,7 +30,9 @@ public class ExternalUserDataBuilder extends BaseUserDataBuilder<ExternalUserDat
                     invite.setLastName(lastName);
                     invite.setEmail(emailAddress);
                     invite.setRoles(newArrayList(role));
-                    inviteUserService.saveUserInvite(invite, role, organisation, 0L).getSuccess();
+                    if(!role.isAssessor()) {
+                       inviteUserService.saveUserInvite(invite, role, organisation).getSuccess();
+                    }
                     hash = inviteUserService.findPendingInternalUserInvites(invite.getEmail(), Pageable.unpaged()).getSuccess().getContent().get(0).getHash();
                 }
                 registerUser(firstName, lastName, emailAddress, phoneNumber, role, hash, data);

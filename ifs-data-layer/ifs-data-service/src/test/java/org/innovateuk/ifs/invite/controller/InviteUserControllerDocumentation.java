@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
@@ -19,9 +20,11 @@ import org.springframework.util.MultiValueMap;
 import java.util.Collections;
 import java.util.List;
 
+import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.RoleInviteResourceBuilder.newRoleInviteResource;
+import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -58,7 +61,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
     @Test
     public void saveUserInvite() throws Exception {
 
-        when(inviteUserServiceMock.saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole(), inviteUserResource.getOrganisation(), inviteUserResource.getInnovationAreaId())).thenReturn(serviceSuccess());
+        when(inviteUserServiceMock.saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole(), inviteUserResource.getOrganisation())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/invite-user/save-invite")
                 .header("IFS_AUTH_TOKEN", "123abc")
@@ -66,7 +69,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
                 .content(toJson(inviteUserResource)))
                 .andExpect(status().isOk());
 
-        verify(inviteUserServiceMock).saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole(), inviteUserResource.getOrganisation(), inviteUserResource.getInnovationAreaId());
+        verify(inviteUserServiceMock).saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole(), inviteUserResource.getOrganisation());
     }
 
     @Test
@@ -140,6 +143,23 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
                 .andExpect(status().isOk());
 
         verify(inviteUserServiceMock).resendInvite(123L);
+    }
+
+    @Test
+    public void saveAssessorInvite() throws Exception {
+        InnovationArea innovationArea = newInnovationArea().withName("innovation area").build();
+        inviteUserResource.setRole(ASSESSOR);
+        inviteUserResource.setInnovationAreaId(innovationArea.getId());
+
+        when(inviteUserServiceMock.saveAssessorInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole(), inviteUserResource.getInnovationAreaId())).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/invite-user/save-invite")
+                        .header("IFS_AUTH_TOKEN", "123abc")
+                        .contentType(APPLICATION_JSON)
+                        .content(toJson(inviteUserResource)))
+                .andExpect(status().isOk());
+
+        verify(inviteUserServiceMock).saveAssessorInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole(), inviteUserResource.getInnovationAreaId());
     }
 
     private RoleInvitePageResource buildRoleInvitePageResource() {

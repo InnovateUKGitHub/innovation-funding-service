@@ -30,7 +30,19 @@ public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<Invit
         UserResource invitedUser = UserResourceBuilder.newUserResource().build();
 
         assertAccessDenied(
-                () -> classUnderTest.saveUserInvite(invitedUser, SUPPORT, "", 0L),
+                () -> classUnderTest.saveUserInvite(invitedUser, SUPPORT, ""),
+                () -> {
+                    verify(inviteUserPermissionRules)
+                            .ifsAdminCanSaveNewUserInvite(any(UserResource.class), any(UserResource.class));
+                    verifyNoMoreInteractions(inviteUserPermissionRules);
+                });
+    }
+    @Test
+    public void saveAssessorInvite() {
+        UserResource invitedUser = UserResourceBuilder.newUserResource().build();
+
+        assertAccessDenied(
+                () -> classUnderTest.saveAssessorInvite(invitedUser, ASSESSOR, 3L),
                 () -> {
                     verify(inviteUserPermissionRules)
                             .ifsAdminCanSaveNewUserInvite(any(UserResource.class), any(UserResource.class));
