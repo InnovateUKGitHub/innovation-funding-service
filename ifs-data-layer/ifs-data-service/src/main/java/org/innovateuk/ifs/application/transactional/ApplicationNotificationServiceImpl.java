@@ -279,6 +279,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
         notificationArguments.put("applicationId", application.getId());
         notificationArguments.put("applicationName", application.getName());
         notificationArguments.put("competitionName", competition.getName());
+        notificationArguments.put("webBaseUrl", webBaseUrl);
 
         return new Notification(
                 from,
