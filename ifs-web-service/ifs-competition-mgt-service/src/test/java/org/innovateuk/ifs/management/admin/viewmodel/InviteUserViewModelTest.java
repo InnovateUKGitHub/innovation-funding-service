@@ -71,10 +71,10 @@ public class InviteUserViewModelTest {
     @Test
     public void inviteExternalUserViewModelIncludingAssessor() {
 
-        InviteUserViewModel viewModel = new InviteUserViewModel(InviteUserView.EXTERNAL_USER, Role.externalRolesIncludingAssessorToInvite().stream().collect(toSet()));
+        InviteUserViewModel viewModel = new InviteUserViewModel(InviteUserView.EXTERNAL_USER, Role.externalRolesToInvite().stream().collect(toSet()));
         assertEquals(InviteUserView.EXTERNAL_USER, viewModel.getType());
         assertTrue(Arrays.asList("assessor", "knowledge transfer adviser", "supporter").contains(viewModel.getTypeName()));
         assertTrue(viewModel.isExternal());
-        assertEquals(viewModel.getRoles(), Role.externalRolesIncludingAssessorToInvite().stream().collect(toSet()));
+        assertEquals(viewModel.getRoles(), Role.externalRolesToInvite().stream().collect(toSet()));
     }
 }
