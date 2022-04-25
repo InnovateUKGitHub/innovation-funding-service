@@ -33,9 +33,12 @@ public class InviteUserController {
 
     @PostMapping("/save-invite")
     public RestResult<Void> saveUserInvite(@RequestBody InviteUserResource inviteUserResource) {
+        if (inviteUserResource.getRole().isAssessor()) {
+            return inviteUserService.saveAssessorInvite(
+                    inviteUserResource.getInvitedUser(), inviteUserResource.getRole(), inviteUserResource.getInnovationAreaId()).toPostResponse();
+        }
         return inviteUserService.saveUserInvite(
-                inviteUserResource.getInvitedUser(), inviteUserResource.getRole(), inviteUserResource.getOrganisation(),
-                inviteUserResource.getInnovationAreaId()).toPostResponse();
+                inviteUserResource.getInvitedUser(), inviteUserResource.getRole(), inviteUserResource.getOrganisation()).toPostResponse();
     }
 
     @GetMapping("/get-invite/{inviteHash}")

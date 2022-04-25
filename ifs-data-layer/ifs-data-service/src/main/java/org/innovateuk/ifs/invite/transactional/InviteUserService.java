@@ -20,7 +20,7 @@ import java.util.List;
 public interface InviteUserService {
 
     @PreAuthorize("hasPermission(#invitedUser, 'SAVE_USER_INVITE')")
-    ServiceResult<Void> saveUserInvite(UserResource invitedUser, Role role, String organisation, Long innovationAreaId);
+    ServiceResult<Void> saveUserInvite(UserResource invitedUser, Role role, String organisation);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "GET_EXISTING_INVITE_FOR_HASH", description = "The System Registration user can get invite using hash to process registration")
@@ -40,4 +40,7 @@ public interface InviteUserService {
     @PreAuthorize("hasAuthority('ifs_administrator')")
     @SecuredBySpring(value = "RESEND_USER_INVITES", description = "Only the IFS Administrators can resend user invites")
     ServiceResult<Void> resendInvite(long inviteId);
+
+    @PreAuthorize("hasPermission(#invitedUser, 'SAVE_USER_INVITE')")
+    ServiceResult<Void> saveAssessorInvite(UserResource invitedUser, Role role, Long innovationAreaId);
 }

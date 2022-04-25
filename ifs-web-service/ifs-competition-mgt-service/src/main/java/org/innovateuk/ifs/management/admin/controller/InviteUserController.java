@@ -57,7 +57,7 @@ public class InviteUserController {
     public String selectRole(@ModelAttribute(name = "form") SelectExternalRoleForm form,
                              Model model) {
 
-        model.addAttribute("roles", isAssessorPoolEnabled ? Role.externalRolesIncludingAssessorToInvite() : Role.externalRolesToInvite());
+        model.addAttribute("roles", isAssessorPoolEnabled ? Role.externalRolesToInvite() : Role.externalRolesExcludingAssessor());
         return "admin/select-external-role";
     }
 
