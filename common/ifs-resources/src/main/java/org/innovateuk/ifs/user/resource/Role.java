@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Role defines database relations and a model to use client side and server side.
@@ -105,10 +106,12 @@ public enum Role implements Identifiable {
     }
 
     public static Set<Role> externalRolesToInvite() {
-        return EnumSet.of(KNOWLEDGE_TRANSFER_ADVISER, SUPPORTER);
+        return EnumSet.of(ASSESSOR, KNOWLEDGE_TRANSFER_ADVISER, SUPPORTER);
     }
 
-    public static Set<Role> externalRolesIncludingAssessorToInvite() {
-        return EnumSet.of(ASSESSOR, KNOWLEDGE_TRANSFER_ADVISER, SUPPORTER);
+    public static Set<Role> externalRolesExcludingAssessor() {
+        return externalRolesToInvite().stream()
+                                 .filter(role -> !role.isAssessor())
+                                 .collect(toSet());
     }
 }

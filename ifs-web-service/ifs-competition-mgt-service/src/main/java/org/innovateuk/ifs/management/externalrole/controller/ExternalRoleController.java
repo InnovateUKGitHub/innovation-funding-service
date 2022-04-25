@@ -81,7 +81,7 @@ public class ExternalRoleController {
                              Model model) {
 
         UserResource user = userRestService.retrieveUserById(userId).getSuccess();
-        model.addAttribute("roles", (isAssessorPoolEnabled ? Role.externalRolesIncludingAssessorToInvite() : Role.externalRolesToInvite())
+        model.addAttribute("roles", (isAssessorPoolEnabled ? Role.externalRolesToInvite() : Role.externalRolesExcludingAssessor())
                 .stream().filter(role -> !user.hasRole(role)).sorted(Comparator.comparing(Role::getDisplayName)).collect(Collectors.toList()));
         return "admin/select-external-role";
     }

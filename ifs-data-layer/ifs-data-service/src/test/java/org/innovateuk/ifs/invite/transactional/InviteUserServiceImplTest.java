@@ -2,6 +2,8 @@ package org.innovateuk.ifs.invite.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.builder.RoleInviteBuilder;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
@@ -51,6 +53,7 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -112,6 +115,9 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     private static String ktaUserEmailDomain = "ktn-uk.org";
 
     private UserResource invitedUser = null;
+
+    @Mock
+    private InnovationAreaRepository innovationAreaRepositoryMock;
 
     @Before
     public void setUp() {
@@ -726,6 +732,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
     @Test
     public void saveAssessorUserInviteSucceeds() throws Exception {
+        InnovationArea innovationArea = newInnovationArea().withName("innovation area").build();
         invitedUser = UserResourceBuilder.newUserResource()
                 .withFirstName("Assessor")
                 .withLastName("Test")
@@ -737,6 +744,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
                 withEmail("assessor.test.org").
                 withName("Assessor Test").
                 withRole(role).
+                withInnovationArea(innovationArea).
                 withStatus(CREATED).
                 withHash("1234").
                 build();
@@ -748,6 +756,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         when(roleInviteRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
 
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
+        when(innovationAreaRepositoryMock.findById(innovationArea.getId())).thenReturn(Optional.of(innovationArea));
 
         NotificationTarget notificationTarget = new UserNotificationTarget(expectedRoleInvite.getName(), expectedRoleInvite.getEmail());
 
@@ -758,7 +767,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         when(notificationService.sendNotificationWithFlush(expectedNotification, EMAIL)).thenReturn(serviceSuccess());
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, role, "");
+        ServiceResult<Void> result = service.saveAssessorInvite(invitedUser, role, expectedRoleInvite.getInnovationArea().getId());
 
         assertTrue(result.isSuccess());
 
