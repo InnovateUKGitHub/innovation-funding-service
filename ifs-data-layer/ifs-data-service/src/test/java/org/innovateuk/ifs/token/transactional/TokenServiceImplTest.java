@@ -135,7 +135,7 @@ public class TokenServiceImplTest extends BaseUnitTestMocksTest {
                         .put("organisationId", organisationId)
         );
 
-        tokenService.handleExtraAttributes(token);
+        tokenService.handleApplicationExtraAttributes(token);
 
         verify(applicationServiceMock, only()).createApplicationByApplicationNameForUserIdAndCompetitionId(EMPTY, competitionId, userId, organisationId);
     }
@@ -144,7 +144,7 @@ public class TokenServiceImplTest extends BaseUnitTestMocksTest {
     public void test_handleExtraAttributes_empty() throws Exception {
         final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L, "ffce0dbb58bd7780cba3a6c64a666d7d3481604722c55400fd5356195407144259de4c9ec75f8edb", now(), JsonNodeFactory.instance.objectNode());
 
-        tokenService.handleExtraAttributes(token);
+        tokenService.handleApplicationExtraAttributes(token);
 
         verify(applicationServiceMock, never()).createApplicationByApplicationNameForUserIdAndCompetitionId(isA(String.class), isA(Long.class), isA(Long.class), isA(Long.class));
     }

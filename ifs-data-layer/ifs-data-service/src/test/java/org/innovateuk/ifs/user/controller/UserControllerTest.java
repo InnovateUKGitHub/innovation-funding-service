@@ -39,8 +39,7 @@ import static java.time.ZonedDateTime.now;
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.core.Is.is;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_CANNOT_BE_WITHDRAWN;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -197,10 +196,9 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         applicationResource.setCompetition(compId);
         applicationResource.setId(appId);
 
-
-        when(tokenServiceMock.handleExtraAttributes(any())).thenReturn(serviceSuccess((applicationResource)));
+        when(crmService.syncCrmContact(userId, appId, compId)).thenReturn(serviceSuccess());
+        when(tokenServiceMock.handleApplicationExtraAttributes(any())).thenReturn(serviceSuccess((applicationResource)));
         when(registrationServiceMock.activateApplicantAndSendDiversitySurvey(anyLong(), anyLong())).thenReturn(serviceSuccess());
-
 
         mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash)
                         .header("IFS_AUTH_TOKEN", "123abc"))
@@ -220,8 +218,9 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         when(tokenServiceMock.getEmailToken(hash)).thenReturn(serviceSuccess((token)));
 
-
-        when(tokenServiceMock.handleExtraAttributes(token)).thenReturn(serviceFailure(PROJECT_CANNOT_BE_WITHDRAWN));
+        when(crmService.syncCrmContact(userId)).thenReturn(serviceSuccess());
+        when(tokenServiceMock.handleApplicationExtraAttributes(token)).thenReturn(serviceFailure(PROJECT_CANNOT_BE_WITHDRAWN));
+        when(tokenServiceMock.handleProjectExtraAttributes(token)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
         when(registrationServiceMock.activateApplicantAndSendDiversitySurvey(anyLong(), anyLong())).thenReturn(serviceSuccess());
         mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash)
                         .header("IFS_AUTH_TOKEN", "123abc"))
@@ -230,7 +229,6 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         verify(crmService).syncCrmContact(userId);
     }
-
 
     @Test
     public void verifyEmailNotFound() throws Exception {
@@ -511,10 +509,9 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         applicationResource.setCompetition(compId);
         applicationResource.setId(appId);
 
-
-        when(tokenServiceMock.handleExtraAttributes(any())).thenReturn(serviceSuccess((applicationResource)));
+        when(crmService.syncCrmContact(userId, appId, compId)).thenReturn(serviceSuccess());
+        when(tokenServiceMock.handleApplicationExtraAttributes(any())).thenReturn(serviceSuccess((applicationResource)));
         when(registrationServiceMock.activateApplicantAndSendDiversitySurvey(anyLong(), anyLong())).thenReturn(serviceSuccess());
-
 
         mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash)
                 .header("IFS_AUTH_TOKEN", "123abc"))
