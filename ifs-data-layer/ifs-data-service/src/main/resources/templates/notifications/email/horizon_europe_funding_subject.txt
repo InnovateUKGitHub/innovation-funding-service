@@ -1,1 +1,1 @@
-${applicationId?c}: update about your Horizon Europe Guarantee application
+Important message about your application '${applicationName}' for the competition '${competitionName}'
