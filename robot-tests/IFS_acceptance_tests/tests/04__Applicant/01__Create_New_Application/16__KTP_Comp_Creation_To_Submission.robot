@@ -227,8 +227,7 @@ The knowledge transfer partnership t&c's are correct
 T&c's can be confirmed
     [Documentation]  IFS-7213  IFS-9124
     Given the user clicks the button/link                    jQuery = button:contains("Done")
-    When the user sees that the radio button is selected     termsAndConditionsId  67
-    And the user should see the element                      link = Innovate UK (opens in a new window)
+    When the user selects the radio button                   termsAndConditionsId    termsAndConditionsId12
     And the user clicks the button/link                      jQuery = button:contains("Done")
     And the user should see the element                      jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Knowledge Transfer Partnership (KTP) - Subsidy control")
     And the user should see the element                      jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Innovate UK")
@@ -331,6 +330,13 @@ New lead applicant starts KTP competition
     Then the user select the competition and starts application     ${ktpCompetitionName}
 
 Select a knowledge base organisation validations and fields
+#    Then the user should see the element         css = button[value="KNOWLEDGE_BASE"].govuk-visually-hidden
+#
+#Knowledge base supervisor validations
+#    [Documentation]  IFS-7790
+#    Given the user clicks the button/link        jQuery = table[id="knowledge-base-table"] button:contains("Remove"):last
+#    When the user enters text to a text field    css = table[id="knowledge-base-table"] input[id$="description"]  ${EMPTY}
+#    And the user enters text to a text field     css = table[id="knowledge-base-table"] input[id$="cost"]         ${EMPTY}
     [Documentation]  IFS-7841  IFS-8318
     Given The user clicks the button/link                           link = Continue and create an account
     When the user clicks the button/link                            jQuery = button:contains("Confirm")
@@ -426,13 +432,6 @@ Knowledge base supervisor can only add two rows
     And the user clicks the button/link          id = edit
     And the user clicks the button/link          jQuery = button:contains("Open all")
     When the user clicks the button/link         css = button[value="KNOWLEDGE_BASE"]
-    Then the user should see the element         css = button[value="KNOWLEDGE_BASE"].govuk-visually-hidden
-
-Knowledge base supervisor validations
-    [Documentation]  IFS-7790
-    Given the user clicks the button/link        jQuery = table[id="knowledge-base-table"] button:contains("Remove"):last
-    When the user enters text to a text field    css = table[id="knowledge-base-table"] input[id$="description"]  ${EMPTY}
-    And the user enters text to a text field     css = table[id="knowledge-base-table"] input[id$="cost"]         ${EMPTY}
     Then the user should see the element         jQuery = table[id="knowledge-base-table"] td:contains(${empty_field_warning_message}) ~ td:contains(${empty_field_warning_message})
 
 Knowledge base supervisor calculations
