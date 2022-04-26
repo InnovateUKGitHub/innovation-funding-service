@@ -33,8 +33,7 @@ import static org.innovateuk.ifs.finance.builder.OtherFundingCostBuilder.newOthe
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostCategoryBuilder.newOtherFundingCostCategory;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundingFormPopulator> {
