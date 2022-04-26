@@ -35,6 +35,8 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11794 HECP Phase 2 - Bug bash changes - Clicking the work programme labels does not select the radio button
 ...
+...               IFS-11758 HECP Phase 2- Spend profile cost categories validations
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -198,10 +200,14 @@ Lead applicant views hecp project cost categories in spendprofile
     And the user should see the element                                             jQuery = p:contains("If you require further assistance in filling out your spend profile, contact your monitoring officer.")
     And the user should see the element                                             jQuery = p:contains("You need to mark this section as complete. You can then send completed spend profiles to Innovate UK.")
 
-Lead applicant views hecp project cost categories in edit spendprofile page
-    [Documentation]  IFS-11695
-    When the user clicks the button/link                    link = Edit spend profile
-    Then the user should see hecp project cost categories
+Lead applicant views hecp project cost categories on validation and edit spendprofile
+    [Documentation]  IFS-11695  IFS-11758
+    When the user clicks the button/link                                    link = Edit spend profile
+    And the user edit the spend profile mothly values                       616  616  247  370  247  493  124
+    And the user clicks the button/link                                     jQuery = button:contains("Save and return to spend profile overview")
+    Then the user should see hecp project cost categories in summary box
+    And the user should see hecp project cost categories
+    [Teardown]   the user reverted the edited values in spend profile
 
 Lead applicant submits spen profile to internal user for review
     [Documentation]  IFS-11551
@@ -614,6 +620,15 @@ the user should see hecp project cost categories
     the user should see the element     jQuery = span:contains("Other costs")
     the user should see the element     jQuery = span:contains("Indirect costs")
 
+the user should see hecp project cost categories in summary box
+    the user should see the element     jQuery = li:contains("Equipment")
+    the user should see the element     jQuery = li:contains("Indirect costs")
+    the user should see the element     jQuery = li:contains("Other costs")
+    the user should see the element     jQuery = li:contains("Other goods, works and services")
+    the user should see the element     jQuery = li:contains("Personnel costs")
+    the user should see the element     jQuery = li:contains("Subcontracting costs")
+    the user should see the element     jQuery = li:contains("Travel and subsistence")
+
 the user should see readonly detailed hecp finances
     the user should see the element    jQuery = label:contains("Personnel costs") ~ span:contains("50,000")
     the user should see the element    jQuery = label:contains("Subcontracting costs") ~ span:contains("50,000")
@@ -624,7 +639,22 @@ the user should see readonly detailed hecp finances
     the user should see the element    jQuery = label:contains("Indirect costs") ~ span:contains("0")
     the user should see the element    css = [id="total-cost"][value="£200,000"]
 
+the user edit the spend profile mothly values
+    [Arguments]  ${personnelCosts}  ${subcontractingCosts}  ${travelAndSubsistenceCosts}  ${equipmentCosts}  ${otherGoodsWorksAndServicesCosts}  ${otherCosts}  ${indirectCosts}
+    the user enters text to a text field     jQuery = tr:nth-of-type(1) td:nth-of-type(1) input[id^="table.monthlyCostsPerCategoryMap"]    ${personnelCosts}
+    the user enters text to a text field     jQuery = tr:nth-of-type(2) td:nth-of-type(1) input[id^="table.monthlyCostsPerCategoryMap"]    ${subcontractingCosts}
+    the user enters text to a text field     jQuery = tr:nth-of-type(3) td:nth-of-type(1) input[id^="table.monthlyCostsPerCategoryMap"]    ${travelAndSubsistenceCosts}
+    the user enters text to a text field     jQuery = tr:nth-of-type(4) td:nth-of-type(1) input[id^="table.monthlyCostsPerCategoryMap"]    ${equipmentCosts}
+    the user enters text to a text field     jQuery = tr:nth-of-type(5) td:nth-of-type(1) input[id^="table.monthlyCostsPerCategoryMap"]    ${otherGoodsWorksAndServicesCosts}
+    the user enters text to a text field     jQuery = tr:nth-of-type(6) td:nth-of-type(1) input[id^="table.monthlyCostsPerCategoryMap"]    ${otherCosts}
+    the user enters text to a text field     jQuery = tr:nth-of-type(7) td:nth-of-type(1) input[id^="table.monthlyCostsPerCategoryMap"]    ${indirectCosts}
+
+the user reverted the edited values in spend profile
+    the user clicks the button/link                 link = Edit spend profile
+    the user edit the spend profile mothly values   615  615  246  369  246  492  123
+
 the user should see Participating Organisation project region
     the user clicks the button/link  jQuery = a:contains("Participating Organisation project region")
     the user should see the element  jQuery = div:contains("Please type the region your project is being carried out in.")
     the user clicks the button/link  jQuery = a:contains("Back to application overview")
+
