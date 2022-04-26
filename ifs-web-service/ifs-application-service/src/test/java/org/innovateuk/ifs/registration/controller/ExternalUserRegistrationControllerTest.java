@@ -19,12 +19,14 @@ import javax.validation.Validator;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.RoleInviteResourceBuilder.newRoleInviteResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ExternalUserRegistrationControllerTest extends BaseControllerMockMVCTest<ExternalUserRegistrationController> {
@@ -153,7 +155,7 @@ public class ExternalUserRegistrationControllerTest extends BaseControllerMockMV
                 .withInviteHash("hash")
                 .withRole(Role.ASSESSOR)
                 .build())))
-                .thenReturn(restSuccess(new UserResource()));
+                .thenReturn(restSuccess(newUserResource().withId(1L).withRoleGlobal(Role.ASSESSOR).build()));
         mockMvc.perform(post(URL_PREFIX + "/hash/register")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("firstName", registrationForm.getFirstName())
@@ -162,6 +164,6 @@ public class ExternalUserRegistrationControllerTest extends BaseControllerMockMV
                         .param("email", registrationForm.getEmail())
                         .param("phoneNumber", registrationForm.getPhoneNumber()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/registration/hash/register/account-created"));
+                .andExpect(redirectedUrl("/registration/hash/register/account-created"));   // TODO change expectedRedirectUrl in ExternalUserRegistrationController.submitYourDetails, IFS-11788
     }
 }
