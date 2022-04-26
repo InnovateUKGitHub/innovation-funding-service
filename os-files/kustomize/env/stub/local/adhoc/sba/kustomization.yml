@@ -3,17 +3,13 @@ commonAnnotations:
   environment: local-dev
 
 resources:
-  - ../../../../../config-mgmt/env/local
-  - ../../../../../secrets-mgmt/env/local
+  - sba-secret.yml
+  - rbac/sba-rbac.yml
 
 components:
   - ../../../../../components/sba
   - ../../../../../patches/
   - ../../patches/
-
-resources:
-  - sba-secret.yml
-  - rbac/sba-rbac.yml
 
 patchesStrategicMerge:
   - sba.yml
