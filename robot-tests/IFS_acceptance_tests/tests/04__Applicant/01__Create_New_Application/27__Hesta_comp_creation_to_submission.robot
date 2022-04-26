@@ -118,7 +118,6 @@ Applicant receives successful message of an application
     Given Log in as a different user                                                &{Comp_admin1_credentials}
     And The user clicks the button/link                                             link = ${hestaCompetitionName}
     When Internal user notifies the applicant on status of application
-    #When the internal team mark the application as successful / unsuccessful        ${hestaApplicationName}   FUNDED
     Then the user reads his email                                                   ${leadApplicantEmail}  Important message about your application '${hestaApplicationName}' for the competition '${hestaCompetitionName}'  ${hestaApplicationSuccessfulEmail}
 
 The Application Summary page must not include the Reopen Application link when the internal team mark the application as successful / unsuccessful
