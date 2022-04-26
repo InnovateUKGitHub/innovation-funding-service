@@ -33,6 +33,7 @@ public interface RoleProfileStatusService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<UserPageResource> findByRoleProfile(RoleProfileState state, ProfileRole profileRole, String filter, Pageable pageable);
 
-    @NotSecured(value = "Should only be called from other secure services")
+    @SecuredBySpring(value = "UPDATE_USER_STATUS", description = "Only comp admin or project finance can create assessor")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'assessor')")
     ServiceResult<Void> createAssessorRoleProfileStatus(long userId);
 }
