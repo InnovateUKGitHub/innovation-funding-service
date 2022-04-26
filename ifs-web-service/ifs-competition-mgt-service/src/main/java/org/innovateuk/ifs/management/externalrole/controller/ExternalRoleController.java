@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Comparator;
+import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -81,8 +82,7 @@ public class ExternalRoleController {
                              Model model) {
 
         UserResource user = userRestService.retrieveUserById(userId).getSuccess();
-        model.addAttribute("roles", (isAssessorPoolEnabled ? Role.externalRolesToInvite() : Role.externalRolesExcludingAssessor())
-                .stream().filter(role -> !user.hasRole(role)).sorted(Comparator.comparing(Role::getDisplayName)).collect(Collectors.toList()));
+        model.addAttribute("roles", getInvitableExternalRoles(user));
         return "admin/select-external-role";
     }
 
@@ -103,5 +103,10 @@ public class ExternalRoleController {
 
     private String redirectToUserPage(long userId) {
         return String.format("redirect:/admin/user/%d/active", userId);
+    }
+
+    private List<Role> getInvitableExternalRoles(UserResource user) {
+        return (isAssessorPoolEnabled ? Role.externalRolesToInvite() : Role.externalRolesExcludingAssessor())
+                .stream().filter(role -> !user.hasRole(role)).sorted(Comparator.comparing(Role::getDisplayName)).collect(Collectors.toList());
     }
 }

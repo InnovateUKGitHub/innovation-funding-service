@@ -75,7 +75,6 @@ public class RoleProfileStatusServiceImpl implements RoleProfileStatusService {
     public ServiceResult<Void> createAssessorRoleProfileStatus(long userId) {
         User user = userRepository.findById(userId).get();
         roleProfileStatusRepository.save(new RoleProfileStatus(user, ProfileRole.ASSESSOR));
-//        registrationService.saveAssessorRoleProfile(user);
             return serviceSuccess();
     }
 
