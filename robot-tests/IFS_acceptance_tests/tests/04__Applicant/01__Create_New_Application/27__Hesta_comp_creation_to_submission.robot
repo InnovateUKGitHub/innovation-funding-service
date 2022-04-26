@@ -113,14 +113,12 @@ Lead applicant should get a confirmation email after application submission
     Given Requesting IDs of this application    ${hestaApplicationName}
     Then the user reads his email               ${leadApplicantEmail}  ${ApplicationID}: ${hestaApplicationSubmissionEmailSubject}  ${hestaApplicationSubmissionEmail}
 
-The Application Summary page must not include the Reopen Application link when the internal team mark the application as successful / unsuccessful
-    [Documentation]  IFS-10697  IFS-11406  IFS-11486
-
 Applicant receives successful message of an application
     [Documentation]  IFS-11554
     Given Log in as a different user                                                &{Comp_admin1_credentials}
     And The user clicks the button/link                                             link = ${hestaCompetitionName}
-    When the internal team mark the application as successful / unsuccessful        ${hestaApplicationName}   FUNDED
+    When Internal user notifies the applicant on status of application
+    #When the internal team mark the application as successful / unsuccessful        ${hestaApplicationName}   FUNDED
     Then the user reads his email                                                   ${leadApplicantEmail}  Important message about your application '${hestaApplicationName}' for the competition '${hestaCompetitionName}'  ${hestaApplicationSuccessfulEmail}
 
 The Application Summary page must not include the Reopen Application link when the internal team mark the application as successful / unsuccessful
@@ -157,7 +155,6 @@ the user should not see any references to assessment and release feedback on clo
 
 Applicant can view application link when in project setup
     [Documentation]  IFS-11510
-    Given Internal user notifies the applicant on status of application
     When the applicant navigates to project set up
     Then The user should see the text in the element               link = view application  view application
 
