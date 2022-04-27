@@ -8,6 +8,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.user.resource.Authority.IFS_ADMINISTRATOR;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 /**
  * Permission rules for Invite User Service
@@ -24,5 +25,10 @@ public class InviteUserPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ", description = "Internal users can view pending internal user invites")
     public boolean internalUsersCanViewPendingInternalUserInvites(RoleInvitePageResource invite, UserResource user) {
         return user.hasAuthority(IFS_ADMINISTRATOR);
+    }
+
+    @PermissionRule(value = "READ", description = "Internal users can view external user invites")
+    public boolean internalUsersCanViewExternalUserInvites(RoleInvitePageResource invite, UserResource user) {
+        return isInternal(user);
     }
 }
