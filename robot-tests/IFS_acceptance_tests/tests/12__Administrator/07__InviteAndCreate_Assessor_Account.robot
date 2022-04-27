@@ -73,7 +73,7 @@ Admin can view the new assessor in invite assessors page of an existing competit
     And the user clicks the button/link         link = Invite assessors to assess the competition
     And the user enters text to a text field    id = assessorNameFilter  alome
     And the user clicks the button/link         id = assessor-filter-button
-    Then the user should see the element        jQuery = td:contains("alome.lolome") +td+ td:contains("Biosciences")
+    Then the user should see the element        jQuery = td:contains("alome lolome")+td+ td:contains("Biosciences")
 
 Competiton admin can view new assessor status
     [Documentation]  IFS-11788
