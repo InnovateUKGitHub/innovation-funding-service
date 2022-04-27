@@ -4,6 +4,7 @@ import org.innovateuk.ifs.testdata.builders.data.BaseUserData;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.EDIStatus;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 
@@ -11,7 +12,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
+import static org.innovateuk.ifs.user.resource.EDIStatus.COMPLETE;
 import static org.innovateuk.ifs.user.resource.UserCreationResource.UserCreationResourceBuilder.anUserCreationResource;
+import static org.innovateuk.ifs.util.TimeMachine.now;
 
 /**
  * Base builder for generating data for non-active and active registered users
@@ -73,6 +76,20 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
                             }
                     );
                 });
+            });
+        });
+    }
+
+    public S addEdiStatus(EDIStatus ediStatus) {
+        return with(data -> {
+            doAs(ifsAdmin(), () -> {
+                long id = data.getUser().getId();
+                userRepository.findById(id).ifPresent(
+                        user -> {
+                            user.setEdiStatus(ediStatus);
+                            user.setEdiReviewDate(ediStatus.equals(COMPLETE) ? now() : null);
+                            userRepository.save(user);
+                        });
             });
         });
     }
