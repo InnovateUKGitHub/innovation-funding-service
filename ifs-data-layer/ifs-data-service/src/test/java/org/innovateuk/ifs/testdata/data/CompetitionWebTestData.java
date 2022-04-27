@@ -478,7 +478,12 @@ public class CompetitionWebTestData {
                 loanCompetition()
                         .withName("Loans SF Part-B Competition")
                         .withInnovationSector("Infrastructure systems")
-                        .withAssessorCount(5)
+                        .withAssessorCount(5),
+                directAwardCompetition()
+                        .withName("Direct award competition")
+                        .withCompetitionType(DIRECT_AWARD)
+                        .withAlwaysOpen(false)
+                        .withResubmission(false)
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.OPEN))
@@ -651,6 +656,14 @@ public class CompetitionWebTestData {
     private static CompetitionLineBuilder ktpCompetition() {
         return anIfsCompetition()
                 .withFundingType(FundingType.KTP)
+                .withResubmission(true);
+    }
+
+    private static CompetitionLineBuilder directAwardCompetition() {
+        return anIfsCompetition()
+                .withFundingType(FundingType.GRANT)
+                .withCompetitionType(DIRECT_AWARD)
+                .withAlwaysOpen(true)
                 .withResubmission(true);
     }
 
