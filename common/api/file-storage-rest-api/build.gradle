@@ -1,0 +1,17 @@
+apply from: rootProject.file("common/gradle-support/java.gradle")
+
+dependencies {
+
+    api platform(project(":common:bom"))
+
+    implementation 'org.springframework:spring-web'
+
+    testImplementation 'org.hamcrest:hamcrest'
+    testImplementation 'nl.jqno.equalsverifier:equalsverifier:3.8'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+test {
+    useJUnitPlatform()
+}

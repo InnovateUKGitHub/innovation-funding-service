@@ -81,4 +81,6 @@ include("robot-tests")
 
 // Tools...
 include("ifs-tools:sba")
+include 'common:api:file-upload-rest-api'
+findProject(':common:api:file-upload-rest-api')?.name = 'file-upload-rest-api'
 
