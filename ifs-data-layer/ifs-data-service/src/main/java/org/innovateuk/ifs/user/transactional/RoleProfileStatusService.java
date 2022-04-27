@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.user.transactional;
 
-import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.domain.RoleProfileStatus;
@@ -19,7 +18,7 @@ import java.util.List;
  */
 public interface RoleProfileStatusService {
 
-    @SecuredBySpring(value = "UPDATE_USER_STATUS", description = "Only comp admin or project finance can update a users status")
+    @SecuredBySpring(value = "UPDATE_USER_STATUS", description = "Only comp admin or assessors who are invited using Manage user can update a users status")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'assessor')")
     ServiceResult<Void> updateUserStatus(long userId, RoleProfileStatusResource roleProfileStatusResource);
 
@@ -32,7 +31,4 @@ public interface RoleProfileStatusService {
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<UserPageResource> findByRoleProfile(RoleProfileState state, ProfileRole profileRole, String filter, Pageable pageable);
-
-    @NotSecured(value = "Should only be called from other secure services")
-    ServiceResult<Void> createAssessorRoleProfileStatus(long userId);
 }
