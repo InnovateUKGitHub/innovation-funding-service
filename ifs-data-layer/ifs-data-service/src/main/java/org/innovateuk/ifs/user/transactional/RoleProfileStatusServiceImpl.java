@@ -70,14 +70,6 @@ public class RoleProfileStatusServiceImpl implements RoleProfileStatusService {
         );
     }
 
-    @Override
-    @Transactional
-    public ServiceResult<Void> createAssessorRoleProfileStatus(long userId) {
-        User user = userRepository.findById(userId).get();
-        roleProfileStatusRepository.save(new RoleProfileStatus(user, ProfileRole.ASSESSOR));
-            return serviceSuccess();
-    }
-
     private ServiceResult<UserPageResource> userPageResource(Page<User> pagedResult) {
         return serviceSuccess(new UserPageResource(
                 pagedResult.getTotalElements(),

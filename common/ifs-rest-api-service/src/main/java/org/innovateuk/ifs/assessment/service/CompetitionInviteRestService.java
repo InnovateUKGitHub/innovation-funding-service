@@ -19,6 +19,8 @@ public interface CompetitionInviteRestService {
 
     RestResult<CompetitionInviteResource> getInvite(String inviteHash);
 
+    RestResult<CompetitionInviteResource> getInviteByInviteId(long inviteId);
+
     RestResult<CompetitionInviteResource> openInvite(String inviteHash);
 
     RestResult<Void> acceptInvite(String inviteHash);

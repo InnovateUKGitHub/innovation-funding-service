@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.singletonList;
+
 /**
  * Build the model for the Invite assessors view.
  */
@@ -57,5 +59,9 @@ abstract class CompetitionInviteAssessorsModelPopulator<ViewModelType extends In
     public List<InnovationAreaResource> getExternalAssessorsInnovationAreas(String email) {
         List<RoleInviteResource> roleInviteResources = inviteUserRestService.findExternalInvitesByEmail(email).getSuccess();
         return roleInviteResources.stream().map(RoleInviteResource::getInnovationArea).collect(Collectors.toList());
+    }
+
+    public List<InnovationAreaResource> getAssessorsInnovationAreasByInviteId(long inviteId) {
+        return singletonList(competitionInviteRestService.getInviteByInviteId(inviteId).getSuccess().getInnovationArea());
     }
 }

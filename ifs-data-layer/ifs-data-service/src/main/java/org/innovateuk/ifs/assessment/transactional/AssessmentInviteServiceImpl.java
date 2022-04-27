@@ -11,6 +11,7 @@ import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -21,8 +22,10 @@ import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
+import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.invite.transactional.InviteService;
+import org.innovateuk.ifs.invite.transactional.InviteUserService;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -56,6 +59,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ofPattern;
@@ -68,8 +72,8 @@ import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.A
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
-import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
 import static org.innovateuk.ifs.profile.domain.Profile.startOfCurrentFinancialYear;
@@ -138,6 +142,12 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private InviteUserService inviteUserService;
+
+    @Autowired
+    private RoleInviteRepository roleInviteRepository;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -227,6 +237,13 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
         return getByHashIfOpen(inviteHash)
                 .andOnSuccessReturn(this::openInvite)
                 .andOnSuccessReturn(assessmentInviteMapper::mapToResource);
+    }
+
+    @Override
+    public ServiceResult<CompetitionInviteResource> getInviteByInviteId(long inviteId) {
+        AssessmentInvite assessmentInvite = assessmentInviteRepository.findById(inviteId).get();
+
+        return serviceSuccess(assessmentInviteMapper.mapToResource(assessmentInvite));
     }
 
     @Override
@@ -430,8 +447,29 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     private ServiceResult<AssessmentInvite> inviteUserToCompetition(User user, long competitionId) {
         return getCompetition(competitionId)
                 .andOnSuccessReturn(
-                        competition -> assessmentInviteRepository.save(new AssessmentInvite(user, generateInviteHash(), competition))
-                );
+                        competition -> {
+                            if (externalAssessor(user.getEmail())) {
+                                return assessmentInviteRepository.save(new AssessmentInvite(user.getName(),
+                                        user.getEmail(),
+                                        generateInviteHash(),
+                                        competition,
+                                        getInnovationArea(user.getEmail())));
+                            }
+                            return assessmentInviteRepository.save(new AssessmentInvite(user, generateInviteHash(), competition));
+                        });
+    }
+
+    private Boolean externalAssessor(String email) {
+        return roleInviteRepository.findByEmail(email).stream().anyMatch(roleInvite -> roleInvite.getTarget().isAssessor());
+    }
+
+    public List<InnovationAreaResource> getExternalAssessorsInnovationAreas(String email) {
+        List<RoleInviteResource> roleInviteResources = inviteUserService.findExternalInvitesByEmail(email).getSuccess();
+        return roleInviteResources.stream().map(RoleInviteResource::getInnovationArea).collect(Collectors.toList());
+    }
+
+    public InnovationArea getInnovationArea(String email) {
+        return getExternalAssessorsInnovationAreas(email).stream().map(innovationAreaMapper::mapToDomain).findAny().orElse(null);
     }
 
     private ServiceResult<Competition> getCompetition(long competitionId) {
@@ -451,11 +489,12 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
             return processAnyFailuresOrSucceed(simpleMap(
                     assessmentInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED),
                     invite -> {
+                        boolean hasNoRoleProfile = roleProfileStatusRepository.findByUserId(invite.getUser().getId()).isEmpty();
                         assessmentParticipantRepository.save(
                                 new AssessmentParticipant(invite.send(loggedInUserSupplier.get(), ZonedDateTime.now()))
                         );
 
-                        if (invite.isNewAssessorInvite()) {
+                        if (invite.isNewAssessorInvite() && hasNoRoleProfile) {
                             userRepository.findByEmail(invite.getEmail()).ifPresent(this::addAssessorRoleToUser);
                         }
 
