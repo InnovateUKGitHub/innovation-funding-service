@@ -10,6 +10,7 @@ import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteServiceImpl;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.sil.crm.resource.SilEDIStatus;
 import org.innovateuk.ifs.token.domain.Token;
@@ -181,7 +182,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     }
 
     @Test
-    public void verifyEmailWithExtraAttributes() throws Exception {
+    public void verifyEmailWithApplicationExtraAttributes() throws Exception {
         final String hash = "8eda60ad3441ee883cc95417e2abaa036c308dd9eb19468fcc8597fb4cb167c32a7e5daf5e237385";
         final Long userId = 1L;
         final Long appId = 1L;
@@ -206,6 +207,34 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(content().string(""));
 
         verify(crmService).syncCrmContact(userId, appId, compId);
+    }
+
+    @Test
+    public void verifyEmailWithProjectExtraAttributes() throws Exception {
+        final String hash = "8eda60ad3441ee883cc95417e2abaa036c308dd9eb19468fcc8597fb4cb167c32a7e5daf5e237385";
+        final Long userId = 1L;
+        final Long projectId = 1L;
+        final Long compId = 1L;
+
+        ObjectNode node = JsonNodeFactory.instance.objectNode();
+        node.put("inviteId", 111L);
+        final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), userId, hash, now(), node);
+        when(tokenServiceMock.getEmailToken(hash)).thenReturn(serviceSuccess((token)));
+
+        ProjectResource projectResource = new ProjectResource();
+        projectResource.setId(projectId);
+
+        when(crmService.syncCrmContact(userId, projectId)).thenReturn(serviceSuccess());
+        when(tokenServiceMock.handleProjectExtraAttributes(token)).thenReturn(serviceSuccess(projectResource));
+        when(tokenServiceMock.handleApplicationExtraAttributes(any())).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
+        when(registrationServiceMock.activateApplicantAndSendDiversitySurvey(anyLong(), anyLong())).thenReturn(serviceSuccess());
+
+        mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash)
+                        .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+
+        verify(crmService).syncCrmContact(userId,projectId);
     }
 
     @Test

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.user.domain.User;
@@ -37,6 +38,9 @@ public class TokenServiceImplTest extends BaseUnitTestMocksTest {
 
     @Mock
     private ApplicationService applicationServiceMock;
+
+    @Mock
+    private ProjectService projectServiceMock;
 
     @Before
     public void setUp() throws Exception {
@@ -120,7 +124,7 @@ public class TokenServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_handleExtraAttributes() throws Exception {
+    public void test_handleApplicationExtraAttributes() {
         final long competitionId = 999L;
         final long userId = 888L;
         final long organisationId = 777L;
@@ -141,12 +145,40 @@ public class TokenServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_handleExtraAttributes_empty() throws Exception {
+    public void test_handleApplicationExtraAttributes_empty() {
         final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L, "ffce0dbb58bd7780cba3a6c64a666d7d3481604722c55400fd5356195407144259de4c9ec75f8edb", now(), JsonNodeFactory.instance.objectNode());
 
         tokenService.handleApplicationExtraAttributes(token);
 
         verify(applicationServiceMock, never()).createApplicationByApplicationNameForUserIdAndCompetitionId(isA(String.class), isA(Long.class), isA(Long.class), isA(Long.class));
+    }
+
+    @Test
+    public void test_handleProjectExtraAttributes() {
+        final long projectId = 999L;
+        final long userId = 888L;
+        final Token token = new Token(
+                VERIFY_EMAIL_ADDRESS,
+                User.class.getName(),
+                userId,
+                "ffce0dbb58bd7780cba3a6c64a666d7d3481604722c55400fd5356195407144259de4c9ec75f8edb",
+                now(),
+                JsonNodeFactory.instance.objectNode()
+                        .put("projectId", projectId)
+        );
+
+        tokenService.handleProjectExtraAttributes(token);
+
+        verify(projectServiceMock, only()).getProjectById(projectId);
+    }
+
+    @Test
+    public void test_handleProjectExtraAttributes_empty() {
+        final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L, "ffce0dbb58bd7780cba3a6c64a666d7d3481604722c55400fd5356195407144259de4c9ec75f8edb", now(), JsonNodeFactory.instance.objectNode());
+
+        tokenService.handleProjectExtraAttributes(token);
+
+        verify(projectServiceMock, never()).getProjectById(isA(Long.class));
     }
 
     /**
