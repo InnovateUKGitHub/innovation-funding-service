@@ -89,7 +89,7 @@ public class ExternalUserRegistrationController {
                     bindingResult.addError(new FieldError("form", violation.getPropertyPath().toString(), violation.getMessage())));
         }
 
-        if (invite.getRole() != Role.ASSESSOR) {
+        if (!invite.getRole().isAssessor()) {
             Set<ConstraintViolation<RegistrationForm>> tncConstraintViolations =
                     validator.validate(registrationForm, RegistrationForm.TermsValidationGroup.class);
 
