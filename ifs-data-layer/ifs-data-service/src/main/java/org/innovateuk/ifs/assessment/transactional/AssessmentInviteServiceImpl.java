@@ -242,19 +242,8 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     @Override
     public ServiceResult<CompetitionInviteResource> getInviteByInviteId(long inviteId) {
         AssessmentInvite assessmentInvite = assessmentInviteRepository.findById(inviteId).get();
-        InnovationAreaResource innovationAreaResource = new InnovationAreaResource();
-        innovationAreaResource.setId(assessmentInvite.getInnovationArea().getId());
-        innovationAreaResource.setSector(assessmentInvite.getInnovationArea().getSector().getId());
-        innovationAreaResource.setDescription(assessmentInvite.getInnovationArea().getDescription());
-        innovationAreaResource.setName(assessmentInvite.getInnovationArea().getName());
-        innovationAreaResource.setSectorName(assessmentInvite.getInnovationArea().getSector().getName());
-        innovationAreaResource.setPriority(assessmentInvite.getInnovationArea().getPriority());
 
-        CompetitionInviteResource competitionInviteResource = new CompetitionInviteResource();
-        competitionInviteResource.setEmail(assessmentInvite.getEmail());
-        competitionInviteResource.setInnovationArea(innovationAreaResource);
-        competitionInviteResource.setCompetitionId(competitionInviteResource.getCompetitionId());
-        return serviceSuccess(competitionInviteResource);
+        return serviceSuccess(assessmentInviteMapper.mapToResource(assessmentInvite));
     }
 
     @Override
