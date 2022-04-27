@@ -11,30 +11,38 @@ Resource          ../../resources/common/Competition_Commons.robot
 Resource          ../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
-${validAssessorEmail}               alome.lolome@gmail.com
-${assessorInviteEmailSubject}       You have been invited to become a assessor
-${AssessorEmailInviteDescription}   You've been invited to become a assessor for the Innovation Funding Service.
+${firstNameInvalidCharacterMessage}     Their first name should have at least 2 characters.
+${lastNameInvalidCharacterMessage}      Their last name should have at least 2 characters.
+${firstNameValidationMessage}           Please enter a first name.
+${lastNameValidationMessage}            Please enter a last name.
+${emailAddressValidationMessage}        Please enter an email address.
+${innovationAreaValidationMessage}      Please enter an innovation sector and area.
+${validAssessorEmail}                   alome.lolome@gmail.com
+${assessorInviteEmailSubject}           You have been invited to become a assessor
+${AssessorEmailInviteDescription}       You've been invited to become a assessor for the Innovation Funding Service.
 
 
 *** Test Cases ***
+Invite a new supporter user field validations
+    [Documentation]  IFS-11787
+    Given the user clicks the button/link                                       link = Manage users
+    And the user clicks the button/link                                         link = Invite a new external user
+    When the user selects a new external user role                              ASSESSOR
+    And the user clicks the button/link                                         jQuery = button:contains("Send invitation")
+    Then the user should see invite an assessor user field validation message
+
 Admin sents an invite for assessor
     [Documentation]  IFS-11788
-    Given the user clicks the button/link                     link = Invite a new external user
-    And the user selects a new external user role             ASSESSOR
     When the user fills invite a new external user fields     alome  lolome  ${validAssessorEmail}
     And the user selects innovation area and sector
     And the user clicks the button/link                       jQuery = button:contains("Send invitation")
     Then the user should see the element                      jQuery = td:contains("Assessor")+td:contains("${validAssessorEmail}")
     [Teardown]  Logout as user
 
-The Assessor accepts the invite to create an account
-    [Documentation]  IFS-11788
-    When the user reads his email and clicks the link      ${validAssessorEmail}  ${assessorInviteEmailSubject}  ${AssessorEmailInviteDescription}
-    Then the user should see the element                   jQuery = h1:contains("Create account")
-
 The Assesssor creates a new account
     [Documentation]  IFS-11788
-    Given assessor enters the details to create an account     alome  lolome
+    Given the user reads his email and clicks the link         ${validAssessorEmail}  ${assessorInviteEmailSubject}  ${AssessorEmailInviteDescription}
+    And assessor enters the details to create an account       alome  lolome
     When the user clicks the button/link                       name = create-account
     Then the user should see the element                       jQuery = h1:contains("Your account has been created")
     And the user should see the element                        jQuery = li:contains("provide information about your skill areas")
@@ -91,5 +99,13 @@ assessor enters the details to create an account
     the user enters text to a text field                   name = password   ${short_password}
 
 the user selects innovation area and sector
-    the user selects the option from the drop-down menu   Health and life sciences  css = [aria-label="Innovation sector"]
-    the user selects the option from the drop-down menu   Biosciences  id = innovationArea
+    the user selects the option from the drop-down menu   Health and life sciences  id = selectedInnovationArea
+    the user selects the option from the drop-down menu   Biosciences  id = grouped-innovation-area
+
+the user should see invite an assessor user field validation message
+    The user should see a field and summary error     ${firstNameInvalidCharacterMessage}
+    The user should see a field and summary error     ${firstNameValidationMessage}
+    The user should see a field and summary error     ${lastNameValidationMessage}
+    The user should see a field and summary error     ${lastNameInvalidCharacterMessage}
+    The user should see a field and summary error     ${innovationAreaValidationMessage}
+    The user should see a field and summary error     ${emailAddressValidationMessage}
