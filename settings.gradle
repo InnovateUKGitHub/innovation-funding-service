@@ -7,6 +7,7 @@ include("common")
 include("common:api")
 include("common:api:static")
 include("common:api:audit-api")
+include("common:api:file-storage-rest-api")
 
 // Starters - should only depend on external libs (mostly spring)
 include("common:starter:ifs-starter-audit")
@@ -81,6 +82,4 @@ include("robot-tests")
 
 // Tools...
 include("ifs-tools:sba")
-include 'common:api:file-upload-rest-api'
-findProject(':common:api:file-upload-rest-api')?.name = 'file-upload-rest-api'
 
