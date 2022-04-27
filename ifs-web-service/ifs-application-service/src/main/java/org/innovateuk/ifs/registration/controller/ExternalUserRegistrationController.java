@@ -100,7 +100,7 @@ public class ExternalUserRegistrationController {
         Supplier<String> failureView = () -> doViewYourDetails(model, invite, loggedInUser);
         Supplier<String> successView = () -> {
             if (invite.getRole().isAssessor()) {
-                return "registration/account-created";
+                return format("redirect:/registration/%s/register/assessor-created", inviteHash);
             }
             return format("redirect:/registration/%s/register/account-created", inviteHash);
         };
@@ -146,6 +146,24 @@ public class ExternalUserRegistrationController {
                 return format("redirect:/registration/%s/register", inviteHash);
             } else {
                 return "registration/external-account-created";
+            }
+        }).getSuccess();
+    }
+
+    @GetMapping(value = "/{inviteHash}/register/assessor-created")
+    public String externalAssessorAccountCreated(@PathVariable("inviteHash") String inviteHash, UserResource loggedInUser) {
+        boolean userIsLoggedIn = loggedInUser != null;
+
+        // the user is already logged in, take them back to the dashboard
+        if (userIsLoggedIn) {
+            return "redirect:/";
+        }
+
+        return inviteUserRestService.checkExistingUser(inviteHash).andOnSuccessReturn(userExists -> {
+            if (!userExists) {
+                return format("redirect:/registration/%s/register", inviteHash);
+            } else {
+                return "registration/account-created";
             }
         }).getSuccess();
     }
