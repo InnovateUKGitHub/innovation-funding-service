@@ -177,7 +177,7 @@ public class ApplicationNotificationTemplateServiceImplTest extends BaseServiceU
 
         when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
         when(renderer.renderTemplate(eq(systemNotificationSource), any(),
-                eq(DEFAULT_NOTIFICATION_TEMPLATES_PATH + "unsuccessful_funding_decision_hesta.html"), eq(arguments)))
+                eq(DEFAULT_NOTIFICATION_TEMPLATES_PATH + "unsuccessful_funding_decision_horizon_europe.html"), eq(arguments)))
                 .thenReturn(serviceSuccess("MessageBody"));
 
         ServiceResult<ApplicationNotificationTemplateResource> result = service.getUnsuccessfulNotificationTemplate(competitionId);
