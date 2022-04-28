@@ -44,6 +44,7 @@ public interface InviteUserService {
     @PreAuthorize("hasPermission(#invitedUser, 'SAVE_USER_INVITE')")
     ServiceResult<Void> saveAssessorInvite(UserResource invitedUser, Role role, Long innovationAreaId);
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'ifs_administrator')")
     @SecuredBySpring(value = "READ_EXTERNAL_INVITES", description = "Internal users can find all external users invites By email")
     ServiceResult<List<RoleInviteResource>> findExternalInvitesByEmail(String email);
 }

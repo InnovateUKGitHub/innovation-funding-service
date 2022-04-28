@@ -463,12 +463,12 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
         return roleInviteRepository.findByEmail(email).stream().anyMatch(roleInvite -> roleInvite.getTarget().isAssessor());
     }
 
-    public List<InnovationAreaResource> getExternalAssessorsInnovationAreas(String email) {
+    private List<InnovationAreaResource> getExternalAssessorsInnovationAreas(String email) {
         List<RoleInviteResource> roleInviteResources = inviteUserService.findExternalInvitesByEmail(email).getSuccess();
         return roleInviteResources.stream().map(RoleInviteResource::getInnovationArea).collect(Collectors.toList());
     }
 
-    public InnovationArea getInnovationArea(String email) {
+    private InnovationArea getInnovationArea(String email) {
         return getExternalAssessorsInnovationAreas(email).stream().map(innovationAreaMapper::mapToDomain).findAny().orElse(null);
     }
 

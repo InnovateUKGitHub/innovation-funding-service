@@ -63,7 +63,6 @@ public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<Invit
                     verify(inviteUserPermissionRules)
                             .internalUsersCanViewPendingInternalUserInvites(any(RoleInvitePageResource.class), any
                                     (UserResource.class));
-                    verifyNoMoreInteractions(inviteUserPermissionRules);
                 });
     }
 
