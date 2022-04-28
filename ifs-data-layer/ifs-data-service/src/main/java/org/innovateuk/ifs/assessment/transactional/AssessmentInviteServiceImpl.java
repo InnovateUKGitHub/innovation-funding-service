@@ -449,11 +449,12 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
                 .andOnSuccessReturn(
                         competition -> {
                             if (externalAssessor(user.getEmail())) {
+                                UserResource userResource = userService.findByEmail(user.getEmail()).getSuccess();
                                 return assessmentInviteRepository.save(new AssessmentInvite(user.getName(),
                                         user.getEmail(),
                                         generateInviteHash(),
                                         competition,
-                                        getInnovationAreaByEmail(user.getEmail())));
+                                        getInnovationAreaByEmail(userResource)));
                             }
                             return assessmentInviteRepository.save(new AssessmentInvite(user, generateInviteHash(), competition));
                         });
@@ -463,13 +464,13 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
         return roleInviteRepository.findByEmail(email).stream().anyMatch(roleInvite -> roleInvite.getTarget().isAssessor());
     }
 
-    private List<InnovationAreaResource> getExternalAssessorsInnovationAreas(String email) {
-        List<RoleInviteResource> roleInviteResources = inviteUserService.findExternalInvitesByEmail(email).getSuccess();
+    private List<InnovationAreaResource> getExternalAssessorsInnovationAreas(UserResource user) {
+        List<RoleInviteResource> roleInviteResources = inviteUserService.findExternalInvitesByEmail(user).getSuccess();
         return roleInviteResources.stream().map(RoleInviteResource::getInnovationArea).collect(Collectors.toList());
     }
 
-    private InnovationArea getInnovationAreaByEmail(String email) {
-        return getExternalAssessorsInnovationAreas(email).stream().map(innovationAreaMapper::mapToDomain).findAny().orElse(null);
+    private InnovationArea getInnovationAreaByEmail(UserResource user) {
+        return getExternalAssessorsInnovationAreas(user).stream().map(innovationAreaMapper::mapToDomain).findAny().orElse(null);
     }
 
     private ServiceResult<Competition> getCompetition(long competitionId) {

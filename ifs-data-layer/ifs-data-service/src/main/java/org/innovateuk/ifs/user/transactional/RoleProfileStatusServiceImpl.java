@@ -38,9 +38,6 @@ public class RoleProfileStatusServiceImpl implements RoleProfileStatusService {
     @Autowired
     private UserMapper userMapper;
 
-    @Autowired
-    private RegistrationService registrationService;
-
     @Override
     @Transactional
     public ServiceResult<Void> updateUserStatus(long userId, RoleProfileStatusResource roleProfileStatusResource) {
