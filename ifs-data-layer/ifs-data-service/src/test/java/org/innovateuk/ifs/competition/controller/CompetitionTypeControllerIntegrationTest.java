@@ -45,6 +45,7 @@ public class CompetitionTypeControllerIntegrationTest extends BaseControllerInte
                         "Advanced Propulsion Centre",
                         "Aerospace Technology Institute",
                         "Assessment only",
+                        "Direct award",
                         "Expression of interest",
                         "Generic",
                         "Horizon 2020",
