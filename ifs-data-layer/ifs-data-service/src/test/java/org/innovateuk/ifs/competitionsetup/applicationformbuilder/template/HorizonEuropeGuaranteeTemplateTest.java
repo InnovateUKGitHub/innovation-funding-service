@@ -64,7 +64,7 @@ public class HorizonEuropeGuaranteeTemplateTest {
         QuestionBuilder projectRegion = applicationQuestions.getQuestions().get(1);
         assertEquals("Participating Organisation project region", projectRegion.getName());
         assertEquals("Participating Organisation project region", projectRegion.getShortName());
-        assertEquals("Please select from the drop down the region your project is being carried out in.", projectRegion.getDescription());
+        assertEquals("Please type the region your project is being carried out in.", projectRegion.getDescription());
         assertEquals(QuestionSetupType.ASSESSED_QUESTION, projectRegion.getQuestionSetupType());
 
         QuestionBuilder eic = applicationQuestions.getQuestions().get(2);

@@ -31,7 +31,11 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11695 HECP Phase 2 - Cost categories - Spend profile updates
 ...
+...               IFS-11791 HECP Phase 2 - Bug bash changes - Content
+...
 ...               IFS-11794 HECP Phase 2 - Bug bash changes - Clicking the work programme labels does not select the radio button
+...
+...               IFS-11758 HECP Phase 2- Spend profile cost categories validations
 ...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -46,10 +50,11 @@ ${hestaApplicationName}                         Hesta application
 ${newHestaApplicationName}                      NEW Hesta application
 ${leadApplicantEmail}                           tim.timmy@heukar.com
 ${newLeadApplicantEmail}                        barry.barrington@heukar.com
-${hestaApplicationSubmissionEmailSubject}       confirmation of your Horizon Europe UK Application Registration
-${hestaApplicationUnsuccessfulEmailSubject}     update about your Horizon Europe UK Application Registration for government-backed funding
-${hestaApplicationSubmissionEmail}              We have received your stage 1 pre-registration to the Horizon Europe UK Application Registration programme
-${hestaApplicationUnsuccessfulEmail}            We have been advised you were unsuccessful in your grant application for Horizon Europe funding from The European Commission
+${hestaApplicationSubmissionEmailSubject}       Successful submission of application
+${hestaApplicationSubmissionEmail}              You have successfully submitted an application for funding to
+${hestaApplicationSuccessfulEmail}              We are pleased to inform you that your application for the Horizon Europe collaborative competition has been successful and passed the technical assessment phase.
+${hestaApplicationUnsuccessfulEmail}            Thank you for submitting your application to Innovate UK for the competition
+${hestaApplicationUnsuccessfulEmailSubject}     update about your Horizon Europe Guarantee application
 ${assessorEmail}                                another.person@gmail.com
 ${webTestAssessor}                              Angel Witt
 ${webTestAssessorEmailAddress}                  angel.witt@gmail.com
@@ -82,22 +87,23 @@ the lead applicant can view answer yet to be provodied when work programme quest
     Then the user should see the element            jQuery = p:contains("Answer yet to be provided")
 
 lead applicant views work programme answers provided in review and submit page
-    [Documentation]  IFS-11686  IFS-11794
+    [Documentation]  IFS-11686  IFS-11791  IFS-11794
     Given the user clicks the button/link                           link = Application overview
     When the user complete the work programme
     And the user clicks the button/link                             link = Review and submit
     Then the user can see the read only view of work programme
 
 Lead applicant can view funding conversion tool in project costs
-    [Documentation]  IFS-11508  IFS-11686
+    [Documentation]  IFS-11508  IFS-11686  IFS-11791
     Given the user clicks the button/link                                       link = Application overview
     And the user completes the application research category                    Feasibility studies
     And the user is able to complete horizon grant agreement section
+    And the user should see Participating Organisation project region
     And the lead applicant fills all the questions and marks as complete(Hecp)
     And the user accept the competition terms and conditions                    Back to application overview
     When the user clicks the button/link                                        link = Your project finances
     And the user clicks the button/link                                         link = Your project costs
-    Then the user should see the element                                        jQuery = a:contains("Horizon Europe guarantee notice and guidance – UKRI")
+    Then the user should see the element                                        jQuery = a:contains("Horizon Europe guarantee notice and guidance – UKRI (opens in a new window)")
     And the user should see the element                                         jQuery = a:contains("heguarantee@iuk.ukri.org")
 
 Lead applicant completes project finances and submits an application
@@ -112,14 +118,18 @@ Lead applicant should get a confirmation email after application submission
     Given Requesting IDs of this application    ${hestaApplicationName}
     Then the user reads his email               ${leadApplicantEmail}  ${ApplicationID}: ${hestaApplicationSubmissionEmailSubject}  ${hestaApplicationSubmissionEmail}
 
-The Application Summary page must not include the Reopen Application link when the internal team mark the application as successful / unsuccessful
-    [Documentation]  IFS-10697  IFS-11406  IFS-11486
+Applicant receives successful message of an application
+    [Documentation]  IFS-11554
     Given Log in as a different user                                                &{Comp_admin1_credentials}
     And The user clicks the button/link                                             link = ${hestaCompetitionName}
-    When the internal team mark the application as successful / unsuccessful        ${hestaApplicationName}   FUNDED
-    And Log in as a different user                                                  email=${leadApplicantEmail}   password=${short_password}
+    When Internal user notifies the applicant on status of application
+    Then the user reads his email                                                   ${leadApplicantEmail}  Important message about your application '${hestaApplicationName}' for the competition '${hestaCompetitionName}'  ${hestaApplicationSuccessfulEmail}
+
+The Application Summary page must not include the Reopen Application link when the internal team mark the application as successful / unsuccessful
+    [Documentation]  IFS-10697  IFS-11406  IFS-11486
+    When Log in as a different user                                                email=${leadApplicantEmail}   password=${short_password}
     Then the application summary page must not include the reopen application link
-    And the user should see the element                                            jQuery = h1:contains("Application status")
+    And the user should see the element                                             jQuery = h1:contains("Application status")
     And the user is presented with the Application Summary page
 
 Lead applicant receives email notifiction when internal user marks application unsuccessful
@@ -137,7 +147,7 @@ Lead applicant receives email notifiction when internal user marks application u
     And the user clicks the button/link                                             link = Competition
     And Requesting IDs of this application                                          ${newHestaApplicationName}
     And the internal team notifies all applicants                                   ${ApplicationID}
-    Then the user reads his email                                                   ${newLeadApplicantEmail}  ${ApplicationID}: ${hestaApplicationUnsuccessfulEmailSubject}  ${hestaApplicationUnsuccessfulEmail}
+    Then the user reads his email                                                   ${newLeadApplicantEmail}  Important message about your application '${newHestaApplicationName}' for the competition '${hestaCompetitionName}'  ${hestaApplicationUnsuccessfulEmail}
 
 the user should not see any references to assessment and release feedback on close competition page
     [Documentation]  IFS-11486
@@ -149,7 +159,6 @@ the user should not see any references to assessment and release feedback on clo
 
 Applicant can view application link when in project setup
     [Documentation]  IFS-11510
-    Given Internal user notifies the applicant on status of application
     When the applicant navigates to project set up
     Then The user should see the text in the element               link = view application  view application
 
@@ -195,10 +204,14 @@ Lead applicant views hecp project cost categories in spendprofile
     And the user should see the element                                             jQuery = p:contains("If you require further assistance in filling out your spend profile, contact your monitoring officer.")
     And the user should see the element                                             jQuery = p:contains("You need to mark this section as complete. You can then send completed spend profiles to Innovate UK.")
 
-Lead applicant views hecp project cost categories in edit spendprofile page
-    [Documentation]  IFS-11695
-    When the user clicks the button/link                    link = Edit spend profile
-    Then the user should see hecp project cost categories
+Lead applicant views hecp project cost categories on validation and edit spendprofile
+    [Documentation]  IFS-11695  IFS-11758
+    When the user clicks the button/link                                    link = Edit spend profile
+    And the user edit the spend profile mothly values                       616  616  247  370  247  493  124
+    And the user clicks the button/link                                     jQuery = button:contains("Save and return to spend profile overview")
+    Then the user should see hecp project cost categories in summary box
+    And the user should see hecp project cost categories
+    [Teardown]   the user reverted the edited values in spend profile
 
 Lead applicant submits spen profile to internal user for review
     [Documentation]  IFS-11551
@@ -335,7 +348,7 @@ the user applys to the competition
     the applicant completes Application Team                        COMPLETE  ${email}
 
 the user can see the read only view of work programme
-    the user should see the element    jQuery = dt:contains("Enter the Horizon Europe Work programme Part you applied to, e.g. CL2.")
+    the user should see the element    jQuery = dt:contains("Select the Horizon Europe Work programme Part you applied to, e.g. CL2.")
     the user should see the element    jQuery = dd:contains("Culture, Creativity and Inclusive Society (CL2)")
     the user should see the element    jQuery = dt:contains("Select the call you applied to.")
     the user should see the element    jQuery = dd:contains("HORIZON-CL2-2021-DEMOCRACY-01")
@@ -391,7 +404,7 @@ the internal team notifies all applicants
     the user clicks the button/link                      id = write-and-send-email
     the user clicks the button/link                      id = send-email-to-all-applicants
     the user clicks the button/link                      id = send-email-to-all-applicants-button
-    the user refreshes until element appears on page     jQuery = td:contains("Sent")
+    the user refreshes until element appears on page     jQuery = td:contains("${ApplicationID}") ~ td:contains("Sent")
 
 the application summary page must not include the reopen application link
     the user navigates to the page          ${server}/application/${ApplicationID}/track
@@ -576,13 +589,14 @@ the user see the print view of the application
     the user should see the element                               xpath = //*[contains(text(),'Other goods, works and services (£)')]
     the user should see the element                               xpath = //*[contains(text(),'Other costs (£)')]
     the user should see the element                               xpath = //*[contains(text(),'Indirect costs (£)')]
-    the user should see the element                               xpath = //*[contains(text(),'Enter the Horizon Europe Work programme Part you applied to, e.g. CL2.')]
+    the user should see the element                               xpath = //*[contains(text(),'Select the Horizon Europe Work programme Part you applied to, e.g. CL2.')]
     the user should see the element                               xpath = //*[contains(text(),'Culture, Creativity and Inclusive Society (CL2)')]
     the user should see the element                               xpath = //*[contains(text(),'Select the call you applied to.')]
     the user should see the element                               xpath = //*[contains(text(),'HORIZON-CL2-2021-DEMOCRACY-01')]
     the user navigates to the page                                ${SERVER}/application/${hestaApplicationID}
 
 the user should see read only view of work program part
+    the user should see the element    jQuery = h1:contains("Select the Horizon Europe Work programme Part")
     the user should see the element    jQuery = label:contains("Culture, Creativity and Inclusive Society (CL2)")
     the user should see the element    jQuery = label:contains("Civil Security for Society (CL3)")
     the user should see the element    jQuery = label:contains("Digital, Industry and Space (CL4 & EUSPA)")
@@ -610,6 +624,15 @@ the user should see hecp project cost categories
     the user should see the element     jQuery = span:contains("Other costs")
     the user should see the element     jQuery = span:contains("Indirect costs")
 
+the user should see hecp project cost categories in summary box
+    the user should see the element     jQuery = li:contains("Equipment")
+    the user should see the element     jQuery = li:contains("Indirect costs")
+    the user should see the element     jQuery = li:contains("Other costs")
+    the user should see the element     jQuery = li:contains("Other goods, works and services")
+    the user should see the element     jQuery = li:contains("Personnel costs")
+    the user should see the element     jQuery = li:contains("Subcontracting costs")
+    the user should see the element     jQuery = li:contains("Travel and subsistence")
+
 the user should see readonly detailed hecp finances
     the user should see the element    jQuery = label:contains("Personnel costs") ~ span:contains("50,000")
     the user should see the element    jQuery = label:contains("Subcontracting costs") ~ span:contains("50,000")
@@ -619,3 +642,23 @@ the user should see readonly detailed hecp finances
     the user should see the element    jQuery = label:contains("Other costs") ~ span:contains("40,000")
     the user should see the element    jQuery = label:contains("Indirect costs") ~ span:contains("0")
     the user should see the element    css = [id="total-cost"][value="£200,000"]
+
+the user edit the spend profile mothly values
+    [Arguments]  ${personnelCosts}  ${subcontractingCosts}  ${travelAndSubsistenceCosts}  ${equipmentCosts}  ${otherGoodsWorksAndServicesCosts}  ${otherCosts}  ${indirectCosts}
+    the user enters text to a text field     jQuery = tr:nth-of-type(1) td:nth-of-type(1) input[id^="table.monthlyCostsPerCategoryMap"]    ${personnelCosts}
+    the user enters text to a text field     jQuery = tr:nth-of-type(2) td:nth-of-type(1) input[id^="table.monthlyCostsPerCategoryMap"]    ${subcontractingCosts}
+    the user enters text to a text field     jQuery = tr:nth-of-type(3) td:nth-of-type(1) input[id^="table.monthlyCostsPerCategoryMap"]    ${travelAndSubsistenceCosts}
+    the user enters text to a text field     jQuery = tr:nth-of-type(4) td:nth-of-type(1) input[id^="table.monthlyCostsPerCategoryMap"]    ${equipmentCosts}
+    the user enters text to a text field     jQuery = tr:nth-of-type(5) td:nth-of-type(1) input[id^="table.monthlyCostsPerCategoryMap"]    ${otherGoodsWorksAndServicesCosts}
+    the user enters text to a text field     jQuery = tr:nth-of-type(6) td:nth-of-type(1) input[id^="table.monthlyCostsPerCategoryMap"]    ${otherCosts}
+    the user enters text to a text field     jQuery = tr:nth-of-type(7) td:nth-of-type(1) input[id^="table.monthlyCostsPerCategoryMap"]    ${indirectCosts}
+
+the user reverted the edited values in spend profile
+    the user clicks the button/link                 link = Edit spend profile
+    the user edit the spend profile mothly values   615  615  246  369  246  492  123
+
+the user should see Participating Organisation project region
+    the user clicks the button/link  jQuery = a:contains("Participating Organisation project region")
+    the user should see the element  jQuery = div:contains("Please type the region your project is being carried out in.")
+    the user clicks the button/link  jQuery = a:contains("Back to application overview")
+

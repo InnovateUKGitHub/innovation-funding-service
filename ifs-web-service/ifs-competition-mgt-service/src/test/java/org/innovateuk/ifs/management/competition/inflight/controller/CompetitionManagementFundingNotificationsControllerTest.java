@@ -287,18 +287,18 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         mockMvc.perform(get("/competition/{competitionId}/funding/send?application_ids={applicationId}", COMPETITION_ID, APPLICATION_ID_ONE))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-send-notifications"))
-                .andExpect(model().attribute("model", Matchers.hasProperty("hesta", Matchers.equalTo(false))));
+                .andExpect(model().attribute("model", Matchers.hasProperty("horizonEurope", Matchers.equalTo(false))));
     }
 
     @Test
-    public void getSendNotificationsPageTest_hesta() throws Exception {
+    public void getSendNotificationsPageTest_horizonEurope() throws Exception {
 
         List<Long> applicationsIds = singletonList(APPLICATION_ID_ONE);
         when(sendNotificationsModelPopulator.populate(eq(COMPETITION_ID), eq(applicationsIds), any())).thenReturn(emptyViewModel(true));
         mockMvc.perform(get("/competition/{competitionId}/funding/send?application_ids={applicationId}", COMPETITION_ID, APPLICATION_ID_ONE))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-send-notifications"))
-                .andExpect(model().attribute("model", Matchers.hasProperty("hesta", Matchers.equalTo(true))));
+                .andExpect(model().attribute("model", Matchers.hasProperty("horizonEurope", Matchers.equalTo(true))));
     }
 
     @Test
@@ -383,8 +383,8 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         }
     }
 
-    private SendNotificationsViewModel emptyViewModel(boolean hesta) {
+    private SendNotificationsViewModel emptyViewModel(boolean horizonEurope) {
         List<FundingDecisionToSendApplicationResource> resourceList = singletonList(new FundingDecisionToSendApplicationResource(1L, "", "", UNFUNDED));
-        return new SendNotificationsViewModel(resourceList, 0L, 0L, 0L, newCompetitionResource().withId(COMPETITION_ID).withName("compName").withAlwaysOpen(false).build(), false, hesta);
+        return new SendNotificationsViewModel(resourceList, 0L, 0L, 0L, newCompetitionResource().withId(COMPETITION_ID).withName("compName").withAlwaysOpen(false).build(), false, horizonEurope);
     }
 }

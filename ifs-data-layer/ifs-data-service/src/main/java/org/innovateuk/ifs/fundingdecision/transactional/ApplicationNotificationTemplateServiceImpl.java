@@ -40,8 +40,7 @@ public class ApplicationNotificationTemplateServiceImpl extends BaseTransactiona
     public ServiceResult<ApplicationNotificationTemplateResource> getSuccessfulNotificationTemplate(long competitionId) {
 
         return getCompetition(competitionId).andOnSuccess(competition -> {
-            String successfulTemplate = competition.isKtp() ?
-                    "successful_funding_decision_ktp.html" : "successful_funding_decision.html";
+            String successfulTemplate = getSuccessfulTemplate(competition);
 
             return renderTemplate(competitionId, successfulTemplate, (c) -> {
                 Map<String, Object> arguments = new HashMap<>();
@@ -52,6 +51,20 @@ public class ApplicationNotificationTemplateServiceImpl extends BaseTransactiona
                 return arguments;
             });
         });
+    }
+
+    private String getSuccessfulTemplate(Competition competition) {
+        String successfulTemplate;
+
+        if (competition.isKtp()) {
+            successfulTemplate = "successful_funding_decision_ktp.html";
+        } else if (competition.isHorizonEuropeGuarantee()) {
+            successfulTemplate = "successful_funding_decision_horizon_europe.html";
+        } else {
+            successfulTemplate = "successful_funding_decision.html";
+        }
+
+        return successfulTemplate;
     }
 
     @Override
@@ -81,7 +94,7 @@ public class ApplicationNotificationTemplateServiceImpl extends BaseTransactiona
         if (competition.isKtp()) {
             unsuccessfulTemplate = "unsuccessful_funding_decision_ktp.html";
         } else if (competition.isHorizonEuropeGuarantee()) {
-            unsuccessfulTemplate = "unsuccessful_funding_decision_hesta.html";
+            unsuccessfulTemplate = "unsuccessful_funding_decision_horizon_europe.html";
         } else {
             unsuccessfulTemplate = "unsuccessful_funding_decision.html";
         }

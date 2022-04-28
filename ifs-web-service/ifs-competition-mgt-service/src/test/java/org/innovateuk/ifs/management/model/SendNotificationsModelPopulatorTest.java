@@ -87,11 +87,11 @@ public class SendNotificationsModelPopulatorTest {
         assertThat(viewModel.getUnsuccessfulRecipientsCount(), is(equalTo(1L)));
         assertThat(viewModel.getOnHoldRecipientsCount(), is(equalTo(1L)));
         assertThat(viewModel.getFundingDecisions(), is(equalTo(expectedDecisions)));
-        assertFalse(viewModel.isHesta());
+        assertFalse(viewModel.isHorizonEurope());
     }
 
     @Test
-    public void populateModel_hesta() {
+    public void populateModel_horizonEurope() {
 
         NotificationEmailsForm notificationEmailsForm = new NotificationEmailsForm();
 
@@ -101,7 +101,7 @@ public class SendNotificationsModelPopulatorTest {
                 .withCompetitionTypeEnum(CompetitionTypeEnum.HORIZON_EUROPE_GUARANTEE)
                 .build();
 
-        ApplicationNotificationTemplateResource notificationTemplateResource = new ApplicationNotificationTemplateResource("hesta_unsuccessful_template.html");
+        ApplicationNotificationTemplateResource notificationTemplateResource = new ApplicationNotificationTemplateResource("horizonEurope_unsuccessful_template.html");
 
         FundingDecisionToSendApplicationResource application
                 = new FundingDecisionToSendApplicationResource(3L, "", "", UNFUNDED);
@@ -118,7 +118,7 @@ public class SendNotificationsModelPopulatorTest {
 
         SendNotificationsViewModel viewModel = sendNotificationsModelPopulator.populate(COMPETITION_ID, requestedIds, notificationEmailsForm);
 
-        assertTrue(viewModel.isHesta());
-        assertEquals("hesta_unsuccessful_template.html", notificationEmailsForm.getMessage());
+        assertTrue(viewModel.isHorizonEurope());
+        assertEquals("horizonEurope_unsuccessful_template.html", notificationEmailsForm.getMessage());
     }
 }

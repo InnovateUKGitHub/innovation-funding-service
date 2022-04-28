@@ -15,7 +15,6 @@
 ####################################################################################
 
 # Define some functions for later use
-DATASERVICE_POD=$(kubectl get pod -l app=data-service -o jsonpath="{.items[0].metadata.name}")
 
 start=$(date +%s)
 
@@ -50,6 +49,7 @@ function section() {
 }
 
 function clearDownFileRepository() {
+    DATASERVICE_POD=$(kubectl get pod -l app=data-service -o jsonpath="{.items[0].metadata.name}")
     echo "***********Deleting any uploaded files***************"
     echo "storedFileFolder:   ${storedFileFolder}"
     kubectl exec $DATASERVICE_POD -- rm -rf ${storedFileFolder}
@@ -68,6 +68,8 @@ function clearDownFileRepository() {
 }
 
 function addTestFiles() {
+    DATASERVICE_POD=$(kubectl get pod -l app=data-service -o jsonpath="{.items[0].metadata.name}")
+
     section "=> RESETTING FILE STORAGE STATE"
 
     clearDownFileRepository
@@ -133,8 +135,9 @@ function initialiseTestEnvironment() {
       else
         section "=> RESTARTING LDAP and cache-provider"
         k8s_delete ldap
+        k8s_delete data-service
         k8s_wait ldap
-
+        k8s_wait data-service
 
 
         section "=> STARTING SELENIUM GRID, INJECTING ENVIRONMENT PARAMETERS, RESETTING DATABASE STATE"
