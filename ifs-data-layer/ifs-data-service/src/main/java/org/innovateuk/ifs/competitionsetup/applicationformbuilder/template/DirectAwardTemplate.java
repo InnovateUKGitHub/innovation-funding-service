@@ -64,6 +64,8 @@ public class DirectAwardTemplate implements CompetitionTemplate {
 
     public static QuestionBuilder directAwardDefaultQuestion() {
         return genericQuestion()
-                .withName("Direct award place holder question");
+                .withShortName("Direct award placeholder question")
+                .withName("Direct award placeholder question")
+                .withDescription("Direct award placeholder question description");
     }
 }
