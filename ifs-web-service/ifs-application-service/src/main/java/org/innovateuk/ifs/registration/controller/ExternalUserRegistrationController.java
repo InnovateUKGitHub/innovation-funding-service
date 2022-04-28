@@ -113,6 +113,10 @@ public class ExternalUserRegistrationController {
                     .withInviteHash(inviteHash)
                     .withRole(invite.getRole())
                 .build());
+                if (invite.getRole().isAssessor() && result.isSuccess()) {
+                    long userId = result.getSuccess().getId();
+                    userRestService.createUserProfileStatus(userId);
+                }
                 result.getErrors().forEach(error -> {
                     if (StringUtils.hasText(error.getFieldName())) {
                         bindingResult.rejectValue(error.getFieldName(), "registration." + error.getErrorKey());
@@ -120,11 +124,6 @@ public class ExternalUserRegistrationController {
                         bindingResult.reject("registration." + error.getErrorKey());
                     }
                 });
-
-                if (invite.getRole().isAssessor()) {
-                    long userId = result.getSuccess().getId();
-                    userRestService.createUserProfileStatus(userId);
-                }
 
                 return validationHandler.
                         failNowOrSucceedWith(failureView, successView);
