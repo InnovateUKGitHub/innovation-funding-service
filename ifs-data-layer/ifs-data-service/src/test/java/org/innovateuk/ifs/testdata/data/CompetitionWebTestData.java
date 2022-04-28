@@ -481,9 +481,6 @@ public class CompetitionWebTestData {
                         .withAssessorCount(5),
                 directAwardCompetition()
                         .withName("Direct award competition")
-                        .withCompetitionType(DIRECT_AWARD)
-                        .withAlwaysOpen(false)
-                        .withResubmission(false)
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.OPEN))
@@ -663,8 +660,7 @@ public class CompetitionWebTestData {
         return anIfsCompetition()
                 .withFundingType(FundingType.GRANT)
                 .withCompetitionType(DIRECT_AWARD)
-                .withAlwaysOpen(true)
-                .withResubmission(true);
+                .withAlwaysOpen(true);
     }
 
     private static CompetitionLineBuilder anIfsCompetition() {
