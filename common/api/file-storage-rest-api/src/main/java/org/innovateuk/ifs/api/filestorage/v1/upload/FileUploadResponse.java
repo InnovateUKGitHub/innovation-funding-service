@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class FileUploadResponse {
+public final class FileUploadResponse {
 
     /** uuid reference for the file */
     private final UUID fileId;

@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class FileDownloadResponse {
+public final class FileDownloadResponse {
 
     /** uuid reference for the file */
     private final UUID fileId;
