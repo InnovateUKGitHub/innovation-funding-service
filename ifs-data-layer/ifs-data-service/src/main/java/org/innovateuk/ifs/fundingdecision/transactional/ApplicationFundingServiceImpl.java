@@ -79,7 +79,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     private String webBaseUrl;
 
     public enum Notifications {
-        APPLICATION_FUNDING, HORIZON_2020_FUNDING, HESTA_FUNDING
+        APPLICATION_FUNDING, HORIZON_2020_FUNDING, HORIZON_EUROPE_FUNDING
     }
 
     @Override
@@ -281,7 +281,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
         if(isH2020Competition(applications)){
             notificationType = HORIZON_2020_FUNDING;
         } else if (competition.isHorizonEuropeGuarantee()){
-            notificationType = HESTA_FUNDING;
+            notificationType = HORIZON_EUROPE_FUNDING;
         } else {
             notificationType = APPLICATION_FUNDING;
         }

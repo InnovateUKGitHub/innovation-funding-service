@@ -3,6 +3,7 @@ package org.innovateuk.ifs.testdata.services;
 import org.assertj.core.util.Lists;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.BaseUserData;
+import org.innovateuk.ifs.user.resource.EDIStatus;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,7 @@ public class UserDataBuilderService extends BaseDataBuilderService {
         testService.doWithinTransaction(() -> {
 
             externalUserBuilder.withRole(line.role);
-            createUser(externalUserBuilder, line, line.role, line.organisationName, line.additionalRoles);
+            createUser(externalUserBuilder, line, line.role, line.organisationName, line.additionalRoles, line.ediStatus);
         });
     }
 
@@ -69,11 +70,11 @@ public class UserDataBuilderService extends BaseDataBuilderService {
 
             InternalUserDataBuilder baseBuilder = internalUserBuilder.withRole(role);
 
-            createUser(baseBuilder, line, role, null, Lists.emptyList());
+            createUser(baseBuilder, line, role, null, Lists.emptyList(), null);
         });
     }
 
-    private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, CsvUtils.UserLine line, Role role, String organisation, List<Role> additionalRoles) {
+    private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, CsvUtils.UserLine line, Role role, String organisation, List<Role> additionalRoles, EDIStatus ediStatus) {
 
         UnaryOperator<S> registerUserIfNecessary = builder -> builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.phoneNumber, role, organisation);
 
@@ -89,9 +90,14 @@ public class UserDataBuilderService extends BaseDataBuilderService {
 
         UnaryOperator<S> addRoles = builder -> builder.addAdditionalRoles(additionalRoles);
 
+        UnaryOperator<S> addEDIStatus = UnaryOperator.identity();
+        if (role.equals(APPLICANT) || additionalRoles.contains(APPLICANT)) {
+            addEDIStatus = builder -> builder.addEdiStatus(ediStatus);
+        }
+
         UnaryOperator<S> inactivateUserIfNecessary = builder -> !(line.emailVerified) ? builder.deactivateUser() : builder;
 
-        registerUserIfNecessary.andThen(verifyEmail).andThen(activateUser).andThen(addRoles).andThen(inactivateUserIfNecessary).apply(baseBuilder).build();
+        registerUserIfNecessary.andThen(verifyEmail).andThen(activateUser).andThen(addRoles).andThen(addEDIStatus).andThen(inactivateUserIfNecessary).apply(baseBuilder).build();
     }
 
     private void setDefaultSystemRegistrar() {
