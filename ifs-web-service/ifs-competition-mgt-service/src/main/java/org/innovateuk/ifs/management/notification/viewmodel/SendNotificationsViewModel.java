@@ -21,7 +21,7 @@ public class SendNotificationsViewModel {
     private boolean h2020;
     private boolean includeAssessorsScore;
     private boolean alwaysOpen;
-    private boolean hesta;
+    private boolean horizonEurope;
     private boolean hasAssessmentStage;
 
     public SendNotificationsViewModel(List<FundingDecisionToSendApplicationResource> applications,
@@ -30,7 +30,7 @@ public class SendNotificationsViewModel {
                                       long onHoldRecipientsCount,
                                       CompetitionResource competition,
                                       boolean includeAssessorsScore,
-                                      boolean hesta) {
+                                      boolean horizonEurope) {
 
         this.successfulRecipientsCount = successfulRecipientsCount;
         this.unsuccessfulRecipientsCount = unsuccessfulRecipientsCount;
@@ -41,7 +41,7 @@ public class SendNotificationsViewModel {
         this.h2020 = competition.isH2020();
         this.alwaysOpen = competition.isAlwaysOpen();
         this.includeAssessorsScore = includeAssessorsScore;
-        this.hesta = hesta;
+        this.horizonEurope = horizonEurope;
         this.hasAssessmentStage = competition.isHasAssessmentStage();
     }
 
@@ -95,7 +95,7 @@ public class SendNotificationsViewModel {
                 ));
     }
 
-    public boolean isHesta() {
-        return hesta;
+    public boolean isHorizonEurope() {
+        return horizonEurope;
     }
 }

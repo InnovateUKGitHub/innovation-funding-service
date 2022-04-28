@@ -65,7 +65,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionAssessmentConfig
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDING;
-import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingServiceImpl.Notifications.HESTA_FUNDING;
+import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingServiceImpl.Notifications.HORIZON_EUROPE_FUNDING;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
@@ -465,7 +465,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
                 new Notification(systemNotificationSource, expectedApplicants
                         .stream()
                         .map(NotificationMessage::new)
-                        .collect(Collectors.toList()), HESTA_FUNDING, emptyMap());
+                        .collect(Collectors.toList()), HORIZON_EUROPE_FUNDING, emptyMap());
 
         List<Long> applicationIds = newArrayList(application1.getId(), application2.getId());
         List<Application> applications = newArrayList(application1, application2);
