@@ -28,7 +28,7 @@ public class InviteUserPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(value = "READ", description = "Internal users can view external user invites")
-    public boolean internalUsersCanViewExternalUserInvites(RoleInvitePageResource invite, UserResource user) {
+    public boolean internalUsersCanViewExternalUserInvites(final UserResource externalUser, UserResource user) {
         return isInternal(user);
     }
 }

@@ -84,8 +84,6 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
                        HttpServletResponse response) {
 
         updateSelectionForm(request, response, competitionId, selectionForm, assessorNameFilter);
-        RoleInviteResource roleInviteResource = new RoleInviteResource();
-
         CompetitionInviteAssessorsFindViewModel inviteAssessorsFindViewModel = inviteAssessorsFindModelPopulator.populateModel(competitionId, page, assessorNameFilter);
 
         model.addAttribute("model", inviteAssessorsFindViewModel);

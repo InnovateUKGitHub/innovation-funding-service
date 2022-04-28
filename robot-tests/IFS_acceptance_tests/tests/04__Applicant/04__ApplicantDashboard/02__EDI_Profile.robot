@@ -21,16 +21,17 @@ ${AssessorapplicationNameEDI}   EDI Assessor application
 *** Test Cases ***
 Applicant can view EDI section in profile page
     [Documentation]  IFS-11252  IFS-11490
-    Given the user logs-in in new browser  	        &{lead_applicant_credentials}
+    Given External user starts a new application
     When the user clicks the button/link            link = Profile
     Then the user should see EDI section details    Incomplete  Not Applicable  Start now
 
 Applicant checks the status of EDI as Incomplete When user not started the edi survey
     [Documentation]  IFS-11253  IFS-11341
-    Given the user creates a new application
+    Given the user clicks the button/link               link = Back to applications
+    And the user clicks the button/link                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     And the user fills in the EDI application details   ${applicationNameEDI}  ${tomorrowday}  ${month}  ${nextyear}
     When the user clicks the button/link                link = Application team
-    Then the user should see the element                jQuery = td:contains("Steve Smith") ~ td:contains("Incomplete") ~ td:contains("Lead applicant")
+    Then the user should see the element                jQuery = td:contains("ediFirstName SurName") ~ td:contains("Incomplete") ~ td:contains("Lead applicant")
 
 Applicant checks the status of EDI as Incomplete on application summary when edi survey is not started
     [Documentation]  IFS-11253  IFS-11341
@@ -60,18 +61,18 @@ Applicant can not mark the application team as complete when edi survey is not c
     And the user clicks the button/link                    id = application-question-complete
     Then the user should see a field and summary error     Complete our equality,diversity and inclusion survey.
 
-Lead applicant adds a partner organisation and check the status of edi as incomplete
+Lead applicant adds a partner organisation and check the status of edi as Complete
     [Documentation]  IFS-11253
     Given the user clicks the button/link              link = Application overview
     When the lead invites already registered user      ${collaborator1_credentials["email"]}  ${competitionNameEDI}
     And logging in and error checking                  ${collaborator1_credentials["email"]}  ${short_password}
     And the user clicks the button/link                jQuery = button:contains("Save and continue")
     And the user clicks the button/link                link = Application team
-    Then the user should see the element               jQuery = td:contains("Jessica Doe") ~ td:contains("Incomplete")
+    Then the user should see the element               jQuery = td:contains("Jessica Doe") ~ td:contains("Complete")
 
 Applicant can view the EDI status as complete in profile
     [Documentation]  IFS-11252  IFS-11490
-    Given log in as a different user                &{lead_applicant_credentials}
+    Given log in as a different user                ediFirstName.SurName@gmail.com  ${short_password}
     When the user clicks the button/link            link = Profile
     And the user changed EDI survey status          COMPLETE  2089-03-25 01:02:03
     Then the user should see EDI section details    Complete  25 March 2089  Review EDI summary
@@ -81,7 +82,7 @@ Lead applicant can mark the application team as complete when edi status is comp
     Given the user navigates to the page            ${server}/application/${applicationIdEDI}
     When the user clicks the button/link            link = Application team
     And the user clicks the button/link             id = application-question-complete
-    Then the user should see the element            jQuery = td:contains("Steve Smith") ~ td:contains("Complete") ~ td:contains("Lead applicant")
+    Then the user should see the element            jQuery = td:contains("ediFirstName SurName") ~ td:contains("Complete") ~ td:contains("Lead applicant")
     And the user clicks the button/link             link = Application overview
     Then the user should see the element            jQuery = li:contains("Application team") > .task-status-complete
 
@@ -133,6 +134,7 @@ Assessor/Applicant can view the EDI status as complete in profile
 Custom Suite Setup
     Set predefined date variables
     Connect to Database    @{database}
+    The guest user opens the browser
 
 Custom suite teardown
     The user closes the browser
@@ -149,7 +151,7 @@ the user should see EDI section details
 
 the user changed EDI survey status
     [Arguments]  ${ediStatus}  ${ediReviewDate}
-    execute sql string   UPDATE `${database_name}`.`user` SET `edi_status` = '${ediStatus}', `edi_review_date` = '${ediReviewDate}' WHERE (`email` = 'steve.smith@empire.com');
+    execute sql string   UPDATE `${database_name}`.`user` SET `edi_status` = '${ediStatus}', `edi_review_date` = '${ediReviewDate}' WHERE (`email` = 'ediFirstName.SurName@gmail.com');
     the user clicks the button/link             link = Edit your details
     the user clicks the button/link             jQuery = button:contains("Save changes")
 
@@ -185,7 +187,7 @@ the user should see the read only view of EDI status
     [Arguments]  ${ediStatus}
     the user should see the element                 jQuery = h3:contains("Team members")
     the user should see the element                 jQuery = th:contains("EDI status")
-    the user should see the element                 jQuery = td:contains("Steve Smith") ~ td:contains("${ediStatus}")
+    the user should see the element                 jQuery = td:contains("ediFirstName SurName") ~ td:contains("${ediStatus}")
 
 the assessor creates a new application
     the user select the competition and starts application     ${competitionNameEDI}
@@ -215,3 +217,15 @@ the user edit the profile of an assessor
     the user enters text to a text field   id= postcode  test
     the user clicks the button/link        jQuery=button:contains("Save and return to your details")
     the user clicks the button/link        link = Profile
+
+External user starts a new application
+    the user select the competition and starts application          ${competitionNameEDI}
+    the user clicks the button/link                                 link = Continue and create an account
+    the user selects the radio button                               organisationTypeId    radio-1
+    the user clicks the button/link                                 jQuery = .govuk-button:contains("Save and continue")
+    the user selects his organisation in Companies House            ASOS  ASOS PLC
+    the user should be redirected to the correct page               ${SERVER}/registration/register
+    the user enters the details and clicks the create account       ediFirstName  SurName  ediFirstName.SurName@gmail.com  ${short_password}
+    the user reads his email and clicks the link                    ediFirstName.SurName@gmail.com  Please verify your email address  Once verified you can sign into your account.
+    the user clicks the button/link                                 link = Sign in
+    Logging in and Error Checking                                   ediFirstName.SurName@gmail.com  ${short_password}

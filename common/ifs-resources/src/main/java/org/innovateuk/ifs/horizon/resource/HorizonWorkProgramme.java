@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.horizon.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
@@ -137,4 +139,10 @@ public enum HorizonWorkProgramme {
     public HorizonWorkProgramme getWorkProgramme() {
         return workProgramme;
     }
+
+    @JsonIgnore
+    public String getProgrammeDisplayName() {
+       return this.getWorkProgramme().getDisplay();
+    }
+
 }

@@ -9,8 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.innovateuk.ifs.user.resource.Role.SUPPORTER;
-import static org.innovateuk.ifs.user.resource.Role.externalRolesExcludingAssessor;
+import static org.innovateuk.ifs.user.resource.Role.*;
 
 /**
  * A view model for serving page listing users to be managed by IFS Administrators

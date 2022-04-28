@@ -185,7 +185,9 @@ public class ProjectSpendProfileController {
 
             SpendProfileTableResource updatedTable = form.getTable();
             SpendProfileTableResource originalTableWithUpdatedCosts = spendProfileService.getSpendProfileTable(projectId, organisationId);
-            originalTableWithUpdatedCosts.setMonthlyCostsPerCategoryMap(updatedTable.getMonthlyCostsPerCategoryMap());
+            originalTableWithUpdatedCosts.getMonthlyCostsPerCategoryMap().forEach((key, value) -> {
+                originalTableWithUpdatedCosts.getMonthlyCostsPerCategoryMap().put(key, updatedTable.getMonthlyCostsPerCategoryMap().get(key));
+            });
 
             ProjectResource project = projectService.getById(projectId);
 
