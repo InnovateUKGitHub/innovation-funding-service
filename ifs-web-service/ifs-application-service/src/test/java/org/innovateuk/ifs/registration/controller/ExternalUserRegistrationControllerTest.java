@@ -171,6 +171,6 @@ public class ExternalUserRegistrationControllerTest extends BaseControllerMockMV
                         .param("email", registrationForm.getEmail())
                         .param("phoneNumber", registrationForm.getPhoneNumber()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/registration/hash/register/assessor-created"));
+                .andExpect(redirectedUrl("/registration/hash/register/account-created"));
     }
 }

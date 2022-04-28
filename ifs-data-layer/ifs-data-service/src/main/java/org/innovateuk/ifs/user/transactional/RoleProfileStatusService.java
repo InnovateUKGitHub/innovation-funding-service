@@ -18,8 +18,8 @@ import java.util.List;
  */
 public interface RoleProfileStatusService {
 
-    @SecuredBySpring(value = "UPDATE_USER_STATUS", description = "Only comp admin or assessors who are invited using Manage user can update a users status")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'assessor')")
+    @SecuredBySpring(value = "UPDATE_USER_STATUS", description = "Only comp admin or project finance can update a users status")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     ServiceResult<Void> updateUserStatus(long userId, RoleProfileStatusResource roleProfileStatusResource);
 
     @SecuredBySpring(value = "RETRIEVE_USER_STATUS", description = "Only comp admin, project finance or support can retrieve a users status")
