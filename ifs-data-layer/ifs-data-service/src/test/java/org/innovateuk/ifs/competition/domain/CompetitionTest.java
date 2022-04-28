@@ -287,7 +287,7 @@ public class CompetitionTest {
     }
 
     @Test
-    public void isHorizonEuropeGuarantee_forHestaCompetitionType() {
+    public void isHorizonEuropeGuarantee_forHorizonEuropeGuaranteeCompetitionType() {
         CompetitionType competitionType = newCompetitionType()
                 .withName("Horizon Europe Guarantee")
                 .build();
