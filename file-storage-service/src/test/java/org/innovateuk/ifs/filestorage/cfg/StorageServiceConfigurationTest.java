@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class StorageServiceConfigurationTest {
 
     @Test
-    public void testStubAvLocalStorage() {
+    void testStubAvLocalStorage() {
         new ApplicationContextRunner()
             .withSystemProperties(
                 TestHelper.activeProfilesString(ImmutableList.of(STUB_AV_SCAN, LOCAL_STORAGE))
@@ -41,7 +41,7 @@ class StorageServiceConfigurationTest {
     }
 
     @Test
-    public void testClamDefaultScannerLocalStorage() {
+    void testClamDefaultScannerLocalStorage() {
         new ApplicationContextRunner()
                 .withSystemProperties(
                         TestHelper.activeProfilesString(ImmutableList.of(LOCAL_STORAGE))
@@ -59,7 +59,7 @@ class StorageServiceConfigurationTest {
     }
 
     @Test
-    public void testClamDefaultScannerS3AndGlusterStorage() {
+    void testClamDefaultScannerS3AndGlusterStorage() {
         new ApplicationContextRunner()
                 .withSystemProperties(
                         TestHelper.activeProfilesString(ImmutableList.of(GLUSTER_STORAGE, S3_STORAGE)),
