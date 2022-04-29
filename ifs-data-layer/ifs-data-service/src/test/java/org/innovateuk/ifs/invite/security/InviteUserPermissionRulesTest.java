@@ -49,5 +49,14 @@ public class InviteUserPermissionRulesTest extends BasePermissionRulesTest<Invit
         assertTrue(rules.internalUsersCanViewPendingInternalUserInvites(invite, ifsAdmin));
         assertFalse(rules.internalUsersCanViewPendingInternalUserInvites(invite, nonIfsAdmin));
     }
+
+    @Test
+    public void internalUsersCanViewExternalUserInvites() {
+        UserResource externalUser = new UserResource();
+        UserResource user = new UserResource();
+
+        assertTrue(rules.internalUsersCanViewExternalUserInvites(externalUser, ifsAdmin));
+        assertFalse(rules.internalUsersCanViewExternalUserInvites(externalUser, nonIfsAdmin));
+    }
 }
 

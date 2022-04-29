@@ -50,7 +50,7 @@ public class CompetitionInviteController {
         return assessmentInviteService.getInvite(inviteHash).toGetResponse();
     }
 
-    @GetMapping("/get-email/{inviteId}")
+    @GetMapping("/get-by-id/{inviteId}")
     public RestResult<CompetitionInviteResource> getInviteByInviteId(@PathVariable long inviteId) {
         return assessmentInviteService.getInviteByInviteId(inviteId).toGetResponse();
     }

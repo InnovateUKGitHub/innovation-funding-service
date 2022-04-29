@@ -465,7 +465,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     }
 
     private List<InnovationAreaResource> getExternalAssessorsInnovationAreas(UserResource user) {
-        List<RoleInviteResource> roleInviteResources = inviteUserService.findExternalInvitesByEmail(user).getSuccess();
+        List<RoleInviteResource> roleInviteResources = inviteUserService.findExternalInvitesByUser(user).getSuccess();
         return roleInviteResources.stream().map(RoleInviteResource::getInnovationArea).collect(Collectors.toList());
     }
 

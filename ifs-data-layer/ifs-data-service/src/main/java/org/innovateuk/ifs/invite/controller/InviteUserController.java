@@ -73,7 +73,7 @@ public class InviteUserController {
     @GetMapping("/get-by-email/{email}")
     public RestResult<List<RoleInviteResource>> findExternalInvitesByEmail(@PathVariable("email") String email) {
         UserResource user = userService.findByEmail(email).getSuccess();
-        return inviteUserService.findExternalInvitesByEmail(user).toGetResponse();
+        return inviteUserService.findExternalInvitesByUser(user).toGetResponse();
     }
 }
 

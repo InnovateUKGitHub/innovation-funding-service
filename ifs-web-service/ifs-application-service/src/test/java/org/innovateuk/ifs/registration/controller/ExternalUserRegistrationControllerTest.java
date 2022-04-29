@@ -2,6 +2,7 @@ package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel;
@@ -21,6 +22,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.RoleInviteResourceBuilder.newRoleInviteResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
+import static org.innovateuk.ifs.user.resource.Role.SUPPORTER;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.when;
@@ -106,16 +108,30 @@ public class ExternalUserRegistrationControllerTest extends BaseControllerMockMV
     @Test
     public void accountCreated() throws Exception {
         setLoggedInUser(null);
-        when(inviteUserRestService.checkExistingUser("hash")).thenReturn(RestResult.restSuccess(true));
+        RoleInviteResource invite = newRoleInviteResource().withRole(SUPPORTER).withHash("hash").build();
+
+        when(inviteUserRestService.getInvite(invite.getHash())).thenReturn(restSuccess(invite));
+        when(inviteUserRestService.checkExistingUser(invite.getHash())).thenReturn(RestResult.restSuccess(true));
         mockMvc.perform(get(URL_PREFIX + "/hash/register/account-created"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("registration/external-account-created"));
     }
 
     @Test
+    public void accountCreatedAssessor() throws Exception {
+        setLoggedInUser(null);
+        RoleInviteResource invite = newRoleInviteResource().withRole(ASSESSOR).withHash("hash").build();
+
+        when(inviteUserRestService.getInvite(invite.getHash())).thenReturn(restSuccess(invite));
+        when(inviteUserRestService.checkExistingUser(invite.getHash())).thenReturn(RestResult.restSuccess(true));
+        mockMvc.perform(get(URL_PREFIX + "/hash/register/account-created"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("registration/account-created"));
+    }
+
+    @Test
     public void yourDetailsAssessor() throws Exception {
         setLoggedInUser(null);
-
 
         when(inviteUserRestService.getInvite("hash")).thenReturn(restSuccess(newRoleInviteResource()
                 .withRole(ASSESSOR)
