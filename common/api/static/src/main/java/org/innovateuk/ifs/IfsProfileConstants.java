@@ -7,6 +7,10 @@ package org.innovateuk.ifs;
  */
 public class IfsProfileConstants {
 
+    private IfsProfileConstants() {
+        // singleton
+    }
+
     /**
      * Used on laptop builds for stub based work
      */
@@ -24,6 +28,9 @@ public class IfsProfileConstants {
      */
     public static final String INTEGRATION_TEST = "integration-test";
     public static final String NOT_INTEGRATION_TEST = "!" + INTEGRATION_TEST;
+
+    public static final String TEST = "TEST";
+    public static final String NOT_TEST = "!" + TEST;
 
     /**
      * Used to denote the presence of AMQP in the deployment

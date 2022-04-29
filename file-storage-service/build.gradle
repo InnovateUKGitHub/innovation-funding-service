@@ -3,16 +3,23 @@ apply from: rootProject.file("gradle-support/jib.gradle")
 
 dependencies {
 
+    implementation project(':common:api:file-storage-rest-api')
+
     implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.837') {
         exclude group: "commons-logging", module: "commons-logging"
     }
     implementation('com.amazonaws:aws-java-sdk-s3') {
         exclude group: "commons-logging", module: "commons-logging"
     }
-    implementation project(':common:api:file-storage-rest-api')
+
 
     implementation 'fi.solita.clamav:clamav-client:1.0.1'
+
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.mariadb.jdbc:mariadb-java-client"
+
+    testImplementation "com.h2database:h2"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
 
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")

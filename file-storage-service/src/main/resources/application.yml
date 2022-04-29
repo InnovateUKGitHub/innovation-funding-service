@@ -8,3 +8,20 @@ ifs:
     storage:
       localStorage:
         rootFolderPath: "/tmp"
+
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:mysql://ifs-database:3306/ifs_file_storage}
+    username: ${DB_USER:root}
+    password: ${DB_PASS:password}
+    test-on-borrow: true
+    validation-query: SELECT 1
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+

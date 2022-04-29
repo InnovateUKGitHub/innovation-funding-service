@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.filestorage.web;
 
+import org.apache.http.HttpHeaders;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownload;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
 import org.innovateuk.ifs.filestorage.storage.StorageService;
@@ -25,10 +26,10 @@ public class StorageDownloadController implements FileDownload {
                 return ResponseEntity
                         .ok()
                         .cacheControl(CacheControl.noCache())
-                        .header("Content-type", "application/octet-stream")
-                        .header("Content-Length", "" + fileDownloadResponse.get().getFileSizeBytes())
-                        .header("Content-disposition", "attachment; filename=\"" + fileDownloadResponse.get().getFileName() + "\"")
-                        .body(new ByteArrayInputStream(fileDownloadResponse.get().getPayload()));
+                        .header(HttpHeaders.CONTENT_TYPE, fileDownloadResponse.get().mimeType().toString())
+                        .header(HttpHeaders.CONTENT_LENGTH, String.valueOf(fileDownloadResponse.get().fileSizeBytes()))
+                        .header("Content-Disposition", "attachment; filename=\"" + fileDownloadResponse.get().fileName() + "\"")
+                        .body(new ByteArrayInputStream(fileDownloadResponse.get().payload()));
             }
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (IOException e) {

@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.api.filestorage.v1.download;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.innovateuk.ifs.api.filestorage.v1.upload.VirusScanStatus;
 import org.springframework.util.MimeType;
 
@@ -9,6 +11,8 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
+@Builder
+@Accessors(fluent = true)
 public final class FileDownloadResponse {
 
     /** uuid reference for the file */
