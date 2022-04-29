@@ -6,12 +6,15 @@ import org.innovateuk.ifs.api.filestorage.util.FileUploadRequestBuilder;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.filestorage.virusscan.VirusScanResult;
+import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -49,5 +52,11 @@ public class TestHelper {
     public static void headerAssert(ResponseEntity<?> responseEntity, String header, Object expected) {
         assertThat(responseEntity.getHeaders().get(header).size(), equalTo(1));
         assertThat(responseEntity.getHeaders().get(header).get(0), equalTo(expected));
+    }
+
+    public static String activeProfilesString(List<String> profiles) {
+        return AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME
+                + "=" +
+                profiles.stream().collect(Collectors.joining(","));
     }
 }
