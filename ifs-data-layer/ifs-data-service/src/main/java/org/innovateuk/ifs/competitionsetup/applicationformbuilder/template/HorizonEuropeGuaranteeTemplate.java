@@ -147,7 +147,7 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
         return aQuestion()
                 .withShortName("Participating Organisation project region")
                 .withName("Participating Organisation project region")
-                .withDescription("Please select from the drop down the region your project is being carried out in.")
+                .withDescription("Please type the region your project is being carried out in.")
                 .withAssignEnabled(true)
                 .withMarkAsCompletedEnabled(true)
                 .withMultipleStatuses(false)

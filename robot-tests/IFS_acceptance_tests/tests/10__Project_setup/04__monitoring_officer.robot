@@ -664,8 +664,8 @@ the user should see the project status
     run keyword if  '${status}'=='FAIL'  run keyword  the user should see the element   jQuery = .task:contains("${applicationTitle}") + .status:contains("Monitor project")
 
 the user should see the read only view of EDI status as incomplete
-    And the user should see the element                 jQuery = h3:contains("Team members")
-    And the user should see the element                 jQuery = th:contains("EDI status")
-    And the user should see the element                 jQuery = td:contains("Dave Adams") ~ td:contains("Complete")
-    And the user should see the element                 jQuery = td:contains("Mrytle Barton") ~ td:contains("Incomplete")
-    And the user should see the element                 jQuery = td:contains("Edward Morris") ~ td:contains("Incomplete")
+    the user should see the element     jQuery = h3:contains("Team members")
+    the user should see the element     jQuery = th:contains("EDI status")
+    the user should see the element     jQuery = td:contains("Dave Adams") ~ td:contains("Complete")
+    the user should see the element     jQuery = td:contains("Mrytle Barton") ~ td:contains("Complete")
+    the user should see the element     jQuery = td:contains("Edward Morris") ~ td:contains("Complete")
