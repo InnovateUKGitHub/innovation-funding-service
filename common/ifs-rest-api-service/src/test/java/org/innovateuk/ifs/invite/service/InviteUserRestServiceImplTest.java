@@ -8,13 +8,14 @@ import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.user.resource.SearchCategory;
 import org.junit.Test;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.externalInviteResourceListType;
 import static org.junit.Assert.assertEquals;
@@ -76,7 +77,7 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
         String searchString = "%a%";
         SearchCategory searchCategory = SearchCategory.NAME;
 
-        List<ExternalInviteResource> expected = Collections.singletonList(new ExternalInviteResource());
+        List<ExternalInviteResource> expected = singletonList(new ExternalInviteResource());
         setupGetWithRestResultExpectations(inviteRestBaseUrl + "/find-external-invites?searchString=" + searchString + "&searchCategory=" + searchCategory.name(), externalInviteResourceListType(), expected, OK);
         List<ExternalInviteResource> result = service.findExternalInvites(searchString, searchCategory).getSuccess();
         assertEquals(expected, result);
@@ -91,5 +92,16 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
 
         assertTrue(result.isSuccess());
         setupPutWithRestResultVerifications(inviteRestBaseUrl + "/internal/pending/123/resend");
+    }
+
+    @Test
+    public void findExternalInvitesByEmail() {
+        List<RoleInviteResource> roleInviteResource = singletonList(new RoleInviteResource());
+        String email = "bob@email.com";
+        String url = inviteRestBaseUrl + "/get-by-email/";
+        setupGetWithRestResultAnonymousExpectations(url + email, new ParameterizedTypeReference<List<RoleInviteResource>>() {}, roleInviteResource, OK);
+        RestResult<List<RoleInviteResource>> result = service.findExternalInvitesByEmail(email);
+        assertTrue(result.isSuccess());
+        assertEquals(roleInviteResource, result.getSuccess());
     }
 }

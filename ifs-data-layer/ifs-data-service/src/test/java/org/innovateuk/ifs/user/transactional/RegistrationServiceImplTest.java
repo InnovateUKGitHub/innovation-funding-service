@@ -9,22 +9,21 @@ import org.innovateuk.ifs.authentication.service.RestIdentityProviderService;
 import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.repository.AllInviteRepository;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerCreateResource;
-import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerInviteRepository;
-import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
+import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserCreationResource;
@@ -71,46 +70,37 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     private User updatedUserInDB;
 
     @Mock
-    private TermsAndConditionsService termsAndConditionsServiceMock;
+    private TermsAndConditionsService termsAndConditionsService;
 
     @Mock
-    private ProfileRepository profileRepositoryMock;
+    private ProfileRepository profileRepository;
 
     @Mock
-    private PasswordPolicyValidator passwordPolicyValidatorMock;
+    private PasswordPolicyValidator passwordPolicyValidator;
 
     @Mock
-    private UserMapper userMapperMock;
+    private UserMapper userMapper;
 
     @Mock
-    private IdentityProviderService idpServiceMock;
+    private IdentityProviderService idpService;
 
     @Mock
-    private AddressMapper addressMapperMock;
+    private AddressMapper addressMapper;
 
     @Mock
-    private UserRepository userRepositoryMock;
+    private UserRepository userRepository;
 
     @Mock
-    private TokenRepository tokenRepositoryMock;
-
-    @Mock
-    private OrganisationRepository organisationRepositoryMock;
-
-    @Mock
-    private BaseUserService baseUserServiceMock;
+    private BaseUserService baseUserService;
 
     @Mock
     private AllInviteRepository allInviteRepository;
 
     @Mock
-    private RegistrationNotificationService registrationEmailServiceMock;
+    private MonitoringOfficerInviteRepository monitoringOfficerInviteRepository;
 
     @Mock
-    private StakeholderRepository stakeholderRepository;
-
-    @Mock
-    private MonitoringOfficerInviteRepository monitoringOfficerInviteRepositoryMock;
+    private RoleProfileStatusRepository roleProfileStatusRepository;
 
 
     @Test
@@ -144,13 +134,13 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 .withProfileId(userProfile.getId())
                 .build();
 
-        when(profileRepositoryMock.findById(userToCreate.getProfileId())).thenReturn(Optional.of(userProfile));
-        when(profileRepositoryMock.save(any(Profile.class))).thenReturn(userProfile);
-        when(passwordPolicyValidatorMock.validatePassword("Passw0rd1357123", userToCreateResource.toUserResource())).thenReturn(serviceSuccess());
-        when(userMapperMock.mapToDomain(userToCreateResource.toUserResource())).thenReturn(userToCreate);
-        when(addressMapperMock.mapToDomain(userToCreateResource.getAddress())).thenReturn(
+        when(profileRepository.findById(userToCreate.getProfileId())).thenReturn(Optional.of(userProfile));
+        when(profileRepository.save(any(Profile.class))).thenReturn(userProfile);
+        when(passwordPolicyValidator.validatePassword("Passw0rd1357123", userToCreateResource.toUserResource())).thenReturn(serviceSuccess());
+        when(userMapper.mapToDomain(userToCreateResource.toUserResource())).thenReturn(userToCreate);
+        when(addressMapper.mapToDomain(userToCreateResource.getAddress())).thenReturn(
                 newAddress().withAddressLine1("Electric Works").withTown("Sheffield").withPostcode("S1 2BJ").build());
-        when(idpServiceMock.createUserRecordWithUid("email@example.com", "Passw0rd1357123")).thenReturn(serviceSuccess("new-uid"));
+        when(idpService.createUserRecordWithUid("email@example.com", "Passw0rd1357123")).thenReturn(serviceSuccess("new-uid"));
 
         User userToSave = createLambdaMatcher(user -> {
             assertNull(user.getId());
@@ -165,7 +155,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals(userToCreate.getRoles(), user.getRoles());
 
             assertNotNull(user.getProfileId());
-            Profile profile = profileRepositoryMock.findById(user.getProfileId()).get();
+            Profile profile = profileRepository.findById(user.getProfileId()).get();
             assertEquals(profileId, profile.getId());
             assertNull(profile.getSkillsAreas());
             assertNull(profile.getBusinessType());
@@ -183,9 +173,9 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         User savedUser = newUser().build();
         UserResource savedUserResource = newUserResource().build();
 
-        when(userRepositoryMock.save(userToSave)).thenReturn(savedUser);
-        when(userRepositoryMock.save(savedUser)).thenReturn(savedUser);
-        when(userMapperMock.mapToResource(savedUser)).thenReturn(savedUserResource);
+        when(userRepository.save(userToSave)).thenReturn(savedUser);
+        when(userRepository.save(savedUser)).thenReturn(savedUser);
+        when(userMapper.mapToResource(savedUser)).thenReturn(savedUserResource);
 
         UserResource result = service.createUser(userToCreateResource).getSuccess();
 
@@ -207,10 +197,10 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         SiteTermsAndConditionsResource siteTermsAndConditions = newSiteTermsAndConditionsResource().build();
 
-        when(termsAndConditionsServiceMock.getLatestSiteTermsAndConditions()).thenReturn(serviceSuccess(siteTermsAndConditions));
-        when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
-        when(userMapperMock.mapToResource(isA(User.class))).thenReturn(user);
-        when(passwordPolicyValidatorMock.validatePassword(eq("thepassword"), any(UserResource.class))).thenReturn(serviceSuccess());
+        when(termsAndConditionsService.getLatestSiteTermsAndConditions()).thenReturn(serviceSuccess(siteTermsAndConditions));
+        when(idpService.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
+        when(userMapper.mapToResource(isA(User.class))).thenReturn(user);
+        when(passwordPolicyValidator.validatePassword(eq("thepassword"), any(UserResource.class))).thenReturn(serviceSuccess());
 
         ServiceResult<UserResource> result = service.createUser(userToCreateResource);
         assertTrue(result.isFailure());
@@ -230,9 +220,9 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 .build();
         UserResource user = new UserResource();
 
-        when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
-        when(userMapperMock.mapToResource(isA(User.class))).thenReturn(user);
-        when(passwordPolicyValidatorMock.validatePassword(eq("thepassword"), any(UserResource.class))).thenReturn(serviceFailure(badRequestError("bad password")));
+        when(idpService.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
+        when(userMapper.mapToResource(isA(User.class))).thenReturn(user);
+        when(passwordPolicyValidator.validatePassword(eq("thepassword"), any(UserResource.class))).thenReturn(serviceFailure(badRequestError("bad password")));
 
         ServiceResult<UserResource> result = service.createUser(userToCreateResource);
         assertTrue(result.isFailure());
@@ -263,12 +253,12 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 .build();
 
         when(allInviteRepository.getByHash("SomeInviteHash")).thenReturn(roleInvite);
-        when(passwordPolicyValidatorMock.validatePassword(anyString(), any(UserResource.class))).thenReturn(serviceSuccess());
-        when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
-        when(profileRepositoryMock.save(any(Profile.class))).thenReturn(newProfile().build());
-        when(userMapperMock.mapToDomain(any(UserResource.class))).thenReturn(userToCreate);
-        when(idpServiceMock.activateUser("new-uid")).thenReturn(serviceSuccess("new-uid"));
-        when(userRepositoryMock.save(any(User.class))).thenReturn(userToCreate);
+        when(passwordPolicyValidator.validatePassword(anyString(), any(UserResource.class))).thenReturn(serviceSuccess());
+        when(idpService.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
+        when(profileRepository.save(any(Profile.class))).thenReturn(newProfile().build());
+        when(userMapper.mapToDomain(any(UserResource.class))).thenReturn(userToCreate);
+        when(idpService.activateUser("new-uid")).thenReturn(serviceSuccess("new-uid"));
+        when(userRepository.save(any(User.class))).thenReturn(userToCreate);
         ServiceResult<UserResource> result = service.createUser(userToCreateResource);
         assertTrue(result.isSuccess());
         assertEquals(InviteStatus.OPENED, roleInvite.getStatus());
@@ -290,7 +280,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         UserResource userToEdit = UserResourceBuilder.newUserResource().build();
 
-        when(baseUserServiceMock.getUserById(userToEdit.getId())).thenReturn(serviceFailure(notFoundError(User.class, userToEdit.getId())));
+        when(baseUserService.getUserById(userToEdit.getId())).thenReturn(serviceFailure(notFoundError(User.class, userToEdit.getId())));
 
         ServiceResult<UserResource> result = service.editInternalUser(userToEdit, Role.SUPPORT);
 
@@ -305,13 +295,13 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         Role newRole = Role.SUPPORT;
 
-        when(userRepositoryMock.findById(userToEdit.getId())).thenReturn(Optional.of(userInDB));
-        when(userMapperMock.mapToDomain(userResourceInDB)).thenReturn(userInDB);
+        when(userRepository.findById(userToEdit.getId())).thenReturn(Optional.of(userInDB));
+        when(userMapper.mapToDomain(userResourceInDB)).thenReturn(userInDB);
 
         ServiceResult<UserResource> result = service.editInternalUser(userToEdit, newRole);
 
         assertTrue(result.isSuccess());
-        verify(userRepositoryMock).save(userInDB);
+        verify(userRepository).save(userInDB);
         assertTrue(userInDB.getRoles().stream().anyMatch(role1 -> role1.equals(Role.SUPPORT)));
         assertEquals(userInDB.getFirstName(), userToEdit.getFirstName());
         assertEquals(userInDB.getLastName(), userToEdit.getLastName());
@@ -322,14 +312,14 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         setUpUsersForEditInternalUserSuccess();
 
-        when(userRepositoryMock.findById(userToEdit.getId())).thenReturn(Optional.of(userInDB));
-        when(idpServiceMock.deactivateUser(userToEdit.getUid())).thenReturn(ServiceResult.serviceSuccess(""));
+        when(userRepository.findById(userToEdit.getId())).thenReturn(Optional.of(userInDB));
+        when(idpService.deactivateUser(userToEdit.getUid())).thenReturn(ServiceResult.serviceSuccess(""));
         userInDB.setStatus(UserStatus.INACTIVE);
-        when(userRepositoryMock.save(userInDB)).thenReturn(userInDB);
+        when(userRepository.save(userInDB)).thenReturn(userInDB);
 
         ServiceResult<UserResource> result = service.deactivateUser(userToEdit.getId());
 
-        verify(userRepositoryMock).save(userInDB);
+        verify(userRepository).save(userInDB);
 
         assertTrue(result.isSuccess());
     }
@@ -339,8 +329,8 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         setUpUsersForEditInternalUserSuccess();
 
-        when(userRepositoryMock.findById(userToEdit.getId())).thenReturn(Optional.of(userInDB));
-        when(idpServiceMock.deactivateUser(userToEdit.getUid())).thenReturn(ServiceResult.serviceFailure(GENERAL_NOT_FOUND));
+        when(userRepository.findById(userToEdit.getId())).thenReturn(Optional.of(userInDB));
+        when(idpService.deactivateUser(userToEdit.getUid())).thenReturn(ServiceResult.serviceFailure(GENERAL_NOT_FOUND));
 
         ServiceResult<UserResource> result = service.deactivateUser(userToEdit.getId());
 
@@ -352,7 +342,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         setUpUsersForEditInternalUserSuccess();
 
-        when(userRepositoryMock.findById(userToEdit.getId())).thenReturn(Optional.empty());
+        when(userRepository.findById(userToEdit.getId())).thenReturn(Optional.empty());
 
         ServiceResult<UserResource> result = service.deactivateUser(userToEdit.getId());
 
@@ -364,14 +354,14 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         setUpUsersForEditInternalUserSuccess();
 
-        when(userRepositoryMock.findById(userToEdit.getId())).thenReturn(Optional.of(userInDB));
-        when(idpServiceMock.activateUser(userToEdit.getUid())).thenReturn(ServiceResult.serviceSuccess(""));
+        when(userRepository.findById(userToEdit.getId())).thenReturn(Optional.of(userInDB));
+        when(idpService.activateUser(userToEdit.getUid())).thenReturn(ServiceResult.serviceSuccess(""));
         userInDB.setStatus(UserStatus.ACTIVE);
-        when(userRepositoryMock.save(userInDB)).thenReturn(updatedUserInDB);
+        when(userRepository.save(userInDB)).thenReturn(updatedUserInDB);
 
         ServiceResult<UserResource> result = service.activateUser(userToEdit.getId());
 
-        verify(userRepositoryMock).save(userInDB);
+        verify(userRepository).save(userInDB);
 
         assertTrue(result.isSuccess());
     }
@@ -381,8 +371,8 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         setUpUsersForEditInternalUserSuccess();
 
-        when(userRepositoryMock.findById(userToEdit.getId())).thenReturn(Optional.of(userInDB));
-        when(idpServiceMock.activateUser(userToEdit.getUid())).thenReturn(ServiceResult.serviceFailure(GENERAL_NOT_FOUND));
+        when(userRepository.findById(userToEdit.getId())).thenReturn(Optional.of(userInDB));
+        when(idpService.activateUser(userToEdit.getUid())).thenReturn(ServiceResult.serviceFailure(GENERAL_NOT_FOUND));
 
         ServiceResult<UserResource> result = service.activateUser(userToEdit.getId());
 
@@ -394,7 +384,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         setUpUsersForEditInternalUserSuccess();
 
-        when(userRepositoryMock.findById(userToEdit.getId())).thenReturn(Optional.empty());
+        when(userRepository.findById(userToEdit.getId())).thenReturn(Optional.empty());
 
         ServiceResult<UserResource> result = service.activateUser(userToEdit.getId());
 
@@ -417,32 +407,45 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         MonitoringOfficerCreateResource resource = new MonitoringOfficerCreateResource(
                 "Steve", "Smith", "011432333333", "test@test.test");
         String password = "superSecurePassword";
-        when(idpServiceMock.createUserRecordWithUid(anyString(), anyString())).thenReturn(serviceSuccess("uid"));
-        when(profileRepositoryMock.save(any(Profile.class))).thenReturn(newProfile().build());
-        when(userRepositoryMock.save(any(User.class))).thenReturn(user);
+        when(idpService.createUserRecordWithUid(anyString(), anyString())).thenReturn(serviceSuccess("uid"));
+        when(profileRepository.save(any(Profile.class))).thenReturn(newProfile().build());
+        when(userRepository.save(any(User.class))).thenReturn(user);
 
         service.createUser(userToCreateResource).getSuccess();
 
-        verify(idpServiceMock).createUserRecordWithUid(anyString(), anyString());
-        verify(profileRepositoryMock).save(any(Profile.class));
-        verify(userRepositoryMock, times(2)).save(any(User.class));
+        verify(idpService).createUserRecordWithUid(anyString(), anyString());
+        verify(profileRepository).save(any(Profile.class));
+        verify(userRepository, times(2)).save(any(User.class));
     }
 
     @Test
     public void activatePendingUser() {
         User user = newUser().withUid("uid").build();
 
-        when(monitoringOfficerInviteRepositoryMock.existsByHash("hash")).thenReturn(true);
-        when(idpServiceMock.activateUser(anyString())).thenReturn(serviceSuccess("uid"));
-        when(userRepositoryMock.save(any(User.class))).thenReturn(user);
-        when(idpServiceMock.updateUserPassword("uid", "password")).thenReturn(serviceSuccess("uid"));
+        when(monitoringOfficerInviteRepository.existsByHash("hash")).thenReturn(true);
+        when(idpService.activateUser(anyString())).thenReturn(serviceSuccess("uid"));
+        when(userRepository.save(any(User.class))).thenReturn(user);
+        when(idpService.updateUserPassword("uid", "password")).thenReturn(serviceSuccess("uid"));
 
         service.activatePendingUser(user, "password", "hash").getSuccess();
 
-        verify(monitoringOfficerInviteRepositoryMock).existsByHash("hash");
-        verify(idpServiceMock).activateUser(anyString());
-        verify(userRepositoryMock).save(any(User.class));
-        verify(idpServiceMock).updateUserPassword("uid", "password");
+        verify(monitoringOfficerInviteRepository).existsByHash("hash");
+        verify(idpService).activateUser(anyString());
+        verify(userRepository).save(any(User.class));
+        verify(idpService).updateUserPassword("uid", "password");
+    }
+
+    @Test
+    public void createUserProfileStatus() {
+        User user = newUser().withEmailAddress("test@test.test").build();
+
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        when(roleProfileStatusRepository.save(any(RoleProfileStatus.class))).thenReturn(new RoleProfileStatus());
+
+        service.createUserProfileStatus(user.getId()).getSuccess();
+
+        verify(userRepository).findById(user.getId());
+        verify(roleProfileStatusRepository).save(any(RoleProfileStatus.class));
     }
 
     private void setUpUsersForEditInternalUserSuccess() {
