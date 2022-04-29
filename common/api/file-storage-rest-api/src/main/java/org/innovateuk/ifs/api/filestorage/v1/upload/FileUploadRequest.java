@@ -34,6 +34,6 @@ public final class FileUploadRequest {
     private final String fileName;
 
     /** The file checksum */
-    private final String checksum;
+    private final String md5Checksum;
 
 }

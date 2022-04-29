@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.filestorage.storage.local;
 
-import com.google.common.hash.Hashing;
 import org.innovateuk.ifs.IfsProfileConstants;
+import org.innovateuk.ifs.api.filestorage.util.FileHashing;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.filestorage.cfg.storage.BackingStoreConfigurationProperties;
 import org.innovateuk.ifs.filestorage.util.TestHelper;
@@ -52,6 +52,6 @@ class LocalStorageProviderTest {
 
         Optional<byte[]> payload = localStorageProvider.readFile(fileUploadRequest.fileId().toString());
         assertThat(payload.isPresent(), equalTo(true));
-        assertThat(Hashing.sha256().hashBytes(payload.get()).toString(), equalTo(fileUploadRequest.checksum()));
+        assertThat(FileHashing.fileHash(payload.get()), equalTo(fileUploadRequest.md5Checksum()));
     }
 }

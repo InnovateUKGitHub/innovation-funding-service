@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.api.filestorage.util;
 
-import com.google.common.hash.Hashing;
 import com.google.common.io.ByteStreams;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -18,10 +17,11 @@ public class FileUploadRequestBuilder {
 
     public static FileUploadRequest.FileUploadRequestBuilder fromResource(UUID uuid, Resource resource, MediaType mediaType) throws IOException {
         byte[] payload = ByteStreams.toByteArray(resource.getInputStream());
+        //noinspection UnstableApiUsage
         return FileUploadRequest.builder()
                 .fileId(uuid)
                 .fileName(resource.getFilename())
-                .checksum(Hashing.sha256().hashBytes(payload).toString())
+                .md5Checksum(FileHashing.fileHash(payload))
                 .mimeType(mediaType)
                 .payload(payload)
                 .fileSizeBytes(payload.length)

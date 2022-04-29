@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.filestorage.util;
 
-import com.google.common.hash.Hashing;
 import com.google.common.io.ByteStreams;
+import org.innovateuk.ifs.api.filestorage.util.FileHashing;
 import org.innovateuk.ifs.api.filestorage.util.FileUploadRequestBuilder;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
@@ -36,7 +36,7 @@ public class TestHelper {
         byte[] payload = ByteStreams.toByteArray(resource.getInputStream());
         return FileDownloadResponse.builder()
                 .payload(payload)
-                .checksum(Hashing.sha256().hashBytes(payload).toString())
+                .checksum(FileHashing.fileHash(payload))
                 .fileName(resource.getFilename())
                 .fileId(uuid)
                 .mimeType(IMAGE_JPEG)
