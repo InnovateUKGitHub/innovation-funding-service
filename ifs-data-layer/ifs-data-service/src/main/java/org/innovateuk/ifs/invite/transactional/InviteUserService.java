@@ -45,5 +45,5 @@ public interface InviteUserService {
     ServiceResult<Void> saveAssessorInvite(UserResource invitedUser, Role role, Long innovationAreaId);
 
     @PreAuthorize("hasPermission(#externalUser, 'SAVE_USER_INVITE')")
-    ServiceResult<List<RoleInviteResource>> findExternalInvitesByEmail(UserResource externalUser);
+    ServiceResult<List<RoleInviteResource>> findExternalInvitesByUser(UserResource externalUser);
 }

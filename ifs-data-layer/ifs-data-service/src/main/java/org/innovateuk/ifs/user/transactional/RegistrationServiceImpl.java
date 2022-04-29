@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.user.transactional;
 
 import org.innovateuk.ifs.address.mapper.AddressMapper;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
 import org.innovateuk.ifs.commons.service.ServiceResult;

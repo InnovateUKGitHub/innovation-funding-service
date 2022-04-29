@@ -15,7 +15,10 @@ import org.innovateuk.ifs.sil.crm.resource.SilEDIStatus;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
+import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
 import org.innovateuk.ifs.user.transactional.RegistrationServiceImpl;
@@ -34,6 +37,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 
 import static java.time.ZonedDateTime.now;
 import static org.hamcrest.Matchers.closeTo;
@@ -46,6 +50,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
 import static org.innovateuk.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
@@ -64,20 +69,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserControllerTest extends BaseControllerMockMVCTest<UserController> {
 
     @Mock
-    private UserService userServiceMock;
+    private UserService userService;
     @Mock
     private UserAuthenticationService userAuthenticationService;
     @Mock
-    private RegistrationServiceImpl registrationServiceMock;
+    private RegistrationServiceImpl registrationService;
 
     @Mock
-    private BaseUserService baseUserServiceMock;
+    private BaseUserService baseuserService;
 
     @Mock
-    private TokenService tokenServiceMock;
-
-    @Mock
-    private ApplicationInviteServiceImpl applicationInviteService;
+    private TokenService tokenService;
 
     @Override
     protected UserController supplyControllerUnderTest() {
@@ -95,7 +97,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         user = newUserResource().withId(1L).build();
         silStatus.setEdiStatus(EDIStatus.INPROGRESS);
         silStatus.setEdiReviewDate(ZonedDateTime.now(ZoneId.of("UTC")));
-        when(userServiceMock.updateDetails(user)).thenReturn(serviceSuccess(user));
+        when(userService.updateDetails(user)).thenReturn(serviceSuccess(user));
     }
 
     @Test
@@ -104,20 +106,20 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         final UserResource userResource = newUserResource().build();
 
-        when(userServiceMock.findInactiveByEmail(emailAddress)).thenReturn(serviceSuccess(userResource));
-        when(registrationServiceMock.resendUserVerificationEmail(userResource)).thenReturn(serviceSuccess());
+        when(userService.findInactiveByEmail(emailAddress)).thenReturn(serviceSuccess(userResource));
+        when(registrationService.resendUserVerificationEmail(userResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/user/resend-email-verification-notification/{emailAddress}/", emailAddress))
                 .andExpect(status().isOk());
 
-        verify(registrationServiceMock, only()).resendUserVerificationEmail(userResource);
+        verify(registrationService, only()).resendUserVerificationEmail(userResource);
     }
 
     @Test
     public void resendEmailVerificationNotification_notFound() throws Exception {
         final String emailAddress = "sample@me.com";
 
-        when(userServiceMock.findInactiveByEmail(emailAddress)).thenReturn(serviceFailure(notFoundError(User.class, emailAddress, INACTIVE)));
+        when(userService.findInactiveByEmail(emailAddress)).thenReturn(serviceFailure(notFoundError(User.class, emailAddress, INACTIVE)));
 
         mockMvc.perform(put("/user/resend-email-verification-notification/{emailAddress}/", emailAddress))
                 .andExpect(status().isNotFound());
@@ -134,7 +136,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         users.add(testUser2);
         users.add(testUser3);
 
-        when(baseUserServiceMock.findAll()).thenReturn(serviceSuccess(users));
+        when(baseuserService.findAll()).thenReturn(serviceSuccess(users));
         mockMvc.perform(get("/user/find-all/")
                         .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
@@ -159,7 +161,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     public void userControllerShouldReturnUserById() throws Exception {
         UserResource testUser1 = newUserResource().withId(1L).withFirstName("test").withLastName("User1").withEmail("email1@email.nl").build();
 
-        when(baseUserServiceMock.getUserById(testUser1.getId())).thenReturn(serviceSuccess(testUser1));
+        when(baseuserService.getUserById(testUser1.getId())).thenReturn(serviceSuccess(testUser1));
         mockMvc.perform(get("/user/id/" + testUser1.getId())
                         .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
@@ -174,7 +176,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     public void updatePassword() throws Exception {
         final String password = "Passw0rd1357";
         final String hash = "bf5b6392-1e08-4acc-b667-f0a16d6744de";
-        when(userServiceMock.changePassword(hash, password)).thenReturn(serviceSuccess(null));
+        when(userService.changePassword(hash, password)).thenReturn(serviceSuccess(null));
         mockMvc.perform(post("/user/" + URL_PASSWORD_RESET + "/{hash}", hash).content(password)
                         .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
@@ -191,15 +193,15 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         ObjectNode node = JsonNodeFactory.instance.objectNode();
         node.put("inviteId", 111L);
         final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), userId, hash, now(), node);
-        when(tokenServiceMock.getEmailToken(hash)).thenReturn(serviceSuccess((token)));
+        when(tokenService.getEmailToken(hash)).thenReturn(serviceSuccess((token)));
 
         ApplicationResource applicationResource = new ApplicationResource();
         applicationResource.setCompetition(compId);
         applicationResource.setId(appId);
 
 
-        when(tokenServiceMock.handleExtraAttributes(any())).thenReturn(serviceSuccess((applicationResource)));
-        when(registrationServiceMock.activateApplicantAndSendDiversitySurvey(anyLong(), anyLong())).thenReturn(serviceSuccess());
+        when(tokenService.handleExtraAttributes(any())).thenReturn(serviceSuccess((applicationResource)));
+        when(registrationService.activateApplicantAndSendDiversitySurvey(anyLong(), anyLong())).thenReturn(serviceSuccess());
 
 
         mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash)
@@ -218,11 +220,11 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         node.put("inviteId", 111L);
         final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), userId, hash, now(), node);
 
-        when(tokenServiceMock.getEmailToken(hash)).thenReturn(serviceSuccess((token)));
+        when(tokenService.getEmailToken(hash)).thenReturn(serviceSuccess((token)));
 
 
-        when(tokenServiceMock.handleExtraAttributes(token)).thenReturn(serviceFailure(PROJECT_CANNOT_BE_WITHDRAWN));
-        when(registrationServiceMock.activateApplicantAndSendDiversitySurvey(anyLong(), anyLong())).thenReturn(serviceSuccess());
+        when(tokenService.handleExtraAttributes(token)).thenReturn(serviceFailure(PROJECT_CANNOT_BE_WITHDRAWN));
+        when(registrationService.activateApplicantAndSendDiversitySurvey(anyLong(), anyLong())).thenReturn(serviceSuccess());
         mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash)
                         .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
@@ -236,7 +238,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     public void verifyEmailNotFound() throws Exception {
         final String hash = "5f415b7ec9e9cc497996e251294b1d6bccfebba8dfc708d87b52f1420c19507ab24683bd7e8f49a0";
         final Error error = notFoundError(Token.class, hash);
-        when(tokenServiceMock.getEmailToken(hash)).thenReturn(serviceFailure(error));
+        when(tokenService.getEmailToken(hash)).thenReturn(serviceFailure(error));
         mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash))
                 .andExpect(status().isNotFound())
                 .andExpect(contentError(error));
@@ -246,7 +248,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     public void verifyEmailExpired() throws Exception {
         final String hash = "5f415b7ec9e9cc497996e251294b1d6bccfebba8dfc708d87b52f1420c19507ab24683bd7e8f49a0";
         final Error error = new Error(USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED);
-        when(tokenServiceMock.getEmailToken(hash)).thenReturn(serviceFailure(error));
+        when(tokenService.getEmailToken(hash)).thenReturn(serviceFailure(error));
         mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash))
                 .andExpect(status().isBadRequest())
                 .andExpect(contentError(error));
@@ -257,7 +259,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         final String password = "Passw0rd1357";
         final String hash = "bf5b6392-1e08-4acc-b667-f0a16d6744de";
         final Error error = notFoundError(Token.class, hash);
-        when(userServiceMock.changePassword(hash, password)).thenReturn(serviceFailure(error));
+        when(userService.changePassword(hash, password)).thenReturn(serviceFailure(error));
         mockMvc.perform(post("/user/" + URL_PASSWORD_RESET + "/" + hash).content(password)
                         .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isNotFound())
@@ -274,7 +276,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .withEdiStatusReviewDate(fixedClock).build();
 
 
-        when(baseUserServiceMock.getUserResourceByUid(testUser1.getUid())).thenReturn(serviceSuccess(testUser1));
+        when(baseuserService.getUserResourceByUid(testUser1.getUid())).thenReturn(serviceSuccess(testUser1));
 
         mockMvc.perform(get("/user/uid/" + testUser1.getUid())
                         .header("IFS_AUTH_TOKEN", "123abc"))
@@ -299,7 +301,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         user.setLastName("testLastName");
         user.setTitle(Mr);
 
-        when(userServiceMock.findByEmail(user.getEmail())).thenReturn(serviceFailure(notFoundError(User.class, user.getEmail())));
+        when(userService.findByEmail(user.getEmail())).thenReturn(serviceFailure(notFoundError(User.class, user.getEmail())));
 
         mockMvc.perform(get("/user/find-by-email/" + user.getEmail() + "/", "json")
                         .contentType(APPLICATION_JSON))
@@ -311,7 +313,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         String email = "testemail@email.com";
 
-        when(userServiceMock.findByEmail(email)).thenReturn(serviceFailure(notFoundError(User.class, email)));
+        when(userService.findByEmail(email)).thenReturn(serviceFailure(notFoundError(User.class, email)));
 
         mockMvc.perform(get("/user/find-by-email/" + email + "/", "json")
                         .contentType(APPLICATION_JSON))
@@ -320,13 +322,13 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     @Test
     public void findActive() throws Exception {
-        when(userServiceMock.findActive(null, PageRequest.of(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(new ManageUserPageResource()));
+        when(userService.findActive(null, PageRequest.of(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(new ManageUserPageResource()));
         mockMvc.perform(get(buildPaginationUri("/user/active", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk());
     }
 
     @Test
     public void findInactive() throws Exception {
-        when(userServiceMock.findInactive(null, PageRequest.of(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(new ManageUserPageResource()));
+        when(userService.findInactive(null, PageRequest.of(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(new ManageUserPageResource()));
         mockMvc.perform(get(buildPaginationUri("/user/inactive", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk());
     }
 
@@ -338,7 +340,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .withPassword("Passw0rd1357123")
                 .build();
 
-        when(registrationServiceMock.createUser(refEq(anUserCreationResource()
+        when(registrationService.createUser(refEq(anUserCreationResource()
                 .withFirstName(internalUserRegistrationResource.getFirstName())
                 .withLastName(internalUserRegistrationResource.getLastName())
                 .withPassword(internalUserRegistrationResource.getPassword())
@@ -355,40 +357,40 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     public void agreeNewSiteTermsAndConditions() throws Exception {
         long userId = 1L;
 
-        when(userServiceMock.agreeNewTermsAndConditions(1L)).thenReturn(serviceSuccess(newUserResource().build()));
+        when(userService.agreeNewTermsAndConditions(1L)).thenReturn(serviceSuccess(newUserResource().build()));
 
         mockMvc.perform(post("/user/id/{userId}/agree-new-site-terms-and-conditions", userId))
                 .andExpect(status().isOk());
 
-        verify(userServiceMock, only()).agreeNewTermsAndConditions(userId);
+        verify(userService, only()).agreeNewTermsAndConditions(userId);
     }
 
     @Test
     public void editInternalUser() throws Exception {
 
         EditUserResource editUserResource = new EditUserResource(1L, "First", "Last", Role.IFS_ADMINISTRATOR);
-        when(registrationServiceMock.editInternalUser(any(), any())).thenReturn(serviceSuccess(newUserResource().build()));
+        when(registrationService.editInternalUser(any(), any())).thenReturn(serviceSuccess(newUserResource().build()));
 
         mockMvc.perform(post("/user/internal/edit")
                         .contentType(APPLICATION_JSON)
                         .content(toJson(editUserResource)))
                 .andExpect(status().isOk());
 
-        verify(registrationServiceMock).editInternalUser(any(), any());
+        verify(registrationService).editInternalUser(any(), any());
     }
 
     @Test
     public void deactivateUser() throws Exception {
-        when(registrationServiceMock.deactivateUser(123L)).thenReturn(serviceSuccess(newUserResource().build()));
+        when(registrationService.deactivateUser(123L)).thenReturn(serviceSuccess(newUserResource().build()));
         mockMvc.perform(post("/user/id/123/deactivate")).andExpect(status().isOk());
-        verify(registrationServiceMock).deactivateUser(123L);
+        verify(registrationService).deactivateUser(123L);
     }
 
     @Test
     public void reactivateUser() throws Exception {
-        when(registrationServiceMock.activateUser(123L)).thenReturn(serviceSuccess(newUserResource().build()));
+        when(registrationService.activateUser(123L)).thenReturn(serviceSuccess(newUserResource().build()));
         mockMvc.perform(post("/user/id/123/reactivate")).andExpect(status().isOk());
-        verify(registrationServiceMock).activateUser(123L);
+        verify(registrationService).activateUser(123L);
     }
 
     @Test
@@ -398,13 +400,13 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         SearchCategory searchCategory = SearchCategory.NAME;
 
         List<UserOrganisationResource> userOrganisationResources = newUserOrganisationResource().build(2);
-        when(userServiceMock.findByProcessRolesAndSearchCriteria(EnumSet.of(Role.APPLICANT), searchString, searchCategory)).thenReturn(serviceSuccess(userOrganisationResources));
+        when(userService.findByProcessRolesAndSearchCriteria(EnumSet.of(Role.APPLICANT), searchString, searchCategory)).thenReturn(serviceSuccess(userOrganisationResources));
 
         mockMvc.perform(get("/user/find-external-users?searchString=" + searchString + "&searchCategory=" + searchCategory))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(userOrganisationResources)));
 
-        verify(userServiceMock).findByProcessRolesAndSearchCriteria(EnumSet.of(Role.APPLICANT), searchString, searchCategory);
+        verify(userService).findByProcessRolesAndSearchCriteria(EnumSet.of(Role.APPLICANT), searchString, searchCategory);
     }
 
     @Test
@@ -412,12 +414,12 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         long userId = 1L;
         Role grantRole = Role.APPLICANT;
 
-        when(userServiceMock.grantRole(new GrantRoleCommand(userId, grantRole))).thenReturn(serviceSuccess(newUserResource().build()));
+        when(userService.grantRole(new GrantRoleCommand(userId, grantRole))).thenReturn(serviceSuccess(newUserResource().build()));
 
         mockMvc.perform(post("/user/{userId}/grant/{role}", userId, grantRole.name()))
                 .andExpect(status().isOk());
 
-        verify(userServiceMock).grantRole(new GrantRoleCommand(userId, grantRole));
+        verify(userService).grantRole(new GrantRoleCommand(userId, grantRole));
     }
 
 
@@ -427,7 +429,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         silStatus.setEdiStatus(EDIStatus.COMPLETE);
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
 
-        when(userServiceMock.updateDetails(user)).thenReturn(serviceSuccess(user));
+        when(userService.updateDetails(user)).thenReturn(serviceSuccess(user));
         mockMvc.perform(patch("/user/v1/edi").contentType(APPLICATION_JSON).content(toJson(silStatus)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
@@ -449,7 +451,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         silStatus.setEdiStatus(EDIStatus.INCOMPLETE);
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
 
-        when(userServiceMock.updateDetails(user)).thenReturn(serviceSuccess(user));
+        when(userService.updateDetails(user)).thenReturn(serviceSuccess(user));
         mockMvc.perform(patch("/user/v1/edi").contentType(APPLICATION_JSON).content(toJson(silStatus)))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
@@ -460,7 +462,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         silStatus.setEdiStatus(EDIStatus.COMPLETE);
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(null);
 
-        when(userServiceMock.updateDetails(user)).thenReturn(serviceSuccess(user));
+        when(userService.updateDetails(user)).thenReturn(serviceSuccess(user));
         mockMvc.perform(patch("/user/v1/edi").contentType(APPLICATION_JSON).content(toJson(silStatus)))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
@@ -472,7 +474,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         silStatus.setEdiReviewDate(null);
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(null);
 
-        when(userServiceMock.updateDetails(user)).thenReturn(serviceSuccess(user));
+        when(userService.updateDetails(user)).thenReturn(serviceSuccess(user));
         String errorMsg = mockMvc.perform(patch("/user/v1/edi").contentType(APPLICATION_JSON).content(toJson(silStatus)))
                 .andDo(print())
                 .andExpect(status().isBadRequest()).andReturn().getResponse().getContentAsString();
@@ -486,7 +488,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(null);
 
-        when(userServiceMock.updateDetails(user)).thenReturn(serviceSuccess(user));
+        when(userService.updateDetails(user)).thenReturn(serviceSuccess(user));
         String errorMsg = mockMvc.perform(patch("/user/v1/edi").contentType(APPLICATION_JSON).content(toJson(silStatus)))
                 .andDo(print())
                 .andExpect(status().isBadRequest()).andReturn().getResponse().getContentAsString();
@@ -496,7 +498,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     @Test
     public void verifyActivateApplicantWithoutDiversityEmailSuccess() throws Exception {
-        ReflectionTestUtils.setField(registrationServiceMock, "isEdiUpdateEnabled", true);
+        ReflectionTestUtils.setField(registrationService, "isEdiUpdateEnabled", true);
         final String hash = "8eda60ad3441ee883cc95417e2abaa036c308dd9eb19468fcc8597fb4cb167c32a7e5daf5e237385";
         final Long userId = 1L;
         final Long appId = 1L;
@@ -505,15 +507,15 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         ObjectNode node = JsonNodeFactory.instance.objectNode();
         node.put("inviteId", 111L);
         final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), userId, hash, now(), node);
-        when(tokenServiceMock.getEmailToken(hash)).thenReturn(serviceSuccess((token)));
+        when(tokenService.getEmailToken(hash)).thenReturn(serviceSuccess((token)));
 
         ApplicationResource applicationResource = new ApplicationResource();
         applicationResource.setCompetition(compId);
         applicationResource.setId(appId);
 
 
-        when(tokenServiceMock.handleExtraAttributes(any())).thenReturn(serviceSuccess((applicationResource)));
-        when(registrationServiceMock.activateApplicantAndSendDiversitySurvey(anyLong(), anyLong())).thenReturn(serviceSuccess());
+        when(tokenService.handleExtraAttributes(any())).thenReturn(serviceSuccess((applicationResource)));
+        when(registrationService.activateApplicantAndSendDiversitySurvey(anyLong(), anyLong())).thenReturn(serviceSuccess());
 
 
         mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash)
@@ -524,4 +526,13 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         verify(crmService).syncCrmContact(userId, appId, compId);
     }
 
+    @Test
+    public void createUserProfileStatus() throws Exception {
+        User user = newUser().build();
+        when(registrationService.createUserProfileStatus(user.getId())).thenReturn(serviceSuccess());
+        mockMvc.perform(
+                post("/user/user-profile-status/" + user.getId())).andExpect(status().isCreated());
+
+        verify(registrationService).createUserProfileStatus(user.getId());
+    }
 }

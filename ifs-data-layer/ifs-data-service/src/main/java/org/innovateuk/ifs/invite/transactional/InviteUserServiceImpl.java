@@ -326,7 +326,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     }
 
     @Override
-    public ServiceResult<List<RoleInviteResource>> findExternalInvitesByEmail(UserResource user) {
+    public ServiceResult<List<RoleInviteResource>> findExternalInvitesByUser(UserResource user) {
         return serviceSuccess(roleInviteRepository.getByUserId(user.getId()).stream().map(roleInviteMapper::mapToResource).collect(Collectors.toList()));
     }
 
