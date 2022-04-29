@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class SearchInformationFormPopulatorTest {
     @Test
     public void testPopulate() {
         PublicContentResource resource = newPublicContentResource()
+                .withCompetitionId(1L)
                 .withProjectFundingRange(FUNDING_RANGE)
                 .withEligibilitySummary(ELIGIBILITY_SUMMARY)
                 .withKeywords(KEYWORDS)
