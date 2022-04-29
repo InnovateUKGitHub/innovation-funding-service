@@ -17,9 +17,9 @@ public class ClamAvScanProvider implements VirusScanProvider {
 
     public VirusScanResult scanFile(byte[] fileBytes) throws IOException {
         ClamAVClient clamAVClient = new ClamAVClient(
-            virusScanConfigurationProperties.getClamAv().getVirusScanHost(),
-                virusScanConfigurationProperties.getClamAv().getVirusScanPort(),
-                    virusScanConfigurationProperties.getClamAv().getVirusScanTimeout()
+            virusScanConfigurationProperties.getClamAv().getHost(),
+                virusScanConfigurationProperties.getClamAv().getPort(),
+                    virusScanConfigurationProperties.getClamAv().getTimeout()
             );
         return mapResult(clamAVClient.scan(fileBytes));
     }

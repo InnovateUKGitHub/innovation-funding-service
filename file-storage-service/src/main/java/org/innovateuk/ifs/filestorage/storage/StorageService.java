@@ -26,6 +26,12 @@ public class StorageService {
     private WritableStorageProvider writableStorageProvider;
 
     public FileUploadResponse fileUpload(FileUploadRequest fileUploadRequest) throws IOException {
+        // add db entry
+        // virus check
+        // update virus details in db
+        // store with provider
+        // update details of storage in db
+        // return response
         return null;//writableStorageProvider.saveFile(fileUploadRequest);
     }
 
@@ -33,6 +39,7 @@ public class StorageService {
         // support multiple sources until migration completes
         for (ReadableStorageProvider storageProvider : readableStorageProviders) {
             if (storageProvider.fileExists(uuid)) {
+
                 return null;//Optional.of(storageProvider.readFile(uuid));
             }
         }

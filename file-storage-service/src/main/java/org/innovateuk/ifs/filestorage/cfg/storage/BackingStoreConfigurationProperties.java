@@ -40,7 +40,7 @@ public class BackingStoreConfigurationProperties {
         private String awsAccessKey;
         private String awsSecretKey;
         private String awsRegion;
-        private String s3Bucket;
+        private String fileStoreS3Bucket;
 
     }
 }

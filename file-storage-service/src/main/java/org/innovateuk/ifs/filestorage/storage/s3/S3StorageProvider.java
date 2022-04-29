@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.filestorage.storage.s3;
 
+import com.amazonaws.services.s3.AmazonS3;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
-import org.innovateuk.ifs.filestorage.cfg.FileStorageConfigurationProperties;
+import org.innovateuk.ifs.filestorage.cfg.storage.BackingStoreConfigurationProperties;
 import org.innovateuk.ifs.filestorage.storage.ReadableStorageProvider;
 import org.innovateuk.ifs.filestorage.storage.WritableStorageProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,10 @@ import java.util.Optional;
 public class S3StorageProvider implements ReadableStorageProvider, WritableStorageProvider {
 
     @Autowired
-    private FileStorageConfigurationProperties fileStorageConfigurationProperties;
+    private BackingStoreConfigurationProperties backingConfig;
 
+    @Autowired
+    private AmazonS3 amazonS3;
 
     @Override
     public Optional<byte[]> readFile(String uuid) throws IOException {
@@ -22,6 +25,9 @@ public class S3StorageProvider implements ReadableStorageProvider, WritableStora
 
     @Override
     public boolean fileExists(String uuid) throws IOException {
+        if (amazonS3.doesBucketExistV2(backingConfig.getS3().getFileStoreS3Bucket())) {
+            return amazonS3.doesObjectExist(backingConfig.getS3().getFileStoreS3Bucket(), uuid);
+        }
         return false;
     }
 

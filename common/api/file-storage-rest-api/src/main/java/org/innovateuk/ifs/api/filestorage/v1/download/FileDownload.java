@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 public interface FileDownload {
 
     @GetMapping("/{uuid}")
-    ResponseEntity<FileDownloadResponse> fileByUuid(@PathVariable("uuid") final String uuid);
+    ResponseEntity<Object> fileByUuid(@PathVariable("uuid") final String uuid);
 
 }

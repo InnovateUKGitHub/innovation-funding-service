@@ -3,6 +3,9 @@ apply from: rootProject.file("gradle-support/jib.gradle")
 
 dependencies {
 
+    implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.837')
+    implementation 'com.amazonaws:aws-java-sdk-s3'
+
     implementation project(':common:api:file-storage-rest-api')
 
     implementation 'fi.solita.clamav:clamav-client:1.0.1'
