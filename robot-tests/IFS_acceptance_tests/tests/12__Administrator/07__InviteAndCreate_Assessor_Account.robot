@@ -75,7 +75,7 @@ Admin can add a new assessor role to existing applicant
     And the user clicks the button/link             jQuery = button:contains("Confirm role profile")
     And the user clicks the button/link             jQuery = button:contains("Save and return")
     And search for an existing user                 ann.kelly@gmail.com
-    Then the user should see the element            jQuery = span:contains("Assessor, Applicant")
+    Then the user should see the element            jQuery = span:contains("Applicant, Assessor")
 
 Admin can view role profile of an assessor
     [Documentation]  IFS-11789
@@ -100,6 +100,12 @@ Admin can view the new assessor in invite assessors page of an existing competit
     And the user enters text to a text field    id = assessorNameFilter  alome
     And the user clicks the button/link         id = assessor-filter-button
     Then the user should see the element        jQuery = td:contains("alome lolome")+td+ td:contains("Biosciences")
+
+Admin can view an existing applicat with new assessor role in invite assessors page of an existing competiton
+    [Documentation]  IFS-11789
+    When the user enters text to a text field   id = assessorNameFilter  Ann Kelly
+    And the user clicks the button/link         id = assessor-filter-button
+    Then the user should see the element        jQuery = td:contains("Ann Kelly")+td+td:contains("")
 
 Competiton admin can view new assessor status
     [Documentation]  IFS-11788
