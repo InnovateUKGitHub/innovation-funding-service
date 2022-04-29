@@ -1,13 +1,15 @@
 package org.innovateuk.ifs.api.filestorage.v1.upload;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.springframework.util.MimeType;
 
 import java.util.UUID;
 
 @Data
-@AllArgsConstructor
+@Builder
+@Accessors(fluent = true)
 public final class FileUploadResponse {
 
     /** uuid reference for the file */

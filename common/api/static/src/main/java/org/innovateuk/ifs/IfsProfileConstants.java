@@ -39,6 +39,15 @@ public class IfsProfileConstants {
     public static final String REDIS_STANDALONE_CACHE = "REDIS_STANDALONE_CACHE";
     public static final String REDIS_CLUSTER_CACHE = "REDIS_CLUSTER_CACHE";
 
+    /**
+     * File Storage Profiles
+     */
+    public static final String STUB_AV_SCAN = "STUB_AV_SCAN";
+    public static final String NOT_STUB_AV_SCAN = "!" + STUB_AV_SCAN;
 
+    public static final String LOCAL_STORAGE = "LOCAL_STORAGE";
+    public static final String NOT_LOCAL_STORAGE = "!" + LOCAL_STORAGE;
+    public static final String GLUSTER_STORAGE = "GLUSTER_STORAGE";
+    public static final String S3_STORAGE = "S3_STORAGE";
 
 }

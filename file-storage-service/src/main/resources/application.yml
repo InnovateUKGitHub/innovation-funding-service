@@ -1,0 +1,10 @@
+ifs:
+  filestorage:
+    virusscan:
+      clamAv:
+        host: clam-av
+        port: 8080
+        timeout: 500
+    storage:
+      localStorage:
+        rootFolderPath: "/tmp"
