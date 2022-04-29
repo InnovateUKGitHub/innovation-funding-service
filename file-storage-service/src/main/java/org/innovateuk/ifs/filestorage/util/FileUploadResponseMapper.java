@@ -17,7 +17,7 @@ public class FileUploadResponseMapper {
                 .mimeType(fileUploadRequest.mimeType())
                 .fileSizeBytes(fileUploadRequest.fileSizeBytes())
                 .fileName(fileUploadRequest.fileName())
-                .checksum(fileUploadRequest.checksum()).build();
+                .checksum(fileUploadRequest.md5Checksum()).build();
     }
 
 }
