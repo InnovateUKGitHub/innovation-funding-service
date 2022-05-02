@@ -215,5 +215,4 @@ public enum HorizonWorkProgramme {
     public String getProgrammeDisplayName() {
        return this.getWorkProgramme().getDisplay();
     }
-
 }
