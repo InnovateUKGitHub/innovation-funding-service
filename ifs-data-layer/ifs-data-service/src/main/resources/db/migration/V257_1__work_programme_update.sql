@@ -1,5 +1,5 @@
 ALTER TABLE application_horizon_work_programme
-    MODIFY COLUMN work_programme(
+    MODIFY COLUMN work_programme ENUM(
 
     'CL2',
     'CL3',
