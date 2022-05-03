@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clam-av
+spec:
+  replicas: 1
+  minReadySeconds: 30
+  selector:
+    matchLabels:
+      app: clam-av
+  template:
+    metadata:
+      labels:
+        app: clam-av
+    spec:
+      containers:
+        - name: clam-av
+          image: mkodockx/docker-clamav:buster
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3310

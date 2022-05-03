@@ -7,6 +7,7 @@ commonAnnotations:
 
 components:
   - ../../../components/sba
+  - ../../../components/clamav
   - ../../../components/mail
   - ../../../components/sil-stub
   - ../../../components/ifs-database
