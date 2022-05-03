@@ -89,7 +89,7 @@
                         Subject
                     </label>
                     <input
-                        th:unless="${model.isHesta()}"
+                        th:unless="${model.isHorizonEurope()}"
                         class="govuk-input"
                         id="subject"
                         type="text"
@@ -98,12 +98,12 @@
                         '<competition name>: Notification regarding your submission <application number>: <application title>' :
                         'Important message about your application \'[application name]\' for the competition \'[competition name]\''" />
                     <input
-                        th:if="${model.isHesta()}"
+                        th:if="${model.isHorizonEurope()}"
                         class="govuk-input"
                         id="subject"
                         type="text"
                         readonly="readonly"
-                        value="<application number>: update about your Horizon Europe UK Application Registration for government-backed funding" />
+                        value="<application number>: update about your Horizon Europe Guarantee application" />
                 </div>
 
                 <div class="govuk-form-group">

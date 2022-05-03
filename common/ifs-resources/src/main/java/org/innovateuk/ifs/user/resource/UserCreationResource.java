@@ -37,6 +37,8 @@ public class UserCreationResource {
     }
     private boolean addLiveProjectUserRole;
 
+    private Long projectId;
+
     public String getFirstName() {
         return firstName;
     }
@@ -144,6 +146,14 @@ public class UserCreationResource {
         this.addLiveProjectUserRole = addLiveProjectUserRole;
     }
 
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+
     public UserResource toUserResource() {
         UserResource user = new UserResource();
 
@@ -178,7 +188,7 @@ public class UserCreationResource {
         private Long inviteId;
         private Long applicationId;
         private boolean addLiveProjectUserRole;
-
+        private Long projectId;
 
         private UserCreationResourceBuilder() {
         }
@@ -261,6 +271,11 @@ public class UserCreationResource {
             return this;
         }
 
+        public UserCreationResourceBuilder withProjectId(Long projectId) {
+            this.projectId = projectId;
+            return this;
+        }
+
         public UserCreationResource build() {
             UserCreationResource userCreationResource = new UserCreationResource();
             userCreationResource.setFirstName(firstName);
@@ -278,6 +293,7 @@ public class UserCreationResource {
             userCreationResource.setApplicationId(applicationId);
             userCreationResource.setInviteId(inviteId);
             userCreationResource.setAddLiveProjectUserRole(addLiveProjectUserRole);
+            userCreationResource.setProjectId(projectId);
 
             return userCreationResource;
         }
