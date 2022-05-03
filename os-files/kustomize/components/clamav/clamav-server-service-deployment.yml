@@ -1,20 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: clam-av
+  name: clamav
+  annotations:
+    pullSecrets: pullSecrets
 spec:
   replicas: 1
   minReadySeconds: 30
   selector:
     matchLabels:
-      app: clam-av
+      app: clamav
   template:
     metadata:
       labels:
-        app: clam-av
+        app: clamav
     spec:
       containers:
-        - name: clam-av
+        - name: clamav
           image: docker-ifs.devops.innovateuk.org/releases/clamav:1.0
           imagePullPolicy: IfNotPresent
           ports:
