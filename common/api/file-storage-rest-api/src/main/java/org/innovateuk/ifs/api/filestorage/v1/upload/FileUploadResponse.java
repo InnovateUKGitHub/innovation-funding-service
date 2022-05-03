@@ -19,7 +19,7 @@ public final class FileUploadResponse {
     private final VirusScanStatus virusScanStatus;
 
     /** Result of the virus scan from provided scanner */
-    private final String virusScanResult;
+    private final String virusScanResultMessage;
 
     /** The file type */
     private final MimeType mimeType;
@@ -31,6 +31,6 @@ public final class FileUploadResponse {
     private final String fileName;
 
     /** The file checksum */
-    private final String checksum;
+    private final String md5Checksum;
 
 }

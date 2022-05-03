@@ -9,6 +9,7 @@ import org.innovateuk.ifs.filestorage.util.FileUploadResponseMapper;
 import org.innovateuk.ifs.filestorage.util.TestHelper;
 import org.innovateuk.ifs.filestorage.virusscan.VirusScanResult;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -33,6 +34,7 @@ class StorageUploadControllerTest {
     private StorageService storageService;
 
     @Test
+    @ResourceLock("LOCK")
     void testUpload() throws IOException {
         FileUploadRequest fileUploadRequest = TestHelper.build();
         when(storageService.fileUpload(fileUploadRequest)).thenReturn(FileUploadResponseMapper.build(fileUploadRequest,
@@ -40,11 +42,12 @@ class StorageUploadControllerTest {
 
         ResponseEntity<FileUploadResponse> responseResponseEntity = storageUploadController.fileUpload(fileUploadRequest);
         assertThat(responseResponseEntity.getStatusCode(), equalTo(HttpStatus.OK));
-        assertThat(responseResponseEntity.getBody().checksum(), equalTo(fileUploadRequest.md5Checksum()));
+        assertThat(responseResponseEntity.getBody().md5Checksum(), equalTo(fileUploadRequest.md5Checksum()));
     }
 
 
     @Test
+    @ResourceLock("LOCK")
     void testUploadFail() throws IOException {
         FileUploadRequest fileUploadRequest = TestHelper.build();
         when(storageService.fileUpload(fileUploadRequest)).thenThrow(new IOException("Mock Test Exception"));

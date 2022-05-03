@@ -39,13 +39,13 @@ public class TestHelper {
         byte[] payload = ByteStreams.toByteArray(resource.getInputStream());
         return FileDownloadResponse.builder()
                 .payload(payload)
-                .checksum(FileHashing.fileHash64(payload))
+                .md5Checksum(FileHashing.fileHash64(payload))
                 .fileName(resource.getFilename())
-                .fileId(uuid)
-                .mimeType(IMAGE_JPEG)
+                .fileId(uuid.toString())
+                .mimeType(IMAGE_JPEG.toString())
                 .fileSizeBytes(payload.length)
-                .virusScanStatus(virusScanResult.virusScanStatus())
-                .virusScanResult(virusScanResult.virusScanResultMessage())
+                .virusScanStatus(virusScanResult.virusScanStatus().toString())
+                .virusScanResultMessage(virusScanResult.virusScanResultMessage())
                 .build();
     }
 
