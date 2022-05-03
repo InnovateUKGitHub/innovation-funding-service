@@ -660,7 +660,8 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         NotificationTarget notificationTarget = new UserNotificationTarget(expectedRoleInvite.getName(), expectedRoleInvite.getEmail());
 
-        Map<String, Object> emailTemplateArgs = asMap("role", role.getDisplayName().toLowerCase(),
+        String forAssessor = role.isAssessor() ? "an" : "a";
+        Map<String, Object> emailTemplateArgs = asMap("isAssessor",forAssessor, "role", role.getDisplayName().toLowerCase(),
                 "inviteUrl", "base/registration/1234/register");
 
         Notification expectedNotification = new Notification(systemNotificationSource, notificationTarget, INVITE_EXTERNAL_USER, emailTemplateArgs);
@@ -759,8 +760,8 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         when(innovationAreaRepositoryMock.findById(innovationArea.getId())).thenReturn(Optional.of(innovationArea));
 
         NotificationTarget notificationTarget = new UserNotificationTarget(expectedRoleInvite.getName(), expectedRoleInvite.getEmail());
-
-        Map<String, Object> emailTemplateArgs = asMap("role", role.getDisplayName().toLowerCase(),
+        String forAssessor = role.isAssessor() ? "an" : "a";
+        Map<String, Object> emailTemplateArgs = asMap("isAssessor", forAssessor, "role", role.getDisplayName().toLowerCase(),
                 "inviteUrl", "base/registration/1234/register");
 
         Notification expectedNotification = new Notification(systemNotificationSource, notificationTarget, INVITE_EXTERNAL_USER, emailTemplateArgs);
