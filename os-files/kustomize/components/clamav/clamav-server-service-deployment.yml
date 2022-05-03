@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: clam-av
-          image: mkodockx/docker-clamav:buster
+          image: docker-ifs.devops.innovateuk.org/releases/clamav:1.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3310
