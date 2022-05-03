@@ -89,7 +89,7 @@
                         Subject
                     </label>
                     <input
-                        th:unless="${model.isHorizonEurope()}"
+                        th:unless="${model.isHorizonEurope() || model.isDirectAward()}"
                         class="govuk-input"
                         id="subject"
                         type="text"
@@ -104,6 +104,13 @@
                         type="text"
                         readonly="readonly"
                         value="<application number>: update about your Horizon Europe Guarantee application" />
+                    <input
+                            th:if="${model.isDirectAward()}"
+                            class="govuk-input"
+                            id="subject"
+                            type="text"
+                            readonly="readonly"
+                            value="Important message about your application '[application name]' for the award '[competition name]'"/>
                 </div>
 
                 <div class="govuk-form-group">

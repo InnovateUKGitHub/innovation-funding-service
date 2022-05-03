@@ -115,6 +115,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean subsidyControl;
     private boolean hasBusinessAndFinancialInformationQuestion;
     private CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource;
+    private boolean isDirectAward;
 
     public CompetitionResource() {
     }
@@ -196,6 +197,11 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     @JsonIgnore
     public boolean isThirdPartyOfgem() {
         return competitionTypeEnum == CompetitionTypeEnum.OFGEM;
+    }
+
+    @JsonIgnore
+    public boolean isDirectAward() {
+        return competitionTypeEnum == CompetitionTypeEnum.DIRECT_AWARD;
     }
 
     @JsonIgnore
@@ -963,6 +969,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(subsidyControl, that.subsidyControl)
                 .append(assessmentPeriods, that.assessmentPeriods)
                 .append(competitionThirdPartyConfigResource, that.competitionThirdPartyConfigResource)
+                .append(isDirectAward, that.isDirectAward)
                 .isEquals();
     }
 
@@ -1031,6 +1038,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(subsidyControl)
                 .append(assessmentPeriods)
                 .append(competitionThirdPartyConfigResource)
+                .append(isDirectAward)
                 .toHashCode();
     }
 
