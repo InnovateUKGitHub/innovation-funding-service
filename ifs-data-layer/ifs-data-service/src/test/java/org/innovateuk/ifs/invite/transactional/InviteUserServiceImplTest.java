@@ -2,6 +2,8 @@ package org.innovateuk.ifs.invite.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.builder.RoleInviteBuilder;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
@@ -51,6 +53,7 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -112,6 +115,9 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     private static String ktaUserEmailDomain = "ktn-uk.org";
 
     private UserResource invitedUser = null;
+
+    @Mock
+    private InnovationAreaRepository innovationAreaRepositoryMock;
 
     @Before
     public void setUp() {
@@ -722,5 +728,56 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         // The one without pre-exiting organisation has name set correctly
         assertEquals("zz@email.com", result.getSuccess().get(4).getEmail());
         assertEquals("Rolls Royce Plc", result.getSuccess().get(4).getOrganisationName());
+    }
+
+    @Test
+    public void saveAssessorUserInviteSucceeds() throws Exception {
+        InnovationArea innovationArea = newInnovationArea().withName("innovation area").build();
+        invitedUser = UserResourceBuilder.newUserResource()
+                .withFirstName("Assessor")
+                .withLastName("Test")
+                .withEmail("assessor.test.org")
+                .build();
+
+        Role role = ASSESSOR;
+        RoleInvite expectedRoleInvite = newRoleInvite().
+                withEmail("assessor.test.org").
+                withName("Assessor Test").
+                withRole(role).
+                withInnovationArea(innovationArea).
+                withStatus(CREATED).
+                withHash("1234").
+                build();
+
+        when(roleInviteRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
+
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
+
+        when(roleInviteRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
+
+        when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
+        when(innovationAreaRepositoryMock.findById(innovationArea.getId())).thenReturn(Optional.of(innovationArea));
+
+        NotificationTarget notificationTarget = new UserNotificationTarget(expectedRoleInvite.getName(), expectedRoleInvite.getEmail());
+
+        Map<String, Object> emailTemplateArgs = asMap("role", role.getDisplayName().toLowerCase(),
+                "inviteUrl", "base/registration/1234/register");
+
+        Notification expectedNotification = new Notification(systemNotificationSource, notificationTarget, INVITE_EXTERNAL_USER, emailTemplateArgs);
+
+        when(notificationService.sendNotificationWithFlush(expectedNotification, EMAIL)).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> result = service.saveAssessorInvite(invitedUser, role, expectedRoleInvite.getInnovationArea().getId());
+
+        assertTrue(result.isSuccess());
+
+        verify(roleInviteRepositoryMock, times(2)).save(roleInviteArgumentCaptor.capture());
+
+        List<RoleInvite> captured = roleInviteArgumentCaptor.getAllValues();
+        assertEquals("assessor.test.org", captured.get(0).getEmail());
+        assertEquals("Assessor Test", captured.get(0).getName());
+        assertEquals(role, captured.get(0).getTarget());
+        assertEquals(CREATED, captured.get(0).getStatus());
+        assertNotNull(captured.get(1).getSentOn());
     }
 }

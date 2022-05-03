@@ -94,7 +94,7 @@ public class ProjectRegistrationController {
                 return restSuccess(REGISTRATION_REGISTER_VIEW);
             }
 
-            ServiceResult<String> result = createUser(registrationForm, invite.getOrganisation())
+            ServiceResult<String> result = createUser(registrationForm, invite.getOrganisation(), invite.getProject())
                     .andOnSuccess(newUser -> {
                         projectInviteRestService.acceptInvite(hash, newUser.getId());
                         return serviceSuccess(REGISTRATION_SUCCESS_VIEW);
@@ -113,12 +113,11 @@ public class ProjectRegistrationController {
         return userRestService.findUserByEmail(email).toOptionalIfNotFound().getSuccess().isPresent();
     }
 
-    private ServiceResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId) {
-        return userRestService.createUser(
-                registrationForm.constructUserCreationResource()
-                .withRole(Role.APPLICANT)
-                .withOrganisationId(organisationId)
-                .build())
-                .toServiceResult();
+    private ServiceResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId, Long projectId) {
+        return userRestService.createUser(registrationForm.constructUserCreationResource()
+                        .withRole(Role.APPLICANT)
+                        .withOrganisationId(organisationId)
+                        .withProjectId(projectId)
+                        .build()).toServiceResult();
     }
 }

@@ -14,6 +14,8 @@ public class InviteUserResource {
 
     private Role role;
 
+    private long innovationAreaId;
+
     public InviteUserResource(UserResource invitedUser, String organisation, Role role) {
         this.invitedUser = invitedUser;
         this.organisation = organisation;
@@ -55,5 +57,13 @@ public class InviteUserResource {
 
     public void setOrganisation(String organisation) {
         this.organisation = organisation;
+    }
+
+    public long getInnovationAreaId() {
+        return innovationAreaId;
+    }
+
+    public void setInnovationAreaId(long innovationAreaId) {
+        this.innovationAreaId = innovationAreaId;
     }
 }

@@ -220,23 +220,17 @@ public class UserController {
                     Long inviteId = Optional.ofNullable(extraInfo).isPresent() ? extraInfo.asLong() : null;
 
                     registrationService.activateApplicantAndSendDiversitySurvey(token.getClassPk(), inviteId).andOnSuccessReturnVoid(v -> {
-                        ServiceResult<ApplicationResource> applicationResourceServiceResult = tokenService.handleExtraAttributes(token);
-
-                        applicationResourceServiceResult.andOnSuccessReturnVoid(
-                                applicationResource -> crmService.syncCrmContact(token.getClassPk(), applicationResource.getCompetition(), applicationResource.getId()));
-
-                        applicationResourceServiceResult.andOnFailure(
-                                failure -> {
-                                    //no Application Resource created
-                                    crmService.syncCrmContact(token.getClassPk());
-                                }
-                        );
+                        tokenService.handleApplicationExtraAttributes(token)
+                                .andOnSuccess(applicationResource -> crmService.syncCrmContact(token.getClassPk(), applicationResource.getCompetition(), applicationResource.getId()))
+                                .andOnFailure(() -> tokenService.handleProjectExtraAttributes(token)
+                                        .andOnSuccess(projectResource -> crmService.syncCrmContact(token.getClassPk(), projectResource.getId()))
+                                        .andOnFailure(() -> crmService.syncCrmContact(token.getClassPk()))
+                                );
                         tokenService.removeToken(token);
-
                     });
+
                     return restSuccess();
                 });
-
     }
 
     @PutMapping("/" + URL_RESEND_EMAIL_VERIFICATION_NOTIFICATION + "/{emailAddress}/")
