@@ -3,6 +3,3 @@ kind: Component
 resources:
   - clamav-server-service.yml
   - clamav-server-service-deployment.yml
-
-
-
