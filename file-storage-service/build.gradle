@@ -1,5 +1,6 @@
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/jib.gradle")
+apply from: rootProject.file("gradle-support/junit5.gradle")
 
 dependencies {
 
@@ -21,11 +22,4 @@ dependencies {
     testImplementation "com.h2database:h2"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-    testImplementation('org.mockito:mockito-junit-jupiter')
-}
-
-test {
-    useJUnitPlatform()
 }
