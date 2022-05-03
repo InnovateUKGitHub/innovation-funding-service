@@ -119,7 +119,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
         if (shouldSendVerificationEmail(user)) {
             result = result
-                    .andOnSuccess(savedUser -> sendUserVerificationEmail(ofNullable(user.getCompetitionId()), ofNullable(user.getOrganisationId()), ofNullable(user.getInviteId()), savedUser));
+                    .andOnSuccess(savedUser -> sendUserVerificationEmail(ofNullable(user.getCompetitionId()), ofNullable(user.getOrganisationId()),
+                            ofNullable(user.getInviteId()), ofNullable(user.getProjectId()), savedUser));
         }
         if (shouldBePending(user)) {
             result = result.andOnSuccess(this::saveUserAsPending);
@@ -244,8 +245,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         });
     }
 
-    private ServiceResult<User> sendUserVerificationEmail(Optional<Long> competitionId, Optional<Long> organisationId, Optional<Long> inviteId, User user) {
-        return registrationNotificationService.sendUserVerificationEmail(userMapper.mapToResource(user), competitionId, organisationId, inviteId).
+    private ServiceResult<User> sendUserVerificationEmail(Optional<Long> competitionId, Optional<Long> organisationId,
+                                                          Optional<Long> inviteId, Optional<Long> projectId, User user) {
+        return registrationNotificationService.sendUserVerificationEmail(userMapper.mapToResource(user), competitionId, organisationId, inviteId, projectId).
                 andOnSuccessReturn(() -> user);
     }
 

@@ -86,10 +86,21 @@ public class TokenServiceSecurityTest extends BaseServiceSecurityTest<TokenServi
     }
 
     @Test
-    public void handleExtraAttributes() throws Exception {
+    public void handleApplicationExtraAttributes() {
         final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L, "hash", now(), JsonNodeFactory.instance.objectNode());
         assertAccessDenied(
-                () -> classUnderTest.handleExtraAttributes(token),
+                () -> classUnderTest.handleApplicationExtraAttributes(token),
+                () -> {
+                    verify(tokenRules, times(1)).systemRegistrationUserCanReadTokens(token, getLoggedInUser());
+                    verifyNoMoreInteractions(tokenRules);
+                });
+    }
+
+    @Test
+    public void handleProjectExtraAttributes() {
+        final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L, "hash", now(), JsonNodeFactory.instance.objectNode());
+        assertAccessDenied(
+                () -> classUnderTest.handleProjectExtraAttributes(token),
                 () -> {
                     verify(tokenRules, times(1)).systemRegistrationUserCanReadTokens(token, getLoggedInUser());
                     verifyNoMoreInteractions(tokenRules);
