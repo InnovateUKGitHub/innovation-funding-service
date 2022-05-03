@@ -39,7 +39,7 @@ public class TestHelper {
         byte[] payload = ByteStreams.toByteArray(resource.getInputStream());
         return FileDownloadResponse.builder()
                 .payload(payload)
-                .checksum(FileHashing.fileHash(payload))
+                .checksum(FileHashing.fileHash64(payload))
                 .fileName(resource.getFilename())
                 .fileId(uuid)
                 .mimeType(IMAGE_JPEG)

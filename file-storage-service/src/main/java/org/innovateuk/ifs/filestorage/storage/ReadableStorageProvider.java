@@ -7,6 +7,6 @@ public interface ReadableStorageProvider {
 
     Optional<byte[]> readFile(String uuid) throws IOException;
 
-    boolean fileExists(String uuid) throws IOException;
+    boolean fileExists(String uuid);
 
 }

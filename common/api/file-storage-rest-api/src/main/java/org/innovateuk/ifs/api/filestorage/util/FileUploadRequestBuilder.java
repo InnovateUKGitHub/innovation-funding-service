@@ -21,7 +21,7 @@ public class FileUploadRequestBuilder {
         return FileUploadRequest.builder()
                 .fileId(uuid)
                 .fileName(resource.getFilename())
-                .md5Checksum(FileHashing.fileHash(payload))
+                .md5Checksum(FileHashing.fileHash64(payload))
                 .mimeType(mediaType)
                 .payload(payload)
                 .fileSizeBytes(payload.length)

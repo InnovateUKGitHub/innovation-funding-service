@@ -13,7 +13,7 @@ public class GlusterStorageProvider implements ReadableStorageProvider {
     }
 
     @Override
-    public boolean fileExists(String uuid) throws IOException {
+    public boolean fileExists(String uuid) {
         return false;
     }
 }

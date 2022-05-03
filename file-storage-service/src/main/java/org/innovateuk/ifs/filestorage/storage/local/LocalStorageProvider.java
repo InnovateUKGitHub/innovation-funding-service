@@ -31,7 +31,7 @@ public class LocalStorageProvider implements ReadableStorageProvider, WritableSt
     }
 
     @Override
-    public boolean fileExists(String uuid) throws IOException {
+    public boolean fileExists(String uuid) {
         File file = Path.of(backingStoreConfigurationProperties.getLocalStorage().getRootFolderPath(), uuid).toFile();
         return file.exists();
     }

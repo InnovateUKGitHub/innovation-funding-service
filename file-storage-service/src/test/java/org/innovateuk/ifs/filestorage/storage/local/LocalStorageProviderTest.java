@@ -52,6 +52,6 @@ class LocalStorageProviderTest {
 
         Optional<byte[]> payload = localStorageProvider.readFile(fileUploadRequest.fileId().toString());
         assertThat(payload.isPresent(), equalTo(true));
-        assertThat(FileHashing.fileHash(payload.get()), equalTo(fileUploadRequest.md5Checksum()));
+        assertThat(FileHashing.fileHash64(payload.get()), equalTo(fileUploadRequest.md5Checksum()));
     }
 }
