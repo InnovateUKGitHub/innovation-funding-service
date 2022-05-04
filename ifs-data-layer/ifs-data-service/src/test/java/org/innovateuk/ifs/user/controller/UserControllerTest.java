@@ -10,15 +10,13 @@ import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteServiceImpl;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.sil.crm.resource.SilEDIStatus;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
-import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
 import org.innovateuk.ifs.user.transactional.RegistrationServiceImpl;
@@ -37,14 +35,12 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Optional;
 
 import static java.time.ZonedDateTime.now;
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.core.Is.is;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_CANNOT_BE_WITHDRAWN;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -74,20 +70,17 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     private UserAuthenticationService userAuthenticationService;
     @Mock
     private RegistrationServiceImpl registrationService;
-
     @Mock
     private BaseUserService baseuserService;
-
     @Mock
     private TokenService tokenService;
+    @Mock
+    private CrmService crmService;
 
     @Override
     protected UserController supplyControllerUnderTest() {
         return new UserController();
     }
-
-    @Mock
-    private CrmService crmService;
 
     private final SilEDIStatus silStatus = new SilEDIStatus();
     private UserResource user;
@@ -184,7 +177,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     }
 
     @Test
-    public void verifyEmailWithExtraAttributes() throws Exception {
+    public void verifyEmailWithApplicationExtraAttributes() throws Exception {
         final String hash = "8eda60ad3441ee883cc95417e2abaa036c308dd9eb19468fcc8597fb4cb167c32a7e5daf5e237385";
         final Long userId = 1L;
         final Long appId = 1L;
@@ -199,10 +192,9 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         applicationResource.setCompetition(compId);
         applicationResource.setId(appId);
 
-
-        when(tokenService.handleExtraAttributes(any())).thenReturn(serviceSuccess((applicationResource)));
+        when(crmService.syncCrmContact(userId, appId, compId)).thenReturn(serviceSuccess());
+        when(tokenService.handleApplicationExtraAttributes(any())).thenReturn(serviceSuccess((applicationResource)));
         when(registrationService.activateApplicantAndSendDiversitySurvey(anyLong(), anyLong())).thenReturn(serviceSuccess());
-
 
         mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash)
                         .header("IFS_AUTH_TOKEN", "123abc"))
@@ -210,6 +202,34 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(content().string(""));
 
         verify(crmService).syncCrmContact(userId, appId, compId);
+    }
+
+    @Test
+    public void verifyEmailWithProjectExtraAttributes() throws Exception {
+        final String hash = "8eda60ad3441ee883cc95417e2abaa036c308dd9eb19468fcc8597fb4cb167c32a7e5daf5e237385";
+        final Long userId = 1L;
+        final Long projectId = 1L;
+        final Long compId = 1L;
+
+        ObjectNode node = JsonNodeFactory.instance.objectNode();
+        node.put("inviteId", 111L);
+        final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), userId, hash, now(), node);
+        when(tokenService.getEmailToken(hash)).thenReturn(serviceSuccess((token)));
+
+        ProjectResource projectResource = new ProjectResource();
+        projectResource.setId(projectId);
+
+        when(crmService.syncCrmContact(userId, projectId)).thenReturn(serviceSuccess());
+        when(tokenService.handleProjectExtraAttributes(token)).thenReturn(serviceSuccess(projectResource));
+        when(tokenService.handleApplicationExtraAttributes(any())).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
+        when(registrationService.activateApplicantAndSendDiversitySurvey(anyLong(), anyLong())).thenReturn(serviceSuccess());
+
+        mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash)
+                        .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+
+        verify(crmService).syncCrmContact(userId,projectId);
     }
 
     @Test
@@ -222,8 +242,9 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         when(tokenService.getEmailToken(hash)).thenReturn(serviceSuccess((token)));
 
-
-        when(tokenService.handleExtraAttributes(token)).thenReturn(serviceFailure(PROJECT_CANNOT_BE_WITHDRAWN));
+        when(crmService.syncCrmContact(userId)).thenReturn(serviceSuccess());
+        when(tokenService.handleApplicationExtraAttributes(token)).thenReturn(serviceFailure(PROJECT_CANNOT_BE_WITHDRAWN));
+        when(tokenService.handleProjectExtraAttributes(token)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
         when(registrationService.activateApplicantAndSendDiversitySurvey(anyLong(), anyLong())).thenReturn(serviceSuccess());
         mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash)
                         .header("IFS_AUTH_TOKEN", "123abc"))
@@ -232,7 +253,6 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         verify(crmService).syncCrmContact(userId);
     }
-
 
     @Test
     public void verifyEmailNotFound() throws Exception {
@@ -513,10 +533,9 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         applicationResource.setCompetition(compId);
         applicationResource.setId(appId);
 
-
-        when(tokenService.handleExtraAttributes(any())).thenReturn(serviceSuccess((applicationResource)));
+        when(crmService.syncCrmContact(userId, appId, compId)).thenReturn(serviceSuccess());
+        when(tokenService.handleApplicationExtraAttributes(any())).thenReturn(serviceSuccess((applicationResource)));
         when(registrationService.activateApplicantAndSendDiversitySurvey(anyLong(), anyLong())).thenReturn(serviceSuccess());
-
 
         mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash)
                 .header("IFS_AUTH_TOKEN", "123abc"))

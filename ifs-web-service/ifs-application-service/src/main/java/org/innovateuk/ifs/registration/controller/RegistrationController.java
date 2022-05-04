@@ -192,7 +192,7 @@ public class RegistrationController {
 
         return validationHandler.failNowOrSucceedWith(
                 () -> registerForm(registrationForm, model, user, request, response),
-                () -> createUser(registrationForm, getOrganisationId(request), getCompetitionId(request), inviteId).handleSuccessOrFailure(
+                () -> createUser(registrationForm, getOrganisationId(request), getCompetitionId(request), inviteId, getProjectId(request)).handleSuccessOrFailure(
                         failure -> {
                             addValidationErrors(validationHandler, failure);
                             return registerForm(registrationForm, model, user, request, response);
@@ -318,6 +318,12 @@ public class RegistrationController {
         return registrationCookieService.getCompetitionIdCookieValue(request).orElse(null);
     }
 
+    private Long getProjectId(HttpServletRequest request) {
+        return registrationCookieService.getProjectInviteHashCookieValue(request)
+                .map(InviteAndIdCookie::getId)
+                .orElse(null);
+    }
+
     private ServiceResult<Void> acceptInvite(HttpServletRequest request, UserResource userResource) {
         Optional<String> inviteHash = registrationCookieService.getInviteHashCookieValue(request);
         if (inviteHash.isPresent()) {
@@ -344,13 +350,15 @@ public class RegistrationController {
         }
     }
 
-    private ServiceResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId, Long competitionId, Long inviteId) {
+    private ServiceResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId, Long competitionId,
+                                                   Long inviteId, Long projectId) {
         return userRestService.createUser(
                         registrationForm.constructUserCreationResource()
                                 .withOrganisationId(organisationId)
                                 .withCompetitionId(competitionId)
                                 .withRole(Role.APPLICANT)
                                 .withInviteId(inviteId)
+                                .withProjectId(projectId)
                                 .build())
                 .toServiceResult();
     }
