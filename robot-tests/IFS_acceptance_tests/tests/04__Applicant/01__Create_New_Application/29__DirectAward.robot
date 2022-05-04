@@ -1,6 +1,9 @@
 *** Settings ***
 Documentation     IFS-11682  Direct Award: New competition type
 ...
+...               IFS-11736 Direct awards - Content sweep
+...
+
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 
@@ -11,6 +14,7 @@ Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${openEndedCompName}               Open ended Direct Award competition
+${openEndedComp}                   Direct Award
 
 
 *** Test Cases ***
@@ -28,6 +32,23 @@ the user should see open ended is selected by default for direct award competiti
     When the user clicks the button/link                  link = Back to competition details
     And the user completes completion stage
     Then the user sees that the radio button is selected  alwaysOpen  true
+
+The user completes open ended competiton
+    [Documentation]  IFS-11736
+    Given the user clicks the button/link                       link = Competition details
+    And the competition admin creates open ended competition   ${business_type_id}  ${openEndedComp}  Open ended  ${compType_DirectAward}  STATE_AID  GRANT  PROJECT_SETUP  yes  50  true  collaborative
+
+Send the email invite to the assessor for the competition using new content
+    [Documentation]  IFS-9009
+    When comp admin sends invite to assesor
+    Then the user reads his email               ${webTestAssessorEmailAddress}  Invitation to be an assessor for competition: '${openEndedComp}'  We invite you to assess applications for the competition:
+
+Lead applicant creates an application and checks the dashboard content
+    [Documentation]  IFS-8850
+    Given the user logs out if they are logged in
+    And the lead user creates an always open application                                         Test   User   test.user1@gmail.com   ${applicationName}
+    When the lead user completes project details, application questions and finances sections    COMPLETE   test.user1@gmail.com
+
 
 *** Keywords ***
 Custom suite setup
