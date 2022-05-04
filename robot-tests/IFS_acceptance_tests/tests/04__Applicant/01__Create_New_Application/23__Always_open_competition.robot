@@ -320,6 +320,7 @@ Comp admin can see the open ended competition in project setup/previous dashboar
 Lead Applicant can view application successful banner message
     [Documentation]  IFS-11715
     Given log in as a different user         &{lead_applicant_credentials}
+    And the user clicks the application tile if displayed
     When the user clicks the button/link     link = ${webTestAppName}
     And the user clicks the button/link      link = view application feedback
     Then the user should see the element     jQuery = h2:contains("Congratulations, your application has been successful")

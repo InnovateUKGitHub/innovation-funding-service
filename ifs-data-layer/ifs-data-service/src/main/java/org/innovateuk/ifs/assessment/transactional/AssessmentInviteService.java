@@ -9,6 +9,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +39,11 @@ public interface AssessmentInviteService {
             description = "The System Registration user can read an invite for a given hash",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
     ServiceResult<CompetitionInviteResource> getInvite(String inviteHash);
+
+    @PreAuthorize("hasAuthority('system_registrar')")
+    @SecuredBySpring(value = "READ_INVITE_ON_INVITE_ID",
+            description = "The System Registration user can retrieve the competition invite that has been created")
+    ServiceResult<CompetitionInviteResource> getInviteByInviteId(@PathVariable long inviteId);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "READ_INVITE_ON_HASH",

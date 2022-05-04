@@ -91,6 +91,16 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     }
 
     @Test
+    public void getInviteByInviteId() {
+        CompetitionInviteResource expected = new CompetitionInviteResource();
+        long inviteId=1L;
+        expected.setCompetitionName("my competition");
+        setupGetWithRestResultAnonymousExpectations(format("%s/%s/%d", restUrl, "get-by-id", inviteId), CompetitionInviteResource.class, expected);
+        CompetitionInviteResource actual = service.getInviteByInviteId(inviteId).getSuccess();
+        assertEquals(expected, actual);
+    }
+
+    @Test
     public void openInvite() {
         CompetitionInviteResource expected = new CompetitionInviteResource();
         expected.setCompetitionName("my competition");

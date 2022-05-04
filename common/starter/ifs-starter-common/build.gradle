@@ -1,4 +1,5 @@
 apply from: rootProject.file("common/gradle-support/java.gradle")
+apply from: rootProject.file("gradle-support/junit5.gradle")
 
 dependencies {
 
@@ -8,14 +9,4 @@ dependencies {
     implementation 'org.springframework:spring-context'
     implementation 'org.springframework.boot:spring-boot'
 
-    testImplementation("org.hamcrest:hamcrest-core")
-    testImplementation("org.junit.jupiter:junit-jupiter-api")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-    testImplementation('org.mockito:mockito-junit-jupiter')
-
-}
-
-test {
-    useJUnitPlatform {
-    }
 }
