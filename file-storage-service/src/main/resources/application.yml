@@ -2,9 +2,9 @@ ifs:
   filestorage:
     virusscan:
       clamAv:
-        host: clam-av
-        port: 8080
-        timeout: 500
+        host: ${FSS_CLAM_HOST:clam-av}
+        port: ${FSS_CLAM_PORT:500}
+        timeout: ${FSS_CLAM_TIMEOUT:500}
     storage:
       localStorage:
         rootFolderPath: "/tmp"
@@ -16,9 +16,9 @@ ifs:
 
 spring:
   datasource:
-    url: ${DB_URL:jdbc:mysql://ifs-database:3306/ifs_file_storage}
-    username: ${DB_USER:root}
-    password: ${DB_PASS:password}
+    url: ${FSS_DB_URL:jdbc:mysql://ifs-database:3306/ifs_file_storage}
+    username: ${FSS_DB_USER:root}
+    password: ${FSS_DB_PASS:password}
     test-on-borrow: true
     validation-query: SELECT 1
     driver-class-name: org.mariadb.jdbc.Driver
@@ -30,3 +30,23 @@ spring:
     hibernate:
       ddl-auto: none
 
+
+management:
+  endpoints:
+    enabled-by-default: true
+    health:
+      show-details: ALWAYS
+      show-components: ALWAYS
+      enabled: true
+    info:
+      enabled: true
+    shutdown:
+      enabled: false
+    web:
+      base-path: /monitoring
+      exposure:
+        include: '*'
+        exclude: threaddump,heapdump
+  endpoint:
+    restart:
+      enabled: false

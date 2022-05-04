@@ -6,6 +6,8 @@ dependencies {
 
     implementation project(':common:api:file-storage-rest-api')
 
+    implementation project(':common:starter:ifs-starter-swagger-ui')
+
     implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.837') {
         exclude group: "commons-logging", module: "commons-logging"
     }
@@ -16,6 +18,7 @@ dependencies {
 
     implementation 'fi.solita.clamav:clamav-client:1.0.1'
 
+    implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.mariadb.jdbc:mariadb-java-client"
 

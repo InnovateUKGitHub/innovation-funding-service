@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.filestorage.web;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHeaders;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownload;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
@@ -13,6 +14,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Optional;
 
+@Slf4j
 public class StorageDownloadController implements FileDownload {
 
     @Autowired
@@ -26,7 +28,7 @@ public class StorageDownloadController implements FileDownload {
                 return ResponseEntity
                         .ok()
                         .cacheControl(CacheControl.noCache())
-                        .header(HttpHeaders.CONTENT_TYPE, fileDownloadResponse.get().mimeType().toString())
+                        .header(HttpHeaders.CONTENT_TYPE, fileDownloadResponse.get().mimeType())
                         .header(HttpHeaders.CONTENT_LENGTH, String.valueOf(fileDownloadResponse.get().fileSizeBytes()))
                         .header("Content-Disposition", "attachment; filename=\"" + fileDownloadResponse.get().fileName() + "\"")
                         .body(new ByteArrayInputStream(fileDownloadResponse.get().payload()));

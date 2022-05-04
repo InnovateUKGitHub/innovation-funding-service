@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController(ApiVersion.VERSION_ONE + "/download")
+@RestController
 public interface FileDownload {
 
-    @GetMapping("/{uuid}")
+    @GetMapping(ApiVersion.VERSION_ONE + "/download/{uuid}")
     ResponseEntity<Object> fileByUuid(@PathVariable("uuid") final String uuid);
 
 }
