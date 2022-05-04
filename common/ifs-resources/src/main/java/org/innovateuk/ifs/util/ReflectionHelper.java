@@ -19,14 +19,17 @@ import java.lang.reflect.Method;
  * it plays havoc with the AutoConfiguration.
  *
  * @deprecated Don't believe the ReflectionTestUtil was ever deemed ok to be used in main code in
- * the first palace. Not sure if it would be easy to replace though.
+ * the first place. Not sure if it would be easy to replace though.
  */
+@Deprecated
 public class ReflectionHelper {
 
     private static final String SETTER_PREFIX = "set";
 
-    private static final boolean springAopPresent = ClassUtils.isPresent(
+    private static final boolean SPRING_AOP_PRESENT = ClassUtils.isPresent(
             "org.springframework.aop.framework.Advised", ReflectionHelper.class.getClassLoader());
+
+    private ReflectionHelper() {}
 
     public static void setField(Object targetObject, String name, @Nullable Object value) {
         setField(targetObject, name, value, null);
@@ -92,7 +95,7 @@ public class ReflectionHelper {
         Assert.isTrue(targetObject != null || targetClass != null,
                 "Either targetObject or targetClass for the field must be specified");
 
-        if (targetObject != null && springAopPresent) {
+        if (targetObject != null && SPRING_AOP_PRESENT) {
             targetObject = getUltimateTargetObject(targetObject);
         }
         if (targetClass == null) {
@@ -125,7 +128,7 @@ public class ReflectionHelper {
         Assert.isTrue(targetObject != null || targetClass != null,
                 "Either targetObject or targetClass for the field must be specified");
 
-        if (targetObject != null && springAopPresent) {
+        if (targetObject != null && SPRING_AOP_PRESENT) {
             targetObject = getUltimateTargetObject(targetObject);
         }
         if (targetClass == null) {
@@ -162,7 +165,7 @@ public class ReflectionHelper {
                 }
             }
         }
-        catch (Throwable ex) {
+        catch (Exception ex) {
             throw new IllegalStateException("Failed to unwrap proxied object", ex);
         }
         return (T) candidate;
