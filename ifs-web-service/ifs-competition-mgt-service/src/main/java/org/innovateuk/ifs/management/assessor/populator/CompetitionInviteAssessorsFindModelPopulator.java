@@ -61,7 +61,7 @@ public class CompetitionInviteAssessorsFindModelPopulator extends CompetitionInv
         return new CompetitionAvailableAssessorRowViewModel(
                 availableAssessorResource.getId(),
                 availableAssessorResource.getName(),
-                availableAssessorResource.getInnovationAreas(),
+                availableAssessorResource.getInnovationAreas().isEmpty() ? getExternalAssessorsInnovationAreas(availableAssessorResource.getEmail()) : availableAssessorResource.getInnovationAreas(),
                 availableAssessorResource.isCompliant(),
                 availableAssessorResource.isValidAgreement(),
                 availableAssessorResource.isValidDoi(),

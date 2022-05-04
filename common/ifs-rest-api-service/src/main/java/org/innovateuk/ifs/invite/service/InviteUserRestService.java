@@ -19,6 +19,7 @@ public interface InviteUserRestService {
     RestResult<RoleInvitePageResource> getPendingInternalUserInvites(String filter, int pageNumber, int pageSize);
     RestResult<List<ExternalInviteResource>> findExternalInvites(String searchString, SearchCategory searchCategory);
     RestResult<Void> resendInternalUserInvite(long inviteId);
+    RestResult<List<RoleInviteResource>> findExternalInvitesByEmail(String email);
 }
 
 
