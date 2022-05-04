@@ -25,6 +25,7 @@ Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
 ${assessorScoreComp}                 Living models for the future
+${assessorScoreCompId}               ${competition_ids['${assessorScoreComp}']}
 ${assessorScoreApplication}          Models with Virtual Reality
 ${assessorScoreApplicationId}        ${application_ids['${assessorScoreApplication}']}
 ${funders_panel_competition_url}     ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}
@@ -274,3 +275,15 @@ Assess the application and move to in notification
     the user selects the checkbox      app-row-1
     the user clicks the button/link    jQuery = button:contains("Successful")
     the user clicks the button/link    link = Competition
+
+the user set assessor score notification to yes
+    the user clicks the button/link         link = View and update competition details
+    the user clicks the button/link         link = Assessors
+    the user clicks the button/link         jQuery = button:contains("Edit")
+    the user selects the radio button       assessorCount   5
+    the user selects the radio button       hasAssessmentPanel  hasAssessmentPanel-0
+    the user selects the radio button       hasInterviewStage  hasInterviewStage-0
+    the user selects the radio button       averageAssessorScore  averageAssessorScore-0
+    the user clicks the button/link         jQuery = button:contains("Done")
+    ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots   page should contain element    jQuery = dt:contains("average assessor score") + dd:contains("Yes")
+    Run Keyword If  '${status}' == 'FAIL'  Run keywords    the user navigates to the page   ${server}/management/competition/setup/${assessorScoreCompId}/section/assessors
