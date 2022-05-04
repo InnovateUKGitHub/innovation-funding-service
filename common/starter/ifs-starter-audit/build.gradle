@@ -1,9 +1,5 @@
 apply from: rootProject.file("common/gradle-support/java.gradle")
-
-test {
-    useJUnitPlatform {
-    }
-}
+apply from: rootProject.file("gradle-support/junit5.gradle")
 
 dependencies {
 
@@ -23,10 +19,5 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.amqp:spring-rabbit-test")
     testImplementation('com.github.fridujo:rabbitmq-mock:1.1.1')
-
-    testImplementation("org.junit.jupiter:junit-jupiter-api")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-    testImplementation('org.mockito:mockito-junit-jupiter')
-
 
 }
