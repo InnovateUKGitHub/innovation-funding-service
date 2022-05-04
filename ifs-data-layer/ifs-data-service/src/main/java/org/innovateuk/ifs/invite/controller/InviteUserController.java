@@ -7,6 +7,8 @@ import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.invite.transactional.InviteUserService;
 import org.innovateuk.ifs.user.resource.SearchCategory;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -30,6 +32,9 @@ public class InviteUserController {
 
     @Autowired
     private InviteUserService inviteUserService;
+
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/save-invite")
     public RestResult<Void> saveUserInvite(@RequestBody InviteUserResource inviteUserResource) {
@@ -63,6 +68,12 @@ public class InviteUserController {
     public RestResult<List<ExternalInviteResource>> findExternalInvites(@RequestParam(value = "searchString") final String searchString,
                                                                         @RequestParam(value = "searchCategory") final SearchCategory searchCategory) {
         return inviteUserService.findExternalInvites(searchString, searchCategory).toGetResponse();
+    }
+
+    @GetMapping("/get-by-email/{email}")
+    public RestResult<List<RoleInviteResource>> findExternalInvitesByEmail(@PathVariable("email") String email) {
+        UserResource user = userService.findByEmail(email).getSuccess();
+        return inviteUserService.findExternalInvitesByUser(user).toGetResponse();
     }
 }
 

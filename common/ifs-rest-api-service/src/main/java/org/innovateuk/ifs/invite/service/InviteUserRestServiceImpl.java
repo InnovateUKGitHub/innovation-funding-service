@@ -2,8 +2,12 @@ package org.innovateuk.ifs.invite.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
+import org.innovateuk.ifs.invite.resource.InviteUserResource;
+import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
+import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.user.resource.SearchCategory;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -54,5 +58,10 @@ public class InviteUserRestServiceImpl extends BaseRestService implements Invite
     @Override
     public RestResult<Void> resendInternalUserInvite(long inviteId) {
         return putWithRestResult(INVITE_REST_URL + "/internal/pending/" + inviteId + "/resend", Void.class);
+    }
+
+    @Override
+    public RestResult<List<RoleInviteResource>> findExternalInvitesByEmail(String email) {
+        return getWithRestResultAnonymous(format("%s/%s/%s", INVITE_REST_URL, "get-by-email", email), new ParameterizedTypeReference<List<RoleInviteResource>>() {});
     }
 }

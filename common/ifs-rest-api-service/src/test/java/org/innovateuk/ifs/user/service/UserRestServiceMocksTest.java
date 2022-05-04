@@ -4,7 +4,10 @@ import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.SearchCategory;
+import org.innovateuk.ifs.user.resource.UserOrganisationResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
@@ -12,7 +15,8 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userOrganisationListType;
 import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -167,5 +171,26 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         setupPostWithRestResultExpectations(format("%s/%s/grant/%s", USERS_URL, userId, role.name()),
                 HttpStatus.OK);
         assertTrue(service.grantRole(userId, role).isSuccess());
+    }
+
+    @Test
+    public void createUserProfileStatus() {
+        setLoggedInUser(null);
+        long userId = 1L;
+        UserResource user = newUserResource()
+                .withId(userId)
+                .withFirstName("First")
+                .withLastName("Last")
+                .withRoleGlobal(Role.ASSESSOR)
+                .withProfile(5L)
+                .build();
+
+        setupPostWithRestResultAnonymousExpectations(USERS_URL + "/user-profile-status/" + userId, Void.class, null, null, CREATED);
+
+        RestResult<Void> result = service.createUserProfileStatus(user.getId());
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(CREATED, result.getStatusCode());
     }
 }
