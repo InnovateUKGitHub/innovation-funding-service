@@ -10,11 +10,15 @@ Suite Teardown    Custom suite teardown
 Resource          ../../../resources/common/Competition_Commons.robot
 Resource          ../../../resources/keywords/MYSQL_AND_DATE_KEYWORDS.robot
 Resource          ../../../resources/defaultResources.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
+Resource          ../../../resources/common/PS_Common.robot
 
 
 *** Variables ***
-${openEndedCompName}               Open ended Direct Award competition
-${openEndedComp}                   Direct Award
+${openEndedCompName}        Open ended Direct Award competition
+${webTestCompName}          Direct award competition
+${webTestCompID}            ${competition_ids["${webTestCompName}"]}
+${applicationName}          Direct award Application
 
 
 *** Test Cases ***
@@ -33,21 +37,15 @@ the user should see open ended is selected by default for direct award competiti
     And the user completes completion stage
     Then the user sees that the radio button is selected  alwaysOpen  true
 
-The user completes open ended competiton
+the user create a new application
     [Documentation]  IFS-11736
-    Given the user clicks the button/link                       link = Competition details
-    And the competition admin creates open ended competition   ${business_type_id}  ${openEndedComp}  Open ended  ${compType_DirectAward}  STATE_AID  GRANT  PROJECT_SETUP  yes  50  true  collaborative
-
-Send the email invite to the assessor for the competition using new content
-    [Documentation]  IFS-9009
-    When comp admin sends invite to assesor
-    Then the user reads his email               ${webTestAssessorEmailAddress}  Invitation to be an assessor for competition: '${openEndedComp}'  We invite you to assess applications for the competition:
-
-Lead applicant creates an application and checks the dashboard content
-    [Documentation]  IFS-8850
     Given the user logs out if they are logged in
-    And the lead user creates an always open application                                         Test   User   test.user1@gmail.com   ${applicationName}
-    When the lead user completes project details, application questions and finances sections    COMPLETE   test.user1@gmail.com
+    And the user navigates to the page           ${server}/competition/${webTestCompID}/overview
+    When the lead user creates an application    Test   User   test.user1@gmail.com   ${applicationName}
+    Then the user should see the element         jQuery = dt:contains("Award:")
+
+the user complete
+
 
 
 *** Keywords ***
@@ -63,4 +61,19 @@ the user completes completion stage
     the user clicks the button/link     link = Milestones
     the user clicks the button twice    jQuery = label:contains("Project setup")
     the user clicks the button/link     jQuery = button:contains("Done")
+
+the lead user creates an application
+    [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
+    the user select the competition and starts application          ${webTestCompName}
+    the user clicks the button/link                                 link = Continue and create an account
+    the user selects the radio button                               organisationTypeId    radio-${BUSINESS_TYPE_ID}
+    the user clicks the button/link                                 jQuery = .govuk-button:contains("Save and continue")
+    the user selects his organisation in Companies House            ASOS  ASOS PLC
+    the user should be redirected to the correct page               ${SERVER}/registration/register
+    the user enters the details and clicks the create account       ${firstName}  ${lastName}  ${email}  ${short_password}
+    the user reads his email and clicks the link                    ${email}  Please verify your email address  Once verified you can sign into your account.
+    the user should be redirected to the correct page               ${REGISTRATION_VERIFIED}
+    the user clicks the button/link                                 link = Sign in
+    Logging in and Error Checking                                   ${email}  ${short_password}
+    the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
 
