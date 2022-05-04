@@ -8,6 +8,11 @@ ifs:
     storage:
       localStorage:
         rootFolderPath: "/tmp"
+      s3:
+        awsAccessKey:  ${FILE_STORAGE_SERVICE_S3_AWS_ACCESS_KEY}
+        awsSecretKey:  ${FILE_STORAGE_SERVICE_S3_AWS_SECRET_KEYN}
+        awsRegion: ${FILE_STORAGE_SERVICE_S3_AWS_REGION}
+        fileStoreS3Bucket: ${FILE_STORAGE_SERVICE_BUCKET}
 
 spring:
   datasource:
