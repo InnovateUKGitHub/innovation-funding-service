@@ -5,7 +5,6 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectio
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.publiccontent.modelpopulator.PublicContentMenuPopulator;
 import org.innovateuk.ifs.management.publiccontent.service.PublicContentService;
 import org.innovateuk.ifs.management.publiccontent.viewmodel.PublicContentMenuViewModel;
 import org.junit.Test;
@@ -16,14 +15,15 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentSectionResourceBuilder.newPublicContentSectionResource;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -45,17 +45,17 @@ public class PublicContentMenuPopulatorTest {
 
     @Test
     public void testPopulate() {
-        List<PublicContentSectionResource> sections = asList(PublicContentSectionType.values())
-                        .stream()
-                .map(type -> newPublicContentSectionResource().withType(type).build())
-                .collect(Collectors.toList());
+        List<PublicContentSectionResource> sections =
+                simpleMap(PublicContentSectionType.values(),
+                        type -> newPublicContentSectionResource().withType(type).build());
+
         ZonedDateTime date = ZonedDateTime.now();
         Boolean publishSetting = Boolean.FALSE;
 
         PublicContentResource publicContent = newPublicContentResource()
                 .withContentSections(sections)
                 .withPublishDate(date)
-                .withInviteOnly(publishSetting)
+                .withInviteOnly(false)
                 .build();
 
         CompetitionResource competition = newCompetitionResource().withId(COMPETITION_ID).build();
@@ -69,8 +69,40 @@ public class PublicContentMenuPopulatorTest {
         assertThat(viewModel.getCompetition(), equalTo(competition));
         assertThat(viewModel.getPublishDate(), equalTo(date));
 
-        assertThat(viewModel.isInviteOnly(), equalTo(publishSetting));
-        assertThat(viewModel.getCompetitionURL(), equalTo("https://environment/competition/" + COMPETITION_ID + "/overview"));
+        assertThat(viewModel.isInviteOnly(), equalTo(false));
+        assertThat(viewModel.getCompetitionURL(),
+                equalTo("https://environment/competition/" + COMPETITION_ID + "/overview"));
     }
 
+    @Test
+    public void populatePrivateComp() {
+        List<PublicContentSectionResource> sections =
+                simpleMap(PublicContentSectionType.values(),
+                        type -> newPublicContentSectionResource().withType(type).build());
+
+        ZonedDateTime date = ZonedDateTime.now();
+
+        PublicContentResource publicContent = newPublicContentResource()
+                .withContentSections(sections)
+                .withPublishDate(date)
+                .withInviteOnly(true)
+                .withHash("hash")
+                .build();
+
+        CompetitionResource competition = newCompetitionResource().withId(COMPETITION_ID).build();
+
+        when(publicContentService.getCompetitionById(COMPETITION_ID)).thenReturn(publicContent);
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+
+        PublicContentMenuViewModel viewModel = target.populate(competition, WEB_BASE_URL);
+
+        assertThat(viewModel.getSections(), equalTo(sections));
+        assertThat(viewModel.getCompetition(), equalTo(competition));
+        assertThat(viewModel.getPublishDate(), equalTo(date));
+
+        assertThat(viewModel.isInviteOnly(), equalTo(true));
+        assertThat(viewModel.getHash(), not(isEmptyOrNullString()));
+        assertThat(viewModel.getCompetitionURL(),
+                equalTo("https://environment/competition/" + COMPETITION_ID + "/overview/" + publicContent.getHash()));
+    }
 }

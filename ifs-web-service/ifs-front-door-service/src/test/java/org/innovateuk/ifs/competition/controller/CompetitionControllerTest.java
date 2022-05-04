@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.populator.CompetitionOverviewPopulator;
 import org.innovateuk.ifs.competition.populator.CompetitionTermsAndConditionsPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.competition.resource.FundingRules;
@@ -21,6 +22,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.builder.CompetitionThirdPartyConfigResourceBuilder.newCompetitionThirdPartyConfigResource;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -58,6 +60,90 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name("competition/overview"));
+    }
+
+    @Test
+    public void privateCompetitionOverview() throws Exception {
+
+        final long competitionId = 999L;
+        final String hash = "abc-123";
+
+        final PublicContentResource publicContent =
+                newPublicContentResource()
+                        .withHash(hash)
+                        .build();
+
+        final PublicContentItemResource publicContentItem =
+                newPublicContentItemResource()
+                        .withPublicContentResource(publicContent)
+                        .build();
+
+        final CompetitionOverviewViewModel viewModel = new CompetitionOverviewViewModel();
+
+        when(publicContentItemRestService.getItemByCompetitionId(competitionId)).thenReturn(restSuccess(publicContentItem));
+        when(overviewPopulator.populateViewModel(publicContentItem, true)).thenReturn(viewModel);
+
+        mockMvc.perform(get("/competition/{id}/overview/{hash}", competitionId, hash))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", viewModel))
+                .andExpect(view().name("competition/overview"));
+
+        verify(publicContentItemRestService).getItemByCompetitionId(competitionId);
+        verify(overviewPopulator).populateViewModel(publicContentItem, true);
+    }
+
+    @Test
+    public void privateCompetitionOverviewWithIncorrectHash() throws Exception {
+
+        final long competitionId = 999L;
+        final String hash = "abc-123";
+        final String incorrectHash = "def-456";
+
+        final PublicContentResource publicContent =
+                newPublicContentResource()
+                        .withHash(hash)
+                        .build();
+
+        final PublicContentItemResource publicContentItem =
+                newPublicContentItemResource()
+                        .withPublicContentResource(publicContent)
+                        .build();
+
+        when(publicContentItemRestService.getItemByCompetitionId(competitionId)).thenReturn(restSuccess(publicContentItem));
+
+        mockMvc.perform(get("/competition/{id}/overview/{hash}", competitionId, incorrectHash))
+                .andExpect(status().isForbidden());
+
+        verify(publicContentItemRestService).getItemByCompetitionId(competitionId);
+        verifyNoInteractions(overviewPopulator);
+    }
+
+    @Test
+    public void competitionOverviewProtectedForPrivateCompetitions() throws Exception {
+
+        final long competitionId = 999L;
+        final String hash = "abc-123";
+
+        final PublicContentResource publicContent =
+                newPublicContentResource()
+                        .withInviteOnly(true)
+                        .withHash(hash)
+                        .build();
+
+        final PublicContentItemResource publicContentItem =
+                newPublicContentItemResource()
+                        .withPublicContentResource(publicContent)
+                        .build();
+
+        final CompetitionOverviewViewModel viewModel = new CompetitionOverviewViewModel();
+
+        when(publicContentItemRestService.getItemByCompetitionId(competitionId)).thenReturn(restSuccess(publicContentItem));
+
+        mockMvc.perform(get("/competition/{id}/overview", competitionId))
+                .andExpect(status().isForbidden());
+
+        verify(publicContentItemRestService).getItemByCompetitionId(competitionId);
+        verifyNoInteractions(overviewPopulator);
     }
 
     @Test

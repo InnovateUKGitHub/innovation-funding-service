@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.controller;
 
+import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.populator.CompetitionOverviewPopulator;
 import org.innovateuk.ifs.competition.populator.CompetitionTermsAndConditionsPopulator;
@@ -55,6 +56,20 @@ public class CompetitionController {
                                       @PathVariable("competitionId") final long competitionId,
                                       UserResource loggedInUser) {
         final PublicContentItemResource publicContentItem = publicContentItemRestService.getItemByCompetitionId(competitionId).getSuccess();
+
+        model.addAttribute("model", overviewPopulator.populateViewModel(publicContentItem, loggedInUser != null));
+        return "competition/overview";
+    }
+
+    @GetMapping("overview/{hash}")
+    public String competitionOverviewWithHash(final Model model,
+                                              @PathVariable("competitionId") final long competitionId,
+                                              @PathVariable("hash") final String hash,
+                                              UserResource loggedInUser) {
+        final PublicContentItemResource publicContentItem = publicContentItemRestService.getItemByCompetitionId(competitionId).getSuccess();
+        if (!hash.equals(publicContentItem.getPublicContentResource().getHash())) {
+            throw new ForbiddenActionException();
+        }
         model.addAttribute("model", overviewPopulator.populateViewModel(publicContentItem, loggedInUser != null));
         return "competition/overview";
     }
