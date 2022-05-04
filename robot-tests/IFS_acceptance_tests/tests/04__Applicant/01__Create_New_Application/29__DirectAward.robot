@@ -26,20 +26,19 @@ the user creates a new open ended competiton
 the user should see open ended is selected by default for direct award competition type
     [Documentation]  IFS-11682
     When the user clicks the button/link                  link = Back to competition details
-    And the user completes milestones
+    And the user completes completion stage
     Then the user sees that the radio button is selected  alwaysOpen  true
 
 *** Keywords ***
 Custom suite setup
     Set predefined date variables
     Connect To Database   @{database}
-    The guest user opens the browser
 
 Custom Suite teardown
     Close browser and delete emails
     Disconnect from database
 
-the user completes milestones
+the user completes completion stage
     the user clicks the button/link     link = Milestones
     the user clicks the button twice    jQuery = label:contains("Project setup")
     the user clicks the button/link     jQuery = button:contains("Done")
