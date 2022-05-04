@@ -44,7 +44,13 @@ the user create a new application
     When the lead user creates an application    Test   User   test.user1@gmail.com   ${applicationName}
     Then the user should see the element         jQuery = dt:contains("Award:")
 
-the user complete
+the user checks the application details
+    [Documentation]  IFS-11736
+    Given the user clicks the button/link     link= Application details
+    Then the user should see the element      jQuery = dt:contains("Award:")
+
+
+
 
 
 
