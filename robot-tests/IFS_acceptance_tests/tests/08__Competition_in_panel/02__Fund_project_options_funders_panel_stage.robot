@@ -133,8 +133,6 @@ Comp Admin can set the notification email to include assessor average score
     [Documentation]  IFS-7369
     Given the user clicks the button/link  link = ${assessorScoreComp}
     When the user set assessor score notification to yes
-    # just checking to see if the redirection is timingout
-    sleep  5s
     Then the user should see the element   jQuery = dt:contains("average assessor score") + dd:contains("Yes")
 
 Notification email template includes assessor score
