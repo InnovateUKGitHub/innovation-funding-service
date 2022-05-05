@@ -9,3 +9,8 @@ spring:
     generate-ddl: false
     hibernate:
       ddl-auto: create
+ifs:
+  filestorage:
+    storage:
+      s3:
+        fileStoreS3Bucket: test-bucket
