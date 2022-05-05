@@ -11,6 +11,8 @@ import org.innovateuk.ifs.filestorage.util.FileUploadResponseMapper;
 import org.innovateuk.ifs.filestorage.util.TestHelper;
 import org.innovateuk.ifs.filestorage.virusscan.VirusScanResult;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -33,6 +35,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {StorageDownloadController.class})
 @ActiveProfiles({IfsProfileConstants.TEST})
+@Execution(ExecutionMode.SAME_THREAD)
 class StorageDownloadControllerTest {
 
     @Autowired
