@@ -503,6 +503,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 .withOrganisationId(1L)
                 .withCompetitionId(1L)
                 .withAgreedTerms(true)
+                .withProjectId(1L)
                 .build();
 
         when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restSuccess(organisation));

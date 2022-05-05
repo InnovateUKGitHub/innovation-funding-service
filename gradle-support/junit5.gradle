@@ -1,0 +1,16 @@
+test {
+    useJUnitPlatform {
+    }
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+    maxParallelForks = 1
+}
+
+dependencies {
+    testImplementation("org.hamcrest:hamcrest-core")
+    testImplementation('nl.jqno.equalsverifier:equalsverifier:3.8')
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    testImplementation('org.mockito:mockito-junit-jupiter')
+}

@@ -191,3 +191,16 @@ profiles:
       kustomize:
         paths:
           - os-files/kustomize/env/stub/local/adhoc/ifs-database
+  - name: file-storage-service
+    build:
+      artifacts:
+        - image: file-storage-service
+          context: .
+          jib:
+            type: gradle
+            project: file-storage-service
+    deploy:
+      statusCheckDeadlineSeconds: 600
+      kustomize:
+        paths:
+          - os-files/kustomize/env/stub/local/adhoc/file-storage-service

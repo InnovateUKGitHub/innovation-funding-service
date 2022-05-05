@@ -3,4 +3,4 @@ apiVersion: v1
 metadata:
   name: spring-profile-env
 data:
-  SPRING_PROFILES_ACTIVE: "dev,SIMPLE_CACHE"
+  SPRING_PROFILES_ACTIVE: "dev,SIMPLE_CACHE,LOCAL_STORAGE,STUB_AV_SCAN"

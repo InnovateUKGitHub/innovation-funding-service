@@ -12,6 +12,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -26,7 +27,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -47,6 +48,8 @@ public class RegistrationNotificationServiceTest extends BaseServiceUnitTest<Reg
 
     @Mock
     private SystemNotificationSource systemNotificationSourceMock;
+
+    private ArgumentCaptor<Token> tokenArgumentCaptor = ArgumentCaptor.forClass(Token.class);
 
     @Test
     public void testSendUserVerificationEmailNoCompetitionId() {
@@ -75,7 +78,7 @@ public class RegistrationNotificationServiceTest extends BaseServiceUnitTest<Reg
         when(tokenRepositoryMock.save(isA(Token.class))).thenReturn(newToken);
         when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
 
-        final ServiceResult<Void> result = service.sendUserVerificationEmail(userResource, empty(), empty(),empty());
+        final ServiceResult<Void> result = service.sendUserVerificationEmail(userResource, empty(), empty(),empty(), empty());
         assertTrue(result.isSuccess());
 
         verify(tokenRepositoryMock).save(isA(Token.class));
@@ -109,12 +112,13 @@ public class RegistrationNotificationServiceTest extends BaseServiceUnitTest<Reg
         when(tokenRepositoryMock.save(isA(Token.class))).thenReturn(newToken);
         when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
 
-        final ServiceResult<Void> result = service.sendUserVerificationEmail(userResource, of(456L), of(123L),of(123L));
+        final ServiceResult<Void> result = service.sendUserVerificationEmail(userResource, of(456L), of(123L), of(123L), empty());
         assertTrue(result.isSuccess());
 
         verify(tokenRepositoryMock).save(isA(Token.class));
         verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
     }
+
     @Test
     public void testSendUserVerificationEmailWithNoInviteId() {
 
@@ -142,13 +146,50 @@ public class RegistrationNotificationServiceTest extends BaseServiceUnitTest<Reg
         when(tokenRepositoryMock.save(isA(Token.class))).thenReturn(newToken);
         when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
 
-        final ServiceResult<Void> result = service.sendUserVerificationEmail(userResource, of(456L), of(123L), empty());
+        final ServiceResult<Void> result = service.sendUserVerificationEmail(userResource, of(456L), of(123L), empty(), empty());
         assertTrue(result.isSuccess());
 
         verify(tokenRepositoryMock).save(isA(Token.class));
         verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
     }
 
+    @Test
+    public void testSendUserVerificationEmailWithProjectId() {
+
+        final UserResource userResource = newUserResource()
+                .withId(1L)
+                .withFirstName("Sample")
+                .withLastName("User")
+                .withEmail("sample@me.com")
+                .build();
+
+        final String hash = "1e627a59879066b44781ca584a23be742d3197dff291245150e62f3d4d3d303e1a87d34fc8a3a2e0";
+        ReflectionTestUtils.setField(service, "passwordEncoder", passwordEncoder);
+        when(passwordEncoder.encode("1==sample@me.com==700")).thenReturn(hash);
+
+        final Token newToken = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), userResource.getId(), hash, now(), JsonNodeFactory.instance.objectNode());
+        final String verificationLink = String.format("%s/registration/verify-email/%s", webBaseUrl, hash);
+
+        final Map<String, Object> expectedNotificationArguments = asMap("verificationLink", verificationLink);
+
+        final NotificationSource from = systemNotificationSourceMock;
+        final NotificationTarget to = new UserNotificationTarget(userResource.getName(), userResource.getEmail());
+
+        final Notification notification = new Notification(from, to, RegistrationNotificationService.Notifications.VERIFY_EMAIL_ADDRESS, expectedNotificationArguments);
+        when(tokenRepositoryMock.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L)).thenReturn(empty());
+        when(tokenRepositoryMock.save(isA(Token.class))).thenReturn(newToken);
+        when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
+
+        final ServiceResult<Void> result = service.sendUserVerificationEmail(userResource, empty(), empty(), empty(), of(123L));
+        assertTrue(result.isSuccess());
+
+        verify(tokenRepositoryMock).save(tokenArgumentCaptor.capture());
+        Token token = tokenArgumentCaptor.getValue();
+        assertNotNull(token.getExtraInfo());
+        assertEquals("{\"projectId\":123}", token.getExtraInfo().toString());
+
+        verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
+    }
 
     @Test
     public void testResendUserVerificationEmail() {
