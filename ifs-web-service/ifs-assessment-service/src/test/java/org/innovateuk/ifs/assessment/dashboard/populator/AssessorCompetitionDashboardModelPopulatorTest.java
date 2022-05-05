@@ -61,7 +61,7 @@ public class AssessorCompetitionDashboardModelPopulatorTest {
                 .withCompetitionName("Competition Name")
                 .withInnovationLead("Innovation Lead")
                 .withOpenEndCompetition(false)
-                .withBatchIndex(null)
+                .withBatchIndex((Long[]) null)
                 .withAssessorAcceptDate(ZonedDateTime.now().minusDays(2))
                 .withAssessorDeadlineDate(ZonedDateTime.now().plusDays(4))
                 .withApplicationAssessments(combineLists(submittedAssessments, outstandingAssessments))

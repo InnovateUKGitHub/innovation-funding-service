@@ -92,6 +92,11 @@ profiles:
           jib:
             type: gradle
             project: ifs-tools:sba
+        - image: file-storage-service
+          context: .
+          jib:
+            type: gradle
+            project: file-storage-service
   - name: custom
     build:
       local:

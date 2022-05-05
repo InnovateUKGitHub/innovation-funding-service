@@ -5,6 +5,7 @@ commonAnnotations:
 components:
   - ../../../../components/data-layer
   - ../../../../components/registration-service
+  - ../../../../components/file-storage-service
   - ../../../../components/web-layer
   - ../../../../components/sil-stub
   - ../../../../patches/

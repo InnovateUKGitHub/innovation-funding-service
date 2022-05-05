@@ -11,8 +11,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORTER;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -49,6 +51,7 @@ public class InviteUserControllerTest extends BaseControllerMockMVCTest<InviteUs
 
     @Test
     public void selectExternalRole() throws Exception {
+        ReflectionTestUtils.setField(controller, "isAssessorPoolEnabled", false);
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/select-external-role"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/select-external-role"));
@@ -120,6 +123,24 @@ public class InviteUserControllerTest extends BaseControllerMockMVCTest<InviteUs
                 .andExpect(view().name("redirect:/admin/users/pending"));
     }
 
+    @Test
+    public void inviteExternalAssessor() throws Exception {
+        InviteUserForm expectedUserForm = new InviteUserForm();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/admin/invite-external-user")
+                        .param("role", ASSESSOR.toString()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/invite-new-user"))
+                .andExpect(model().attribute("form", expectedUserForm));
+    }
+
+    @Test
+    public void selectExternalAssessorRole() throws Exception {
+        ReflectionTestUtils.setField(controller, "isAssessorPoolEnabled", true);
+        mockMvc.perform(MockMvcRequestBuilders.get("/admin/select-external-role"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/select-external-role"));
+    }
     @Override
     protected InviteUserController supplyControllerUnderTest() {
         return new InviteUserController();

@@ -12,3 +12,4 @@ components:
   - ../../../components/registration-service
   - ../../../components/data-layer/
   - ../../../components/web-layer
+  - ../../../components/file-storage-service

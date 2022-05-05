@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.invite.domain;
 
+import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.organisation.domain.SimpleOrganisation;
 import org.innovateuk.ifs.user.domain.User;
@@ -21,6 +22,10 @@ public class RoleInvite extends Invite<Role, RoleInvite> {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private SimpleOrganisation simpleOrganisation;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="innovation_category_id", referencedColumnName = "id")
+    private InnovationArea innovationArea;
 
     public RoleInvite() {
     }
@@ -47,6 +52,14 @@ public class RoleInvite extends Invite<Role, RoleInvite> {
 
     public void setSimpleOrganisation(SimpleOrganisation simpleOrganisation) {
         this.simpleOrganisation = simpleOrganisation;
+    }
+
+    public InnovationArea getInnovationArea() {
+        return innovationArea;
+    }
+
+    public void setInnovationArea(InnovationArea innovationArea) {
+        this.innovationArea = innovationArea;
     }
 
     public RoleInvite sendOrResend(User sentBy, ZonedDateTime sentOn) {

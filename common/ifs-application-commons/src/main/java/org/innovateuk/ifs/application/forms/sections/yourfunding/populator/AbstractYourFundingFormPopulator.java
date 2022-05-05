@@ -10,6 +10,7 @@ import org.innovateuk.ifs.finance.resource.category.PreviousFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -43,10 +44,8 @@ public abstract class AbstractYourFundingFormPopulator<R extends BaseOtherFundin
             }).collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
             rows.put(generateUnsavedRowId(), new OtherFundingRowForm());
         }
-
-        Boolean otherFundingSet = isOtherFundingSet(otherFundingCategory);
-
-        form.setOtherFunding(otherFundingSet);
+        Optional<Boolean> isOtherFundingSet = isOtherFundingSet(otherFundingCategory);
+        form.setOtherFunding(isOtherFundingSet.isPresent() ? isOtherFundingSet.get() : null);
         form.setOtherFundingRows((Map<String, T>) rows);
     }
 
@@ -70,12 +69,12 @@ public abstract class AbstractYourFundingFormPopulator<R extends BaseOtherFundin
 
     }
 
-    private Boolean isOtherFundingSet(BaseOtherFundingCostCategory otherFundingCategory) {
+    private Optional<Boolean> isOtherFundingSet(BaseOtherFundingCostCategory otherFundingCategory) {
         if (otherFundingCategory.getOtherFunding() == null ||
                 isNullOrEmpty(otherFundingCategory.getOtherFunding().getOtherPublicFunding())) {
-            return null;
+            return Optional.empty();
         } else {
-            return otherFundingCategory.otherFundingSet();
+            return Optional.of(otherFundingCategory.otherFundingSet());
         }
     }
 }

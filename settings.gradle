@@ -7,6 +7,7 @@ include("common")
 include("common:api")
 include("common:api:static")
 include("common:api:audit-api")
+include("common:api:file-storage-rest-api")
 
 // Starters - should only depend on external libs (mostly spring)
 include("common:starter:ifs-starter-audit")
@@ -77,8 +78,11 @@ include("ifs-web-service:ifs-project-setup-service")
 include("ifs-web-service:ifs-project-setup-mgt-service")
 include("ifs-web-service:ifs-front-door-service")
 include("ifs-registration-service")
+include("file-storage-service")
+
 include("robot-tests")
 
 // Tools...
 include("ifs-tools:sba")
+
 

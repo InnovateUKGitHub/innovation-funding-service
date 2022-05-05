@@ -37,6 +37,18 @@ public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<Invit
                     verifyNoMoreInteractions(inviteUserPermissionRules);
                 });
     }
+    @Test
+    public void saveAssessorInvite() {
+        UserResource invitedUser = UserResourceBuilder.newUserResource().build();
+
+        assertAccessDenied(
+                () -> classUnderTest.saveAssessorInvite(invitedUser, ASSESSOR, 3L),
+                () -> {
+                    verify(inviteUserPermissionRules)
+                            .ifsAdminCanSaveNewUserInvite(any(UserResource.class), any(UserResource.class));
+                    verifyNoMoreInteractions(inviteUserPermissionRules);
+                });
+    }
 
     @Test
     public void findPendingInternalUserInvites() {

@@ -147,7 +147,7 @@ public class ApplicationTeamPopulatorTest {
         when(applicationKtaInviteRestService.getKtaInviteByApplication(application.getId())).thenReturn(restSuccess(null, HttpStatus.OK));
         when(organisationRestService.getOrganisationsByApplicationId(application.getId())).thenReturn(restSuccess(asList(collboratorOrganisation, leadOrganisation)));
         when(questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(questionId, application.getId())).thenReturn(restSuccess(singletonList(status)));
-        when(userRestService.retrieveUserById(anyLong())).thenReturn(restSuccess(newUserResource().withEdiStatus(null).build()));
+        when(userRestService.retrieveUserById(anyLong())).thenReturn(restSuccess(newUserResource().withEdiStatus((EDIStatus[]) null).build()));
 
         ApplicationTeamViewModel viewModel = populator.populate(application.getId(), questionId, user);
 

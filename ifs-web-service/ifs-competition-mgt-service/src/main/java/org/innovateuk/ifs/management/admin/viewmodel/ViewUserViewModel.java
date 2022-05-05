@@ -9,8 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.innovateuk.ifs.user.resource.Role.SUPPORTER;
-import static org.innovateuk.ifs.user.resource.Role.externalRolesToInvite;
+import static org.innovateuk.ifs.user.resource.Role.*;
 
 /**
  * A view model for serving page listing users to be managed by IFS Administrators
@@ -58,7 +57,7 @@ public class ViewUserViewModel {
     }
 
     public boolean isLinkVisibleToIfsAdmin() {
-        return isIfsAdmin() && !user.getRoles().stream().anyMatch(externalRolesToInvite()::contains) && isExternalRoleLinkEnabled();
+        return isIfsAdmin() && !user.getRoles().stream().anyMatch(externalRolesExcludingAssessor()::contains) && isExternalRoleLinkEnabled();
     }
 
     public boolean isCanEditUserDetails() {

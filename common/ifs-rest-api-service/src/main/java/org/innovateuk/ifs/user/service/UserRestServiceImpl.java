@@ -41,6 +41,12 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     public RestResult<UserResource> createUser(UserCreationResource user) {
         return postWithRestResultAnonymous(USER_REST_URL, user, UserResource.class);
     }
+
+    @Override
+    public RestResult<Void> createUserProfileStatus(long userId) {
+        return postWithRestResultAnonymous(USER_REST_URL + "/user-profile-status/" + userId, Void.class);
+    }
+
     @Override
     public Future<RestResult<Void>> sendPasswordResetNotification(String email) {
         return getWithRestResultAsyncAnonymous(USER_REST_URL + "/"+URL_SEND_PASSWORD_RESET_NOTIFICATION+"/"+ email+"/", Void.class);
