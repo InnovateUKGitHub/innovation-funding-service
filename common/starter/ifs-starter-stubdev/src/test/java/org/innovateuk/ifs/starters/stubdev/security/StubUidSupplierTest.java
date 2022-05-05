@@ -4,6 +4,8 @@ import org.innovateuk.ifs.starters.stubdev.cfg.StubDevConfigurationProperties;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.api.parallel.ResourceLock;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -16,7 +18,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@Disabled("TODO")
+@Execution(ExecutionMode.SAME_THREAD)
 @ExtendWith(MockitoExtension.class)
 class StubUidSupplierTest {
 
