@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: clamav
+spec:
+  selector:
+    app: clamav
+  clusterIP: None
+  ports:
+    - name: clamav
+      port: 3310
+      targetPort: 3310

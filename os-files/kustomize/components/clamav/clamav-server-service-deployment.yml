@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clamav
+  annotations:
+    pullSecrets: pullSecrets
+spec:
+  replicas: 1
+  minReadySeconds: 30
+  selector:
+    matchLabels:
+      app: clamav
+  template:
+    metadata:
+      labels:
+        app: clamav
+    spec:
+      containers:
+        - name: clamav
+          image: docker-ifs.devops.innovateuk.org/releases/clamav:1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3310
