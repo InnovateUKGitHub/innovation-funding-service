@@ -3,4 +3,9 @@ apiVersion: v1
 metadata:
   name: file-storage-service-config
 data:
-  DATA_SERVICE_HOST: "data-service"
+  FSS_GLUSTER_ROOT_FOLDER_PATH: "/mnt/ifs_storage"
+  FSS_S3_AWS_REGION: ""
+  FSS_S3_AWS_BUCKET: ""
+  FSS_CLAM_HOST: ""
+  FSS_CLAM_PORT: ""
+  FSS_CLAM_TIMEOUT: 500

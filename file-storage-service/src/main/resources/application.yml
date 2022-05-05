@@ -8,11 +8,13 @@ ifs:
     storage:
       localStorage:
         rootFolderPath: "/tmp"
+      glusterStorage:
+        rootFolderPath: ${FSS_GLUSTER_ROOT_FOLDER_PATH}
       s3:
-        awsAccessKey:  ${FILE_STORAGE_SERVICE_S3_AWS_ACCESS_KEY}
-        awsSecretKey:  ${FILE_STORAGE_SERVICE_S3_AWS_SECRET_KEYN}
-        awsRegion: ${FILE_STORAGE_SERVICE_S3_AWS_REGION}
-        fileStoreS3Bucket: ${FILE_STORAGE_SERVICE_BUCKET}
+        awsAccessKey:  ${FSS_S3_AWS_ACCESS_KEY}
+        awsSecretKey:  ${FSS_S3_AWS_SECRET_KEY}
+        awsRegion: ${FSS_S3_AWS_REGION}
+        fileStoreS3Bucket: ${FSS_S3_AWS_BUCKET}
 
 spring:
   datasource:
@@ -29,7 +31,6 @@ spring:
     generate-ddl: false
     hibernate:
       ddl-auto: none
-
 
 management:
   endpoints:

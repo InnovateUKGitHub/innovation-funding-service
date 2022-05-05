@@ -4,6 +4,7 @@ test {
     testLogging {
         events "passed", "skipped", "failed"
     }
+    // Let junit 5 config determine this
     maxParallelForks = 1
 }
 

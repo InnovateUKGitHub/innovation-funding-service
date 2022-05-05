@@ -41,22 +41,12 @@ spec:
           timeoutSeconds: 25
           successThreshold: 1
           failureThreshold: 3
+        envFrom:
+          - secretKeyRef:
+              name: file-storage-service-secrets
+          - configKeyRef:
+              name: file-storage-service-config
         env:
-        - name: SPRING_DATASOURCE_URL
-          valueFrom:
-            secretKeyRef:
-              name: file-storage-db-secrets
-              key: FSS_DB_URL
-        - name: SPRING_DATASOURCE_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: file-storage-db-secrets
-              key: FSS_DB_USER
-        - name: SPRING_DATASOURCE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: file-storage-db-secrets
-              key: FSS_DB_PASS
         - name: JAVA_TOOL_OPTIONS
           value: -Xms1500m -Xmx1500m -javaagent:/newrelic.jar
         - name: NEW_RELIC_APP_NAME
