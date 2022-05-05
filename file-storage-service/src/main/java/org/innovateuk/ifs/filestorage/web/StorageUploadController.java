@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.filestorage.web;
 
 import lombok.extern.slf4j.Slf4j;
+import org.innovateuk.ifs.api.filestorage.util.FileUploadRequestBuilder;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUpload;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadResponse;
@@ -21,6 +22,16 @@ public class StorageUploadController implements FileUpload {
     public ResponseEntity<FileUploadResponse> fileUpload(FileUploadRequest fileUploadRequest) {
         try {
             return ResponseEntity.ok(storageService.fileUpload(fileUploadRequest));
+        } catch (IOException e) {
+            log.error("Failed to persist", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public ResponseEntity<FileUploadResponse> fileUploadRaw(byte[] payload) {
+        try {
+            return fileUpload(FileUploadRequestBuilder.fromResource(payload, "testMethod").build());
         } catch (IOException e) {
             log.error("Failed to persist", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

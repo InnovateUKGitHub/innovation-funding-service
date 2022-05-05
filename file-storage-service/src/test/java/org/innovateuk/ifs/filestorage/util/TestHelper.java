@@ -26,7 +26,7 @@ public class TestHelper {
 
     public static final FileUploadRequest build(UUID uuid) throws IOException {
         FileUploadRequest.FileUploadRequestBuilder builder
-                = FileUploadRequestBuilder.fromResource(uuid, new ClassPathResource(TEST_IMAGE), IMAGE_JPEG);
+                = FileUploadRequestBuilder.fromResource(uuid, new ClassPathResource(TEST_IMAGE), IMAGE_JPEG, "testUser");
         return builder.userId(TestHelper.class.getSimpleName()).build();
     }
 

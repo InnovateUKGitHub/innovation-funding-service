@@ -39,10 +39,10 @@ public class LocalStorageProvider implements ReadableStorageProvider, WritableSt
     @Override
     public String saveFile(FileUploadRequest fileUploadRequest) throws IOException {
         File target = Path.of(backingStoreConfigurationProperties.getLocalStorage().getRootFolderPath(),
-                fileUploadRequest.fileId().toString()).toFile();
-        Files.write(fileUploadRequest.payload(),
+                fileUploadRequest.getFileId()).toFile();
+        Files.write(fileUploadRequest.getPayload(),
                 Path.of(backingStoreConfigurationProperties.getLocalStorage().getRootFolderPath(),
-                        fileUploadRequest.fileId().toString()).toFile());
+                        fileUploadRequest.getFileId()).toFile());
         return target.getAbsolutePath();
     }
 }

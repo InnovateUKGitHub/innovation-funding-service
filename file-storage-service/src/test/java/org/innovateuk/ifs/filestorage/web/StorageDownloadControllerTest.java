@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +47,7 @@ class StorageDownloadControllerTest {
         FileDownloadResponse fileDownloadResponse = TestHelper.build(uuid,
                 new VirusScanResult(VirusScanStatus.VIRUS_FREE, "OK"));
         when(storageService.fileByUuid(uuid.toString())).thenReturn(Optional.of(fileDownloadResponse));
-        ResponseEntity<Object> responseEntity = storageDownloadController.fileByUuid(uuid.toString());
+        ResponseEntity<Resource> responseEntity = storageDownloadController.fileByUuid(uuid.toString());
         assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.OK));
 
         headerAssert(responseEntity, HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG.toString());
@@ -57,7 +58,7 @@ class StorageDownloadControllerTest {
     @Test
     void testDownloadFail() throws IOException {
         when(storageService.fileByUuid("test")).thenReturn(Optional.empty());
-        ResponseEntity<Object> responseEntity = storageDownloadController.fileByUuid("test");
+        ResponseEntity<Resource> responseEntity = storageDownloadController.fileByUuid("test");
         assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
     }
 }

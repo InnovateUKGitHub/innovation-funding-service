@@ -42,7 +42,7 @@ class StorageUploadControllerTest {
 
         ResponseEntity<FileUploadResponse> responseResponseEntity = storageUploadController.fileUpload(fileUploadRequest);
         assertThat(responseResponseEntity.getStatusCode(), equalTo(HttpStatus.OK));
-        assertThat(responseResponseEntity.getBody().md5Checksum(), equalTo(fileUploadRequest.md5Checksum()));
+        assertThat(responseResponseEntity.getBody().getMd5Checksum(), equalTo(fileUploadRequest.getMd5Checksum()));
     }
 
 
@@ -55,4 +55,5 @@ class StorageUploadControllerTest {
         ResponseEntity<FileUploadResponse> responseResponseEntity = storageUploadController.fileUpload(fileUploadRequest);
         assertThat(responseResponseEntity.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
     }
+
 }

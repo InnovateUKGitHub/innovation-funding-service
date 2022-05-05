@@ -14,13 +14,13 @@ public class FileStorageRecordMapper {
 
     public static FileStorageRecord to(FileUploadRequest fileUploadRequest, WritableStorageProvider writableStorageProvider) {
         FileStorageRecord fileStorageRecord = new FileStorageRecord();
-        fileStorageRecord.fileUuid(fileUploadRequest.fileId().toString());
-        fileStorageRecord.systemId(fileUploadRequest.systemId());
-        fileStorageRecord.userId(fileUploadRequest.userId());
-        fileStorageRecord.mimeType(fileUploadRequest.mimeType().toString());
-        fileStorageRecord.fileSizeBytes(fileUploadRequest.fileSizeBytes());
-        fileStorageRecord.fileName(fileUploadRequest.fileName());
-        fileStorageRecord.md5Checksum(fileUploadRequest.md5Checksum());
+        fileStorageRecord.fileUuid(fileUploadRequest.getFileId());
+        fileStorageRecord.systemId(fileUploadRequest.getSystemId());
+        fileStorageRecord.userId(fileUploadRequest.getUserId());
+        fileStorageRecord.mimeType(fileUploadRequest.getMimeType());
+        fileStorageRecord.fileSizeBytes(fileUploadRequest.getFileSizeBytes());
+        fileStorageRecord.fileName(fileUploadRequest.getFileName());
+        fileStorageRecord.md5Checksum(fileUploadRequest.getMd5Checksum());
         fileStorageRecord.storageProvider(writableStorageProvider.getClass().getSimpleName());
         return fileStorageRecord;
     }

@@ -2,30 +2,32 @@ package org.innovateuk.ifs.api.filestorage.v1.upload;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.Accessors;
-import org.springframework.util.MimeType;
 
-import java.util.UUID;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Data
 @Builder
-@Accessors(fluent = true)
-public final class FileUploadRequest {
+public final class FileUploadRequest implements Serializable {
 
     /** uuid reference for the file */
-    private final UUID fileId;
+    @NotNull
+    private final String fileId;
 
     /** Originating system or subsystem for the storage request */
     private final String systemId;
 
+
     /** The user requesting storage */
     private final String userId;
 
+    @NotNull
     /** The file payload */
     private final byte[] payload;
 
+    @NotNull
     /** The file type */
-    private final MimeType mimeType;
+    private final String mimeType;
 
     /** The file size in bytes */
     private final long fileSizeBytes;

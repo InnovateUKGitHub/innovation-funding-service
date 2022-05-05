@@ -46,15 +46,15 @@ public class StorageService {
     @Autowired
     private StorageDownloadController storageDownloadController;
 
-    @Scheduled(fixedDelay = 2000)
-    public void scheduled() throws IOException {
-        log.error("sdfdfdfsdsfdfdfsdsf");
-        storageUploadController.fileUpload(FileUploadRequestBuilder.fromResource(new ClassPathResource("test.txt"), MediaType.TEXT_PLAIN).userId("123").build());
-    }
+//    @Scheduled(fixedDelay = 2000)
+//    public void scheduled() throws IOException {
+//        log.error("sdfdfdfsdsfdfdfsdsf");
+//        storageUploadController.fileUpload(FileUploadRequestBuilder.fromResource(new ClassPathResource("test.txt"), MediaType.TEXT_PLAIN).userId("123").build());
+//    }
 
     public FileUploadResponse fileUpload(FileUploadRequest fileUploadRequest) throws IOException {
         FileStorageRecord fileStorageRecord = storageServiceHelper.saveInitialRequest(fileUploadRequest, writableStorageProvider);
-        VirusScanResult virusScanResult = virusScanProvider.scanFile(fileUploadRequest.payload());
+        VirusScanResult virusScanResult = virusScanProvider.scanFile(fileUploadRequest.getPayload());
         fileStorageRecord = storageServiceHelper.updateVirusCheckStatus(fileStorageRecord, virusScanResult);
         String providerLocation = writableStorageProvider.saveFile(fileUploadRequest);
         storageServiceHelper.saveProviderResult(fileStorageRecord, providerLocation);

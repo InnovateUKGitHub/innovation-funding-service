@@ -2,18 +2,15 @@ package org.innovateuk.ifs.api.filestorage.v1.upload;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.Accessors;
-import org.springframework.util.MimeType;
 
-import java.util.UUID;
+import java.io.Serializable;
 
 @Data
 @Builder
-@Accessors(fluent = true)
-public final class FileUploadResponse {
+public final class FileUploadResponse implements Serializable {
 
     /** uuid reference for the file */
-    private final UUID fileId;
+    private final String fileId;
 
     /** Virus scan status */
     private final VirusScanStatus virusScanStatus;
@@ -22,7 +19,7 @@ public final class FileUploadResponse {
     private final String virusScanResultMessage;
 
     /** The file type */
-    private final MimeType mimeType;
+    private final String mimeType;
 
     /** The file size in bytes */
     private final long fileSizeBytes;

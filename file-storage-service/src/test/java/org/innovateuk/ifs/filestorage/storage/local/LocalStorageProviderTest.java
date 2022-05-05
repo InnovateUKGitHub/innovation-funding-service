@@ -46,12 +46,12 @@ class LocalStorageProviderTest {
         String path = localStorageProvider.saveFile(fileUploadRequest);
 
         assertThat(path, equalTo(backingStoreConfigurationProperties.getLocalStorage().getRootFolderPath()
-                + "/" + fileUploadRequest.fileId().toString()));
+                + "/" + fileUploadRequest.getFileId().toString()));
 
-        assertThat(localStorageProvider.fileExists(fileUploadRequest.fileId().toString()), equalTo(true));
+        assertThat(localStorageProvider.fileExists(fileUploadRequest.getFileId().toString()), equalTo(true));
 
-        Optional<byte[]> payload = localStorageProvider.readFile(fileUploadRequest.fileId().toString());
+        Optional<byte[]> payload = localStorageProvider.readFile(fileUploadRequest.getFileId().toString());
         assertThat(payload.isPresent(), equalTo(true));
-        assertThat(FileHashing.fileHash64(payload.get()), equalTo(fileUploadRequest.md5Checksum()));
+        assertThat(FileHashing.fileHash64(payload.get()), equalTo(fileUploadRequest.getMd5Checksum()));
     }
 }

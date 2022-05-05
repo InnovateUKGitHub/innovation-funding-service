@@ -54,7 +54,7 @@ class S3StorageProviderTest {
                 + backingProps.getS3().getFileStoreS3Bucket() + ".s3." + backingProps.getS3().getAwsRegion() + ".amazonaws.com/" + uuid));
         assertThat(s3StorageProvider.fileExists(uuid.toString()), equalTo(true));
         byte[] payload = s3StorageProvider.readFile(uuid.toString()).get();
-        assertThat(payload, equalTo(fileUploadRequest.payload()));
+        assertThat(payload, equalTo(fileUploadRequest.getPayload()));
 
     }
 }

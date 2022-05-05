@@ -11,13 +11,13 @@ public class FileUploadResponseMapper {
 
     public static final FileUploadResponse build(FileUploadRequest fileUploadRequest, VirusScanResult virusScanResult) {
         return FileUploadResponse.builder()
-                .fileId(fileUploadRequest.fileId())
+                .fileId(fileUploadRequest.getFileId())
                 .virusScanStatus(virusScanResult.virusScanStatus())
                 .virusScanResultMessage(virusScanResult.virusScanResultMessage())
-                .mimeType(fileUploadRequest.mimeType())
-                .fileSizeBytes(fileUploadRequest.fileSizeBytes())
-                .fileName(fileUploadRequest.fileName())
-                .md5Checksum(fileUploadRequest.md5Checksum()).build();
+                .mimeType(fileUploadRequest.getMimeType())
+                .fileSizeBytes(fileUploadRequest.getFileSizeBytes())
+                .fileName(fileUploadRequest.getFileName())
+                .md5Checksum(fileUploadRequest.getMd5Checksum()).build();
     }
 
 }

@@ -44,15 +44,15 @@ public class S3StorageProvider implements ReadableStorageProvider, WritableStora
     @Override
     public String saveFile(FileUploadRequest fileUploadRequest) throws IOException {
         ObjectMetadata objectMetadata = new ObjectMetadata();
-        objectMetadata.setContentLength(fileUploadRequest.fileSizeBytes());
-        objectMetadata.setContentType(fileUploadRequest.mimeType().toString());
-        objectMetadata.setContentMD5(fileUploadRequest.md5Checksum());
+        objectMetadata.setContentLength(fileUploadRequest.getFileSizeBytes());
+        objectMetadata.setContentType(fileUploadRequest.getMimeType());
+        objectMetadata.setContentMD5(fileUploadRequest.getMd5Checksum());
         amazonS3.putObject(
                 backingConfig.getS3().getFileStoreS3Bucket(),
-                fileUploadRequest.fileId().toString(),
-                ByteSource.wrap(fileUploadRequest.payload()).openStream(),
+                fileUploadRequest.getFileId(),
+                ByteSource.wrap(fileUploadRequest.getPayload()).openStream(),
                 objectMetadata
         );
-        return amazonS3.getUrl(backingConfig.getS3().getFileStoreS3Bucket(), fileUploadRequest.fileId().toString()).toString();
+        return amazonS3.getUrl(backingConfig.getS3().getFileStoreS3Bucket(), fileUploadRequest.getFileId()).toString();
     }
 }

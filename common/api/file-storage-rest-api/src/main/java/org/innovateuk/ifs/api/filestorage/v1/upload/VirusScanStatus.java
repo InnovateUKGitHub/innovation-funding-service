@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.api.filestorage.v1.upload;
 
-public enum VirusScanStatus {
+import java.io.Serializable;
+
+public enum VirusScanStatus implements Serializable {
     VIRUS_FREE,
     VIRUS_DETECTED
 }
