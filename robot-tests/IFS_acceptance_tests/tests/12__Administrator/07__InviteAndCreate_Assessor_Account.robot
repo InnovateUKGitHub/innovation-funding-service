@@ -75,11 +75,12 @@ Admin can add a new assessor role to existing applicant
     And the user clicks the button/link             jQuery = button:contains("Confirm role profile")
     And the user clicks the button/link             jQuery = button:contains("Save and return")
     And search for an existing user                 ann.kelly@gmail.com
-    Then the user should see the element            jQuery = span:contains("Applicant, Assessor")
+    And the user clicks the button/link             link = Edit
+    Then the user should see the element            jQuery = td:contains("Assessor") + td:contains("Available")
+    Then the user should see the element            jQuery = td:contains("Applicant") + td:contains("Active")
 
 Admin can view role profile of an assessor
     [Documentation]  IFS-11789
-    Given the user clicks the button/link   link = Edit
     When the user clicks the button/link    link = View role profile
     Then the user should see the element    jQuery = dt:contains("Role profile")+dd:contains("Assessor")
     And the user should see the element     jQuery = dt:contains("Role status")+dd:contains("Available")
