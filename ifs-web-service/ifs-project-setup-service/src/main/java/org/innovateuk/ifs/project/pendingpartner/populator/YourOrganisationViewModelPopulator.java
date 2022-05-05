@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.pendingpartner.populator;
 
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
@@ -9,6 +10,7 @@ import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisationViewModel;
+import org.innovateuk.ifs.publiccontent.service.PublicContentRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +37,14 @@ public class YourOrganisationViewModelPopulator {
     @Autowired
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
 
+    @Autowired
+    private PublicContentRestService publicContentRestService;
+
     public ProjectYourOrganisationViewModel populate(long projectId, long organisationId, UserResource user) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+        PublicContentResource publicContent = publicContentRestService.getByCompetitionId(competition.getId()).getSuccess();
 
         PendingPartnerProgressResource pendingPartner = pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId).getSuccess();
 
@@ -57,6 +63,7 @@ public class YourOrganisationViewModelPopulator {
                 project.getName(),
                 pendingPartner.isYourOrganisationComplete(),
                 user,
-                true);
+                true,
+                publicContent.getHash());
     }
 }
