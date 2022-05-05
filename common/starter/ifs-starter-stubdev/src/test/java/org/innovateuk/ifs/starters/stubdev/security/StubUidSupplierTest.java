@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.starters.stubdev.security;
 
 import org.innovateuk.ifs.starters.stubdev.cfg.StubDevConfigurationProperties;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -14,6 +15,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@Disabled("Intermittent on bamboo")
 @ExtendWith(MockitoExtension.class)
 class StubUidSupplierTest {
 
