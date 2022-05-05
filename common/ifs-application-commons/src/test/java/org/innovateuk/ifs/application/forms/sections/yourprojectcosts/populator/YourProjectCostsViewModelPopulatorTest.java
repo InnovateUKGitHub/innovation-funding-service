@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
@@ -19,6 +20,7 @@ import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.publiccontent.service.PublicContentRestService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -48,6 +50,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
@@ -82,6 +85,9 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
 
     @Mock
     private CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
+
+    @Mock
+    private PublicContentRestService publicContentRestService;
 
     @Override
     protected YourProjectCostsViewModelPopulator supplyServiceUnderTest() {
@@ -126,6 +132,8 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .build();
         ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().build();
 
+        PublicContentResource publicContentResource = newPublicContentResource().withHash(null).build();
+
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
                 .build()));
@@ -136,6 +144,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(applicantRestService.getSection(user.getId(), application.getId(), SECTION_ID)).thenReturn(applicantSection);
         when(applicationFinanceRestService.getApplicationFinance(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(applicationFinance));
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(publicContentRestService.getByCompetitionId(application.getCompetition())).thenReturn(restSuccess(publicContentResource));
         when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         YourProjectCostsViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, user);
@@ -183,6 +192,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .build();
         UserResource user = newUserResource().build();
         ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().build();
+        PublicContentResource publicContentResource = newPublicContentResource().withHash(null).build();
 
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
@@ -193,6 +203,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getCompleted(APPLICATION_ID, ORGANISATION_ID)).thenReturn(singletonList(SECTION_ID));
         when(applicationFinanceRestService.getApplicationFinance(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(applicationFinance));
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(publicContentRestService.getByCompetitionId(application.getCompetition())).thenReturn(restSuccess(publicContentResource));
         when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         YourProjectCostsViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, user);
@@ -229,6 +240,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .build();
         UserResource user = newUserResource().build();
         ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().build();
+        PublicContentResource publicContentResource = newPublicContentResource().withHash(null).build();
 
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
@@ -239,6 +251,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getCompleted(APPLICATION_ID, ORGANISATION_ID)).thenReturn(singletonList(SECTION_ID));
         when(applicationFinanceRestService.getApplicationFinance(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(applicationFinance));
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(publicContentRestService.getByCompetitionId(application.getCompetition())).thenReturn(restSuccess(publicContentResource));
         when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         YourProjectCostsViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, user);
@@ -273,6 +286,8 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         UserResource user = newUserResource().build();
         ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().build();
 
+        PublicContentResource publicContentResource = newPublicContentResource().withHash(null).build();
+
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
                 .build()));
@@ -282,6 +297,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getCompleted(APPLICATION_ID, ORGANISATION_ID)).thenReturn(singletonList(SECTION_ID));
         when(applicationFinanceRestService.getApplicationFinance(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(applicationFinance));
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(publicContentRestService.getByCompetitionId(application.getCompetition())).thenReturn(restSuccess(publicContentResource));
         when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         YourProjectCostsViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, user);
@@ -334,6 +350,8 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withFecEnabled(null)
                 .build();
 
+        PublicContentResource publicContentResource = newPublicContentResource().withHash(null).build();
+
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
                 .build()));
@@ -346,6 +364,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(null);
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(publicContentRestService.getByCompetitionId(application.getCompetition())).thenReturn(restSuccess(publicContentResource));
         when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
@@ -412,6 +431,8 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withGrantClaimPercentage(BigDecimal.valueOf(50))
                 .build();
 
+        PublicContentResource publicContentResource = newPublicContentResource().withHash(null).build();
+
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
                 .build()));
@@ -424,6 +445,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(null);
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(publicContentRestService.getByCompetitionId(application.getCompetition())).thenReturn(restSuccess(publicContentResource));
         when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
@@ -496,6 +518,8 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withGrantClaimPercentage(BigDecimal.valueOf(50))
                 .build();
 
+        PublicContentResource publicContentResource = newPublicContentResource().withHash(null).build();
+
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
                 .withApplication(application.getId())
@@ -509,6 +533,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(fecCostFinanceSection);
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(publicContentRestService.getByCompetitionId(application.getCompetition())).thenReturn(restSuccess(publicContentResource));
         when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
@@ -582,6 +607,8 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withGrantClaimPercentage(BigDecimal.valueOf(50))
                 .build();
 
+        PublicContentResource publicContentResource = newPublicContentResource().withHash(null).build();
+
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
                 .build()));
@@ -594,6 +621,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(fecCostFinanceSection);
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(publicContentRestService.getByCompetitionId(application.getCompetition())).thenReturn(restSuccess(publicContentResource));
         when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
@@ -656,6 +684,8 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withGrantClaimPercentage(BigDecimal.valueOf(50))
                 .build();
 
+        PublicContentResource publicContentResource = newPublicContentResource().withHash(null).build();
+
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
                 .build()));
@@ -667,6 +697,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(applicantRestService.getSection(user.getId(), application.getId(), SECTION_ID)).thenReturn(applicantSection);
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(publicContentRestService.getByCompetitionId(application.getCompetition())).thenReturn(restSuccess(publicContentResource));
         when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
@@ -744,6 +775,8 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withGrantClaimPercentage(BigDecimal.valueOf(50))
                 .build();
 
+        PublicContentResource publicContentResource = newPublicContentResource().withHash(null).build();
+
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
                 .build()));
@@ -756,6 +789,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(fecCostFinanceSection);
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(publicContentRestService.getByCompetitionId(application.getCompetition())).thenReturn(restSuccess(publicContentResource));
         when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
@@ -831,6 +865,8 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withGrantClaimPercentage(BigDecimal.valueOf(50))
                 .build();
 
+        PublicContentResource publicContentResource = newPublicContentResource().withHash(null).build();
+
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
                 .build()));
@@ -843,6 +879,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(fecCostFinanceSection);
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(publicContentRestService.getByCompetitionId(application.getCompetition())).thenReturn(restSuccess(publicContentResource));
         when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
@@ -917,6 +954,9 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withFecEnabled(true)
                 .withGrantClaimPercentage(BigDecimal.valueOf(50))
                 .build();
+        PublicContentResource publicContentResource = newPublicContentResource()
+                .withHash(null)
+                .build();
 
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
@@ -930,6 +970,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(fecCostFinanceSection);
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(publicContentRestService.getByCompetitionId(application.getCompetition())).thenReturn(restSuccess(publicContentResource));
         when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
@@ -1005,6 +1046,8 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withGrantClaimPercentage(BigDecimal.valueOf(50))
                 .build();
 
+        PublicContentResource publicContentResource = newPublicContentResource().withHash(null).build();
+
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
                 .build()));
@@ -1017,6 +1060,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(fecCostFinanceSection);
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(publicContentRestService.getByCompetitionId(application.getCompetition())).thenReturn(restSuccess(publicContentResource));
         when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
@@ -1075,6 +1119,8 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
                 .withApplication(application.getId())
                 .build();
+        PublicContentResource publicContentResource = newPublicContentResource().withHash(null).build();
+
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(thirdPartyCompetition.getId())).thenReturn(restSuccess(thirdPartyCompetition));
         when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
@@ -1085,6 +1131,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withOrganisation(organisation.getId())
                 .build()));
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinanceResource));
+        when(publicContentRestService.getByCompetitionId(application.getCompetition())).thenReturn(restSuccess(publicContentResource));
         when(competitionThirdPartyConfigRestService.findOneByCompetitionId(thirdPartyCompetition.getId())).thenReturn(restSuccess(thirdPartyConfigResource));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
