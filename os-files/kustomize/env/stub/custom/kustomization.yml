@@ -11,6 +11,7 @@ components:
   - ../../../components/sil-stub
   - ../../../components/ifs-database
   - ../../../components/cache-provider
+  - ../../../components/file-storage-service
   - ../../../components/registration-service
   - ../../../components/data-layer
   - ../../../components/web-layer
