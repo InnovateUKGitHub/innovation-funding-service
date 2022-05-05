@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.organisation.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.form.ConfirmResearchOrganisationEligibilityForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.publiccontent.service.PublicContentRestService;
 import org.innovateuk.ifs.registration.service.OrganisationJourneyEnd;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -16,14 +18,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.servlet.http.HttpServletRequest;
 
-import java.util.Optional;
-
-import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RESEARCH;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -56,6 +56,9 @@ public class ConfirmResearchOrganisationEligibilityControllerTest extends BaseCo
     @Mock
     private OrganisationJourneyEnd organisationJourneyEnd;
 
+    @Mock
+    private PublicContentRestService publicContentRestService;
+
     @Override
     protected ConfirmResearchOrganisationEligibilityController supplyControllerUnderTest() {
         return new ConfirmResearchOrganisationEligibilityController();
@@ -79,7 +82,11 @@ public class ConfirmResearchOrganisationEligibilityControllerTest extends BaseCo
 
     @Test
     public void existingResearchOrganisationConfirmEligibilityViewPage() throws Exception {
+
+        PublicContentResource publicContent = newPublicContentResource().build();
+
         when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
+        when(publicContentRestService.getByCompetitionId(competition.getId())).thenReturn(restSuccess(publicContent));
 
         mockMvc.perform(get(BASE_URL + "/" + competition.getId() +"/confirm-eligibility"))
                 .andExpect(status().is2xxSuccessful())
@@ -88,6 +95,11 @@ public class ConfirmResearchOrganisationEligibilityControllerTest extends BaseCo
 
     @Test
     public void newResearchOrganisationConfirmEligibilityViewPage() throws Exception {
+
+        PublicContentResource publicContent = newPublicContentResource().build();
+
+        when(publicContentRestService.getByCompetitionId(competition.getId())).thenReturn(restSuccess(publicContent));
+
         mockMvc.perform(get(BASE_URL + "/" + competition.getId() +"/confirm-eligibility"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name(TEMPLATE_PATH + "/" + RESEARCH_ELIGIBILITY_TEMPLATE));
@@ -98,7 +110,10 @@ public class ConfirmResearchOrganisationEligibilityControllerTest extends BaseCo
         ConfirmResearchOrganisationEligibilityForm form = new ConfirmResearchOrganisationEligibilityForm();
         form.setConfirmEligibility(true);
 
+        PublicContentResource publicContent = newPublicContentResource().build();
+
         when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
+        when(publicContentRestService.getByCompetitionId(competition.getId())).thenReturn(restSuccess(publicContent));
 
         mockMvc.perform(post(BASE_URL + "/" + competition.getId() +"/confirm-eligibility/" + organisation.getId())
                 .param("confirmEligibility", "Yes"))
@@ -110,8 +125,11 @@ public class ConfirmResearchOrganisationEligibilityControllerTest extends BaseCo
     public void existingResearchUserChooseNo() throws Exception {
         ConfirmResearchOrganisationEligibilityForm form = new ConfirmResearchOrganisationEligibilityForm();
         form.setConfirmEligibility(false);
-        when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
 
+        PublicContentResource publicContent = newPublicContentResource().build();
+
+        when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
+        when(publicContentRestService.getByCompetitionId(competition.getId())).thenReturn(restSuccess(publicContent));
         when(registrationCookieService.isLeadJourney(any(HttpServletRequest.class))).thenReturn(false);
         when(registrationCookieService.isCollaboratorJourney(any(HttpServletRequest.class))).thenReturn(true);
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
@@ -130,9 +148,12 @@ public class ConfirmResearchOrganisationEligibilityControllerTest extends BaseCo
         ConfirmResearchOrganisationEligibilityForm form = new ConfirmResearchOrganisationEligibilityForm();
         form.setConfirmEligibility(false);
 
+        PublicContentResource publicContent = newPublicContentResource().build();
+        when(publicContentRestService.getByCompetitionId(competition.getId())).thenReturn(restSuccess(publicContent));
+
         mockMvc.perform(post(BASE_URL + "/" + competition.getId() +"/confirm-eligibility")
                 .param("confirmEligibility", "No"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format(BASE_URL + "/" + FIND_ORGANISATION)));
+                .andExpect(redirectedUrl(BASE_URL + "/" + FIND_ORGANISATION));
     }
 }

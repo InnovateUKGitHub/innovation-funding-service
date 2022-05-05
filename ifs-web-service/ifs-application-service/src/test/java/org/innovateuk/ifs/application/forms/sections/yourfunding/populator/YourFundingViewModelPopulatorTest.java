@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -20,6 +21,7 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.publiccontent.service.PublicContentRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -42,6 +44,7 @@ import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuild
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.SUBSIDY_BASIS;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
@@ -84,6 +87,9 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
 
     @Mock
     private ProcessRoleRestService processRoleRestService;
+
+    @Mock
+    private PublicContentRestService publicContentRestService;
 
     @Override
     protected YourFundingViewModelPopulator supplyServiceUnderTest() {
@@ -131,6 +137,7 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
 
         QuestionResource researchCategoryQuestion = newQuestionResource().build();
         QuestionResource subsidyBasisQuestion = newQuestionResource().build();
+        PublicContentResource publicContent = newPublicContentResource().build();
 
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(newApplicationResource()
                 .withId(APPLICATION_ID)
@@ -139,6 +146,7 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
                 .build()));
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+        when(publicContentRestService.getByCompetitionId(COMPETITION_ID)).thenReturn(restSuccess(publicContent));
 
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(section.getCompetition().getId(), RESEARCH_CATEGORY))
                 .thenReturn(restSuccess(researchCategoryQuestion));
@@ -176,6 +184,8 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
 
         CompetitionResource competition = newCompetitionResource().build();
         OrganisationResource organisation = newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
+        PublicContentResource publicContent = newPublicContentResource().build();
+
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(newApplicationResource()
                 .withId(APPLICATION_ID)
                 .withName("name")
@@ -183,7 +193,7 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
                 .build()));
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
-
+        when(publicContentRestService.getByCompetitionId(COMPETITION_ID)).thenReturn(restSuccess(publicContent));
         when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));
 
         YourFundingViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
