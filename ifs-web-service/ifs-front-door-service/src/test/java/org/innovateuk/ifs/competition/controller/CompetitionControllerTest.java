@@ -119,34 +119,6 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
     }
 
     @Test
-    public void competitionOverviewProtectedForPrivateCompetitions() throws Exception {
-
-        final long competitionId = 999L;
-        final String hash = "abc-123";
-
-        final PublicContentResource publicContent =
-                newPublicContentResource()
-                        .withInviteOnly(true)
-                        .withHash(hash)
-                        .build();
-
-        final PublicContentItemResource publicContentItem =
-                newPublicContentItemResource()
-                        .withPublicContentResource(publicContent)
-                        .build();
-
-        final CompetitionOverviewViewModel viewModel = new CompetitionOverviewViewModel();
-
-        when(publicContentItemRestService.getItemByCompetitionId(competitionId)).thenReturn(restSuccess(publicContentItem));
-
-        mockMvc.perform(get("/competition/{id}/overview", competitionId))
-                .andExpect(status().isForbidden());
-
-        verify(publicContentItemRestService).getItemByCompetitionId(competitionId);
-        verifyNoInteractions(overviewPopulator);
-    }
-
-    @Test
     public void competitionOverview_notLoggedIn() throws Exception {
         final long competitionId = 20L;
         setLoggedInUser(null);
