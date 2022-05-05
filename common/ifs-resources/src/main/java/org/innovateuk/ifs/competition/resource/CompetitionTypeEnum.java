@@ -14,9 +14,8 @@ public enum CompetitionTypeEnum {
     HORIZON_2020("Horizon 2020"),
     ASSESSMENT_ONLY("Assessment only"),
     HORIZON_EUROPE_GUARANTEE("Horizon Europe Guarantee"),
-    OFGEM("Ofgem");
-
-
+    OFGEM("Ofgem"),
+    DIRECT_AWARD("Direct award");
 
     CompetitionTypeEnum(String text) {
         this.text = text;
