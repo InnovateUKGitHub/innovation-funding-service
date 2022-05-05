@@ -46,9 +46,9 @@ the user create a new application
 
 the user checks the application details
     [Documentation]  IFS-11736
-    When the user completes the application details section
-    And the user clicks the button/link       link = Application details
-    Then the user should see the element      jQuery = dt:contains("Award name")
+    When the user completes the application details section   ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  25
+    And the user clicks the button/link                       link = Application details
+    Then the user should see the element                      jQuery = dt:contains("Award name")
 
 the user checks the scope of application
      [Documentation]  IFS-11736
