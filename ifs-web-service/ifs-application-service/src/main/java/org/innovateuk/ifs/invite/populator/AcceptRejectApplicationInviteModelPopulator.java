@@ -1,13 +1,19 @@
 package org.innovateuk.ifs.invite.populator;
 
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.viewmodel.AcceptRejectApplicationInviteViewModel;
+import org.innovateuk.ifs.publiccontent.service.PublicContentRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
 @Component
 public class AcceptRejectApplicationInviteModelPopulator {
+
+    @Autowired
+    private PublicContentRestService publicContentRestService;
 
     public AcceptRejectApplicationInviteViewModel populateModel(ApplicationInviteResource invite,
                                                                 InviteOrganisationResource inviteOrganisation) {
@@ -20,8 +26,18 @@ public class AcceptRejectApplicationInviteModelPopulator {
         boolean inviteOrganisationExists = inviteOrganisation.getOrganisation() != null;
         boolean leadOrganisation = invite.getLeadOrganisationId().equals(inviteOrganisation.getOrganisation());
 
-        return new AcceptRejectApplicationInviteViewModel(invite.getApplication(), competitionId, competitionName, leadOrganisationName,
-                leadApplicantName, inviteOrganisationName, leadApplicantEmail, inviteOrganisationExists,
-                leadOrganisation);
+        PublicContentResource publicContent = publicContentRestService.getByCompetitionId(invite.getCompetitionId()).getSuccess();
+
+        return new AcceptRejectApplicationInviteViewModel(
+                invite.getApplication(),
+                competitionId,
+                competitionName,
+                leadOrganisationName,
+                leadApplicantName,
+                inviteOrganisationName,
+                leadApplicantEmail,
+                inviteOrganisationExists,
+                leadOrganisation,
+                publicContent.getHash());
     }
 }

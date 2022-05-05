@@ -26,13 +26,15 @@ public class ApplicationYourOrganisationViewModel implements BaseAnalyticsViewMo
     private boolean internal;
     private YourOrganisationDetailsReadOnlyViewModel orgDetailsViewModel;
     private boolean partnerOrgDisplay;
+    private String hash;
 
 
     public ApplicationYourOrganisationViewModel(long applicationId, CompetitionResource competition,
                                                 OrganisationTypeEnum organisationType,
                                                 boolean maximumFundingLevelConstant,
                                                 boolean showOrganisationSizeAlert,
-                                                boolean internal) {
+                                                boolean internal,
+                                                String hash) {
         this.applicationId = applicationId;
         this.competitionId = competition.getId();
         this.competitionName = competition.getName();
@@ -41,6 +43,7 @@ public class ApplicationYourOrganisationViewModel implements BaseAnalyticsViewMo
         this.maximumFundingLevelConstant = maximumFundingLevelConstant;
         this.showOrganisationSizeAlert = showOrganisationSizeAlert;
         this.internal = internal;
+        this.hash = hash;
     }
 
     @Override
@@ -111,5 +114,9 @@ public class ApplicationYourOrganisationViewModel implements BaseAnalyticsViewMo
 
     public void setOrgDetailsViewModel(YourOrganisationDetailsReadOnlyViewModel orgDetailsViewModel) {
         this.orgDetailsViewModel = orgDetailsViewModel;
+    }
+
+    public String getHash() {
+        return hash;
     }
 }

@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.supporter.dashboard.controller;
 
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
+import org.innovateuk.ifs.publiccontent.service.PublicContentRestService;
 import org.innovateuk.ifs.supporter.dashboard.viewmodel.SupporterCompetitionDashboardViewModel;
 import org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationPageResource;
 import org.innovateuk.ifs.supporter.service.SupporterDashboardRestService;
@@ -28,14 +30,20 @@ public class SupporterCompetitionDashboardController {
     @Autowired
     private CompetitionRestService competitionRestService;
 
+    @Autowired
+    private PublicContentRestService publicContentRestService;
+
     @GetMapping
     public String view(@PathVariable long competitionId,
                        @RequestParam(name = "page", defaultValue = "1") int page,
                        UserResource loggedInUser,
                        Model model) {
+
         SupporterDashboardApplicationPageResource pageResource = supporterDashboardRestService.getSupporterCompetitionDashboardApplications(loggedInUser.getId(), competitionId, page - 1).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        model.addAttribute("model", new SupporterCompetitionDashboardViewModel(pageResource, competition));
+        PublicContentResource publicContent = publicContentRestService.getByCompetitionId(competitionId).getSuccess();
+
+        model.addAttribute("model", new SupporterCompetitionDashboardViewModel(pageResource, competition, publicContent.getHash()));
         return "supporter/supporter-competition-dashboard";
     }
 }

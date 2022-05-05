@@ -104,10 +104,10 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
         inOrder.verifyNoMoreInteractions();
 
         List<AssessorCompetitionForPanelDashboardApplicationViewModel> expectedReviews = asList(
-                new AssessorCompetitionForPanelDashboardApplicationViewModel(applications.get(0).getId(), assessmentReviews.get(0).getId(), applications.get(0).getName(), organisations.get(0).getName(), assessmentReviews.get(0).getReviewState()),
-                new AssessorCompetitionForPanelDashboardApplicationViewModel(applications.get(1).getId(), assessmentReviews.get(1).getId(), applications.get(1).getName(), organisations.get(1).getName(), assessmentReviews.get(1).getReviewState()),
-                new AssessorCompetitionForPanelDashboardApplicationViewModel(applications.get(2).getId(), assessmentReviews.get(2).getId(), applications.get(2).getName(), organisations.get(2).getName(), assessmentReviews.get(2).getReviewState()),
-                new AssessorCompetitionForPanelDashboardApplicationViewModel(applications.get(3).getId(), assessmentReviews.get(3).getId(), applications.get(3).getName(), organisations.get(3).getName(), assessmentReviews.get(3).getReviewState())
+                new AssessorCompetitionForPanelDashboardApplicationViewModel(applications.get(0).getId(), assessmentReviews.get(0).getId(), applications.get(0).getName(), organisations.get(0).getName(), assessmentReviews.get(0).getReviewState(), null),
+                new AssessorCompetitionForPanelDashboardApplicationViewModel(applications.get(1).getId(), assessmentReviews.get(1).getId(), applications.get(1).getName(), organisations.get(1).getName(), assessmentReviews.get(1).getReviewState(), null),
+                new AssessorCompetitionForPanelDashboardApplicationViewModel(applications.get(2).getId(), assessmentReviews.get(2).getId(), applications.get(2).getName(), organisations.get(2).getName(), assessmentReviews.get(2).getReviewState(), null),
+                new AssessorCompetitionForPanelDashboardApplicationViewModel(applications.get(3).getId(), assessmentReviews.get(3).getId(), applications.get(3).getName(), organisations.get(3).getName(), assessmentReviews.get(3).getReviewState(), null)
         );
 
         AssessorCompetitionForPanelDashboardViewModel model = (AssessorCompetitionForPanelDashboardViewModel) result.getModelAndView().getModel().get("model");

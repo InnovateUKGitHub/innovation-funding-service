@@ -92,7 +92,7 @@ public class InterviewInviteControllerTest extends BaseControllerMockMVCTest<Int
                 .withCompetitionName("my competition")
                 .build();
 
-        InterviewInviteViewModel expectedViewModel = new InterviewInviteViewModel("hash", inviteResource, false);
+        InterviewInviteViewModel expectedViewModel = new InterviewInviteViewModel("hash", inviteResource, false, null);
 
         when(interviewInviteRestService.checkExistingUser("hash")).thenReturn(restSuccess(TRUE));
         when(interviewInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
@@ -136,7 +136,7 @@ public class InterviewInviteControllerTest extends BaseControllerMockMVCTest<Int
         InterviewInviteResource inviteResource = newInterviewInviteResource().withCompetitionName("my competition")
                 .build();
 
-        InterviewInviteViewModel expectedViewModel = new InterviewInviteViewModel("hash", inviteResource, true);
+        InterviewInviteViewModel expectedViewModel = new InterviewInviteViewModel("hash", inviteResource, true, null);
 
         when(interviewInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
         mockMvc.perform(get(restUrl + "{inviteHash}", "hash"))

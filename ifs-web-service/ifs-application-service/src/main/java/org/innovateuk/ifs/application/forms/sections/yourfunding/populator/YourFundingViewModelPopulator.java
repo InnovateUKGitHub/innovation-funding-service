@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -20,6 +21,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.publiccontent.service.PublicContentRestService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -69,6 +71,9 @@ public class YourFundingViewModelPopulator {
     @Autowired
     private ProcessRoleRestService processRoleRestService;
 
+    @Autowired
+    private PublicContentRestService publicContentRestService;
+
     public YourFundingViewModel populate(long applicationId, long sectionId, long organisationId, UserResource user) {
         boolean userCanEdit = user.hasRole(Role.APPLICANT) && processRoleRestService.findProcessRole(user.getId(), applicationId).getOptionalSuccessObject()
                 .map(role -> role.getOrganisationId() != null && role.getOrganisationId().equals(organisationId))
@@ -82,6 +87,7 @@ public class YourFundingViewModelPopulator {
     private YourFundingViewModel populateApplicant(long applicationId, long sectionId, long organisationId, UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+        PublicContentResource publicContent = publicContentRestService.getByCompetitionId(application.getCompetition()).getSuccess();
 
         ApplicantSectionResource section = applicantRestService.getSection(user.getId(), applicationId, sectionId);
         if (!section.getCurrentApplicant().getOrganisation().getId().equals(organisationId)) {
@@ -127,7 +133,8 @@ public class YourFundingViewModelPopulator {
                 overridingFundingRules,
                 section.getCompetition().getFundingType(),
                 section.getCurrentApplicant().getOrganisation().getOrganisationTypeEnum(),
-                competition.isThirdPartyOfgem());
+                competition.isThirdPartyOfgem(),
+                publicContent.getHash());
     }
 
 
@@ -135,9 +142,10 @@ public class YourFundingViewModelPopulator {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+        PublicContentResource publicContent = publicContentRestService.getByCompetitionId(application.getCompetition()).getSuccess();
 
         return new ManagementYourFundingViewModel(applicationId, application.getCompetitionName(), sectionId, organisationId, application.getCompetition(), application.getName(),
-                format("/application/%d/form/FINANCE/%d", applicationId, organisationId), competition.getFundingType(), organisation.getOrganisationTypeEnum(), competition.isThirdPartyOfgem());
+                format("/application/%d/form/FINANCE/%d", applicationId, organisationId), competition.getFundingType(), organisation.getOrganisationTypeEnum(), competition.isThirdPartyOfgem(), publicContent.getHash());
     }
 
     private Long getSubsidyBasisQuestionId(ApplicantSectionResource section) {

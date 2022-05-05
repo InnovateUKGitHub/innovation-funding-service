@@ -11,7 +11,16 @@
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block th:insert="fragments/layout :: page-title"
                           th:with="pageTitle=${model.leadOrganisation}? 'Invitation to contribute' : 'Invitation to collaborate',size='govuk-heading-xl'" />
-                <p class="govuk-body">You have been invited to join an application in the competition '<a th:href="@{/competition/{competitionId}/overview(competitionId=${model.competitionId})}" th:text="${model.competitionName}" class="govuk-link"></a>'.</p>
+                <p class="govuk-body">You have been invited to join an application in the competition
+
+                    '<a th:href="${model.hash == null}
+                    ? @{/competition/{competitionId}/overview(competitionId=${model.competitionId})}
+                    : @{/competition/{competitionId}/overview/{hash}(competitionId=${model.competitionId},hash=${model.hash})}"
+                        th:text="${model.competitionName}"
+                        class="govuk-link">
+                    </a>'.
+                </p>
+
                 <h2 class="govuk-heading-l">Application details</h2>
                 <dl class="govuk-list govuk-!-margin-bottom-6">
                     <dt>Lead organisation:</dt>
