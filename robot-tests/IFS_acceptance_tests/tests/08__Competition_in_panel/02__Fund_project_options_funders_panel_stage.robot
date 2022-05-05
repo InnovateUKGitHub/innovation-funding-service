@@ -285,5 +285,5 @@ the user set assessor score notification to yes
     the user selects the radio button       hasInterviewStage  hasInterviewStage-0
     the user selects the radio button       averageAssessorScore  averageAssessorScore-0
     the user clicks the button/link         jQuery = button:contains("Done")
-    ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots   page should contain element    jQuery = dt:contains("average assessor score123") + dd:contains("Yes")
+    ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots   page should contain element    jQuery = dt:contains("average assessor score") + dd:contains("Yes")
     Run Keyword If  '${status}' == 'FAIL'  the user navigates to the page   ${server}/management/competition/setup/${assessorScoreCompId}/section/assessors
