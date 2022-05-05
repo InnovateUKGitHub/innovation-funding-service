@@ -94,7 +94,7 @@ public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<Review
                 .withPanelDate(panelDate)
                 .build();
 
-        ReviewInviteViewModel expectedViewModel = new ReviewInviteViewModel("hash", inviteResource, false);
+        ReviewInviteViewModel expectedViewModel = new ReviewInviteViewModel("hash", inviteResource, false, null);
 
         when(reviewInviteRestService.checkExistingUser("hash")).thenReturn(restSuccess(TRUE));
         when(reviewInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
@@ -141,7 +141,7 @@ public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<Review
                 .withPanelDate(panelDate)
                 .build();
 
-        ReviewInviteViewModel expectedViewModel = new ReviewInviteViewModel("hash", inviteResource, true);
+        ReviewInviteViewModel expectedViewModel = new ReviewInviteViewModel("hash", inviteResource, true, null);
 
         when(reviewInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
         mockMvc.perform(get(restUrl + "{inviteHash}", "hash"))
