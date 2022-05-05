@@ -17,3 +17,4 @@ resources:
   - shibboleth-config.yml
   - spring-profile-env.yml
   - web-config.yml
+  - file-storage-service-config.yml

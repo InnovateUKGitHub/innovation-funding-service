@@ -2,8 +2,8 @@ ifs:
   filestorage:
     virusscan:
       clamAv:
-        host: ${FSS_CLAM_HOST:clam-av}
-        port: ${FSS_CLAM_PORT:500}
+        host: ${FSS_CLAM_HOST:clamav}
+        port: ${FSS_CLAM_PORT:3310}
         timeout: ${FSS_CLAM_TIMEOUT:500}
     storage:
       localStorage:
