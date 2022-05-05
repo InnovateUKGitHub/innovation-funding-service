@@ -42,4 +42,6 @@ public interface RegistrationService {
     @SecuredBySpring(value = "CREATE", securedType = StakeholderRegistrationResource.class, description = "A System Registration User can create new Stakeholders on behalf of non-logged in users with invite hash")
     ServiceResult<UserResource> editInternalUser(UserResource userToEdit, Role userRoleType);
 
+    @PreAuthorize("hasPermission(#user, 'CREATE')")
+    ServiceResult<Void> createUserProfileStatus(long userId);
 }

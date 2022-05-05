@@ -134,7 +134,7 @@ Comp Admin can set the notification email to include assessor average score
     [Documentation]  IFS-7369
     Given the user clicks the button/link  link = ${assessorScoreComp}
     When the user set assessor score notification to yes
-    Then the user should see the element   jQuery = dt:contains("average assessor score") + dd:contains("Yes")
+    Then the user should see the element   jQuery = dt:contains("Include the average assessor score in funding decision notifications?") + dd:contains("Yes")
 
 Notification email template includes assessor score
     [Documentation]  IFS-7370

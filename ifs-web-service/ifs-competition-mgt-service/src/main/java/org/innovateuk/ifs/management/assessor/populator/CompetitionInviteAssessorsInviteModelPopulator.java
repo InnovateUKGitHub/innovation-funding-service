@@ -60,7 +60,7 @@ public class CompetitionInviteAssessorsInviteModelPopulator extends CompetitionI
         return new InvitedAssessorRowViewModel(
                 assessorCreatedInviteResource.getId(),
                 assessorCreatedInviteResource.getName(),
-                assessorCreatedInviteResource.getInnovationAreas(),
+                assessorCreatedInviteResource.getInnovationAreas().isEmpty() ? getExternalAssessorsInnovationAreas(assessorCreatedInviteResource.getEmail()) : assessorCreatedInviteResource.getInnovationAreas(),
                 assessorCreatedInviteResource.isCompliant(),
                 assessorCreatedInviteResource.isValidAgreement(),
                 assessorCreatedInviteResource.isValidDoi(),

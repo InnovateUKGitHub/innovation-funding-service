@@ -9,12 +9,12 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
-import org.innovateuk.ifs.registration.form.RegistrationForm.TermsValidationGroup;
 import org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.RegistrationViewModelBuilder;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.service.RoleProfileStatusRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -57,6 +57,9 @@ public class ExternalUserRegistrationController {
     private AddressRestService addressRestService;
 
     @Autowired
+    private RoleProfileStatusRestService roleProfileStatusRestService;
+
+    @Autowired
     private Validator validator;
 
     @GetMapping("/{inviteHash}/register")
@@ -72,7 +75,7 @@ public class ExternalUserRegistrationController {
     @PostMapping("/{inviteHash}/register")
     public String submitYourDetails(Model model,
                                     @PathVariable("inviteHash") String inviteHash,
-                                    @Validated({Default.class, TermsValidationGroup.class}) @ModelAttribute("form") RegistrationForm registrationForm,
+                                    @Validated({Default.class, Primary.class}) @ModelAttribute("form") RegistrationForm registrationForm,
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler,
                                     UserResource loggedInUser) {
@@ -86,7 +89,16 @@ public class ExternalUserRegistrationController {
                     bindingResult.addError(new FieldError("form", violation.getPropertyPath().toString(), violation.getMessage())));
         }
 
+        if (!invite.getRole().isAssessor()) {
+            Set<ConstraintViolation<RegistrationForm>> tncConstraintViolations =
+                    validator.validate(registrationForm, RegistrationForm.TermsValidationGroup.class);
+
+            tncConstraintViolations.forEach(violation ->
+                    bindingResult.addError(new FieldError("form", violation.getPropertyPath().toString(), violation.getMessage())));
+        }
+
         Supplier<String> failureView = () -> doViewYourDetails(model, invite, loggedInUser);
+        Supplier<String> successView = () -> format("redirect:/registration/%s/register/account-created", inviteHash);
 
         if(loggedInUser != null){
             return failureView.get();
@@ -96,6 +108,10 @@ public class ExternalUserRegistrationController {
                     .withInviteHash(inviteHash)
                     .withRole(invite.getRole())
                 .build());
+                if (invite.getRole().isAssessor() && result.isSuccess()) {
+                    long userId = result.getSuccess().getId();
+                    userRestService.createUserProfileStatus(userId);
+                }
                 result.getErrors().forEach(error -> {
                     if (StringUtils.hasText(error.getFieldName())) {
                         bindingResult.rejectValue(error.getFieldName(), "registration." + error.getErrorKey());
@@ -103,9 +119,9 @@ public class ExternalUserRegistrationController {
                         bindingResult.reject("registration." + error.getErrorKey());
                     }
                 });
+
                 return validationHandler.
-                            failNowOrSucceedWith(failureView,
-                                                 () -> format("redirect:/registration/%s/register/account-created", inviteHash));
+                        failNowOrSucceedWith(failureView, successView);
             });
         }
     }
@@ -113,6 +129,7 @@ public class ExternalUserRegistrationController {
     @GetMapping(value = "/{inviteHash}/register/account-created")
     public String accountCreated(@PathVariable("inviteHash") String inviteHash, UserResource loggedInUser) {
         boolean userIsLoggedIn = loggedInUser != null;
+        RoleInviteResource invite = inviteUserRestService.getInvite(inviteHash).getSuccess();
 
         // the user is already logged in, take them back to the dashboard
         if (userIsLoggedIn) {
@@ -124,13 +141,13 @@ public class ExternalUserRegistrationController {
                 return format("redirect:/registration/%s/register", inviteHash);
             }
             else {
-                return "registration/external-account-created";
+                return invite.getRole().isAssessor() ? "registration/account-created" : "registration/external-account-created";
             }
         }).getSuccess();
     }
 
     private String doViewYourDetails(Model model, RoleInviteResource invite, UserResource loggedInUser) {
-        if(loggedInUser != null) {
+        if (loggedInUser != null) {
             return "registration/error";
         } else {
             RegistrationViewModelBuilder viewModelBuilder = aRegistrationViewModel();
@@ -156,6 +173,13 @@ public class ExternalUserRegistrationController {
                         .withSubTitle("")
                         .withPostcodeGuidance("")
                         .withGuidance("");
+            }
+            if (invite.getRole() == Role.ASSESSOR) {
+                viewModelBuilder.withPhoneRequired(true)
+                        .withAddressRequired(true)
+                        .withInvitee(true)
+                        .withTermsRequired(false)
+                        .withButtonText("Continue");
             }
             model.addAttribute("model", viewModelBuilder.build());
             return "registration/register";

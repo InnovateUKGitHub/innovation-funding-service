@@ -10,12 +10,12 @@ import org.innovateuk.ifs.starters.stubdev.thymeleaf.IfsThymeleafPostProcessorDi
 import org.innovateuk.ifs.starters.stubdev.util.TimerAspect;
 import org.innovateuk.ifs.starters.stubdev.util.WarningLogger;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.devtools.autoconfigure.LocalDevToolsAutoConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.env.AbstractEnvironment;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
 import java.util.List;
@@ -23,7 +23,6 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.innovateuk.ifs.IfsProfileConstants.SIMPLE_CACHE;
 import static org.innovateuk.ifs.IfsProfileConstants.STUBDEV;
 import static org.innovateuk.ifs.starters.stubdev.cfg.StubDevConfigurationProperties.STUB_DEV_PROPS_PREFIX;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -46,6 +45,7 @@ public class IfsStubDevAutoConfigurationTest {
     );
 
     @Test
+    @ResourceLock("COMMON")
     public void testConfigWithDevtoolsAndProfileAndThymleafDebug() {
         new ApplicationContextRunner()
                 .withSystemProperties(ProfileUtils.activeProfilesString(STUBDEV))
@@ -64,6 +64,7 @@ public class IfsStubDevAutoConfigurationTest {
     }
 
     @Test
+    @ResourceLock("COMMON")
     public void testConfigWithDevtoolsAndWrongProfile() {
         new ApplicationContextRunner()
                 .withSystemProperties(ProfileUtils.activeProfilesString(IfsProfileConstants.AMQP_PROFILE))
@@ -76,6 +77,7 @@ public class IfsStubDevAutoConfigurationTest {
     }
 
     @Test
+    @ResourceLock("COMMON")
     public void testConfigWithDevtoolsAndProfile() {
         new ApplicationContextRunner()
                 .withSystemProperties(
@@ -91,6 +93,7 @@ public class IfsStubDevAutoConfigurationTest {
     }
 
     @Test
+    @ResourceLock("COMMON")
     public void testConfigWithDevtoolsNoProfile() {
         new ApplicationContextRunner()
                 .withConfiguration(
@@ -102,6 +105,7 @@ public class IfsStubDevAutoConfigurationTest {
     }
 
     @Test
+    @ResourceLock("COMMON")
     public void testConfigNoDevtoolsNoProfile() {
         new ApplicationContextRunner()
                 .withConfiguration(

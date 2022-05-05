@@ -3,9 +3,11 @@ package org.innovateuk.ifs.management.admin.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.management.admin.form.InviteUserView;
 import org.innovateuk.ifs.user.resource.Role;
 
+import java.util.List;
 import java.util.Set;
 
 public class InviteUserViewModel {
@@ -13,6 +15,8 @@ public class InviteUserViewModel {
     private InviteUserView type;
 
     private Set<Role> roles;
+
+    private List<InnovationSectorResource> innovationSectorOptions;
 
     public InviteUserViewModel(InviteUserView type, Set<Role> roles)
     {
@@ -64,12 +68,25 @@ public class InviteUserViewModel {
         return this.roles.size() == 1 &&
                 this.roles.stream().findFirst().get() == Role.SUPPORTER;
     }
+    public boolean isAddingAssessorRole() {
+        return this.roles.size() == 1 &&
+                this.roles.stream().findFirst().get() == Role.ASSESSOR;
+    }
+
+    public List<InnovationSectorResource> getInnovationSectorOptions() {
+        return innovationSectorOptions;
+    }
+
+    public void setInnovationSectorOptions(List<InnovationSectorResource> innovationSectorOptions) {
+        this.innovationSectorOptions = innovationSectorOptions;
+    }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(type)
                 .append(roles)
+                .append(innovationSectorOptions)
                 .toHashCode();
     }
 
@@ -84,6 +101,7 @@ public class InviteUserViewModel {
         return new EqualsBuilder()
                 .append(type, this.type)
                 .append(roles, this.roles)
+                .append(innovationSectorOptions, this.innovationSectorOptions)
                 .isEquals();
     }
 
@@ -92,6 +110,7 @@ public class InviteUserViewModel {
         return new ToStringBuilder(this)
                 .append("type", type)
                 .append("roles", roles)
+                .append("innovationSectorOptions", innovationSectorOptions)
                 .toString();
     }
 }

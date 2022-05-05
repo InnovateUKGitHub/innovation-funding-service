@@ -9,10 +9,15 @@ import java.io.IOException;
 
 /**
  * @deprecated very few times has storing json in mysql tables been a good idea
+ *
+ * Catching the exception and returning null has never been a good idea
+ *
  */
 @Slf4j
+@Deprecated
 public class JpaJsonConverter implements AttributeConverter<JsonNode, String> {
-    private final static ObjectMapper objectMapper = new ObjectMapper();
+
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public String convertToDatabaseColumn(JsonNode meta) {

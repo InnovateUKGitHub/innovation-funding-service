@@ -55,8 +55,9 @@ class RegistrationNotificationService {
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
-    ServiceResult<Void> sendUserVerificationEmail(final UserResource user, final Optional<Long> competitionId, final Optional<Long> organisationId, final Optional<Long> inviteId) {
-        final Token token = createEmailVerificationToken(user, competitionId, organisationId, inviteId);
+    ServiceResult<Void> sendUserVerificationEmail(final UserResource user, final Optional<Long> competitionId, final Optional<Long> organisationId,
+                                                  final Optional<Long> inviteId, final Optional<Long> projectId) {
+        final Token token = createEmailVerificationToken(user, competitionId, organisationId, inviteId, projectId);
         final Notification notification = getEmailVerificationNotification(user, token);
         return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
@@ -85,13 +86,15 @@ class RegistrationNotificationService {
         return new Notification(systemNotificationSource, new UserNotificationTarget(user.getName(), user.getEmail()), Notifications.VERIFY_EMAIL_ADDRESS, asMap("verificationLink", format("%s/registration/verify-email/%s", webBaseUrl, token.getHash())));
     }
 
-    private Token createEmailVerificationToken(final UserResource user, final Optional<Long> competitionId, final Optional<Long> organisationId, final Optional<Long> inviteId) {
+    private Token createEmailVerificationToken(final UserResource user, final Optional<Long> competitionId, final Optional<Long> organisationId,
+                                               final Optional<Long> inviteId, final Optional<Long> projectId) {
         final String emailVerificationHash = getEmailVerificationHash(user);
 
         final ObjectNode extraInfo = factory.objectNode();
         competitionId.ifPresent(aLong -> extraInfo.put("competitionId", aLong));
         organisationId.ifPresent(aLong -> extraInfo.put("organisationId", aLong));
         inviteId.ifPresent(aLong -> extraInfo.put("inviteId", aLong));
+        projectId.ifPresent(aLong -> extraInfo.put("projectId", aLong));
         final Token token = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId(), emailVerificationHash, now(), extraInfo);
         return tokenRepository.save(token);
     }

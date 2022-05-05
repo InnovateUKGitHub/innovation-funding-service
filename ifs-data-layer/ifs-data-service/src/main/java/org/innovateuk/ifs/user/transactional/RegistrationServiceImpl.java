@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.user.transactional;
 
 import org.innovateuk.ifs.address.mapper.AddressMapper;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -23,12 +22,11 @@ import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerInviteRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.cache.UserUpdate;
+import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserCreationResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserStatus;
+import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
+import org.innovateuk.ifs.user.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -102,6 +100,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Autowired
     private InviteOrganisationRepository inviteOrganisationRepository;
 
+    @Autowired
+    private RoleProfileStatusRepository roleProfileStatusRepository;
+
     @Value("${ifs.edi.update.enabled}")
     private boolean isEdiUpdateEnabled;
 
@@ -118,7 +119,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
         if (shouldSendVerificationEmail(user)) {
             result = result
-                    .andOnSuccess(savedUser -> sendUserVerificationEmail(ofNullable(user.getCompetitionId()), ofNullable(user.getOrganisationId()), ofNullable(user.getInviteId()), savedUser));
+                    .andOnSuccess(savedUser -> sendUserVerificationEmail(ofNullable(user.getCompetitionId()), ofNullable(user.getOrganisationId()),
+                            ofNullable(user.getInviteId()), ofNullable(user.getProjectId()), savedUser));
         }
         if (shouldBePending(user)) {
             result = result.andOnSuccess(this::saveUserAsPending);
@@ -132,6 +134,16 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         }
         return result
                 .andOnSuccessReturn(userMapper::mapToResource);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> createUserProfileStatus(long userId) {
+
+        User user = userRepository.findById(userId).get();
+        roleProfileStatusRepository.save(new RoleProfileStatus(user, ProfileRole.ASSESSOR));
+
+        return serviceSuccess();
     }
 
     private boolean shouldImmediatelyActivate(UserCreationResource user) {
@@ -233,8 +245,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         });
     }
 
-    private ServiceResult<User> sendUserVerificationEmail(Optional<Long> competitionId, Optional<Long> organisationId, Optional<Long> inviteId, User user) {
-        return registrationNotificationService.sendUserVerificationEmail(userMapper.mapToResource(user), competitionId, organisationId, inviteId).
+    private ServiceResult<User> sendUserVerificationEmail(Optional<Long> competitionId, Optional<Long> organisationId,
+                                                          Optional<Long> inviteId, Optional<Long> projectId, User user) {
+        return registrationNotificationService.sendUserVerificationEmail(userMapper.mapToResource(user), competitionId, organisationId, inviteId, projectId).
                 andOnSuccessReturn(() -> user);
     }
 
