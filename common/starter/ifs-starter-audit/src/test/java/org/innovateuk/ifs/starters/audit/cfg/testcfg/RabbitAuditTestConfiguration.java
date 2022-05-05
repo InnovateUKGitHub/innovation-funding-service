@@ -21,6 +21,8 @@ public class RabbitAuditTestConfiguration {
     @Autowired
     private Queue queue;
 
+    public static final String CONTEXT_RESOURCE_LOCK = "CONTEXT_RESOURCE_LOCK";
+
     @Bean
     public ConnectionFactory connectionFactory() {
         return new CachingConnectionFactory(MockConnectionFactoryFactory.build().enableConsistentHashPlugin());
