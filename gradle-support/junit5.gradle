@@ -4,7 +4,7 @@ test {
     testLogging {
         events "passed", "skipped", "failed"
     }
-    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+    maxParallelForks = 1
 }
 
 dependencies {
