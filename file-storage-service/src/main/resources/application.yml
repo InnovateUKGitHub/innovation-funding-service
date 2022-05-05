@@ -20,7 +20,7 @@ spring:
   datasource:
     url: ${FSS_DB_URL:jdbc:mysql://ifs-database:3306/ifs_file_storage}
     username: ${FSS_DB_USER:root}
-    password: ${FSS_DB_PASS}
+    password: ${FSS_DB_PASS:password}
     test-on-borrow: true
     validation-query: SELECT 1
     driver-class-name: org.mariadb.jdbc.Driver
