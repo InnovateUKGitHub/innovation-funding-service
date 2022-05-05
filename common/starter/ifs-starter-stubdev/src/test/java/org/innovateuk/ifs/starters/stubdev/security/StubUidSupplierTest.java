@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 
 @Disabled("Intermittent on bamboo")
 @ExtendWith(MockitoExtension.class)
-@Execution(SAME_THREAD)
 class StubUidSupplierTest {
 
     @Mock
