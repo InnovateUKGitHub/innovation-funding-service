@@ -4,7 +4,6 @@ import org.innovateuk.ifs.starters.stubdev.cfg.StubDevConfigurationProperties;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.parallel.Execution;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -15,7 +14,6 @@ import java.util.UUID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 
 @Disabled("Intermittent on bamboo")
 @ExtendWith(MockitoExtension.class)
