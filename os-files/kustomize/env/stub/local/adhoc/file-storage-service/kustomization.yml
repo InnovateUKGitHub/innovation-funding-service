@@ -1,0 +1,13 @@
+commonAnnotations:
+  deployedWith: kustomize
+  environment: local-dev
+
+resources:
+  - ../../../../../config-mgmt/env/local
+  - ../../../../../secrets-mgmt/env/local
+
+components:
+  - ../../../../../components/file-storage-service
+  - ../../../../../patches/
+  - ../../patches/
+
