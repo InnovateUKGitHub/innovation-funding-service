@@ -300,6 +300,7 @@ ${compType_ATI}        Aerospace Technology Institute
 ${compType_PT}         The Prince's Trust
 ${compType_H2020}      Horizon 2020
 ${compType_HESTA}      Horizon Europe Guarantee
+${compType_DirectAward}  Direct award
 
 # Competition and Applicant lists
 # the questions are only the assessed questions for a particular compettion type
