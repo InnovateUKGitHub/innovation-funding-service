@@ -1,6 +1,8 @@
 *** Settings ***
 Documentation    IFS-11788  Assessor pool: Create account journey for assessor
 ...
+...              IFS-11945 Assessor pool: New assessor email template content change
+...
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
@@ -18,12 +20,12 @@ ${lastNameValidationMessage}            Please enter a last name.
 ${emailAddressValidationMessage}        Please enter an email address.
 ${innovationAreaValidationMessage}      Please enter an innovation sector and area.
 ${validAssessorEmail}                   alome.lolome@gmail.com
-${assessorInviteEmailSubject}           You have been invited to become a assessor
-${AssessorEmailInviteDescription}       You've been invited to become a assessor for the Innovation Funding Service.
+${assessorInviteEmailSubject}           You have been invited to become an assessor
+${AssessorEmailInviteDescription}       You've been invited to become an assessor for the Innovation Funding Service.
 
 
 *** Test Cases ***
-Invite a new supporter user field validations
+Invite a new Assessor user field validations
     [Documentation]  IFS-11787
     Given the user clicks the button/link                                       link = Manage users
     And the user clicks the button/link                                         link = Invite a new external user
@@ -40,7 +42,7 @@ Admin sents an invite for assessor
     [Teardown]  Logout as user
 
 The Assesssor creates a new account
-    [Documentation]  IFS-11788
+    [Documentation]  IFS-11788  IFS-11945
     Given the user reads his email and clicks the link         ${validAssessorEmail}  ${assessorInviteEmailSubject}  ${AssessorEmailInviteDescription}
     And assessor enters the details to create an account       alome  lolome
     When the user clicks the button/link                       name = create-account
