@@ -15,6 +15,8 @@ public abstract class AbstractPublicContentViewModel {
 
     private boolean readOnly = false;
 
+    private boolean isDirectAward = false;
+
     public CompetitionResource getCompetition() {
         return competition;
     }
@@ -49,4 +51,7 @@ public abstract class AbstractPublicContentViewModel {
 
     public boolean isComplete() { return PublicContentStatus.COMPLETE.equals(section.getStatus()); }
 
+    public boolean isDirectAward() {
+        return getCompetition().isDirectAward();
+    }
 }

@@ -648,16 +648,6 @@ moving competition to Project Setup
     the user navigates to the page   ${server}/management/competition/${compID}
     the user clicks the button/link  css = button[type="submit"][formaction$="release-feedback"]
 
-the user set assessor score notification to yes
-    the user clicks the button/link         link = View and update competition details
-    the user clicks the button/link         link = Assessors
-    the user clicks the button/link         jQuery = button:contains("Edit")
-    the user selects the radio button       assessorCount   5
-    the user selects the radio button       hasAssessmentPanel  0
-    the user selects the radio button       hasInterviewStage  0
-    the user selects the radio button       averageAssessorScore  1
-    the user clicks the button/link         jQuery = button:contains("Done")
-
 the user selects the organisational eligibility
     [Arguments]     ${organisationEligibilityOption}            ${CanInternationalOrganisationsLead}
     the user clicks the button/link         link = ${organisationalEligibilityTitle}

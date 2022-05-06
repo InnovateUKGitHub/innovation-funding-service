@@ -1,9 +1,14 @@
 *** Settings ***
 Documentation     IFS-11682  Direct Award: New competition type
 ...
+<<<<<<< HEAD
 ...               IFS-11736 Direct awards - Content sweep
 ...
 
+=======
+...               IFS-11735 Direct Awards: Public Content scale back
+...
+>>>>>>> 03f6aeea0fe14a88262d66301662b02293da28cc
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 
@@ -33,16 +38,23 @@ the user creates a new open ended competiton
 
 the user should see open ended is selected by default for direct award competition type
     [Documentation]  IFS-11682
-    When the user clicks the button/link                  link = Back to competition details
-    And the user completes completion stage
-    Then the user sees that the radio button is selected  alwaysOpen  true
+    Given the user clicks the button/link                  link = Back to competition details
+    When the user completes completion stage
+    Then the user sees that the radio button is selected   alwaysOpen  true
+
+the user should see inviteonly selected as default option in competition information and search
+    [Documentation]  IFS-11735
+    Given the user clicks the button/link                  link = Back to competition details
+    When the user clicks the button/link                   link = Public content
+    And the user clicks the button/link                    link = Competition information and search
+    Then the user sees that the radio button is selected   publishSetting  invite
 
 the user create a new application
     [Documentation]  IFS-11736
     Given the user logs out if they are logged in
-    And the user navigates to the page           ${server}/competition/${webTestCompID}/overview
-    When existing user creates a new application
-    Then the user should see the element         jQuery = dt:contains("Award:")
+    And the user navigates to the page            ${server}/competition/${webTestCompID}/overview
+    When existing user creates a new application  ${webTestCompName}
+    Then the user should see the element          jQuery = dt:contains("Award:")
 
 the user checks the application details
     [Documentation]  IFS-11736
@@ -69,21 +81,6 @@ the user completes completion stage
     the user clicks the button/link     link = Milestones
     the user clicks the button twice    jQuery = label:contains("Project setup")
     the user clicks the button/link     jQuery = button:contains("Done")
-
-the lead user creates an application
-    [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
-    the user select the competition and starts application          ${webTestCompName}
-    the user clicks the button/link                                 link = Continue and create an account
-    the user selects the radio button                               organisationTypeId    radio-${BUSINESS_TYPE_ID}
-    the user clicks the button/link                                 jQuery = .govuk-button:contains("Save and continue")
-    the user selects his organisation in Companies House            ASOS  ASOS PLC
-    the user should be redirected to the correct page               ${SERVER}/registration/register
-    the user enters the details and clicks the create account       ${firstName}  ${lastName}  ${email}  ${short_password}
-    the user reads his email and clicks the link                    ${email}  Please verify your email address  Once verified you can sign into your account.
-    the user should be redirected to the correct page               ${REGISTRATION_VERIFIED}
-    the user clicks the button/link                                 link = Sign in
-    Logging in and Error Checking                                   ${email}  ${short_password}
-    the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
 
 the user completes the application details
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}  ${projectDuration}
