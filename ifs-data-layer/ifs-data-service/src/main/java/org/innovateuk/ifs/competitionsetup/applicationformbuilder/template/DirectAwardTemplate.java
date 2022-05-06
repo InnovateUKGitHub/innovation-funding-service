@@ -37,6 +37,8 @@ public class DirectAwardTemplate implements CompetitionTemplate {
 
         competition.setAcademicGrantPercentage(100);
         competition.setAlwaysOpen(true);
+        competition.setMinProjectDuration(1);
+        competition.setMaxProjectDuration(36);
         return competition;
     }
 
