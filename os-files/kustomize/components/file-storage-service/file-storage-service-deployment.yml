@@ -42,9 +42,9 @@ spec:
           successThreshold: 1
           failureThreshold: 3
         envFrom:
-          - secretKeyRef:
+          - secretRef:
               name: file-storage-service-secrets
-          - configKeyRef:
+          - configMapRef:
               name: file-storage-service-config
         env:
         - name: JAVA_TOOL_OPTIONS
