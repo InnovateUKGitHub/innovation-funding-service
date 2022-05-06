@@ -281,9 +281,11 @@ the user set assessor score notification to yes
     the user clicks the button/link         link = Assessors
     the user clicks the button/link         jQuery = button:contains("Edit")
     the user selects the radio button       assessorCount   5
-    the user selects the radio button       hasAssessmentPanel  hasAssessmentPanel-0
-    the user selects the radio button       hasInterviewStage  hasInterviewStage-0
-    the user selects the radio button       averageAssessorScore  averageAssessorScore-0
+    the user selects the radio button       hasAssessmentPanel  0
+    the user selects the radio button       hasInterviewStage  0
+    the user selects the radio button       averageAssessorScore  1
     the user clicks the button/link         jQuery = button:contains("Done")
     ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots   page should contain element    jQuery = dt:contains("average assessor score") + dd:contains("Yes")
-    Run Keyword If  '${status}' == 'FAIL'  the user navigates to the page   ${server}/management/competition/setup/${assessorScoreCompId}/section/assessors
+    Run Keyword If  '${status}' == 'FAIL'  run keywords     the user navigates to the page          ${server}/management/competition/setup/${assessorScoreCompId}/section/assessors
+    ...             AND                                     the user selects the radio button       averageAssessorScore  1
+    ...             AND                                     the user clicks the button/link         jQuery = button:contains("Done")
