@@ -7,5 +7,5 @@ data:
   FSS_S3_AWS_REGION: "eu-west-2"
   FSS_S3_AWS_BUCKET: "ifs-file-storage-service-custom"
   FSS_CLAM_HOST: "clamav"
-  FSS_CLAM_PORT: 3310
-  FSS_CLAM_TIMEOUT: 500
+  FSS_CLAM_PORT: "3310"
+  FSS_CLAM_TIMEOUT: "500"
