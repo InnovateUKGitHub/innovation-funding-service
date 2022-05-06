@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.supporter.dashboard.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
+import org.innovateuk.ifs.publiccontent.service.PublicContentRestService;
 import org.innovateuk.ifs.supporter.dashboard.viewmodel.SupporterCompetitionDashboardViewModel;
 import org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationPageResource;
 import org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationResource;
@@ -22,6 +24,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -36,6 +39,9 @@ public class SupporterCompetitionDashboardControllerTest extends BaseControllerM
 
     @Mock
     private CompetitionRestService competitionRestService;
+
+    @Mock
+    private PublicContentRestService publicContentRestService;
 
     @Override
     protected SupporterCompetitionDashboardController supplyControllerUnderTest() {
@@ -58,8 +64,11 @@ public class SupporterCompetitionDashboardControllerTest extends BaseControllerM
                 .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
                 .build();
 
+        PublicContentResource publicContentResource = newPublicContentResource().build();
+
         when(supporterDashboardRestService.getSupporterCompetitionDashboardApplications(getLoggedInUser().getId(), competition.getId(), 2)).thenReturn(restSuccess(pageResource));
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(publicContentRestService.getByCompetitionId(competition.getId())).thenReturn(restSuccess(publicContentResource));
 
 
         MvcResult result = mockMvc.perform(get("/supporter/dashboard/competition/{competitionId}?page={page}", competition.getId(), page))

@@ -45,9 +45,10 @@ public class AssessorCompetitionForPanelDashboardModelPopulator {
 
     public AssessorCompetitionForPanelDashboardViewModel populateModel(Long competitionId, Long userId) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        PublicContentResource publicContent = publicContentRestService.getByCompetitionId(competitionId).getSuccess();
         ZonedDateTime panelDate = competition.getFundersPanelDate();
 
-        List<AssessorCompetitionForPanelDashboardApplicationViewModel> applications = getApplications(userId, competitionId);
+        List<AssessorCompetitionForPanelDashboardApplicationViewModel> applications = getApplications(userId, competitionId, publicContent);
 
         return new AssessorCompetitionForPanelDashboardViewModel(
                 competition.getId(),
@@ -58,21 +59,20 @@ public class AssessorCompetitionForPanelDashboardModelPopulator {
         );
     }
 
-    private List<AssessorCompetitionForPanelDashboardApplicationViewModel> getApplications(long userId, long competitionId) {
+    private List<AssessorCompetitionForPanelDashboardApplicationViewModel> getApplications(long userId, long competitionId, PublicContentResource publicContentResource) {
         List<ReviewResource> reviews = reviewRestService.getAssessmentReviews(userId, competitionId).getSuccess();
-        return simpleMap(reviews, this::createApplicationViewModel);
+        return simpleMap(reviews, review -> createApplicationViewModel(review, publicContentResource));
     }
 
-    private AssessorCompetitionForPanelDashboardApplicationViewModel createApplicationViewModel(ReviewResource assessmentReview) {
+    private AssessorCompetitionForPanelDashboardApplicationViewModel createApplicationViewModel(ReviewResource assessmentReview, PublicContentResource publicContentResource) {
         ApplicationResource application = applicationService.getById(assessmentReview.getApplication());
         OrganisationResource leadOrganisation = organisationRestService.getOrganisationById(application.getLeadOrganisationId()).getSuccess();
-        PublicContentResource publicContent = publicContentRestService.getByCompetitionId(application.getCompetition()).getSuccess();
 
         return new AssessorCompetitionForPanelDashboardApplicationViewModel(application.getId(),
                 assessmentReview.getId(),
                 application.getName(),
                 leadOrganisation.getName(),
                 assessmentReview.getReviewState(),
-                publicContent.getHash());
+                publicContentResource.getHash());
     }
 }
