@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.validator.
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -40,6 +41,7 @@ import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.publiccontent.service.PublicContentRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -70,6 +72,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilde
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -121,6 +124,9 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
 
     @Mock
     private GrantOfferLetterService grantOfferLetterService;
+
+    @Mock
+    private PublicContentRestService publicContentRestService;
 
     private OrganisationResource industrialOrganisation;
 
@@ -191,8 +197,11 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility, project);
 
+        PublicContentResource publicContentResource = newPublicContentResource().build();
+
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
+        when(publicContentRestService.getByCompetitionId(project.getCompetition())).thenReturn(restSuccess(publicContentResource));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility",
                 project.getId(), industrialOrganisation.getId())).
@@ -213,9 +222,12 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
 
         CompetitionResource h2020Comp = newCompetitionResource().withCompetitionTypeEnum(CompetitionTypeEnum.HORIZON_2020).build();
 
+        PublicContentResource publicContentResource = newPublicContentResource().build();
+
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(h2020Comp));
         when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
+        when(publicContentRestService.getByCompetitionId(project.getCompetition())).thenReturn(restSuccess(publicContentResource));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility",
                                                project.getId(), industrialOrganisation.getId())).
@@ -234,8 +246,11 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility, project);
 
+        PublicContentResource publicContentResource = newPublicContentResource().build();
+
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(academicOrganisation);
         when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
+        when(publicContentRestService.getByCompetitionId(project.getCompetition())).thenReturn(restSuccess(publicContentResource));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility",
                 project.getId(), industrialOrganisation.getId())).
@@ -254,9 +269,12 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility, project);
 
+        PublicContentResource publicContentResource = newPublicContentResource().build();
+
         AcademicCostForm academicCostForm = new AcademicCostForm();
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(academicOrganisation);
         when(projectAcademicCostFormPopulator.populate(any(), eq(project.getId()), eq(academicOrganisation.getId()))).thenReturn(academicCostForm);
+        when(publicContentRestService.getByCompetitionId(project.getCompetition())).thenReturn(restSuccess(publicContentResource));
 
         ApplicationFinanceResource appFinanceResource = newApplicationFinanceResource().withFinanceFileEntry(123L).build();
         FileEntryResource jesFile = newFileEntryResource().withId(987L).withName("Jes1").build();
@@ -281,6 +299,8 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility, project);
 
+        PublicContentResource publicContentResource = newPublicContentResource().build();
+
         AcademicCostForm academicCostForm = new AcademicCostForm();
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(academicOrganisation);
         when(projectAcademicCostFormPopulator.populate(any(), eq(project.getId()), eq(academicOrganisation.getId()))).thenReturn(academicCostForm);
@@ -290,6 +310,8 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         when(applicationFinanceRestService.getFinanceDetails(project.getApplication(), academicOrganisation.getId())).thenReturn(restSuccess(appFinanceResource));
         when(financeService.getFinanceEntry(123L)).thenReturn(restSuccess(jesFile));
         when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
+
+        when(publicContentRestService.getByCompetitionId(project.getCompetition())).thenReturn(restSuccess(publicContentResource));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility?editAcademicFinances=true",
                 project.getId(), academicOrganisation.getId())).
@@ -342,6 +364,8 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility, project);
 
+        PublicContentResource publicContentResource = newPublicContentResource().build();
+
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getByApplicationId(application.getId())).thenReturn(project);
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
@@ -350,6 +374,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), kbOrganisation.getId())).thenReturn(eligibilityOverview);
         when(projectFinanceRestService.getFinanceTotals(project.getId())).thenReturn(restSuccess(Collections.emptyList()));
         when(grantOfferLetterService.getGrantOfferLetterState(project.getId())).thenReturn(serviceSuccess(grantOfferLetterStateResource));
+        when(publicContentRestService.getByCompetitionId(project.getCompetition())).thenReturn(restSuccess(publicContentResource));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility",
                 project.getId(), kbOrganisation.getId())).
@@ -410,6 +435,8 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility, project);
 
+        PublicContentResource publicContentResource = newPublicContentResource().build();
+
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getByApplicationId(application.getId())).thenReturn(project);
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
@@ -418,6 +445,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), kbOrganisation.getId())).thenReturn(eligibilityOverview);
         when(projectFinanceRestService.getFinanceTotals(project.getId())).thenReturn(restSuccess(Collections.emptyList()));
         when(grantOfferLetterService.getGrantOfferLetterState(project.getId())).thenReturn(serviceSuccess(grantOfferLetterStateResource));
+        when(publicContentRestService.getByCompetitionId(project.getCompetition())).thenReturn(restSuccess(publicContentResource));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility",
                 project.getId(), kbOrganisation.getId())).
@@ -527,6 +555,10 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility, project);
 
+        PublicContentResource publicContentResource = newPublicContentResource().build();
+
+        when(publicContentRestService.getByCompetitionId(project.getCompetition())).thenReturn(restSuccess(publicContentResource));
+
         mockMvc.perform(
                 post("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility", project.getId(), industrialOrganisation.getId()).
                         param("confirm-eligibility", "").
@@ -585,10 +617,13 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         long projectId = project.getId();
         long organisationId = industrialOrganisation.getId();
 
+        PublicContentResource publicContentResource = newPublicContentResource().build();
+
         EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility, project);
 
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
+        when(publicContentRestService.getByCompetitionId(project.getCompetition())).thenReturn(restSuccess(publicContentResource));
         when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
 
         mockMvc.perform(
@@ -645,9 +680,12 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
     @Test
     public void testSaveAndContinueWhenSaveEligibilityReturnsFailure() throws Exception {
 
+        PublicContentResource publicContentResource = newPublicContentResource().build();
+
         when(financeCheckRestService.saveEligibility(project.getId(), industrialOrganisation.getId(), EligibilityState.REVIEW, EligibilityRagStatus.RED)).
                 thenReturn(restFailure(ELIGIBILITY_HAS_ALREADY_BEEN_APPROVED));
         when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
+        when(publicContentRestService.getByCompetitionId(project.getCompetition())).thenReturn(restSuccess(publicContentResource));
 
         EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility, project);
@@ -740,8 +778,11 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         EligibilityResource eligibility = new EligibilityResource(EligibilityState.REVIEW, EligibilityRagStatus.UNSET);
         setUpViewEligibilityMocking(eligibility, project);
 
+        PublicContentResource publicContentResource = newPublicContentResource().build();
+
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
+        when(publicContentRestService.getByCompetitionId(project.getCompetition())).thenReturn(restSuccess(publicContentResource));
 
         mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility?editProjectCosts=true",
                 project.getId(), industrialOrganisation.getId())).
