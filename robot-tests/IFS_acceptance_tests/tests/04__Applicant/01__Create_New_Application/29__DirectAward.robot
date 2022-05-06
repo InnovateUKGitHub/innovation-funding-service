@@ -46,13 +46,15 @@ the user create a new application
 
 the user checks the application details
     [Documentation]  IFS-11736
-    Given the user clicks the button/link     link= Application details
-    Then the user should see the element      jQuery = dt:contains("Award:")
+    When the user completes the application details section   ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  25
+    And the user clicks the button/link                       link = Application details
+    Then the user should see the element                      jQuery = dt:contains("Award name")
 
-
-
-
-
+the user checks the scope of application
+     [Documentation]  IFS-11736
+     Given the user clicks the button/link  link = Back to application overview
+     And the user clicks the button/link    link= Scope
+     Then the user should see the element   jQuery = h3:contains("How does your project align with the scope of this award?")
 
 *** Keywords ***
 Custom suite setup
