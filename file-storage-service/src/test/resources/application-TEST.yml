@@ -9,6 +9,8 @@ spring:
     generate-ddl: false
     hibernate:
       ddl-auto: create
+  flyway:
+    enabled: false
 ifs:
   filestorage:
     storage:
