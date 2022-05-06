@@ -1,6 +1,8 @@
 *** Settings ***
 Documentation     IFS-11682  Direct Award: New competition type
 ...
+...               IFS-11735 Direct Awards: Public Content scale back
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 
@@ -25,9 +27,16 @@ the user creates a new open ended competiton
 
 the user should see open ended is selected by default for direct award competition type
     [Documentation]  IFS-11682
-    When the user clicks the button/link                  link = Back to competition details
-    And the user completes completion stage
-    Then the user sees that the radio button is selected  alwaysOpen  true
+    Given the user clicks the button/link                  link = Back to competition details
+    When the user completes completion stage
+    Then the user sees that the radio button is selected   alwaysOpen  true
+
+the user should see inviteonly selected as default option in competition information and search
+    [Documentation]  IFS-11735
+    Given the user clicks the button/link                  link = Back to competition details
+    When the user clicks the button/link                   link = Public content
+    And the user clicks the button/link                    link = Competition information and search
+    Then the user sees that the radio button is selected   publishSetting  invite
 
 *** Keywords ***
 Custom suite setup
@@ -42,4 +51,3 @@ the user completes completion stage
     the user clicks the button/link     link = Milestones
     the user clicks the button twice    jQuery = label:contains("Project setup")
     the user clicks the button/link     jQuery = button:contains("Done")
-
