@@ -361,7 +361,7 @@ Internal user can view validation message when payment requested is less than to
     Given the user navigates to the page            ${server}/project-setup-management/project/${sbriProjectId}/finance-check
     And the user clicks the button/link             jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
     And the user clicks the button/link             id = edit
-    When The user enters text to a text field       id = milestones[4].payment   10000000
+    When The user enters text to a text field       id = milestones[1].payment   10000000
     And The user clicks the button/link             jQuery = button:contains("Save and return to payment milestone check")
     Then the user should see a summary error        Your payment milestones exceeds 100% of your project costs. You must lower your payment requests or adjust your project costs.
     [Teardown]  The user clicks the button/link     id = cancel
