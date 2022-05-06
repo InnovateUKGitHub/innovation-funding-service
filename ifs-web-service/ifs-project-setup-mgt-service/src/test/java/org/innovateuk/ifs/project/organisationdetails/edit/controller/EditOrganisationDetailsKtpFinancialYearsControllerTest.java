@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.organisationdetails.edit.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.*;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.KtpYearResource;
@@ -12,6 +13,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.publiccontent.service.PublicContentRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,6 +37,7 @@ import static org.innovateuk.ifs.finance.resource.OrganisationSize.LARGE;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -67,6 +70,9 @@ public class EditOrganisationDetailsKtpFinancialYearsControllerTest extends Base
     private YourOrganisationKtpFinancialYearsFormSaver saver;
 
     @Mock
+    private PublicContentRestService publicContentRestService;
+
+    @Mock
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
 
     private static final long projectId = 3L;
@@ -75,6 +81,7 @@ public class EditOrganisationDetailsKtpFinancialYearsControllerTest extends Base
     private ProjectResource projectResource;
     private OrganisationResource organisationResource;
     private static CompetitionResource competitionResource;
+    private static PublicContentResource publicContentResource;
     private static final String VIEW_WITH_GROWTH_TABLE_PAGE = "project/organisationdetails/edit-organisation-size";
 
     @Override
@@ -109,6 +116,8 @@ public class EditOrganisationDetailsKtpFinancialYearsControllerTest extends Base
                 .build();
         competitionResource = newCompetitionResource()
                 .build();
+        publicContentResource = newPublicContentResource()
+                .build();
     }
 
     @Test
@@ -119,6 +128,7 @@ public class EditOrganisationDetailsKtpFinancialYearsControllerTest extends Base
         when(projectYourOrganisationRestService.getOrganisationKtpYears(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesResource));
         when(formPopulator.populate(organisationFinancesResource)).thenReturn(form);
         when(competitionRestService.getCompetitionById(projectResource.getCompetition())).thenReturn(restSuccess(competitionResource));
+        when(publicContentRestService.getByCompetitionId(projectResource.getCompetition())).thenReturn(restSuccess(publicContentResource));
         when(grantClaimMaximumRestService.isMaximumFundingLevelConstant(competitionResource.getId())).thenReturn(restSuccess(false));
 
         mockMvc.perform(get(viewPageUrl()))
@@ -150,6 +160,7 @@ public class EditOrganisationDetailsKtpFinancialYearsControllerTest extends Base
         when(projectYourOrganisationRestService.getOrganisationKtpYears(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesResource));
         when(formPopulator.populate(organisationFinancesResource)).thenReturn(form);
         when(competitionRestService.getCompetitionById(projectResource.getCompetition())).thenReturn(restSuccess(competitionResource));
+        when(publicContentRestService.getByCompetitionId(projectResource.getCompetition())).thenReturn(restSuccess(publicContentResource));
         when(grantClaimMaximumRestService.isMaximumFundingLevelConstant(competitionResource.getId())).thenReturn(restSuccess(false));
 
         mockMvc.perform(get(viewPageUrl()))

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
@@ -25,6 +26,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisationViewModel;
+import org.innovateuk.ifs.publiccontent.service.PublicContentRestService;
 import org.innovateuk.ifs.user.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Before;
@@ -46,6 +48,7 @@ import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.
 import static org.innovateuk.ifs.organisation.builder.OrganisationSearchResultBuilder.newOrganisationSearchResult;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckSummaryResourceBuilder.newFinanceCheckSummaryResource;
 import static org.innovateuk.ifs.project.finance.resource.ViabilityState.REVIEW;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -84,6 +87,9 @@ public class OrganisationDetailsWithGrowthTableControllerTest extends BaseContro
     @Mock
     private OrganisationAddressRestService organisationAddressRestService;
 
+    @Mock
+    private PublicContentRestService publicContentRestService;
+
     @Override
     protected OrganisationDetailsWithGrowthTableController supplyControllerUnderTest() {
         return new OrganisationDetailsWithGrowthTableController();
@@ -115,6 +121,7 @@ public class OrganisationDetailsWithGrowthTableControllerTest extends BaseContro
         FinanceCheckSummaryResource financeCheckSummaryResource = newFinanceCheckSummaryResource()
                 .build();
         financeCheckSummaryResource.setPartnerStatusResources(partnerStatusResources);
+        PublicContentResource publicContentResource = newPublicContentResource().build();
 
         when(projectRestService.getProjectById(projectId)).thenReturn(new RestResult(restSuccess(project)));
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(new RestResult(restSuccess(organisation)));
@@ -125,6 +132,7 @@ public class OrganisationDetailsWithGrowthTableControllerTest extends BaseContro
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(new RestResult(restSuccess(competition)));
         when(financeCheckService.getFinanceCheckSummary(projectId)).thenReturn(serviceSuccess(financeCheckSummaryResource));
         when(grantClaimMaximumRestService.isMaximumFundingLevelConstant(competitionId)).thenReturn(restSuccess(false));
+        when(publicContentRestService.getByCompetitionId(competitionId)).thenReturn(restSuccess(publicContentResource));
     }
 
     private MvcResult callEndpoint() throws Exception {
