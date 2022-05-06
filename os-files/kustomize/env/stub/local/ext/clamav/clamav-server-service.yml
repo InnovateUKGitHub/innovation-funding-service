@@ -5,9 +5,9 @@ metadata:
   labels:
     app: clamav
 spec:
-  selector:
-    app: clamav
+  type: NodePort
   ports:
     - name: 3310-tcp
       port: 3310
       targetPort: 3310
+      nodePort: 3310

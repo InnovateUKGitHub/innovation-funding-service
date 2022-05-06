@@ -23,7 +23,7 @@ public class VirusScanConfigurationProperties {
 
         private int port;
 
-        private int timeout = 500;
+        private int timeout = 5000;
 
     }
 }
