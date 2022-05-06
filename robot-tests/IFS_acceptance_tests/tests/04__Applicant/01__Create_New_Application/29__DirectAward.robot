@@ -41,12 +41,12 @@ the user create a new application
     [Documentation]  IFS-11736
     Given the user logs out if they are logged in
     And the user navigates to the page           ${server}/competition/${webTestCompID}/overview
-    When the lead user creates an application    Test   User   test.user1@gmail.com   ${applicationName}
+    When existing user creates a new application
     Then the user should see the element         jQuery = dt:contains("Award:")
 
 the user checks the application details
     [Documentation]  IFS-11736
-    When the user completes the application details section   ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  25
+    When the user completes the application details           ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  25
     And the user clicks the button/link                       link = Application details
     Then the user should see the element                      jQuery = dt:contains("Award name")
 
@@ -84,4 +84,17 @@ the lead user creates an application
     the user clicks the button/link                                 link = Sign in
     Logging in and Error Checking                                   ${email}  ${short_password}
     the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+
+the user completes the application details
+    [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}  ${projectDuration}
+    the user clicks the button/link             link = Application details
+    the user should see the element             jQuery = h1:contains("Application details")
+    the user enters text to a text field        id = name  ${appTitle}
+    the user enters text to a text field        id = startDate  ${tomorrowday}
+    the user enters text to a text field        css = #application_details-startdate_month  ${month}
+    the user enters text to a text field        css = #application_details-startdate_year  ${nextyear}
+    the user should see the element             jQuery = label:contains("Project duration in months")
+    the user enters text to a text field        css = [id="durationInMonths"]  ${projectDuration}
+    the user clicks the button/link             id = application-question-complete
+    the user clicks the button/link             link = Back to application overview
 
