@@ -68,6 +68,33 @@ Admin can see the new assessor in the system
     When the user clicks the button/link         css = input[type="submit"]
     Then the user should see the element         link = ${validAssessorEmail}
 
+Admin can add a new assessor role to existing applicant
+    [Documentation]  IFS-11789
+    Given search for an existing user               ann.kelly@gmail.com
+    And the user clicks the button/link             link = Edit
+    When the user clicks the button/link            link = Add a new external role profile
+    And the user selects a new external user role   ASSESSOR
+    And the user clicks the button/link             jQuery = button:contains("Confirm role profile")
+    And the user clicks the button/link             jQuery = button:contains("Save and return")
+    And search for an existing user                 ann.kelly@gmail.com
+    And the user clicks the button/link             link = Edit
+    Then the user should see the element            jQuery = td:contains("Assessor") + td:contains("Available")
+    Then the user should see the element            jQuery = td:contains("Applicant") + td:contains("Active")
+
+Admin can view role profile of an assessor
+    [Documentation]  IFS-11789
+    When the user clicks the button/link    link = View role profile
+    Then the user should see the element    jQuery = dt:contains("Role profile")+dd:contains("Assessor")
+    And the user should see the element     jQuery = dt:contains("Role status")+dd:contains("Available")
+
+Admin can not assign assessor role to an existing assessor
+    [Documentation]  IFS-11789
+    Given the user clicks the button/link       link = Manage users
+    And search for an existing user             danni.elliott@gmail.com
+    And the user clicks the button/link         link = Edit
+    When the user clicks the button/link        link = Add a new external role profile
+    Then the user should not see the element    jQuery = label:contains("Assessor")
+
 Admin can view the new assessor in invite assessors page of an existing competiton
     [Documentation]  IFS-11788
     Given the user navigates to the page        ${server}/management/dashboard/live
@@ -77,12 +104,18 @@ Admin can view the new assessor in invite assessors page of an existing competit
     And the user clicks the button/link         id = assessor-filter-button
     Then the user should see the element        jQuery = td:contains("alome lolome")+td+ td:contains("Biosciences")
 
+Admin can view an existing applicat with new assessor role in invite assessors page of an existing competiton
+    [Documentation]  IFS-11789
+    When the user enters text to a text field   id = assessorNameFilter  Ann Kelly
+    And the user clicks the button/link         id = assessor-filter-button
+    Then the user should see the element        jQuery = td:contains("Ann Kelly")+td+td:contains("")
+
 Competiton admin can view new assessor status
     [Documentation]  IFS-11788
     Given log in as a different user             &{Comp_admin1_credentials}
     When the user clicks the button/link         link = Assessor status
     And the user enters text to a text field     id = filter  alome.lolome@gmail.com
-    When the user clicks the button/link         css = input[type="submit"]
+    And the user clicks the button/link          css = input[type="submit"]
     Then the user should see the element         link = ${validAssessorEmail}
 
 
@@ -111,3 +144,8 @@ the user should see invite an assessor user field validation message
     The user should see a field and summary error     ${lastNameInvalidCharacterMessage}
     The user should see a field and summary error     ${innovationAreaValidationMessage}
     The user should see a field and summary error     ${emailAddressValidationMessage}
+
+search for an existing user
+    [Arguments]  ${emailaddress}
+    the user enters text to a text field      id = filter  ${emailaddress}
+    the user clicks the button/link           css = input[type="submit"]

@@ -227,6 +227,7 @@ Applicant uploads the GOL using Docusign
     the user navigates to the page                                           ${server}/project-setup/project/${projectID}
     the user clicks the button/link                                          jquery = a:contains("Grant offer letter")
     the user clicks the button/link                                          jquery = a:contains("review and sign the grant offer letter")
+    the user wait until docusign page loaded                                 css=.page.page-loaded   ${projectID}
     wait until keyword succeeds without screenshots      30 s    5 s         the user should see the element   css=.page.page-loaded
     the user accepts electronic record and signature disclosure if exist
     the user should see the element                                          jQuery = span:contains("Please review the documents below.")
@@ -946,3 +947,13 @@ the IFS Admin approves to SP
     the user should see the element                  jQuery = h2:contains("Innovation Lead") ~ p:contains("Peter Freeman")
     the user selects the radio button                spendProfileApproved  true
     the user should not see an error in the page
+
+the user wait until docusign page loaded
+    [Arguments]  ${selector}  ${projectID}
+    Wait Until Keyword Succeeds Without Screenshots     120s   5s   reload and check if docusign is available    ${selector}  ${projectID}
+
+reload and check if docusign is available
+    [Arguments]  ${selector}  ${projectID}
+    the user navigates to the page                          ${server}/project-setup/project/${projectID}/offer
+    the user clicks the button/link                         link = review and sign the grant offer letter
+    Wait Until Page Contains Element Without Screenshots    ${selector}     30s
