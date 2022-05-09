@@ -3,11 +3,8 @@ package org.innovateuk.ifs.filestorage.web;
 import org.apache.http.HttpHeaders;
 import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
-import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
-import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadResponse;
 import org.innovateuk.ifs.api.filestorage.v1.upload.VirusScanStatus;
 import org.innovateuk.ifs.filestorage.storage.StorageService;
-import org.innovateuk.ifs.filestorage.util.FileUploadResponseMapper;
 import org.innovateuk.ifs.filestorage.util.TestHelper;
 import org.innovateuk.ifs.filestorage.virusscan.VirusScanResult;
 import org.junit.jupiter.api.Test;
@@ -21,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.util.MimeType;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -50,7 +46,7 @@ class StorageDownloadControllerTest {
         FileDownloadResponse fileDownloadResponse = TestHelper.build(uuid,
                 new VirusScanResult(VirusScanStatus.VIRUS_FREE, "OK"));
         when(storageService.fileByUuid(uuid.toString())).thenReturn(Optional.of(fileDownloadResponse));
-        ResponseEntity<Resource> responseEntity = storageDownloadController.fileByUuid(uuid.toString());
+        ResponseEntity<Resource> responseEntity = storageDownloadController.fileStreamByUuid(uuid.toString());
         assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.OK));
 
         headerAssert(responseEntity, HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG.toString());
@@ -61,7 +57,7 @@ class StorageDownloadControllerTest {
     @Test
     void testDownloadFail() throws IOException {
         when(storageService.fileByUuid("test")).thenReturn(Optional.empty());
-        ResponseEntity<Resource> responseEntity = storageDownloadController.fileByUuid("test");
+        ResponseEntity<Resource> responseEntity = storageDownloadController.fileStreamByUuid("test");
         assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
     }
 }

@@ -1,3 +1,0 @@
-feign:
-  name: "file-upload"
-  url: "localhost:8080"
