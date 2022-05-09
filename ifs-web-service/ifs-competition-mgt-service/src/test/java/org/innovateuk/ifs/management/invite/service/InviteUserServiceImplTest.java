@@ -3,7 +3,7 @@ package org.innovateuk.ifs.management.invite.service;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
-import org.innovateuk.ifs.management.invite.service.InviteUserServiceImpl;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -29,6 +29,20 @@ public class InviteUserServiceImplTest {
     public void saveProjectInvite() throws Exception {
 
         InviteUserResource inviteUserResource = new InviteUserResource();
+        when(inviteUserRestService.saveUserInvite(inviteUserResource)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = service.saveUserInvite(inviteUserResource);
+
+        assertTrue(result.isSuccess());
+        verify(inviteUserRestService).saveUserInvite(inviteUserResource);
+
+    }
+
+    @Test
+    public void saveAssessorInvite() throws Exception {
+
+        InviteUserResource inviteUserResource = new InviteUserResource();
+        inviteUserResource.setRole(Role.ASSESSOR);
         when(inviteUserRestService.saveUserInvite(inviteUserResource)).thenReturn(restSuccess());
 
         ServiceResult<Void> result = service.saveUserInvite(inviteUserResource);

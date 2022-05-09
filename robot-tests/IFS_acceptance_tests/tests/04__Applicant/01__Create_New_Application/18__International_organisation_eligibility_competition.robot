@@ -219,7 +219,6 @@ Registered users applying for an international competition see only UK based org
     [Tags]  HappyPath
     Given the user clicks the button/link              link = Back to tell us where your organisation is based
     When user selects where is organisation based      isNotInternational
-    #Then the user should see the element               jQuery = dt:contains("Empire Ltd")
     Then the user should see only uk based organisations
     And the user should see the element                link = Apply with a different organisation
 
@@ -1038,11 +1037,11 @@ the user check for correspondence address titles and info text
 
 the user fills correspondence address data
     [Arguments]     ${addresLine1}  ${addresLine2}  ${town}  ${country}  ${zipCode}
-    the user enters text to a text field            id = addressLine1       ${addresLine1}
-    the user enters text to a text field            id = addressLine2       ${addresLine2}
-    the user enters text to a text field            id = town               ${town}
-    enter the country in the autocomplete field     Argentina               ${country}
-    the user enters text to a text field            id = zipCode            ${zipCode}
+    Wait Until Keyword Succeeds Without Screenshots    10    200ms    input text        id = addressLine1       ${addresLine1}
+    Wait Until Keyword Succeeds Without Screenshots    10    200ms    input text        id = addressLine2       ${addresLine2}
+    Wait Until Keyword Succeeds Without Screenshots    10    200ms    input text        id = town               ${town}
+    enter the country in the autocomplete field        Argentina      ${country}
+    Wait Until Keyword Succeeds Without Screenshots    10    200ms    input text        id = zipCode            ${zipCode}
 
 the user should see read only view of completed correspondence address details
     wait until keyword succeeds without screenshots  5 s   100 ms     the user should see the element     jQuery = td:contains("Calle 11, San Sebastian,")

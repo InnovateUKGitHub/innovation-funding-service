@@ -893,6 +893,11 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 && termsAndConditions.isProcurementThirdParty();
     }
 
+    @JsonIgnore
+    public boolean isDirectAward() {
+         return competitionTypeEnum == CompetitionTypeEnum.DIRECT_AWARD;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
