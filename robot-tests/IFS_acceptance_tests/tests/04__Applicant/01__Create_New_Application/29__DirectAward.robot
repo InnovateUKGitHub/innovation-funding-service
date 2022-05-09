@@ -1,14 +1,11 @@
 *** Settings ***
 Documentation     IFS-11682  Direct Award: New competition type
 ...
-<<<<<<< HEAD
 ...               IFS-11736 Direct awards - Content sweep
 ...
-
-=======
 ...               IFS-11735 Direct Awards: Public Content scale back
 ...
->>>>>>> 03f6aeea0fe14a88262d66301662b02293da28cc
+
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 
