@@ -11,7 +11,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -42,7 +42,7 @@ import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
-import org.innovateuk.ifs.publiccontent.service.PublicContentRestService;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.thread.viewmodel.ThreadState;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
@@ -129,7 +129,7 @@ public class ProjectFinanceChecksController {
     private PartnerOrganisationRestService partnerOrganisationRestService;
 
     @Autowired
-    private PublicContentRestService publicContentRestService;
+    private PublicContentItemRestService publicContentItemRestService;
 
     @Autowired
     private EncryptedCookieService cookieUtil;
@@ -514,7 +514,7 @@ public class ProjectFinanceChecksController {
 
         List<ProjectFinanceResource> projectFinances = projectFinanceRestService.getProjectFinances(project.getId()).getSuccess();
 
-        PublicContentResource publicContent = publicContentRestService.getByCompetitionId(project.getCompetition()).getSuccess();
+        PublicContentItemResource publicContentItem = publicContentItemRestService.getItemByCompetitionId(project.getCompetition()).getSuccess();
 
         boolean isUsingJesFinances = competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
         if (!isUsingJesFinances) {
@@ -530,7 +530,7 @@ public class ProjectFinanceChecksController {
                     canEditProjectCosts,
                     competition.isThirdPartyOfgem(),
                     competition.isHorizonEuropeGuarantee(),
-                    publicContent.getHash()));
+                    publicContentItem.getPublicContentResource().getHash()));
             model.addAttribute("form", competition.isHorizonEuropeGuarantee() ?
                     hecpCostsFormPopulator.populate(project.getId(), organisation.getId()) :
                     formPopulator.populateForm(project.getId(), organisation.getId(), competition.isThirdPartyOfgem()));

@@ -4,6 +4,8 @@ import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteHistory;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
@@ -16,6 +18,7 @@ import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
+import org.innovateuk.ifs.publiccontent.transactional.PublicContentItemService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -46,6 +49,8 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
 import static org.innovateuk.ifs.invite.transactional.ApplicationInviteServiceImpl.Notifications.INVITE_COLLABORATOR;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.service.ServiceFailureTestHelper.assertThatServiceFailureIs;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -60,8 +65,10 @@ public class ApplicationInviteNotificationServiceTest {
 
     @Mock
     private ApplicationInviteRepository applicationInviteRepositoryMock;
+
     @Mock
     private InviteHistoryRepository inviteHistoryRepositoryMock;
+
     @Mock
     private OrganisationRepository organisationRepositoryMock;
 
@@ -70,6 +77,9 @@ public class ApplicationInviteNotificationServiceTest {
 
     @Mock
     private NotificationService notificationServiceMock;
+
+    @Mock
+    private PublicContentItemService publicContentItemService;
 
     @InjectMocks
     private ApplicationInviteNotificationService inviteService = new ApplicationInviteNotificationService();
@@ -156,6 +166,9 @@ public class ApplicationInviteNotificationServiceTest {
                 .build();
         application.setProcessRoles(singletonList(processRole1));
 
+        PublicContentResource publicContentResource = newPublicContentResource().build();
+        PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
+
         ApplicationInvite invite = newApplicationInvite().withApplication(application).build();
         invite.setName("Nico");
         invite.setEmail("nico@test.nl");
@@ -169,17 +182,19 @@ public class ApplicationInviteNotificationServiceTest {
         when(organisationRepositoryMock.findById(leadOrganisation.getId())).thenReturn(Optional.of(leadOrganisation));
         when(notificationServiceMock.sendNotificationWithFlush(createNotificationExpectations(invite, application,
                 competition, leadOrganisation), eq(NotificationMedium.EMAIL))).thenReturn(serviceSuccess());
+        when(publicContentItemService.byCompetitionId(competition.getId())).thenReturn(serviceSuccess(publicContentItemResource));
 
         ServiceResult<Void> results = inviteService.inviteCollaborators(singletonList(invite));
 
         assertThat(results.isSuccess()).isTrue();
-        assertFalse("hash234".equals(invite.getHash()));
+        assertNotEquals("hash234", invite.getHash());
 
         verify(organisationRepositoryMock).findById(leadOrganisation.getId());
         verify(notificationServiceMock).sendNotificationWithFlush(isA(Notification.class), eq(NotificationMedium.EMAIL));
         verify(organisationRepositoryMock).findById(leadOrganisation.getId());
         verify(notificationServiceMock).sendNotificationWithFlush(createNotificationExpectations(invite, application,
                 competition, leadOrganisation), eq(NotificationMedium.EMAIL));
+        verify(publicContentItemService).byCompetitionId(competition.getId());
     }
 
     @Test
@@ -241,8 +256,12 @@ public class ApplicationInviteNotificationServiceTest {
                 new InviteOrganisation("SomeOrg", null, singletonList(invite));
         invite.setInviteOrganisation(inviteOrganisation);
 
+        PublicContentResource publicContentResource = newPublicContentResource().build();
+        PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
+
         when(organisationRepositoryMock.findById(leadOrganisation.getId())).thenReturn(Optional.of(leadOrganisation));
         when(notificationServiceMock.sendNotificationWithFlush(isA(Notification.class), eq(NotificationMedium.EMAIL))).thenReturn(serviceFailure(forbiddenError()));
+        when(publicContentItemService.byCompetitionId(competition.getId())).thenReturn(serviceSuccess(publicContentItemResource));
 
         ServiceResult<Void> results = inviteService.inviteCollaborators(singletonList(invite));
 
@@ -250,6 +269,7 @@ public class ApplicationInviteNotificationServiceTest {
 
         verify(organisationRepositoryMock).findById(leadOrganisation.getId());
         verify(notificationServiceMock).sendNotificationWithFlush(isA(Notification.class), eq(NotificationMedium.EMAIL));
+        verify(publicContentItemService).byCompetitionId(competition.getId());
     }
 
     @Test
@@ -287,6 +307,9 @@ public class ApplicationInviteNotificationServiceTest {
         invite.setInviteOrganisation(inviteOrganisation);
         invite.setHash("hash123");
 
+        PublicContentResource publicContentResource = newPublicContentResource().build();
+        PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
+
         when(organisationRepositoryMock.findById(leadOrganisation.getId())).thenReturn(Optional.of(leadOrganisation));
         when(notificationServiceMock.sendNotificationWithFlush(isA(Notification.class), eq(NotificationMedium.EMAIL)))
                 .thenReturn(serviceSuccess());
@@ -295,6 +318,7 @@ public class ApplicationInviteNotificationServiceTest {
                                                                                               competition,
                                                                                               leadOrganisation),
                                                                eq(NotificationMedium.EMAIL))).thenReturn(serviceSuccess());
+        when(publicContentItemService.byCompetitionId(competition.getId())).thenReturn(serviceSuccess(publicContentItemResource));
 
         ServiceResult<Void> result = inviteService.resendCollaboratorInvite(invite);
 
@@ -309,7 +333,7 @@ public class ApplicationInviteNotificationServiceTest {
                                                                                                  competition,
                                                                                                  leadOrganisation),
                                                                   eq(NotificationMedium.EMAIL));
-
+        verify(publicContentItemService).byCompetitionId(competition.getId());
     }
 
     private Notification createNotificationExpectations(ApplicationInvite invite, Application application,

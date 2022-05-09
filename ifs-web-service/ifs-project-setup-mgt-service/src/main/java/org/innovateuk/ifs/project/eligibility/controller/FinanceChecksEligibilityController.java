@@ -14,7 +14,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -27,13 +27,13 @@ import org.innovateuk.ifs.grantofferletter.GrantOfferLetterService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.eligibility.form.ResetEligibilityForm;
+import org.innovateuk.ifs.project.eligibility.populator.FinanceChecksEligibilityHecpCostsFormPopulator;
 import org.innovateuk.ifs.project.eligibility.populator.FinanceChecksEligibilityProjectCostsFormPopulator;
 import org.innovateuk.ifs.project.eligibility.populator.ProjectAcademicCostFormPopulator;
 import org.innovateuk.ifs.project.eligibility.populator.ProjectFinanceChangesViewModelPopulator;
-import org.innovateuk.ifs.project.eligibility.populator.FinanceChecksEligibilityHecpCostsFormPopulator;
+import org.innovateuk.ifs.project.eligibility.saver.FinanceChecksEligibilityHecpCostsSaver;
 import org.innovateuk.ifs.project.eligibility.saver.FinanceChecksEligibilityProjectCostsSaver;
 import org.innovateuk.ifs.project.eligibility.saver.ProjectAcademicCostsSaver;
-import org.innovateuk.ifs.project.eligibility.saver.FinanceChecksEligibilityHecpCostsSaver;
 import org.innovateuk.ifs.project.eligibility.viewmodel.FinanceChecksProjectCostsViewModel;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
@@ -44,7 +44,7 @@ import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.publiccontent.service.PublicContentRestService;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -130,7 +130,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     private FinanceChecksEligibilityHecpCostsSaver projectHecpCostsSaver;
 
     @Autowired
-    private PublicContentRestService publicContentRestService;
+    private PublicContentItemRestService publicContentItemRestService;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
@@ -160,7 +160,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
         Future<OrganisationResource> leadOrganisation = async(() -> projectService.getLeadOrganisation(projectId));
         Future<EligibilityResource> eligibility = async(() -> financeCheckRestService.getEligibility(projectId, organisationId).getSuccess());
         Future<FinanceCheckEligibilityResource> eligibilityOverview = async(() -> financeCheckService.getFinanceCheckEligibilityDetails(projectId, organisationId));
-        Future<PublicContentResource> publicContent = async(() -> publicContentRestService.getByCompetitionId(project.getCompetition()).getSuccess());
+        Future<PublicContentItemResource> publicContentItem = async(() -> publicContentItemRestService.getItemByCompetitionId(project.getCompetition()).getSuccess());
 
         try {
             Future<Model> future = CompletableFuture.completedFuture(model);
@@ -188,7 +188,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                         canEditProjectCosts,
                         competition.get().isThirdPartyOfgem(),
                         competition.get().isHorizonEuropeGuarantee(),
-                        publicContent.get().getHash()));
+                        publicContentItem.get().getPublicContentResource().getHash()));
 
                 if(competition.get().isHorizonEuropeGuarantee()) {
                     model.addAttribute("form", projectHecpCostsFormPopulator.populate(projectId, organisationId));

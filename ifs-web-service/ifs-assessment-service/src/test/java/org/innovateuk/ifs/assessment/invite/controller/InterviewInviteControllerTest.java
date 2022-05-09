@@ -4,13 +4,14 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.invite.form.InterviewInviteForm;
 import org.innovateuk.ifs.assessment.invite.populator.InterviewInviteModelPopulator;
 import org.innovateuk.ifs.assessment.invite.viewmodel.InterviewInviteViewModel;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
 import org.innovateuk.ifs.invite.resource.InterviewInviteResource;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
 import org.innovateuk.ifs.invite.resource.ReviewInviteResource;
 import org.innovateuk.ifs.invite.service.RejectionReasonRestService;
-import org.innovateuk.ifs.publiccontent.service.PublicContentRestService;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +34,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.interview.builder.InterviewInviteResourceBuilder.newInterviewInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -57,7 +59,7 @@ public class InterviewInviteControllerTest extends BaseControllerMockMVCTest<Int
     private RejectionReasonRestService rejectionReasonRestService;
 
     @Mock
-    private PublicContentRestService publicContentRestService;
+    private PublicContentItemRestService publicContentItemRestService;
 
     private final List<RejectionReasonResource> rejectionReasons = newRejectionReasonResource()
             .withReason("Reason 1", "Reason 2")
@@ -84,8 +86,9 @@ public class InterviewInviteControllerTest extends BaseControllerMockMVCTest<Int
                 .build();
 
         PublicContentResource publicContentResource = newPublicContentResource().build();
+        PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
 
-        when(publicContentRestService.getByCompetitionId(inviteResource.getCompetitionId())).thenReturn(restSuccess(publicContentResource));
+        when(publicContentItemRestService.getItemByCompetitionId(inviteResource.getCompetitionId())).thenReturn(restSuccess(publicContentItemResource));
 
         mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -106,12 +109,13 @@ public class InterviewInviteControllerTest extends BaseControllerMockMVCTest<Int
                 .build();
 
         PublicContentResource publicContentResource = newPublicContentResource().build();
+        PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
 
         InterviewInviteViewModel expectedViewModel = new InterviewInviteViewModel("hash", inviteResource, false, null);
 
         when(interviewInviteRestService.checkExistingUser("hash")).thenReturn(restSuccess(TRUE));
         when(interviewInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
-        when(publicContentRestService.getByCompetitionId(inviteResource.getCompetitionId())).thenReturn(restSuccess(publicContentResource));
+        when(publicContentItemRestService.getItemByCompetitionId(inviteResource.getCompetitionId())).thenReturn(restSuccess(publicContentItemResource));
 
         mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -154,11 +158,12 @@ public class InterviewInviteControllerTest extends BaseControllerMockMVCTest<Int
                 .build();
 
         PublicContentResource publicContentResource = newPublicContentResource().build();
+        PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
 
         InterviewInviteViewModel expectedViewModel = new InterviewInviteViewModel("hash", inviteResource, true, null);
 
         when(interviewInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
-        when(publicContentRestService.getByCompetitionId(inviteResource.getCompetitionId())).thenReturn(restSuccess(publicContentResource));
+        when(publicContentItemRestService.getItemByCompetitionId(inviteResource.getCompetitionId())).thenReturn(restSuccess(publicContentItemResource));
 
         mockMvc.perform(get(restUrl + "{inviteHash}", "hash"))
                 .andExpect(status().isOk())
@@ -182,9 +187,10 @@ public class InterviewInviteControllerTest extends BaseControllerMockMVCTest<Int
     public void noDecisionMade() throws Exception {
         InterviewInviteResource inviteResource = newInterviewInviteResource().withCompetitionName("my competition").build();
         PublicContentResource publicContentResource = newPublicContentResource().build();
+        PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
 
         when(interviewInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
-        when(publicContentRestService.getByCompetitionId(inviteResource.getCompetitionId())).thenReturn(restSuccess(publicContentResource));
+        when(publicContentItemRestService.getItemByCompetitionId(inviteResource.getCompetitionId())).thenReturn(restSuccess(publicContentItemResource));
 
         InterviewInviteForm expectedForm = new InterviewInviteForm();
 
