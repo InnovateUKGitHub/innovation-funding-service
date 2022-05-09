@@ -600,18 +600,20 @@ the applicant submits the application
     the user should be redirected to the correct page  track
 
 the user applies to competition and enters organisation type
-    [Arguments]  ${compId}  ${organisationType}
-    the user navigates to the page     ${server}/competition/${compId}/overview
+    [Arguments]  ${compName}  ${organisationType}
+    the user navigates to the page                              ${frontDoor}
+    the user clicks the button/link in the paginated list       link = ${compName}
     the user fills in the address info   2
 
 the user applies to competition and enters organisation type link
-    [Arguments]  ${compId}  ${organisationType}  ${organisationName}
-    the user navigates to the page                      ${server}/competition/${compId}/overview
-    the user clicks the button/link                     link = Start new application
-    The user clicks the button/link                     link = Continue and create an account
-    the user selects the radio button                   organisationTypeId  ${organisationType}
-    the user clicks the button/link                     jQuery = button:contains("Save and continue")
-    the user search for organisation name on Companies house   ITV  ${organisationName}
+    [Arguments]  ${compName}  ${organisationType}  ${organisationName}
+    the user navigates to the page                              ${frontDoor}
+    the user clicks the button/link in the paginated list       link = ${compName}
+    the user clicks the button/link                             link = Start new application
+    The user clicks the button/link                             link = Continue and create an account
+    the user selects the radio button                           organisationTypeId  ${organisationType}
+    the user clicks the button/link                             jQuery = button:contains("Save and continue")
+    the user search for organisation name on Companies house    ITV  ${organisationName}
 
 the user selects his organisation in Companies House
     [Arguments]  ${search}  ${link}

@@ -193,8 +193,7 @@ the question should not be marked as complete on the application overview page
 
 Log in and create a new application for the Aerospace competition
     The user logs-in in new browser  &{lead_applicant_credentials}
-    The user navigates to the page   ${SERVER}/competition/${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}/overview/
-    the user clicks the button/link  link = Start new application
+    the user select the competition and starts application    ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}
 
     #The following two lines are failing if we don't have any other application for the same competition
     ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    Page Should Contain    You have an application in progress

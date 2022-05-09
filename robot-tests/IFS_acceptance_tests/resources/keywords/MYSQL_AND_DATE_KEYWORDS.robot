@@ -338,3 +338,13 @@ applicant completes edi profile
     [Arguments]  ${ediStatus}  ${userEmail}
     execute sql string   UPDATE `${database_name}`.`user` SET `edi_status` = '${ediStatus}', `edi_review_date` = '2100-12-20 10:10:10' WHERE (`email` = '${userEmail}');
     reload page
+
+#get hash using competition id
+#    [Arguments]  ${competition_id}
+#    log to console  ${competition_id}
+#    ${result} =  query  SELECT `hash` FROM `${database_name}`.`public_content` WHERE `competition_id` = "${competition_id}";
+#    log to console  ${result}
+#    ${result} =  get from list  ${result}  0
+#    ${hash} =    get from list  ${result}  0
+#    log to console  ${hash}
+#    [Return]  ${hash}
