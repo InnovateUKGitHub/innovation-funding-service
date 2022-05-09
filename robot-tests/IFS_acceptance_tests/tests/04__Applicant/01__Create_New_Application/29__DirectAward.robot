@@ -53,7 +53,7 @@ the user create a new application
     [Documentation]  IFS-11736
     Given the user logs out if they are logged in
     And the user navigates to the page                      ${server}/competition/${webTestCompID}/overview
-    And the user sign in and apply for international comp
+    And the lead user creates new application               Test   User   test.user1@gmail.com   ${applicationName}
     Then the user should see the element                    jQuery = dt:contains("Award:")
 
 the user checks the application details
@@ -95,8 +95,19 @@ the user completes the application details
     the user clicks the button/link             id = application-question-complete
     the user clicks the button/link             link = Back to application overview
 
-existing user starts new application
-    the user select the competition and starts application     ${webTestCompName}
-    the user clicks the button/link                            link = Sign in
-    the user
+the lead user creates new application
+    [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
+    the user select the competition and starts application          ${webTestCompName}
+    the user clicks the button/link                                 link = Continue and create an account
+    the user selects the radio button                               organisationTypeId    radio-${BUSINESS_TYPE_ID}
+    the user clicks the button/link                                 jQuery = .govuk-button:contains("Save and continue")
+    the user selects his organisation in Companies House            ASOS  ASOS PLC
+    the user should be redirected to the correct page               ${SERVER}/registration/register
+    the user enters the details and clicks the create account       ${firstName}  ${lastName}  ${email}  ${short_password}
+    the user reads his email and clicks the link                    ${email}  Please verify your email address  Once verified you can sign into your account.
+    the user should be redirected to the correct page               ${REGISTRATION_VERIFIED}
+    the user clicks the button/link                                 link = Sign in
+    Logging in and Error Checking                                   ${email}  ${short_password}
+    the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+
 
