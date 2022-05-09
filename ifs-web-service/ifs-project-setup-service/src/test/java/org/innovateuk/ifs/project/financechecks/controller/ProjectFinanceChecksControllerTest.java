@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -35,6 +36,7 @@ import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksVi
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.publiccontent.service.PublicContentRestService;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
 import org.innovateuk.ifs.threads.resource.QueryResource;
@@ -70,6 +72,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
@@ -111,6 +114,9 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
 
     @Mock
     private ProjectFinanceChecksReadOnlyPopulator projectFinanceChecksReadOnlyPopulator;
+
+    @Mock
+    private PublicContentRestService publicContentRestService;
 
     private OrganisationResource industrialOrganisation;
 
@@ -274,10 +280,13 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility);
 
+        PublicContentResource publicContent = newPublicContentResource().build();
+
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(industrialOrganisation.getId());
         when(projectFinanceRestService.getFinanceTotals(project.getId())).thenReturn(restSuccess(emptyList()));
         when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
+        when(publicContentRestService.getByCompetitionId(project.getCompetition())).thenReturn(restSuccess(publicContent));
         when(formPopulator.populateForm(project.getId(), industrialOrganisation.getId(), false)).thenReturn(new YourProjectCostsForm());
         when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(anyBoolean(), any(), any())).thenReturn(new ProjectFinanceChangesViewModel());
 
@@ -329,6 +338,8 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
                         FinanceRowType.KTP_TRAVEL, newDefaultCostCategory().build()))
                 .build();
 
+        PublicContentResource publicContent = newPublicContentResource().build();
+
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getByApplicationId(application.getId())).thenReturn(project);
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), kbOrganisation.getId())).thenReturn(eligibilityOverview);
@@ -337,6 +348,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(kbOrganisation.getId());
         when(projectFinanceRestService.getFinanceTotals(project.getId())).thenReturn(restSuccess(emptyList()));
         when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(Collections.singletonList(projectFinance)));
+        when(publicContentRestService.getByCompetitionId(project.getCompetition())).thenReturn(restSuccess(publicContent));
         when(formPopulator.populateForm(project.getId(), kbOrganisation.getId(), false)).thenReturn(new YourProjectCostsForm());
         when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(anyBoolean(), any(), any())).thenReturn(new ProjectFinanceChangesViewModel());
 
@@ -396,6 +408,8 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
                         FinanceRowType.INDIRECT_COSTS, newDefaultCostCategory().build()))
                 .build();
 
+        PublicContentResource publicContent = newPublicContentResource().build();
+
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getByApplicationId(application.getId())).thenReturn(project);
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), kbOrganisation.getId())).thenReturn(eligibilityOverview);
@@ -404,6 +418,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(kbOrganisation.getId());
         when(projectFinanceRestService.getFinanceTotals(project.getId())).thenReturn(restSuccess(emptyList()));
         when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(Collections.singletonList(projectFinance)));
+        when(publicContentRestService.getByCompetitionId(project.getCompetition())).thenReturn(restSuccess(publicContent));
         when(formPopulator.populateForm(project.getId(), kbOrganisation.getId(), false)).thenReturn(new YourProjectCostsForm());
         when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(anyBoolean(), any(), any())).thenReturn(new ProjectFinanceChangesViewModel());
 
