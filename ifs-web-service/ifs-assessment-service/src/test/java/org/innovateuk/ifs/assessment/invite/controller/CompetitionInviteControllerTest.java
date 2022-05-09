@@ -106,6 +106,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         boolean accept = true;
 
         CompetitionInviteResource inviteResource = newCompetitionInviteResource()
+                .withCompetitionId(1L)
                 .withCompetitionName("my competition")
                 .withAcceptsDate(acceptsDate).withDeadlineDate(deadlineDate)
                 .withBriefingDate(briefingDate).withAssessorPay(assessorPay)
@@ -176,7 +177,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         ZonedDateTime deadlineDate = ZonedDateTime.now().plusDays(1);
         ZonedDateTime briefingDate = ZonedDateTime.now().plusDays(2);
         BigDecimal assessorPay = BigDecimal.TEN;
-        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition")
+        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionId(1L).withCompetitionName("my competition")
                 .withAcceptsDate(acceptsDate).withDeadlineDate(deadlineDate)
                 .withBriefingDate(briefingDate).withAssessorPay(assessorPay).build();
 
@@ -208,7 +209,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
     @Test
     public void noDecisionMade() throws Exception {
-        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition").build();
+        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionId(1L).withCompetitionName("my competition").build();
         PublicContentResource publicContentResource = newPublicContentResource().build();
         PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
 
@@ -271,7 +272,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     @Test
     public void rejectInvite_noReason() throws Exception {
         Boolean accept = false;
-        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition").build();
+        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionId(1L).withCompetitionName("my competition").build();
 
         PublicContentResource publicContentResource = newPublicContentResource().build();
         PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
@@ -327,7 +328,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
     @Test
     public void rejectInvite_exceedsCharacterSizeLimit() throws Exception {
-        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition").build();
+        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionId(1L).withCompetitionName("my competition").build();
 
         PublicContentResource publicContentResource = newPublicContentResource().build();
         PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
@@ -378,7 +379,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
     @Test
     public void rejectInvite_exceedsWordLimit() throws Exception {
-        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition").build();
+        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionId(1L).withCompetitionName("my competition").build();
 
         PublicContentResource publicContentResource = newPublicContentResource().build();
         PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
