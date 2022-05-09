@@ -42,7 +42,7 @@ the user should see open ended is selected by default for direct award competiti
     When the user completes completion stage
     Then the user sees that the radio button is selected   alwaysOpen  true
 
-the user should see inviteonly selected as default option in competition information and search
+the user should see invite only selected as default option in competition information and search
     [Documentation]  IFS-11735
     Given the user clicks the button/link                  link = Back to competition details
     When the user clicks the button/link                   link = Public content
@@ -52,9 +52,9 @@ the user should see inviteonly selected as default option in competition informa
 the user create a new application
     [Documentation]  IFS-11736
     Given the user logs out if they are logged in
-    And the user navigates to the page            ${server}/competition/${webTestCompID}/overview
-    When existing user creates a new application  ${webTestCompName}
-    Then the user should see the element          jQuery = dt:contains("Award:")
+    And the user navigates to the page                      ${server}/competition/${webTestCompID}/overview
+    And the user sign in and apply for international comp
+    Then the user should see the element                    jQuery = dt:contains("Award:")
 
 the user checks the application details
     [Documentation]  IFS-11736
@@ -94,4 +94,9 @@ the user completes the application details
     the user enters text to a text field        css = [id="durationInMonths"]  ${projectDuration}
     the user clicks the button/link             id = application-question-complete
     the user clicks the button/link             link = Back to application overview
+
+existing user starts new application
+    the user select the competition and starts application     ${webTestCompName}
+    the user clicks the button/link                            link = Sign in
+    the user
 
