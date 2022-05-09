@@ -6,11 +6,12 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.assessment.dashboard.populator.AssessorCompetitionForPanelDashboardModelPopulator;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForPanelDashboardApplicationViewModel;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForPanelDashboardViewModel;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.publiccontent.service.PublicContentRestService;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.review.service.ReviewRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -34,6 +35,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.review.builder.ReviewResourceBuilder.newReviewResource;
 import static org.innovateuk.ifs.review.resource.ReviewState.*;
@@ -63,7 +65,7 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
     private OrganisationRestService organisationRestService;
 
     @Mock
-    private PublicContentRestService publicContentRestService;
+    private PublicContentItemRestService publicContentItemRestService;
 
     @Override
     protected AssessorCompetitionForPanelDashboardController supplyControllerUnderTest() {
@@ -87,9 +89,10 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
         List<OrganisationResource> organisations = buildTestOrganisations();
 
         PublicContentResource publicContent = newPublicContentResource().build();
+        PublicContentItemResource publicContentItem = newPublicContentItemResource().withPublicContentResource(publicContent).build();
 
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(publicContentRestService.getByCompetitionId(competition.getId())).thenReturn(restSuccess(publicContent));
+        when(publicContentItemRestService.getItemByCompetitionId(competition.getId())).thenReturn(restSuccess(publicContentItem));
         when(reviewRestService.getAssessmentReviews(userId, competition.getId())).thenReturn(restSuccess(assessmentReviews));
 
         applications.forEach(application -> when(applicationService.getById(application.getId())).thenReturn(application));
@@ -135,10 +138,11 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
         CompetitionResource competition = buildTestCompetition();
 
         PublicContentResource publicContent = newPublicContentResource().build();
+        PublicContentItemResource publicContentItem = newPublicContentItemResource().withPublicContentResource(publicContent).build();
 
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(reviewRestService.getAssessmentReviews(userId, competition.getId())).thenReturn(restSuccess(emptyList()));
-        when(publicContentRestService.getByCompetitionId(competition.getId())).thenReturn(restSuccess(publicContent));
+        when(publicContentItemRestService.getItemByCompetitionId(competition.getId())).thenReturn(restSuccess(publicContentItem));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard/competition/{competitionId}/panel", competition.getId()))
                 .andExpect(status().isOk())

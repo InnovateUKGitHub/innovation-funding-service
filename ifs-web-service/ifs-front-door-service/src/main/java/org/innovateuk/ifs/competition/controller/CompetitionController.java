@@ -57,6 +57,10 @@ public class CompetitionController {
                                       UserResource loggedInUser) {
         final PublicContentItemResource publicContentItem = publicContentItemRestService.getItemByCompetitionId(competitionId).getSuccess();
 
+        if (publicContentItem.isProtected()) {
+            throw new ForbiddenActionException();
+        }
+
         model.addAttribute("model", overviewPopulator.populateViewModel(publicContentItem, loggedInUser != null));
         return "competition/overview";
     }

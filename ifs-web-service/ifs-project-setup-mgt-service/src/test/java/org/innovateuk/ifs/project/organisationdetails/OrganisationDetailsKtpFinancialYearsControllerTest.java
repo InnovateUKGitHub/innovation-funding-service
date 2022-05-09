@@ -5,6 +5,7 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationKtpFinancialYearsForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationKtpFinancialYearsFormPopulator;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -26,7 +27,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisationViewModel;
-import org.innovateuk.ifs.publiccontent.service.PublicContentRestService;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.user.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Before;
@@ -48,6 +49,7 @@ import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.
 import static org.innovateuk.ifs.organisation.builder.OrganisationSearchResultBuilder.newOrganisationSearchResult;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckSummaryResourceBuilder.newFinanceCheckSummaryResource;
 import static org.innovateuk.ifs.project.finance.resource.ViabilityState.REVIEW;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -89,7 +91,7 @@ public class OrganisationDetailsKtpFinancialYearsControllerTest extends BaseCont
     private OrganisationAddressRestService organisationAddressRestService;
 
     @Mock
-    private PublicContentRestService publicContentRestService;
+    private PublicContentItemRestService publicContentItemRestService;
 
     @Override
     protected OrganisationDetailsKtpFinancialYearsController supplyControllerUnderTest() {
@@ -123,6 +125,7 @@ public class OrganisationDetailsKtpFinancialYearsControllerTest extends BaseCont
                 .build();
         financeCheckSummaryResource.setPartnerStatusResources(partnerStatusResources);
         PublicContentResource publicContentResource = newPublicContentResource().build();
+        PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
 
 
         when(projectRestService.getProjectById(projectId)).thenReturn(new RestResult(restSuccess(project)));
@@ -134,7 +137,7 @@ public class OrganisationDetailsKtpFinancialYearsControllerTest extends BaseCont
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(new RestResult(restSuccess(competition)));
         when(financeCheckService.getFinanceCheckSummary(projectId)).thenReturn(serviceSuccess(financeCheckSummaryResource));
         when(grantClaimMaximumRestService.isMaximumFundingLevelConstant(competitionId)).thenReturn(restSuccess(false));
-        when(publicContentRestService.getByCompetitionId(competitionId)).thenReturn(restSuccess(publicContentResource));
+        when(publicContentItemRestService.getItemByCompetitionId(competitionId)).thenReturn(restSuccess(publicContentItemResource));
     }
 
     private MvcResult callEndpoint() throws Exception {

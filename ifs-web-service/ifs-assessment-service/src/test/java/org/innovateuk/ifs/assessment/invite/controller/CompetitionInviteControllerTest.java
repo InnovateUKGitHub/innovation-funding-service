@@ -6,12 +6,13 @@ import org.innovateuk.ifs.assessment.invite.form.CompetitionInviteForm;
 import org.innovateuk.ifs.assessment.invite.populator.CompetitionInviteModelPopulator;
 import org.innovateuk.ifs.assessment.invite.viewmodel.CompetitionInviteViewModel;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.invite.resource.CompetitionRejectionResource;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
 import org.innovateuk.ifs.invite.service.RejectionReasonRestService;
-import org.innovateuk.ifs.publiccontent.service.PublicContentRestService;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,6 +40,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOU
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -63,7 +65,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     private CompetitionInviteRestService competitionInviteRestService;
 
     @Mock
-    private PublicContentRestService publicContentRestService;
+    private PublicContentItemRestService publicContentItemRestService;
 
     private final List<RejectionReasonResource> rejectionReasons = newRejectionReasonResource()
             .withReason("Reason 1", "Reason 2")
@@ -91,7 +93,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/invite-accept/competition/hash/accept"));
 
-        verifyZeroInteractions(competitionInviteRestService);
+        verifyNoMoreInteractions(competitionInviteRestService);
     }
 
     @Test
@@ -112,10 +114,11 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         CompetitionInviteViewModel expectedViewModel = new CompetitionInviteViewModel("hash", inviteResource, false, null);
 
         PublicContentResource publicContentResource = newPublicContentResource().build();
+        PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
 
         when(competitionInviteRestService.checkExistingUser("hash")).thenReturn(restSuccess(TRUE));
         when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
-        when(publicContentRestService.getByCompetitionId(inviteResource.getCompetitionId())).thenReturn(restSuccess(publicContentResource));
+        when(publicContentItemRestService.getItemByCompetitionId(inviteResource.getCompetitionId())).thenReturn(restSuccess(publicContentItemResource));
 
         mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -133,13 +136,13 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     @Test
     public void acceptInvite_notLoggedInAndNotExistingUser() throws Exception {
         setLoggedInUser(null);
-        Boolean accept = true;
+        boolean accept = true;
 
         when(competitionInviteRestService.checkExistingUser("hash")).thenReturn(restSuccess(FALSE));
 
         mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("acceptInvitation", accept.toString()))
+                .param("acceptInvitation", Boolean.toString(accept)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/registration/hash/start"));
 
@@ -180,9 +183,10 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         CompetitionInviteViewModel expectedViewModel = new CompetitionInviteViewModel("hash", inviteResource, true, null);
 
         PublicContentResource publicContentResource = newPublicContentResource().build();
+        PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
 
         when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
-        when(publicContentRestService.getByCompetitionId(inviteResource.getCompetitionId())).thenReturn(restSuccess(publicContentResource));
+        when(publicContentItemRestService.getItemByCompetitionId(inviteResource.getCompetitionId())).thenReturn(restSuccess(publicContentItemResource));
 
         mockMvc.perform(get(restUrl + "{inviteHash}", "hash"))
                 .andExpect(status().isOk())
@@ -206,9 +210,10 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     public void noDecisionMade() throws Exception {
         CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition").build();
         PublicContentResource publicContentResource = newPublicContentResource().build();
+        PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
 
         when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
-        when(publicContentRestService.getByCompetitionId(inviteResource.getCompetitionId())).thenReturn(restSuccess(publicContentResource));
+        when(publicContentItemRestService.getItemByCompetitionId(inviteResource.getCompetitionId())).thenReturn(restSuccess(publicContentItemResource));
 
         CompetitionInviteForm expectedForm = new CompetitionInviteForm();
 
@@ -243,7 +248,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     @Test
     public void rejectInvite() throws Exception {
         String comment = String.join(" ", nCopies(100, "comment"));
-        Boolean accept = false;
+        boolean accept = false;
 
         CompetitionRejectionResource competitionRejectionResource = new CompetitionRejectionResource(newRejectionReasonResource()
                 .with(id(1L))
@@ -253,7 +258,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
         mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("acceptInvitation", accept.toString())
+                .param("acceptInvitation", Boolean.toString(accept))
                 .param("rejectReason", "1")
                 .param("rejectComment", comment))
                 .andExpect(status().is3xxRedirection())
@@ -269,9 +274,10 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition").build();
 
         PublicContentResource publicContentResource = newPublicContentResource().build();
+        PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
 
         when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
-        when(publicContentRestService.getByCompetitionId(inviteResource.getCompetitionId())).thenReturn(restSuccess(publicContentResource));
+        when(publicContentItemRestService.getItemByCompetitionId(inviteResource.getCompetitionId())).thenReturn(restSuccess(publicContentItemResource));
 
         String comment = String.join(" ", nCopies(100, "comment"));
 
@@ -300,7 +306,8 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
     @Test
     public void rejectInvite_noReasonComment() throws Exception {
-        Boolean accept = false;
+
+        boolean accept = false;
         CompetitionRejectionResource competitionRejectionResource = new CompetitionRejectionResource(newRejectionReasonResource()
                 .with(id(1L))
                 .build(), null);
@@ -309,7 +316,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
         mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("acceptInvitation", accept.toString())
+                .param("acceptInvitation", Boolean.toString(accept))
                 .param("rejectReason", "1"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/invite/competition/hash/reject/thank-you"));
@@ -323,9 +330,10 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition").build();
 
         PublicContentResource publicContentResource = newPublicContentResource().build();
+        PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
 
         when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
-        when(publicContentRestService.getByCompetitionId(inviteResource.getCompetitionId())).thenReturn(restSuccess(publicContentResource));
+        when(publicContentItemRestService.getItemByCompetitionId(inviteResource.getCompetitionId())).thenReturn(restSuccess(publicContentItemResource));
 
         String comment = RandomStringUtils.random(5001);
         Boolean accept = false;
@@ -373,9 +381,10 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition").build();
 
         PublicContentResource publicContentResource = newPublicContentResource().build();
+        PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
 
         when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
-        when(publicContentRestService.getByCompetitionId(inviteResource.getCompetitionId())).thenReturn(restSuccess(publicContentResource));
+        when(publicContentItemRestService.getItemByCompetitionId(inviteResource.getCompetitionId())).thenReturn(restSuccess(publicContentItemResource));
 
         String comment = String.join(" ", nCopies(101, "comment"));
         Boolean accept = false;

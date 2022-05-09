@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.forms.sections.yourorganisation.populator
 
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.ApplicationYourOrganisationViewModel;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.service.ApplicationYourOrganisationRestService;
@@ -10,7 +10,7 @@ import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.publiccontent.service.PublicContentRestService;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -39,13 +39,13 @@ public class ApplicationYourOrganisationViewModelPopulator {
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
 
     @Autowired
-    private PublicContentRestService publicContentRestService;
+    private PublicContentItemRestService publicContentItemRestService;
 
     public ApplicationYourOrganisationViewModel populate(long applicationId, long competitionId, long organisationId) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        PublicContentResource publicContent = publicContentRestService.getByCompetitionId(competitionId).getSuccess();
+        PublicContentItemResource publicContentItem = publicContentItemRestService.getItemByCompetitionId(competitionId).getSuccess();
 
         List<SectionResource> fundingSections = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES);
 
@@ -69,6 +69,6 @@ public class ApplicationYourOrganisationViewModelPopulator {
                 isMaximumFundingLevelConstant,
                 showOrganisationSizeAlert,
                 false,
-                publicContent.getHash());
+                publicContentItem.getPublicContentResource().getHash());
     }
 }

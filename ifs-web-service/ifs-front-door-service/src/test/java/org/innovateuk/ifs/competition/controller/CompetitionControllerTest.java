@@ -50,7 +50,14 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
     public void competitionOverview() throws Exception {
         final long competitionId = 20L;
 
-        final PublicContentItemResource publicContentItem = newPublicContentItemResource().build();
+        final PublicContentResource publicContent = newPublicContentResource()
+                .withHash(null)
+                .build();
+
+        final PublicContentItemResource publicContentItem = newPublicContentItemResource()
+                .withPublicContentResource(publicContent)
+                .build();
+
         final CompetitionOverviewViewModel viewModel = new CompetitionOverviewViewModel();
 
         when(publicContentItemRestService.getItemByCompetitionId(competitionId)).thenReturn(restSuccess(publicContentItem));
@@ -63,6 +70,62 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
     }
 
     @Test
+    public void competitionOverviewWithHash() throws Exception {
+
+        final long competitionId = 999L;
+        final String hash = "abc-123";
+
+        final PublicContentResource publicContent =
+                newPublicContentResource()
+                        .withHash(hash)
+                        .build();
+
+        final PublicContentItemResource publicContentItem =
+                newPublicContentItemResource()
+                        .withPublicContentResource(publicContent)
+                        .build();
+
+        final CompetitionOverviewViewModel viewModel = new CompetitionOverviewViewModel();
+
+        when(publicContentItemRestService.getItemByCompetitionId(competitionId)).thenReturn(restSuccess(publicContentItem));
+        when(overviewPopulator.populateViewModel(publicContentItem, true)).thenReturn(viewModel);
+
+        mockMvc.perform(get("/competition/{id}/overview/{hash}", competitionId, hash))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", viewModel))
+                .andExpect(view().name("competition/overview"));
+
+        verify(publicContentItemRestService).getItemByCompetitionId(competitionId);
+        verify(overviewPopulator).populateViewModel(publicContentItem, true);
+    }
+
+    @Test
+    public void competitionOverviewWithIncorrectHash() throws Exception {
+
+        final long competitionId = 999L;
+        final String hash = "abc-123";
+        final String incorrectHash = "def-456";
+
+        final PublicContentResource publicContent =
+                newPublicContentResource()
+                        .withHash(hash)
+                        .build();
+
+        final PublicContentItemResource publicContentItem =
+                newPublicContentItemResource()
+                        .withPublicContentResource(publicContent)
+                        .build();
+
+        when(publicContentItemRestService.getItemByCompetitionId(competitionId)).thenReturn(restSuccess(publicContentItem));
+
+        mockMvc.perform(get("/competition/{id}/overview/{hash}", competitionId, incorrectHash))
+                .andExpect(status().isForbidden());
+
+        verify(publicContentItemRestService).getItemByCompetitionId(competitionId);
+        verifyNoInteractions(overviewPopulator);
+    }
+
+    @Test
     public void privateCompetitionOverview() throws Exception {
 
         final long competitionId = 999L;
@@ -71,6 +134,7 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
         final PublicContentResource publicContent =
                 newPublicContentResource()
                         .withHash(hash)
+                        .withInviteOnly(true)
                         .build();
 
         final PublicContentItemResource publicContentItem =
@@ -102,6 +166,7 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
         final PublicContentResource publicContent =
                 newPublicContentResource()
                         .withHash(hash)
+                        .withInviteOnly(true)
                         .build();
 
         final PublicContentItemResource publicContentItem =
@@ -123,7 +188,15 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
         final long competitionId = 20L;
         setLoggedInUser(null);
 
-        final PublicContentItemResource publicContentItem = newPublicContentItemResource().build();
+        final PublicContentResource publicContent =
+                newPublicContentResource()
+                        .withHash(null)
+                        .build();
+
+        final PublicContentItemResource publicContentItem = newPublicContentItemResource()
+                .withPublicContentResource(publicContent)
+                .build();
+
         final CompetitionOverviewViewModel viewModel = new CompetitionOverviewViewModel();
 
         when(publicContentItemRestService.getItemByCompetitionId(competitionId)).thenReturn(restSuccess(publicContentItem));

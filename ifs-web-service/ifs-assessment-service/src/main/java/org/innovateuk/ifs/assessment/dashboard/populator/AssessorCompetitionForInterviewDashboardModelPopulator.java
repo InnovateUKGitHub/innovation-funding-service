@@ -4,13 +4,13 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForInterviewDashboardApplicationViewModel;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForInterviewDashboardViewModel;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.interview.resource.InterviewResource;
 import org.innovateuk.ifs.interview.service.InterviewAllocationRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.publiccontent.service.PublicContentRestService;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,24 +29,24 @@ public class AssessorCompetitionForInterviewDashboardModelPopulator {
     private ApplicationService applicationService;
     private OrganisationRestService organisationRestService;
     private InterviewAllocationRestService interviewAllocateRestService;
-    private PublicContentRestService publicContentRestService;
+    private PublicContentItemRestService publicContentItemRestService;
 
     @Autowired
     public AssessorCompetitionForInterviewDashboardModelPopulator(CompetitionRestService competitionRestService,
                                                                   ApplicationService applicationService,
                                                                   InterviewAllocationRestService interviewAllocateRestService,
                                                                   OrganisationRestService organisationRestService,
-                                                                  PublicContentRestService publicContentRestService) {
+                                                                  PublicContentItemRestService publicContentItemRestService) {
         this.competitionRestService = competitionRestService;
         this.applicationService = applicationService;
         this.interviewAllocateRestService = interviewAllocateRestService;
         this.organisationRestService = organisationRestService;
-        this.publicContentRestService = publicContentRestService;
+        this.publicContentItemRestService = publicContentItemRestService;
     }
 
     public AssessorCompetitionForInterviewDashboardViewModel populateModel(long competitionId, long userId) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        PublicContentResource publicContent = publicContentRestService.getByCompetitionId(competitionId).getSuccess();
+        PublicContentItemResource publicContentItem = publicContentItemRestService.getItemByCompetitionId(competitionId).getSuccess();
 
         List<AssessorCompetitionForInterviewDashboardApplicationViewModel> applications = getApplications(userId, competitionId);
 
@@ -55,7 +55,7 @@ public class AssessorCompetitionForInterviewDashboardModelPopulator {
                 competition.getName(),
                 competition.getLeadTechnologistName(),
                 applications,
-                publicContent.getHash());
+                publicContentItem.getPublicContentResource().getHash());
     }
 
     private List<AssessorCompetitionForInterviewDashboardApplicationViewModel> getApplications(long userId, long competitionId) {

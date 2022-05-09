@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.ApplicationKtaInvite;
 import org.innovateuk.ifs.invite.domain.InviteHistory;
@@ -15,6 +16,7 @@ import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
+import org.innovateuk.ifs.publiccontent.transactional.PublicContentItemService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -64,6 +66,9 @@ class ApplicationInviteNotificationService {
 
     @Autowired
     private ApplicationKtaInviteRepository applicationKtaInviteRepository;
+
+    @Autowired
+    private PublicContentItemService publicContentItemService;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -242,7 +247,11 @@ class ApplicationInviteNotificationService {
     }
 
     private String getCompetitionDetailsUrl(String baseUrl, Application inviteTarget) {
-        return baseUrl + "/competition/" + inviteTarget.getCompetition().getId() + "/overview";
+        PublicContentItemResource publicContent = publicContentItemService.byCompetitionId(inviteTarget.getCompetition().getId()).getSuccess();
+
+        return publicContent.getPublicContentResource().getHash() == null
+                ? baseUrl + "/competition/" + inviteTarget.getCompetition().getId() + "/overview"
+                : baseUrl + "/competition/" + inviteTarget.getCompetition().getId() + "/overview/" + publicContent.getPublicContentResource().getHash();
     }
 
     private void handleInviteSuccess(ApplicationInvite invite, boolean isResend) {

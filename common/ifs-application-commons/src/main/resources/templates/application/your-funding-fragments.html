@@ -337,10 +337,9 @@
     <th:block th:if="${model.overridingFundingRules}">
         The maximum you can enter is <span th:text="${model.maximumFundingLevel}">22</span>%,
         based on this <a class="govuk-link" target="_blank"
-                         th:text="${publicContentItem.competitionTitle}"
                          th:href="${publicContentItem.hash == null}
-                                        ? @{/competition/{competitionId}/overview#eligibility(competitionId=${model.competitionId})}
-                                        : @{/competition/{competitionId}/overview/{hash}#eligibility(competitionId=${model.competitionId},hash=${model.hash})}">
+                         ? @{/competition/{competitionId}/overview#eligibility(competitionId=${model.competitionId})}
+                         : @{/competition/{competitionId}/overview/{hash}#eligibility(competitionId=${model.competitionId},hash=${model.hash})}">
         competition's rules (opens in a new window)</a>.
     </th:block>
     <th:block th:unless="${model.overridingFundingRules}">
@@ -360,7 +359,9 @@
     <th:block th:if="${model.overridingFundingRules}">
         The maximum you can enter is <span th:text="${model.maximumFundingLevel}">22</span>%,
         based on this <a class="govuk-link" target="_blank"
-                        th:href="@{~/competition/{competitionId}/overview#eligibility(competitionId=${model.competitionId})}">competition's rules (opens in a new window)</a>.
+                         th:href="${publicContentItem.hash == null}
+                         ? @{/competition/{competitionId}/overview#eligibility(competitionId=${model.competitionId})}
+                         : @{/competition/{competitionId}/overview/{hash}#eligibility(competitionId=${model.competitionId},hash=${model.hash})}">competition's rules (opens in a new window)</a>.
     </th:block>
     <th:block th:unless="${model.overridingFundingRules}">
         The maximum you can enter is <span th:text="${model.maximumFundingLevel}">33</span>%, based on your organisation size and project research category.

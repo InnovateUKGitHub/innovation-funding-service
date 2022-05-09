@@ -5,8 +5,8 @@ import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionDash
 import org.innovateuk.ifs.assessment.resource.dashboard.ApplicationAssessmentResource;
 import org.innovateuk.ifs.assessment.resource.dashboard.AssessorCompetitionDashboardResource;
 import org.innovateuk.ifs.assessment.service.AssessorCompetitionDashboardRestService;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
-import org.innovateuk.ifs.publiccontent.service.PublicContentRestService;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,12 +25,12 @@ public class AssessorCompetitionDashboardModelPopulator {
     private AssessorCompetitionDashboardRestService assessorCompetitionDashboardRestService;
 
     @Autowired
-    private PublicContentRestService publicContentRestService;
+    private PublicContentItemRestService publicContentItemRestService;
 
     public AssessorCompetitionDashboardViewModel populateModel(Long competitionId, Long userId) {
 
         AssessorCompetitionDashboardResource assessorCompetitionDashboard = assessorCompetitionDashboardRestService.getAssessorCompetitionDashboard(competitionId, userId).getSuccess();
-        PublicContentResource publicContent = publicContentRestService.getByCompetitionId(competitionId).getSuccess();
+        PublicContentItemResource publicContentItem = getPublicContentItemResource(competitionId);
 
         List<AssessorCompetitionDashboardApplicationViewModel> outstanding = getOutstandingAssessments(assessorCompetitionDashboard.getApplicationAssessments());
         List<AssessorCompetitionDashboardApplicationViewModel> submitted = getSubmittedAssessments(assessorCompetitionDashboard.getApplicationAssessments());
@@ -49,14 +49,14 @@ public class AssessorCompetitionDashboardModelPopulator {
                 submitted,
                 outstanding,
                 submitVisible,
-                publicContent.getHash()
+                publicContentItem.getPublicContentResource().getHash()
         );
     }
 
     public AssessorCompetitionDashboardViewModel populateModel(Long competitionId, Long assessmentPeriodId, Long userId) {
 
         AssessorCompetitionDashboardResource assessorCompetitionDashboard = assessorCompetitionDashboardRestService.getAssessorCompetitionDashboard(competitionId, assessmentPeriodId, userId).getSuccess();
-        PublicContentResource publicContent = publicContentRestService.getByCompetitionId(competitionId).getSuccess();
+        PublicContentItemResource publicContentItem = getPublicContentItemResource(competitionId);
 
         List<AssessorCompetitionDashboardApplicationViewModel> outstanding = getOutstandingAssessments(assessorCompetitionDashboard.getApplicationAssessments());
         List<AssessorCompetitionDashboardApplicationViewModel> submitted = getSubmittedAssessments(assessorCompetitionDashboard.getApplicationAssessments());
@@ -75,7 +75,7 @@ public class AssessorCompetitionDashboardModelPopulator {
                 submitted,
                 outstanding,
                 submitVisible,
-                publicContent.getHash()
+                publicContentItem.getPublicContentResource().getHash()
         );
     }
 
@@ -108,5 +108,9 @@ public class AssessorCompetitionDashboardModelPopulator {
                 assessment.getOverallScore(),
                 assessment.getRecommended()
         );
+    }
+
+    private PublicContentItemResource getPublicContentItemResource(Long competitionId) {
+        return publicContentItemRestService.getItemByCompetitionId(competitionId).getSuccess();
     }
 }
