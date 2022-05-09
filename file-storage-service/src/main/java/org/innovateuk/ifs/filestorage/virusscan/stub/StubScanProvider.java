@@ -6,6 +6,7 @@ import org.innovateuk.ifs.filestorage.virusscan.VirusScanResult;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 public class StubScanProvider implements VirusScanProvider {
 
@@ -14,7 +15,7 @@ public class StubScanProvider implements VirusScanProvider {
 
     @Override
     public VirusScanResult scanFile(byte[] fileBytes) throws IOException {
-        if (EICAR == fileBytes) {
+        if (Arrays.equals(EICAR, fileBytes)) {
             return new VirusScanResult(VirusScanStatus.VIRUS_DETECTED, "EICAR");
         }
         return new VirusScanResult(VirusScanStatus.VIRUS_FREE, "Dummy Scan Provider");

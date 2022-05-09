@@ -27,7 +27,7 @@ spec:
           httpGet:
             path: /monitoring/health
             port: 8080
-          initialDelaySeconds: 120
+          initialDelaySeconds: 30
           periodSeconds: 31
           timeoutSeconds: 25
           successThreshold: 1
@@ -36,15 +36,15 @@ spec:
           httpGet:
             path: /monitoring/health
             port: 8080
-          initialDelaySeconds: 120
+          initialDelaySeconds: 30
           periodSeconds: 5
           timeoutSeconds: 25
           successThreshold: 1
           failureThreshold: 3
         envFrom:
-          - secretKeyRef:
+          - secretRef:
               name: file-storage-service-secrets
-          - configKeyRef:
+          - configMapRef:
               name: file-storage-service-config
         env:
         - name: JAVA_TOOL_OPTIONS
