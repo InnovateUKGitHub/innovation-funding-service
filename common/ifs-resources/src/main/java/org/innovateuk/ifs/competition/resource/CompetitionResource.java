@@ -199,11 +199,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     }
 
     @JsonIgnore
-    public boolean isDirectAward() {
-        return competitionTypeEnum == CompetitionTypeEnum.DIRECT_AWARD;
-    }
-
-    @JsonIgnore
     public boolean onlyOneOrgAllowedPerApplication() {
         return isH2020() || isProcurement();
     }
