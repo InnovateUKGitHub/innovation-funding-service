@@ -79,6 +79,7 @@ include("ifs-web-service:ifs-project-setup-mgt-service")
 include("ifs-web-service:ifs-front-door-service")
 include("ifs-registration-service")
 include("file-storage-service")
+include 'feign-test'
 
 include("robot-tests")
 

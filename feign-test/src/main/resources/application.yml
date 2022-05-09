@@ -1,0 +1,14 @@
+server:
+  port: 8081
+logging:
+  level:
+    org:
+      innovateuk:
+        ifs:
+          api:
+            filestorage:
+              v1:
+                upload: DEBUG
+feign:
+  name: "file-upload"
+  url: "localhost:8080"
