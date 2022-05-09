@@ -23,4 +23,3 @@ patchesStrategicMerge:
   - auth/sp/sp.yml
   - auth/sp/sp-deployment.yml
   - auth/ldap/ldap-deployment.yml
-  - clamav/clamav-server-service.yml
