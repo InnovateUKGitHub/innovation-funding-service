@@ -75,14 +75,14 @@ ${projectSetupCompMgtDetailsPage}  ${server}/project-setup-management/competitio
 Internal finance can see competition terms and conditions
     [Documentation]  IFS-5920
     [Tags]
-    Given the internal user should see read only view of terms and conditions   ${Internal_Competition_Status}   ${PS_PD_Application_Id}  Terms and conditions of an Innovate UK grant award   Innovate UK
+    Given the internal user should see read only view of terms and conditions   ${Internal_Competition_Status}   ${PS_PD_Application_Id}  Terms and conditions of an Innovate UK Grant Award   Innovate UK
     Then the user navigates to the page                                         ${Internal_Competition_Status}
 
 Competition admin can see competition terms and conditions
     [Documentation]  IFS-5920
     [Tags]
     Given Log in as a different user                                           &{Comp_admin1_credentials}
-    Then the internal user should see read only view of terms and conditions   ${Internal_Competition_Status}  ${PS_PD_Application_Id}  Terms and conditions of an Innovate UK grant award   Innovate UK
+    Then the internal user should see read only view of terms and conditions   ${Internal_Competition_Status}  ${PS_PD_Application_Id}  Terms and conditions of an Innovate UK Grant Award   Innovate UK
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 INFUND-5507 INFUND-5543
@@ -328,7 +328,7 @@ the user should see the grant award terms and conditions
     the user clicks the button/link            link = ${PS_PD_Application_Title}
     the user clicks the button/link            link = view the award terms and conditions
     the user clicks the button/link            jQuery = a:contains("Innovate UK")
-    the user should see the element            jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
+    the user should see the element            jQuery = h1:contains("Terms and conditions of an Innovate UK Grant Award")
     the user goes back to the previous page
     the user clicks the button/link            jQuery = a:contains("Back to set up your project")
 

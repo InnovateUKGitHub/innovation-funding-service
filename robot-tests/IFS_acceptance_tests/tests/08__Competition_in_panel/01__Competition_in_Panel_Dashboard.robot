@@ -27,7 +27,7 @@ Internal user can see grant terms and conditions
     When the user clicks the button/link   link = ${application_ids["${FUNDERS_PANEL_APPLICATION_1_TITLE}"]}
     And the user clicks the button/link    jQuery = button:contains("Award terms and conditions")
     And the user clicks the button/link    jQuery = a:contains("Innovate UK")
-    Then the user should see the element   jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
+    Then the user should see the element   jQuery = h1:contains("Terms and conditions of an Innovate UK Grant Award")
 
 *** Keywords ***
 the user should see milestones for In Panel Competitions
