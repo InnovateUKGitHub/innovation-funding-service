@@ -124,7 +124,7 @@
                                 <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Full name</th>
                                 <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Email</th>
                                 <th:block th:if="${model.isEDIUpdateEnabled}">
-                                    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">EDI status</th>
+                                    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">EDI survey</th>
                                 </th:block>
                                 <th scope="col" class="govuk-table__header govuk-!-width-one-quarter"><span
                                         class="govuk-visually-hidden">Remove</span></th>
@@ -140,10 +140,9 @@
                                     th:text="${row.email}"
                                     th:classappend="${row.invite ? 'hint' : ''}"></td>
 
-                                <td class="govuk-table__cell " th:if="${model.isEDIUpdateEnabled and model.loggedInUserId == row.id and !row.isEdiStatusComplete()}"
-                                    >
-                                    <a th:if="${model.hasApplicantAndAssessorRole}" href="/assessment/profile/details" class="govuk-link">Start Survey</a>
-                                    <a th:unless="${model.hasApplicantAndAssessorRole}" href="/profile/view" class="govuk-link">Start Survey</a></p>
+                                <td class="govuk-table__cell " th:if="${model.isEDIUpdateEnabled and model.loggedInUserId == row.id and !row.isEdiStatusComplete()}">
+                                    <a th:if="${model.hasApplicantAndAssessorRole}" href="/assessment/profile/details" class="govuk-link">Start survey</a>
+                                    <a th:unless="${model.hasApplicantAndAssessorRole}" href="/profile/view" class="govuk-link">Start survey</a>
                                 </td>
                                 <td class="govuk-table__cell " th:unless="${model.isEDIUpdateEnabled and model.loggedInUserId == row.id and !row.isEdiStatusComplete()}">
                                     <span class="edit" th:unless="${row.isEdiStatusComplete()}">Incomplete</span>
