@@ -479,7 +479,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         // Method under test
         ServiceResult<ProjectUser> shouldFail = service.addPartner(project.getId(), u.getId(), o.getId());
         // Expectations
-        verifyZeroInteractions(projectUserRepositoryMock);
+        verifyNoInteractions(projectUserRepositoryMock);
         assertTrue(shouldFail.isSuccess());
     }
 

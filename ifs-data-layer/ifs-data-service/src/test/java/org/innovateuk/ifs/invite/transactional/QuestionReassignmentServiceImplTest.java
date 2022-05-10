@@ -29,7 +29,7 @@ import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.ProcessRoleType.COLLABORATOR;
-import static org.mockito.ArgumentMatchers.anyCollectionOf;
+import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 
@@ -114,7 +114,7 @@ public class QuestionReassignmentServiceImplTest extends BaseUnitTestMocksTest {
                                 qs.getAssignee().equals(leadApplicantProcessRole))
                 )
         );
-        inOrder.verify(questionStatusRepositoryMock).deleteAll(anyCollectionOf(QuestionStatus.class));
+        inOrder.verify(questionStatusRepositoryMock).deleteAll(anyCollection());
 
         inOrder.verifyNoMoreInteractions();
     }
@@ -189,7 +189,7 @@ public class QuestionReassignmentServiceImplTest extends BaseUnitTestMocksTest {
                         )
                 )
         );
-        inOrder.verify(questionStatusRepositoryMock).deleteAll(anyCollectionOf(QuestionStatus.class));
+        inOrder.verify(questionStatusRepositoryMock).deleteAll(anyCollection());
 
         inOrder.verifyNoMoreInteractions();
     }

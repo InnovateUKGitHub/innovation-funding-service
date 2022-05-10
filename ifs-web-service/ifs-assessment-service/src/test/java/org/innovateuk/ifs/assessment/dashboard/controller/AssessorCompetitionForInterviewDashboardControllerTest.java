@@ -135,8 +135,8 @@ public class AssessorCompetitionForInterviewDashboardControllerTest extends Base
         inOrder.verify(interviewAllocationRestService).getAllocatedApplicationsByAssessorId(competition.getId(), userId);
         inOrder.verifyNoMoreInteractions();
 
-        verifyZeroInteractions(applicationService);
-        verifyZeroInteractions(organisationRestService);
+        verifyNoInteractions(applicationService);
+        verifyNoInteractions(organisationRestService);
 
         AssessorCompetitionForInterviewDashboardViewModel model = (AssessorCompetitionForInterviewDashboardViewModel) result.getModelAndView().getModel().get("model");
 

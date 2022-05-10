@@ -279,8 +279,8 @@ public class QuestionServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(assessmentRepositoryMock).findById(assessmentId);
         inOrder.verifyNoMoreInteractions();
 
-        verifyZeroInteractions(questionRepositoryMock);
-        verifyZeroInteractions(questionMapperMock);
+        verifyNoInteractions(questionRepositoryMock);
+        verifyNoInteractions(questionMapperMock);
     }
 
     @Test
@@ -309,7 +309,7 @@ public class QuestionServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(questionRepositoryMock).findById(questionId);
         inOrder.verifyNoMoreInteractions();
 
-        verifyZeroInteractions(questionMapperMock);
+        verifyNoInteractions(questionMapperMock);
     }
 
     @Test
@@ -346,7 +346,7 @@ public class QuestionServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(questionRepositoryMock).findById(questionId);
         inOrder.verifyNoMoreInteractions();
 
-        verifyZeroInteractions(questionMapperMock);
+        verifyNoInteractions(questionMapperMock);
     }
 
     @Test

@@ -649,7 +649,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         assertTrue(changedResult.isSuccess());
         verify(applicationRepository, times(2)).findAllowedApplicationsForCompetition(new HashSet<>(singletonList(applicationId)), competitionId);
         verify(applicationService, times(2)).setApplicationFundingEmailDateTime(applicationId, null);
-        verifyZeroInteractions(applicationWorkflowHandler);
+        verifyNoInteractions(applicationWorkflowHandler);
 
         assertTrue(FundingDecisionStatus.UNFUNDED.equals(application1.getFundingDecision()));
     }

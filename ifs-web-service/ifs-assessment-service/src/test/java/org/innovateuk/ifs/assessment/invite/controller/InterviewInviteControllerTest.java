@@ -80,7 +80,7 @@ public class InterviewInviteControllerTest extends BaseControllerMockMVCTest<Int
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/invite-accept/interview/hash/accept"));
 
-        verifyZeroInteractions(interviewInviteRestService);
+        verifyNoInteractions(interviewInviteRestService);
     }
 
     @Test

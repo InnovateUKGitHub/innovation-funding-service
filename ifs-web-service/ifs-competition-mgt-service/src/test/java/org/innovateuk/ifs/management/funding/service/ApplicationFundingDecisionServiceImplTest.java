@@ -63,7 +63,7 @@ public class ApplicationFundingDecisionServiceImplTest extends BaseServiceUnitTe
 
         assertTrue(result.isFailure());
 
-        verifyZeroInteractions(applicationFundingDecisionRestService);
+        verifyNoInteractions(applicationFundingDecisionRestService);
     }
 
     @Test
@@ -73,7 +73,7 @@ public class ApplicationFundingDecisionServiceImplTest extends BaseServiceUnitTe
         Optional<FundingDecision> fundingDecision = service.getFundingDecisionForString(fundingDecisionString);
 
         assertTrue(fundingDecision.isPresent());
-        assertEquals(fundingDecision.get(), FundingDecision.ON_HOLD);
+        assertEquals(FundingDecision.ON_HOLD, fundingDecision.get());
     }
 
     @Test

@@ -85,7 +85,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/invite-accept/competition/hash/accept"));
 
-        verifyZeroInteractions(competitionInviteRestService);
+        verifyNoInteractions(competitionInviteRestService);
     }
 
     @Test

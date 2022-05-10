@@ -355,8 +355,8 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
         assertNotNull(leadOrganisationFinanceBreakdown);
         assertEquals(leadOrganisationId, leadOrganisationFinanceBreakdown.getOrganisationId().longValue());
 
-        verifyZeroInteractions(inviteService);
-        verifyZeroInteractions(financeLinksUtil);
+        verifyNoInteractions(inviteService);
+        verifyNoInteractions(financeLinksUtil);
     }
 
     @Test
@@ -439,8 +439,8 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
 
         assertThat(leadOrganisationFinanceRowTypes, containsInAnyOrder(expectedFinanceRowTypes.toArray()));
 
-        verifyZeroInteractions(inviteService);
-        verifyZeroInteractions(financeLinksUtil);
+        verifyNoInteractions(inviteService);
+        verifyNoInteractions(financeLinksUtil);
     }
 
     @Test
@@ -525,7 +525,7 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
 
         assertThat(leadOrganisationFinanceRowTypes, containsInAnyOrder(expectedFinanceRowTypes.toArray()));
 
-        verifyZeroInteractions(inviteService);
-        verifyZeroInteractions(financeLinksUtil);
+        verifyNoInteractions(inviteService);
+        verifyNoInteractions(financeLinksUtil);
     }
 }

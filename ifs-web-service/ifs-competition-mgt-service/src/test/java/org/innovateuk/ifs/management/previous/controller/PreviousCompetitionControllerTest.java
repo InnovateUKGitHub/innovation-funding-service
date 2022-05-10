@@ -130,7 +130,7 @@ public class PreviousCompetitionControllerTest extends BaseControllerMockMVCTest
                 .withName("Successful project")
                 .build();
 
-        when(applicationFundingDecisionService.saveApplicationFundingDecisionData(anyLong(), any(FundingDecision.class), anyListOf(Long.class)))
+        when(applicationFundingDecisionService.saveApplicationFundingDecisionData(anyLong(), any(FundingDecision.class), anyList()))
                 .thenReturn(ServiceResult.serviceSuccess());
         when(projectRestService.createProjectFromApplicationId(anyLong()))
                 .thenReturn(restSuccess(projectResource));
@@ -140,7 +140,7 @@ public class PreviousCompetitionControllerTest extends BaseControllerMockMVCTest
                 .andExpect(view().name("redirect:/competition/{competitionId}/previous"))
                 .andReturn();
 
-        verify(applicationFundingDecisionService).saveApplicationFundingDecisionData(anyLong(), any(FundingDecision.class), anyListOf(Long.class));
+        verify(applicationFundingDecisionService).saveApplicationFundingDecisionData(anyLong(), any(FundingDecision.class), anyList());
         verify(projectRestService).createProjectFromApplicationId(anyLong());
         verifyNoMoreInteractions(applicationFundingDecisionService, projectRestService);
 

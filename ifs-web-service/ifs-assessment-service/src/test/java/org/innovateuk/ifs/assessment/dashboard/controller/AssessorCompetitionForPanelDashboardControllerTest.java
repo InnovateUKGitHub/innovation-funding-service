@@ -138,8 +138,8 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
         inOrder.verify(reviewRestService).getAssessmentReviews(userId, competition.getId());
         inOrder.verifyNoMoreInteractions();
 
-        verifyZeroInteractions(applicationService);
-        verifyZeroInteractions(organisationRestService);
+        verifyNoInteractions(applicationService);
+        verifyNoInteractions(organisationRestService);
 
         AssessorCompetitionForPanelDashboardViewModel model = (AssessorCompetitionForPanelDashboardViewModel) result.getModelAndView().getModel().get("model");
 
