@@ -103,13 +103,16 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
         boolean isMaximumFundingLevelConstant = competition.isMaximumFundingLevelConstant(
                 organisation::getOrganisationTypeEnum,
                 () -> grantClaimMaximumRestService.isMaximumFundingLevelConstant(competition.getId()).getSuccess());
+
+        String hash = publicContentItem.getPublicContentResource().getHash();
+
         ProjectOrganisationSizeViewModel projectOrganisationSizeViewModel =  new ProjectOrganisationSizeViewModel(project,
                 competition,
                 organisation,
                 isMaximumFundingLevelConstant,
                 false,
                 false,
-                publicContentItem.getPublicContentResource().getHash());
+                hash);
         projectOrganisationSizeViewModel.setOrgDetailsViewModel(populateOrganisationDetails(organisationId));
         projectOrganisationSizeViewModel.setPartnerOrgDisplay(true);
         return projectOrganisationSizeViewModel;

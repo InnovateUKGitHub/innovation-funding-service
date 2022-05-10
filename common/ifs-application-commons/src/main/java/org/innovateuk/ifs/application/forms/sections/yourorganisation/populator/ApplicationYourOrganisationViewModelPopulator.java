@@ -62,6 +62,8 @@ public class ApplicationYourOrganisationViewModelPopulator {
             showOrganisationSizeAlert = fundingSectionComplete;
         }
 
+        String hash = publicContentItem.getPublicContentResource().getHash();
+
         return new ApplicationYourOrganisationViewModel(
                 applicationId,
                 competition,
@@ -69,6 +71,6 @@ public class ApplicationYourOrganisationViewModelPopulator {
                 isMaximumFundingLevelConstant,
                 showOrganisationSizeAlert,
                 false,
-                publicContentItem.getPublicContentResource().getHash());
+                hash);
     }
 }

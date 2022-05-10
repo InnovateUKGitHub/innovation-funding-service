@@ -53,6 +53,9 @@ public class YourOrganisationViewModelPopulator {
                 () -> grantClaimMaximumRestService.isMaximumFundingLevelConstant(competition.getId()).getSuccess());
 
         boolean showOrganisationSizeAlert = !isMaximumFundingLevelConstant && pendingPartner.isYourFundingComplete();
+
+        String hash = publicContentItem.getPublicContentResource().getHash();
+
         return new ProjectYourOrganisationViewModel(
                 project.getApplication(),
                 competition,
@@ -64,6 +67,6 @@ public class YourOrganisationViewModelPopulator {
                 pendingPartner.isYourOrganisationComplete(),
                 user,
                 true,
-                publicContentItem.getPublicContentResource().getHash());
+                hash);
     }
 }

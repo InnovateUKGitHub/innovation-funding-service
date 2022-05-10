@@ -50,12 +50,14 @@ public class AssessorCompetitionForInterviewDashboardModelPopulator {
 
         List<AssessorCompetitionForInterviewDashboardApplicationViewModel> applications = getApplications(userId, competitionId);
 
+        String hash = publicContentItem.getPublicContentResource().getHash();
+
         return new AssessorCompetitionForInterviewDashboardViewModel(
                 competition.getId(),
                 competition.getName(),
                 competition.getLeadTechnologistName(),
                 applications,
-                publicContentItem.getPublicContentResource().getHash());
+                hash);
     }
 
     private List<AssessorCompetitionForInterviewDashboardApplicationViewModel> getApplications(long userId, long competitionId) {

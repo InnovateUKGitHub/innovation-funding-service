@@ -29,7 +29,9 @@ public class UpcomingCompetitionViewModelTest {
         PublicContentResource publicContent = newPublicContentResource().build();
         PublicContentItemResource publicContentItem = newPublicContentItemResource().withPublicContentResource(publicContent).build();
 
-        UpcomingCompetitionViewModel viewModel = new UpcomingCompetitionViewModel(competitionResource, competitionAssessmentConfigResource, publicContentItem.getPublicContentResource().getHash());
+        String hash = publicContentItem.getPublicContentResource().getHash();
+
+        UpcomingCompetitionViewModel viewModel = new UpcomingCompetitionViewModel(competitionResource, competitionAssessmentConfigResource, hash);
 
         assertFalse(viewModel.isKtpCompetition());
         assertFalse(viewModel.isAlwaysOpenCompetition());
@@ -47,7 +49,9 @@ public class UpcomingCompetitionViewModelTest {
         PublicContentResource publicContent = newPublicContentResource().build();
         PublicContentItemResource publicContentItem = newPublicContentItemResource().withPublicContentResource(publicContent).build();
 
-        UpcomingCompetitionViewModel viewModel = new UpcomingCompetitionViewModel(competitionResource, competitionAssessmentConfigResource, publicContentItem.getPublicContentResource().getHash());
+        String hash = publicContentItem.getPublicContentResource().getHash();
+
+        UpcomingCompetitionViewModel viewModel = new UpcomingCompetitionViewModel(competitionResource, competitionAssessmentConfigResource, hash);
 
         assertTrue(viewModel.isKtpCompetition());
         assertFalse(viewModel.isAlwaysOpenCompetition());
@@ -66,7 +70,9 @@ public class UpcomingCompetitionViewModelTest {
         PublicContentResource publicContent = newPublicContentResource().build();
         PublicContentItemResource publicContentItem = newPublicContentItemResource().withPublicContentResource(publicContent).build();
 
-        UpcomingCompetitionViewModel viewModel = new UpcomingCompetitionViewModel(competitionResource, competitionAssessmentConfigResource, publicContentItem.getPublicContentResource().getHash());
+        String hash = publicContentItem.getPublicContentResource().getHash();
+
+        UpcomingCompetitionViewModel viewModel = new UpcomingCompetitionViewModel(competitionResource, competitionAssessmentConfigResource, hash);
 
         assertTrue(viewModel.isAlwaysOpenCompetition());
     }

@@ -249,9 +249,11 @@ class ApplicationInviteNotificationService {
     private String getCompetitionDetailsUrl(String baseUrl, Application inviteTarget) {
         PublicContentItemResource publicContent = publicContentItemService.byCompetitionId(inviteTarget.getCompetition().getId()).getSuccess();
 
-        return publicContent.getPublicContentResource().getHash() == null
+        String hash = publicContent.getPublicContentResource().getHash();
+
+        return !publicContent.isProtected()
                 ? baseUrl + "/competition/" + inviteTarget.getCompetition().getId() + "/overview"
-                : baseUrl + "/competition/" + inviteTarget.getCompetition().getId() + "/overview/" + publicContent.getPublicContentResource().getHash();
+                : baseUrl + "/competition/" + inviteTarget.getCompetition().getId() + "/overview/" + hash;
     }
 
     private void handleInviteSuccess(ApplicationInvite invite, boolean isResend) {

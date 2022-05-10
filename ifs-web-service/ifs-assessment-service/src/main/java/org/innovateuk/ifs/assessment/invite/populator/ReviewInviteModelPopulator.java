@@ -25,6 +25,8 @@ public class ReviewInviteModelPopulator extends InviteModelPopulator<ReviewInvit
         ReviewInviteResource invite = inviteRestService.openInvite(inviteHash).getSuccess();
         PublicContentItemResource publicContentItem = publicContentItemRestService.getItemByCompetitionId(invite.getCompetitionId()).getSuccess();
 
-        return new ReviewInviteViewModel(inviteHash, invite, userLoggedIn, publicContentItem.getPublicContentResource().getHash());
+        String hash = publicContentItem.getPublicContentResource().getHash();
+
+        return new ReviewInviteViewModel(inviteHash, invite, userLoggedIn, hash);
     }
 }

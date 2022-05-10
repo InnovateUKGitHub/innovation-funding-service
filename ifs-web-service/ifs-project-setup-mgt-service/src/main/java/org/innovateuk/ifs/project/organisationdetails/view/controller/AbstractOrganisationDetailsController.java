@@ -81,6 +81,9 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
             boolean isMaximumFundingLevelConstant = competition.isMaximumFundingLevelConstant(
                     organisation::getOrganisationTypeEnum,
                     () -> grantClaimMaximumRestService.isMaximumFundingLevelConstant(competition.getId()).getSuccess());
+
+            String hash = publicContentItem.getPublicContentResource().getHash();
+
             ProjectYourOrganisationViewModel projectYourOrganisationViewModel = new ProjectYourOrganisationViewModel(
                     project.getApplication(),
                     competition,
@@ -92,7 +95,7 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
                     true,
                     loggedInUser,
                     isAllEligibilityAndViabilityInReview(projectId),
-                    publicContentItem.getPublicContentResource().getHash());
+                    hash);
             projectYourOrganisationViewModel.setOrgDetailsViewModel(populateOrganisationDetails((organisationId)));
             projectYourOrganisationViewModel.setPartnerOrgDisplay(true);
             model.addAttribute("yourOrganisation", projectYourOrganisationViewModel);

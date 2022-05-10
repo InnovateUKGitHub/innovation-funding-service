@@ -43,7 +43,9 @@ public class SupporterCompetitionDashboardController {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         PublicContentItemResource publicContentItem = publicContentItemRestService.getItemByCompetitionId(competitionId).getSuccess();
 
-        model.addAttribute("model", new SupporterCompetitionDashboardViewModel(pageResource, competition, publicContentItem.getPublicContentResource().getHash()));
+        String hash = publicContentItem.getPublicContentResource().getHash();
+
+        model.addAttribute("model", new SupporterCompetitionDashboardViewModel(pageResource, competition, hash));
         return "supporter/supporter-competition-dashboard";
     }
 }

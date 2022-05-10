@@ -111,6 +111,8 @@ public class YourFundingViewModelPopulator {
                 yourOrganisationRequired, subsidyBasisQuestionRequired);
         boolean overridingFundingRules = isMaximumFundingLevelOverridden(section);
 
+        String hash = publicContentItem.getPublicContentResource().getHash();
+
         return new YourFundingViewModel(applicationId,
                 section.getCompetition().getName(),
                 section.getSection().getId(),
@@ -134,7 +136,7 @@ public class YourFundingViewModelPopulator {
                 section.getCompetition().getFundingType(),
                 section.getCurrentApplicant().getOrganisation().getOrganisationTypeEnum(),
                 competition.isThirdPartyOfgem(),
-                publicContentItem.getPublicContentResource().getHash());
+                hash);
     }
 
 
@@ -144,8 +146,10 @@ public class YourFundingViewModelPopulator {
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         PublicContentItemResource publicContentItem = publicContentItemRestService.getItemByCompetitionId(application.getCompetition()).getSuccess();
 
+        String hash = publicContentItem.getPublicContentResource().getHash();
+
         return new ManagementYourFundingViewModel(applicationId, application.getCompetitionName(), sectionId, organisationId, application.getCompetition(), application.getName(),
-                format("/application/%d/form/FINANCE/%d", applicationId, organisationId), competition.getFundingType(), organisation.getOrganisationTypeEnum(), competition.isThirdPartyOfgem(), publicContentItem.getPublicContentResource().getHash());
+                format("/application/%d/form/FINANCE/%d", applicationId, organisationId), competition.getFundingType(), organisation.getOrganisationTypeEnum(), competition.isThirdPartyOfgem(), hash);
     }
 
     private Long getSubsidyBasisQuestionId(ApplicantSectionResource section) {

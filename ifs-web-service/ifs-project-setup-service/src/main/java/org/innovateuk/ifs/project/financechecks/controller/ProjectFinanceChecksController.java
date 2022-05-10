@@ -521,6 +521,9 @@ public class ProjectFinanceChecksController {
             Optional<ProjectFinanceResource> organisationProjectFinance = projectFinances.stream()
                     .filter(projectFinance -> projectFinance.getOrganisation().equals(organisation.getId()))
                     .findFirst();
+
+            String hash = publicContentItem.getPublicContentResource().getHash();
+
             model.addAttribute("model", new FinanceChecksProjectCostsViewModel(application.getId(),
                     competition.getFinanceRowTypesByFinance(organisationProjectFinance),
                     competition.isOverheadsAlwaysTwenty(),
@@ -530,7 +533,7 @@ public class ProjectFinanceChecksController {
                     canEditProjectCosts,
                     competition.isThirdPartyOfgem(),
                     competition.isHorizonEuropeGuarantee(),
-                    publicContentItem.getPublicContentResource().getHash()));
+                    hash));
             model.addAttribute("form", competition.isHorizonEuropeGuarantee() ?
                     hecpCostsFormPopulator.populate(project.getId(), organisation.getId()) :
                     formPopulator.populateForm(project.getId(), organisation.getId(), competition.isThirdPartyOfgem()));

@@ -38,6 +38,8 @@ public class AssessorCompetitionDashboardModelPopulator {
         boolean submitVisible = outstanding.stream()
                 .anyMatch(AssessorCompetitionDashboardApplicationViewModel::isReadyToSubmit);
 
+        String hash = publicContentItem.getPublicContentResource().getHash();
+
         return new AssessorCompetitionDashboardViewModel(
                 assessorCompetitionDashboard.getCompetitionId(),
                 assessorCompetitionDashboard.getCompetitionName(),
@@ -49,7 +51,7 @@ public class AssessorCompetitionDashboardModelPopulator {
                 submitted,
                 outstanding,
                 submitVisible,
-                publicContentItem.getPublicContentResource().getHash()
+                hash
         );
     }
 
@@ -64,6 +66,8 @@ public class AssessorCompetitionDashboardModelPopulator {
         boolean submitVisible = outstanding.stream()
                 .anyMatch(AssessorCompetitionDashboardApplicationViewModel::isReadyToSubmit);
 
+        String hash = publicContentItem.getPublicContentResource().getHash();
+
         return new AssessorCompetitionDashboardViewModel(
                 assessorCompetitionDashboard.getCompetitionId(),
                 assessorCompetitionDashboard.getCompetitionName(),
@@ -75,7 +79,7 @@ public class AssessorCompetitionDashboardModelPopulator {
                 submitted,
                 outstanding,
                 submitVisible,
-                publicContentItem.getPublicContentResource().getHash()
+                hash
         );
     }
 

@@ -25,6 +25,8 @@ public class CompetitionInviteModelPopulator extends InviteModelPopulator<Compet
         CompetitionInviteResource invite = inviteRestService.openInvite(inviteHash).getSuccess();
         PublicContentItemResource publicContentItem = publicContentItemRestService.getItemByCompetitionId(invite.getCompetitionId()).getSuccess();
 
-        return new CompetitionInviteViewModel(inviteHash, invite, userLoggedIn, publicContentItem.getPublicContentResource().getHash());
+        String hash = publicContentItem.getPublicContentResource().getHash();
+
+        return new CompetitionInviteViewModel(inviteHash, invite, userLoggedIn, hash);
     }
 }

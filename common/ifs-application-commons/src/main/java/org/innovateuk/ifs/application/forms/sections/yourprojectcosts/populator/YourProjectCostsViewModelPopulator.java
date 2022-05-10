@@ -93,8 +93,10 @@ public class YourProjectCostsViewModelPopulator {
 
         boolean includeVat = STANDARD_WITH_VAT.equals(competition.getApplicationFinanceType());
 
+        String hash = publicContentItem.getPublicContentResource().getHash();
+
         if (isUserCanEditFecFinance(competition, section, open)) {
-            return getYourFecProjectCostsViewModel(application, competition, organisation, section, finance, completedSectionIds, open, complete, includeVat, publicContentItem.getPublicContentResource().getHash());
+            return getYourFecProjectCostsViewModel(application, competition, organisation, section, finance, completedSectionIds, open, complete, includeVat, hash);
         } else {
             return new YourProjectCostsViewModel(applicationId,
                     competition.getName(),
@@ -121,7 +123,7 @@ public class YourProjectCostsViewModelPopulator {
                     competition.isOfGemCompetition(),
                     competition.isThirdPartyOfgem(),
                     competition.isHorizonEuropeGuarantee(),
-                    publicContentItem.getPublicContentResource().getHash());
+                    hash);
         }
     }
 

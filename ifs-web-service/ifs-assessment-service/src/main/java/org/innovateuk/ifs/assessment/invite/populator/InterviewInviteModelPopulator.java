@@ -25,6 +25,8 @@ public class InterviewInviteModelPopulator extends InviteModelPopulator<Intervie
         InterviewInviteResource invite = inviteRestService.openInvite(inviteHash).getSuccess();
         PublicContentItemResource publicContentItem = publicContentItemRestService.getItemByCompetitionId(invite.getCompetitionId()).getSuccess();
 
-        return new InterviewInviteViewModel(inviteHash, invite, userLoggedIn, publicContentItem.getPublicContentResource().getHash());
+        String hash = publicContentItem.getPublicContentResource().getHash();
+
+        return new InterviewInviteViewModel(inviteHash, invite, userLoggedIn, hash);
     }
 }

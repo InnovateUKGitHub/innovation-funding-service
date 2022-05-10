@@ -81,7 +81,9 @@ public class UpcomingCompetitionControllerTest extends BaseControllerMockMVCTest
         PublicContentResource publicContent = newPublicContentResource().build();
         PublicContentItemResource publicContentItem = newPublicContentItemResource().withPublicContentResource(publicContent).build();
 
-        UpcomingCompetitionViewModel expectedViewModel = new UpcomingCompetitionViewModel(competitionResource, competitionAssessmentConfigResource, publicContentItem.getPublicContentResource().getHash());
+        String hash = publicContentItem.getPublicContentResource().getHash();
+
+        UpcomingCompetitionViewModel expectedViewModel = new UpcomingCompetitionViewModel(competitionResource, competitionAssessmentConfigResource, hash);
 
         when(competitionRestService.getCompetitionById(1L)).thenReturn(restSuccess(competitionResource));
         when(competitionAssessmentConfigRestService.findOneByCompetitionId(competitionResource.getId())).thenReturn(restSuccess(competitionAssessmentConfigResource));
