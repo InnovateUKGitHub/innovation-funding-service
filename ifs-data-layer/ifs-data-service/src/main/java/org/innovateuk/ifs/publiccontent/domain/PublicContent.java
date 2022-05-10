@@ -29,7 +29,7 @@ public class PublicContent {
 
     private Boolean inviteOnly;
 
-    @Column(length=5000)
+    @Column(length=5000, columnDefinition = "LONGTEXT")
     private String summary;
 
     @OneToMany(mappedBy="publicContent", cascade = CascadeType.REMOVE, orphanRemoval = true)

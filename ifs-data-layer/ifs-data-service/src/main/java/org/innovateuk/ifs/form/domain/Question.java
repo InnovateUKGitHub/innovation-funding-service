@@ -23,10 +23,10 @@ public class Question {
     private String name;
     private String shortName;
 
-    @Column(length = 5000)
+    @Column(length = 5000, columnDefinition = "LONGTEXT")
     private String description;
 
-    @Column(length = 5000)
+    @Column(length = 5000, columnDefinition = "LONGTEXT")
     private String description2;
 
     private Boolean markAsCompletedEnabled = false;
