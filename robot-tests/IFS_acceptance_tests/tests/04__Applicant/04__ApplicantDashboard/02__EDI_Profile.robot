@@ -34,7 +34,7 @@ Applicant checks the status of EDI as Incomplete When user not started the edi s
     And the user fills in the EDI application details   ${applicationNameEDI}  ${tomorrowday}  ${month}  ${nextyear}
     When the user clicks the button/link                link = Application team
     Then the user should see the element                jQuery = td:contains("ediFirstName SurName") ~ td:contains("Start survey") ~ td:contains("Lead applicant")
-    And the user should see the element                 jQuery = p:contains("The lead applicant must complete the equality, diversity and inclusion (EDI) survey. ")
+    And the user should see the element                 jQuery = p:contains("The lead applicant must complete the equality, diversity and inclusion (EDI) survey.")
 
 Applicant checks the status of EDI as Incomplete on application summary when edi survey is not started
     [Documentation]  IFS-11253  IFS-11341
@@ -122,7 +122,7 @@ Assessor/applicant can not mark the application team as complete when the edi su
     And the user clicks the button/link                    link = ${AssessorapplicationNameEDI}
     And the user clicks the button/link                    link = Application team
     When the user clicks the button/link                   id = application-question-complete
-    And the user clicks the button/link                    jQuery = a:contains("here")
+    And the user clicks the button/link                    jQuery = a:contains("Start survey")
     And the assessor changed EDI survey status             INPROGRESS  2076-01-22 01:02:03
     And the user edit the profile of an assessor
     Then the user should see EDI section details           Incomplete  22 January 2076  Continue
