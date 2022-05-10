@@ -59,12 +59,6 @@ the user checks the application details
     And the user clicks the button/link                       link = Application details
     Then the user should see the element                      jQuery = dt:contains("Award name")
 
-the user checks the scope of application
-     [Documentation]  IFS-11736
-     Given the user clicks the button/link  link = Back to application overview
-     And the user clicks the button/link    link= Scope
-     Then the user should see the element   jQuery = h3:contains("How does your project align with the scope of this award?")
-
 *** Keywords ***
 Custom suite setup
     Set predefined date variables
