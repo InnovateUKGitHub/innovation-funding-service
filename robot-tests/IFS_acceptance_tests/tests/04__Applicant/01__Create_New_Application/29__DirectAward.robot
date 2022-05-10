@@ -50,7 +50,7 @@ the user create a new application
     [Documentation]  IFS-11736
     Given the user logs out if they are logged in
     And the user navigates to the page                      ${server}/competition/${webTestCompID}/overview
-    And the lead user creates new application               Test   User   test.user1@gmail.com   ${applicationName}
+    And the lead user creates new application               Test   User   test.user@gmail.com   ${applicationName}
     Then the user should see the element                    jQuery = dt:contains("Award:")
 
 the user checks the application details
