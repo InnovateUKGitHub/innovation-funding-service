@@ -5,9 +5,12 @@ metadata:
   labels:
     app: clamd
 spec:
+  type: NodePort
   selector:
     app: clamd
   ports:
     - name: 3310-tcp
       port: 3310
       targetPort: 3310
+      protocol: TCP
+      nodePort: 3310
