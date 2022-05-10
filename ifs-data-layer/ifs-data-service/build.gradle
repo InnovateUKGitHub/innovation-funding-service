@@ -23,6 +23,8 @@ afterEvaluate {
 
 }
 
+ext['hibernate.version'] = '5.4.33.Final'
+
 dependencies {
     implementation project(":common:ifs-data-service-file")
     implementation project(":common:ifs-data-service-commons")
