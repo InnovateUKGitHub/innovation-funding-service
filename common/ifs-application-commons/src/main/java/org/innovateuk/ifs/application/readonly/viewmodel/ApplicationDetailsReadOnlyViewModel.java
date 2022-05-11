@@ -23,6 +23,7 @@ public class ApplicationDetailsReadOnlyViewModel extends AbstractQuestionReadOnl
     private final CompetitionReferralSource competitionReferralSource;
     private final CompanyAge companyAge;
     private final CompanyPrimaryFocus companyPrimaryFocus;
+    private final boolean isDirectAward;
 
     public ApplicationDetailsReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource question) {
         super(data, question);
@@ -39,6 +40,7 @@ public class ApplicationDetailsReadOnlyViewModel extends AbstractQuestionReadOnl
         this.competitionReferralSource = data.getApplication().getCompetitionReferralSource();
         this.companyAge = data.getApplication().getCompanyAge();
         this.companyPrimaryFocus = data.getApplication().getCompanyPrimaryFocus();
+        this.isDirectAward = data.getCompetition().isDirectAward();
     }
 
     public String getCompetitionName() {
@@ -91,6 +93,10 @@ public class ApplicationDetailsReadOnlyViewModel extends AbstractQuestionReadOnl
 
     public CompanyPrimaryFocus getCompanyPrimaryFocus() {
         return companyPrimaryFocus;
+    }
+
+    public boolean isDirectAward() {
+        return isDirectAward;
     }
 
     @Override
