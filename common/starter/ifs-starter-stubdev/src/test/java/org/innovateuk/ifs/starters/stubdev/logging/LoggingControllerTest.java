@@ -4,6 +4,7 @@ import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.starters.stubdev.cfg.StubDevConfigurationProperties;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.logging.LoggersEndpoint;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -29,6 +30,7 @@ class LoggingControllerTest {
     private LoggersEndpoint loggersEndpoint;
 
     @Test
+    @ResourceLock("loggingController")
     void logLevel() {
         assertThat(loggersEndpoint.loggerLevels("foo"), is(nullValue()));
         loggingController.logLevel("foo", LogLevel.WARN.name());
@@ -36,6 +38,7 @@ class LoggingControllerTest {
     }
 
     @Test
+    @ResourceLock("loggingController")
     void thymeleaf() {
         loggingController.logLevel(THYMELEAF_LOG_KEY, LogLevel.ERROR.name());
         assertThat(loggersEndpoint.loggerLevels(THYMELEAF_LOG_KEY).getConfiguredLevel(), equalTo(LogLevel.ERROR.name()));
@@ -44,6 +47,7 @@ class LoggingControllerTest {
     }
 
     @Test
+    @ResourceLock("loggingController")
     void thymeleafInfo() {
         loggingController.logLevel(THYMELEAF_LOG_KEY, LogLevel.ERROR.name());
         assertThat(loggersEndpoint.loggerLevels(THYMELEAF_LOG_KEY).getConfiguredLevel(), equalTo(LogLevel.ERROR.name()));

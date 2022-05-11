@@ -121,7 +121,7 @@ assessor should see the competition terms and conditions
     [Arguments]  ${back_link}
     the user expands the section           Award terms and conditions
     the user clicks the button/link        jQuery = a:contains("Innovate UK")
-    the user should see the element        jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
+    the user should see the element        jQuery = h1:contains("Terms and conditions of an Innovate UK Grant Award")
     [Teardown]  the user clicks the button/link  link = ${back_link}
 
 the assessor accept the application

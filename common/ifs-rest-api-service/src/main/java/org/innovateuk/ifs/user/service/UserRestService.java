@@ -60,4 +60,5 @@ public interface UserRestService {
     RestResult<Void> reactivateUser(long userId);
     RestResult<Void> grantRole(long userId, Role targetRole);
     RestResult<Void> updateEmail(long userId, String email);
+    RestResult<Void> createUserProfileStatus(long userId);
 }

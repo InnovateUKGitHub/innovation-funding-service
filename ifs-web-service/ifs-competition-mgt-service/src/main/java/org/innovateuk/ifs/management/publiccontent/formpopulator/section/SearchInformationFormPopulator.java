@@ -25,12 +25,12 @@ public class SearchInformationFormPopulator extends AbstractPublicContentFormPop
         form.setProjectFundingRange(publicContentResource.getProjectFundingRange());
         form.setShortDescription(publicContentResource.getShortDescription());
         form.setKeywords(publicContentResource.getKeywords().stream().collect(Collectors.joining(",")));
-        form.setPublishSetting(convertToPublishSettingString(publicContentResource.getInviteOnly()));
+        form.setPublishSetting(convertToPublishSettingString(publicContentResource.getInviteOnly(), publicContentResource.getCompetitionId()));
     }
 
-    private String convertToPublishSettingString(Boolean inviteOnly) {
+    private String convertToPublishSettingString(Boolean inviteOnly, long competitionId) {
         if(null == inviteOnly) {
-            return "";
+            return super.getCompetition(competitionId).isDirectAward() ? "invite" : "";
         }
         return inviteOnly ? "invite" : "public";
     }

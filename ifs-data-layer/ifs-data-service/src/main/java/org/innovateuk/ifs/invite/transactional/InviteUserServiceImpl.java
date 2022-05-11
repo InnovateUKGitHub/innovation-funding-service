@@ -2,6 +2,9 @@ package org.innovateuk.ifs.invite.transactional;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.category.domain.Category;
+import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
@@ -42,6 +45,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -50,8 +54,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.user.resource.Role.externalRolesToInvite;
-import static org.innovateuk.ifs.user.resource.Role.internalRoles;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -84,6 +87,9 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     @Autowired
     private SimpleOrganisationRepository simpleOrganisationRepository;
+
+    @Autowired
+    private InnovationAreaRepository innovationAreaRepository;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -244,6 +250,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     private Map<String, Object> createGlobalArgsForExternalUserInvite(RoleInvite roleInvite) {
         Map<String, Object> globalArguments = new HashMap<>();
         Role roleResource = roleInvite.getTarget();
+        globalArguments.put("isAssessor", roleResource.isAssessor() ? "an" : "a");
         globalArguments.put("role", roleResource.getDisplayName().toLowerCase());
         globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + EXTERNAL_USER_WEB_CONTEXT, roleInvite));
         return globalArguments;
@@ -317,6 +324,11 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
                         return serviceFailure(NOT_AN_INTERNAL_USER_ROLE);
                     }
                 });
+    }
+
+    @Override
+    public ServiceResult<List<RoleInviteResource>> findExternalInvitesByUser(UserResource user) {
+        return serviceSuccess(roleInviteRepository.getByUserId(user.getId()).stream().map(roleInviteMapper::mapToResource).collect(Collectors.toList()));
     }
 
     private ServiceResult<RoleInvite> findRoleInvite(long inviteId) {
@@ -399,5 +411,41 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     private List<ExternalInviteResource> sortByEmail(List<ExternalInviteResource> extInviteResources) {
         return extInviteResources.stream().sorted(Comparator.comparing(extInviteResource -> extInviteResource.getEmail().toUpperCase())).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> saveAssessorInvite(UserResource invitedUser, Role role, Long innovationAreaId) {
+            return   validateUserRoleInvite(invitedUser, role)
+                    .andOnSuccess(() -> validateUserEmailAvailable(invitedUser))
+                    .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
+                    .andOnSuccess(() -> saveAssessorRoleInvite(invitedUser, role, innovationAreaId))
+                    .andOnSuccess(this::inviteExternalUser);
+    }
+
+    private ServiceResult<Void> validateUserRoleInvite(UserResource invitedUser, Role role) {
+        if (StringUtils.isEmpty(invitedUser.getEmail()) || StringUtils.isEmpty(invitedUser.getFirstName())
+                || StringUtils.isEmpty(invitedUser.getLastName()) || role == null){
+            return serviceFailure(USER_ROLE_INVITE_INVALID);
+        }
+       return serviceSuccess();
+    }
+
+    private ServiceResult<RoleInvite> saveAssessorRoleInvite(UserResource invitedUser, Role role, Long innovationAreaId) {
+        RoleInvite roleInvite = new RoleInvite(invitedUser.getFirstName() + " " + invitedUser.getLastName(),
+                invitedUser.getEmail(),
+                generateInviteHash(),
+                role,
+                CREATED,
+                null);
+
+        roleInvite.setInnovationArea(getInnovationArea(innovationAreaId).getSuccess());
+        RoleInvite invite = roleInviteRepository.save(roleInvite);
+
+        return serviceSuccess(invite);
+    }
+
+    private ServiceResult<InnovationArea> getInnovationArea(long innovationCategoryId) {
+        return find(innovationAreaRepository.findById(innovationCategoryId), notFoundError(Category.class, innovationCategoryId, INNOVATION_AREA));
     }
 }
