@@ -13,6 +13,7 @@ include("common:api:file-storage-rest-api")
 include("common:starter:ifs-starter-audit")
 include("common:starter:ifs-starter-cache")
 include("common:starter:ifs-starter-common")
+include("common:starter:ifs-starter-feign")
 include("common:starter:ifs-starter-logging")
 include("common:starter:ifs-starter-stubdev")
 include("common:starter:ifs-starter-swagger-ui")
@@ -85,6 +86,4 @@ include("robot-tests")
 
 // Tools...
 include("ifs-tools:sba")
-include 'common:starter:ifs-starter-feign'
-findProject(':common:starter:ifs-starter-feign')?.name = 'ifs-starter-feign'
 
