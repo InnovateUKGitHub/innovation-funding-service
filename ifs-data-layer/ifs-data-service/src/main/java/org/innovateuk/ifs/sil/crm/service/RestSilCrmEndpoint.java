@@ -5,9 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.innovateuk.ifs.activitylog.transactional.SILMessagingService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.sil.SIlPayloadKeyType;
+import org.innovateuk.ifs.sil.SIlPayloadType;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
 import org.innovateuk.ifs.sil.crm.resource.SilCrmError;
 import org.innovateuk.ifs.sil.crm.resource.SilLoanApplication;
@@ -45,6 +48,9 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
     @Value("${sil.rest.crmDecisionmatrix}")
     private String silmDecisionmatrix;
 
+    @Autowired
+    SILMessagingService silMessagingService;
+
     @SneakyThrows(JsonProcessingException.class)
     @Override
     public ServiceResult<Void> updateContact(SilContact silContact) {
@@ -54,9 +60,16 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
                     final Either<ResponseEntity<SilCrmError>, ResponseEntity<Void>> response = adaptor.restPostWithEntity(silRestServiceUrl + silCrmContacts, silContact, Void.class, SilCrmError.class, HttpStatus.ACCEPTED);
                     return response.mapLeftOrRight(failure -> {
                                 log.error("Error updating SIL contact " + silContact);
+                                silMessagingService.recordSilMessage(SIlPayloadType.CONTACT, SIlPayloadKeyType.USER_ID, silContact.getIfsUuid(),
+                                        silContactJson, failure.getStatusCode());
                                 return serviceFailure(new Error(CONTACT_NOT_UPDATED));
                             },
-                            success -> serviceSuccess());
+
+                            success -> {
+                                silMessagingService.recordSilMessage(SIlPayloadType.CONTACT, SIlPayloadKeyType.USER_ID,
+                                        silContact.getIfsUuid(), silContactJson, HttpStatus.ACCEPTED);
+                                return serviceSuccess();
+                            });
                 }
         );
     }
@@ -72,9 +85,15 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
                     return response.mapLeftOrRight(failure -> {
                                 log.error("Error updating SIL Loan Application state: " + silApplication +
                                         "Error: " + failure);
+                                silMessagingService.recordSilMessage(SIlPayloadType.CONTACT, SIlPayloadKeyType.USER_ID, Integer.toString(silApplication.getApplicationID()),
+                                        silApplicationJson, failure.getStatusCode());
                                 return serviceFailure(new Error(APPLICATION_NOT_UPDATED));
                             },
-                            success -> serviceSuccess());
+                            success -> {
+                                silMessagingService.recordSilMessage(SIlPayloadType.CONTACT, SIlPayloadKeyType.USER_ID, Integer.toString(silApplication.getApplicationID()),
+                                        silApplicationJson, HttpStatus.ACCEPTED);
+                                return serviceSuccess();
+                            });
                 }
         );
     }
@@ -89,9 +108,15 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
                     return response.mapLeftOrRight(failure -> {
                                 log.error("Error updating SIL Loan Assessment: " + silLoanAssessment +
                                         "Error: " + failure);
+                                silMessagingService.recordSilMessage(SIlPayloadType.CONTACT, SIlPayloadKeyType.USER_ID, Long.toString(silLoanAssessment.getCompetitionID()),
+                                        silApplicationJson, failure.getStatusCode());
                                 return serviceFailure(new Error(APPLICATION_NOT_UPDATED));
                             },
-                            success -> serviceSuccess());
+                            success -> {
+                                silMessagingService.recordSilMessage(SIlPayloadType.CONTACT, SIlPayloadKeyType.USER_ID, Long.toString(silLoanAssessment.getCompetitionID()),
+                                        silApplicationJson, HttpStatus.ACCEPTED);
+                                return serviceSuccess();
+                            });
                 }
         );
     }
