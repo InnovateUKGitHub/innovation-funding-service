@@ -4,11 +4,11 @@ dependencies {
 
     api platform(project(":common:bom"))
 
+    api "org.springframework.cloud:spring-cloud-starter-openfeign"
+
     implementation project(':common:api:file-storage-rest-api')
     implementation project(":common:starter:ifs-starter-common")
 
     implementation "com.squareup.okhttp3:okhttp"
-
-    api "org.springframework.cloud:spring-cloud-starter-openfeign"
 
 }

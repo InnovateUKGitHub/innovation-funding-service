@@ -2,6 +2,7 @@ package org.innovateuk.ifs.starters.feign.cfg;
 
 import feign.Logger;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.OkHttpClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,12 +12,13 @@ public class IfsFeignAutoConfiguration {
 
     @Bean
     Logger.Level feignLoggerLevel() {
-        return Logger.Level.HEADERS;
+        return Logger.Level.BASIC;
     }
 
     @Bean
     OkHttpClient okHttpClient() {
-
+        return new OkHttpClient.Builder()
+                .build();
     }
 
 }
