@@ -45,6 +45,7 @@ dependencies {
         api project(":common:starter:ifs-starter-audit")
         api project(":common:starter:ifs-starter-cache")
         api project(":common:starter:ifs-starter-common")
+        api project(":common:starter:ifs-starter-feign")
         api project(":common:starter:ifs-starter-logging")
         api project(":common:starter:ifs-starter-stubdev")
         api project(":common:starter:ifs-starter-swagger-ui")
