@@ -181,6 +181,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
                 "competitionName", application1.getCompetition().getName(),
                 "competitionId", application1.getCompetition().getId(),
                 "alwaysOpen", application1.getCompetition().isAlwaysOpen(),
+                "directAward", false,
                 "webBaseUrl", webBaseUrl
             ));
 
@@ -191,6 +192,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
                 "competitionName", application2.getCompetition().getName(),
                 "competitionId", application2.getCompetition().getId(),
                 "alwaysOpen", application2.getCompetition().isAlwaysOpen(),
+                "directAward", false,
                 "webBaseUrl", webBaseUrl
         ));
 
@@ -201,6 +203,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
                 "competitionName", application3.getCompetition().getName(),
                 "competitionId", application3.getCompetition().getId(),
                 "alwaysOpen", application3.getCompetition().isAlwaysOpen(),
+                "directAward", false,
                 "webBaseUrl", webBaseUrl
         ));
 
@@ -275,6 +278,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
                 "competitionName", application1.getCompetition().getName(),
                 "competitionId", application1.getCompetition().getId(),
                 "alwaysOpen", application1.getCompetition().isAlwaysOpen(),
+                "directAward", false,
                 "webBaseUrl", webBaseUrl,
                 "averageAssessorScore", "Average assessor score: " + averageAssessorScore1.getScore() + "%"));
         UserNotificationTarget application2LeadApplicantTarget = new UserNotificationTarget(application2LeadApplicant.getName(), application2LeadApplicant.getEmail());
@@ -284,6 +288,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
                 "competitionName", application2.getCompetition().getName(),
                 "competitionId", application2.getCompetition().getId(),
                 "alwaysOpen", application2.getCompetition().isAlwaysOpen(),
+                "directAward", false,
                 "webBaseUrl", webBaseUrl,
                 "averageAssessorScore", "Average assessor score: " + averageAssessorScore2.getScore() + "%"));
         UserNotificationTarget application3LeadApplicantTarget = new UserNotificationTarget(application3LeadApplicant.getName(), application3LeadApplicant.getEmail());
@@ -293,6 +298,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
                 "competitionName", application3.getCompetition().getName(),
                 "competitionId", application3.getCompetition().getId(),
                 "alwaysOpen", application3.getCompetition().isAlwaysOpen(),
+                "directAward", false,
                 "webBaseUrl", webBaseUrl,
                 "averageAssessorScore", "Average assessor score: " + averageAssessorScore3.getScore() + "%"));
         List<NotificationMessage> expectedLeadApplicants = newArrayList(application1LeadApplicantMessage, application2LeadApplicantMessage, application3LeadApplicantMessage);

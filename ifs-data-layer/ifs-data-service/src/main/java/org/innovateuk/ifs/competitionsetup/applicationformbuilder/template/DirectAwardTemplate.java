@@ -54,6 +54,7 @@ public class DirectAwardTemplate implements CompetitionTemplate {
                                 projectSummary(),
                                 publicDescription(),
                                 scope()
+                                        .withName("How does your project align with the scope of this award?")
                         )),
                 applicationQuestions()
                         .withQuestions(newArrayList(

@@ -23,6 +23,7 @@ public class SendNotificationsViewModel {
     private boolean alwaysOpen;
     private boolean horizonEurope;
     private boolean hasAssessmentStage;
+    private boolean isDirectAward;
 
     public SendNotificationsViewModel(List<FundingDecisionToSendApplicationResource> applications,
                                       long successfulRecipientsCount,
@@ -43,6 +44,7 @@ public class SendNotificationsViewModel {
         this.includeAssessorsScore = includeAssessorsScore;
         this.horizonEurope = horizonEurope;
         this.hasAssessmentStage = competition.isHasAssessmentStage();
+        this.isDirectAward = competition.isDirectAward();
     }
 
     public long getCompetitionId() {
@@ -79,6 +81,10 @@ public class SendNotificationsViewModel {
 
     public boolean isAlwaysOpen() {
         return alwaysOpen;
+    }
+
+    public boolean isDirectAward() {
+        return isDirectAward;
     }
 
     public String getPageTitle () {
