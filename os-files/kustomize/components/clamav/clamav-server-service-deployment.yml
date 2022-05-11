@@ -108,6 +108,8 @@ spec:
 
       containers:
         - name: clamd
+          ports:
+            - containerPort: 3310
           image: filefrog/clamav:latest
           imagePullPolicy: Always
           command:
