@@ -142,7 +142,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
             <dl class="govuk-list govuk-!-font-size-16">
-                <dt>Competition name</dt>
+                <dt th:text="${model.isDirectAward ? 'Award name' : 'Competition name'}"></dt>
                 <dd th:text="${model.competitionName}"></dd>
                 <dt>Application name</dt>
                 <dd th:text="${model.applicationName}"></dd>
@@ -297,7 +297,7 @@
                 <th scope="col" class="govuk-table__header table-header-width-one-third">Full name</th>
                 <th th:if="${model.internal}" scope="col" class="govuk-table__header table-header-width-one-third">Phone number</th>
                 <th scope="col" class="govuk-table__header table-header-width-one-third">Email</th>
-                <th th:if="${model.ediUpdateEnabled}" scope="col" class="govuk-table__header table-header-width-one-third">EDI status</th>
+                <th th:if="${model.ediUpdateEnabled}" scope="col" class="govuk-table__header table-header-width-one-third">EDI survey</th>
             </tr>
             </thead>
             <tbody class="govuk-table__body">

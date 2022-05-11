@@ -349,7 +349,7 @@ the terms and condition question should not be scorable
 
 the user should see read only view of terms and conditions
     the user clicks the button/link         jQuery = a:contains("Innovate UK")
-    the user should see the element         jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
+    the user should see the element         jQuery = h1:contains("Terms and conditions of an Innovate UK Grant Award")
     the user should not see the element     jQuery = button:contains("Agree and continue")
     the user should not see the element     jQuery = .form-footer:contains("Terms and conditions accepted")
     the user should not see the element     link = Return to application overview

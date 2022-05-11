@@ -111,10 +111,18 @@ Successful applications are turned into Project
     Given log in as a different user      ${test_mailbox_one}+fundsuccess@gmail.com  ${short_password}
     Then the user should see the element  jQuery = .projects-in-setup li:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
 
+Comp Admin can set the notification email to include assessor average score
+    [Documentation]  IFS-7369
+    Given log in as a different user                       &{Comp_admin1_credentials}
+    And the user navigates to the page                     ${CA_Live}
+    When the user clicks the button/link                  link = ${assessorScoreComp}
+    And the user set assessor score notification to yes
+    Then the user should see the element                  jQuery = dt:contains("Include the average assessor score in funding decision notifications?") + dd:contains("Yes")
+
 Internal user can see the comp in Project Setup once applicant is notified
     [Documentation]  IFS-1620
     [Tags]
-    Given log in as a different user                       &{Comp_admin1_credentials}
+    Given the user navigates to the page                   ${CA_Live}
     When the user clicks the button/link                   jQuery = a:contains("Project setup")
     And the user should see the element                    jQuery = h2:not(".govuk-tabs__title"):contains("Project setup")
     Then the user clicks the button/link                   link = ${FUNDERS_PANEL_COMPETITION_NAME}
@@ -129,12 +137,6 @@ Once all final decisions have been made and emails are sent Comp moves to Inform
     Given log in as a different user                     &{Comp_admin1_credentials}
     When the user navigates to the page                  ${CA_Live}
     Then the user should see the element                 jQuery = section:contains("Inform") > ul:contains("${FUNDERS_PANEL_COMPETITION_NAME}")
-
-Comp Admin can set the notification email to include assessor average score
-    [Documentation]  IFS-7369
-    Given the user clicks the button/link  link = ${assessorScoreComp}
-    When the user set assessor score notification to yes
-    Then the user should see the element   jQuery = dt:contains("Include the average assessor score in funding decision notifications?") + dd:contains("Yes")
 
 Notification email template includes assessor score
     [Documentation]  IFS-7370
@@ -268,8 +270,7 @@ external collaborators read their email
     verify the user has received the on hold email    ${collaborator2_alternative_user_credentials["email"]}
 
 Assess the application and move to in notification
-    the user clicks the button/link    link = Back to competition details
-    the user clicks the button/link    link = Competition
+    the user clicks the button/link    link = ${assessorScoreComp}
     the user clicks the button/link    id = close-assessment-button
     the user clicks the button/link    link = Input and review funding decision
     the user selects the checkbox      app-row-1
@@ -281,9 +282,7 @@ the user set assessor score notification to yes
     the user clicks the button/link         link = Assessors
     the user clicks the button/link         jQuery = button:contains("Edit")
     the user selects the radio button       assessorCount   5
-    the user selects the radio button       hasAssessmentPanel  hasAssessmentPanel-0
-    the user selects the radio button       hasInterviewStage  hasInterviewStage-0
-    the user selects the radio button       averageAssessorScore  averageAssessorScore-0
+    the user selects the radio button       hasAssessmentPanel  0
+    the user selects the radio button       hasInterviewStage  0
+    the user selects the radio button       averageAssessorScore  1
     the user clicks the button/link         jQuery = button:contains("Done")
-    ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots   page should contain element    jQuery = dt:contains("average assessor score") + dd:contains("Yes")
-    Run Keyword If  '${status}' == 'FAIL'  the user navigates to the page   ${server}/management/competition/setup/${assessorScoreCompId}/section/assessors

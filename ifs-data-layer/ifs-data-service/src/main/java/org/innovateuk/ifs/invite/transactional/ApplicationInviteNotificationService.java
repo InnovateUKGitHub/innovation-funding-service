@@ -176,6 +176,8 @@ class ApplicationInviteNotificationService {
         notificationArguments.put("competitionName", invite.getTarget().getCompetition().getName());
         notificationArguments.put("competitionUrl", getCompetitionDetailsUrl(baseUrl, invite.getTarget()));
         notificationArguments.put("inviteUrl", getInviteUrl(baseUrl, invite.getHash()));
+        notificationArguments.put("directAward", invite.getTarget().getCompetition().isDirectAward());
+
         if (invite.getInviteOrganisation().getOrganisation() != null) {
             notificationArguments.put("inviteOrganisationName", invite.getInviteOrganisation().getOrganisation().getName());
         } else {

@@ -45,7 +45,7 @@
                     <th:block th:unless="${model.competition.isH2020()}">
                         <dt>Application number:</dt>
                         <dd th:text="${model.application.id}"/>
-                        <dt>Competition:</dt>
+                        <dt th:text="${model.competition.isDirectAward ? 'Award:' : 'Competition:'}"></dt>
                         <dd th:text="${model.competition.name}"/>
                         <dt>Funding body:</dt>
                         <dd>Innovate UK</dd>

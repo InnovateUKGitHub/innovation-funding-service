@@ -847,6 +847,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
                 && getCompetitionTypeEnum() == CompetitionTypeEnum.OFGEM;
     }
 
+    public boolean isDirectAward() {
+        return getCompetitionTypeEnum() == CompetitionTypeEnum.DIRECT_AWARD;
+    }
+
     public void releaseFeedback(ZonedDateTime date) {
         setMilestoneDate(MilestoneType.FEEDBACK_RELEASED, date);
     }
