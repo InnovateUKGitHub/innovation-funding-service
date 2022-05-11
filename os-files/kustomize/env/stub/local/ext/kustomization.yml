@@ -9,13 +9,15 @@ components:
   - ../../../../patches/new-relic-env-vars-patch
   - ../../../../patches/pull-secrets-patch
   - ../../../../patches/spring-profile-patch
-  - ../../../../components/clamav
 
 resources:
   - ../../../../config-mgmt/env/local
   - ../../../../secrets-mgmt/env/local
+  - clamav/clamav-server-service.yml
+  - clamav/clamav-server-service-deployment.yml
 
 patchesStrategicMerge:
+  - clamav/clamav-server-service.yml
   - mail/mail.yml
   - ifs-database/ifs-database.yml
   - auth/idp/idp.yml
@@ -23,4 +25,3 @@ patchesStrategicMerge:
   - auth/sp/sp.yml
   - auth/sp/sp-deployment.yml
   - auth/ldap/ldap-deployment.yml
-  - clamav/clamav-server-service.yml
