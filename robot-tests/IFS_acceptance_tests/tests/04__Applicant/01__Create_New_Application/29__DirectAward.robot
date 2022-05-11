@@ -17,9 +17,9 @@ Resource          ../../../resources/common/PS_Common.robot
 
 
 *** Variables ***
-${openEndedCompName}        Open ended Direct Award competition
-${webTestCompName}          Direct award competition
-${webTestCompID}            ${competition_ids["${webTestCompName}"]}
+${CompName}                 Open ended Direct Award competition
+${openEndedCompName}        Direct award competition
+${webTestCompID}            ${competition_ids["${openEndedCompName}"]}
 ${applicationName}          Direct award Application
 
 
@@ -29,7 +29,7 @@ the user creates a new open ended competiton
     Given The user logs-in in new browser           &{Comp_admin1_credentials}
     When the user navigates to the page             ${CA_UpcomingComp}
     And the user clicks the button/link             jQuery = .govuk-button:contains("Create competition")
-    And the user fills in the CS Initial details    ${openEndedCompName}  ${month}  ${nextyear}  ${compType_DirectAward}  STATE_AID  GRANT
+    And the user fills in the CS Initial details    ${CompName}  ${month}  ${nextyear}  ${compType_DirectAward}  STATE_AID  GRANT
     And the user clicks the button/link             link = Initial details
     Then the user should see the element            jQuery = dt:contains("Competition type") ~ dd:contains("Direct award")
 
@@ -46,14 +46,14 @@ the user should see invite only selected as default option in competition inform
     And the user clicks the button/link                    link = Competition information and search
     Then the user sees that the radio button is selected   publishSetting  invite
 
-the user create a new application
+the user create a new application and check the competition title as a award in application overview page
     [Documentation]  IFS-11736
     Given the user logs out if they are logged in
     And the user navigates to the page                      ${server}/competition/${webTestCompID}/overview
-    And the lead user creates new application               Test   User   test.user@gmail.com   ${applicationName}
+    And the lead user creates an always open application    Test   User   test.user@gmail.com   ${applicationName}
     Then the user should see the element                    jQuery = dt:contains("Award:")
 
-the user checks the application details
+the user fills the Application details and check the title of competition name as a award name
     [Documentation]  IFS-11736
     When the user completes the application details           ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  25
     And the user clicks the button/link                       link = Application details
@@ -86,9 +86,9 @@ the user completes the application details
     the user clicks the button/link             id = application-question-complete
     the user clicks the button/link             link = Back to application overview
 
-the lead user creates new application
+the lead user creates an always open application
     [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
-    the user select the competition and starts application          ${webTestCompName}
+    the user select the competition and starts application          ${openEndedCompName}
     the user clicks the button/link                                 link = Continue and create an account
     the user selects the radio button                               organisationTypeId    radio-${BUSINESS_TYPE_ID}
     the user clicks the button/link                                 jQuery = .govuk-button:contains("Save and continue")
@@ -100,5 +100,6 @@ the lead user creates new application
     the user clicks the button/link                                 link = Sign in
     Logging in and Error Checking                                   ${email}  ${short_password}
     the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+
 
 
