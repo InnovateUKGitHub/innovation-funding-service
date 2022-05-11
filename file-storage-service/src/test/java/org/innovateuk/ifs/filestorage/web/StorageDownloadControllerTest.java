@@ -50,8 +50,8 @@ class StorageDownloadControllerTest {
         assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.OK));
 
         headerAssert(responseEntity, HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG.toString());
-        headerAssert(responseEntity, HttpHeaders.CONTENT_LENGTH, String.valueOf(fileDownloadResponse.fileSizeBytes()));
-        headerAssert(responseEntity, "Content-Disposition", "attachment; filename=\"" + fileDownloadResponse.fileName() + "\"");
+        headerAssert(responseEntity, HttpHeaders.CONTENT_LENGTH, String.valueOf(fileDownloadResponse.getFileSizeBytes()));
+        headerAssert(responseEntity, "Content-Disposition", "attachment; filename=\"" + fileDownloadResponse.getFileName() + "\"");
     }
 
     @Test
