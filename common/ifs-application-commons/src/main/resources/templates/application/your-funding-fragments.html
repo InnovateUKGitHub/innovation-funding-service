@@ -337,7 +337,7 @@
     <th:block th:if="${model.overridingFundingRules}">
         The maximum you can enter is <span th:text="${model.maximumFundingLevel}">22</span>%,
         based on this <a class="govuk-link" target="_blank"
-                         th:href="${publicContentItem.hash == null}
+                         th:href="${model.hash == null}
                          ? @{/competition/{competitionId}/overview#eligibility(competitionId=${model.competitionId})}
                          : @{/competition/{competitionId}/overview/{hash}#eligibility(competitionId=${model.competitionId},hash=${model.hash})}">
         competition's rules (opens in a new window)</a>.
@@ -359,7 +359,7 @@
     <th:block th:if="${model.overridingFundingRules}">
         The maximum you can enter is <span th:text="${model.maximumFundingLevel}">22</span>%,
         based on this <a class="govuk-link" target="_blank"
-                         th:href="${publicContentItem.hash == null}
+                         th:href="${model.hash == null}
                          ? @{/competition/{competitionId}/overview#eligibility(competitionId=${model.competitionId})}
                          : @{/competition/{competitionId}/overview/{hash}#eligibility(competitionId=${model.competitionId},hash=${model.hash})}">competition's rules (opens in a new window)</a>.
     </th:block>
