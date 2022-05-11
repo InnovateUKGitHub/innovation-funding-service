@@ -1,7 +1,7 @@
 package ifs.test;
 
 import lombok.extern.slf4j.Slf4j;
-import org.innovateuk.ifs.api.filestorage.v1.feign.FileUploadFeign;
+import org.innovateuk.ifs.starter.feign.filestorage.v1.feign.FileUploadFeign;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;

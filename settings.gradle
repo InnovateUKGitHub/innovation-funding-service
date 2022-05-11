@@ -85,5 +85,6 @@ include("robot-tests")
 
 // Tools...
 include("ifs-tools:sba")
-
+include 'common:starter:ifs-starter-feign'
+findProject(':common:starter:ifs-starter-feign')?.name = 'ifs-starter-feign'
 

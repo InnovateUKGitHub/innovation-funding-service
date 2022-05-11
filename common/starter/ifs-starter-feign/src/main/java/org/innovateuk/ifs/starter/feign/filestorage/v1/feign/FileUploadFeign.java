@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.api.filestorage.v1.feign;
+package org.innovateuk.ifs.starter.feign.filestorage.v1.feign;
 
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUpload;
 import org.springframework.cloud.openfeign.FeignClient;
