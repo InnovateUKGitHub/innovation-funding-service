@@ -48,6 +48,7 @@ public class CompetitionLine {
     private String projectCostGuidanceUrl;
     private String termsAndConditionsTemplate;
     private boolean assessmentStage;
+    private boolean preRegistration;
     private boolean priority;
 
     public CompetitionLine() {
@@ -371,5 +372,13 @@ public class CompetitionLine {
 
     public void setAssessmentStage(boolean assessmentStage) {
         this.assessmentStage = assessmentStage;
+    }
+
+    public boolean hasPreRegistration() {
+        return preRegistration;
+    }
+
+    public void setPreRegistration(boolean preRegistration) {
+        this.preRegistration = preRegistration;
     }
 }

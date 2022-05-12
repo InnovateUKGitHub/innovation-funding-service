@@ -482,7 +482,10 @@ public class CompetitionWebTestData {
                 directAwardCompetition()
                         .withName("Direct award competition"),
                 horizonEuropeGuaranteeCompetition()
-                        .withName("Horizon Europe Guarantee Competition")
+                        .withName("Horizon Europe Guarantee Competition"),
+                horizonEuropeGuaranteeCompetition()
+                        .withName("Horizon Europe Guarantee Competition For Pre Registration")
+                        .withPreRegistration(true)
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.OPEN))

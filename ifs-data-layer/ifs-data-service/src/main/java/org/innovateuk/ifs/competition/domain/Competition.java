@@ -1124,10 +1124,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.competitionExternalConfig = competitionExternalConfig;
     }
 
-    public boolean isPreRegistrationEnabled() {
-        return preRegistration;
-    }
-
     public void setPreRegistration(boolean preRegistration) {
         this.preRegistration = preRegistration;
     }

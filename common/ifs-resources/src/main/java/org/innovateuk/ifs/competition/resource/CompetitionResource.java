@@ -115,6 +115,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean subsidyControl;
     private boolean hasBusinessAndFinancialInformationQuestion;
     private CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource;
+    private boolean preRegistration;
 
     public CompetitionResource() {
     }
@@ -1084,5 +1085,12 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         return applicationState == ApplicationState.REJECTED;
     }
 
+    public boolean hasPreRegistration() {
+        return preRegistration;
+    }
+
+    public void setPreRegistration(boolean preRegistration) {
+        this.preRegistration = preRegistration;
+    }
 }
 
