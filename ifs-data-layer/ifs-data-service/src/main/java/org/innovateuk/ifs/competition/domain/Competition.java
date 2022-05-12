@@ -209,6 +209,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinColumn(name = "competitionThirdPartyConfigId", referencedColumnName = "id")
     private CompetitionThirdPartyConfig competitionThirdPartyConfig;
 
+    @Column(nullable = false)
+    private boolean preRegistration = false;
+
     public Competition() {
         setupComplete = false;
     }
@@ -1119,5 +1122,13 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setCompetitionExternalConfig(CompetitionExternalConfig competitionExternalConfig) {
         this.competitionExternalConfig = competitionExternalConfig;
+    }
+
+    public boolean isPreRegistrationEnabled() {
+        return preRegistration;
+    }
+
+    public void setPreRegistration(boolean preRegistration) {
+        this.preRegistration = preRegistration;
     }
 }

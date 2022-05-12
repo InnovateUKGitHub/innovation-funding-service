@@ -663,6 +663,14 @@ public class CompetitionWebTestData {
                 .withAlwaysOpen(true);
     }
 
+    private static CompetitionLineBuilder horizonEuropeGuaranteeCompetition() {
+        return anIfsCompetition()
+                .withFundingType(FundingType.HECP)
+                .withCompetitionType(HORIZON_EUROPE_GUARANTEE)
+                .withAlwaysOpen(true)
+                .withAssessmentStage(false);
+    }
+
     private static CompetitionLineBuilder anIfsCompetition() {
         return aCompetitionLine()
                 .withCompetitionType(PROGRAMME)
