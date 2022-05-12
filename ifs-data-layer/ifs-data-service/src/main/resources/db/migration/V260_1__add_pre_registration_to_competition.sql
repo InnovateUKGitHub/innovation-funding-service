@@ -1,1 +1,1 @@
-ALTER TABLE competition_application_config ADD COLUMN pre_registration BIT(1) NOT NULL DEFAULT FALSE;
+ALTER TABLE competition ADD COLUMN pre_registration BIT(1) NOT NULL DEFAULT FALSE;
