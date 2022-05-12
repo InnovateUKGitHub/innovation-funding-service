@@ -66,6 +66,9 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
                             },
 
                             success -> {
+                                System.out.println("1111111"+silContact.getIfsUuid());
+                                System.out.println("2222"+silContactJson);
+                                System.out.println("2222"+silMessagingService);
                                 silMessagingService.recordSilMessage(SIlPayloadType.CONTACT, SIlPayloadKeyType.USER_ID,
                                         silContact.getIfsUuid(), silContactJson, HttpStatus.ACCEPTED);
                                 return serviceSuccess();

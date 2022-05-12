@@ -428,7 +428,7 @@ public class ServiceResult<T> extends BaseFailingOrSucceedingResult<T, ServiceFa
      * @return the original ServiceResult returned from the serviceCode, or a generic ServiceResult failure if an exception
      * was thrown in serviceCode
      */
-    public static <T> ServiceResult<T> handlingErrors(Error catchAllError, Supplier<ServiceResult<T>> serviceCode) {
+        public static <T> ServiceResult<T> handlingErrors(Error catchAllError, Supplier<ServiceResult<T>> serviceCode) {
         try {
             return serviceCode.get();
         } catch (Exception e) {

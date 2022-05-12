@@ -12,6 +12,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     @Before
     public void setupMockInjection() {
         // Process mock annotations
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 }

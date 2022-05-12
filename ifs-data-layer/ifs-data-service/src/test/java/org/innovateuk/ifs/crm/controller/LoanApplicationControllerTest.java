@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.crm.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
+import org.innovateuk.ifs.activitylog.transactional.SILMessagingService;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.QuestionStatus;
 import org.innovateuk.ifs.application.transactional.QuestionStatusService;
@@ -11,10 +13,13 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.innovateuk.ifs.sil.SIlPayloadKeyType;
+import org.innovateuk.ifs.sil.SIlPayloadType;
 import org.innovateuk.ifs.sil.crm.resource.SilLoanApplicationStatus;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.UsersRolesService;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -32,6 +37,7 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProc
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -40,6 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class LoanApplicationControllerTest extends BaseControllerMockMVCTest<LoanApplicationController> {
 
+    public static final String APPLICATION_PAYLOAD = "{\"questionSetupType\":\"LOAN_BUSINESS_AND_FINANCIAL_INFORMATION\",\"completionStatus\":\"Complete\",\"completionDate\":\"2022-05-12T09:42:07.403057Z\"}";
     @Mock
     private UserAuthenticationService userAuthenticationService;
     @Mock
@@ -52,10 +59,22 @@ public class LoanApplicationControllerTest extends BaseControllerMockMVCTest<Loa
     private QuestionStatusService questionStatusService;
     @Mock
     private ActivityLogService activityLogService;
+    @Mock
+    private SILMessagingService silMessagingService;
+
+    @Mock
+    private ObjectMapper objectMapper;
 
     @Override
     protected LoanApplicationController supplyControllerUnderTest() {
         return new LoanApplicationController();
+    }
+
+    @Before
+   public void  setup(){
+        when(objectMapper.writer()).thenReturn(new ObjectMapper().writer());
+        doNothing().when(silMessagingService).recordSilMessage(SIlPayloadType.APPLICATION_UPDATE, SIlPayloadKeyType.APPLICATION_ID,"1", APPLICATION_PAYLOAD, null);
+
     }
 
     @Test
@@ -91,6 +110,7 @@ public class LoanApplicationControllerTest extends BaseControllerMockMVCTest<Loa
 
     @Test
     public void updateApplicationFailWhenIncorrectProcessRoleIdIsPassed() throws Exception {
+
         long applicationId = 1L;
         UserResource user = newUserResource().withId(1L).build();
         ProcessRoleResource processRole = newProcessRoleResource().withId(5L).build();
@@ -104,6 +124,9 @@ public class LoanApplicationControllerTest extends BaseControllerMockMVCTest<Loa
         silStatus.setCompletionDate(ZonedDateTime.now(ZoneId.of("UTC")));
 
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
+
+
+
         when(usersRolesService.getProcessRoleByUserIdAndApplicationId(user.getId(), applicationId))
                 .thenReturn(serviceSuccess(processRole));
         when(competitionService.getCompetitionByApplicationId(applicationId))

@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.user.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.activitylog.transactional.SILMessagingService;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
@@ -12,6 +14,8 @@ import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteServiceImpl;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
+import org.innovateuk.ifs.sil.SIlPayloadKeyType;
+import org.innovateuk.ifs.sil.SIlPayloadType;
 import org.innovateuk.ifs.sil.crm.resource.SilEDIStatus;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
@@ -84,6 +88,11 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     private final SilEDIStatus silStatus = new SilEDIStatus();
     private UserResource user;
+    @Mock
+    private SILMessagingService silMessagingService;
+
+    @Mock
+    private ObjectMapper mapper;
 
     @Before
     public void setup() {
@@ -91,6 +100,10 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         silStatus.setEdiStatus(EDIStatus.INPROGRESS);
         silStatus.setEdiReviewDate(ZonedDateTime.now(ZoneId.of("UTC")));
         when(userService.updateDetails(user)).thenReturn(serviceSuccess(user));
+        when(mapper.writer()).thenReturn(new ObjectMapper().writer());
+
+        doNothing().when(silMessagingService).recordSilMessage(SIlPayloadType.APPLICATION_UPDATE, SIlPayloadKeyType.APPLICATION_ID, "1", "", null);
+
     }
 
     @Test
@@ -229,7 +242,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
 
-        verify(crmService).syncCrmContact(userId,projectId);
+        verify(crmService).syncCrmContact(userId, projectId);
     }
 
     @Test
@@ -538,7 +551,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         when(registrationService.activateApplicantAndSendDiversitySurvey(anyLong(), anyLong())).thenReturn(serviceSuccess());
 
         mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash)
-                .header("IFS_AUTH_TOKEN", "123abc"))
+                        .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
 
