@@ -105,7 +105,7 @@
                     <input type="hidden" th:field="*{email}">
                 </th:block>
                 <th:block th:unless="${model.invitee}">
-                    <span class="govuk-hint">You will need this to sign into your account.</span>
+                    <span class="govuk-hint">You will need this to sign in to your account and we may use this to contact you. We recommend using a professional email address. You will not be able to change this in the service once you have created your account. If you need to change your email address you must contact us.</span>
                     <th:block th:if="${#fields.hasErrors('email')}">
                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}"></span>
                     </th:block>
