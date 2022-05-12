@@ -480,7 +480,9 @@ public class CompetitionWebTestData {
                         .withInnovationSector("Infrastructure systems")
                         .withAssessorCount(5),
                 directAwardCompetition()
-                        .withName("Direct award competition")
+                        .withName("Direct award competition"),
+                horizonEuropeGuaranteeCompetition()
+                        .withName("Horizon Europe Guarantee Competition")
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.OPEN))
