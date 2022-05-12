@@ -76,7 +76,7 @@ public class CompetitionInviteAssessorsOverviewModelPopulator extends Competitio
         return new OverviewAssessorRowViewModel(
                 assessorInviteOverviewResource.getId(),
                 assessorInviteOverviewResource.getName(),
-                assessorInviteOverviewResource.getInnovationAreas(),
+                assessorInviteOverviewResource.getInnovationAreas().isEmpty() ? getAssessorsInnovationAreasByInviteId(assessorInviteOverviewResource.getInviteId()) : assessorInviteOverviewResource.getInnovationAreas(),
                 assessorInviteOverviewResource.isCompliant(),
                 assessorInviteOverviewResource.isValidAgreement(),
                 assessorInviteOverviewResource.isValidDoi(),

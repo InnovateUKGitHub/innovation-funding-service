@@ -665,7 +665,7 @@ the user should see the project status
 
 the user should see the read only view of EDI status as incomplete
     the user should see the element     jQuery = h3:contains("Team members")
-    the user should see the element     jQuery = th:contains("EDI status")
+    the user should see the element     jQuery = th:contains("EDI survey")
     the user should see the element     jQuery = td:contains("Dave Adams") ~ td:contains("Complete")
     the user should see the element     jQuery = td:contains("Mrytle Barton") ~ td:contains("Complete")
     the user should see the element     jQuery = td:contains("Edward Morris") ~ td:contains("Complete")

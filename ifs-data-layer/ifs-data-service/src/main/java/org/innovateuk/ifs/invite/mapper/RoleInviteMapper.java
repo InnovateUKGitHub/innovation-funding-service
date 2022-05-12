@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.invite.mapper;
 
+import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
+import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.mapstruct.Mapper;
@@ -11,7 +13,8 @@ import org.mapstruct.Mappings;
  * Mapper for converting between RoleInvite domain and resource objects
  */
 
-@Mapper(componentModel = "spring")
+@Mapper(config = GlobalMapperConfig.class,
+        uses = { InnovationAreaMapper.class })
 public abstract class RoleInviteMapper extends BaseMapper<RoleInvite, RoleInviteResource, Long> {
 
     @Mappings({
