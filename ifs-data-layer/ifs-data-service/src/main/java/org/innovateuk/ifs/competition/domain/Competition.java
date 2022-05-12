@@ -192,6 +192,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     private boolean hasAssessmentStage = true;
 
+    @Column(name="pre_registration")
+    private boolean enabledForPreRegistration = false;
+
     @Enumerated(EnumType.STRING)
     private CovidType covidType;
 
@@ -208,9 +211,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "competitionThirdPartyConfigId", referencedColumnName = "id")
     private CompetitionThirdPartyConfig competitionThirdPartyConfig;
-
-    @Column(nullable = false)
-    private boolean preRegistration = false;
 
     public Competition() {
         setupComplete = false;
@@ -1124,7 +1124,11 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.competitionExternalConfig = competitionExternalConfig;
     }
 
-    public void setPreRegistration(boolean preRegistration) {
-        this.preRegistration = preRegistration;
+    public boolean isEnabledForPreRegistration() {
+        return enabledForPreRegistration;
+    }
+
+    public void setEnabledForPreRegistration(boolean enabledForPreRegistration) {
+        this.enabledForPreRegistration = enabledForPreRegistration;
     }
 }
