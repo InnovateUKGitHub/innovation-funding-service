@@ -58,8 +58,6 @@ the applicant can click edit to make the section editable again
 Create a new application
     [Arguments]  ${Application_title}   ${orgType}
     the user select the competition and starts application      ${openCompetitionBusinessRTO_name}
-#    the user navigates to the page                              ${openCompetitionBusinessRTO_overview}
-#    the user clicks the button/link                             jQuery=a:contains("Start new application")
     check if there is an existing application in progress for this competition
     the user clicks the button/link                             link=Apply with a different organisation
     the user selects the radio button                           organisationTypeId  ${orgType}

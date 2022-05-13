@@ -191,6 +191,5 @@ the user still sees pending user
     the user should see the element    jQuery = td:contains("Adrian Booth (pending for")
 
 Get competition id and open the competition to live
-    #Get competitions id and set it as suite variable  ${openCompetitionBusinessRTO_name}
     ${yesterday} =    get yesterday
     execute sql string  UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`=' ${openCompetitionBusinessRTO}' and type IN ('OPEN_DATE');
