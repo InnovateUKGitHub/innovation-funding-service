@@ -46,9 +46,9 @@ ENV BAMBOO_BUILD_NO=$BAMBOO_BUILD_NO_ARG
 ENV GID=993
 ENV UID=996
 ENV PW=default
-
-RUN groupadd -g ${GID} gluster && \
-  useradd -p ${PW} -u ${UID} -g ${GID} gluster
+#
+#RUN groupadd -g ${GID} gluster && \
+#  useradd -p ${PW} -u ${UID} -g ${GID} gluster
 
 VOLUME /mnt/ifs_storage
 
@@ -65,13 +65,13 @@ ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64/
 ENV IS_CONTAINERIZED true
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
-
-RUN chown -R gluster:gluster . && \
-  find . \( -type d -o -type f \) -exec chmod 775 {} + && \
-  chown -R gluster:gluster /tmp && \
-  find /tmp \( -type d -o -type f \) -exec chmod 775 {} +
-
-USER gluster
+#
+#RUN chown -R gluster:gluster . && \
+#  find . \( -type d -o -type f \) -exec chmod 775 {} + && \
+#  chown -R gluster:gluster /tmp && \
+#  find /tmp \( -type d -o -type f \) -exec chmod 775 {} +
+#
+#USER gluster
 
 COPY IFS_acceptance_tests/resources/variables/EMAIL_VARIABLES_TEMPLATE.robot /robot-tests/IFS_acceptance_tests/resources/variables/EMAIL_VARIABLES_SENSITIVE.robot
 

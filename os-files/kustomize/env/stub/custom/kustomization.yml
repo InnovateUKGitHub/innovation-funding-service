@@ -23,8 +23,8 @@ resources:
   - ../../../config-mgmt/env/aws/custom
   - routes/mail-route.yml
   - routes/sba-route.yml
-  - storage/gluster.yml
-  - storage/gluster-ep.yml
+#  - storage/gluster.yml
+#  - storage/gluster-ep.yml
   - storage/persistent-volume-claim.yml
   - rbac/sba-rbac.yml
 
