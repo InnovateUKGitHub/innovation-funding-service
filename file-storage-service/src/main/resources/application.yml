@@ -1,3 +1,5 @@
+server:
+  port: 8091
 ifs:
   filestorage:
     virusscan:
