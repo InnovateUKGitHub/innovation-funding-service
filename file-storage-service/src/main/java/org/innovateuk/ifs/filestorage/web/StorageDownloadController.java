@@ -19,28 +19,38 @@ public class StorageDownloadController implements FileDownload {
     private StorageService storageService;
 
     @Override
-    public ResponseEntity<Resource> fileByUuid(String uuid) {
+    public ResponseEntity<Resource> fileStreamByUuid(String uuid) {
         try {
             Optional<FileDownloadResponse> fileDownloadResponse = storageService.fileByUuid(uuid);
             if (fileDownloadResponse.isPresent()) {
                 HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.valueOf(fileDownloadResponse.get().mimeType()));
-                headers.setContentLength(fileDownloadResponse.get().fileSizeBytes());
+                headers.setContentType(MediaType.valueOf(fileDownloadResponse.get().getMimeType()));
+                headers.setContentLength(fileDownloadResponse.get().getFileSizeBytes());
                 headers.setContentDisposition(
                     ContentDisposition
                         .attachment()
-                        .filename(fileDownloadResponse.get().fileName())
+                        .filename(fileDownloadResponse.get().getFileName())
                         .build()
                 );
                 return ResponseEntity.ok().headers(headers)
-                        .body(new ByteArrayResource(fileDownloadResponse.get().payload()));
+                        .body(new ByteArrayResource(fileDownloadResponse.get().getPayload()));
             }
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (IOException e) {
+            log.error(e.getMessage(), e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    @Override
+    public ResponseEntity<Optional<FileDownloadResponse>> fileDownloadResponse(String uuid) {
+        try {
+            return ResponseEntity.ok(storageService.fileByUuid(uuid));
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
 }

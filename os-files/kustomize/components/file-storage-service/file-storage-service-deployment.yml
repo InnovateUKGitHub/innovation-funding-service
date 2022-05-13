@@ -26,7 +26,7 @@ spec:
         livenessProbe:
           httpGet:
             path: /monitoring/health
-            port: 8080
+            port: 8091
           initialDelaySeconds: 30
           periodSeconds: 31
           timeoutSeconds: 25
@@ -35,7 +35,7 @@ spec:
         readinessProbe:
           httpGet:
             path: /monitoring/health
-            port: 8080
+            port: 8091
           initialDelaySeconds: 30
           periodSeconds: 5
           timeoutSeconds: 25
@@ -52,7 +52,7 @@ spec:
         - name: NEW_RELIC_APP_NAME
           value: 'ifs-$(NEW_RELIC_ENV)-file-storage-service'
         ports:
-          - containerPort: 7444
+          - containerPort: 8091
         resources:
           limits:
             cpu: 2000m

@@ -13,6 +13,7 @@ include("common:api:file-storage-rest-api")
 include("common:starter:ifs-starter-audit")
 include("common:starter:ifs-starter-cache")
 include("common:starter:ifs-starter-common")
+include("common:starter:ifs-starter-feign")
 include("common:starter:ifs-starter-logging")
 include("common:starter:ifs-starter-stubdev")
 include("common:starter:ifs-starter-swagger-ui")
@@ -79,10 +80,10 @@ include("ifs-web-service:ifs-project-setup-mgt-service")
 include("ifs-web-service:ifs-front-door-service")
 include("ifs-registration-service")
 include("file-storage-service")
+include 'feign-test'
 
 include("robot-tests")
 
 // Tools...
 include("ifs-tools:sba")
-
 

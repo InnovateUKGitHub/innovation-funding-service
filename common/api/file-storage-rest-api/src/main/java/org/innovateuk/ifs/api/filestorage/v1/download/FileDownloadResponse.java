@@ -3,13 +3,13 @@ package org.innovateuk.ifs.api.filestorage.v1.download;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.Accessors;
+
+import java.io.Serializable;
 
 @Data
 @AllArgsConstructor
 @Builder
-@Accessors(fluent = true)
-public final class FileDownloadResponse {
+public final class FileDownloadResponse implements Serializable {
 
     /** uuid reference for the file */
     private final String fileId;

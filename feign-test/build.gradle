@@ -1,0 +1,13 @@
+apply from: rootProject.file("gradle-support/spring-boot.gradle")
+apply from: rootProject.file("gradle-support/jib.gradle")
+apply from: rootProject.file("gradle-support/junit5.gradle")
+
+dependencies {
+
+    implementation project(':common:api:file-storage-rest-api')
+    implementation project(":common:starter:ifs-starter-feign")
+
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+
+}
