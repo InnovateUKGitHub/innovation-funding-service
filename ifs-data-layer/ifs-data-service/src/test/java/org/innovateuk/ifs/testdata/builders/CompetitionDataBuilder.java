@@ -132,6 +132,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setFundingType(line.getFundingType());
                 competition.setCompletionStage(line.getCompetitionCompletionStage());
                 competition.setAlwaysOpen(isAlwaysOpen(line));
+                competition.setHasAssessmentStage(line.hasAssessmentStage());
+                competition.setEnabledForPreRegistration(line.hasPreRegistration());
             });
         });
     }

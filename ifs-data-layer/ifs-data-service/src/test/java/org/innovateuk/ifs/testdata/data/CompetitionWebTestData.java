@@ -480,7 +480,12 @@ public class CompetitionWebTestData {
                         .withInnovationSector("Infrastructure systems")
                         .withAssessorCount(5),
                 directAwardCompetition()
-                        .withName("Direct award competition")
+                        .withName("Direct award competition"),
+                horizonEuropeGuaranteeCompetition()
+                        .withName("Horizon Europe Guarantee Competition"),
+                horizonEuropeGuaranteeCompetition()
+                        .withName("Horizon Europe Guarantee Competition For Pre Registration")
+                        .withPreRegistration(true)
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.OPEN))
@@ -661,6 +666,14 @@ public class CompetitionWebTestData {
                 .withFundingType(FundingType.GRANT)
                 .withCompetitionType(DIRECT_AWARD)
                 .withAlwaysOpen(true);
+    }
+
+    private static CompetitionLineBuilder horizonEuropeGuaranteeCompetition() {
+        return anIfsCompetition()
+                .withFundingType(FundingType.HECP)
+                .withCompetitionType(HORIZON_EUROPE_GUARANTEE)
+                .withAlwaysOpen(true)
+                .withAssessmentStage(false);
     }
 
     private static CompetitionLineBuilder anIfsCompetition() {
