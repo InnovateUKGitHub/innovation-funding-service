@@ -3,4 +3,4 @@ apiVersion: v1
 metadata:
   name: file-storage-service-config
 data:
-  FSS_S3_AWS_BUCKET: "ifs-file-storage-service-demo"
+  FSS_S3_AWS_BUCKET: "iukorg.org-env-0.ifs-file-storage-service-demo"
