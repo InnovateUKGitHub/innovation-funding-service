@@ -502,15 +502,18 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             List<SectionResource> competitionSections = sectionService.getByCompetitionId(data.getCompetition().getId()).getSuccess();
 
             competitionSections.stream()
-                    .filter(sectionResource -> sectionLine.isPresent()
-                            && sectionResource.getName() == sectionLine.get().sectionName)
-                    .forEach(sectionResource -> markSectionForPreRegistration(sectionResource));
+                    .forEach(sectionResource -> {
+                        if (sectionLine.isPresent()
+                                && sectionResource.getName().equals(sectionLine.get().sectionName)) {
+                            markSectionForPreRegistration(sectionResource);
+                        }
+                    });
         });
     }
 
     private void markSectionForPreRegistration(SectionResource section) {
-        section.setEnabledForPreRegistration(true);
-        sectionService.update(section);
+        section.setEnabledForPreRegistration(false);
+        sectionService.save(section);
 
         section.getQuestions().stream()
                 .map(questionId -> questionService.getQuestionById(questionId).getSuccess())
@@ -521,7 +524,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     private void markQuestionForPreRegistration(QuestionResource question) {
-        question.setEnabledForPreRegistration(true);
+        question.setEnabledForPreRegistration(false);
         questionService.save(question);
     }
 

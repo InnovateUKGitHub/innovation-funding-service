@@ -51,5 +51,5 @@ public interface SectionService {
 
     @SecuredBySpring(value = "UPDATE", description = "Only comp admin can update a section")
     @PreAuthorize("hasAnyAuthority('comp_admin')")
-    ServiceResult<SectionResource> update(SectionResource sectionResource);
+    ServiceResult<SectionResource> save(SectionResource sectionResource);
 }
