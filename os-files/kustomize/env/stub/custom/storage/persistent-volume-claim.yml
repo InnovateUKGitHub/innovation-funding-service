@@ -9,7 +9,7 @@ metadata:
     volume.kubernetes.io/selected-node: ip-10-40-7-134.eu-west-2.compute.internal
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 400M
