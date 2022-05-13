@@ -58,6 +58,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
     private static List<CsvUtils.CompetitionFunderLine> competitionFunderLines;
     private static List<CsvUtils.CompetitionOrganisationConfigLine> competitionOrganisationConfigLines;
     private static List<CsvUtils.AssessmentPeriodLine> competitionAssessmentPeriodLines;
+    private List<CsvUtils.CompetitionSectionLineDisabledForPreRegistration>  competitionSectionLineDisabledForPreRegistration;
 
     @PostConstruct
     public void readCsvs() {
@@ -73,6 +74,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         competitionFunderLines = readCompetitionFunders();
         competitionOrganisationConfigLines = readCompetitionOrganisationConfig();
         competitionAssessmentPeriodLines = readCompetitionAssessmentPeriods();
+        competitionSectionLineDisabledForPreRegistration = readCompetitionSectionDisabledForPreRegistrations();
     }
 
     public void moveCompetitionsToCorrectFinalState(List<CompetitionData> competitions) {
@@ -147,6 +149,14 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         }
     }
 
+    private CompetitionDataBuilder disableSectionForPreRegistration(CompetitionLine line, CompetitionDataBuilder competitionDataBuilder) {
+
+        Optional<CsvUtils.CompetitionSectionLineDisabledForPreRegistration> sectionLine = simpleFindFirst(competitionSectionLineDisabledForPreRegistration, l ->
+                line.getName().equals(l.competitionName));
+
+        return competitionDataBuilder.withSectionUpdateForPreRegistration(sectionLine);
+    }
+
     public void moveCompetitionIntoOpenStatus(CompetitionData competition) {
         CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competition);
         basicCompetitionInformation.moveCompetitionIntoOpenStatus().build();
@@ -178,7 +188,10 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                 .withThirdPartyConfig(line)
                 .withNewMilestones(line);
 
-        CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(line, competitionBeforeMilestones);
+        CompetitionDataBuilder competitionForPreRegistration = disableSectionForPreRegistration(line, competitionBeforeMilestones);
+
+        CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(line, competitionForPreRegistration);
+
         return competitionWithMilestones.
                 withDefaultPublicContent(line);
     }

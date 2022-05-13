@@ -12,7 +12,6 @@ import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.form.mapper.SectionMapper;
 import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -20,6 +19,7 @@ import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionLine;
+import org.innovateuk.ifs.testdata.services.CsvUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +28,7 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -495,12 +496,14 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withSectionUpdateForPreRegistration(CompetitionLine line) {
+    public CompetitionDataBuilder withSectionUpdateForPreRegistration(Optional<CsvUtils.CompetitionSectionLineDisabledForPreRegistration> sectionLine) {
 
         return asCompAdmin(data -> {
             List<SectionResource> competitionSections = sectionService.getByCompetitionId(data.getCompetition().getId()).getSuccess();
 
             competitionSections.stream()
+                    .filter(sectionResource -> sectionLine.isPresent()
+                            && sectionResource.getName() == sectionLine.get().sectionName)
                     .forEach(sectionResource -> markSectionForPreRegistration(sectionResource));
         });
     }
@@ -514,7 +517,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 .forEach(questionResource -> markQuestionForPreRegistration(questionResource));
 
         sectionService.getChildSectionsByParentId(section.getId()).getSuccess().stream()
-                .forEach(sectionResource -> markSectionForPreRegistration(data, sectionResource));
+                .forEach(sectionResource -> markSectionForPreRegistration(sectionResource));
     }
 
     private void markQuestionForPreRegistration(QuestionResource question) {

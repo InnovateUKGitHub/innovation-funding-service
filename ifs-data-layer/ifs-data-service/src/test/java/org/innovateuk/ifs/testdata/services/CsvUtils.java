@@ -115,6 +115,10 @@ public class CsvUtils {
         return simpleMap(readCsvLines("projects"), ProjectLine::new);
     }
 
+    public static List<CompetitionSectionLineDisabledForPreRegistration> readCompetitionSectionDisabledForPreRegistrations() {
+        return simpleMap(readCsvLines("competition-pre-registration"), CompetitionSectionLineDisabledForPreRegistration::new);
+    }
+
     public static class ProjectLine {
 
         public String name;
@@ -775,6 +779,17 @@ public class CsvUtils {
             assessorBriefing = nullableDateTime(line.get(i++));
             assessorAccepts  = nullableDateTime(line.get(i++));
             assessorDeadline = nullableDateTime(line.get(i++));
+        }
+    }
+
+    public static class CompetitionSectionLineDisabledForPreRegistration {
+        public String competitionName;
+        public String sectionName;
+
+        private CompetitionSectionLineDisabledForPreRegistration(List<String> line) {
+            int i = 0;
+            competitionName = nullable(line.get(i++));
+            sectionName = nullable(line.get(i++));
         }
     }
 
