@@ -18,7 +18,6 @@ public class ProjectYourOrganisationViewModel extends ApplicationYourOrganisatio
     private final boolean isAllEligibilityAndViabilityInReview;
     private YourOrganisationDetailsReadOnlyViewModel orgDetailsViewModel;
     private boolean partnerOrgDisplay;
-    private String hash;
 
     public ProjectYourOrganisationViewModel(long applicationId,
                                             CompetitionResource competition,
