@@ -34,6 +34,7 @@ public class CompetitionInviteViewModel extends BaseInviteViewModel {
         this.assessorPay = invite.getAssessorPay();
         this.competitionFundingType = invite.getCompetitionFundingType();
         this.competitionAlwaysOpen = invite.getCompetitionAlwaysOpen();
+        this.hash = hash;
     }
 
     public String getCompetitionInviteHash() {

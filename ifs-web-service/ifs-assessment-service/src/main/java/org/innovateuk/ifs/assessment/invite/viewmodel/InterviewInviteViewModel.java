@@ -7,7 +7,7 @@ import org.innovateuk.ifs.invite.resource.InterviewInviteResource;
 /**
  * ViewModel of a InterviewInvite.
  */
-public class InterviewInviteViewModel  extends BaseInviteViewModel {
+public class InterviewInviteViewModel extends BaseInviteViewModel {
 
     public InterviewInviteViewModel(String panelInviteHash, InterviewInviteResource invite, boolean userLoggedIn, String hash) {
         super(panelInviteHash, invite.getCompetitionId(), invite.getCompetitionName(), userLoggedIn, hash);
