@@ -144,7 +144,7 @@
                                     <a th:if="${model.hasApplicantAndAssessorRole}" href="/assessment/profile/details" class="govuk-link">Start survey</a>
                                     <a th:unless="${model.hasApplicantAndAssessorRole}" href="/profile/view" class="govuk-link">Start survey</a>
                                 </td>
-                                <td class="govuk-table__cell " th:unless="${model.isEDIUpdateEnabled and model.loggedInUserId == row.id and !row.isEdiStatusComplete()}">
+                                <td class="govuk-table__cell " th:if="${model.isEDIUpdateEnabled and !(model.loggedInUserId == row.id) and !row.isEdiStatusComplete()}">
                                     <span class="edit" th:unless="${row.isEdiStatusComplete()}">Incomplete</span>
                                     <span class="yes" th:if="${row.isEdiStatusComplete()}">Complete</span>
                                 </td>
