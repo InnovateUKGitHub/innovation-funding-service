@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.form.transactional;
 
 import org.innovateuk.ifs.commons.security.NotSecured;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -47,4 +48,8 @@ public interface SectionService {
 
     @PreAuthorize("hasPermission(#parentId, 'org.innovateuk.ifs.form.resource.SectionResource', 'READ')")
     ServiceResult<List<SectionResource>> getChildSectionsByParentId(long parentId);
+
+    @SecuredBySpring(value = "UPDATE", description = "Only comp admin can update a section")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
+    ServiceResult<SectionResource> update(SectionResource sectionResource);
 }

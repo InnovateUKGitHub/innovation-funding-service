@@ -146,4 +146,10 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                 .map(sectionMapper::mapToResource)
                 .collect(toList()));
     }
+
+    @Override
+    public ServiceResult<SectionResource> update(SectionResource sectionResource) {
+        return find(section(sectionResource.getId()), notFoundError(Section.class, sectionResource.getId()))
+                .andOnSuccessReturn(section -> sectionMapper.mapToResource(sectionRepository.save(sectionMapper.mapToDomain(sectionResource))));
+    }
 }

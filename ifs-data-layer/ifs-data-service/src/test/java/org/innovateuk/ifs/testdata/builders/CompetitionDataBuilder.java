@@ -12,6 +12,7 @@ import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.mapper.SectionMapper;
 import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -492,6 +493,33 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             competitionSetupFinanceResource.setIncludeJesForm(line.getIncludeJesForm());
             competitionSetupFinanceService.save(competitionSetupFinanceResource);
         });
+    }
+
+    public CompetitionDataBuilder withSectionUpdateForPreRegistration(CompetitionLine line) {
+
+        return asCompAdmin(data -> {
+            List<SectionResource> competitionSections = sectionService.getByCompetitionId(data.getCompetition().getId()).getSuccess();
+
+            competitionSections.stream()
+                    .forEach(sectionResource -> markSectionForPreRegistration(sectionResource));
+        });
+    }
+
+    private void markSectionForPreRegistration(SectionResource section) {
+        section.setEnabledForPreRegistration(true);
+        sectionService.update(section);
+
+        section.getQuestions().stream()
+                .map(questionId -> questionService.getQuestionById(questionId).getSuccess())
+                .forEach(questionResource -> markQuestionForPreRegistration(questionResource));
+
+        sectionService.getChildSectionsByParentId(section.getId()).getSuccess().stream()
+                .forEach(sectionResource -> markSectionForPreRegistration(data, sectionResource));
+    }
+
+    private void markQuestionForPreRegistration(QuestionResource question) {
+        question.setEnabledForPreRegistration(true);
+        questionService.save(question);
     }
 
     public CompetitionDataBuilder withAssessmentConfig(CompetitionLine line) {
