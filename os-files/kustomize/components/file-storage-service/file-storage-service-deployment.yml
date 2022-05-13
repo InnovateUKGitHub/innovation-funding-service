@@ -8,7 +8,6 @@ metadata:
     javaDebug: javaDebug
     pullSecrets: pullSecrets
     slow: slow
-    newRelic: newRelic
 spec:
   replicas: 1
   selector:

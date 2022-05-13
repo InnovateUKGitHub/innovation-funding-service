@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.util.StopWatch;
 
 import java.io.IOException;
 import java.util.List;
@@ -53,11 +54,28 @@ public class StorageService {
 //    }
 
     public FileUploadResponse fileUpload(FileUploadRequest fileUploadRequest) throws IOException {
+        StopWatch stopWatch = new StopWatch(StorageService.class.getSimpleName());
+
+        stopWatch.start("Storing initial request");
         FileStorageRecord fileStorageRecord = storageServiceHelper.saveInitialRequest(fileUploadRequest, writableStorageProvider);
+        stopWatch.stop();
+
+        stopWatch.start("Virus Scan");
         VirusScanResult virusScanResult = virusScanProvider.scanFile(fileUploadRequest.getPayload());
+        stopWatch.stop();
+
+        stopWatch.start("Update Virus Status in DB");
         fileStorageRecord = storageServiceHelper.updateVirusCheckStatus(fileStorageRecord, virusScanResult);
+        stopWatch.stop();
+
+        stopWatch.start("Push to storage provider : " + writableStorageProvider.getClass().getSimpleName());
         String providerLocation = writableStorageProvider.saveFile(fileUploadRequest);
+        stopWatch.stop();
+
+        stopWatch.start("Update Stored Status in DB");
         storageServiceHelper.saveProviderResult(fileStorageRecord, providerLocation);
+        stopWatch.stop();
+        log.info(stopWatch.prettyPrint());
         return FileUploadResponseMapper.build(fileUploadRequest, virusScanResult);
     }
 
