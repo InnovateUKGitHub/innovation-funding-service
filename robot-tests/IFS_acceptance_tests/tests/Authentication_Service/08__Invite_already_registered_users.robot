@@ -51,10 +51,7 @@ the user should see the change in the view team members page
     The user should see the element     jQuery = td:contains("Dennis Bergkamp")
 
 Existing user creates a new application and invites a user from the same organisation
-    the user navigates to the page                    ${openCompetitionBusinessRTO_overview}
-    the user clicks the button/link                   jQuery = a:contains("Start new application")
-    the user clicks the button/link                   jQuery = .govuk-button:contains("Continue")
-    the user should see a field and summary error     Please select an option to continue.
+    the user select the competition and starts application     ${openCompetitionBusinessRTO_name}
     the user selects the radio button                 createNewApplication  true      #Yes, I want to create a new application.
     the user clicks the button/link                   jQuery = .govuk-button:contains("Continue")
     the user clicks the button/link                   css = .govuk-button[type="submit"]    #Save and continue
