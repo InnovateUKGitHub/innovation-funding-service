@@ -3,6 +3,8 @@ package org.innovateuk.ifs.project.pendingpartner.populator;
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -19,6 +21,7 @@ import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -29,6 +32,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -38,6 +42,8 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilde
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.builder.PendingPartnerProgressResourceBuilder.newPendingPartnerProgressResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.SUBSIDY_BASIS;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
@@ -62,6 +68,8 @@ public class ProjectYourFundingModelPopulatorTest extends BaseUnitTest {
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
     @Mock
     private PartnerOrganisationRestService partnerOrganisationRestService;
+    @Mock
+    private PublicContentItemRestService publicContentItemRestService;
 
     @InjectMocks
     private ProjectYourFundingViewModelPopulator projectYourFundingViewModelPopulator;
@@ -95,6 +103,8 @@ public class ProjectYourFundingModelPopulatorTest extends BaseUnitTest {
                 .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
                 .build();
         QuestionResource question = newQuestionResource().build();
+        PublicContentResource publicContent = newPublicContentResource().build();
+        PublicContentItemResource publicContentItem = newPublicContentItemResource().withPublicContentResource(publicContent).build();
 
         when(grantClaimMaximumRestService.isMaximumFundingLevelConstant(competition.getId())).thenReturn(restSuccess(false));
         when(projectFinanceRestService.getProjectFinance(project.getId(), organisation.getId())).thenReturn(restSuccess(projectFinance));
@@ -103,6 +113,7 @@ public class ProjectYourFundingModelPopulatorTest extends BaseUnitTest {
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), SUBSIDY_BASIS)).thenReturn(restSuccess(question));
         when(projectRestService.getProjectById(project.getId())).thenReturn(restSuccess(project));
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(publicContentItemRestService.getItemByCompetitionId(competition.getId())).thenReturn(restSuccess(publicContentItem));
         when(pendingPartnerProgressRestService.getPendingPartnerProgress(project.getId(), organisation.getId())).thenReturn(restSuccess(progress));
         when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
 
@@ -125,6 +136,6 @@ public class ProjectYourFundingModelPopulatorTest extends BaseUnitTest {
         assertTrue(actual.isLeadOrganisation());
         assertFalse(actual.isOrganisationRequiredAndNotCompleted());
         assertFalse(actual.isSubsidyBasisRequiredAndNotCompleted());
-        assertEquals(question.getId(), actual.getSubsidyBasisQuestionId());
+        assertEquals(Optional.of(question.getId()), actual.getSubsidyBasisQuestionId());
     }
 }

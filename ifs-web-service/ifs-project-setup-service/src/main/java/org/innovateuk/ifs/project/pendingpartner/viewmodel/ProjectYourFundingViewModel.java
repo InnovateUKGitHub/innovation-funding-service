@@ -1,11 +1,13 @@
 package org.innovateuk.ifs.project.pendingpartner.viewmodel;
 
+import lombok.Getter;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
 import java.util.Optional;
 
+@Getter
 public class ProjectYourFundingViewModel {
 
     private final String projectName;
@@ -22,6 +24,7 @@ public class ProjectYourFundingViewModel {
     private final boolean subsidyBasisRequiredAndNotCompleted;
     private final Optional<Long> subsidyBasisQuestionId;
     private final boolean isThirdPartyOfgem;
+    private String hash;
 
     public ProjectYourFundingViewModel(ProjectResource project,
                                        long organisationId,
@@ -35,7 +38,8 @@ public class ProjectYourFundingViewModel {
                                        boolean subsidyBasisRequiredAndNotCompleted,
                                        boolean organisationRequiredAndNotCompleted,
                                        Optional<Long> subsidyBasisQuestionId,
-                                       boolean isThirdPartyOfgem) {
+                                       boolean isThirdPartyOfgem,
+                                       String hash) {
         this.projectName = project.getName();
         this.projectId = project.getId();
         this.organisationId = organisationId;
@@ -50,50 +54,15 @@ public class ProjectYourFundingViewModel {
         this.organisationRequiredAndNotCompleted = organisationRequiredAndNotCompleted;
         this.subsidyBasisQuestionId = subsidyBasisQuestionId;
         this.isThirdPartyOfgem = isThirdPartyOfgem;
-    }
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public long getProjectId() {
-        return projectId;
-    }
-
-    public long getOrganisationId() {
-        return organisationId;
-    }
-
-    public boolean isReadOnly() {
-        return readOnly;
-    }
-
-    public int getMaximumFundingLevel() {
-        return maximumFundingLevel;
+        this.hash = hash;
     }
 
     public boolean isFundingSectionLocked() {
         return subsidyBasisRequiredAndNotCompleted || organisationRequiredAndNotCompleted;
     }
 
-    public long getCompetitionId() {
-        return competitionId;
-    }
-
-    public boolean isOverridingFundingRules() {
-        return overridingFundingRules;
-    }
-
-    public FundingType getFundingType() {
-        return fundingType;
-    }
-
     public boolean isKtpFundingType() {
         return FundingType.KTP == fundingType;
-    }
-
-    public OrganisationTypeEnum getOrganisationType() {
-        return organisationType;
     }
 
     public boolean isBusiness() {
@@ -107,22 +76,6 @@ public class ProjectYourFundingViewModel {
      * */
     public boolean hideAreYouRequestingFunding() {
         return isKtpFundingType() && organisationType != OrganisationTypeEnum.KNOWLEDGE_BASE;
-    }
-
-    public boolean isLeadOrganisation() {
-        return leadOrganisation;
-    }
-
-    public boolean isOrganisationRequiredAndNotCompleted() {
-        return organisationRequiredAndNotCompleted;
-    }
-
-    public boolean isSubsidyBasisRequiredAndNotCompleted() {
-        return subsidyBasisRequiredAndNotCompleted;
-    }
-
-    public Long getSubsidyBasisQuestionId() {
-        return subsidyBasisQuestionId.orElse(null);
     }
 
     public boolean isThirdPartyOfgem() {
