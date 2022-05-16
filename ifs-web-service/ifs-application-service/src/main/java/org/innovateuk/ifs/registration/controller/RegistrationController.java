@@ -262,11 +262,7 @@ public class RegistrationController {
             if (invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccess().getStatus())) {
                 ApplicationInviteResource inviteResource = invite.getSuccess();
                 registrationForm.setEmail(inviteResource.getEmail());
-                model.addAttribute("model", anInvitedUserViewModelBuilder()
-                        .withShowBackLink(true)
-                        .withGuidance("To continue, you need to create an account with the Innovation Funding Service. This account will be associated with your organisation.")
-                        .withEmailHint("You will need this to sign in to your account and we may use this to contact you. We recommend using a professional email address. You will not be able to change this in the service once you have created your account. If you need to change your email address you must contact us.")
-                        .build());
+                model.addAttribute("model", anInvitedUserViewModelBuilder().withShowBackLink(true).build());
                 return true;
             } else {
                 log.debug("Invite already accepted.");

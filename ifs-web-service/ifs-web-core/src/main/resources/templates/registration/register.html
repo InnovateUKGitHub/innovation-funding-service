@@ -98,9 +98,10 @@
                     Email
                 </label>
                 <th:block th:if="${model.invitee}">
-                    <span class="govuk-hint govuk-!-margin-bottom-0" th:text="${model.emailHint}"></span>
-
-                    <span class="govuk-body govuk-hint govuk-!-margin-top-0"><strong th:text="${form.email}"></strong></span>
+                        <span class="govuk-hint">You will need this to sign into your account.
+                            <br/>
+                            <strong th:text="${form.email}"></strong>
+                        </span>
                     <input type="hidden" th:field="*{email}">
                 </th:block>
                 <th:block th:unless="${model.invitee}">
