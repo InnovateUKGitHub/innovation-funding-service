@@ -425,26 +425,6 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
     }
 
     @Test
-    public void testDeleteFile() throws IOException {
-
-        FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(30);
-        FileEntry fileEntryToDelete = fileBuilder.with(id(456L)).build();
-
-        when(fileEntryRepository.findById(456L)).thenReturn(Optional.of(fileEntryToDelete));
-        when(finalFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceSuccess(new File("foundme")));
-        when(finalFileStorageStrategy.deleteFile(fileEntryToDelete)).thenReturn(serviceSuccess());
-
-        ServiceResult<FileEntry> result = service.deleteFileIgnoreNotFound(456L);
-        assertNotNull(result);
-        assertTrue(result.isSuccess());
-
-        verify(fileEntryRepository).findById(456L);
-        verify(finalFileStorageStrategy).getFile(fileEntryToDelete);
-        verify(finalFileStorageStrategy).deleteFile(fileEntryToDelete);
-        verify(fileEntryRepository).delete(fileEntryToDelete);
-    }
-
-    @Test
     public void testDeleteFileButCantDeleteFileFromFilesystem() throws IOException {
 
         FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(30);
@@ -463,30 +443,6 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         verify(fileEntryRepository).delete(fileEntryToDelete);
         verify(finalFileStorageStrategy).getFile(fileEntryToDelete);
         verify(finalFileStorageStrategy).deleteFile(fileEntryToDelete);
-    }
-
-    @Test
-    public void testDeleteFileButNoFileExistsOnFilesystemToDelete() throws IOException {
-
-        FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(30);
-        FileEntry fileEntryToDelete = fileBuilder.with(id(456L)).build();
-
-        when(fileEntryRepository.findById(456L)).thenReturn(Optional.of(fileEntryToDelete));
-        when(finalFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
-        when(temporaryHoldingFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
-        when(scannedFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
-        when(quarantinedFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
-
-        ServiceResult<FileEntry> result = service.deleteFileIgnoreNotFound(456L);
-        assertNotNull(result);
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(notFoundError(FileEntry.class, 456L)));
-
-        verify(fileEntryRepository).findById(456L);
-        verify(finalFileStorageStrategy).getFile(fileEntryToDelete);
-        verify(temporaryHoldingFileStorageStrategy).getFile(fileEntryToDelete);
-        verify(scannedFileStorageStrategy).getFile(fileEntryToDelete);
-        verify(quarantinedFileStorageStrategy).getFile(fileEntryToDelete);
     }
 
     @Test
