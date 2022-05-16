@@ -505,22 +505,26 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                     .forEach(sectionResource -> {
                         if (sectionLine.isPresent()
                                 && sectionResource.getName().equals(sectionLine.get().sectionName)) {
-                            markSectionForPreRegistration(sectionResource);
+                            markSectionForPreRegistration(sectionResource, sectionLine.get().subSectionName, sectionLine.get().questionName);
                         }
                     });
         });
     }
 
-    private void markSectionForPreRegistration(SectionResource section) {
-        section.setEnabledForPreRegistration(false);
-        sectionService.save(section);
+    private void markSectionForPreRegistration(SectionResource section, String subSectionName, String questionName) {
+        if (subSectionName.isEmpty() && questionName.isEmpty()) {
+            section.setEnabledForPreRegistration(false);
+            sectionService.save(section);
+        }
 
         section.getQuestions().stream()
                 .map(questionId -> questionService.getQuestionById(questionId).getSuccess())
+                .filter(questionResource -> !subSectionName.isEmpty() ? questionResource.getName().equals(questionName) : true)
                 .forEach(questionResource -> markQuestionForPreRegistration(questionResource));
 
         sectionService.getChildSectionsByParentId(section.getId()).getSuccess().stream()
-                .forEach(sectionResource -> markSectionForPreRegistration(sectionResource));
+                .filter(subSectionResource -> !subSectionName.isEmpty() ? subSectionResource.getName().equals(subSectionName) : true)
+                .forEach(sectionResource -> markSectionForPreRegistration(sectionResource, subSectionName, questionName));
     }
 
     private void markQuestionForPreRegistration(QuestionResource question) {

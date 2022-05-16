@@ -785,11 +785,15 @@ public class CsvUtils {
     public static class CompetitionSectionLineDisabledForPreRegistration {
         public String competitionName;
         public String sectionName;
+        public String subSectionName;
+        public String questionName;
 
         private CompetitionSectionLineDisabledForPreRegistration(List<String> line) {
             int i = 0;
             competitionName = nullable(line.get(i++));
             sectionName = nullable(line.get(i++));
+            subSectionName = nullable(line.get(i++));
+            questionName = nullable(line.get(i++));
         }
     }
 
