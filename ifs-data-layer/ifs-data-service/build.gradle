@@ -37,6 +37,9 @@ dependencies {
 
     implementation project(":common:starter:ifs-starter-cache")
 
+    implementation project(":common:api:file-storage-rest-api")
+    implementation project(":common:starter:ifs-starter-feign")
+
     if (isStubDevMode()) {
         developmentOnly "org.springframework.boot:spring-boot-devtools"
         developmentOnly project(":common:starter:ifs-starter-stubdev")
