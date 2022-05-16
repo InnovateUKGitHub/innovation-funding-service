@@ -38,6 +38,7 @@ import static java.util.Optional.*;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.resource.CompetitionResource.H2020_TYPE_NAME;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
+import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.ASSESSMENT_ONLY;
 import static org.innovateuk.ifs.competition.resource.FundingRules.SUBSIDY_CONTROL;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION;
@@ -817,6 +818,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         return ofNullable(competitionType)
                 .map(CompetitionType::getName)
                 .map(name -> name.equals(CompetitionTypeEnum.HORIZON_EUROPE_GUARANTEE.getText()))
+                .orElse(false);
+    }
+
+    @Override
+    public boolean isAssessmentOnly() {
+        return ofNullable(competitionType)
+                .map(CompetitionType::getName)
+                .map(name -> name.equals(ASSESSMENT_ONLY.getText()))
                 .orElse(false);
     }
 
