@@ -23,6 +23,8 @@ public class FileEntry {
 
     private long filesizeBytes;
 
+    private String fileUuid;
+
     public FileEntry() {
     	// no-arg constructor
     }
@@ -70,6 +72,10 @@ public class FileEntry {
         this.id = id;
     }
 
+    public String getFileUuid() { return fileUuid; }
+
+    public void setFileUuid(String fileUuid) { this.fileUuid = fileUuid; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -81,8 +87,7 @@ public class FileEntry {
         if (id != null ? !id.equals(fileEntry.id) : fileEntry.id != null) return false;
         if (name != null ? !name.equals(fileEntry.name) : fileEntry.name != null) return false;
         if (mediaType != null ? !mediaType.equals(fileEntry.mediaType) : fileEntry.mediaType != null) return false;
-
-        return true;
+        return fileUuid != null ? fileUuid.equals(fileEntry.fileUuid) : fileEntry.fileUuid == null;
     }
 
     @Override
@@ -91,6 +96,7 @@ public class FileEntry {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (mediaType != null ? mediaType.hashCode() : 0);
         result = 31 * result + (int) (filesizeBytes ^ (filesizeBytes >>> 32));
+        result = 31 * result + (fileUuid != null ? fileUuid.hashCode() : 0);
         return result;
     }
 }
