@@ -796,6 +796,10 @@ public class CsvUtils {
             questionName = nullable(line.get(i++));
         }
 
+        public String getCompetitionName() {
+            return competitionName;
+        }
+
         public String getSectionName() {
             return sectionName;
         }

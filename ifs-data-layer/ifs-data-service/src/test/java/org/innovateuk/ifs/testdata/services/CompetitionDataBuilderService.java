@@ -30,6 +30,7 @@ import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCom
 import static org.innovateuk.ifs.testdata.builders.CompetitionFunderDataBuilder.newCompetitionFunderData;
 import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.newPublicContentDateDataBuilder;
 import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder.newPublicContentGroupDataBuilder;
+import static org.innovateuk.ifs.testdata.builders.PreRegistrationSectionsBuilder.newCompetitionPreRegistrationSections;
 import static org.innovateuk.ifs.testdata.data.CompetitionWebTestData.buildCompetitionLines;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -53,6 +54,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
     private CompetitionFunderDataBuilder competitionFunderDataBuilder;
     private CompetitionOrganisationConfigDataBuilder competitionOrganisationConfigDataBuilder;
     private AssessmentPeriodDataBuilder assessmentPeriodDataBuilder;
+    private PreRegistrationSectionsBuilder preRegistrationSectionsBuilder;
 
     private List<CompetitionLine> competitionLines;
     private static List<CsvUtils.CompetitionFunderLine> competitionFunderLines;
@@ -69,6 +71,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         competitionFunderDataBuilder = newCompetitionFunderData(serviceLocator);
         competitionOrganisationConfigDataBuilder = newCompetitionConfigData(serviceLocator);
         assessmentPeriodDataBuilder = newCompetitionAssessmentPeriods(serviceLocator);
+        preRegistrationSectionsBuilder = newCompetitionPreRegistrationSections(serviceLocator);
 
         competitionLines = buildCompetitionLines();
         competitionFunderLines = readCompetitionFunders();
@@ -149,12 +152,14 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         }
     }
 
-    private CompetitionDataBuilder disableSectionForPreRegistration(CompetitionLine line, CompetitionDataBuilder competitionDataBuilder) {
+    public void disableSectionForPreRegistration(CompetitionData competition) {
 
-        Optional<CsvUtils.CompetitionSectionLineDisabledForPreRegistration> sectionLine = simpleFindFirst(competitionSectionLineDisabledForPreRegistration, l ->
-                line.getName().equals(l.competitionName));
+        List<CsvUtils.CompetitionSectionLineDisabledForPreRegistration> sectionLines = simpleFilter(competitionSectionLineDisabledForPreRegistration, l ->
+                competition.getCompetition().getName().equals(l.competitionName));
 
-        return competitionDataBuilder.withSectionUpdateForPreRegistration(sectionLine);
+        sectionLines.forEach(sectionLine ->
+                preRegistrationSectionsBuilder.withPreRegistrationSections(sectionLine).build()
+        );
     }
 
     public void moveCompetitionIntoOpenStatus(CompetitionData competition) {
@@ -188,9 +193,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                 .withThirdPartyConfig(line)
                 .withNewMilestones(line);
 
-        CompetitionDataBuilder competitionForPreRegistration = disableSectionForPreRegistration(line, competitionBeforeMilestones);
-
-        CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(line, competitionForPreRegistration);
+        CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(line, competitionBeforeMilestones);
 
         return competitionWithMilestones.
                 withDefaultPublicContent(line);

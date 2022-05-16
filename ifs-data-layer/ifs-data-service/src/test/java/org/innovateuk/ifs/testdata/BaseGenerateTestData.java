@@ -334,13 +334,17 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         CompletableFuture<Void> competitionAssessmentPeriodsFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(() ->
                 createAssessmentPeriodsForCompetitions(createCompetitionFutures), taskExecutor);
 
+        CompletableFuture<Void> disableSectionForPreRegistrationFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(() ->
+                disableSectionForPreRegistrationForCompetitions(createCompetitionFutures), taskExecutor);
+
         CompletableFuture.allOf(competitionFundersFutures,
                                 publicContentFutures,
                                 assessorFutures,
                                 competitionsFinalisedFuture,
                                 competitionOrganisationConfigFutures,
                                 supporterFutures,
-                                competitionAssessmentPeriodsFutures
+                                competitionAssessmentPeriodsFutures,
+                                disableSectionForPreRegistrationFutures
         ).join();
 
         UserResource user = userService.findByEmail("ifs_system_maintenance_user@innovateuk.org").getSuccess();
@@ -424,6 +428,11 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private void createAssessmentPeriodsForCompetitions(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
         List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
         createCompetitionAssessmentPeriods(competitions);
+    }
+
+    private void disableSectionForPreRegistrationForCompetitions(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
+        List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
+        disableSectionForPreRegistration(competitions);
     }
 
     private List<CompletableFuture<CompetitionData>> createCompetitions(List<CompetitionLine> competitionLines) {
@@ -531,6 +540,10 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private void createCompetitionAssessmentPeriods(List<CompetitionData> competitions) {
         competitions.forEach(competitionDataBuilderService::createCompetitionAssessmentPeriods);
+    }
+
+    private void disableSectionForPreRegistration(List<CompetitionData> competitions) {
+        competitions.forEach(competitionDataBuilderService::disableSectionForPreRegistration);
     }
 
     private void createPublicContentGroups(List<CompetitionData> competitions) {

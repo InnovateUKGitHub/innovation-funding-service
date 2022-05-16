@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.testdata.builders;
 
 import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
@@ -20,7 +19,6 @@ import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionLine;
-import org.innovateuk.ifs.testdata.services.CsvUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -495,53 +493,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             competitionSetupFinanceResource.setIncludeJesForm(line.getIncludeJesForm());
             competitionSetupFinanceService.save(competitionSetupFinanceResource);
         });
-    }
-
-    public CompetitionDataBuilder withSectionUpdateForPreRegistration(Optional<CsvUtils.CompetitionSectionLineDisabledForPreRegistration> sectionLine) {
-
-        return asCompAdmin(data -> {
-            List<SectionResource> competitionSections = sectionService.getByCompetitionId(data.getCompetition().getId()).getSuccess();
-
-            competitionSections.stream()
-                    .forEach(sectionResource -> {
-                        if (sectionLine.isPresent()
-                                && sectionResource.getName().equals(sectionLine.get().getSectionName())) {
-                            CsvUtils.CompetitionSectionLineDisabledForPreRegistration preRegistrationSection = sectionLine.get();
-                            if (preRegistrationSection.getSubSectionName() == null && preRegistrationSection.getQuestionName() == null) {
-                                markSectionForPreRegistration(sectionResource, preRegistrationSection.getSubSectionName(), preRegistrationSection.getQuestionName());
-                            } else if (preRegistrationSection.getQuestionName() == null) {
-                                markSubsectionForPreRegistration(sectionResource, preRegistrationSection.getSubSectionName(), preRegistrationSection.getQuestionName());
-                            } else {
-                                markQuestionForPreRegistration(sectionResource, preRegistrationSection.getQuestionName());
-                            }
-                        }
-                    });
-        });
-    }
-
-    private void markSectionForPreRegistration(SectionResource section, String subSectionName, String questionName) {
-        section.setEnabledForPreRegistration(false);
-        sectionService.save(section);
-
-        markQuestionForPreRegistration(section, questionName);
-
-        markSubsectionForPreRegistration(section, subSectionName, questionName);
-    }
-
-    private void markSubsectionForPreRegistration(SectionResource section, String subSectionName, String questionName) {
-        sectionService.getChildSectionsByParentId(section.getId()).getSuccess().stream()
-                .filter(subSectionResource -> subSectionName == null ? true : subSectionResource.getName().equals(subSectionName))
-                .forEach(sectionResource -> markSectionForPreRegistration(sectionResource, subSectionName, questionName));
-    }
-
-    private void markQuestionForPreRegistration(SectionResource section, String questionName) {
-        section.getQuestions().stream()
-                .map(questionId -> questionService.getQuestionById(questionId).getSuccess())
-                .filter(questionResource -> questionName == null ? true : questionResource.getName().equals(questionName))
-                .forEach(questionResource -> {
-                    questionResource.setEnabledForPreRegistration(false);
-                    questionService.save(questionResource);
-                });
     }
 
     public CompetitionDataBuilder withAssessmentConfig(CompetitionLine line) {
