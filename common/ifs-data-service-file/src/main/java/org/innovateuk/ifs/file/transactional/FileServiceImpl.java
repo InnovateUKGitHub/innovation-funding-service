@@ -114,27 +114,6 @@ public class FileServiceImpl extends RootTransactionalService implements FileSer
     }
 
     /**
-     * @deprecated
-     * Avoid using this and use deleteFileIgnoreNotFound unless you intend to block user from not being able to
-     * remove file entrys with associated files missing.  See IFS-955
-     * @param fileEntryId
-     * @return
-     */
-    @Override
-    @Transactional
-    @Deprecated
-    public ServiceResult<FileEntry> deleteFile(long fileEntryId) {
-
-        return findFileEntry(fileEntryId).
-            andOnSuccess(fileEntry -> findFileForDelete(fileEntry).
-            andOnSuccess(fileAndStorageLocation -> {
-                fileEntryRepository.delete(fileEntry);
-                FileStorageStrategy storageLocation = fileAndStorageLocation.getValue();
-                return storageLocation.deleteFile(fileEntry).andOnSuccessReturn(() -> fileEntry);
-            }));
-    }
-
-    /**
      * This method is preferred over deleteFile method above to avoid blocking removal of files when they are missing.
      * There have been issues on production environment resulting in missing files.  This meant users were not able
      * to reupload after removing files.  See IFS-955.

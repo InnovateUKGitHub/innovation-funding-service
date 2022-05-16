@@ -434,7 +434,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         when(finalFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceSuccess(new File("foundme")));
         when(finalFileStorageStrategy.deleteFile(fileEntryToDelete)).thenReturn(serviceSuccess());
 
-        ServiceResult<FileEntry> result = service.deleteFile(456L);
+        ServiceResult<FileEntry> result = service.deleteFileIgnoreNotFound(456L);
         assertNotNull(result);
         assertTrue(result.isSuccess());
 
@@ -454,7 +454,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         when(finalFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceSuccess(new File("cantdeleteme")));
         when(finalFileStorageStrategy.deleteFile(fileEntryToDelete)).thenReturn(serviceFailure(new Error(FILES_UNABLE_TO_DELETE_FILE)));
 
-        ServiceResult<FileEntry> result = service.deleteFile(456L);
+        ServiceResult<FileEntry> result = service.deleteFileIgnoreNotFound(456L);
         assertNotNull(result);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(new Error(FILES_UNABLE_TO_DELETE_FILE)));
@@ -477,7 +477,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         when(scannedFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
         when(quarantinedFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
 
-        ServiceResult<FileEntry> result = service.deleteFile(456L);
+        ServiceResult<FileEntry> result = service.deleteFileIgnoreNotFound(456L);
         assertNotNull(result);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(FileEntry.class, 456L)));
@@ -502,7 +502,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         when(quarantinedFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceSuccess(new File("foundme")));
         when(quarantinedFileStorageStrategy.deleteFile(fileEntryToDelete)).thenReturn(serviceSuccess());
 
-        ServiceResult<FileEntry> result = service.deleteFile(456L);
+        ServiceResult<FileEntry> result = service.deleteFileIgnoreNotFound(456L);
         assertTrue(result.isSuccess());
 
         verify(fileEntryRepository).findById(456L);
@@ -519,7 +519,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
 
         when(fileEntryRepository.findById(456L)).thenReturn(Optional.empty());
 
-        ServiceResult<FileEntry> result = service.deleteFile(456L);
+        ServiceResult<FileEntry> result = service.deleteFileIgnoreNotFound(456L);
         assertNotNull(result);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(FileEntry.class, 456L)));
