@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.testdata.builders;
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
@@ -504,32 +505,43 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             competitionSections.stream()
                     .forEach(sectionResource -> {
                         if (sectionLine.isPresent()
-                                && sectionResource.getName().equals(sectionLine.get().sectionName)) {
-                            markSectionForPreRegistration(sectionResource, sectionLine.get().subSectionName, sectionLine.get().questionName);
+                                && sectionResource.getName().equals(sectionLine.get().getSectionName())) {
+                            CsvUtils.CompetitionSectionLineDisabledForPreRegistration preRegistrationSection = sectionLine.get();
+                            if (preRegistrationSection.getSubSectionName() == null && preRegistrationSection.getQuestionName() == null) {
+                                markSectionForPreRegistration(sectionResource, preRegistrationSection.getSubSectionName(), preRegistrationSection.getQuestionName());
+                            } else if (preRegistrationSection.getQuestionName() == null) {
+                                markSubsectionForPreRegistration(sectionResource, preRegistrationSection.getSubSectionName(), preRegistrationSection.getQuestionName());
+                            } else {
+                                markQuestionForPreRegistration(sectionResource, preRegistrationSection.getQuestionName());
+                            }
                         }
                     });
         });
     }
 
     private void markSectionForPreRegistration(SectionResource section, String subSectionName, String questionName) {
-        if (subSectionName.isEmpty() && questionName.isEmpty()) {
-            section.setEnabledForPreRegistration(false);
-            sectionService.save(section);
-        }
+        section.setEnabledForPreRegistration(false);
+        sectionService.save(section);
 
-        section.getQuestions().stream()
-                .map(questionId -> questionService.getQuestionById(questionId).getSuccess())
-                .filter(questionResource -> !subSectionName.isEmpty() ? questionResource.getName().equals(questionName) : true)
-                .forEach(questionResource -> markQuestionForPreRegistration(questionResource));
+        markQuestionForPreRegistration(section, questionName);
 
+        markSubsectionForPreRegistration(section, subSectionName, questionName);
+    }
+
+    private void markSubsectionForPreRegistration(SectionResource section, String subSectionName, String questionName) {
         sectionService.getChildSectionsByParentId(section.getId()).getSuccess().stream()
-                .filter(subSectionResource -> !subSectionName.isEmpty() ? subSectionResource.getName().equals(subSectionName) : true)
+                .filter(subSectionResource -> subSectionName == null ? true : subSectionResource.getName().equals(subSectionName))
                 .forEach(sectionResource -> markSectionForPreRegistration(sectionResource, subSectionName, questionName));
     }
 
-    private void markQuestionForPreRegistration(QuestionResource question) {
-        question.setEnabledForPreRegistration(false);
-        questionService.save(question);
+    private void markQuestionForPreRegistration(SectionResource section, String questionName) {
+        section.getQuestions().stream()
+                .map(questionId -> questionService.getQuestionById(questionId).getSuccess())
+                .filter(questionResource -> questionName == null ? true : questionResource.getName().equals(questionName))
+                .forEach(questionResource -> {
+                    questionResource.setEnabledForPreRegistration(false);
+                    questionService.save(questionResource);
+                });
     }
 
     public CompetitionDataBuilder withAssessmentConfig(CompetitionLine line) {

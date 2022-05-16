@@ -795,6 +795,18 @@ public class CsvUtils {
             subSectionName = nullable(line.get(i++));
             questionName = nullable(line.get(i++));
         }
+
+        public String getSectionName() {
+            return sectionName;
+        }
+
+        public String getSubSectionName() {
+            return subSectionName;
+        }
+
+        public String getQuestionName() {
+            return questionName;
+        }
     }
 
     public static List<List<String>> readCsvLines(String csvName) {
