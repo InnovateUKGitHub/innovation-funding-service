@@ -7,7 +7,8 @@ public class RegistrationViewModel {
     private static final String DEFAULT_PAGE_TITLE = "Your details";
     private static final String DEFAULT_SUB_TITLE = "Create an account";
     private static final String DEFAULT_GUIDANCE = "To continue, you need to create an account with the Innovation Funding Service.";
-    private static final String APPLICANT_GUIDANCE = "To continue, you need to create an account with the Innovation Funding Service. This account will be associated with your organisation.";
+    private static final String DEFAULT_EMAIL_HINT = "You will need this to sign into your account.";
+    private static final String DEFAULT_APPLICANT_GUIDANCE = "To continue, you need to create an account with the Innovation Funding Service. This account will be associated with your organisation.";
 
     private String pageTitle;
     private String subTitle;
@@ -23,14 +24,15 @@ public class RegistrationViewModel {
     private final boolean phoneRequired;
     private final boolean termsRequired;
     private final boolean addressRequired;
+    private final String emailHint;
 
-    public RegistrationViewModel(String pageTitle, String subTitle, boolean invitee, String role, String project, String guidance, String phoneGuidance, String postcodeGuidance, String buttonText, String organisation, boolean phoneRequired, boolean termsRequired, boolean addressRequired, boolean showBackLink) {
+    public RegistrationViewModel(String pageTitle, String subTitle, boolean invitee, String role, String project, String guidance, String phoneGuidance, String postcodeGuidance, String buttonText, String organisation, boolean phoneRequired, boolean termsRequired, boolean addressRequired, boolean showBackLink, String emailHint) {
         this.pageTitle = pageTitle == null ? DEFAULT_PAGE_TITLE : pageTitle;
         this.subTitle = subTitle == null ? DEFAULT_SUB_TITLE : subTitle;
         this.invitee = invitee;
         this.role = role;
         this.project = project;
-        this.guidance = guidance == null ? ((getRole() == null && !isInvitee()) ? APPLICANT_GUIDANCE : DEFAULT_GUIDANCE) : guidance;
+        this.guidance = guidance == null ? ((getRole() == null && !isInvitee()) ? DEFAULT_APPLICANT_GUIDANCE : DEFAULT_GUIDANCE) : guidance;
         this.phoneGuidance = phoneGuidance == null ? DEFAULT_PHONE_GUIDANCE : phoneGuidance;
         this.postcodeGuidance = postcodeGuidance == null ? DEFAULT_POSTCODE_GUIDANCE : postcodeGuidance;
         this.buttonText = buttonText == null ? DEFAULT_BUTTON_TEXT : buttonText;
@@ -39,6 +41,7 @@ public class RegistrationViewModel {
         this.termsRequired = termsRequired;
         this.addressRequired = addressRequired;
         this.showBackLink = showBackLink;
+        this.emailHint = emailHint == null ? DEFAULT_EMAIL_HINT : emailHint;
     }
 
     public String getPageTitle() {
@@ -97,6 +100,10 @@ public class RegistrationViewModel {
         return showBackLink;
     }
 
+    public String getEmailHint() {
+        return emailHint;
+    }
+
     public static RegistrationViewModelBuilder anInvitedUserViewModelBuilder() {
         return RegistrationViewModelBuilder.aRegistrationViewModel().withInvitee(true).withPhoneRequired(true).withTermsRequired(true);
     }
@@ -120,6 +127,7 @@ public class RegistrationViewModel {
         private boolean addressRequired;
         private String organisation;
         private boolean showBackLink;
+        private String emailHint;
 
         private RegistrationViewModelBuilder() {
         }
@@ -198,8 +206,13 @@ public class RegistrationViewModel {
             return this;
         }
 
+        public RegistrationViewModelBuilder withEmailHint(String emailHint) {
+            this.emailHint = emailHint;
+            return this;
+        }
+
         public RegistrationViewModel build() {
-            return new RegistrationViewModel(pageTitle, subTitle, invitee, role, project, guidance, phoneGuidance, postcodeGuidance, buttonText, organisation, phoneRequired, termsRequired, addressRequired, showBackLink);
+            return new RegistrationViewModel(pageTitle, subTitle, invitee, role, project, guidance, phoneGuidance, postcodeGuidance, buttonText, organisation, phoneRequired, termsRequired, addressRequired, showBackLink, emailHint);
         }
     }
 }
