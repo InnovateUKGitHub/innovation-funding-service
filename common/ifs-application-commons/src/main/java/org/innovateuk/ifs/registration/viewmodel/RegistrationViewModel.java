@@ -7,7 +7,7 @@ public class RegistrationViewModel {
     private static final String DEFAULT_PAGE_TITLE = "Your details";
     private static final String DEFAULT_SUB_TITLE = "Create an account";
     private static final String DEFAULT_GUIDANCE = "To continue, you need to create an account with the Innovation Funding Service.";
-    private static final String APPLICANT_GUIDANCE = "To continue, you need to create an account with the Innovation Funding Service. This account will be associated with your organisation.";
+    private static final String LEAD_APPLICANT_GUIDANCE = "To continue, you need to create an account with the Innovation Funding Service. This account will be associated with your organisation.";
 
     private String pageTitle;
     private String subTitle;
@@ -30,7 +30,7 @@ public class RegistrationViewModel {
         this.invitee = invitee;
         this.role = role;
         this.project = project;
-        this.guidance = guidance == null ? ((getRole() == null && !isInvitee()) ? APPLICANT_GUIDANCE : DEFAULT_GUIDANCE) : guidance;
+        this.guidance = guidance == null ? ((getRole() == null && !isInvitee()) ? LEAD_APPLICANT_GUIDANCE : DEFAULT_GUIDANCE) : guidance;
         this.phoneGuidance = phoneGuidance == null ? DEFAULT_PHONE_GUIDANCE : phoneGuidance;
         this.postcodeGuidance = postcodeGuidance == null ? DEFAULT_POSTCODE_GUIDANCE : postcodeGuidance;
         this.buttonText = buttonText == null ? DEFAULT_BUTTON_TEXT : buttonText;
