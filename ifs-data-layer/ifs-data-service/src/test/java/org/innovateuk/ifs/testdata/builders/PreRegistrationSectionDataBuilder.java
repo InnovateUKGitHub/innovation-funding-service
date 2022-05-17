@@ -2,7 +2,7 @@ package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.resource.SectionResource;
-import org.innovateuk.ifs.testdata.services.CsvUtils;
+import org.innovateuk.ifs.testdata.builders.data.PreRegistrationSectionLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,11 +13,11 @@ import java.util.function.BiConsumer;
 /**
  * Generates data for Pre Registration Sections and attaches it to a competition
  */
-public class PreRegistrationSectionsBuilder extends BaseDataBuilder<Void, PreRegistrationSectionsBuilder> {
+public class PreRegistrationSectionDataBuilder extends BaseDataBuilder<Void, PreRegistrationSectionDataBuilder> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PreRegistrationSectionsBuilder.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PreRegistrationSectionDataBuilder.class);
 
-    public PreRegistrationSectionsBuilder withPreRegistrationSections(CsvUtils.CompetitionSectionLineDisabledForPreRegistration sectionLine) {
+    public PreRegistrationSectionDataBuilder withPreRegistrationSections(PreRegistrationSectionLine sectionLine) {
         return with(data -> {
             testService.doWithinTransaction(() -> {
                 Competition competition = retrieveCompetitionByName(sectionLine.getCompetitionName());
@@ -64,17 +64,17 @@ public class PreRegistrationSectionsBuilder extends BaseDataBuilder<Void, PreReg
                 });
     }
 
-    public static PreRegistrationSectionsBuilder newCompetitionPreRegistrationSections(ServiceLocator serviceLocator) {
-        return new PreRegistrationSectionsBuilder(Collections.emptyList(), serviceLocator);
+    public static PreRegistrationSectionDataBuilder newCompetitionPreRegistrationSections(ServiceLocator serviceLocator) {
+        return new PreRegistrationSectionDataBuilder(Collections.emptyList(), serviceLocator);
     }
 
-    private PreRegistrationSectionsBuilder(List<BiConsumer<Integer, Void>> multiActions, ServiceLocator serviceLocator) {
+    private PreRegistrationSectionDataBuilder(List<BiConsumer<Integer, Void>> multiActions, ServiceLocator serviceLocator) {
         super(multiActions, serviceLocator);
     }
 
     @Override
-    protected PreRegistrationSectionsBuilder createNewBuilderWithActions(List<BiConsumer<Integer, Void>> actions) {
-        return new PreRegistrationSectionsBuilder(actions, serviceLocator);
+    protected PreRegistrationSectionDataBuilder createNewBuilderWithActions(List<BiConsumer<Integer, Void>> actions) {
+        return new PreRegistrationSectionDataBuilder(actions, serviceLocator);
     }
 
     @Override
