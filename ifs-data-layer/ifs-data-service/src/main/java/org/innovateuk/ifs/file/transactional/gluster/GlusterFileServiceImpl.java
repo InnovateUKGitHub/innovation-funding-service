@@ -2,6 +2,7 @@ package org.innovateuk.ifs.file.transactional.gluster;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
@@ -43,10 +44,7 @@ public class GlusterFileServiceImpl extends RootTransactionalService {
     @Autowired
     private FileEntryRepository fileEntryRepository;
 
-    public ServiceResult<FileEntry> findFileEntry(Long fileEntryId) {
-        return find(fileEntryRepository.findById(fileEntryId), notFoundError(FileEntry.class, fileEntryId));
-    }
-
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     public ServiceResult<Pair<File, FileStorageStrategy>> findFileForGet(FileEntry fileEntry) {
         return findFileInSafeLocation(fileEntry);
     }
@@ -63,14 +61,11 @@ public class GlusterFileServiceImpl extends RootTransactionalService {
         return findFileInStorageLocation(fileEntry, scannedFileStorageStrategy).andOnSuccessReturn(file -> Pair.of(file, scannedFileStorageStrategy));
     }
 
-    private ServiceResult<Pair<File, FileStorageStrategy>> findFileInHoldingStorageLocation(FileEntry fileEntry) {
-        return findFileInStorageLocation(fileEntry, temporaryHoldingFileStorageStrategy).andOnSuccessReturn(file -> Pair.of(file, temporaryHoldingFileStorageStrategy));
-    }
-
     private ServiceResult<File> findFileInStorageLocation(FileEntry fileEntry, FileStorageStrategy fileStorageStrategy) {
         return fileStorageStrategy.getFile(fileEntry);
     }
 
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     public ServiceResult<Supplier<InputStream>> getInputStreamSupplier(File file) {
         return serviceSuccess(() -> {
             try {

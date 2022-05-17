@@ -2,7 +2,6 @@ package org.innovateuk.ifs.file.transactional;
 
 import com.google.common.io.ByteStreams;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.api.filestorage.util.FileUploadRequestBuilder;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownload;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
@@ -10,17 +9,13 @@ import org.innovateuk.ifs.api.filestorage.v1.upload.FileUpload;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadResponse;
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.service.ExceptionErrorAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileService;
-import org.innovateuk.ifs.file.transactional.gluster.FileStorageStrategy;
 import org.innovateuk.ifs.file.transactional.gluster.GlusterFileServiceImpl;
-import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +23,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -80,16 +77,6 @@ public class FileServiceImpl implements FileService {
         } catch (ResponseStatusException responseStatusException) {
             // TODO some sort of adaptor to map from this to CommonFailureKeys
             return serviceFailure(responseStatusException);
-        }
-    }
-
-    class FSIResponseErrorMapper implements ExceptionErrorAdaptor {
-
-        FSIResponseErrorMapper INSTANCE = new FSIResponseErrorMapper();
-
-        @Override
-        public <T> T toError(ResponseStatusException responseStatusException) {
-            return null;
         }
     }
 
