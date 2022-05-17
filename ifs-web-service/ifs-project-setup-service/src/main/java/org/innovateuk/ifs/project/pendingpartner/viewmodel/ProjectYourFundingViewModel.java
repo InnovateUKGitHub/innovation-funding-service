@@ -1,13 +1,11 @@
 package org.innovateuk.ifs.project.pendingpartner.viewmodel;
 
-import lombok.Getter;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
 import java.util.Optional;
 
-@Getter
 public class ProjectYourFundingViewModel {
 
     private final String projectName;
@@ -57,12 +55,48 @@ public class ProjectYourFundingViewModel {
         this.hash = hash;
     }
 
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public long getProjectId() {
+        return projectId;
+    }
+
+    public long getOrganisationId() {
+        return organisationId;
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
+    public int getMaximumFundingLevel() {
+        return maximumFundingLevel;
+    }
+
     public boolean isFundingSectionLocked() {
         return subsidyBasisRequiredAndNotCompleted || organisationRequiredAndNotCompleted;
     }
 
+    public long getCompetitionId() {
+        return competitionId;
+    }
+
+    public boolean isOverridingFundingRules() {
+        return overridingFundingRules;
+    }
+
+    public FundingType getFundingType() {
+        return fundingType;
+    }
+
     public boolean isKtpFundingType() {
         return FundingType.KTP == fundingType;
+    }
+
+    public OrganisationTypeEnum getOrganisationType() {
+        return organisationType;
     }
 
     public boolean isBusiness() {
@@ -78,7 +112,27 @@ public class ProjectYourFundingViewModel {
         return isKtpFundingType() && organisationType != OrganisationTypeEnum.KNOWLEDGE_BASE;
     }
 
+    public boolean isLeadOrganisation() {
+        return leadOrganisation;
+    }
+
+    public boolean isOrganisationRequiredAndNotCompleted() {
+        return organisationRequiredAndNotCompleted;
+    }
+
+    public boolean isSubsidyBasisRequiredAndNotCompleted() {
+        return subsidyBasisRequiredAndNotCompleted;
+    }
+
+    public Long getSubsidyBasisQuestionId() {
+        return subsidyBasisQuestionId.orElse(null);
+    }
+
     public boolean isThirdPartyOfgem() {
         return isThirdPartyOfgem;
+    }
+
+    public String getHash() {
+        return hash;
     }
 }
