@@ -32,6 +32,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     private final boolean thirdPartyProcurement;
     private final CompetitionThirdPartyConfigResource thirdPartyConfig;
     private final boolean hasAssessmentStage;
+    private final boolean isDirectAward;
 
     public SetupStatusViewModel(ProjectResource project,
                                 boolean monitoringOfficer,
@@ -44,7 +45,8 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
                                 String liveProjectsLandingPageUrl,
                                 boolean thirdPartyProcurement,
                                 CompetitionThirdPartyConfigResource thirdPartyConfig,
-                                boolean hasAssessmentStage) {
+                                boolean hasAssessmentStage,
+                                boolean isDirectAward) {
         this.projectId = project.getId();
         this.projectName = project.getName();
         this.monitoringOfficer = monitoringOfficer;
@@ -63,6 +65,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         this.thirdPartyProcurement = thirdPartyProcurement;
         this.thirdPartyConfig = thirdPartyConfig;
         this.hasAssessmentStage = hasAssessmentStage;
+        this.isDirectAward = isDirectAward;
     }
 
     public Long getProjectId() {
@@ -159,5 +162,9 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
 
     public boolean isHasAssessmentStage() {
         return hasAssessmentStage;
+    }
+
+    public boolean isDirectAward() {
+        return isDirectAward;
     }
 }

@@ -262,6 +262,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
                     perNotificationTargetArguments.put("competitionName", application.getCompetition().getName());
                     perNotificationTargetArguments.put("competitionId", application.getCompetition().getId());
                     perNotificationTargetArguments.put("alwaysOpen", application.getCompetition().isAlwaysOpen());
+                    perNotificationTargetArguments.put("directAward", application.getCompetition().isDirectAward());
                     perNotificationTargetArguments.put("webBaseUrl", webBaseUrl);
                     if (includeAssesssorScore) {
                         Optional<AverageAssessorScore> averageAssessorScore = averageAssessorScoreRepository.findByApplicationId(applicationId);

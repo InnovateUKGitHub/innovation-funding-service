@@ -36,6 +36,7 @@ public class ApplicationSummaryViewModel implements BaseAnalyticsViewModel {
     private final boolean ktpCompetition;
     private final InterviewFeedbackViewModel interviewFeedbackViewModel;
     private final BigDecimal totalProjectCosts;
+    private final boolean isDirectAward;
 
     public ApplicationSummaryViewModel(ApplicationReadOnlyViewModel applicationReadOnlyViewModel, ApplicationResource application, CompetitionResource competition, OrganisationResource leadOrganisation, List<OrganisationResource> collaboratorOrganisations, boolean projectWithdrawn, InterviewFeedbackViewModel interviewFeedbackViewModel) {
         this.applicationReadOnlyViewModel = applicationReadOnlyViewModel;
@@ -66,6 +67,7 @@ public class ApplicationSummaryViewModel implements BaseAnalyticsViewModel {
         this.interviewFeedbackViewModel = interviewFeedbackViewModel;
 
         this.totalProjectCosts = projectCosts(applicationReadOnlyViewModel);
+        this.isDirectAward = competition.isDirectAward();
     }
 
     private BigDecimal projectCosts(ApplicationReadOnlyViewModel applicationReadOnlyViewModel) {
@@ -170,5 +172,9 @@ public class ApplicationSummaryViewModel implements BaseAnalyticsViewModel {
 
     public boolean isKtpCompetition() {
         return ktpCompetition;
+    }
+
+    public boolean isDirectAward() {
+        return isDirectAward;
     }
 }

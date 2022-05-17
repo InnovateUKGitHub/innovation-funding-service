@@ -1,1 +1,1 @@
-Important message about your application '${applicationName}' for the competition '${competitionName}'
+Important message about your application '${applicationName}' for the <#if directAward>award<#else>competition</#if> '${competitionName}'

@@ -24,7 +24,7 @@
 
         <th:block th:unless="${model.displayIfsAssessmentInformation}">
             <h3 class="govuk-heading-m">Assessment process</h3>
-            <p class="govuk-body">Once the competition submission deadline is reached your application will be sent for assessment. This is subject to eligibility. The assessment process follows these steps:</p>
+            <p class="govuk-body">Once the <span th:text="${model.currentCompetition.isDirectAward()} ? award : competition" /> submission deadline is reached your application will be sent for assessment. This is subject to eligibility. The assessment process follows these steps:</p>
             <ul class="govuk-list govuk-list--bullet">
                 <th:block th:unless="${model.currentCompetition.ktp}">
                     <li>eligible applications will be assessed independently by expert assessors</li>
@@ -75,7 +75,7 @@
                     <h3 class="govuk-heading-m">If your application is unsuccessful</h3>
                     <th:block th:unless="${model.currentCompetition.ktp}">
                         <p class="govuk-body">If you are unsuccessful with your application, you will be able to view the feedback from the assessors.</p>
-                        <p class="govuk-body">Sometimes your application will have scored well and will receive positive comments from the assessors. The average score however, will not be above the funding threshold for the competition.</p>
+                        <p class="govuk-body">Sometimes your application will have scored well and will receive positive comments from the assessors. The average score however, will not be above the funding threshold for the <span th:text="${model.currentCompetition.isDirectAward()} ? award : competition" />.</p>
                     </th:block>
                     <th:block th:if="${model.currentCompetition.ktp}">
                         <p class="govuk-body">Please note that some unsuccessful proposals may appear to have been favourably assessed, based on the assessors’ comments.</p>
@@ -97,7 +97,7 @@
         </th:block>
         <th:block th:if="${model.displayIfsAssessmentInformation}">
             <h3 class="govuk-heading-m">Assessment process</h3>
-            <p class="govuk-body">Once the competition submission deadline is reached your application will be sent for assessment. This is subject to eligibility. The assessment process follows these steps:</p>
+            <p class="govuk-body">Once the <span th:text="${model.currentCompetition.isDirectAward()} ? award : competition" /> submission deadline is reached your application will be sent for assessment. This is subject to eligibility. The assessment process follows these steps:</p>
             <ul class="govuk-list govuk-list--bullet">
                 <li>eligible applications will be assessed independently by selected assessors</li>
                 <li>each application is assessed against the same set of criteria</li>
