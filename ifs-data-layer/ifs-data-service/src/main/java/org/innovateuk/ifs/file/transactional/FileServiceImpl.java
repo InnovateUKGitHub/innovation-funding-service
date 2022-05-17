@@ -11,7 +11,6 @@ import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadResponse;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
-import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileService;
 import org.innovateuk.ifs.file.transactional.gluster.GlusterFileServiceImpl;
@@ -20,14 +19,12 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.NoSuchElementException;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -43,9 +40,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 public class FileServiceImpl implements FileService {
 
     @Autowired
-    private FileEntryRepository fileEntryRepository;
-
-    @Autowired
     private FileDownload fileDownloadFeign;
 
     @Autowired
@@ -54,101 +48,72 @@ public class FileServiceImpl implements FileService {
     @Autowired
     private GlusterFileServiceImpl glusterFileService;
 
+    @Autowired
+    private FileServiceTransactionHelper fileServiceTransactionHelper;
+
     @Override
-    @Transactional
     public ServiceResult<FileEntry> createFile(FileEntryResource resource, Supplier<InputStream> inputStreamSupplier) {
-        UUID uuid = UUID.randomUUID();
-        FileEntry fileEntry = new FileEntry();
-        fileEntry.setFileUuid(uuid.toString());
-        fileEntryRepository.save(fileEntry);
+        return createOrUpdate(fileServiceTransactionHelper.persistInitial(), resource, inputStreamSupplier);
+    }
 
-        FileUploadRequest fileUploadRequest = null;
+    @Override
+    public ServiceResult<FileEntry> updateFile(FileEntryResource fileToUpdate, Supplier<InputStream> inputStreamSupplier) {
         try {
-            fileUploadRequest = FileUploadRequestBuilder.fromResource(new InputStreamResource(inputStreamSupplier.get()),
-                    MediaType.valueOf(resource.getMediaType()), "IFS").fileName(resource.getName()).build();
-        } catch (IOException e) {
-            return ServiceResult.serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));
+            return createOrUpdate(fileServiceTransactionHelper.updateExisting(fileToUpdate.getId()), fileToUpdate, inputStreamSupplier);
+        } catch (NoSuchElementException e) {
+            return serviceFailure(new Error(FILES_UNABLE_TO_FIND_FILE_ENTRY_ID_FROM_FILE));
         }
+    }
 
+    private ServiceResult<FileEntry> createOrUpdate(FileEntry fileEntry, FileEntryResource resource, Supplier<InputStream> inputStreamSupplier) {
         try {
+            FileUploadRequest fileUploadRequest = FileUploadRequestBuilder.fromResource(
+                    new InputStreamResource(inputStreamSupplier.get()),
+                    MediaType.valueOf(resource.getMediaType()), "IFS").fileName(resource.getName()
+            ).build();
             ResponseEntity<FileUploadResponse> fileUploadResponse = fileUploadFeign.fileUpload(fileUploadRequest);
-            fileEntry.setMd5Checksum(fileUploadResponse.getBody().getMd5Checksum());
-            return serviceSuccess(fileEntry);
+            return serviceSuccess(
+                fileServiceTransactionHelper.updateMd5(fileEntry.getId(), fileUploadResponse.getBody().getMd5Checksum())
+            );
+        } catch (IOException | NoSuchElementException e) {
+            return ServiceResult.serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));
         } catch (ResponseStatusException responseStatusException) {
-            // TODO some sort of adaptor to map from this to CommonFailureKeys
+            // TODO some sort of adaptor to map from this to CommonFailureKeys??
             return serviceFailure(responseStatusException);
         }
     }
 
     @Override
     public ServiceResult<Supplier<InputStream>> getFileByFileEntryId(Long fileEntryId) {
-        Optional<FileEntry> fileEntry = fileEntryRepository.findById(fileEntryId);
-        if (!fileEntry.isPresent()) {
+        try {
+            FileEntry fileEntry = fileServiceTransactionHelper.find(fileEntryId);
+            if (fileEntry.getFileUuid() == null || fileEntry.getFileUuid().isEmpty()) {
+                // no uuid means it must be a gluster file
+                return glusterPath(fileEntry);
+            }
+            ResponseEntity<FileDownloadResponse> fileDownloadResponse = fileDownloadFeign.fileDownloadResponse(fileEntry.getFileUuid());
+            return serviceSuccess(() -> new ByteArrayInputStream(fileDownloadResponse.getBody().getPayload()));
+        } catch (NoSuchElementException ex) {
             return serviceFailure(new Error(FILES_UNABLE_TO_FIND_FILE_ENTRY_ID_FROM_FILE));
+        } catch (ResponseStatusException responseStatusException) {
+            // TODO some sort of adaptor to map from this to CommonFailureKeys??
+            return serviceFailure(responseStatusException);
         }
-        if (fileEntry.get().getFileUuid() != null) {
-            // get file from file upload service
-            return obtainFromStorageService(fileEntry.get().getFileUuid());
-        }
-        // old path via gluster - see gluster package
-        return glusterFileService.findFileForGet(fileEntry.get()).
+    }
+
+    // old path via gluster - see gluster package - delete after migration
+    private ServiceResult<Supplier<InputStream>> glusterPath(FileEntry fileEntry) {
+        return glusterFileService.findFileForGet(fileEntry).
                 andOnSuccess(fileAndStorageLocation -> glusterFileService.getInputStreamSupplier(fileAndStorageLocation.getKey()));
     }
 
-    private ServiceResult<Supplier<InputStream>> obtainFromStorageService(String fileUuid) {
-        ResponseEntity<FileDownloadResponse> fileDownloadResponse = fileDownloadFeign.fileDownloadResponse(fileUuid);
-        if (fileDownloadResponse.getStatusCode().is2xxSuccessful()) {
-            return serviceSuccess(() -> new ByteArrayInputStream(fileDownloadResponse.getBody().getPayload()));
-        }
-        return serviceFailure(new Error("File Storage Service Error", fileDownloadResponse.getStatusCode()));
-    }
-
     @Override
-    @Transactional
-    public ServiceResult<FileEntry> updateFile(FileEntryResource fileToUpdate, Supplier<InputStream> inputStreamSupplier) {
-        UUID uuid = UUID.randomUUID();
-
-        ServiceResult serviceResult = validateContentLength(fileToUpdate.getFilesizeBytes(), inputStreamSupplier);
-        if (serviceResult.isFailure()) {
-            return serviceResult;
-        }
-        FileEntry fileEntry = fileEntryRepository.findById(fileToUpdate.getId()).get();
-        fileEntry.setFileUuid(uuid.toString());
-        fileEntryRepository.save(fileEntry);
-
-        FileUploadRequest fileUploadRequest = null;
-        try {
-            fileUploadRequest = FileUploadRequestBuilder.fromResource(new InputStreamResource(inputStreamSupplier.get()), MediaType.valueOf(fileToUpdate.getMediaType()), "IFS").fileName(fileToUpdate.getName()).build();
-        } catch (IOException e) {
-            return ServiceResult.serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));
-        }
-
-        ResponseEntity<FileUploadResponse> fileUploadResponse = fileUploadFeign.fileUpload(fileUploadRequest);
-        if (fileUploadResponse.getStatusCode().is2xxSuccessful()) {
-            fileEntry.setMd5Checksum(fileUploadResponse.getBody().getMd5Checksum());
-            return serviceSuccess(fileEntry);
-        }
-        return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));
-    }
-
-    /**
-     * This method is preferred over deleteFile method above to avoid blocking removal of files when they are missing.
-     * There have been issues on production environment resulting in missing files.  This meant users were not able
-     * to reupload after removing files.  See IFS-955.
-     * Such records where files are actually missing will be logged as an error but file entry record will be removed
-     * and no exception thrown.  So re-upload is allowed.
-     * @param fileEntryId
-     * @return
-     */
-    @Override
-    @Transactional
     public ServiceResult<FileEntry> deleteFileIgnoreNotFound(long fileEntryId) {
-        Optional<FileEntry> fileEntry = fileEntryRepository.findById(fileEntryId);
-        fileEntryRepository.delete(fileEntry.get());
+        fileServiceTransactionHelper.delete(fileEntryId);
         // TODO Async call to storage service to delete file - not that fussed though we can leave it in there
-        return serviceSuccess(fileEntry.get());
+        // Why would you return the entity after delete? return new to fit interface
+        return serviceSuccess(new FileEntry());
     }
-
 
     // TODO move me to FSS
     private ServiceResult<InputStream> validateContentLength(long filesizeBytes, Supplier<InputStream> inputStream) {

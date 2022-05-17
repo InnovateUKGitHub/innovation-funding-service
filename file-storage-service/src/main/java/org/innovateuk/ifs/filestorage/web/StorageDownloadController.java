@@ -7,10 +7,10 @@ import org.innovateuk.ifs.filestorage.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.*;
-
-import java.io.IOException;
-import java.util.Optional;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 
 @Slf4j
 public class StorageDownloadController implements FileDownload {
