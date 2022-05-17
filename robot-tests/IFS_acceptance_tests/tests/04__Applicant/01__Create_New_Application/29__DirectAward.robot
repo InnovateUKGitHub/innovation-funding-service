@@ -5,6 +5,8 @@ Documentation     IFS-11682  Direct Award: New competition type
 ...
 ...               IFS-11735 Direct Awards: Public Content scale back
 ...
+...               IFS-11994 Web test data update - Direct award
+...
 
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -21,7 +23,8 @@ ${CompName}                 Open ended Direct Award competition
 ${openEndedCompName}        Direct award competition
 ${webTestCompID}            ${competition_ids["${openEndedCompName}"]}
 ${applicationName}          Direct award Application
-
+${DirectAwardComp}          3-Dimensional Shaped Aluminium Foam Sandwiches
+${DirectAwardCompId}        ${competition_ids["${DirectAwardComp}"]}
 
 *** Test Cases ***
 the user creates a new open ended competiton
@@ -58,6 +61,16 @@ the user fills the Application details and check the title of competition name a
     When the user completes the application details           ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  25
     And the user clicks the button/link                       link = Application details
     Then the user should see the element                      jQuery = dt:contains("Award name")
+
+the user can see award in scope section in application overview
+    [Documentation]  IFS-11994
+    When the user clicks the button/link    link = Scope
+    Then the user should see the element    jQuery = h3:contains("How does your project align with the scope of this award?")
+
+the lead user can see award in project setup
+    [Documentation]  IFS-11994
+    When the user navigates to the page      ${server}/project-setup/project/${DirectAwardCompId}
+    Then the user should see the element     jQuery = dt:contains("Award:")
 
 *** Keywords ***
 Custom suite setup
