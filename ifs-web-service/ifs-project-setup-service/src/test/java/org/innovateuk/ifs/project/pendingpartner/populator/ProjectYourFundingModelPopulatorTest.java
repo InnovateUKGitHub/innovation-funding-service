@@ -136,6 +136,6 @@ public class ProjectYourFundingModelPopulatorTest extends BaseUnitTest {
         assertTrue(actual.isLeadOrganisation());
         assertFalse(actual.isOrganisationRequiredAndNotCompleted());
         assertFalse(actual.isSubsidyBasisRequiredAndNotCompleted());
-        assertEquals(Optional.of(question.getId()), actual.getSubsidyBasisQuestionId());
+        assertEquals(question.getId(), actual.getSubsidyBasisQuestionId());
     }
 }
