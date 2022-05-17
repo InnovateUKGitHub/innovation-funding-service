@@ -24,7 +24,7 @@ Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/PS_Common.robot
 
 *** Test Cases ***
-Your details: Password Server-side validations
+Your details: Server-side weak password validation
     [Documentation]    INFUND-885
     [Tags]
     Given Applicant goes to the registration form
