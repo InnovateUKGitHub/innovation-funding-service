@@ -92,7 +92,7 @@ public class FileServiceImpl extends RootTransactionalService implements FileSer
 
         ResponseEntity<FileUploadResponse> fileUploadResponse = fileUploadFeign.fileUpload(fileUploadRequest);
         if (fileUploadResponse.getStatusCode().is2xxSuccessful()) {
-            fileEntry.setMd5(fileUploadResponse.getBody().getMd5Checksum());
+            fileEntry.setMd5Checksum(fileUploadResponse.getBody().getMd5Checksum());
             return serviceSuccess(fileEntry);
         }
         return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));
@@ -141,7 +141,7 @@ public class FileServiceImpl extends RootTransactionalService implements FileSer
 
         ResponseEntity<FileUploadResponse> fileUploadResponse = fileUploadFeign.fileUpload(fileUploadRequest);
         if (fileUploadResponse.getStatusCode().is2xxSuccessful()) {
-            fileEntry.setMd5(fileUploadResponse.getBody().getMd5Checksum());
+            fileEntry.setMd5Checksum(fileUploadResponse.getBody().getMd5Checksum());
             return serviceSuccess(fileEntry);
         }
         return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));

@@ -2,10 +2,7 @@ package org.innovateuk.ifs.file.domain;
 
 import org.springframework.http.MediaType;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Represents a File on the filesystem that can be referenced in the application.
@@ -25,7 +22,9 @@ public class FileEntry {
 
     private String fileUuid;
 
-    private String md5;
+    /** base64 encoded to suit s3 */
+    @Column(name = "md5_checksum")
+    private String md5Checksum;
 
     public FileEntry() {
     	// no-arg constructor
@@ -78,12 +77,12 @@ public class FileEntry {
 
     public void setFileUuid(String fileUuid) { this.fileUuid = fileUuid; }
 
-    public String getMd5() {
-        return md5;
+    public String getMd5Checksum() {
+        return md5Checksum;
     }
 
-    public void setMd5(String md5) {
-        this.md5 = md5;
+    public void setMd5Checksum(String md5Checksum) {
+        this.md5Checksum = md5Checksum;
     }
 
     @Override
@@ -98,7 +97,7 @@ public class FileEntry {
         if (name != null ? !name.equals(fileEntry.name) : fileEntry.name != null) return false;
         if (mediaType != null ? !mediaType.equals(fileEntry.mediaType) : fileEntry.mediaType != null) return false;
         if (fileUuid != null ? !fileUuid.equals(fileEntry.fileUuid) : fileEntry.fileUuid != null) return false;
-        return md5 != null ? md5.equals(fileEntry.md5) : fileEntry.md5 == null;
+        return md5Checksum != null ? md5Checksum.equals(fileEntry.md5Checksum) : fileEntry.md5Checksum == null;
     }
 
     @Override
@@ -108,7 +107,7 @@ public class FileEntry {
         result = 31 * result + (mediaType != null ? mediaType.hashCode() : 0);
         result = 31 * result + (int) (filesizeBytes ^ (filesizeBytes >>> 32));
         result = 31 * result + (fileUuid != null ? fileUuid.hashCode() : 0);
-        result = 31 * result + (md5 != null ? md5.hashCode() : 0);
+        result = 31 * result + (md5Checksum != null ? md5Checksum.hashCode() : 0);
         return result;
     }
 }
