@@ -5,11 +5,11 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
+import org.innovateuk.ifs.file.resource.BasicFileAndContents;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.BasicFileAndContents;
-import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.file.resource.FileAndContents;
+import org.innovateuk.ifs.file.service.FileService;
 import org.innovateuk.ifs.file.transactional.ApplicationFinanceFileEntryService;
-import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
@@ -92,9 +92,7 @@ public class FinanceFileEntryServiceImpl extends BaseTransactionalService implem
         });
     }
 
-    private FileEntryResource linkFileEntryToApplicationFinance(ApplicationFinance applicationFinance, Pair<File, FileEntry> fileResults) {
-        FileEntry fileEntry = fileResults.getValue();
-
+    private FileEntryResource linkFileEntryToApplicationFinance(ApplicationFinance applicationFinance, FileEntry fileEntry) {
         ApplicationFinanceResource applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
 
         if (applicationFinanceResource != null) {
@@ -115,8 +113,7 @@ public class FinanceFileEntryServiceImpl extends BaseTransactionalService implem
         );
     }
 
-    private FileEntryResource linkFECFileEntryToApplicationFinance(ApplicationFinance applicationFinance, Pair<File, FileEntry> fileResults) {
-        FileEntry fileEntry = fileResults.getValue();
+    private FileEntryResource linkFECFileEntryToApplicationFinance(ApplicationFinance applicationFinance, FileEntry fileEntry) {
         ApplicationFinanceResource applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
         if (applicationFinanceResource != null) {
              applicationFinanceResource.setFecFileEntry(fileEntry.getId());

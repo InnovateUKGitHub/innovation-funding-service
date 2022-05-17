@@ -3,7 +3,7 @@ package org.innovateuk.ifs.form.documentation;
 import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.file.resource.FileAndContents;
 import org.innovateuk.ifs.form.controller.FormInputController;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.transactional.FormInputService;

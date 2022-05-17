@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.innovateuk.ifs.api.filestorage.v1.upload.MimeCheckResult;
 import org.innovateuk.ifs.api.filestorage.v1.upload.VirusScanStatus;
 
 import javax.persistence.Column;
@@ -53,5 +54,8 @@ public class FileStorageRecord {
 
     @Column
     private String storageLocation;
+
+    @Column
+    private MimeCheckResult mimeCheckResult;
 
 }

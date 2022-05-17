@@ -24,12 +24,10 @@ afterEvaluate {
 }
 
 dependencies {
-    implementation project(":common:ifs-data-service-file")
     implementation project(":common:ifs-data-service-commons")
     implementation project(":common:ifs-data-service-notifications")
     implementation project(":common:ifs-sil-resources")
     implementation project(":common:ifs-error-util")
-    implementation project(":common:ifs-data-service-file")
     implementation project(":common:ifs-resources")
     implementation project(":common:ifs-commons")
     implementation project(":common:ifs-security")

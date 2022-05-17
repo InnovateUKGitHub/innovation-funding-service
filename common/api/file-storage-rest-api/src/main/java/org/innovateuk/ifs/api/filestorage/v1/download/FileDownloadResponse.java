@@ -34,4 +34,5 @@ public final class FileDownloadResponse implements Serializable {
 
     /** The file payload */
     private final byte[] payload;
+
 }

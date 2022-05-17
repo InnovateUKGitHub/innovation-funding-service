@@ -3,7 +3,7 @@ package org.innovateuk.ifs.interview.documentation;
 import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.file.resource.FileAndContents;
 import org.innovateuk.ifs.interview.controller.InterviewAssignmentController;
 import org.innovateuk.ifs.interview.resource.InterviewApplicationSentInviteResource;
 import org.innovateuk.ifs.interview.transactional.InterviewApplicationFeedbackService;

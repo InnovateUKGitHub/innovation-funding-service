@@ -17,6 +17,6 @@ public interface FileDownload {
     ResponseEntity<Resource> fileStreamByUuid(@PathVariable("uuid") final String uuid);
 
     @GetMapping(ApiVersion.VERSION_ONE + "/fileDownloadResponse/{uuid}")
-    ResponseEntity<Optional<FileDownloadResponse>> fileDownloadResponse(@PathVariable("uuid") final String uuid) throws IOException;
+    ResponseEntity<Optional<FileDownloadResponse>> fileDownloadResponse(@PathVariable("uuid") final String uuid);
 
 }

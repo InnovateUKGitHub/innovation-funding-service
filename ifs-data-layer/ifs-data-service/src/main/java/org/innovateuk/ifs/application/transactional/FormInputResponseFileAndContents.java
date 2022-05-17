@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.file.resource.FileAndContents;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;

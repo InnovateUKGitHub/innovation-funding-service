@@ -10,13 +10,13 @@ import java.io.Serializable;
 @Builder
 public final class FileUploadRequest implements Serializable {
 
-    /** uuid reference for the file */
+
     @NotNull
+    /** uuid reference for the file */
     private final String fileId;
 
     /** Originating system or subsystem for the storage request */
     private final String systemId;
-
 
     /** The user requesting storage */
     private final String userId;

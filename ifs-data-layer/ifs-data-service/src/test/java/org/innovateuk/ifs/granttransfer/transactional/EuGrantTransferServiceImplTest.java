@@ -6,12 +6,12 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
+import org.innovateuk.ifs.file.controller.FileHeaderAttributes;
+import org.innovateuk.ifs.file.controller.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
-import org.innovateuk.ifs.file.transactional.FileEntryService;
-import org.innovateuk.ifs.file.transactional.FileHeaderAttributes;
+import org.innovateuk.ifs.file.resource.FileAndContents;
+import org.innovateuk.ifs.file.service.FileEntryService;
 import org.innovateuk.ifs.granttransfer.domain.EuGrantTransfer;
 import org.innovateuk.ifs.granttransfer.mapper.EuGrantTransferMapper;
 import org.innovateuk.ifs.granttransfer.repository.EuGrantTransferRepository;
@@ -139,7 +139,6 @@ public class EuGrantTransferServiceImplTest extends BaseServiceUnitTest<EuGrantT
         EuGrantTransfer grantTransfer = newEuGrantTransfer()
                 .build();
         FileEntry created = newFileEntry().build();
-        Pair<File, FileEntry> result = ImmutablePair.of(mock(File.class), created);
         when(euGrantTransferRepository.findByApplicationId(applicationId)).thenReturn(grantTransfer);
         when(fileControllerUtils.handleFileUpload(eq(contentType), eq(contentLength), eq(originalFilename), eq(fileValidator), eq(validMediaTypes), eq(maxFileSize), eq(request), any()))
                 .thenReturn(restSuccess(Void.class));
@@ -155,7 +154,7 @@ public class EuGrantTransferServiceImplTest extends BaseServiceUnitTest<EuGrantT
         ArgumentCaptor<BiFunction<FileHeaderAttributes, Supplier<InputStream>, ServiceResult<Void>>> argument = ArgumentCaptor.forClass(BiFunction.class);
         verify(fileControllerUtils).handleFileUpload(eq(contentType), eq(contentLength), eq(originalFilename), eq(fileValidator), eq(validMediaTypes), eq(maxFileSize), eq(request), argument.capture());
 
-        when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).thenReturn(serviceSuccess(result));
+        when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).thenReturn(serviceSuccess(created));
         argument.getValue().apply(attributes, inputStreamSupplier);
 
         assertEquals(created, grantTransfer.getGrantAgreement());

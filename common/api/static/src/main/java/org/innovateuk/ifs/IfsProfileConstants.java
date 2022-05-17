@@ -54,7 +54,6 @@ public class IfsProfileConstants {
 
     public static final String LOCAL_STORAGE = "LOCAL_STORAGE";
     public static final String NOT_LOCAL_STORAGE = "!" + LOCAL_STORAGE;
-    public static final String GLUSTER_STORAGE = "GLUSTER_STORAGE";
     public static final String S3_STORAGE = "S3_STORAGE";
 
 }

@@ -54,7 +54,6 @@ dependencies {
         api project(":common:ifs-commons-test")
         api project(":common:ifs-data-service-commons")
         api project(":common:ifs-data-service-commons-test")
-        api project(":common:ifs-data-service-file")
         api project(":common:ifs-error-util")
         api project(":common:ifs-resources")
         api project(":common:ifs-survey-resources")

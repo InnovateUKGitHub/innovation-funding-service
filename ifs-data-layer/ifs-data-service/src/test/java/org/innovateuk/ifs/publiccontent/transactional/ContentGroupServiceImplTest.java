@@ -8,7 +8,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResour
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.file.resource.FileAndContents;
 import org.innovateuk.ifs.publiccontent.domain.ContentGroup;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.innovateuk.ifs.publiccontent.repository.ContentGroupRepository;
@@ -50,7 +50,7 @@ public class ContentGroupServiceImplTest extends BaseServiceUnitTest<ContentGrou
         FileEntry fileEntry = mock(FileEntry.class);
         ContentGroup group = mock(ContentGroup.class);
 
-        when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).thenReturn(serviceSuccess(new ImmutablePair<>(null, fileEntry)));
+        when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).thenReturn(serviceSuccess(fileEntry));
         when(contentGroupRepository.findById(contentGroupId)).thenReturn(Optional.of(group));
 
         service.uploadFile(contentGroupId, fileEntryResource, inputStreamSupplier);

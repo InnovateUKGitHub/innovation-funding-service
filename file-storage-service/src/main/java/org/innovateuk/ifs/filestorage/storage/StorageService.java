@@ -5,9 +5,11 @@ import org.innovateuk.ifs.api.filestorage.util.FileUploadRequestBuilder;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadResponse;
+import org.innovateuk.ifs.api.filestorage.v1.upload.MimeCheckResult;
 import org.innovateuk.ifs.filestorage.repository.FileStorageRecord;
 import org.innovateuk.ifs.filestorage.repository.FileStorageRecordMapper;
 import org.innovateuk.ifs.filestorage.repository.FileStorageRecordRepository;
+import org.innovateuk.ifs.filestorage.storage.tika.TikaFileValidator;
 import org.innovateuk.ifs.filestorage.util.FileUploadResponseMapper;
 import org.innovateuk.ifs.filestorage.virusscan.VirusScanProvider;
 import org.innovateuk.ifs.filestorage.virusscan.VirusScanResult;
@@ -47,11 +49,8 @@ public class StorageService {
     @Autowired
     private StorageDownloadController storageDownloadController;
 
-//    @Scheduled(fixedDelay = 2000)
-//    public void scheduled() throws IOException {
-//        log.error("sdfdfdfsdsfdfdfsdsf");
-//        storageUploadController.fileUpload(FileUploadRequestBuilder.fromResource(new ClassPathResource("test.txt"), MediaType.TEXT_PLAIN).userId("123").build());
-//    }
+    @Autowired
+    private TikaFileValidator tikaFileValidator;
 
     public FileUploadResponse fileUpload(FileUploadRequest fileUploadRequest) throws IOException {
         StopWatch stopWatch = new StopWatch(StorageService.class.getSimpleName());
@@ -68,6 +67,14 @@ public class StorageService {
         fileStorageRecord = storageServiceHelper.updateVirusCheckStatus(fileStorageRecord, virusScanResult);
         stopWatch.stop();
 
+        stopWatch.start("Mime check with tika");
+        MimeCheckResult mimeCheckResult = tikaFileValidator.validatePayload(fileUploadRequest.getMimeType(), fileUploadRequest.getPayload(), fileUploadRequest.getFileName());
+        stopWatch.stop();
+
+        stopWatch.start("Update Mime Status in DB");
+        fileStorageRecord = storageServiceHelper.updateTikaParseResult(fileStorageRecord, mimeCheckResult);
+        stopWatch.stop();
+
         stopWatch.start("Push to storage provider : " + writableStorageProvider.getClass().getSimpleName());
         String providerLocation = writableStorageProvider.saveFile(fileUploadRequest);
         stopWatch.stop();
@@ -76,6 +83,7 @@ public class StorageService {
         storageServiceHelper.saveProviderResult(fileStorageRecord, providerLocation);
         stopWatch.stop();
         log.info(stopWatch.prettyPrint());
+
         return FileUploadResponseMapper.build(fileUploadRequest, virusScanResult);
     }
 

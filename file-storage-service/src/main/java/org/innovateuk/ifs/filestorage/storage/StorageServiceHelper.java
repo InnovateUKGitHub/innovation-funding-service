@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.filestorage.storage;
 
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
+import org.innovateuk.ifs.api.filestorage.v1.upload.MimeCheckResult;
 import org.innovateuk.ifs.filestorage.repository.FileStorageRecord;
 import org.innovateuk.ifs.filestorage.repository.FileStorageRecordMapper;
 import org.innovateuk.ifs.filestorage.repository.FileStorageRecordRepository;
@@ -29,6 +30,12 @@ public class StorageServiceHelper {
     @Transactional
     public FileStorageRecord saveProviderResult(FileStorageRecord fileStorageRecord, String providerStorageLocation) {
         fileStorageRecord.storageLocation(providerStorageLocation);
+        return fileStorageRecordRepository.save(fileStorageRecord);
+    }
+
+    @Transactional
+    public FileStorageRecord updateTikaParseResult(FileStorageRecord fileStorageRecord, MimeCheckResult mimeCheckResult) {
+        fileStorageRecord.mimeCheckResult(mimeCheckResult);
         return fileStorageRecordRepository.save(fileStorageRecord);
     }
 }

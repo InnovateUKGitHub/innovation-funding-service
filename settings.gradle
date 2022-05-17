@@ -40,7 +40,6 @@ include("common:ifs-security-test")
 include("common:ifs-data-service-commons")
 include("common:ifs-data-service-commons-test")
 // make these part of data-service (not shared)
-include("common:ifs-data-service-file")
 include("common:ifs-data-service-notifications")
 include("common:ifs-data-service-notifications-test")
 

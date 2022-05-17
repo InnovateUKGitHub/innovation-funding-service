@@ -30,4 +30,7 @@ public final class FileUploadResponse implements Serializable {
     /** The file checksum */
     private final String md5Checksum;
 
+    /** Mime check result */
+    private MimeCheckResult mimeCheckResult;
+
 }
