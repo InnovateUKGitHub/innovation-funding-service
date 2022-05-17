@@ -36,6 +36,7 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
                 "competitionName", "Competition 123",
                 "competitionUrl", "123",
                 "inviteUrl", "http://acceptinvite.com",
+                "directAward", false,
                 "inviteOrganisationName", "Nomensa",
                 "leadOrganisation", "Empire Ltd",
                 "leadApplicant", "Steve Smith",
@@ -53,7 +54,8 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
         Map<String, Object> templateArguments = asMap(
                 "applicationName", "My Application",
                 "competitionName", "Competition 123",
-                "webBaseUrl", "http://webbaseurl.com"
+                "webBaseUrl", "http://webbaseurl.com",
+                "directAward", false
         );
 
         assertRenderedEmailTemplateContainsExpectedLines("application_submitted_text_html.html", templateArguments);
@@ -70,6 +72,7 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
                 "applicationId", 1234L,
                 "message", "Body of message.",
                 "alwaysOpen", true,
+                "directAward", false,
                 "averageAssessorScore", 99,
                 "webBaseUrl", "https://ifs.local-dev/"
         );
