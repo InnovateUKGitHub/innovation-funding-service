@@ -23,7 +23,7 @@ public class FileEntry {
     private String fileUuid;
 
     /** base64 encoded to suit s3 */
-    @Column(name = "md5_checksum")
+    @Column(name = "mdfive_checksum")
     private String md5Checksum;
 
     public FileEntry() {

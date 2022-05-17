@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-@RestController
 public interface FileUpload {
 
     @PostMapping(value = ApiVersion.VERSION_ONE + "/upload")

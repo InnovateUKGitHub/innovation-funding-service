@@ -3,6 +3,7 @@ package org.innovateuk.ifs.filestorage.storage.local;
 import com.google.common.io.Files;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.filestorage.cfg.storage.BackingStoreConfigurationProperties;
+import org.innovateuk.ifs.filestorage.exception.ServiceException;
 import org.innovateuk.ifs.filestorage.storage.ReadableStorageProvider;
 import org.innovateuk.ifs.filestorage.storage.WritableStorageProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +38,16 @@ public class LocalStorageProvider implements ReadableStorageProvider, WritableSt
     }
 
     @Override
-    public String saveFile(FileUploadRequest fileUploadRequest) throws IOException {
+    public String saveFile(FileUploadRequest fileUploadRequest) {
         File target = Path.of(backingStoreConfigurationProperties.getLocalStorage().getRootFolderPath(),
                 fileUploadRequest.getFileId()).toFile();
-        Files.write(fileUploadRequest.getPayload(),
-                Path.of(backingStoreConfigurationProperties.getLocalStorage().getRootFolderPath(),
-                        fileUploadRequest.getFileId()).toFile());
+        try {
+            Files.write(fileUploadRequest.getPayload(),
+                    Path.of(backingStoreConfigurationProperties.getLocalStorage().getRootFolderPath(),
+                            fileUploadRequest.getFileId()).toFile());
+        } catch (IOException e) {
+            throw new ServiceException(e);
+        }
         return target.getAbsolutePath();
     }
 }

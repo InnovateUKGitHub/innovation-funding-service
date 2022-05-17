@@ -20,37 +20,23 @@ public class StorageDownloadController implements FileDownload {
 
     @Override
     public ResponseEntity<Resource> fileStreamByUuid(String uuid) {
-        try {
-            Optional<FileDownloadResponse> fileDownloadResponse = storageService.fileByUuid(uuid);
-            if (fileDownloadResponse.isPresent()) {
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.valueOf(fileDownloadResponse.get().getMimeType()));
-                headers.setContentLength(fileDownloadResponse.get().getFileSizeBytes());
-                headers.setContentDisposition(
-                    ContentDisposition
-                        .attachment()
-                        .filename(fileDownloadResponse.get().getFileName())
-                        .build()
-                );
-                return ResponseEntity.ok().headers(headers)
-                        .body(new ByteArrayResource(fileDownloadResponse.get().getPayload()));
-            }
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+            FileDownloadResponse fileDownloadResponse = storageService.fileByUuid(uuid);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.valueOf(fileDownloadResponse.getMimeType()));
+            headers.setContentLength(fileDownloadResponse.getFileSizeBytes());
+            headers.setContentDisposition(
+                ContentDisposition
+                    .attachment()
+                    .filename(fileDownloadResponse.getFileName())
+                    .build()
+            );
+            return ResponseEntity.ok().headers(headers)
+                    .body(new ByteArrayResource(fileDownloadResponse.getPayload()));
     }
 
     @Override
-    public ResponseEntity<Optional<FileDownloadResponse>> fileDownloadResponse(String uuid) {
-        try {
-            return ResponseEntity.ok(storageService.fileByUuid(uuid));
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<FileDownloadResponse> fileDownloadResponse(String uuid) {
+        return ResponseEntity.ok(storageService.fileByUuid(uuid));
     }
-
 
 }

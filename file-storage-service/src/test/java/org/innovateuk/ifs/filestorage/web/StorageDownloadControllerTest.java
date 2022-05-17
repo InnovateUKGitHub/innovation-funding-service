@@ -4,6 +4,7 @@ import org.apache.http.HttpHeaders;
 import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
 import org.innovateuk.ifs.api.filestorage.v1.upload.VirusScanStatus;
+import org.innovateuk.ifs.filestorage.exception.NoSuchRecordException;
 import org.innovateuk.ifs.filestorage.storage.StorageService;
 import org.innovateuk.ifs.filestorage.util.TestHelper;
 import org.innovateuk.ifs.filestorage.virusscan.VirusScanResult;
@@ -45,7 +46,7 @@ class StorageDownloadControllerTest {
         UUID uuid = UUID.randomUUID();
         FileDownloadResponse fileDownloadResponse = TestHelper.build(uuid,
                 new VirusScanResult(VirusScanStatus.VIRUS_FREE, "OK"));
-        when(storageService.fileByUuid(uuid.toString())).thenReturn(Optional.of(fileDownloadResponse));
+        when(storageService.fileByUuid(uuid.toString())).thenReturn(fileDownloadResponse);
         ResponseEntity<Resource> responseEntity = storageDownloadController.fileStreamByUuid(uuid.toString());
         assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.OK));
 
@@ -56,7 +57,7 @@ class StorageDownloadControllerTest {
 
     @Test
     void testDownloadFail() throws IOException {
-        when(storageService.fileByUuid("test")).thenReturn(Optional.empty());
+        when(storageService.fileByUuid("test")).thenThrow(new NoSuchRecordException("test"));
         ResponseEntity<Resource> responseEntity = storageDownloadController.fileStreamByUuid("test");
         assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
     }

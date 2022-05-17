@@ -20,7 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Disabled
 @AutoConfigureMockMvc
 @SpringBootTest(classes = StorageUploadController.class)
 class StorageUploadControllerMockMvcTest {
@@ -34,8 +33,11 @@ class StorageUploadControllerMockMvcTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
+    @Disabled
     void upload() throws Exception {
         mockMvc.perform(post("/" + ApiVersion.VERSION_ONE + "/upload")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(TestHelper.build())))
         .andExpect(status().isOk());
     }

@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.filestorage.virusscan;
 
-import java.io.IOException;
+import org.innovateuk.ifs.filestorage.exception.VirusDetectedException;
 
 public interface VirusScanProvider {
 
-    VirusScanResult scanFile(byte[] fileBytes) throws IOException;
+    void scanFile(byte[] fileBytes) throws VirusDetectedException;
 
 }

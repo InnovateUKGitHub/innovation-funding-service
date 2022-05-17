@@ -9,11 +9,9 @@ import org.innovateuk.ifs.filestorage.virusscan.VirusScanResult;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileUploadResponseMapper {
 
-    public static final FileUploadResponse build(FileUploadRequest fileUploadRequest, VirusScanResult virusScanResult) {
+    public static final FileUploadResponse build(FileUploadRequest fileUploadRequest) {
         return FileUploadResponse.builder()
                 .fileId(fileUploadRequest.getFileId())
-                .virusScanStatus(virusScanResult.virusScanStatus())
-                .virusScanResultMessage(virusScanResult.virusScanResultMessage())
                 .mimeType(fileUploadRequest.getMimeType())
                 .fileSizeBytes(fileUploadRequest.getFileSizeBytes())
                 .fileName(fileUploadRequest.getFileName())

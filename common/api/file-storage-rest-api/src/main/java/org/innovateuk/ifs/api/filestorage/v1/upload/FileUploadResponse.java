@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 @Data
 @Builder
@@ -11,12 +12,6 @@ public final class FileUploadResponse implements Serializable {
 
     /** uuid reference for the file */
     private final String fileId;
-
-    /** Virus scan status */
-    private final VirusScanStatus virusScanStatus;
-
-    /** Result of the virus scan from provided scanner */
-    private final String virusScanResultMessage;
 
     /** The file type */
     private final String mimeType;
@@ -29,8 +24,5 @@ public final class FileUploadResponse implements Serializable {
 
     /** The file checksum */
     private final String md5Checksum;
-
-    /** Mime check result */
-    private final MimeCheckResult mimeCheckResult;
 
 }

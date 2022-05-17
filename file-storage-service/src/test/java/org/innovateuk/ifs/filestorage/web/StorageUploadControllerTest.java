@@ -3,11 +3,9 @@ package org.innovateuk.ifs.filestorage.web;
 import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadResponse;
-import org.innovateuk.ifs.api.filestorage.v1.upload.VirusScanStatus;
 import org.innovateuk.ifs.filestorage.storage.StorageService;
 import org.innovateuk.ifs.filestorage.util.FileUploadResponseMapper;
 import org.innovateuk.ifs.filestorage.util.TestHelper;
-import org.innovateuk.ifs.filestorage.virusscan.VirusScanResult;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceLock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,14 +35,12 @@ class StorageUploadControllerTest {
     @ResourceLock("LOCK")
     void testUpload() throws IOException {
         FileUploadRequest fileUploadRequest = TestHelper.build();
-        when(storageService.fileUpload(fileUploadRequest)).thenReturn(FileUploadResponseMapper.build(fileUploadRequest,
-                new VirusScanResult(VirusScanStatus.VIRUS_FREE, "whatever")));
+        when(storageService.fileUpload(fileUploadRequest)).thenReturn(FileUploadResponseMapper.build(fileUploadRequest));
 
         ResponseEntity<FileUploadResponse> responseResponseEntity = storageUploadController.fileUpload(fileUploadRequest);
         assertThat(responseResponseEntity.getStatusCode(), equalTo(HttpStatus.OK));
         assertThat(responseResponseEntity.getBody().getMd5Checksum(), equalTo(fileUploadRequest.getMd5Checksum()));
     }
-
 
     @Test
     @ResourceLock("LOCK")

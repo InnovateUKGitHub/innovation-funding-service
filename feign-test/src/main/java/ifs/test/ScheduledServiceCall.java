@@ -28,7 +28,7 @@ public class ScheduledServiceCall {
     public void testRun() throws IOException {
         ResponseEntity<FileUploadResponse> response = fileUpload.fileUploadRaw("This is some text here".getBytes(StandardCharsets.UTF_8));
         log.error(response.toString());
-        ResponseEntity<Optional<FileDownloadResponse>> download = fileDownload.fileDownloadResponse(response.getBody().getFileId());
+        ResponseEntity<FileDownloadResponse> download = fileDownload.fileDownloadResponse(response.getBody().getFileId());
         log.error(download.toString());
     }
 

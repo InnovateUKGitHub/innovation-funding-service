@@ -8,6 +8,7 @@ import com.google.common.io.ByteStreams;
 import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.filestorage.cfg.storage.BackingStoreConfigurationProperties;
+import org.innovateuk.ifs.filestorage.exception.ServiceException;
 import org.innovateuk.ifs.filestorage.storage.ReadableStorageProvider;
 import org.innovateuk.ifs.filestorage.storage.WritableStorageProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,17 +43,21 @@ public class S3StorageProvider implements ReadableStorageProvider, WritableStora
     }
 
     @Override
-    public String saveFile(FileUploadRequest fileUploadRequest) throws IOException {
+    public String saveFile(FileUploadRequest fileUploadRequest) throws ServiceException {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(fileUploadRequest.getFileSizeBytes());
         objectMetadata.setContentType(fileUploadRequest.getMimeType());
         objectMetadata.setContentMD5(fileUploadRequest.getMd5Checksum());
-        amazonS3.putObject(
-                backingConfig.getS3().getFileStoreS3Bucket(),
-                fileUploadRequest.getFileId(),
-                ByteSource.wrap(fileUploadRequest.getPayload()).openStream(),
-                objectMetadata
-        );
+        try {
+            amazonS3.putObject(
+                    backingConfig.getS3().getFileStoreS3Bucket(),
+                    fileUploadRequest.getFileId(),
+                    ByteSource.wrap(fileUploadRequest.getPayload()).openStream(),
+                    objectMetadata
+            );
+        } catch (IOException e) {
+            throw new ServiceException(e);
+        }
         return amazonS3.getUrl(backingConfig.getS3().getFileStoreS3Bucket(), fileUploadRequest.getFileId()).toString();
     }
 }

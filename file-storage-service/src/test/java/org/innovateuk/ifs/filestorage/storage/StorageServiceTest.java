@@ -50,7 +50,7 @@ class StorageServiceTest {
         storageService.fileUpload(fileUploadRequest);
         FileStorageRecord fileStorageRecord = fileStorageRecordRepository.findById(uuid.toString()).get();
         assertThat(fileStorageRecord.fileUuid(), equalTo(uuid.toString()));
-        FileDownloadResponse fileDownloadResponse = storageService.fileByUuid(uuid.toString()).get();
+        FileDownloadResponse fileDownloadResponse = storageService.fileByUuid(uuid.toString());
         assertThat(fileDownloadResponse.getFileId(), equalTo(uuid.toString()));
     }
 

@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
-import org.innovateuk.ifs.filestorage.storage.WritableStorageProvider;
 
 /**
  * Map entity to its respective request and response to and from the DB.
@@ -12,7 +11,32 @@ import org.innovateuk.ifs.filestorage.storage.WritableStorageProvider;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileStorageRecordMapper {
 
-    public static FileStorageRecord to(FileUploadRequest fileUploadRequest, WritableStorageProvider writableStorageProvider) {
+
+
+    public static FileStorageRecord to(FileUploadRequest fileUploadRequest, String providerStorageLocation) {
+        FileStorageRecord fileStorageRecord = internal(fileUploadRequest);
+        fileStorageRecord.storageLocation(providerStorageLocation);
+        return fileStorageRecord;
+    }
+
+    public static FileStorageRecord fromError(FileUploadRequest fileUploadRequest, Exception exception) {
+        FileStorageRecord fileStorageRecord = internal(fileUploadRequest);
+        fileStorageRecord.error(exception.toString());
+        return fileStorageRecord;
+    }
+
+    public static FileDownloadResponse from(FileStorageRecord fileStorageRecord, byte[] payload) {
+        return FileDownloadResponse.builder()
+                .fileId(fileStorageRecord.fileUuid())
+                .mimeType(fileStorageRecord.mimeType())
+                .fileSizeBytes(fileStorageRecord.fileSizeBytes())
+                .fileName(fileStorageRecord.fileName())
+                .md5Checksum(fileStorageRecord.md5Checksum())
+                .payload(payload)
+                .build();
+    }
+
+    private static FileStorageRecord internal(FileUploadRequest fileUploadRequest) {
         FileStorageRecord fileStorageRecord = new FileStorageRecord();
         fileStorageRecord.fileUuid(fileUploadRequest.getFileId());
         fileStorageRecord.systemId(fileUploadRequest.getSystemId());
@@ -21,21 +45,7 @@ public class FileStorageRecordMapper {
         fileStorageRecord.fileSizeBytes(fileUploadRequest.getFileSizeBytes());
         fileStorageRecord.fileName(fileUploadRequest.getFileName());
         fileStorageRecord.md5Checksum(fileUploadRequest.getMd5Checksum());
-        fileStorageRecord.storageProvider(writableStorageProvider.getClass().getSimpleName());
         return fileStorageRecord;
-    }
-
-    public static FileDownloadResponse from(FileStorageRecord fileStorageRecord, byte[] payload) {
-        return FileDownloadResponse.builder()
-                .fileId(fileStorageRecord.fileUuid())
-                .virusScanStatus(fileStorageRecord.virusScanStatus().toString())
-                .virusScanResultMessage(fileStorageRecord.virusScanMessage())
-                .mimeType(fileStorageRecord.mimeType())
-                .fileSizeBytes(fileStorageRecord.fileSizeBytes())
-                .fileName(fileStorageRecord.fileName())
-                .md5Checksum(fileStorageRecord.md5Checksum())
-                .payload(payload)
-                .build();
     }
 
 }

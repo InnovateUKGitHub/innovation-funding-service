@@ -1,41 +1,30 @@
 package org.innovateuk.ifs.filestorage.storage;
 
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
-import org.innovateuk.ifs.api.filestorage.v1.upload.MimeCheckResult;
 import org.innovateuk.ifs.filestorage.repository.FileStorageRecord;
 import org.innovateuk.ifs.filestorage.repository.FileStorageRecordMapper;
 import org.innovateuk.ifs.filestorage.repository.FileStorageRecordRepository;
-import org.innovateuk.ifs.filestorage.virusscan.VirusScanResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 
 public class StorageServiceHelper {
 
     @Autowired
     private FileStorageRecordRepository fileStorageRecordRepository;
 
+    @Autowired
+    private FileStorageRecordMapper fileStorageRecordMapper;
+
     @Transactional
-    public FileStorageRecord saveInitialRequest(FileUploadRequest fileUploadRequest, WritableStorageProvider writableStorageProvider) {
-        return fileStorageRecordRepository.save(FileStorageRecordMapper.to(fileUploadRequest, writableStorageProvider));
+    public FileStorageRecord saveProviderResult(FileUploadRequest fileUploadRequest, String providerStorageLocation) {
+        return fileStorageRecordRepository.save(fileStorageRecordMapper.to(fileUploadRequest, providerStorageLocation));
     }
 
     @Transactional
-    public FileStorageRecord updateVirusCheckStatus(FileStorageRecord fileStorageRecord, VirusScanResult virusScanResult) {
-        fileStorageRecord.virusScanStatus(virusScanResult.virusScanStatus());
-        fileStorageRecord.virusScanMessage(virusScanResult.virusScanResultMessage());
-        return fileStorageRecordRepository.save(fileStorageRecord);
-    }
-
-    @Transactional
-    public FileStorageRecord saveProviderResult(FileStorageRecord fileStorageRecord, String providerStorageLocation) {
-        fileStorageRecord.storageLocation(providerStorageLocation);
-        return fileStorageRecordRepository.save(fileStorageRecord);
-    }
-
-    @Transactional
-    public FileStorageRecord updateTikaParseResult(FileStorageRecord fileStorageRecord, MimeCheckResult mimeCheckResult) {
-        fileStorageRecord.mimeCheckResult(mimeCheckResult);
-        return fileStorageRecordRepository.save(fileStorageRecord);
+    public FileStorageRecord saveErrorResult(FileUploadRequest fileUploadRequest, Exception ex) {
+        return fileStorageRecordRepository.save(fileStorageRecordMapper.fromError(fileUploadRequest, ex));
     }
 }

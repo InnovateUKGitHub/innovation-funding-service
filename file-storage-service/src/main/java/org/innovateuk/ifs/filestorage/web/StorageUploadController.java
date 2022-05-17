@@ -9,10 +9,13 @@ import org.innovateuk.ifs.filestorage.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 
 @Slf4j
+@RestController
 public class StorageUploadController implements FileUpload {
 
     @Autowired
@@ -20,12 +23,7 @@ public class StorageUploadController implements FileUpload {
 
     @Override
     public ResponseEntity<FileUploadResponse> fileUpload(FileUploadRequest fileUploadRequest) {
-        try {
-            return ResponseEntity.ok(storageService.fileUpload(fileUploadRequest));
-        } catch (IOException e) {
-            log.error("Failed to persist", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return ResponseEntity.ok(storageService.fileUpload(fileUploadRequest));
     }
 
     @Override
@@ -33,8 +31,8 @@ public class StorageUploadController implements FileUpload {
         try {
             return fileUpload(FileUploadRequestBuilder.fromResource(payload, "testMethod").build());
         } catch (IOException e) {
-            log.error("Failed to persist", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
         }
     }
 
