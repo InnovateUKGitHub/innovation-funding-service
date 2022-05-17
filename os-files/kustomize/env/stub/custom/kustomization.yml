@@ -27,6 +27,3 @@ resources:
   - storage/gluster-ep.yml
   - storage/persistent-volume-claim.yml
   - rbac/sba-rbac.yml
-
-patchesStrategicMerge:
-  - registration-service/registration-deployment.yml
