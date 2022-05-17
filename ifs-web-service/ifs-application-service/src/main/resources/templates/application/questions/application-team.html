@@ -140,14 +140,17 @@
                                     th:text="${row.email}"
                                     th:classappend="${row.invite ? 'hint' : ''}"></td>
 
-                                <td class="govuk-table__cell " th:if="${model.isEDIUpdateEnabled and model.loggedInUserId == row.id and !row.isEdiStatusComplete()}">
+
+                                <th:block th:if="${model.isEDIUpdateEnabled}">
+                                <td class="govuk-table__cell " th:if="${model.loggedInUserId == row.id and !row.isEdiStatusComplete()}">
                                     <a th:if="${model.hasApplicantAndAssessorRole}" href="/assessment/profile/details" class="govuk-link">Start survey</a>
                                     <a th:unless="${model.hasApplicantAndAssessorRole}" href="/profile/view" class="govuk-link">Start survey</a>
                                 </td>
-                                <td class="govuk-table__cell " th:unless="${model.isEDIUpdateEnabled and model.loggedInUserId == row.id and !row.isEdiStatusComplete()}">
-                                    <span class="edit" th:unless="${row.isEdiStatusComplete()}">Incomplete</span>
+                                <td class="govuk-table__cell "th:unless="${model.loggedInUserId == row.id and !row.isEdiStatusComplete()}">
                                     <span class="yes" th:if="${row.isEdiStatusComplete()}">Complete</span>
+                                    <span class="edit" th:unless="${row.isEdiStatusComplete()}">Incomplete</span>
                                 </td>
+                                </th:block>
                                 <td class="govuk-table__cell alignright"
                                     th:classappend="${row.invite ? 'hint' : ''}">
                                     <th:block th:if="${organisation.editable and !model.readOnly and !row.lead}">
