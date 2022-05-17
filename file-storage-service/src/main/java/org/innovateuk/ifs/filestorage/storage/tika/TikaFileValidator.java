@@ -12,7 +12,7 @@ public class TikaFileValidator {
     public void validatePayload(String mimeType, byte[] payload, String fileName) {
         String detectedMimeType = tika.detect(payload, fileName);
         // Follows previous logic ported from data-service
-        if (detectedMimeType != null && detectedMimeType.equalsIgnoreCase(mimeType)) {
+        if (detectedMimeType != null && !detectedMimeType.equalsIgnoreCase(mimeType)) {
             throw new MimeMismatchException(detectedMimeType + " when " + mimeType + " was specified");
         }
     }

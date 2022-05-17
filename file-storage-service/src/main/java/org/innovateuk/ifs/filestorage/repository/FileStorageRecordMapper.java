@@ -11,8 +11,6 @@ import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileStorageRecordMapper {
 
-
-
     public static FileStorageRecord to(FileUploadRequest fileUploadRequest, String providerStorageLocation) {
         FileStorageRecord fileStorageRecord = internal(fileUploadRequest);
         fileStorageRecord.storageLocation(providerStorageLocation);

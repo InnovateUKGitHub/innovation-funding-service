@@ -14,8 +14,6 @@ import org.innovateuk.ifs.filestorage.repository.FileStorageRecordRepository;
 import org.innovateuk.ifs.filestorage.storage.tika.TikaFileValidator;
 import org.innovateuk.ifs.filestorage.util.FileUploadResponseMapper;
 import org.innovateuk.ifs.filestorage.virusscan.VirusScanProvider;
-import org.innovateuk.ifs.filestorage.web.StorageDownloadController;
-import org.innovateuk.ifs.filestorage.web.StorageUploadController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.InvalidMimeTypeException;
 import org.springframework.util.StopWatch;
@@ -71,6 +69,7 @@ public class StorageService {
             stopWatch.stop();
             log.info(stopWatch.prettyPrint());
         } catch (ResponseStatusException responseStatusException) {
+            stopWatch.stop();
             stopWatch.start("Update Stored Status in DB");
             storageServiceHelper.saveErrorResult(fileUploadRequest, responseStatusException);
             stopWatch.stop();

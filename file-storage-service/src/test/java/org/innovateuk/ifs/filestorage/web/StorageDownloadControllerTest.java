@@ -27,6 +27,7 @@ import java.util.UUID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.innovateuk.ifs.filestorage.util.TestHelper.headerAssert;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -58,7 +59,6 @@ class StorageDownloadControllerTest {
     @Test
     void testDownloadFail() throws IOException {
         when(storageService.fileByUuid("test")).thenThrow(new NoSuchRecordException("test"));
-        ResponseEntity<Resource> responseEntity = storageDownloadController.fileStreamByUuid("test");
-        assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+        assertThrows(NoSuchRecordException.class, () -> storageDownloadController.fileStreamByUuid("test"));
     }
 }

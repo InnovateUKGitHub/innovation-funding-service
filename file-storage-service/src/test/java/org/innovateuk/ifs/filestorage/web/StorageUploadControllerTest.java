@@ -3,6 +3,7 @@ package org.innovateuk.ifs.filestorage.web;
 import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadResponse;
+import org.innovateuk.ifs.filestorage.exception.ServiceException;
 import org.innovateuk.ifs.filestorage.storage.StorageService;
 import org.innovateuk.ifs.filestorage.util.FileUploadResponseMapper;
 import org.innovateuk.ifs.filestorage.util.TestHelper;
@@ -19,6 +20,7 @@ import java.io.IOException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {StorageUploadController.class})
@@ -46,10 +48,13 @@ class StorageUploadControllerTest {
     @ResourceLock("LOCK")
     void testUploadFail() throws IOException {
         FileUploadRequest fileUploadRequest = TestHelper.build();
-        when(storageService.fileUpload(fileUploadRequest)).thenThrow(new IOException("Mock Test Exception"));
+        when(storageService.fileUpload(fileUploadRequest)).thenThrow(new ServiceException(new IOException("ddd")));
 
-        ResponseEntity<FileUploadResponse> responseResponseEntity = storageUploadController.fileUpload(fileUploadRequest);
-        assertThat(responseResponseEntity.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
+        assertThrows(
+                ServiceException.class,
+                () -> storageUploadController.fileUpload(fileUploadRequest)
+        );
+
     }
 
 }

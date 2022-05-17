@@ -8,11 +8,13 @@ import org.innovateuk.ifs.filestorage.storage.StorageServiceHelper;
 import org.innovateuk.ifs.filestorage.storage.tika.TikaFileValidator;
 import org.innovateuk.ifs.filestorage.web.StorageDownloadController;
 import org.innovateuk.ifs.filestorage.web.StorageUploadController;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
+@EnableConfigurationProperties(StorageServiceConfigurationProperties.class)
 @Import({BackingStoreConfiguration.class, VirusScanConfiguration.class})
 public class StorageServiceConfiguration {
 

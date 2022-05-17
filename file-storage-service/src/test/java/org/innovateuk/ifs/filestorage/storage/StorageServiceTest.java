@@ -6,6 +6,7 @@ import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.filestorage.cfg.StorageServiceConfiguration;
 import org.innovateuk.ifs.filestorage.cfg.storage.BackingStoreConfigurationProperties;
 import org.innovateuk.ifs.filestorage.repository.FileStorageRecord;
+import org.innovateuk.ifs.filestorage.repository.FileStorageRecordMapper;
 import org.innovateuk.ifs.filestorage.repository.FileStorageRecordRepository;
 import org.innovateuk.ifs.filestorage.storage.local.LocalStorageProvider;
 import org.innovateuk.ifs.filestorage.util.TestHelper;
