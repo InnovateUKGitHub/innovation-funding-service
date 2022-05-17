@@ -66,9 +66,7 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
                             },
 
                             success -> {
-                                System.out.println("1111111"+silContact.getIfsUuid());
-                                System.out.println("2222"+silContactJson);
-                                System.out.println("2222"+silMessagingService);
+
                                 silMessagingService.recordSilMessage(SIlPayloadType.CONTACT, SIlPayloadKeyType.USER_ID,
                                         silContact.getIfsUuid(), silContactJson, HttpStatus.ACCEPTED);
                                 return serviceSuccess();
@@ -88,12 +86,12 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
                     return response.mapLeftOrRight(failure -> {
                                 log.error("Error updating SIL Loan Application state: " + silApplication +
                                         "Error: " + failure);
-                                silMessagingService.recordSilMessage(SIlPayloadType.APPLICATION_UPDATE, SIlPayloadKeyType.APPLICATION_ID, Integer.toString(silApplication.getApplicationID()),
+                                silMessagingService.recordSilMessage(SIlPayloadType.APPLICATION_SUBMISSION, SIlPayloadKeyType.APPLICATION_ID, Integer.toString(silApplication.getApplicationID()),
                                         silApplicationJson, failure.getStatusCode());
                                 return serviceFailure(new Error(APPLICATION_NOT_UPDATED));
                             },
                             success -> {
-                                silMessagingService.recordSilMessage(SIlPayloadType.APPLICATION_UPDATE, SIlPayloadKeyType.APPLICATION_ID, Integer.toString(silApplication.getApplicationID()),
+                                silMessagingService.recordSilMessage(SIlPayloadType.APPLICATION_SUBMISSION, SIlPayloadKeyType.APPLICATION_ID, Integer.toString(silApplication.getApplicationID()),
                                         silApplicationJson, HttpStatus.ACCEPTED);
                                 return serviceSuccess();
                             });
