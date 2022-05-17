@@ -312,6 +312,9 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
     private ProjectActivityStates getDocumentsStatus(Project project) {
         List<ProjectDocument> projectDocuments = project.getProjectDocuments();
         List<CompetitionDocument> expectedDocuments = project.getApplication().getCompetition().getCompetitionDocuments();
+
+        removeNonEnabledDocuments(projectDocuments, expectedDocuments);
+
         if (!project.isCollaborativeProject()) {
             projectDocuments = projectDocuments.stream()
                 .filter(doc -> !COLLABORATION_AGREEMENT_TITLE.equals(doc.getCompetitionDocument().getTitle()))
@@ -325,6 +328,11 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
                                  projectDocuments.size(),
                                  expectedDocuments.size(),
                                  project.getProjectState());
+    }
+
+    private void removeNonEnabledDocuments(List<ProjectDocument> projectDocuments, List<CompetitionDocument> expectedDocuments) {
+        projectDocuments.removeIf(document -> !document.getCompetitionDocument().isEnabled());
+        expectedDocuments.removeIf(document -> !document.isEnabled());
     }
 
     private ProjectActivityStates getDocumentsState(List<ProjectDocument> projectDocuments,

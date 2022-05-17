@@ -61,6 +61,8 @@ public class DocumentsPopulator {
         CompetitionResource competition = getCompetition(project.getCompetition());
         List<CompetitionDocumentResource> configuredProjectDocuments = competition.getCompetitionDocuments();
 
+        removeNonEnabledDocuments(configuredProjectDocuments);
+
         List<PartnerOrganisationResource> partnerOrganisations =
                 partnerOrganisationRestService.getProjectPartnerOrganisations(project.getId()).getSuccess();
 
@@ -76,6 +78,10 @@ public class DocumentsPopulator {
                         getProjectDocumentStatus(projectDocuments, configuredDocument.getId())));
 
         return new AllDocumentsViewModel(project, documents, isProjectManager(loggedInUserId, projectId), competition.isProcurement(), userCanApproveOrRejectDocuments(projectId, loggedInUser));
+    }
+
+    private void removeNonEnabledDocuments(List<CompetitionDocumentResource> configuredProjectDocuments) {
+        configuredProjectDocuments.removeIf(document -> !document.isEnabled());
     }
 
     private DocumentStatus getProjectDocumentStatus(List<ProjectDocumentResource> projectDocuments, Long documentConfigId) {

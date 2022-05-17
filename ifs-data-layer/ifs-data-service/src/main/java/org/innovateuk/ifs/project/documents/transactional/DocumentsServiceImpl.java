@@ -210,12 +210,18 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         List<PartnerOrganisation> projectOrganisations = partnerOrganisationRepository.findByProjectId(project.getId());
         List<CompetitionDocument> expectedDocuments = competitionDocumentConfigRepository.findByCompetitionId(project.getApplication().getCompetition().getId());
 
+        removeNonEnabledDocuments(expectedDocuments);
+
         if (projectOrganisations.size() == 1) {
             expectedDocuments.removeIf(
                     document -> document.getTitle().equals(COLLABORATION_AGREEMENT_TITLE));
         }
 
         return project.getProjectDocuments().size() == expectedDocuments.size();
+    }
+
+    private void removeNonEnabledDocuments(List<CompetitionDocument> expectedDocuments) {
+        expectedDocuments.removeIf(document -> !document.isEnabled());
     }
 
     @Override

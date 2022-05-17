@@ -110,6 +110,8 @@ public class SetupSectionStatus {
         List<CompetitionDocumentResource> competitionDocuments = competition.getCompetitionDocuments();
         List<ProjectDocumentResource> projectDocuments = project.getProjectDocuments();
 
+        removeNonEnabledDocuments(competitionDocuments, projectDocuments);
+
         if (!project.isCollaborativeProject()) {
             competitionDocuments.removeIf(
                     document -> document.getTitle().equals(COLLABORATION_AGREEMENT_TITLE));
@@ -147,7 +149,12 @@ public class SetupSectionStatus {
             return HOURGLASS;
     }
 
-            public SectionStatus grantOfferLetterSectionStatus(final ProjectActivityStates grantOfferLetterState,
+    private void removeNonEnabledDocuments(List<CompetitionDocumentResource> competitionDocuments, List<ProjectDocumentResource> projectDocuments) {
+        competitionDocuments.removeIf(document -> !document.isEnabled());
+        projectDocuments.removeIf(document -> !document.getCompetitionDocument().isEnabled());
+    }
+
+    public SectionStatus grantOfferLetterSectionStatus(final ProjectActivityStates grantOfferLetterState,
                                                        final boolean isLeadPartner) {
         if (grantOfferLetterState == null || NOT_REQUIRED.equals(grantOfferLetterState)) {
             return EMPTY;
