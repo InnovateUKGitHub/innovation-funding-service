@@ -969,6 +969,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(subsidyControl, that.subsidyControl)
                 .append(assessmentPeriods, that.assessmentPeriods)
                 .append(competitionThirdPartyConfigResource, that.competitionThirdPartyConfigResource)
+                .append(enabledForPreRegistration, that.enabledForPreRegistration)
                 .isEquals();
     }
 
@@ -1037,6 +1038,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(subsidyControl)
                 .append(assessmentPeriods)
                 .append(competitionThirdPartyConfigResource)
+                .append(enabledForPreRegistration)
                 .toHashCode();
     }
 
