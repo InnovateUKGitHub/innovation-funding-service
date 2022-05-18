@@ -48,6 +48,8 @@ public final class CompetitionLineBuilder {
     private String termsAndConditionsGuidance;
     private String projectCostGuidanceUrl;
     private String termsAndConditionsTemplate;
+    private boolean assessmentStage;
+    private boolean preRegistration;
     private BuilderOrder builderOrder = BuilderOrder.ANYWHERE;
 
     private CompetitionLineBuilder() {
@@ -257,6 +259,16 @@ public final class CompetitionLineBuilder {
         return this;
     }
 
+    public CompetitionLineBuilder withAssessmentStage(boolean assessmentStage) {
+        this.assessmentStage = assessmentStage;
+        return this;
+    }
+
+    public CompetitionLineBuilder withPreRegistration(boolean preRegistration) {
+        this.preRegistration = preRegistration;
+        return this;
+    }
+
     public CompetitionLine build() {
         CompetitionLine competitionLine = new CompetitionLine();
         competitionLine.setId(id);
@@ -298,6 +310,8 @@ public final class CompetitionLineBuilder {
         competitionLine.setTermsAndConditionsGuidance(termsAndConditionsGuidance);
         competitionLine.setProjectCostGuidanceUrl(projectCostGuidanceUrl);
         competitionLine.setTermsAndConditionsTemplate(termsAndConditionsTemplate);
+        competitionLine.setAssessmentStage(assessmentStage);
+        competitionLine.setPreRegistration(preRegistration);
 
         return competitionLine;
     }
