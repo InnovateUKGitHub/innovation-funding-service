@@ -63,6 +63,9 @@ public class Question {
     @JoinColumn(name = "questionnaire_id", referencedColumnName = "id")
     private Questionnaire questionnaire;
 
+    @Column(name="pre_registration")
+    private boolean enabledForPreRegistration = false;
+
     public Question() {
         //default constructor
     }
@@ -230,5 +233,13 @@ public class Question {
 
     public void setDescription2(String description2) {
         this.description2 = description2;
+    }
+
+    public boolean isEnabledForPreRegistration() {
+        return enabledForPreRegistration;
+    }
+
+    public void setEnabledForPreRegistration(boolean enabledForPreRegistration) {
+        this.enabledForPreRegistration = enabledForPreRegistration;
     }
 }

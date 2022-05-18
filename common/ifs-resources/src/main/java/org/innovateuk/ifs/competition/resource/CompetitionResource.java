@@ -115,6 +115,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean subsidyControl;
     private boolean hasBusinessAndFinancialInformationQuestion;
     private CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource;
+    private boolean enabledForPreRegistration;
 
     public CompetitionResource() {
     }
@@ -973,6 +974,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(subsidyControl, that.subsidyControl)
                 .append(assessmentPeriods, that.assessmentPeriods)
                 .append(competitionThirdPartyConfigResource, that.competitionThirdPartyConfigResource)
+                .append(enabledForPreRegistration, that.enabledForPreRegistration)
                 .isEquals();
     }
 
@@ -1041,6 +1043,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(subsidyControl)
                 .append(assessmentPeriods)
                 .append(competitionThirdPartyConfigResource)
+                .append(enabledForPreRegistration)
                 .toHashCode();
     }
 
@@ -1089,5 +1092,12 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         return applicationState == ApplicationState.REJECTED;
     }
 
+    public boolean isEnabledForPreRegistration() {
+        return enabledForPreRegistration;
+    }
+
+    public void setEnabledForPreRegistration(boolean enabledForPreRegistration) {
+        this.enabledForPreRegistration = enabledForPreRegistration;
+    }
 }
 
