@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface FileEntryRepository extends PagingAndSortingRepository<FileEntry, Long> {
 
-    @Query("Select a from FileEntry a where a.fileUuid is null")
+    @Query("Select a from FileEntry a where a.id in (1168, 1170, 1171, 1172, 1174, 1177, 1180)")
     List<FileEntry> findByNullUUID(Pageable pageable);
 
 }
