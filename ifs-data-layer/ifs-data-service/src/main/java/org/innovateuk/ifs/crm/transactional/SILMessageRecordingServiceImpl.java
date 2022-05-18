@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class SILMessageRecordingServiceImpl implements SILMessageRecordingService {
 
@@ -24,8 +26,14 @@ public class SILMessageRecordingServiceImpl implements SILMessageRecordingServic
                                  String key, String payload, HttpStatus httpStatus) {
 
 
-        SilMessage silMessage = SilMessage.builder().payloadType(payloadType).keyType(keyType)
-                .keyValue(key).payload(payload).responseCode(httpStatus == null ? null : httpStatus.name()).dateCreated(TimeMachine.now()).build();
+        SilMessage silMessage = SilMessage.builder()
+                .payloadType(payloadType)
+                .keyType(keyType)
+                .keyValue(key)
+                .payload(payload)
+                .responseCode(Optional.ofNullable(httpStatus).map(Enum::name).orElse(null))
+                .dateCreated(TimeMachine.now())
+                .build();
 
         silMessageRepository.save(silMessage);
 
