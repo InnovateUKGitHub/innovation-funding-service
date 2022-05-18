@@ -1,6 +1,6 @@
 ifs:
   feign:
-    file-storage-service: "${FILE_STORAGE_SERVICE_HOST:localhost}:${FILE_STORAGE_SERVICE_PORT:8091}"
+    file-storage-service: "${FILE_STORAGE_SERVICE_HOST:localhost}:8091"
 
 feign:
   okhttp:

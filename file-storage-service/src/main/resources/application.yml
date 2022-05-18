@@ -19,6 +19,8 @@ ifs:
         fileStoreS3Bucket: ${FSS_S3_AWS_BUCKET}
 
 spring:
+  main:
+    allow-bean-definition-overriding: true
   datasource:
     url: ${FSS_DB_URL:jdbc:mysql://ifs-database:3306/ifs_file_storage}
     username: ${FSS_DB_USER:root}
