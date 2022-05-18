@@ -5,13 +5,12 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.activitylog.transactional.SILMessagingService;
+import org.innovateuk.ifs.crm.transactional.SILMessageRecordingService;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
-import org.innovateuk.ifs.invite.transactional.ApplicationInviteServiceImpl;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.sil.SIlPayloadKeyType;
@@ -89,7 +88,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     private final SilEDIStatus silStatus = new SilEDIStatus();
     private UserResource user;
     @Mock
-    private SILMessagingService silMessagingService;
+    private SILMessageRecordingService silMessagingService;
 
     @Mock
     private ObjectMapper mapper;

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.innovateuk.ifs.activitylog.transactional.SILMessagingService;
+import org.innovateuk.ifs.crm.transactional.SILMessageRecordingService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -49,7 +49,7 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
     private String silmDecisionmatrix;
 
     @Autowired
-    SILMessagingService silMessagingService;
+    SILMessageRecordingService silMessagingService;
 
     @SneakyThrows(JsonProcessingException.class)
     @Override

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.innovateuk.ifs.activitylog.transactional.SILMessagingService;
+import org.innovateuk.ifs.crm.transactional.SILMessageRecordingService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
@@ -86,7 +86,7 @@ public class UserController {
     private CrmService crmService;
 
     @Autowired
-    SILMessagingService silMessagingService;
+    SILMessageRecordingService silMessagingService;
 
     @GetMapping("/uid/{uid}")
     public RestResult<UserResource> getUserByUid(@PathVariable String uid) {

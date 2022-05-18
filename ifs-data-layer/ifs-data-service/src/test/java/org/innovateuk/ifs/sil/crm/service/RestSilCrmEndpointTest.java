@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.sil.crm.service;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
-import org.innovateuk.ifs.activitylog.transactional.SILMessagingService;
+import org.innovateuk.ifs.crm.transactional.SILMessageRecordingService;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.config.rest.RestTemplateAdaptorFactory;
@@ -44,7 +44,7 @@ public class RestSilCrmEndpointTest extends BaseUnitTestMocksTest {
         ReflectionTestUtils.setField(service, "adaptor", adaptor);
         ReflectionTestUtils.setField(service, "silRestServiceUrl", "http://sil.com");
         ReflectionTestUtils.setField(service, "silCrmContacts", "/silstub/contacts");
-        ReflectionTestUtils.setField(service, "silMessagingService", new SILMessagingService() {
+        ReflectionTestUtils.setField(service, "silMessagingService", new SILMessageRecordingService() {
             @Override
             public void recordSilMessage(SIlPayloadType sIlPayloadType, SIlPayloadKeyType sIlPayloadKeyType, String key, String payload, HttpStatus httpStatus) {
                 //Simple stubbing

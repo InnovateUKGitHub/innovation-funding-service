@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.sil;
 
 public enum SIlPayloadType {
-    APPLICATION_SUBMISSION("Verified"),
-    CONTACT("Not Verified"),
-    ASSESSMENT_COMPLETE("Created but not registered or invited"),
-    APPLICATION_UPDATE("Created but not registered or invited"),
-    USER_UPDATE("Created but not registered or invited");
+    APPLICATION_SUBMISSION("Application submission"),
+    CONTACT("Contact sync created / updated"),
+    ASSESSMENT_COMPLETE("Assessment completed"),
+    APPLICATION_UPDATE("Update application state"),
+    USER_UPDATE("User profile updated");
 
 
-    private String displayName;
+    private final String displayName;
 
     SIlPayloadType(String displayName) {
         this.displayName = displayName;

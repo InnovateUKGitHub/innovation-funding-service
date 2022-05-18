@@ -1,5 +1,5 @@
 
-package org.innovateuk.ifs.activitylog.transactional;
+package org.innovateuk.ifs.crm.transactional;
 
 
 import org.innovateuk.ifs.activitylog.repository.SilMessageRepository;
@@ -12,7 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SILMessagingServiceImpl implements SILMessagingService {
+public class SILMessageRecordingServiceImpl implements SILMessageRecordingService {
+
 
     @Autowired
     SilMessageRepository silMessageRepository;
@@ -24,7 +25,7 @@ public class SILMessagingServiceImpl implements SILMessagingService {
 
 
         SilMessage silMessage = SilMessage.builder().payloadType(payloadType).keyType(keyType)
-                .keyValue(key).payload(payload).responseCode(httpStatus==null?null:httpStatus.name()).dateCreated(TimeMachine.now()).build();
+                .keyValue(key).payload(payload).responseCode(httpStatus == null ? null : httpStatus.name()).dateCreated(TimeMachine.now()).build();
 
         silMessageRepository.save(silMessage);
 

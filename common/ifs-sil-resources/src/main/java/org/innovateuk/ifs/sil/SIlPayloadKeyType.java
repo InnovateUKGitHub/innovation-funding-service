@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.sil;
 
 public enum SIlPayloadKeyType {
-    COMPETITION_ID("Verified"),
-    APPLICATION_ID("Not Verified"),
-    USER_ID("Created but not registered or invited");
+    COMPETITION_ID("Competition ID"),
+    APPLICATION_ID("Application ID"),
+    USER_ID("User ID ");
 
 
-    private String displayName;
+    private final String displayName;
 
     SIlPayloadKeyType(String displayName) {
         this.displayName = displayName;

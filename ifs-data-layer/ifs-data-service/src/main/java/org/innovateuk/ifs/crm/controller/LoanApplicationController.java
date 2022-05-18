@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
-import org.innovateuk.ifs.activitylog.transactional.SILMessagingService;
+import org.innovateuk.ifs.crm.transactional.SILMessageRecordingService;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.transactional.QuestionStatusService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
@@ -56,7 +56,7 @@ public class LoanApplicationController {
     @Autowired
     ObjectMapper objectMapper;
     @Autowired
-    SILMessagingService silMessagingService;
+    SILMessageRecordingService silMessagingService;
 
     @PreAuthorize("permitAll()")
     @PatchMapping(value = "/{applicationId}")

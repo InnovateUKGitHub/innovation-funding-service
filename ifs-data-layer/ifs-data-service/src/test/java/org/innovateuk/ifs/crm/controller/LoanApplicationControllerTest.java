@@ -3,7 +3,7 @@ package org.innovateuk.ifs.crm.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
-import org.innovateuk.ifs.activitylog.transactional.SILMessagingService;
+import org.innovateuk.ifs.crm.transactional.SILMessageRecordingService;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.QuestionStatus;
 import org.innovateuk.ifs.application.transactional.QuestionStatusService;
@@ -60,7 +60,7 @@ public class LoanApplicationControllerTest extends BaseControllerMockMVCTest<Loa
     @Mock
     private ActivityLogService activityLogService;
     @Mock
-    private SILMessagingService silMessagingService;
+    private SILMessageRecordingService silMessagingService;
 
     @Mock
     private ObjectMapper objectMapper;
