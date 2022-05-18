@@ -41,4 +41,16 @@ public class FileUploadRequestBuilder {
                 MediaTypeFactory.getMediaType(payloadResource).orElse(MediaType.APPLICATION_OCTET_STREAM), userId);
     }
 
+    public static FileUploadRequest.FileUploadRequestBuilder fromResource(byte[] payload, MediaType mediaType, String fileName) {
+        return FileUploadRequest.builder()
+                .fileId(UUID.randomUUID().toString())
+                .fileName(fileName)
+                .md5Checksum(FileHashing.fileHash64(payload))
+                .mimeType(mediaType.toString())
+                .payload(payload)
+                .userId("userId")
+                .fileSizeBytes(payload.length)
+                .systemId(DEFAULT_SYSTEM_ID);
+    }
+
 }
