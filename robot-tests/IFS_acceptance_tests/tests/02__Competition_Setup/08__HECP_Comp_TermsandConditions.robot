@@ -34,7 +34,7 @@ Comp admin marks HECP terms and conditions section as complete
     And the user clicks the button/link       link = Back to competition details
     Then the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete
 
-HECP terms and conditions are correct
+HECP EIT KICs terms and conditions are correct
     [Documentation]  IFS-10926
     Given the user clicks the button/link                link = Terms and conditions
     When the user clicks the button/link                 link = ${hecpKicsTermsAndConditionsLink}
