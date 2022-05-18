@@ -43,12 +43,15 @@ public class GlusterMigrationServiceImpl implements GlusterMigrationService {
 
     @Override
     public ServiceResult<ScheduleResponse> processGlusterFiles() throws IOException {
+        log.info("Get files from gluster");
         StopWatch stopWatch = new StopWatch(GlusterMigrationServiceImpl.class.getSimpleName());
         stopWatch.start();
         List<FileEntry> fileEntries = fileEntryRepository.findByNullUUID(PageRequest.of(0, 10));
+        log.info("Number of files entry retrieved " + fileEntries.size());
         for (FileEntry fileEntry : fileEntries) {
             ServiceResult<File> result = finalFileStorageStrategy.getFile(fileEntry).andOnFailure(() -> scannedFileStorageStrategy.getFile(fileEntry));
             if (result.isSuccess()) {
+                log.info("file entry to process " + fileEntry.getId());
                 File file = result.getSuccess();
                 FileUploadRequest.FileUploadRequestBuilder fileUploadRequestBuilder = FileUploadRequestBuilder.fromResource(FileUtils.readFileToByteArray(file),
                         MediaType.valueOf(fileEntry.getMediaType()),
@@ -58,6 +61,8 @@ public class GlusterMigrationServiceImpl implements GlusterMigrationService {
                     fileEntry.setFileUuid(fileUploadResponseEntity.getBody().getFileId());
                     fileEntryRepository.save(fileEntry);
                 }
+            } else {
+                log.info("No files retrieved from gluster");
             }
 
         }
