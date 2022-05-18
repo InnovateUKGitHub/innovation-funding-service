@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
-import org.innovateuk.ifs.competitionsetup.domain.DocumentConfig;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -229,13 +228,8 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
             return COMPLETE;
         }
 
-        List<ProjectDocument> projectDocuments = project.getProjectDocuments();
-        List<CompetitionDocument> expectedDocuments = project.getApplication().getCompetition().getCompetitionDocuments();
-
-        projectDocuments = projectDocuments.stream()
-                .filter(document -> document.getCompetitionDocument().isEnabled()).collect(toList());
-        expectedDocuments = expectedDocuments.stream()
-                .filter(DocumentConfig::isEnabled).collect(toList());
+        List<ProjectDocument> projectDocuments = project.getActiveProjectDocuments();
+        List<CompetitionDocument> expectedDocuments = project.getApplication().getCompetition().getActiveCompetitionDocuments();
 
         if (!project.isCollaborativeProject()) {
             projectDocuments = projectDocuments.stream()

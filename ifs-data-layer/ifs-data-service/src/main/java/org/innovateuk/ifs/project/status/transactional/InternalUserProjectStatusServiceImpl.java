@@ -310,10 +310,8 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
     }
 
     private ProjectActivityStates getDocumentsStatus(Project project) {
-        List<ProjectDocument> projectDocuments = project.getProjectDocuments();
-        List<CompetitionDocument> expectedDocuments = project.getApplication().getCompetition().getCompetitionDocuments();
-
-        removeNonEnabledDocuments(projectDocuments, expectedDocuments);
+        List<ProjectDocument> projectDocuments = project.getActiveProjectDocuments();
+        List<CompetitionDocument> expectedDocuments = project.getApplication().getCompetition().getActiveCompetitionDocuments();
 
         if (!project.isCollaborativeProject()) {
             projectDocuments = projectDocuments.stream()
@@ -328,11 +326,6 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
                                  projectDocuments.size(),
                                  expectedDocuments.size(),
                                  project.getProjectState());
-    }
-
-    private void removeNonEnabledDocuments(List<ProjectDocument> projectDocuments, List<CompetitionDocument> expectedDocuments) {
-        projectDocuments.removeIf(document -> !document.getCompetitionDocument().isEnabled());
-        expectedDocuments.removeIf(document -> !document.isEnabled());
     }
 
     private ProjectActivityStates getDocumentsState(List<ProjectDocument> projectDocuments,

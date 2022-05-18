@@ -59,9 +59,7 @@ public class DocumentsPopulator {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
 
         CompetitionResource competition = getCompetition(project.getCompetition());
-        List<CompetitionDocumentResource> configuredProjectDocuments = competition.getCompetitionDocuments();
-
-        removeNonEnabledDocuments(configuredProjectDocuments);
+        List<CompetitionDocumentResource> configuredProjectDocuments = competition.getActiveCompetitionDocuments();
 
         List<PartnerOrganisationResource> partnerOrganisations =
                 partnerOrganisationRestService.getProjectPartnerOrganisations(project.getId()).getSuccess();
@@ -71,17 +69,13 @@ public class DocumentsPopulator {
                     document -> document.getTitle().equals(COLLABORATION_AGREEMENT_TITLE));
         }
 
-        List<ProjectDocumentResource> projectDocuments = project.getProjectDocuments();
+        List<ProjectDocumentResource> projectDocuments = project.getActiveProjectDocuments();
 
         List<ProjectDocumentStatus> documents = simpleMap(configuredProjectDocuments, configuredDocument ->
                 new ProjectDocumentStatus(configuredDocument.getId(), configuredDocument.getTitle(),
                         getProjectDocumentStatus(projectDocuments, configuredDocument.getId())));
 
         return new AllDocumentsViewModel(project, documents, isProjectManager(loggedInUserId, projectId), competition.isProcurement(), userCanApproveOrRejectDocuments(projectId, loggedInUser));
-    }
-
-    private void removeNonEnabledDocuments(List<CompetitionDocumentResource> configuredProjectDocuments) {
-        configuredProjectDocuments.removeIf(document -> !document.isEnabled());
     }
 
     private DocumentStatus getProjectDocumentStatus(List<ProjectDocumentResource> projectDocuments, Long documentConfigId) {
@@ -95,7 +89,7 @@ public class DocumentsPopulator {
 
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
 
-        List<CompetitionDocumentResource> configuredProjectDocuments = getCompetition(project.getCompetition()).getCompetitionDocuments();
+        List<CompetitionDocumentResource> configuredProjectDocuments = getCompetition(project.getCompetition()).getActiveCompetitionDocuments();
 
         CompetitionDocumentResource configuredProjectDocument =
                 simpleFindAny(configuredProjectDocuments,
