@@ -128,6 +128,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     List<CompetitionDocumentResource> projectDocumentConfig =
             newCompetitionDocumentResource()
                     .withTitle("Risk Register", "Plan Document")
+                    .withEnabled(true)
                     .build(2);
 
     String termsTemplate = "terms-template";
