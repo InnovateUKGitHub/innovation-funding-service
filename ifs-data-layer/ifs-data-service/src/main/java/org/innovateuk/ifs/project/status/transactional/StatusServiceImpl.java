@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
+import org.innovateuk.ifs.competitionsetup.domain.DocumentConfig;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -231,7 +232,10 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         List<ProjectDocument> projectDocuments = project.getProjectDocuments();
         List<CompetitionDocument> expectedDocuments = project.getApplication().getCompetition().getCompetitionDocuments();
 
-        removeNonEnabledDocuments(projectDocuments, expectedDocuments);
+        projectDocuments = projectDocuments.stream()
+                .filter(document -> document.getCompetitionDocument().isEnabled()).collect(toList());
+        expectedDocuments = expectedDocuments.stream()
+                .filter(DocumentConfig::isEnabled).collect(toList());
 
         if (!project.isCollaborativeProject()) {
             projectDocuments = projectDocuments.stream()
@@ -256,11 +260,6 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         }
 
         return PENDING;
-    }
-
-    private void removeNonEnabledDocuments(List<ProjectDocument> projectDocuments, List<CompetitionDocument> expectedDocuments) {
-        projectDocuments.removeIf(document -> !document.getCompetitionDocument().isEnabled());
-        expectedDocuments.removeIf(document -> !document.isEnabled());
     }
 
     private ProjectActivityStates createFinanceContactStatus(Project project, Organisation partnerOrganisation) {
