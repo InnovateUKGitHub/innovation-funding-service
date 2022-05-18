@@ -22,7 +22,7 @@
             <h2 class="govuk-panel__title">Application submitted</h2>
             <div class="govuk-panel__body govuk-!-font-size-19">
                 Application number: <span th:text="${model.currentApplication.id}" /><br/>
-                Your application for the competition '<span th:text="${model.currentCompetition.name}" />' was submitted
+                Your application for the <span th:text="${model.currentCompetition.isDirectAward()} ? |award '${model.currentCompetition.name}'| : |competition '${model.currentCompetition.name}'|" /> was submitted
                 <th:block th:if="${model.currentApplication.submittedDate}">
                     on
                     <th:block th:text="${#temporals.format(model.currentApplication.submittedDate, 'd MMMM yyyy')}"></th:block>
