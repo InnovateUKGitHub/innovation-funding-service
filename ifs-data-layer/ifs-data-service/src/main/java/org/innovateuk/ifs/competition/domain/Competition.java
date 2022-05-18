@@ -192,6 +192,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     private boolean hasAssessmentStage = true;
 
+    @Column(name="pre_registration")
+    private boolean enabledForPreRegistration = false;
+
     @Enumerated(EnumType.STRING)
     private CovidType covidType;
 
@@ -1119,5 +1122,13 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setCompetitionExternalConfig(CompetitionExternalConfig competitionExternalConfig) {
         this.competitionExternalConfig = competitionExternalConfig;
+    }
+
+    public boolean isEnabledForPreRegistration() {
+        return enabledForPreRegistration;
+    }
+
+    public void setEnabledForPreRegistration(boolean enabledForPreRegistration) {
+        this.enabledForPreRegistration = enabledForPreRegistration;
     }
 }
