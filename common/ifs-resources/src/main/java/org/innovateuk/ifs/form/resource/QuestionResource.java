@@ -33,6 +33,7 @@ public class QuestionResource implements Comparable<QuestionResource>, Cacheable
     //Used by @Cacheable
     @JsonIgnore
     private boolean competitionOpen;
+    private boolean enabledForPreRegistration;
 
     public QuestionResource() {
         //default constructor
@@ -202,6 +203,14 @@ public class QuestionResource implements Comparable<QuestionResource>, Cacheable
         return Integer.compare(this.priority, o.priority);
     }
 
+    public boolean isEnabledForPreRegistration() {
+        return enabledForPreRegistration;
+    }
+
+    public void setEnabledForPreRegistration(boolean enabledForPreRegistration) {
+        this.enabledForPreRegistration = enabledForPreRegistration;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -224,6 +233,7 @@ public class QuestionResource implements Comparable<QuestionResource>, Cacheable
                 .append(type, that.type)
                 .append(questionSetupType, that.questionSetupType)
                 .append(assessorMaximumScore, that.assessorMaximumScore)
+                .append(enabledForPreRegistration, that.enabledForPreRegistration)
                 .isEquals();
     }
 
@@ -243,6 +253,7 @@ public class QuestionResource implements Comparable<QuestionResource>, Cacheable
                 .append(type)
                 .append(questionSetupType)
                 .append(assessorMaximumScore)
+                .append(enabledForPreRegistration)
                 .toHashCode();
     }
 }
