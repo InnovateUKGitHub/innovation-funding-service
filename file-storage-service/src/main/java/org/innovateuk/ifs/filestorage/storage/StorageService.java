@@ -78,7 +78,7 @@ public class StorageService {
             log.info(stopWatch.prettyPrint());
         } catch (ResponseStatusException responseStatusException) {
             stopWatch.stop();
-            stopWatch.start("Update Stored Status in DB");
+            stopWatch.start("Update Failed Status in DB");
             storageServiceHelper.saveErrorResult(fileUploadRequest, responseStatusException);
             stopWatch.stop();
             log.info(stopWatch.prettyPrint());
