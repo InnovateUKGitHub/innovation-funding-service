@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadResponse;
-import org.innovateuk.ifs.filestorage.virusscan.VirusScanResult;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileUploadResponseMapper {
