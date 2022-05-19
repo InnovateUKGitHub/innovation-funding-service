@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.yourorganisation.viewmodel;
 
+import lombok.Getter;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.ApplicationYourOrganisationViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationDetailsReadOnlyViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -7,6 +8,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 
+@Getter
 public class ProjectYourOrganisationViewModel extends ApplicationYourOrganisationViewModel {
     private final long projectId;
     private final String projectName;
@@ -26,8 +28,9 @@ public class ProjectYourOrganisationViewModel extends ApplicationYourOrganisatio
                                             String projectName,
                                             boolean readOnly,
                                             UserResource loggedInUser,
-                                            boolean isAllEligibilityAndViabilityInReview) {
-        super(applicationId, competition, organisation.getOrganisationTypeEnum(), maximumFundingLevelConstant, showOrganisationSizeAlert, false);
+                                            boolean isAllEligibilityAndViabilityInReview,
+                                            String hash) {
+        super(applicationId, competition, organisation.getOrganisationTypeEnum(), maximumFundingLevelConstant, showOrganisationSizeAlert, false, hash);
         this.projectId = projectId;
         this.projectName = projectName;
         this.organisationId = organisation.getId();
@@ -36,41 +39,13 @@ public class ProjectYourOrganisationViewModel extends ApplicationYourOrganisatio
         this.isAllEligibilityAndViabilityInReview = isAllEligibilityAndViabilityInReview;
     }
 
-    public long getProjectId() {
-        return projectId;
-    }
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public long getOrganisationId() {
-        return organisationId;
-    }
-
-    public boolean isReadOnly() {
-        return readOnly;
-    }
-
-    public UserResource getLoggedInUser() {
-        return loggedInUser;
-    }
-
     public boolean isAllowedToEditOrganisationSize() {
         return getLoggedInUser().hasAuthority(Authority.PROJECT_FINANCE) && isAllEligibilityAndViabilityInReview;
     }
 
 
-    public YourOrganisationDetailsReadOnlyViewModel getOrgDetailsViewModel() {
-        return orgDetailsViewModel;
-    }
-
     public void setOrgDetailsViewModel(YourOrganisationDetailsReadOnlyViewModel orgDetailsViewModel) {
         this.orgDetailsViewModel = orgDetailsViewModel;
-    }
-
-    public boolean isPartnerOrgDisplay() {
-        return partnerOrgDisplay;
     }
 
     public void setPartnerOrgDisplay(boolean partnerOrgDisplay) {

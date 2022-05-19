@@ -4,6 +4,9 @@ import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionDash
 import org.innovateuk.ifs.assessment.resource.dashboard.ApplicationAssessmentResource;
 import org.innovateuk.ifs.assessment.resource.dashboard.AssessorCompetitionDashboardResource;
 import org.innovateuk.ifs.assessment.service.AssessorCompetitionDashboardRestService;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -19,6 +22,8 @@ import static org.innovateuk.ifs.assessment.builder.AssessorCompetitionDashboard
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.PENDING;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -31,6 +36,9 @@ public class AssessorCompetitionDashboardModelPopulatorTest {
 
     @InjectMocks
     private AssessorCompetitionDashboardModelPopulator assessorCompetitionDashboardModelPopulator;
+
+    @Mock
+    private PublicContentItemRestService publicContentItemRestService;
 
     @Test
     public void populateModel() {
@@ -67,8 +75,13 @@ public class AssessorCompetitionDashboardModelPopulatorTest {
                 .withApplicationAssessments(combineLists(submittedAssessments, outstandingAssessments))
                 .build();
 
+        PublicContentResource publicContentResource = newPublicContentResource().build();
+        PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
+
         when(assessorCompetitionDashboardRestService.getAssessorCompetitionDashboard(compId, userId))
                 .thenReturn(restSuccess(assessorCompetitionDashboardResource));
+
+        when(publicContentItemRestService.getItemByCompetitionId(compId)).thenReturn(restSuccess(publicContentItemResource));
 
         AssessorCompetitionDashboardViewModel viewModel = assessorCompetitionDashboardModelPopulator.populateModel(compId, userId);
         assertEquals(viewModel.getCompetitionId(), assessorCompetitionDashboardResource.getCompetitionId());
@@ -121,8 +134,13 @@ public class AssessorCompetitionDashboardModelPopulatorTest {
                 .withApplicationAssessments(combineLists(submittedAssessments, outstandingAssessments))
                 .build();
 
+        PublicContentResource publicContentResource = newPublicContentResource().build();
+        PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
+
         when(assessorCompetitionDashboardRestService.getAssessorCompetitionDashboard(compId, assessmentPeriodId, userId))
                 .thenReturn(restSuccess(assessorCompetitionDashboardResource));
+
+        when(publicContentItemRestService.getItemByCompetitionId(compId)).thenReturn(restSuccess(publicContentItemResource));
 
         AssessorCompetitionDashboardViewModel viewModel = assessorCompetitionDashboardModelPopulator.populateModel(compId, assessmentPeriodId, userId);
         assertEquals(viewModel.getCompetitionId(), assessorCompetitionDashboardResource.getCompetitionId());

@@ -13,8 +13,8 @@ public class ReviewInviteViewModel extends BaseInviteViewModel {
 
     private ZonedDateTime panelDate;
 
-    public ReviewInviteViewModel(String panelInviteHash, ReviewInviteResource invite, boolean userLoggedIn) {
-        super(panelInviteHash, invite.getCompetitionId(), invite.getCompetitionName(), userLoggedIn);
+    public ReviewInviteViewModel(String panelInviteHash, ReviewInviteResource invite, boolean userLoggedIn, String hash) {
+        super(panelInviteHash, invite.getCompetitionId(), invite.getCompetitionName(), userLoggedIn, hash);
         this.panelDate = invite.getPanelDate();
     }
 

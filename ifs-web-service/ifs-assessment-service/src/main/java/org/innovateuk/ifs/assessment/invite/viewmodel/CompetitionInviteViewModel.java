@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.invite.viewmodel;
 
+import lombok.Getter;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -14,6 +15,7 @@ import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.
 /**
  * ViewModel of a CompetitionInvite.
  */
+@Getter
 public class CompetitionInviteViewModel extends BaseInviteViewModel {
 
     private ZonedDateTime acceptsDate;
@@ -22,35 +24,21 @@ public class CompetitionInviteViewModel extends BaseInviteViewModel {
     private BigDecimal assessorPay;
     private FundingType competitionFundingType;
     private Boolean competitionAlwaysOpen;
+    private String hash;
 
-    public CompetitionInviteViewModel(String competitionInviteHash, CompetitionInviteResource invite, boolean userLoggedIn) {
-        super(competitionInviteHash, invite.getCompetitionId(), invite.getCompetitionName(), userLoggedIn);
+    public CompetitionInviteViewModel(String competitionInviteHash, CompetitionInviteResource invite, boolean userLoggedIn, String hash) {
+        super(competitionInviteHash, invite.getCompetitionId(), invite.getCompetitionName(), userLoggedIn, hash);
         this.acceptsDate = invite.getAcceptsDate();
         this.deadlineDate = invite.getDeadlineDate();
         this.briefingDate = invite.getBriefingDate();
         this.assessorPay = invite.getAssessorPay();
         this.competitionFundingType = invite.getCompetitionFundingType();
         this.competitionAlwaysOpen = invite.getCompetitionAlwaysOpen();
+        this.hash = hash;
     }
 
     public String getCompetitionInviteHash() {
         return getInviteHash();
-    }
-
-    public ZonedDateTime getAcceptsDate() {
-        return acceptsDate;
-    }
-
-    public ZonedDateTime getDeadlineDate() {
-        return deadlineDate;
-    }
-
-    public ZonedDateTime getBriefingDate() {
-        return briefingDate;
-    }
-
-    public BigDecimal getAssessorPay() {
-        return assessorPay;
     }
 
     public Boolean isKtpCompetition() {

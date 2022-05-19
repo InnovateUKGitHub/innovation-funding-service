@@ -22,6 +22,7 @@ public class ProjectYourFundingViewModel {
     private final boolean subsidyBasisRequiredAndNotCompleted;
     private final Optional<Long> subsidyBasisQuestionId;
     private final boolean isThirdPartyOfgem;
+    private String hash;
 
     public ProjectYourFundingViewModel(ProjectResource project,
                                        long organisationId,
@@ -35,7 +36,8 @@ public class ProjectYourFundingViewModel {
                                        boolean subsidyBasisRequiredAndNotCompleted,
                                        boolean organisationRequiredAndNotCompleted,
                                        Optional<Long> subsidyBasisQuestionId,
-                                       boolean isThirdPartyOfgem) {
+                                       boolean isThirdPartyOfgem,
+                                       String hash) {
         this.projectName = project.getName();
         this.projectId = project.getId();
         this.organisationId = organisationId;
@@ -50,6 +52,7 @@ public class ProjectYourFundingViewModel {
         this.organisationRequiredAndNotCompleted = organisationRequiredAndNotCompleted;
         this.subsidyBasisQuestionId = subsidyBasisQuestionId;
         this.isThirdPartyOfgem = isThirdPartyOfgem;
+        this.hash = hash;
     }
 
     public String getProjectName() {
@@ -127,5 +130,9 @@ public class ProjectYourFundingViewModel {
 
     public boolean isThirdPartyOfgem() {
         return isThirdPartyOfgem;
+    }
+
+    public String getHash() {
+        return hash;
     }
 }

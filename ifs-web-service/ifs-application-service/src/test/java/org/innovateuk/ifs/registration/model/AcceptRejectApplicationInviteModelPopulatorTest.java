@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.registration.model;
 
+import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.invite.populator.AcceptRejectApplicationInviteModelPopulator;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.populator.AcceptRejectApplicationInviteModelPopulator;
 import org.innovateuk.ifs.invite.viewmodel.AcceptRejectApplicationInviteViewModel;
 import org.junit.Test;
 
@@ -12,7 +13,12 @@ import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.junit.Assert.*;
 
-public class AcceptRejectApplicationInviteModelPopulatorTest {
+public class AcceptRejectApplicationInviteModelPopulatorTest extends BaseServiceUnitTest<AcceptRejectApplicationInviteModelPopulator> {
+
+    @Override
+    protected AcceptRejectApplicationInviteModelPopulator supplyServiceUnderTest() {
+        return new AcceptRejectApplicationInviteModelPopulator();
+    }
 
     @Test
     public void populateModel() {
@@ -41,7 +47,7 @@ public class AcceptRejectApplicationInviteModelPopulatorTest {
                 build();
 
         AcceptRejectApplicationInviteViewModel model =
-                new AcceptRejectApplicationInviteModelPopulator().populateModel(invite, inviteOrganisation);
+                new AcceptRejectApplicationInviteModelPopulator().populateModel(invite, inviteOrganisation, null);
 
         assertEquals(competition.getId().longValue(), model.getCompetitionId());
         assertEquals(competition.getName(), model.getCompetitionName());
@@ -78,7 +84,7 @@ public class AcceptRejectApplicationInviteModelPopulatorTest {
                 build();
 
         AcceptRejectApplicationInviteViewModel model =
-                new AcceptRejectApplicationInviteModelPopulator().populateModel(invite, inviteOrganisation);
+                new AcceptRejectApplicationInviteModelPopulator().populateModel(invite, inviteOrganisation, null);
 
         assertEquals(competition.getId().longValue(), model.getCompetitionId());
         assertEquals(competition.getName(), model.getCompetitionName());
@@ -115,8 +121,9 @@ public class AcceptRejectApplicationInviteModelPopulatorTest {
                 withOrganisation(leadOrganisationId).
                 build();
 
+
         AcceptRejectApplicationInviteViewModel model =
-                new AcceptRejectApplicationInviteModelPopulator().populateModel(invite, inviteOrganisation);
+                new AcceptRejectApplicationInviteModelPopulator().populateModel(invite, inviteOrganisation, null);
 
         assertEquals(competition.getId().longValue(), model.getCompetitionId());
         assertEquals(competition.getName(), model.getCompetitionName());

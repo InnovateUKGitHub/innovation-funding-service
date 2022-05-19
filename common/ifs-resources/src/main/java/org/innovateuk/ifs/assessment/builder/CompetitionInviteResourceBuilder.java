@@ -35,6 +35,10 @@ public class CompetitionInviteResourceBuilder extends BaseBuilder<CompetitionInv
         return withArraySetFieldByReflection("competitionName", competitionNames);
     }
 
+    public CompetitionInviteResourceBuilder withCompetitionId(Long... competitionIds) {
+        return withArraySetFieldByReflection("competitionId", competitionIds);
+    }
+
     public CompetitionInviteResourceBuilder withCompetitionFundingType(FundingType... competitionFundingType) {
         return withArraySetFieldByReflection("competitionFundingType", competitionFundingType);
     }
