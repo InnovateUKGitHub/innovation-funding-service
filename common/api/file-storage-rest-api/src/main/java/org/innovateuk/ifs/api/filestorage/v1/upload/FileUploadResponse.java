@@ -1,27 +1,30 @@
 package org.innovateuk.ifs.api.filestorage.v1.upload;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-@Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public final class FileUploadResponse implements Serializable {
 
     /** uuid reference for the file */
-    private final String fileId;
+    private String fileId;
 
     /** The file type */
-    private final String mimeType;
+    private String mimeType;
 
     /** The file size in bytes */
-    private final long fileSizeBytes;
+    private long fileSizeBytes;
 
     /** The file name */
-    private final String fileName;
+    private String fileName;
 
     /** The file checksum */
-    private final String md5Checksum;
+    private String md5Checksum;
 
 }
