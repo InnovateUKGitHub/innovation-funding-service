@@ -32,13 +32,13 @@ public class SilMessage {
     @Enumerated(EnumType.STRING)
     private SilPayloadKeyType keyType;
 
-    @Column(nullable = false)
+    @Column
     private String keyValue;
 
     @Column(nullable = false)
     private String payload;
 
-    @Column(nullable = false)
+    @Column
     private String responseCode;
 
 
