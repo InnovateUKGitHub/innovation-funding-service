@@ -48,24 +48,23 @@ the user should see invite only selected as default option in competition inform
     And the user clicks the button/link                    link = Competition information and search
     Then the user sees that the radio button is selected   publishSetting  invite
 
-#the user create a new application and check the competition title as a award in application overview page
-#    [Documentation]  IFS-11736
-#    Given the user logs out if they are logged in
-#    And the user navigates to the page                      ${server}/competition/${webTestCompID}/overview
-#    And the lead user creates an always open application    Test   User   test.user@gmail.com   ${applicationName}
-#    Then the user should see the element                    jQuery = dt:contains("Award:")
-
-#the user fills the Application details and check the title of competition name as a award name
-#    [Documentation]  IFS-11736
-#    When the user completes the application details           ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  25
-#    And the user clicks the button/link                       link = Application details
-#    Then the user should see the element                      jQuery = dt:contains("Award name")
-
-the lead user submit the application
-    [Documentation]  IFS-11734
+the user create a new application and check the competition title as a award in application overview page
+    [Documentation]  IFS-11736
     Given the user logs out if they are logged in
-    When the lead user creates an always open application                                                           Test   User   test.user@gmail.com   ${applicationName}
-    And the lead user completes project details, application questions, finances sections and terms and condition   COMPLETE   test.user@gmail.com
+    And the user navigates to the page                      ${server}/competition/${webTestCompID}/overview
+    And the lead user creates an always open application    Test   User   test.user@gmail.com   ${applicationName}
+    Then the user should see the element                    jQuery = dt:contains("Award:")
+
+the user fills the Application details and check the title of competition name as a award name
+    [Documentation]  IFS-11736
+    When the user completes the application details           ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  25
+    And the user clicks the button/link                       link = Application details
+    Then the user should see the element                      jQuery = dt:contains("Award name")
+
+the lead user submit the application and check the status of application
+    [Documentation]  IFS-11734
+    Given the user clicks the button/link                   link = Back to application overview
+    When the lead user completes direct award application   COMPLETE   test.user@gmail.com
     Then user should see the status of application
 
 *** Keywords ***
@@ -124,9 +123,8 @@ the user completes the application details section
     the user clicks the button/link             link = Back to application overview
     the user should see the element             jQuery = li:contains("Application details") > .task-status-complete
 
-the lead user completes project details, application questions, finances sections and terms and condition
+the lead user completes direct award application
     [Arguments]  ${ediStatus}  ${userEmail}
-    the user completes the application details section                              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  25
     the applicant completes Application Team                                        ${ediStatus}  ${userEmail}
     the user completes the research category                                        Feasibility studies
     the lead applicant fills all the questions and marks as complete(Direct Award)
