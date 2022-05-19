@@ -5,7 +5,8 @@ import org.innovateuk.ifs.filestorage.cfg.storage.BackingStoreConfiguration;
 import org.innovateuk.ifs.filestorage.cfg.virusscan.VirusScanConfiguration;
 import org.innovateuk.ifs.filestorage.storage.StorageService;
 import org.innovateuk.ifs.filestorage.storage.StorageServiceHelper;
-import org.innovateuk.ifs.filestorage.storage.tika.TikaFileValidator;
+import org.innovateuk.ifs.filestorage.storage.validator.TikaFileValidator;
+import org.innovateuk.ifs.filestorage.storage.validator.UploadValidator;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,4 +32,7 @@ public class StorageServiceConfiguration {
 
     @Bean
     public TikaFileValidator tikaFileValidator() { return new TikaFileValidator(); }
+
+    @Bean
+    public UploadValidator uploadValidator() { return new UploadValidator(); }
 }

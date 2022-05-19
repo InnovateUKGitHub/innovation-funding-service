@@ -23,10 +23,16 @@ public class TestHelper {
 
     private static final String TEST_IMAGE = "test.jpg";
 
+    public static final FileUploadRequest.FileUploadRequestBuilder builder(UUID uuid) throws IOException {
+        FileUploadRequest.FileUploadRequestBuilder builder
+                = FileUploadRequestBuilder.fromResource(uuid, new ClassPathResource(TEST_IMAGE), IMAGE_JPEG, "testUser");
+        return builder.userId(TestHelper.class.getSimpleName());
+    }
+
     public static final FileUploadRequest build(UUID uuid) throws IOException {
         FileUploadRequest.FileUploadRequestBuilder builder
                 = FileUploadRequestBuilder.fromResource(uuid, new ClassPathResource(TEST_IMAGE), IMAGE_JPEG, "testUser");
-        return builder.userId(TestHelper.class.getSimpleName()).build();
+        return builder(uuid).build();
     }
 
     public static FileUploadRequest build() throws IOException {

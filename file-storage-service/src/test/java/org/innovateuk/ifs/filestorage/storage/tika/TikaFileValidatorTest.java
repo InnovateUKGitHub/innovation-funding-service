@@ -4,14 +4,13 @@ import org.innovateuk.ifs.filestorage.cfg.StorageServiceConfiguration;
 import org.innovateuk.ifs.filestorage.exception.MimeMismatchException;
 import org.innovateuk.ifs.filestorage.storage.StorageService;
 import org.innovateuk.ifs.filestorage.storage.StorageServiceHelper;
+import org.innovateuk.ifs.filestorage.storage.validator.TikaFileValidator;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.util.MimeType;
 
 import java.nio.charset.StandardCharsets;
 

@@ -2,7 +2,7 @@ server:
   port: 8091
 ifs:
   filestorage:
-    mimeCheckEnabled: false
+    mimeCheckEnabled: true
     virusscan:
       clamAv:
         host: ${FSS_CLAM_HOST:localhost}
@@ -11,8 +11,6 @@ ifs:
     storage:
       localStorage:
         rootFolderPath: "/tmp"
-      glusterStorage:
-        rootFolderPath: ${FSS_GLUSTER_ROOT_FOLDER_PATH}
       s3:
         awsAccessKey:  ${FSS_S3_AWS_ACCESS_KEY}
         awsSecretKey:  ${FSS_S3_AWS_SECRET_KEY}
