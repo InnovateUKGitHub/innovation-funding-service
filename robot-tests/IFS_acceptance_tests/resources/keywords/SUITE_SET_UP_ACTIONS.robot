@@ -45,6 +45,11 @@ the lead applicant fills all the questions and marks as complete(programme)
     :FOR  ${ELEMENT}    IN    @{programme_questions}
      \     the lead applicant marks every question as complete     ${ELEMENT}
 
+the lead applicant fills all the questions and marks as complete(Direct Award)
+    the user marks the project details as complete
+    :FOR  ${ELEMENT}    IN    @{Directaward_questions}
+     \     the lead applicant marks every question as complete     ${ELEMENT}
+
 the lead applicant fills all the questions and marks as complete(programme ATI)
     the user marks the project details as complete
     :FOR  ${ELEMENT}    IN    @{programme_questions_procurement_ati}
