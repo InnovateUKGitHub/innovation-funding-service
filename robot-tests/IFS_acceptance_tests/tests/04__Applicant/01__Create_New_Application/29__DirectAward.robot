@@ -24,7 +24,6 @@ ${openEndedCompName}        Direct award competition
 ${webTestCompID}            ${competition_ids["${openEndedCompName}"]}
 ${applicationName}          Direct award Application
 ${DirectAwardComp}          3-Dimensional Shaped Aluminium Foam Sandwiches
-${DirectAwardCompId}        ${competition_ids["${DirectAwardComp}"]}
 
 *** Test Cases ***
 the user creates a new open ended competiton
@@ -70,7 +69,8 @@ the user can see award in scope section in application overview
 
 the lead user can see award in project setup
     [Documentation]  IFS-11994
-    When the user navigates to the page      ${server}/project-setup/project/${DirectAwardCompId}
+    Given log in as a different user         &{lead_applicant_credentials}
+    When the user clicks the button/link     link = ${DirectAwardComp}
     Then the user should see the element     jQuery = dt:contains("Award:")
 
 *** Keywords ***
