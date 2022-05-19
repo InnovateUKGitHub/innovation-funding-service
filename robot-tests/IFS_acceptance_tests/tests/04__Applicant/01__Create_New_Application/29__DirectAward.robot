@@ -61,12 +61,6 @@ the user fills the Application details and check the title of competition name a
     And the user clicks the button/link                       link = Application details
     Then the user should see the element                      jQuery = dt:contains("Award name")
 
-the user can see award in scope section in application overview
-    [Documentation]  IFS-11994
-    When the user clicks the button/link    link = Back to application overview
-    And the user clicks the button/link     link = Scope
-    Then the user should see the element    jQuery = h3:contains("How does your project align with the scope of this award?")
-
 the lead user can see award in project setup
     [Documentation]  IFS-11994
     Given log in as a different user         &{lead_applicant_credentials}
