@@ -2,14 +2,14 @@
 package org.innovateuk.ifs.crm.transactional;
 
 import org.innovateuk.ifs.commons.security.NotSecured;
-import org.innovateuk.ifs.sil.SIlPayloadKeyType;
-import org.innovateuk.ifs.sil.SIlPayloadType;
+import org.innovateuk.ifs.sil.SilPayloadKeyType;
+import org.innovateuk.ifs.sil.SilPayloadType;
 import org.springframework.http.HttpStatus;
 
-public interface SILMessageRecordingService {
+public interface SilMessageRecordingService {
 
     @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
-    void recordSilMessage(SIlPayloadType sIlPayloadType, SIlPayloadKeyType sIlPayloadKeyType,
+    void recordSilMessage(SilPayloadType sIlPayloadType, SilPayloadKeyType sIlPayloadKeyType,
                           String key, String payload, HttpStatus httpStatus);
 
 

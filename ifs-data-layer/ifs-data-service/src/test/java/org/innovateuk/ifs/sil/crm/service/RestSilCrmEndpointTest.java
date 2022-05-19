@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.sil.crm.service;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
-import org.innovateuk.ifs.crm.transactional.SILMessageRecordingService;
+import org.innovateuk.ifs.crm.transactional.SilMessageRecordingService;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.config.rest.RestTemplateAdaptorFactory;
-import org.innovateuk.ifs.sil.SIlPayloadKeyType;
-import org.innovateuk.ifs.sil.SIlPayloadType;
+import org.innovateuk.ifs.sil.SilPayloadKeyType;
+import org.innovateuk.ifs.sil.SilPayloadType;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,9 +44,9 @@ public class RestSilCrmEndpointTest extends BaseUnitTestMocksTest {
         ReflectionTestUtils.setField(service, "adaptor", adaptor);
         ReflectionTestUtils.setField(service, "silRestServiceUrl", "http://sil.com");
         ReflectionTestUtils.setField(service, "silCrmContacts", "/silstub/contacts");
-        ReflectionTestUtils.setField(service, "silMessagingService", new SILMessageRecordingService() {
+        ReflectionTestUtils.setField(service, "silMessagingService", new SilMessageRecordingService() {
             @Override
-            public void recordSilMessage(SIlPayloadType sIlPayloadType, SIlPayloadKeyType sIlPayloadKeyType, String key, String payload, HttpStatus httpStatus) {
+            public void recordSilMessage(SilPayloadType sIlPayloadType, SilPayloadKeyType sIlPayloadKeyType, String key, String payload, HttpStatus httpStatus) {
                 //Simple stubbing
             }
         });

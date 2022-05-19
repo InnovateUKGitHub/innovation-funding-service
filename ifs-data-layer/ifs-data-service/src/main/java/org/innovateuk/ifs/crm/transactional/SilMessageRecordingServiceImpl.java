@@ -3,8 +3,8 @@ package org.innovateuk.ifs.crm.transactional;
 
 
 import org.innovateuk.ifs.activitylog.repository.SilMessageRepository;
-import org.innovateuk.ifs.sil.SIlPayloadKeyType;
-import org.innovateuk.ifs.sil.SIlPayloadType;
+import org.innovateuk.ifs.sil.SilPayloadKeyType;
+import org.innovateuk.ifs.sil.SilPayloadType;
 import org.innovateuk.ifs.sil.crm.resource.SilMessage;
 import org.innovateuk.ifs.util.TimeMachine;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class SILMessageRecordingServiceImpl implements SILMessageRecordingService {
+public class SilMessageRecordingServiceImpl implements SilMessageRecordingService {
 
 
     @Autowired
@@ -22,7 +22,7 @@ public class SILMessageRecordingServiceImpl implements SILMessageRecordingServic
 
 
     @Override
-    public void recordSilMessage(SIlPayloadType payloadType, SIlPayloadKeyType keyType,
+    public void recordSilMessage(SilPayloadType payloadType, SilPayloadKeyType keyType,
                                  String key, String payload, HttpStatus httpStatus) {
 
 

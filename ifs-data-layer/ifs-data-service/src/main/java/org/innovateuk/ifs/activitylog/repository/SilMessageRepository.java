@@ -5,6 +5,4 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface SilMessageRepository extends PagingAndSortingRepository<SilMessage, String> {
 
-
-
 }

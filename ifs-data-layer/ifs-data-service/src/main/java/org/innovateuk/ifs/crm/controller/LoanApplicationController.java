@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
-import org.innovateuk.ifs.crm.transactional.SILMessageRecordingService;
+import org.innovateuk.ifs.crm.transactional.SilMessageRecordingService;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.transactional.QuestionStatusService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
@@ -16,8 +16,8 @@ import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
-import org.innovateuk.ifs.sil.SIlPayloadKeyType;
-import org.innovateuk.ifs.sil.SIlPayloadType;
+import org.innovateuk.ifs.sil.SilPayloadKeyType;
+import org.innovateuk.ifs.sil.SilPayloadType;
 import org.innovateuk.ifs.sil.crm.resource.SilLoanApplicationStatus;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.UsersRolesService;
@@ -56,7 +56,7 @@ public class LoanApplicationController {
     @Autowired
     ObjectMapper objectMapper;
     @Autowired
-    SILMessageRecordingService silMessagingService;
+    SilMessageRecordingService silMessagingService;
 
     @PreAuthorize("permitAll()")
     @PatchMapping(value = "/{applicationId}")
@@ -73,7 +73,7 @@ public class LoanApplicationController {
                                                 BindingResult bindingResult, HttpServletRequest request) throws JsonProcessingException {
 
         String silStatusJson = objectMapper.writer().writeValueAsString(silStatus);
-        silMessagingService.recordSilMessage(SIlPayloadType.APPLICATION_UPDATE, SIlPayloadKeyType.APPLICATION_ID, Long.toString(applicationId),
+        silMessagingService.recordSilMessage(SilPayloadType.APPLICATION_UPDATE, SilPayloadKeyType.APPLICATION_ID, Long.toString(applicationId),
                 silStatusJson, null);
 
         if(bindingResult.hasErrors()) {

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.innovateuk.ifs.crm.transactional.SILMessageRecordingService;
+import org.innovateuk.ifs.crm.transactional.SilMessageRecordingService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
@@ -12,8 +12,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
-import org.innovateuk.ifs.sil.SIlPayloadKeyType;
-import org.innovateuk.ifs.sil.SIlPayloadType;
+import org.innovateuk.ifs.sil.SilPayloadKeyType;
+import org.innovateuk.ifs.sil.SilPayloadType;
 import org.innovateuk.ifs.sil.crm.resource.SilEDIStatus;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
@@ -86,7 +86,7 @@ public class UserController {
     private CrmService crmService;
 
     @Autowired
-    SILMessageRecordingService silMessagingService;
+    SilMessageRecordingService silMessagingService;
 
     @GetMapping("/uid/{uid}")
     public RestResult<UserResource> getUserByUid(@PathVariable String uid) {
@@ -304,7 +304,7 @@ public class UserController {
 
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         String surveyStatusJson = objectMapper.writer().writeValueAsString(surveyStatus);
-        silMessagingService.recordSilMessage(SIlPayloadType.USER_UPDATE, SIlPayloadKeyType.USER_ID, user==null?null:user.getUid(),
+        silMessagingService.recordSilMessage(SilPayloadType.USER_UPDATE, SilPayloadKeyType.USER_ID, user==null?null:user.getUid(),
                 surveyStatusJson, null);
 
 

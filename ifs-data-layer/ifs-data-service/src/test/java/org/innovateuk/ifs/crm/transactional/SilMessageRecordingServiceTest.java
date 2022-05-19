@@ -2,8 +2,8 @@ package org.innovateuk.ifs.crm.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.activitylog.repository.SilMessageRepository;
-import org.innovateuk.ifs.sil.SIlPayloadKeyType;
-import org.innovateuk.ifs.sil.SIlPayloadType;
+import org.innovateuk.ifs.sil.SilPayloadKeyType;
+import org.innovateuk.ifs.sil.SilPayloadType;
 import org.innovateuk.ifs.sil.crm.resource.SilMessage;
 import org.innovateuk.ifs.util.TimeMachine;
 import org.junit.Before;
@@ -16,9 +16,9 @@ import java.time.ZonedDateTime;
 import static org.mockito.Mockito.verify;
 
 /**
- * Tests around the {@link SILMessageRecordingService}.
+ * Tests around the {@link SilMessageRecordingService}.
  */
-public class SilMessageRecordingServiceTest extends BaseServiceUnitTest<SILMessageRecordingServiceImpl> {
+public class SilMessageRecordingServiceTest extends BaseServiceUnitTest<SilMessageRecordingServiceImpl> {
 
 
     @Before
@@ -55,11 +55,11 @@ public class SilMessageRecordingServiceTest extends BaseServiceUnitTest<SILMessa
                 "\n" +
                 "{   \"name\": \"Test0605_10rg\",   \"registrationNumber\": \"Test0605_1\",   \"srcSysOrgId\": \"Test2605_20rg\"   }\n" +
                 "}";
-        service.recordSilMessage(SIlPayloadType.CONTACT, SIlPayloadKeyType.USER_ID, USER_ID,
+        service.recordSilMessage(SilPayloadType.CONTACT, SilPayloadKeyType.USER_ID, USER_ID,
                 silContactJson, HttpStatus.ACCEPTED);
 
 
-        SilMessage silMessage = SilMessage.builder().payloadType(SIlPayloadType.CONTACT).keyType(SIlPayloadKeyType.USER_ID)
+        SilMessage silMessage = SilMessage.builder().payloadType(SilPayloadType.CONTACT).keyType(SilPayloadKeyType.USER_ID)
                 .keyValue(USER_ID).payload(silContactJson).responseCode(HttpStatus.ACCEPTED.name()).dateCreated(TimeMachine.now()).build();
 
         verify(silMessageRepository).save(silMessage);
@@ -92,11 +92,11 @@ public class SilMessageRecordingServiceTest extends BaseServiceUnitTest<SILMessa
                 "    ]\n" +
                 "}" +
                 "}";
-        service.recordSilMessage(SIlPayloadType.ASSESSMENT_COMPLETE, SIlPayloadKeyType.COMPETITION_ID, COMPETITION_ID,
+        service.recordSilMessage(SilPayloadType.ASSESSMENT_COMPLETE, SilPayloadKeyType.COMPETITION_ID, COMPETITION_ID,
                 silLineDrawPayload, HttpStatus.ACCEPTED);
 
 
-        SilMessage silMessage = SilMessage.builder().payloadType(SIlPayloadType.ASSESSMENT_COMPLETE).keyType(SIlPayloadKeyType.COMPETITION_ID)
+        SilMessage silMessage = SilMessage.builder().payloadType(SilPayloadType.ASSESSMENT_COMPLETE).keyType(SilPayloadKeyType.COMPETITION_ID)
                 .keyValue(COMPETITION_ID).payload(silLineDrawPayload).responseCode(HttpStatus.ACCEPTED.name()).dateCreated(TimeMachine.now()).build();
 
         verify(silMessageRepository).save(silMessage);
@@ -118,11 +118,11 @@ public class SilMessageRecordingServiceTest extends BaseServiceUnitTest<SILMessa
                 "  \"eligibilityStatusChangeDate\" : null,\n" +
                 "  \"eligibilityStatusChangeSource\" : null\n" +
                 "}";
-        service.recordSilMessage(SIlPayloadType.APPLICATION_SUBMISSION, SIlPayloadKeyType.APPLICATION_ID, APPLICATION_ID,
+        service.recordSilMessage(SilPayloadType.APPLICATION_SUBMISSION, SilPayloadKeyType.APPLICATION_ID, APPLICATION_ID,
                 silLoansSubmission, HttpStatus.ACCEPTED);
 
 
-        SilMessage silMessage = SilMessage.builder().payloadType(SIlPayloadType.APPLICATION_SUBMISSION).keyType(SIlPayloadKeyType.APPLICATION_ID)
+        SilMessage silMessage = SilMessage.builder().payloadType(SilPayloadType.APPLICATION_SUBMISSION).keyType(SilPayloadKeyType.APPLICATION_ID)
                 .keyValue(APPLICATION_ID).payload(silLoansSubmission).responseCode(HttpStatus.ACCEPTED.name()).dateCreated(TimeMachine.now()).build();
 
         verify(silMessageRepository).save(silMessage);
@@ -135,11 +135,11 @@ public class SilMessageRecordingServiceTest extends BaseServiceUnitTest<SILMessa
                 "   \"completionStatus\":\"Complete\",\n" +
                 "   \"completionDate\":\"2022-04-11T12:15:45.000Z\"\n" +
                 "}";
-        service.recordSilMessage(SIlPayloadType.APPLICATION_UPDATE, SIlPayloadKeyType.APPLICATION_ID, APPLICATION_ID,
+        service.recordSilMessage(SilPayloadType.APPLICATION_UPDATE, SilPayloadKeyType.APPLICATION_ID, APPLICATION_ID,
                 silLoansSubmission, null);
 
 
-        SilMessage silMessage = SilMessage.builder().payloadType(SIlPayloadType.APPLICATION_UPDATE).keyType(SIlPayloadKeyType.APPLICATION_ID)
+        SilMessage silMessage = SilMessage.builder().payloadType(SilPayloadType.APPLICATION_UPDATE).keyType(SilPayloadKeyType.APPLICATION_ID)
                 .keyValue(APPLICATION_ID).payload(silLoansSubmission).responseCode(null).dateCreated(TimeMachine.now()).build();
 
         verify(silMessageRepository).save(silMessage);
@@ -151,11 +151,11 @@ public class SilMessageRecordingServiceTest extends BaseServiceUnitTest<SILMessa
                 "   \"ediStatus\":\"In Progress\",\n" +
                 "   \"ediReviewDate\":\"2020-01-31T01:02:03Z\"\n" +
                 "}";
-        service.recordSilMessage(SIlPayloadType.USER_UPDATE, SIlPayloadKeyType.USER_ID, USER_ID,
+        service.recordSilMessage(SilPayloadType.USER_UPDATE, SilPayloadKeyType.USER_ID, USER_ID,
                 silLoansSubmission, null);
 
 
-        SilMessage silMessage = SilMessage.builder().payloadType(SIlPayloadType.USER_UPDATE).keyType(SIlPayloadKeyType.USER_ID)
+        SilMessage silMessage = SilMessage.builder().payloadType(SilPayloadType.USER_UPDATE).keyType(SilPayloadKeyType.USER_ID)
                 .keyValue(USER_ID).payload(silLoansSubmission).responseCode(null).dateCreated(TimeMachine.now()).build();
 
         verify(silMessageRepository).save(silMessage);
@@ -163,8 +163,8 @@ public class SilMessageRecordingServiceTest extends BaseServiceUnitTest<SILMessa
 
 
     @Override
-    protected SILMessageRecordingServiceImpl supplyServiceUnderTest() {
-        return new SILMessageRecordingServiceImpl();
+    protected SilMessageRecordingServiceImpl supplyServiceUnderTest() {
+        return new SilMessageRecordingServiceImpl();
     }
 
 

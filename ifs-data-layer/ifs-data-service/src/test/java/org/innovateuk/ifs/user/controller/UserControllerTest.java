@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.crm.transactional.SILMessageRecordingService;
+import org.innovateuk.ifs.crm.transactional.SilMessageRecordingService;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
@@ -13,8 +13,8 @@ import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
-import org.innovateuk.ifs.sil.SIlPayloadKeyType;
-import org.innovateuk.ifs.sil.SIlPayloadType;
+import org.innovateuk.ifs.sil.SilPayloadKeyType;
+import org.innovateuk.ifs.sil.SilPayloadType;
 import org.innovateuk.ifs.sil.crm.resource.SilEDIStatus;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
@@ -88,7 +88,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     private final SilEDIStatus silStatus = new SilEDIStatus();
     private UserResource user;
     @Mock
-    private SILMessageRecordingService silMessagingService;
+    private SilMessageRecordingService silMessagingService;
 
     @Mock
     private ObjectMapper mapper;
@@ -101,7 +101,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         when(userService.updateDetails(user)).thenReturn(serviceSuccess(user));
         when(mapper.writer()).thenReturn(new ObjectMapper().writer());
 
-        doNothing().when(silMessagingService).recordSilMessage(SIlPayloadType.APPLICATION_UPDATE, SIlPayloadKeyType.APPLICATION_ID, "1", "", null);
+        doNothing().when(silMessagingService).recordSilMessage(SilPayloadType.APPLICATION_UPDATE, SilPayloadKeyType.APPLICATION_ID, "1", "", null);
 
     }
 

@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.sil;
 
-public enum SIlPayloadType {
+public enum SilPayloadType {
     APPLICATION_SUBMISSION("Application submission"),
     CONTACT("Contact sync created / updated"),
     ASSESSMENT_COMPLETE("Assessment completed"),
@@ -10,7 +10,7 @@ public enum SIlPayloadType {
 
     private final String displayName;
 
-    SIlPayloadType(String displayName) {
+    SilPayloadType(String displayName) {
         this.displayName = displayName;
     }
 

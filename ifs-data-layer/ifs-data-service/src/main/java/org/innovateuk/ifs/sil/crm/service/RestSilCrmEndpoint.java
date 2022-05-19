@@ -5,12 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.innovateuk.ifs.crm.transactional.SILMessageRecordingService;
+import org.innovateuk.ifs.crm.transactional.SilMessageRecordingService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.sil.SIlPayloadKeyType;
-import org.innovateuk.ifs.sil.SIlPayloadType;
+import org.innovateuk.ifs.sil.SilPayloadKeyType;
+import org.innovateuk.ifs.sil.SilPayloadType;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
 import org.innovateuk.ifs.sil.crm.resource.SilCrmError;
 import org.innovateuk.ifs.sil.crm.resource.SilLoanApplication;
@@ -49,7 +49,7 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
     private String silmDecisionmatrix;
 
     @Autowired
-    SILMessageRecordingService silMessagingService;
+    SilMessageRecordingService silMessagingService;
 
     @SneakyThrows(JsonProcessingException.class)
     @Override
@@ -60,14 +60,14 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
                     final Either<ResponseEntity<SilCrmError>, ResponseEntity<Void>> response = adaptor.restPostWithEntity(silRestServiceUrl + silCrmContacts, silContact, Void.class, SilCrmError.class, HttpStatus.ACCEPTED);
                     return response.mapLeftOrRight(failure -> {
                                 log.error("Error updating SIL contact " + silContact);
-                                silMessagingService.recordSilMessage(SIlPayloadType.CONTACT, SIlPayloadKeyType.USER_ID, silContact.getIfsUuid(),
+                                silMessagingService.recordSilMessage(SilPayloadType.CONTACT, SilPayloadKeyType.USER_ID, silContact.getIfsUuid(),
                                         silContactJson, failure.getStatusCode());
                                 return serviceFailure(new Error(CONTACT_NOT_UPDATED));
                             },
 
                             success -> {
 
-                                silMessagingService.recordSilMessage(SIlPayloadType.CONTACT, SIlPayloadKeyType.USER_ID,
+                                silMessagingService.recordSilMessage(SilPayloadType.CONTACT, SilPayloadKeyType.USER_ID,
                                         silContact.getIfsUuid(), silContactJson, HttpStatus.ACCEPTED);
                                 return serviceSuccess();
                             });
@@ -86,12 +86,12 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
                     return response.mapLeftOrRight(failure -> {
                                 log.error("Error updating SIL Loan Application state: " + silApplication +
                                         "Error: " + failure);
-                                silMessagingService.recordSilMessage(SIlPayloadType.APPLICATION_SUBMISSION, SIlPayloadKeyType.APPLICATION_ID, Integer.toString(silApplication.getApplicationID()),
+                                silMessagingService.recordSilMessage(SilPayloadType.APPLICATION_SUBMISSION, SilPayloadKeyType.APPLICATION_ID, Integer.toString(silApplication.getApplicationID()),
                                         silApplicationJson, failure.getStatusCode());
                                 return serviceFailure(new Error(APPLICATION_NOT_UPDATED));
                             },
                             success -> {
-                                silMessagingService.recordSilMessage(SIlPayloadType.APPLICATION_SUBMISSION, SIlPayloadKeyType.APPLICATION_ID, Integer.toString(silApplication.getApplicationID()),
+                                silMessagingService.recordSilMessage(SilPayloadType.APPLICATION_SUBMISSION, SilPayloadKeyType.APPLICATION_ID, Integer.toString(silApplication.getApplicationID()),
                                         silApplicationJson, HttpStatus.ACCEPTED);
                                 return serviceSuccess();
                             });
@@ -109,12 +109,12 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
                     return response.mapLeftOrRight(failure -> {
                                 log.error("Error updating SIL Loan Assessment: " + silLoanAssessment +
                                         "Error: " + failure);
-                                silMessagingService.recordSilMessage(SIlPayloadType.ASSESSMENT_COMPLETE, SIlPayloadKeyType.COMPETITION_ID, Long.toString(silLoanAssessment.getCompetitionID()),
+                                silMessagingService.recordSilMessage(SilPayloadType.ASSESSMENT_COMPLETE, SilPayloadKeyType.COMPETITION_ID, Long.toString(silLoanAssessment.getCompetitionID()),
                                         silApplicationJson, failure.getStatusCode());
                                 return serviceFailure(new Error(APPLICATION_NOT_UPDATED));
                             },
                             success -> {
-                                silMessagingService.recordSilMessage(SIlPayloadType.ASSESSMENT_COMPLETE, SIlPayloadKeyType.COMPETITION_ID, Long.toString(silLoanAssessment.getCompetitionID()),
+                                silMessagingService.recordSilMessage(SilPayloadType.ASSESSMENT_COMPLETE, SilPayloadKeyType.COMPETITION_ID, Long.toString(silLoanAssessment.getCompetitionID()),
                                         silApplicationJson, HttpStatus.ACCEPTED);
                                 return serviceSuccess();
                             });

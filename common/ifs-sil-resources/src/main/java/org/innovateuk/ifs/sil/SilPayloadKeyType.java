@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.sil;
 
-public enum SIlPayloadKeyType {
+public enum SilPayloadKeyType {
     COMPETITION_ID("Competition ID"),
     APPLICATION_ID("Application ID"),
     USER_ID("User ID ");
@@ -8,7 +8,7 @@ public enum SIlPayloadKeyType {
 
     private final String displayName;
 
-    SIlPayloadKeyType(String displayName) {
+    SilPayloadKeyType(String displayName) {
         this.displayName = displayName;
     }
 
