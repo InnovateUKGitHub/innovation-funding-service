@@ -5,6 +5,7 @@ import org.innovateuk.ifs.filestorage.repository.FileStorageRecord;
 import org.innovateuk.ifs.filestorage.repository.FileStorageRecordMapper;
 import org.innovateuk.ifs.filestorage.repository.FileStorageRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 
@@ -20,7 +21,7 @@ public class StorageServiceHelper {
     }
 
     @Transactional
-    public FileStorageRecord saveErrorResult(FileUploadRequest fileUploadRequest, Exception ex) {
+    public FileStorageRecord saveErrorResult(FileUploadRequest fileUploadRequest, ResponseStatusException ex) {
         return fileStorageRecordRepository.save(FileStorageRecordMapper.fromError(fileUploadRequest, ex));
     }
 }

@@ -38,7 +38,7 @@ public class FileUploadRequestBuilder {
     public static FileUploadRequest.FileUploadRequestBuilder fromResource(byte[] payload, String userId) throws IOException {
         Resource payloadResource = new ByteArrayResource(payload);
         return fromResource(UUID.randomUUID(), payloadResource,
-                MediaTypeFactory.getMediaType(payloadResource).orElse(MediaType.APPLICATION_OCTET_STREAM), userId);
+                MediaTypeFactory.getMediaType(payloadResource).orElse(MediaType.APPLICATION_JSON), userId);
     }
 
 }

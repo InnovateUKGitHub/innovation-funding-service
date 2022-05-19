@@ -2,6 +2,7 @@ server:
   port: 8091
 ifs:
   filestorage:
+    mimeCheckEnabled: false
     virusscan:
       clamAv:
         host: ${FSS_CLAM_HOST:localhost}
