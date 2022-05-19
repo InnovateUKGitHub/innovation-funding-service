@@ -5,6 +5,7 @@ import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.filestorage.cfg.StorageServiceConfiguration;
 import org.innovateuk.ifs.filestorage.cfg.storage.BackingStoreConfigurationProperties;
+import org.innovateuk.ifs.filestorage.exception.MimeMismatchException;
 import org.innovateuk.ifs.filestorage.repository.FileStorageRecord;
 import org.innovateuk.ifs.filestorage.repository.FileStorageRecordMapper;
 import org.innovateuk.ifs.filestorage.repository.FileStorageRecordRepository;
@@ -21,7 +22,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.util.MimeType;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -53,6 +56,19 @@ class StorageServiceTest {
         assertThat(fileStorageRecord.fileUuid(), equalTo(uuid.toString()));
         FileDownloadResponse fileDownloadResponse = storageService.fileByUuid(uuid.toString());
         assertThat(fileDownloadResponse.getFileId(), equalTo(uuid.toString()));
+    }
+
+    @Test
+    void fileUploadFail() throws IOException {
+        UUID uuid = UUID.randomUUID();
+        FileUploadRequest fileUploadRequest = TestHelper.builder(uuid).mimeType(MediaType.APPLICATION_PDF.toString()).build();
+        assertThrows(
+            MimeMismatchException.class,
+                () -> storageService.fileUpload(fileUploadRequest)
+        );
+        FileStorageRecord fileStorageRecord = fileStorageRecordRepository.findById(uuid.toString()).get();
+        assertThat(fileStorageRecord.fileUuid(), equalTo(uuid.toString()));
+        assertThat(fileStorageRecord.error().contains("image/jpeg when application/pdf was specified"), equalTo(true));
     }
 
 }

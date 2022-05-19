@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.filestorage.storage.tika;
+package org.innovateuk.ifs.filestorage.storage.validator;
 
 import org.apache.tika.Tika;
 import org.innovateuk.ifs.filestorage.exception.MimeMismatchException;

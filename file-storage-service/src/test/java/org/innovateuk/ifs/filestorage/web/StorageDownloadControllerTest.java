@@ -3,11 +3,9 @@ package org.innovateuk.ifs.filestorage.web;
 import org.apache.http.HttpHeaders;
 import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
-import org.innovateuk.ifs.api.filestorage.v1.upload.VirusScanStatus;
 import org.innovateuk.ifs.filestorage.exception.NoSuchRecordException;
 import org.innovateuk.ifs.filestorage.storage.StorageService;
 import org.innovateuk.ifs.filestorage.util.TestHelper;
-import org.innovateuk.ifs.filestorage.virusscan.VirusScanResult;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -21,14 +19,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.innovateuk.ifs.filestorage.util.TestHelper.headerAssert;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {StorageDownloadController.class})
@@ -45,8 +41,7 @@ class StorageDownloadControllerTest {
     @Test
     void testDownload() throws IOException {
         UUID uuid = UUID.randomUUID();
-        FileDownloadResponse fileDownloadResponse = TestHelper.build(uuid,
-                new VirusScanResult(VirusScanStatus.VIRUS_FREE, "OK"));
+        FileDownloadResponse fileDownloadResponse = TestHelper.buildDownLoadResponse(uuid);
         when(storageService.fileByUuid(uuid.toString())).thenReturn(fileDownloadResponse);
         ResponseEntity<Resource> responseEntity = storageDownloadController.fileStreamByUuid(uuid.toString());
         assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.OK));

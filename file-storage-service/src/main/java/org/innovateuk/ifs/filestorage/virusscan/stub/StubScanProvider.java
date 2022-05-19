@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.filestorage.virusscan.stub;
 
-import org.innovateuk.ifs.api.filestorage.v1.upload.VirusScanStatus;
 import org.innovateuk.ifs.filestorage.exception.VirusDetectedException;
 import org.innovateuk.ifs.filestorage.virusscan.VirusScanProvider;
-import org.innovateuk.ifs.filestorage.virusscan.VirusScanResult;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;

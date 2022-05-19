@@ -33,7 +33,7 @@ class StorageUploadControllerMockMvcTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    @Disabled
+    @Disabled("I think this is a mock mvc bug - ignores mimes")
     void upload() throws Exception {
         mockMvc.perform(post("/" + ApiVersion.VERSION_ONE + "/upload")
                 .accept(MediaType.APPLICATION_JSON)

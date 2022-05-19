@@ -11,7 +11,8 @@ import org.innovateuk.ifs.filestorage.exception.VirusDetectedException;
 import org.innovateuk.ifs.filestorage.repository.FileStorageRecord;
 import org.innovateuk.ifs.filestorage.repository.FileStorageRecordMapper;
 import org.innovateuk.ifs.filestorage.repository.FileStorageRecordRepository;
-import org.innovateuk.ifs.filestorage.storage.tika.TikaFileValidator;
+import org.innovateuk.ifs.filestorage.storage.validator.TikaFileValidator;
+import org.innovateuk.ifs.filestorage.storage.validator.UploadValidator;
 import org.innovateuk.ifs.filestorage.util.FileUploadResponseMapper;
 import org.innovateuk.ifs.filestorage.virusscan.VirusScanProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,12 +47,19 @@ public class StorageService {
     @Autowired
     private TikaFileValidator tikaFileValidator;
 
+    @Autowired
+    private UploadValidator uploadValidator;
+
     public FileUploadResponse fileUpload(FileUploadRequest fileUploadRequest) throws VirusDetectedException, InvalidMimeTypeException {
         StopWatch stopWatch = new StopWatch(StorageService.class.getSimpleName());
 
         try {
             stopWatch.start("Virus Scan");
             virusScanProvider.scanFile(fileUploadRequest.getPayload());
+            stopWatch.stop();
+
+            stopWatch.start("Validate Upload");
+            uploadValidator.validateFile(fileUploadRequest);
             stopWatch.stop();
 
             if (storageServiceConfigurationProperties.isMimeCheckEnabled()) {

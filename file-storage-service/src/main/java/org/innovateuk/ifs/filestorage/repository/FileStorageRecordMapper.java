@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  * Map entity to its respective request and response to and from the DB.
@@ -17,9 +18,10 @@ public class FileStorageRecordMapper {
         return fileStorageRecord;
     }
 
-    public static FileStorageRecord fromError(FileUploadRequest fileUploadRequest, Exception exception) {
+    public static FileStorageRecord fromError(FileUploadRequest fileUploadRequest, ResponseStatusException exception) {
         FileStorageRecord fileStorageRecord = internal(fileUploadRequest);
-        fileStorageRecord.error(exception.toString());
+        String message = exception.getClass().getSimpleName() + ":" + exception.getReason();
+        fileStorageRecord.error(message.substring(0, Math.min(message.length(), 250)));
         return fileStorageRecord;
     }
 

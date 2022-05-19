@@ -5,7 +5,6 @@ import org.innovateuk.ifs.api.filestorage.util.FileHashing;
 import org.innovateuk.ifs.api.filestorage.util.FileUploadRequestBuilder;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
-import org.innovateuk.ifs.filestorage.virusscan.VirusScanResult;
 import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -24,17 +23,23 @@ public class TestHelper {
 
     private static final String TEST_IMAGE = "test.jpg";
 
+    public static final FileUploadRequest.FileUploadRequestBuilder builder(UUID uuid) throws IOException {
+        FileUploadRequest.FileUploadRequestBuilder builder
+                = FileUploadRequestBuilder.fromResource(uuid, new ClassPathResource(TEST_IMAGE), IMAGE_JPEG, "testUser");
+        return builder.userId(TestHelper.class.getSimpleName());
+    }
+
     public static final FileUploadRequest build(UUID uuid) throws IOException {
         FileUploadRequest.FileUploadRequestBuilder builder
                 = FileUploadRequestBuilder.fromResource(uuid, new ClassPathResource(TEST_IMAGE), IMAGE_JPEG, "testUser");
-        return builder.userId(TestHelper.class.getSimpleName()).build();
+        return builder(uuid).build();
     }
 
     public static FileUploadRequest build() throws IOException {
         return build(UUID.randomUUID());
     }
 
-    public static FileDownloadResponse build(UUID uuid, VirusScanResult virusScanResult) throws IOException {
+    public static FileDownloadResponse buildDownLoadResponse(UUID uuid) throws IOException {
         Resource resource = new ClassPathResource(TEST_IMAGE);
         byte[] payload = ByteStreams.toByteArray(resource.getInputStream());
         return FileDownloadResponse.builder()
@@ -44,8 +49,6 @@ public class TestHelper {
                 .fileId(uuid.toString())
                 .mimeType(IMAGE_JPEG.toString())
                 .fileSizeBytes(payload.length)
-                .virusScanStatus(virusScanResult.virusScanStatus().toString())
-                .virusScanResultMessage(virusScanResult.virusScanResultMessage())
                 .build();
     }
 
