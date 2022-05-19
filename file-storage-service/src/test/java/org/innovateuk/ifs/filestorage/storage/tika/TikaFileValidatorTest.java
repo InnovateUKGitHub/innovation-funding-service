@@ -32,12 +32,8 @@ class TikaFileValidatorTest {
     private TikaFileValidator tikaFileValidator;
 
     @Test
-    void validatePayload() {
-        tikaFileValidator.validatePayload(MediaType.APPLICATION_JSON_VALUE, JSON, "foo.json");
-    }
-
-    @Test
     void validatePayloadFail() {
+        tikaFileValidator.validatePayload(MediaType.APPLICATION_JSON_VALUE, JSON, "foo.json");
         assertThrows(
                 MimeMismatchException.class,
                 () -> tikaFileValidator.validatePayload(MediaType.IMAGE_GIF_VALUE, JSON, "foo.json")
