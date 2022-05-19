@@ -22,15 +22,13 @@ class StubScanProviderTest {
     @Test
     void scanFile() {
         stubScanProvider.scanFile("sdfsdfsfd".getBytes(StandardCharsets.UTF_8));
-    }
-
-    @Test
-    void scanFileVirus() {
+        byte[] eicar = "X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"
+                .getBytes(StandardCharsets.UTF_8);
         assertThrows(
-            VirusDetectedException.class,
+                VirusDetectedException.class,
                 () -> stubScanProvider
-                        .scanFile("X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"
-                        .getBytes(StandardCharsets.UTF_8))
+                        .scanFile(eicar)
         );
     }
+
 }
