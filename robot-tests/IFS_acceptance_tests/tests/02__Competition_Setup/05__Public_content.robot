@@ -344,7 +344,7 @@ User can view the competition url for invite only competitions
     [Documentation]    IFS-262  IFS-5370
     [Tags]
     Given the user should not see the element           jQuery = .message-alert:contains("This information will be publicly viewable by prospective applicants.")
-    When the user clicks the button/link                jQuery = a:contains("${server}:8443/competition/${competitionId}/overview")
+    When the user clicks the button/link                jQuery = a:contains("${server}/competition/${competitionId}/overview")
     Then the user should see the element                jQuery = h1:contains("Public content competition")
     And the user should see the element                 jQUery = .govuk-body:contains("This is a Summary description")
     Then the internal user navigates to public content  ${public_content_competition_name}
