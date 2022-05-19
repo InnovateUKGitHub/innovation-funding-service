@@ -102,7 +102,7 @@ Competition information and search: Valid values
     And the user selects the radio button           publishSetting  invite
     And the user enters text to a text field        css = [aria-labelledby="eligibilitySummary-label"]  Summary of eligiblity
     When the user enters text to a text field       id = keywords  hellohellohellohellohellohellohellohellohellohellou
-    And the user clicks the button/link             jQuery = buttnon:contains("Save and review")
+    And the user clicks the button/link             jQuery = .govuk-button:contains("Save and review")
     Then the user should see the element            jQuery = .govuk-error-summary__list:contains("Each keyword must be less than 50 characters long.")
     And the user enters text to a text field        id = keywords  Search, Testing, Robot
     Then the user clicks the button/link            jQuery = .govuk-button:contains("Save and review")
@@ -344,7 +344,7 @@ User can view the competition url for invite only competitions
     [Documentation]    IFS-262  IFS-5370
     [Tags]
     Given the user should not see the element           jQuery = .message-alert:contains("This information will be publicly viewable by prospective applicants.")
-    When the user clicks the button/link                jQuery = a:contains("${server}/competition/${competitionId}/overview")
+    When the user clicks the button/link                jQuery = a:contains("${server}:8443/competition/${competitionId}/overview")
     Then the user should see the element                jQuery = h1:contains("Public content competition")
     And the user should see the element                 jQUery = .govuk-body:contains("This is a Summary description")
     Then the internal user navigates to public content  ${public_content_competition_name}
