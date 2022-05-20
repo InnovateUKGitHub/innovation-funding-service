@@ -140,7 +140,9 @@ public class CompetitionWebTestData {
                         .withLeadApplicantTypes(asSet(BUSINESS, RESEARCH, RTO, PUBLIC_SECTOR_OR_CHARITY)),
                 grantCompetition()
                         .withName("subsidy control comp in project setup")
-                        .withFundingRules(FundingRules.SUBSIDY_CONTROL)
+                        .withFundingRules(FundingRules.SUBSIDY_CONTROL),
+                directAwardCompetition()
+                        .withName("Direct award competition - Project Setup")
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.PROJECT_SETUP))

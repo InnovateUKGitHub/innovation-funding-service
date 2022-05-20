@@ -5,8 +5,10 @@ Documentation     IFS-11682  Direct Award: New competition type
 ...
 ...               IFS-11735 Direct Awards: Public Content scale back
 ...
-...               IFS-11734 Direct awards - Application status
+...               IFS-11994 Web test data update - Direct award
 ...
+...               IFS-11734 Direct awards - Application status
+
 
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -23,7 +25,7 @@ ${CompName}                 Open ended Direct Award competition
 ${openEndedCompName}        Direct award competition
 ${webTestCompID}            ${competition_ids["${openEndedCompName}"]}
 ${applicationName}          Direct award Application
-
+${DirectAwardComp}          3-Dimensional Shaped Aluminium Foam Sandwiches
 
 *** Test Cases ***
 the user creates a new open ended competiton
@@ -65,6 +67,13 @@ the lead user submit the application and check the status of application
     Given the user clicks the button/link                   link = Back to application overview
     When the lead user completes direct award application   COMPLETE   test.user@gmail.com
     Then user should see the status of application
+
+the lead user can see award in project setup
+    [Documentation]  IFS-11994
+    Given log in as a different user         &{lead_applicant_credentials}
+    When the user clicks the button/link     link = ${DirectAwardComp}
+    Then the user should see the element     jQuery = dt:contains("Award:")
+
 
 *** Keywords ***
 Custom suite setup

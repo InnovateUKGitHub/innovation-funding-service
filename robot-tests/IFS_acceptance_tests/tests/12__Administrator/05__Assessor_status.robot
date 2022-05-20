@@ -201,7 +201,7 @@ the user checks the assessor lists
     the user clicks the button/link       link = ${IN_ASSESSMENT_COMPETITION_NAME}
     the user clicks the button/link       link = Invite assessors to assess the competition
     the user enters text to a text field  id = assessorNameFilter  myra
-    the user clicks the button/link           jQuery = button:contains("Filter")
+    the user clicks the button/link       jQuery = button:contains("Filter")
     the user should see the element       jQuery = td:contains("No available assessors found")
     the user clicks the button/link       link = Accepted
     the user clicks the button/link       link = 21 to 40
