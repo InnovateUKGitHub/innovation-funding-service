@@ -24,7 +24,8 @@
                        value="public"
                        th:errorclass="field-error"
                        required="required"
-                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.publishsetting.required}" />
+                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.publishsetting.required}"
+                       data-conditionally-add-required="#shortDescription, #projectFundingRange, #eligibilitySummary, #keywords"/>
                 <label for="publishSetting"
                        class="govuk-label govuk-radios__label">
                     Public
@@ -38,7 +39,8 @@
                        th:errorclass="field-error"
                        required="required"
                        value="invite"
-                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.publishsetting.required}" />
+                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.publishsetting.required}"
+                       data-conditionally-remove-required="#shortDescription, #projectFundingRange, #eligibilitySummary, #keywords"/>
                 <label for="publishSetting-1"
                        class="govuk-label govuk-radios__label">
                     Invite only
@@ -93,7 +95,6 @@
                    type="text"
                    th:errorclass="govuk-input--error"
                    th:field="${form.shortDescription}"
-                   required="required"
                    maxlength="255"
                    th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.shortDescription.required}" />
         </div>
@@ -110,7 +111,6 @@
                    type="text"
                    th:errorclass="govuk-input--error"
                    th:field="${form.projectFundingRange}"
-                   required="required"
                    maxlength="255"
                    th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.projectFundingRange.required}" />
         </div>
@@ -128,7 +128,6 @@
                        id="eligibilitySummary"
                        ifs:utext="${form.eligibilitySummary}"
                        th:field="${form.eligibilitySummary}"
-                       required="required"
                        th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.eligibilitySummary.required}"></textarea>
             </div>
         </div>
@@ -145,7 +144,6 @@
                    type="text"
                    th:field="${form.keywords}"
                    th:errorclass="govuk-input--error"
-                   required="required"
                    maxlength="255"
                    th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.keywords.required}" />
         </div>

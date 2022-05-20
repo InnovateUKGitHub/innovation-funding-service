@@ -1,20 +1,23 @@
 package org.innovateuk.ifs.management.publiccontent.form.section;
 
-import javax.validation.constraints.NotBlank;
+import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.management.publiccontent.form.AbstractPublicContentForm;
+
+import javax.validation.constraints.NotBlank;
+import java.util.Objects;
 
 /**
  * Form for the Search page on public content setup.
  */
+@FieldRequiredIf(required = "shortDescription", argument = "publicSetting", predicate = true, message = "{validation.publiccontent.searchinformationform.shortDescription.required}")
+@FieldRequiredIf(required = "projectFundingRange", argument = "publicSetting", predicate = true, message = "{validation.publiccontent.searchinformationform.projectFundingRange.required}")
+@FieldRequiredIf(required = "eligibilitySummary", argument = "publicSetting", predicate = true, message = "{validation.publiccontent.searchinformationform.eligibilitySummary.required}")
+@FieldRequiredIf(required = "keywords", argument = "publicSetting", predicate = true, message = "{validation.publiccontent.searchinformationform.keywords.required}")
 public class SearchInformationForm extends AbstractPublicContentForm {
 
-    @NotBlank(message="{validation.publiccontent.searchinformationform.shortDescription.required}")
     private String shortDescription;
-    @NotBlank (message="{validation.publiccontent.searchinformationform.projectFundingRange.required}")
     private String projectFundingRange;
-    @NotBlank (message="{validation.publiccontent.searchinformationform.eligibilitySummary.required}")
     private String eligibilitySummary;
-    @NotBlank (message="{validation.publiccontent.searchinformationform.keywords.required}")
     private String keywords;
     @NotBlank (message="{validation.publiccontent.searchinformationform.publishsetting.required}")
     private String publishSetting;
@@ -57,5 +60,9 @@ public class SearchInformationForm extends AbstractPublicContentForm {
 
     public void setPublishSetting(String publishSetting) {
         this.publishSetting = publishSetting;
+    }
+
+    public boolean isPublicSetting() {
+        return Objects.equals(publishSetting, "public");
     }
 }
