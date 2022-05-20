@@ -48,7 +48,7 @@ public class FileUploadRequestBuilder {
                 .md5Checksum(FileHashing.fileHash64(payload))
                 .mimeType(mediaType.toString())
                 .payload(payload)
-                .userId("userId")
+                .userId("GLUSTER_MIGRATION")
                 .fileSizeBytes(payload.length)
                 .systemId(DEFAULT_SYSTEM_ID);
     }

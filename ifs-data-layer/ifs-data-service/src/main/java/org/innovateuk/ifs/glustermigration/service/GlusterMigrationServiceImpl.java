@@ -8,7 +8,10 @@ import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadResponse;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.glustermigration.GlusterMigrationStatusType;
+import org.innovateuk.ifs.glustermigration.domain.GlusterMigrationStatus;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
+import org.innovateuk.ifs.glustermigration.repository.GlusterMigrationStatusRepository;
 import org.innovateuk.ifs.file.transactional.gluster.FileStorageStrategy;
 import org.innovateuk.ifs.schedule.transactional.ScheduleResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +25,14 @@ import org.springframework.util.StopWatch;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class GlusterMigrationServiceImpl implements GlusterMigrationService {
 
+    @Autowired
+    private GlusterMigrationStatusRepository glusterMigrationStatusRepository;
     @Autowired
     private FileEntryRepository fileEntryRepository;
 
@@ -46,7 +52,11 @@ public class GlusterMigrationServiceImpl implements GlusterMigrationService {
         log.info("Get files from gluster");
         StopWatch stopWatch = new StopWatch(GlusterMigrationServiceImpl.class.getSimpleName());
         stopWatch.start();
-        List<FileEntry> fileEntries = fileEntryRepository.findByNullUUID(PageRequest.of(0, 10));
+        List<GlusterMigrationStatus> glusterMigrationStatuses = glusterMigrationStatusRepository.findGlusterMigrationStatusByStatusEquals(GlusterMigrationStatusType.FILE_NOT_FOUND.toString());
+        List<Long> fileIds = glusterMigrationStatuses.stream()
+                .map(GlusterMigrationStatus::getId)
+                .collect(Collectors.toList());
+        List<FileEntry> fileEntries = fileEntryRepository.findByNullUUID(PageRequest.of(0, 10), fileIds);
         log.info("Number of files entry retrieved " + fileEntries.size());
         for (FileEntry fileEntry : fileEntries) {
             ServiceResult<File> result = finalFileStorageStrategy.getFile(fileEntry).andOnFailure(() -> scannedFileStorageStrategy.getFile(fileEntry));
