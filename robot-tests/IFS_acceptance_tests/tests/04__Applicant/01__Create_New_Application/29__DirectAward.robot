@@ -5,6 +5,8 @@ Documentation     IFS-11682  Direct Award: New competition type
 ...
 ...               IFS-11735 Direct Awards: Public Content scale back
 ...
+...               IFS-11734 Direct awards - Application status
+...
 
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -58,6 +60,12 @@ the user fills the Application details and check the title of competition name a
     And the user clicks the button/link                       link = Application details
     Then the user should see the element                      jQuery = dt:contains("Award name")
 
+the lead user submit the application and check the status of application
+    [Documentation]  IFS-11734
+    Given the user clicks the button/link                   link = Back to application overview
+    When the lead user completes direct award application   COMPLETE   test.user@gmail.com
+    Then user should see the status of application
+
 *** Keywords ***
 Custom suite setup
     Set predefined date variables
@@ -99,6 +107,47 @@ the lead user creates a direct award application
     the user clicks the button/link                                 link = Sign in
     Logging in and Error Checking                                   ${email}  ${short_password}
     the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+
+the user completes the application details section
+    [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}  ${projectDuration}
+    the user clicks the button/link             link = Application details
+    the user should see the element             jQuery = h1:contains("Application details")
+    the user enters text to a text field        id = name  ${appTitle}
+    the user enters text to a text field        id = startDate  ${tomorrowday}
+    the user enters text to a text field        css = #application_details-startdate_month  ${month}
+    the user enters text to a text field        css = #application_details-startdate_year  ${nextyear}
+    the user should see the element             jQuery = label:contains("Project duration in months")
+    the user enters text to a text field        css = [id="durationInMonths"]  ${projectDuration}
+    the user clicks the button/link             id = application-question-complete
+    the user clicks the button/link             link = Back to application overview
+    the user should see the element             jQuery = li:contains("Application details") > .task-status-complete
+
+the lead user completes direct award application
+    [Arguments]  ${ediStatus}  ${userEmail}
+    the applicant completes Application Team                                        ${ediStatus}  ${userEmail}
+    the user completes the research category                                        Feasibility studies
+    the lead applicant fills all the questions and marks as complete(Direct Award)
+    the user clicks the button/link                                                 link = Your project finances
+    the user marks the finances as complete                                         ${applicationName}  labour costs  54,000  yes
+    The user completes the terms & condition
+
+user should see the status of application
+    the user should see the element  jQuery = span:contains("award")
+    the user should see the element  jQuery = h2:contains("What happens next?")
+    the user should see the element  jQuery = h3:contains("Assessment process")
+    the user should see the element  jQuery = h3:contains("Decision notification")
+    the user should see the element  jQuery = h3:contains("If your application is successful")
+    the user should see the element  jQuery = h3:contains("If your application is unsuccessful")
+    the user should see the element  jQuery = h3:contains("Feedback")
+
+The user completes the terms & condition
+    the user clicks the button/link      link = Award terms and conditions
+    the user selects the checkbox        agreed
+    the user clicks the button/link      jQuery = button:contains("Agree and continue")
+    the user clicks the button/link      link = Back to application overview
+    the user clicks the button/link      id = application-overview-submit-cta
+    the user clicks the button/link      jQuery = button:contains("Submit application")
+
 
 
 
