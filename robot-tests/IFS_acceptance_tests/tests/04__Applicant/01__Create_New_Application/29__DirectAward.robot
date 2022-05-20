@@ -62,17 +62,18 @@ the user fills the Application details and check the title of competition name a
     And the user clicks the button/link                       link = Application details
     Then the user should see the element                      jQuery = dt:contains("Award name")
 
+the lead user submit the application and check the status of application
+    [Documentation]  IFS-11734
+    Given the user clicks the button/link                   link = Back to application overview
+    When the lead user completes direct award application   COMPLETE   test.user@gmail.com
+    Then user should see the status of application
+
 the lead user can see award in project setup
     [Documentation]  IFS-11994
     Given log in as a different user         &{lead_applicant_credentials}
     When the user clicks the button/link     link = ${DirectAwardComp}
     Then the user should see the element     jQuery = dt:contains("Award:")
 
-the lead user submit the application and check the status of application
-    [Documentation]  IFS-11734
-    Given the user clicks the button/link                   link = Back to application overview
-    When the lead user completes direct award application   COMPLETE   test.user@gmail.com
-    Then user should see the status of application
 
 *** Keywords ***
 Custom suite setup
