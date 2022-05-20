@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.dashboard.viewmodel;
 
+import lombok.Getter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.review.resource.ReviewState;
@@ -10,6 +11,7 @@ import static org.innovateuk.ifs.review.resource.ReviewState.PENDING;
 /**
  * Holder of model attributes for the applications shown on the Assessor Competition for Panel Dashboard.
  */
+@Getter
 public class AssessorCompetitionForPanelDashboardApplicationViewModel {
 
     private long applicationId;
@@ -17,37 +19,20 @@ public class AssessorCompetitionForPanelDashboardApplicationViewModel {
     private String displayLabel;
     private String leadOrganisation;
     private ReviewState state;
+    private String hash;
 
     public AssessorCompetitionForPanelDashboardApplicationViewModel(long applicationId,
                                                                     long reviewId,
                                                                     String displayLabel,
                                                                     String leadOrganisation,
-                                                                    ReviewState state) {
+                                                                    ReviewState state,
+                                                                    String hash) {
         this.applicationId = applicationId;
         this.reviewId = reviewId;
         this.displayLabel = displayLabel;
         this.leadOrganisation = leadOrganisation;
         this.state = state;
-    }
-
-    public long getApplicationId() {
-        return applicationId;
-    }
-
-    public long getReviewId() {
-        return reviewId;
-    }
-
-    public String getDisplayLabel() {
-        return displayLabel;
-    }
-
-    public String getLeadOrganisation() {
-        return leadOrganisation;
-    }
-
-    public ReviewState getState() {
-        return state;
+        this.hash = hash;
     }
 
     public boolean isPending() {
@@ -80,6 +65,7 @@ public class AssessorCompetitionForPanelDashboardApplicationViewModel {
                 .append(displayLabel, that.displayLabel)
                 .append(leadOrganisation, that.leadOrganisation)
                 .append(state, that.state)
+                .append(hash, that.hash)
                 .isEquals();
     }
 
@@ -91,6 +77,7 @@ public class AssessorCompetitionForPanelDashboardApplicationViewModel {
                 .append(displayLabel)
                 .append(leadOrganisation)
                 .append(state)
+                .append(hash)
                 .toHashCode();
     }
 }

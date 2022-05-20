@@ -108,7 +108,6 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
-
     @Mock
     private AssessmentPeriodRepository assessmentPeriodRepository;
 
@@ -144,8 +143,6 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
     @Mock
     private CompetitionRepository competitionRepository;
-
-
 
     @Mock
     private SystemNotificationSource systemNotificationSource;
@@ -251,9 +248,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(profileRepository).save(any(Profile.class));
         inOrder.verifyNoMoreInteractions();
 
-        participantsForOtherInvites.forEach(competitionParticipant -> {
-            verify(competitionParticipant).setUser(createdUser);
-        });
+        participantsForOtherInvites.forEach(competitionParticipant -> verify(competitionParticipant).setUser(createdUser));
     }
 
     @Test
@@ -539,7 +534,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         when(assessmentWorkflowHandler.notify(same(assessments.get(0)))).thenReturn(true);
         when(assessmentWorkflowHandler.notify(same(assessments.get(1)))).thenReturn(true);
 
-        when(notificationService.sendNotificationWithFlush(expectedNotification1, EMAIL)).thenReturn(serviceSuccess());
+//        when(notificationService.sendNotificationWithFlush(expectedNotification1, EMAIL)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> serviceResult = assessorService.notifyAssessorsByCompetition(competition.getId());
 
@@ -597,7 +592,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         when(assessmentWorkflowHandler.notify(same(assessments.get(0)))).thenReturn(true);
         when(assessmentWorkflowHandler.notify(same(assessments.get(1)))).thenReturn(true);
 
-        when(notificationService.sendNotificationWithFlush(expectedNotification, EMAIL)).thenReturn(serviceSuccess());
+//        when(notificationService.sendNotificationWithFlush(expectedNotification, EMAIL)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> serviceResult = assessorService.notifyAssessorsByCompetition(competition.getId());
 

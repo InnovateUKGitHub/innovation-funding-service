@@ -4,11 +4,14 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.upcoming.populator.UpcomingCompetitionModelPopulator;
 import org.innovateuk.ifs.assessment.upcoming.viewmodel.UpcomingCompetitionViewModel;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionAssessmentConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -23,6 +26,8 @@ import java.time.ZonedDateTime;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionAssessmentConfigResourceBuilder.newCompetitionAssessmentConfigResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -42,6 +47,9 @@ public class UpcomingCompetitionControllerTest extends BaseControllerMockMVCTest
 
     @Mock
     private CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
+
+    @Mock
+    private PublicContentItemRestService publicContentItemRestService;
 
     private static final String restUrl = "/competition";
 
@@ -70,10 +78,16 @@ public class UpcomingCompetitionControllerTest extends BaseControllerMockMVCTest
                 .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
                 .build();
 
-        UpcomingCompetitionViewModel expectedViewModel = new UpcomingCompetitionViewModel(competitionResource, competitionAssessmentConfigResource);
+        PublicContentResource publicContent = newPublicContentResource().build();
+        PublicContentItemResource publicContentItem = newPublicContentItemResource().withPublicContentResource(publicContent).build();
+
+        String hash = publicContentItem.getPublicContentResource().getHash();
+
+        UpcomingCompetitionViewModel expectedViewModel = new UpcomingCompetitionViewModel(competitionResource, competitionAssessmentConfigResource, hash);
 
         when(competitionRestService.getCompetitionById(1L)).thenReturn(restSuccess(competitionResource));
         when(competitionAssessmentConfigRestService.findOneByCompetitionId(competitionResource.getId())).thenReturn(restSuccess(competitionAssessmentConfigResource));
+        when(publicContentItemRestService.getItemByCompetitionId(competitionResource.getId())).thenReturn(restSuccess(publicContentItem));
 
         mockMvc.perform(get(restUrl + "/{competitionId}/upcoming", "1"))
                 .andExpect(model().attribute("model", expectedViewModel))

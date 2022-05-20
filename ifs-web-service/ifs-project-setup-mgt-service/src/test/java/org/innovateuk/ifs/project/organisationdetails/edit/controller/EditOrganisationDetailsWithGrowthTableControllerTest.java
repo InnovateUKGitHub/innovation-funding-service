@@ -4,6 +4,8 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormSaver;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
@@ -13,6 +15,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,6 +37,8 @@ import static org.innovateuk.ifs.finance.resource.OrganisationSize.LARGE;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -67,6 +72,9 @@ public class EditOrganisationDetailsWithGrowthTableControllerTest extends BaseCo
     private YourOrganisationWithGrowthTableFormSaver saver;
 
     @Mock
+    private PublicContentItemRestService publicContentItemRestService;
+
+    @Mock
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
 
     private static final long projectId = 3L;
@@ -75,6 +83,7 @@ public class EditOrganisationDetailsWithGrowthTableControllerTest extends BaseCo
     private ProjectResource projectResource;
     private OrganisationResource organisationResource;
     private static CompetitionResource competitionResource;
+    private static PublicContentItemResource publicContentItemResource;
     private static final String VIEW_WITH_GROWTH_TABLE_PAGE = "project/organisationdetails/edit-organisation-size";
 
     @Override
@@ -103,6 +112,9 @@ public class EditOrganisationDetailsWithGrowthTableControllerTest extends BaseCo
                 .build();
         competitionResource = newCompetitionResource()
                 .build();
+        PublicContentResource publicContentResource = newPublicContentResource()
+                .build();
+        publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
     }
 
     @Test
@@ -113,6 +125,7 @@ public class EditOrganisationDetailsWithGrowthTableControllerTest extends BaseCo
         when(projectYourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesWithGrowthTableResource));
         when(viewModelPopulator.populate(organisationFinancesWithGrowthTableResource)).thenReturn(yourOrganisationWithGrowthTableForm);
         when(competitionRestService.getCompetitionById(projectResource.getCompetition())).thenReturn(restSuccess(competitionResource));
+        when(publicContentItemRestService.getItemByCompetitionId(projectResource.getCompetition())).thenReturn(restSuccess(publicContentItemResource));
         when(grantClaimMaximumRestService.isMaximumFundingLevelConstant(competitionResource.getId())).thenReturn(restSuccess(false));
 
         mockMvc.perform(get(viewPageUrl()))
@@ -144,6 +157,7 @@ public class EditOrganisationDetailsWithGrowthTableControllerTest extends BaseCo
         when(projectYourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesWithGrowthTableResource));
         when(viewModelPopulator.populate(organisationFinancesWithGrowthTableResource)).thenReturn(yourOrganisationWithGrowthTableForm);
         when(competitionRestService.getCompetitionById(projectResource.getCompetition())).thenReturn(restSuccess(competitionResource));
+        when(publicContentItemRestService.getItemByCompetitionId(projectResource.getCompetition())).thenReturn(restSuccess(publicContentItemResource));
         when(grantClaimMaximumRestService.isMaximumFundingLevelConstant(competitionResource.getId())).thenReturn(restSuccess(false));
 
         mockMvc.perform(get(viewPageUrl()))

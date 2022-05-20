@@ -17,7 +17,6 @@ public class ProjectFinanceChecksControllerSecurityTest extends BaseProjectSetup
     private ProjectLookupStrategy projectLookupStrategy;
     private ProjectCompositeId projectCompositeId;
 
-
     @Override
     @Before
     public void lookupPermissionRules() {

@@ -49,8 +49,7 @@ the user should see invite only selected as default option in competition inform
 the user create a new application and check the competition title as a award in application overview page
     [Documentation]  IFS-11736
     Given the user logs out if they are logged in
-    And the user navigates to the page                      ${server}/competition/${webTestCompID}/overview
-    And the lead user creates an always open application    Test   User   test.user@gmail.com   ${applicationName}
+    When the lead user creates a direct award application   Test   User   test.user@gmail.com   ${applicationName}
     Then the user should see the element                    jQuery = dt:contains("Award:")
 
 the user fills the Application details and check the title of competition name as a award name
@@ -86,7 +85,7 @@ the user completes the application details
     the user clicks the button/link             id = application-question-complete
     the user clicks the button/link             link = Back to application overview
 
-the lead user creates an always open application
+the lead user creates a direct award application
     [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
     the user select the competition and starts application          ${openEndedCompName}
     the user clicks the button/link                                 link = Continue and create an account

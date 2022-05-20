@@ -23,6 +23,7 @@ public class PublicContentMenuPopulator {
         viewModel.setSections(publicContent.getContentSections());
         viewModel.setCompetition(competition);
         viewModel.setInviteOnly(publicContent.getInviteOnly());
+        viewModel.setHash(publicContent.getHash());
         viewModel.setWebBaseUrl(webBaseUrl);
         return viewModel;
     }
