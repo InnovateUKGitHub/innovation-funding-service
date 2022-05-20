@@ -17,6 +17,7 @@ class FileUploadRequestTest {
     @Test
     void json() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValueAsString(FileUploadRequestBuilder.fromResource("test".getBytes(), "testUser").build());
+        objectMapper.writeValueAsString(FileUploadRequestBuilder.fromResource("test".getBytes(),
+                "testUser").build());
     }
 }

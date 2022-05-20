@@ -16,8 +16,7 @@ import java.nio.charset.StandardCharsets;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
-@Import(VirusScanConfiguration.class)
+@SpringBootTest(classes = {ClamAvScanProvider.class})
 class ClamAvScanProviderTest {
 
     private byte[] testString = "123123123123".getBytes(StandardCharsets.UTF_8);
@@ -27,9 +26,6 @@ class ClamAvScanProviderTest {
 
     @MockBean
     private ClamAVClient clamAVClient;
-
-    @MockBean
-    private StorageService storageService;
 
     @Test
     void scanFile() throws IOException {
