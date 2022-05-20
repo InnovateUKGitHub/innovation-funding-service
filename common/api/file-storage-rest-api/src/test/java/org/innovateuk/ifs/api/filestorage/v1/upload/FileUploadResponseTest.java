@@ -2,6 +2,7 @@ package org.innovateuk.ifs.api.filestorage.v1.upload;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
@@ -11,7 +12,7 @@ class FileUploadResponseTest {
 
     @Test
     void equalsTest() {
-        EqualsVerifier.forClass(FileUploadResponse.class).verify();
+        EqualsVerifier.forClass(FileUploadResponse.class).suppress(Warning.NONFINAL_FIELDS).verify();
     }
 
     @Test
