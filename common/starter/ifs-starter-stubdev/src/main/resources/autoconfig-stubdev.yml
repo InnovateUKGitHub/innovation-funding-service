@@ -12,7 +12,7 @@ ifs:
       validateHtml: false
       webCoreTemplates: "/ifs-web-service/ifs-web-core/src/main/resources/templates/"
       logThymeLeafTemplates: false
-      defaultUuid: "83090896-d73f-4ced-b27b-4eb1bf43821d"
+      defaultUuid: "98fc8417-9d57-4d1f-9984-c8fd6037b697"
       rewriteRules:
         - existing: "https://localhost:8080/assessment/"
           rewrite: "http://localhost:8081/assessment/"

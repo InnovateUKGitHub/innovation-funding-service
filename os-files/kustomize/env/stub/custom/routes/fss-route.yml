@@ -5,7 +5,7 @@ metadata:
 spec:
   host: fss-openshiftEnvKey.apps.org-env-0.org.innovateuk.ukri.org
   port:
-    targetPort: 8091-tcp
+    targetPort: 8080-tcp
   tls:
     insecureEdgeTerminationPolicy: Redirect
     termination: edge

@@ -8,8 +8,8 @@ metadata:
     javaDebug: javaDebug
 spec:
   ports:
-    - name: 8091-tcp
-      port: 8091
-      targetPort: 8091
+    - name: 8080-tcp
+      port: 8080
+      targetPort: 8080
   selector:
     app: file-storage-service
