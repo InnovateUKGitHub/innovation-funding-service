@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.filestorage.storage.tika;
 
+import org.apache.tika.Tika;
 import org.innovateuk.ifs.filestorage.cfg.StorageServiceConfiguration;
 import org.innovateuk.ifs.filestorage.exception.MimeMismatchException;
 import org.innovateuk.ifs.filestorage.storage.StorageService;
@@ -16,17 +17,10 @@ import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest
-@Import(StorageServiceConfiguration.class)
+@SpringBootTest(classes = {TikaFileValidator.class, Tika.class})
 class TikaFileValidatorTest {
 
     private byte[] JSON = "{some: json}".getBytes(StandardCharsets.UTF_8);
-
-    @MockBean
-    private StorageService storageService;
-
-    @MockBean
-    private StorageServiceHelper storageServiceHelper;
 
     @Autowired
     private TikaFileValidator tikaFileValidator;
