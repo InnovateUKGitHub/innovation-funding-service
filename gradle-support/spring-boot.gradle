@@ -4,7 +4,7 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.springframework.boot'
 
 ext.isStubDevMode = { ->
-    if (System.getenv("SPRING_PROFILES_ACTIVE").equals("STUBDEV")) {
+    if (System.getenv("SPRING_PROFILES_ACTIVE").contains("STUBDEV")) {
         println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
         println("XXXXXXXXX Compiling Dev Mode XXXXXXXXXX")
         println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
