@@ -128,4 +128,9 @@ public class PublicContentItemResource {
                 .map(name -> name.equals(H2020_TYPE_NAME))
                 .orElse(false);
     }
+
+    @JsonIgnore
+    public boolean isProtected() {
+        return null != this.publicContentResource.getHash();
+    }
 }

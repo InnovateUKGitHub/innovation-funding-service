@@ -158,6 +158,11 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     }
 
     @JsonIgnore
+    public boolean isAssessmentOnly() {
+        return competitionTypeEnum == CompetitionTypeEnum.ASSESSMENT_ONLY;
+    }
+
+    @JsonIgnore
     public boolean isAssessmentClosed() {
         return competitionStatus != null && (competitionStatus.isLaterThan(CompetitionStatus.IN_ASSESSMENT));
     }

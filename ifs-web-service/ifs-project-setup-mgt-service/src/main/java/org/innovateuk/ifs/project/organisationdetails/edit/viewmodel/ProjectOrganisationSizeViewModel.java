@@ -26,8 +26,9 @@ public class ProjectOrganisationSizeViewModel extends ApplicationYourOrganisatio
                                             OrganisationResource organisation,
                                             boolean isMaximumFundingLevelConstant,
                                             boolean showOrganisationSizeAlert,
-                                            boolean readOnly) {
-        super(project.getApplication(), competition, organisation.getOrganisationTypeEnum(), isMaximumFundingLevelConstant, showOrganisationSizeAlert, true);
+                                            boolean readOnly,
+                                            String hash) {
+        super(project.getApplication(), competition, organisation.getOrganisationTypeEnum(), isMaximumFundingLevelConstant, showOrganisationSizeAlert, true, hash);
         this.project = project;
         this.organisationName = organisation.getName();
         this.organisationId = organisation.getId();
