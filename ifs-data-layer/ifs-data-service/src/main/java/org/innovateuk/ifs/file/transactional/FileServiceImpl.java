@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.file.transactional;
 
+import com.google.common.io.ByteStreams;
 import lombok.extern.slf4j.Slf4j;
-import org.innovateuk.ifs.api.filestorage.util.FileUploadRequestBuilder;
+import org.innovateuk.ifs.IfsConstants;
+import org.innovateuk.ifs.api.filestorage.util.FileHashing;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownload;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUpload;
@@ -14,8 +16,6 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileService;
 import org.innovateuk.ifs.file.transactional.gluster.GlusterFileServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -67,11 +67,17 @@ public class FileServiceImpl implements FileService {
 
     private ServiceResult<FileEntry> createOrUpdate(FileEntry fileEntry, FileEntryResource resource, Supplier<InputStream> inputStreamSupplier) {
         try {
-            FileUploadRequest fileUploadRequest = FileUploadRequestBuilder.fromResource(
-                    new InputStreamResource(inputStreamSupplier.get()),
-                    MediaType.valueOf(resource.getMediaType()), "IFS").fileName(resource.getName()
-            ).build();
-            ResponseEntity<FileUploadResponse> fileUploadResponse = fileUploadFeign.fileUpload(fileUploadRequest);
+            byte[] payload = ByteStreams.toByteArray(inputStreamSupplier.get());
+            FileUploadRequest.FileUploadRequestBuilder fileUploadRequestBuilder = FileUploadRequest.builder()
+                    .fileId(fileEntry.getFileUuid())
+                    .systemId(IfsConstants.IFS_SYSTEM_USER)
+                    .userId(FileServiceImpl.class.getSimpleName())
+                    .payload(payload)
+                    .mimeType(resource.getMediaType())
+                    .fileSizeBytes(resource.getFilesizeBytes())
+                    .fileName(resource.getName())
+                    .md5Checksum(FileHashing.fileHash64(payload));
+            ResponseEntity<FileUploadResponse> fileUploadResponse = fileUploadFeign.fileUpload(fileUploadRequestBuilder.build());
             return serviceSuccess(
                 fileServiceTransactionHelper.updateMd5(fileEntry.getId(), fileUploadResponse.getBody().getMd5Checksum())
             );

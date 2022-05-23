@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.granttransfer.transactional;
 
-import org.innovateuk.ifs.api.filestorage.util.FileUploadRequestBuilder;
+import com.google.common.io.ByteStreams;
+import org.innovateuk.ifs.api.filestorage.util.FileHashing;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownload;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUpload;
-import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadResponse;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.cfg.MapperConfiguration;
@@ -38,7 +38,6 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import static org.junit.Assert.assertTrue;
@@ -77,44 +76,39 @@ public class UploadGrantAgreementComponentTest {
     @Test
     public void uploadGrantAgreement() throws IOException {
         String contentType = MediaType.APPLICATION_PDF_VALUE;
-        String contentLength = "1";
         String originalFilename = "filename";
         long applicationId = 1L;
         String fileId = UUID.randomUUID().toString();
 
+        Resource resource = new ClassPathResource("webtest.pdf");
+        byte[] payload = ByteStreams.toByteArray(resource.getInputStream());
+
         mockFileServiceHelper(fileId);
         mockEuGrantTransfer(applicationId);
-        HttpServletRequest request = mockHttpServletRequest();
+        HttpServletRequest request = mockHttpServletRequest(payload);
 
-        FileUploadRequest fileUploadRequest = fileUploadRequest();
-        FileUploadResponse fileUploadResponse = fileUploadResponse(fileUploadRequest);
+        FileUploadResponse fileUploadResponse = fileUploadResponse(fileId, originalFilename, contentType, payload);
         when(fileUpload.fileUpload(any())).thenReturn(ResponseEntity.ok(fileUploadResponse));
 
-        ServiceResult<Void> response = euGrantTransferService.uploadGrantAgreement(contentType, contentLength, originalFilename, applicationId, request);
+        ServiceResult<Void> response = euGrantTransferService.uploadGrantAgreement(contentType, "" + payload.length, originalFilename, applicationId, request);
         assertTrue(response.isSuccess());
 
         // assert a bit more here....
     }
 
-    private FileUploadRequest fileUploadRequest() throws IOException {
-        Resource resource = new ClassPathResource("webtest.pdf");
-        FileUploadRequest fileUploadRequest = FileUploadRequestBuilder.fromResource(resource, MediaType.APPLICATION_PDF, "testUser").build();
-        return fileUploadRequest;
-    }
-
-    private FileUploadResponse fileUploadResponse(FileUploadRequest fileUploadRequest) {
+    private FileUploadResponse fileUploadResponse(String fileId, String originalFilename, String contentType, byte[] payload) {
         FileUploadResponse fileUploadResponse = new FileUploadResponse();
-        fileUploadResponse.setFileId(fileUploadRequest.getFileId());
-        fileUploadResponse.setFileName(fileUploadRequest.getFileName());
-        fileUploadResponse.setMd5Checksum(fileUploadRequest.getMd5Checksum());
-        fileUploadResponse.setMimeType(fileUploadRequest.getMimeType());
-        fileUploadResponse.setFileSizeBytes(fileUploadRequest.getFileSizeBytes());
+        fileUploadResponse.setFileId(fileId);
+        fileUploadResponse.setFileName(originalFilename);
+        fileUploadResponse.setMd5Checksum(FileHashing.fileHash64(payload));
+        fileUploadResponse.setMimeType(contentType);
+        fileUploadResponse.setFileSizeBytes(payload.length);
         return fileUploadResponse;
     }
 
-    private HttpServletRequest mockHttpServletRequest() throws IOException {
+    private HttpServletRequest mockHttpServletRequest(byte[] content) throws IOException {
         HttpServletRequest request = mock(HttpServletRequest.class);
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream("sdfsdf".getBytes(StandardCharsets.UTF_8));
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(content);
         ServletInputStream servletInputStream = new DelegatingServletInputStream(byteArrayInputStream);
         when(request.getInputStream()).thenReturn(servletInputStream);
         return request;
