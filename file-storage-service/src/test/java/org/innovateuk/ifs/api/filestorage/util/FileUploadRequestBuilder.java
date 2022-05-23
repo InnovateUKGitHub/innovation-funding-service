@@ -41,16 +41,4 @@ public class FileUploadRequestBuilder {
                 MediaTypeFactory.getMediaType(payloadResource).orElse(MediaType.APPLICATION_JSON), userId);
     }
 
-    public static FileUploadRequest.FileUploadRequestBuilder fromResource(byte[] payload, MediaType mediaType, String fileName) {
-        return FileUploadRequest.builder()
-                .fileId(UUID.randomUUID().toString())
-                .fileName(fileName)
-                .md5Checksum(FileHashing.fileHash64(payload))
-                .mimeType(mediaType.toString())
-                .payload(payload)
-                .userId("GLUSTER_MIGRATION")
-                .fileSizeBytes(payload.length)
-                .systemId(DEFAULT_SYSTEM_ID);
-    }
-
 }
