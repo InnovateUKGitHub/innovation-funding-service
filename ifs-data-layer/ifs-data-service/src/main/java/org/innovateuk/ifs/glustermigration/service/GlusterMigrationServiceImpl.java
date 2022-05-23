@@ -9,10 +9,10 @@ import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadResponse;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.file.transactional.gluster.FileStorageStrategy;
 import org.innovateuk.ifs.glustermigration.GlusterMigrationStatusType;
 import org.innovateuk.ifs.glustermigration.domain.GlusterMigrationStatus;
-import org.innovateuk.ifs.glustermigration.repository.FileEntryMigrationRepository;
 import org.innovateuk.ifs.glustermigration.repository.GlusterMigrationStatusRepository;
 import org.innovateuk.ifs.schedule.transactional.ScheduleResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class GlusterMigrationServiceImpl implements GlusterMigrationService {
     private GlusterMigrationStatusRepository glusterMigrationStatusRepository;
 
     @Autowired
-    private FileEntryMigrationRepository fileEntryMigrationRepository;
+    private FileEntryRepository fileEntryRepository;
 
     @Autowired
     private FileUpload fileUpload;
@@ -58,7 +58,7 @@ public class GlusterMigrationServiceImpl implements GlusterMigrationService {
         List<Long> fileEntryIds = glusterMigrationStatuses.stream()
                 .map(GlusterMigrationStatus::getFileEntryId)
                 .collect(Collectors.toList());
-        List<FileEntry> fileEntries = fileEntryMigrationRepository.findFileEntryByIdNotInAAndFileUuidIsNull(fileEntryIds, PageRequest.of(0, 10));
+        List<FileEntry> fileEntries = fileEntryRepository.findFileEntryByIdNotInAndFileUuidIsNull(fileEntryIds, PageRequest.of(0, 10));
         log.info("Number of files entry retrieved " + fileEntries.size());
         for (FileEntry fileEntry : fileEntries) {
             log.info("File sequence: " + fileEntry.getId());
@@ -80,7 +80,7 @@ public class GlusterMigrationServiceImpl implements GlusterMigrationService {
                 ResponseEntity<FileUploadResponse> fileUploadResponseEntity = fileUpload.fileUpload(fileUploadRequestBuilder.build());
                 if (fileUploadResponseEntity.getStatusCode().is2xxSuccessful()) {
                     fileEntry.setFileUuid(fileId.toString());
-                    fileEntryMigrationRepository.save(fileEntry);
+                    fileEntryRepository.save(fileEntry);
                 }
 
             } else {
