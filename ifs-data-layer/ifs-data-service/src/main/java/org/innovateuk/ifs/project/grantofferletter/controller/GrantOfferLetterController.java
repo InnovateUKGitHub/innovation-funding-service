@@ -37,8 +37,7 @@ public class GrantOfferLetterController {
     @Qualifier("mediaTypeStringsFileValidator")
     private FilesizeAndTypeFileValidator<List<String>> fileValidator;
 
-    @Autowired
-    private FileControllerUtils fileControllerUtils;
+    private FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
     @GetMapping("/{projectId}/signed-grant-offer")
     public @ResponseBody ResponseEntity<Object> getGrantOfferLetterFileContents(

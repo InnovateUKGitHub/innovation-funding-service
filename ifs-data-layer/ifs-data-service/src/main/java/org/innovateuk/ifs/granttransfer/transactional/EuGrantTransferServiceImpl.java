@@ -63,8 +63,7 @@ public class EuGrantTransferServiceImpl implements EuGrantTransferService {
     @Autowired
     private EuGrantTransferMapper mapper;
 
-    @Autowired
-    private FileControllerUtils fileControllerUtils;
+    private FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
     @Override
     @Transactional

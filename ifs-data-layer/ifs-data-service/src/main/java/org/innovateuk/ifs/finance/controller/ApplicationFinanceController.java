@@ -45,8 +45,7 @@ public class ApplicationFinanceController {
     @Qualifier("mediaTypeStringsFileValidator")
     private FilesizeAndTypeFileValidator<List<String>> fileValidator;
 
-    @Autowired
-    private FileControllerUtils fileControllerUtils;
+    private FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
     @GetMapping("/find-by-application-organisation/{applicationId}/{organisationId}")
     public RestResult<ApplicationFinanceResource> findByApplicationOrganisation(

@@ -33,8 +33,7 @@ public class ContentGroupController {
     @Autowired
     private FilesizeAndTypeFileValidator<List<String>> fileValidator;
 
-    @Autowired
-    private FileControllerUtils fileControllerUtils;
+    private FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
     @PostMapping(value = "upload-file", produces = "application/json")
     public RestResult<Void> uploadFile(@RequestHeader(value = "Content-Type", required = false) String contentType,

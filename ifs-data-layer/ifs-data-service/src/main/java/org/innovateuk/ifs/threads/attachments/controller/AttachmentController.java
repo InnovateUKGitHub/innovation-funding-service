@@ -14,8 +14,7 @@ public abstract class AttachmentController<R> {
 
     private final AttachmentsService<R> service;
 
-    @Autowired
-    private FileControllerUtils fileControllerUtils;
+    private FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
     public AttachmentController(AttachmentsService<R> service) {
         this.service = service;

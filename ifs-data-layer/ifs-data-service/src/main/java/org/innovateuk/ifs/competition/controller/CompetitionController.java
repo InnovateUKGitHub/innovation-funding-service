@@ -21,8 +21,7 @@ public class CompetitionController {
     @Autowired
     private CompetitionService competitionService;
 
-    @Autowired
-    private FileControllerUtils fileControllerUtils;
+    private FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
     @GetMapping("/{id}")
     public RestResult<CompetitionResource> getCompetitionById(@PathVariable("id") final long id) {
