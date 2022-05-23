@@ -3,6 +3,7 @@ package org.innovateuk.ifs.threads.attachments.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.threads.attachments.service.AttachmentsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +14,8 @@ public abstract class AttachmentController<R> {
 
     private final AttachmentsService<R> service;
 
-    private FileControllerUtils fileControllerUtils = new FileControllerUtils();
+    @Autowired
+    private FileControllerUtils fileControllerUtils;
 
     public AttachmentController(AttachmentsService<R> service) {
         this.service = service;

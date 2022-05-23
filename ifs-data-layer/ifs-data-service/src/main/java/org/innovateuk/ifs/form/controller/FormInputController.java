@@ -23,7 +23,8 @@ public class FormInputController {
     @Autowired
     private FormInputService formInputService;
 
-    private final static FileControllerUtils fileControllerUtils = new FileControllerUtils();
+    @Autowired
+    private FileControllerUtils fileControllerUtils;
 
     @GetMapping("/{id}")
     public RestResult<FormInputResource> findOne(@PathVariable("id") Long id) {

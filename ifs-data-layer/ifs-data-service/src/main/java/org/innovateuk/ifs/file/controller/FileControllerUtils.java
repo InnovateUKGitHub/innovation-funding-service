@@ -13,6 +13,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,12 +32,13 @@ import static org.springframework.http.HttpStatus.OK;
  * Helpful utility methods for dealing with file uploads within Controllers
  */
 @Slf4j
+@Component
 public class FileControllerUtils {
 
     /**
      * A convenience method to create a response to a file download request, given a supplier of a FileAndContents
      */
-    public static ResponseEntity<Object> handleFileDownload(Supplier<ServiceResult<? extends FileAndContents>> fileResultSupplier) {
+    public ResponseEntity<Object> handleFileDownload(Supplier<ServiceResult<? extends FileAndContents>> fileResultSupplier) {
 
         try {
 
@@ -73,7 +75,7 @@ public class FileControllerUtils {
      * The {@link MediaTypesContext} generic type refers to a context from which a valid set of Media Types can be established,
      * as used by the supplied {@link FilesizeAndTypeFileValidator}.
      */
-    public static <T, MediaTypesContext> RestResult<T> handleFileUpload(String contentType, String contentLength, String originalFilename,
+    public <T, MediaTypesContext> RestResult<T> handleFileUpload(String contentType, String contentLength, String originalFilename,
                                                                  FilesizeAndTypeFileValidator<MediaTypesContext> fileValidator, MediaTypesContext mediaTypeContext, long maxFileSizeBytes,
                                                                  HttpServletRequest request, BiFunction<FileHeaderAttributes, Supplier<InputStream>, ServiceResult<T>> uploadFileActionFn) {
 
@@ -94,7 +96,7 @@ public class FileControllerUtils {
         return handleFileUploadWithServiceCall(contentType, contentLength, originalFilename, fileValidator, mediaTypesContext, maxFileSizeBytes, request, voidReturner).toPutResponse();
     }
 
-    private static <T, MediaTypesContext> ServiceResult<T> handleFileUploadWithServiceCall(String contentType, String contentLength, String originalFilename, FilesizeAndTypeFileValidator<MediaTypesContext> fileValidator, MediaTypesContext mediaTypesContext, long maxFileSizeBytes, HttpServletRequest request, BiFunction<FileHeaderAttributes, Supplier<InputStream>, ServiceResult<T>> uploadFileActionFn) {
+    private <T, MediaTypesContext> ServiceResult<T> handleFileUploadWithServiceCall(String contentType, String contentLength, String originalFilename, FilesizeAndTypeFileValidator<MediaTypesContext> fileValidator, MediaTypesContext mediaTypesContext, long maxFileSizeBytes, HttpServletRequest request, BiFunction<FileHeaderAttributes, Supplier<InputStream>, ServiceResult<T>> uploadFileActionFn) {
 
         return fileValidator.validateFileHeaders(contentType, contentLength, originalFilename, mediaTypesContext, maxFileSizeBytes).handleSuccessOrFailure(
                 failure -> failureView(request, failure),
@@ -102,11 +104,11 @@ public class FileControllerUtils {
         );
     }
 
-    private static Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {
+    private Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {
         return () -> inputStream(request);
     }
 
-    private static InputStream inputStream(HttpServletRequest request) {
+    private InputStream inputStream(HttpServletRequest request) {
             try {
                 byte[] array = IOUtils.toByteArray(request.getInputStream());
                 return new ByteArrayInputStream(array);
@@ -116,7 +118,7 @@ public class FileControllerUtils {
             }
     }
 
-    private static <T> ServiceResult<T> failureView(HttpServletRequest request, ServiceFailure result) {
+    private <T> ServiceResult<T> failureView(HttpServletRequest request, ServiceFailure result) {
         // Must be called on failure to wait for upload to finish otherwise we get a connection reset error
         inputStream(request);
         return serviceFailure(result.getErrors());

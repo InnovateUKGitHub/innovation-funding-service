@@ -35,7 +35,8 @@ public class InterviewAssignmentController {
 
     private InterviewApplicationInviteService interviewApplicationInviteService;
 
-    private FileControllerUtils fileControllerUtils = new FileControllerUtils();
+    @Autowired
+    private FileControllerUtils fileControllerUtils;
 
     @Autowired
     public InterviewAssignmentController(InterviewAssignmentService interviewAssignmentService,

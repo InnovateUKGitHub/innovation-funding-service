@@ -33,7 +33,8 @@ public class DocumentsController {
     @Value("${ifs.data.service.file.storage.projectsetupdocuments.max.filesize.bytes}")
     private Long maxFileSizeBytesForProjectSetupDocuments;
 
-    private FileControllerUtils fileControllerUtils = new FileControllerUtils();
+    @Autowired
+    private FileControllerUtils fileControllerUtils;
 
     @PostMapping(value = "/config/{documentConfigId}/upload", produces = "application/json")
     public RestResult<FileEntryResource> uploadDocument(@PathVariable("projectId") long projectId,

@@ -33,7 +33,8 @@ public class FormInputResponseFileUploadController {
     @Autowired
     private ApplicationFormInputUploadService applicationFormInputUploadService;
 
-    private FileControllerUtils fileControllerUtils = new FileControllerUtils();
+    @Autowired
+    private FileControllerUtils fileControllerUtils;
 
     @Autowired
     @Qualifier("formInputFileValidator")
