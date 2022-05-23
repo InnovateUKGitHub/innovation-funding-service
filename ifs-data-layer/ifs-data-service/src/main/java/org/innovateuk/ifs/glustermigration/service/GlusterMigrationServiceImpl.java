@@ -25,6 +25,7 @@ import org.springframework.util.StopWatch;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -76,10 +77,9 @@ public class GlusterMigrationServiceImpl implements GlusterMigrationService {
                         .fileSizeBytes(FileUtils.readFileToByteArray(file).length)
                         .systemId(IfsConstants.IFS_SYSTEM_USER);
                 ResponseEntity<FileUploadResponse> fileUploadResponseEntity = fileUpload.fileUpload(fileUploadRequestBuilder.build());
-                if (fileUploadResponseEntity.getBody() != null) {
-                    fileEntry.setFileUuid(fileUploadResponseEntity.getBody().getFileId());
-                    fileEntryRepository.save(fileEntry);
-                }
+                fileEntry.setFileUuid(Objects.requireNonNull(fileUploadResponseEntity.getBody()).getFileId());
+                fileEntryRepository.save(fileEntry);
+
             } else {
                 log.info("No files retrieved from gluster");
                 glusterMigrationStatusRepository.save(new GlusterMigrationStatus(fileEntry.getId(), GlusterMigrationStatusType.FILE_NOT_FOUND.toString(), ""));
