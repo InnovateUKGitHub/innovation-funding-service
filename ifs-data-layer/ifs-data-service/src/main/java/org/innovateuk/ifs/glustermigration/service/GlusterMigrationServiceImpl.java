@@ -2,22 +2,22 @@ package org.innovateuk.ifs.glustermigration.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
-import org.innovateuk.ifs.api.filestorage.util.FileUploadRequestBuilder;
+import org.innovateuk.ifs.IfsConstants;
+import org.innovateuk.ifs.api.filestorage.util.FileHashing;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUpload;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadResponse;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.file.repository.FileEntryRepository;
+import org.innovateuk.ifs.file.transactional.gluster.FileStorageStrategy;
 import org.innovateuk.ifs.glustermigration.GlusterMigrationStatusType;
 import org.innovateuk.ifs.glustermigration.domain.GlusterMigrationStatus;
-import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.glustermigration.repository.GlusterMigrationStatusRepository;
-import org.innovateuk.ifs.file.transactional.gluster.FileStorageStrategy;
 import org.innovateuk.ifs.schedule.transactional.ScheduleResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
@@ -25,6 +25,7 @@ import org.springframework.util.StopWatch;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,9 +66,15 @@ public class GlusterMigrationServiceImpl implements GlusterMigrationService {
             if (result.isSuccess()) {
                 log.info("file entry to process " + fileEntry.getId());
                 File file = result.getSuccess();
-                FileUploadRequest.FileUploadRequestBuilder fileUploadRequestBuilder = FileUploadRequestBuilder.fromResource(FileUtils.readFileToByteArray(file),
-                        MediaType.valueOf(fileEntry.getMediaType()),
-                        fileEntry.getName());
+                FileUploadRequest.FileUploadRequestBuilder fileUploadRequestBuilder = FileUploadRequest.builder()
+                        .fileId(UUID.randomUUID().toString())
+                        .fileName(fileEntry.getName())
+                        .md5Checksum(FileHashing.fileHash64(FileUtils.readFileToByteArray(file)))
+                        .mimeType(fileEntry.getMediaType())
+                        .payload(FileUtils.readFileToByteArray(file))
+                        .userId(IfsConstants.IFS_SYSTEM_USER)
+                        .fileSizeBytes(FileUtils.readFileToByteArray(file).length)
+                        .systemId(IfsConstants.IFS_SYSTEM_USER);
                 ResponseEntity<FileUploadResponse> fileUploadResponseEntity = fileUpload.fileUpload(fileUploadRequestBuilder.build());
                 if (fileUploadResponseEntity.getBody() != null) {
                     fileEntry.setFileUuid(fileUploadResponseEntity.getBody().getFileId());
