@@ -68,8 +68,9 @@ public class GlusterMigrationServiceImpl implements GlusterMigrationService {
             if (result.isSuccess()) {
                 log.info("file entry to process " + fileEntry.getId());
                 File file = result.getSuccess();
+                UUID fileId = UUID.randomUUID();
                 FileUploadRequest.FileUploadRequestBuilder fileUploadRequestBuilder = FileUploadRequest.builder()
-                        .fileId(UUID.randomUUID().toString())
+                        .fileId(fileId.toString())
                         .fileName(fileEntry.getName())
                         .md5Checksum(FileHashing.fileHash64(FileUtils.readFileToByteArray(file)))
                         .mimeType(fileEntry.getMediaType())
@@ -78,8 +79,10 @@ public class GlusterMigrationServiceImpl implements GlusterMigrationService {
                         .fileSizeBytes(FileUtils.readFileToByteArray(file).length)
                         .systemId(IfsConstants.IFS_SYSTEM_USER);
                 ResponseEntity<FileUploadResponse> fileUploadResponseEntity = fileUpload.fileUpload(fileUploadRequestBuilder.build());
-                fileEntry.setFileUuid(Objects.requireNonNull(fileUploadResponseEntity.getBody()).getFileId());
-                fileEntryMigrationRepository.save(fileEntry);
+                if (fileUploadResponseEntity.getStatusCode().is2xxSuccessful()) {
+                    fileEntry.setFileUuid(fileId.toString());
+                    fileEntryMigrationRepository.save(fileEntry);
+                }
 
             } else {
                 log.info("No files retrieved from gluster");
