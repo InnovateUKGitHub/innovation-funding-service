@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface FileEntryMigrationRepository extends JpaRepository<FileEntry, Long> {
 
-    List<FileEntry> findFileEntryByIdNotIn(List<Long> fileEntryIds, Pageable pageable);
+    List<FileEntry> findFileEntryByIdNotInAAndFileUuidIsNull(List<Long> fileEntryIds, Pageable pageable);
 
 }

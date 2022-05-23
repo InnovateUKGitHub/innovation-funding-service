@@ -59,7 +59,7 @@ public class GlusterMigrationServiceImpl implements GlusterMigrationService {
         List<Long> fileEntryIds = glusterMigrationStatuses.stream()
                 .map(GlusterMigrationStatus::getFileEntryId)
                 .collect(Collectors.toList());
-        List<FileEntry> fileEntries = fileEntryMigrationRepository.findFileEntryByIdNotIn(fileEntryIds, PageRequest.of(0, 10));
+        List<FileEntry> fileEntries = fileEntryMigrationRepository.findFileEntryByIdNotInAAndFileUuidIsNull(fileEntryIds, PageRequest.of(0, 10));
         log.info("Number of files entry retrieved " + fileEntries.size());
         for (FileEntry fileEntry : fileEntries) {
             log.info("File sequence: " + fileEntry.getId());
