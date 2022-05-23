@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface FileEntryRepository extends PagingAndSortingRepository<FileEntry, Long> {
 
-    @Query("Select a from FileEntry a where a.id not in :fileIds")
+    @Query("Select a from FileEntry a where a.id not in (:fileIds)")
     List<FileEntry> findByNullUUID(Pageable pageable, List<Long> fileIds);
 
 }
