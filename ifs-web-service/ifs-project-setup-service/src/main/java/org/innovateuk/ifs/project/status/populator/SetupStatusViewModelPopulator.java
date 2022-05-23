@@ -115,7 +115,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 navigationUtils.getLiveProjectsLandingPageUrl(),
                 competition.getTermsAndConditions().isProcurementThirdParty(),
                 thirdPartyConfig,
-                competition.isHasAssessmentStage());
+                competition.isHasAssessmentStage(),
+                competition.isDirectAward());
     }
 
     private boolean showBankDetails(RestResult<OrganisationResource> organisationResult, ProjectTeamStatusResource teamStatus) {

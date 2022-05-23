@@ -6,10 +6,12 @@ public class ConfirmResearchOrganisationEligibilityViewModel {
 
     private long competitionId;
     private String organisationName;
+    private String hash;
 
-    public ConfirmResearchOrganisationEligibilityViewModel(long competitionId, String organisationName) {
+    public ConfirmResearchOrganisationEligibilityViewModel(long competitionId, String organisationName, String hash) {
         this.competitionId = competitionId;
         this.organisationName = organisationName;
+        this.hash = hash;
     }
 
     public long getCompetitionId() {
@@ -26,5 +28,9 @@ public class ConfirmResearchOrganisationEligibilityViewModel {
 
     public void setOrganisationName(String organisationName) {
         this.organisationName = organisationName;
+    }
+
+    public String getHash() {
+        return hash;
     }
 }

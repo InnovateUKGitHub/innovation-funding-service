@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.assessor.viewmodel;
 
+import org.apache.logging.log4j.util.Strings;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 
 import java.util.List;
@@ -43,6 +44,7 @@ public abstract class InviteAssessorsRowViewModel {
 
     public String getInnovationAreas() {
         return innovationAreas == null ? EMPTY : innovationAreas.stream()
+                .filter(i -> !Strings.isBlank(i.getName()))
                 .map(i -> i.getName())
                 .collect(joining(", "));
     }

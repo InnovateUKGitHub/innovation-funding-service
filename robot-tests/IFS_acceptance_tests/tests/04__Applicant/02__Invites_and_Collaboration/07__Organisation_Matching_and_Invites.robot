@@ -23,9 +23,9 @@ ${bLead}          businesslead@gmail.com
 Business invites other business from same organisation in his application and the latter is able to accept
     [Documentation]  IFS-1324  IFS-7723
     # TODO would be nice to try with custom address insertion instead of clicking checkbox same-address IFS-1550
-    Given we create a new user                             ${openCompetitionBusinessRTO}  Business  collab  ${bCollaborator}  ${BUSINESS_TYPE_ID}
+    Given we create a new user                             ${openCompetitionBusinessRTO_name}  Business  collab  ${bCollaborator}  ${BUSINESS_TYPE_ID}
     And the user logs out if they are logged in
-    And we create a new user                               ${openCompetitionBusinessRTO}  Business  lead  ${bLead}  ${BUSINESS_TYPE_ID}
+    And we create a new user                               ${openCompetitionBusinessRTO_name}  Business  lead  ${bLead}  ${BUSINESS_TYPE_ID}
     When the user invites collaborator by email address    ${bCollaborator}
     And the user changes the application name              ${bCollaborator}'s Application
     And the user logs out if they are logged in
@@ -90,7 +90,7 @@ the user updates his organisation inviting the user
 # I am on purpose not making the following lines one keyword.
 # That is because i want to insert too many custom inputs, that would lead to too many arguments
 New Research user applies to Competition and starts application
-    the user applies to competition and enters organisation type    ${openCompetitionResearch}  radio-2
+    the user applies to competition and enters organisation type    ${openCompetitionResearch_name}  radio-2
     the user confirms economic activity for research organiations   No
     the research user finds org in companies house                  Warwick  University of Warwick
     the user enters text to a text field                            email  ${bob}
@@ -99,7 +99,7 @@ New Research user applies to Competition and starts application
     logout as user
 
 Another Research user applies to Competition and starts application
-    the user applies to competition and enters organisation type    ${openCompetitionResearch}  radio-2
+    the user applies to competition and enters organisation type    ${openCompetitionResearch_name}  radio-2
     the user confirms economic activity for research organiations   No
     the research user finds org in companies house                  Warwick  University of Warwick
     the user enters text to a text field                            email  ${stuart}

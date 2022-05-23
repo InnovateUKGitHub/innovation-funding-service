@@ -51,6 +51,8 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
 
     private final boolean isThirdPartyOfgem;
 
+    private String hash;
+
     public YourFundingViewModel(long applicationId,
                                 String competitionName,
                                 long sectionId,
@@ -73,7 +75,8 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
                                 boolean overridingFundingRules,
                                 FundingType fundingType,
                                 OrganisationTypeEnum organisationType,
-                                boolean isThirdPartyOfgem) {
+                                boolean isThirdPartyOfgem,
+                                String hash) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.sectionId = sectionId;
@@ -97,6 +100,7 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
         this.fundingType = fundingType;
         this.organisationType = organisationType;
         this.isThirdPartyOfgem = isThirdPartyOfgem;
+        this.hash = hash;
     }
 
     @Override
@@ -195,6 +199,10 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
 
     public boolean isThirdPartyOfgem() {
         return isThirdPartyOfgem;
+    }
+
+    public String getHash() {
+        return hash;
     }
 
     /* view logic */

@@ -58,6 +58,9 @@ public class Section implements Comparable<Section> {
     @Column(name="section_type")
     private SectionType type = SectionType.GENERAL;
 
+    @Column(name="pre_registration")
+    private boolean enabledForPreRegistration = false;
+
     public String getName() {
         return name;
     }
@@ -190,5 +193,13 @@ public class Section implements Comparable<Section> {
 
     public boolean isCompetitionOpen() {
         return competition.getCompetitionStatus().isLaterThan(READY_TO_OPEN);
+    }
+
+    public boolean isEnabledForPreRegistration() {
+        return enabledForPreRegistration;
+    }
+
+    public void setEnabledForPreRegistration(boolean enabledForPreRegistration) {
+        this.enabledForPreRegistration = enabledForPreRegistration;
     }
 }

@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.organisation.controller;
 
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.form.ConfirmResearchOrganisationEligibilityForm;
 import org.innovateuk.ifs.organisation.viewmodel.ConfirmResearchOrganisationEligibilityViewModel;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,6 +36,9 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
     @Autowired
     private CompetitionRestService competitionRestService;
 
+    @Autowired
+    private PublicContentItemRestService publicContentItemRestService;
+
     @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
     @GetMapping()
     public String newResearchOrganisationConfirmEligibilityViewPage(
@@ -41,7 +46,9 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
             Model model,
             UserResource user) {
 
-        model.addAttribute("model", new ConfirmResearchOrganisationEligibilityViewModel(competitionId, null));
+        PublicContentItemResource publicContent = publicContentItemRestService.getItemByCompetitionId(competitionId).getSuccess();
+
+        model.addAttribute("model", new ConfirmResearchOrganisationEligibilityViewModel(competitionId, null, publicContent.getPublicContentResource().getHash()));
         model.addAttribute(FORM_NAME, new ConfirmResearchOrganisationEligibilityForm());
 
         return TEMPLATE_PATH + "/" + RESEARCH_ELIGIBILITY_TEMPLATE;
@@ -56,7 +63,8 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
             UserResource user) {
 
         String organisationName = organisationRestService.getOrganisationById(organisationId).getSuccess().getName();
-        model.addAttribute("model", new ConfirmResearchOrganisationEligibilityViewModel(competitionId, organisationName));
+        PublicContentItemResource publicContent = publicContentItemRestService.getItemByCompetitionId(competitionId).getSuccess();
+        model.addAttribute("model", new ConfirmResearchOrganisationEligibilityViewModel(competitionId, organisationName, publicContent.getPublicContentResource().getHash()));
         model.addAttribute(FORM_NAME, new ConfirmResearchOrganisationEligibilityForm());
 
         return TEMPLATE_PATH + "/" + RESEARCH_ELIGIBILITY_TEMPLATE;
@@ -72,8 +80,10 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
             Model model,
             UserResource user) {
 
+        PublicContentItemResource publicContent = publicContentItemRestService.getItemByCompetitionId(competitionId).getSuccess();
+
         Supplier<String> failureView = () -> {
-            model.addAttribute("model", new ConfirmResearchOrganisationEligibilityViewModel(competitionId, null));
+            model.addAttribute("model", new ConfirmResearchOrganisationEligibilityViewModel(competitionId, null, publicContent.getPublicContentResource().getHash()));
             return TEMPLATE_PATH + "/" + RESEARCH_ELIGIBILITY_TEMPLATE;
         };
         Supplier<String> successView = () -> {
@@ -99,9 +109,11 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
             Model model,
             UserResource user) {
 
+        PublicContentItemResource publicContent = publicContentItemRestService.getItemByCompetitionId(competitionId).getSuccess();
+
         Supplier<String> failureView = () -> {
                 String organisationName = organisationRestService.getOrganisationById(organisationId).getSuccess().getName();
-                model.addAttribute("model", new ConfirmResearchOrganisationEligibilityViewModel(competitionId, organisationName));
+                model.addAttribute("model", new ConfirmResearchOrganisationEligibilityViewModel(competitionId, organisationName, publicContent.getPublicContentResource().getHash()));
                 return TEMPLATE_PATH + "/" + RESEARCH_ELIGIBILITY_TEMPLATE;
             };
         Supplier<String> successView = () -> {
@@ -120,8 +132,11 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
                                   Model model,
                                   UserResource user,
                                   HttpServletRequest request) {
+
+        PublicContentItemResource publicContent = publicContentItemRestService.getItemByCompetitionId(competitionId).getSuccess();
+
         model.addAttribute("collaborator", registrationCookieService.isCollaboratorJourney(request));
-        model.addAttribute("model", new ConfirmResearchOrganisationEligibilityViewModel(competitionId, null));
+        model.addAttribute("model", new ConfirmResearchOrganisationEligibilityViewModel(competitionId, null, publicContent.getPublicContentResource().getHash()));
         return TEMPLATE_PATH + "/" + RESEARCH_NOT_ELIGIBLE;
     }
 
@@ -132,9 +147,12 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
                                   Model model,
                                   UserResource user,
                                   HttpServletRequest request) {
+
         String organisationName = organisationRestService.getOrganisationById(organisationId).getSuccess().getName();
+        PublicContentItemResource publicContent = publicContentItemRestService.getItemByCompetitionId(competitionId).getSuccess();
+
         model.addAttribute("collaborator", registrationCookieService.isCollaboratorJourney(request));
-        model.addAttribute("model", new ConfirmResearchOrganisationEligibilityViewModel(competitionId, organisationName));
+        model.addAttribute("model", new ConfirmResearchOrganisationEligibilityViewModel(competitionId, organisationName, publicContent.getPublicContentResource().getHash()));
         return TEMPLATE_PATH + "/" + RESEARCH_NOT_ELIGIBLE;
     }
 

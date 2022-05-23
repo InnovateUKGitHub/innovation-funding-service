@@ -227,7 +227,7 @@ The knowledge transfer partnership t&c's are correct
 T&c's can be confirmed
     [Documentation]  IFS-7213  IFS-9124
     Given the user clicks the button/link                    jQuery = button:contains("Done")
-    When the user selects the radio button                   termsAndConditionsId    termsAndConditionsId12
+    When the user selects the radio button                   termsAndConditionsId    termsAndConditionsId13
     And the user clicks the button/link                      jQuery = button:contains("Done")
     And the user should see the element                      jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Knowledge Transfer Partnership (KTP) - Subsidy control")
     And the user should see the element                      jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Innovate UK")

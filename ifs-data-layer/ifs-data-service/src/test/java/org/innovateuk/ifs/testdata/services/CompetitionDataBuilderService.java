@@ -7,6 +7,7 @@ import org.innovateuk.ifs.testdata.CompetitionOrganisationConfigDataBuilder;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionLine;
+import org.innovateuk.ifs.testdata.builders.data.PreRegistrationSectionLine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.support.GenericApplicationContext;
@@ -30,7 +31,9 @@ import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCom
 import static org.innovateuk.ifs.testdata.builders.CompetitionFunderDataBuilder.newCompetitionFunderData;
 import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.newPublicContentDateDataBuilder;
 import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder.newPublicContentGroupDataBuilder;
+import static org.innovateuk.ifs.testdata.builders.PreRegistrationSectionDataBuilder.newCompetitionPreRegistrationSections;
 import static org.innovateuk.ifs.testdata.data.CompetitionWebTestData.buildCompetitionLines;
+import static org.innovateuk.ifs.testdata.data.CompetitionPreRegistrationWebTestData.buildCompetitionPreRegistrationLines;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -53,11 +56,13 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
     private CompetitionFunderDataBuilder competitionFunderDataBuilder;
     private CompetitionOrganisationConfigDataBuilder competitionOrganisationConfigDataBuilder;
     private AssessmentPeriodDataBuilder assessmentPeriodDataBuilder;
+    private PreRegistrationSectionDataBuilder preRegistrationSectionDataBuilder;
 
     private List<CompetitionLine> competitionLines;
     private static List<CsvUtils.CompetitionFunderLine> competitionFunderLines;
     private static List<CsvUtils.CompetitionOrganisationConfigLine> competitionOrganisationConfigLines;
     private static List<CsvUtils.AssessmentPeriodLine> competitionAssessmentPeriodLines;
+    private List<PreRegistrationSectionLine> preRegistrationSectionLines;
 
     @PostConstruct
     public void readCsvs() {
@@ -68,11 +73,13 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         competitionFunderDataBuilder = newCompetitionFunderData(serviceLocator);
         competitionOrganisationConfigDataBuilder = newCompetitionConfigData(serviceLocator);
         assessmentPeriodDataBuilder = newCompetitionAssessmentPeriods(serviceLocator);
+        preRegistrationSectionDataBuilder = newCompetitionPreRegistrationSections(serviceLocator);
 
         competitionLines = buildCompetitionLines();
         competitionFunderLines = readCompetitionFunders();
         competitionOrganisationConfigLines = readCompetitionOrganisationConfig();
         competitionAssessmentPeriodLines = readCompetitionAssessmentPeriods();
+        preRegistrationSectionLines = buildCompetitionPreRegistrationLines();
     }
 
     public void moveCompetitionsToCorrectFinalState(List<CompetitionData> competitions) {
@@ -147,6 +154,16 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         }
     }
 
+    public void disableSectionForPreRegistration(CompetitionData competition) {
+
+        List<PreRegistrationSectionLine> sectionLines = simpleFilter(preRegistrationSectionLines, l ->
+                competition.getCompetition().getName().equals(l.competitionName));
+
+        sectionLines.forEach(sectionLine ->
+                preRegistrationSectionDataBuilder.withPreRegistrationSections(sectionLine).build()
+        );
+    }
+
     public void moveCompetitionIntoOpenStatus(CompetitionData competition) {
         CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competition);
         basicCompetitionInformation.moveCompetitionIntoOpenStatus().build();
@@ -179,6 +196,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                 .withNewMilestones(line);
 
         CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(line, competitionBeforeMilestones);
+
         return competitionWithMilestones.
                 withDefaultPublicContent(line);
     }

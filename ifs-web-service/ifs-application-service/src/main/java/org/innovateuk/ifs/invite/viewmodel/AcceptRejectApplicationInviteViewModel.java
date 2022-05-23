@@ -13,6 +13,7 @@ public class AcceptRejectApplicationInviteViewModel implements BaseAnalyticsView
     private String leadApplicantEmail;
     private boolean inviteOrganisationExists;
     private boolean leadOrganisation;
+    private String hash;
 
     public AcceptRejectApplicationInviteViewModel(final long applicationId,
                                                   final long competitionId, final String competitionName,
@@ -20,7 +21,8 @@ public class AcceptRejectApplicationInviteViewModel implements BaseAnalyticsView
                                                   final String inviteOrganisationName,
                                                   final String leadApplicantEmail,
                                                   final boolean inviteOrganisationExists,
-                                                  final boolean leadOrganisation) {
+                                                  final boolean leadOrganisation,
+                                                  String hash) {
         this.applicationId = applicationId;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
@@ -30,6 +32,7 @@ public class AcceptRejectApplicationInviteViewModel implements BaseAnalyticsView
         this.leadApplicantEmail = leadApplicantEmail;
         this.inviteOrganisationExists = inviteOrganisationExists;
         this.leadOrganisation = leadOrganisation;
+        this.hash = hash;
     }
 
     @Override
@@ -68,6 +71,10 @@ public class AcceptRejectApplicationInviteViewModel implements BaseAnalyticsView
 
     public boolean isLeadOrganisation() {
         return leadOrganisation;
+    }
+
+    public String getHash() {
+        return hash;
     }
 }
 

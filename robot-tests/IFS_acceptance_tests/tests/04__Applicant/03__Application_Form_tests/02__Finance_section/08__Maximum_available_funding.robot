@@ -16,7 +16,7 @@ ${lead_rto_email}                      oscarRTO@innovateuk.com
 Maximum funding level available for lead business
     [Documentation]    IFS-338
     [Tags]  HappyPath
-    Given we create a new user                               ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}  Oscar  business  ${lead_business_email}  ${BUSINESS_TYPE_ID}
+    Given we create a new user                               ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  Oscar  business  ${lead_business_email}  ${BUSINESS_TYPE_ID}
     When the user clicks the button/link                     link = Untitled application (start here)
     And the applicant completes the application details      Application details
     And the user selects Research category                   Experimental development
@@ -62,7 +62,7 @@ Maximum funding level available for RTO lead
     [Documentation]  IFS-338
     [Tags]  HappyPath
     [Setup]  logout as user
-    Given we create a new user                                              ${openCompetitionRTO}  Smith  rto  ${lead_rto_email}    ${RTO_TYPE_ID}
+    Given we create a new user                                              ${openCompetitionRTO_name}  Smith  rto  ${lead_rto_email}    ${RTO_TYPE_ID}
     When the user clicks the button/link                                    link = Untitled application (start here)
     And the applicant completes the application details for RTO lead appln  Application details
     And the user selects Research category                                  Experimental development

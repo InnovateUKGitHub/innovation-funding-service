@@ -27,6 +27,8 @@ Documentation     INFUND-6914 Create 'Public content' menu page for "Front Door"
 ...
 ...               IFS-8848  Always open competitions: comp setup milestones
 ...
+...               IFS-11982 Direct Awards: Public Content (Invite only)
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -68,27 +70,39 @@ External users do not have access to the Public content sections
     Then The user navigates to the page and gets a custom error message  ${public_content_overview}  ${403_error_message}
 
 Competition information and search: server side validation
-    [Documentation]    INFUND-6915  IFS-179
-    [Tags]
-    [Setup]  log in as a different user                  &{Comp_admin1_credentials}
-    Given the internal user navigates to public content  ${public_content_competition_name}
-    Then the user clicks the button/link                 link = Competition information and search
-    When the user clicks the button/link                 jQuery = .govuk-button:contains("Save and review")
+    [Documentation]   IFS-11982
+    Given log in as a different user                     &{Comp_admin1_credentials}
+    When the internal user navigates to public content   ${public_content_competition_name}
+    And the user clicks the button/link                  link = Competition information and search
+    And the user clicks the button/link                  jQuery = .govuk-button:contains("Save and review")
+    Then the user should see a summary error             Please select a publish setting.
+
+Competition information and search: server side validation
+    [Documentation]    INFUND-6915  IFS-179  IFS-11982
+    When the user selects the radio button               publishSetting  public
+    And the user clicks the button/link                  jQuery = .govuk-button:contains("Save and review")
     Then the user should see a summary error             Please enter a short description.
     Then the user should see a summary error             Please enter a project funding range.
     Then the user should see a summary error             Please enter an eligibility summary.
     Then the user should see a summary error             Please enter a valid set of keywords.
-    Then the user should see a summary error             Please select a publish setting.
+
+
+The user should not see competition information and search field validations on selecting invite only publish setting
+    [Documentation]   IFS-11982
+    When the user selects the radio button               publishSetting  invite
+    And the user clicks the button/link                  jQuery = .govuk-button:contains("Save and review")
+    Then the user should see the element                 jQuery = a:contains("Edit")
 
 Competition information and search: Valid values
     [Documentation]    INFUND-6915  INFUND-8363  IFS-179
     [Tags]
+    Given the user clicks the button/link           jQuery = a:contains("Edit")
     When the user enters text to a text field       id = shortDescription  Short public description
     And the user enters text to a text field        id = projectFundingRange  Up to £1million
     And the user selects the radio button           publishSetting  invite
     And the user enters text to a text field        css = [aria-labelledby="eligibilitySummary-label"]  Summary of eligiblity
     When the user enters text to a text field       id = keywords  hellohellohellohellohellohellohellohellohellohellou
-    And the user clicks the button/link             jQuery = button:contains("Save and review")
+    And the user clicks the button/link             jQuery = .govuk-button:contains("Save and review")
     Then the user should see the element            jQuery = .govuk-error-summary__list:contains("Each keyword must be less than 50 characters long.")
     And the user enters text to a text field        id = keywords  Search, Testing, Robot
     Then the user clicks the button/link            jQuery = .govuk-button:contains("Save and review")

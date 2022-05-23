@@ -18,7 +18,7 @@ public class CompetitionInviteViewModelTest {
                 .withCompetitionFundingType(FundingType.GRANT)
                 .build();
 
-        CompetitionInviteViewModel viewModel = new CompetitionInviteViewModel(inviteHash, competitionInviteResource, false);
+        CompetitionInviteViewModel viewModel = new CompetitionInviteViewModel(inviteHash, competitionInviteResource, false, null);
 
         assertFalse(viewModel.isKtpCompetition());
         assertFalse(viewModel.isAlwaysOpenCompetition());
@@ -32,7 +32,7 @@ public class CompetitionInviteViewModelTest {
                 .withCompetitionFundingType(FundingType.KTP)
                 .build();
 
-        CompetitionInviteViewModel viewModel = new CompetitionInviteViewModel(inviteHash, competitionInviteResource, false);
+        CompetitionInviteViewModel viewModel = new CompetitionInviteViewModel(inviteHash, competitionInviteResource, false, null);
 
         assertTrue(viewModel.isKtpCompetition());
         assertFalse(viewModel.isAlwaysOpenCompetition());
@@ -47,7 +47,7 @@ public class CompetitionInviteViewModelTest {
                 .withCompetitionAlwaysOpen(true)
                 .build();
 
-        CompetitionInviteViewModel viewModel = new CompetitionInviteViewModel(inviteHash, competitionInviteResource, false);
+        CompetitionInviteViewModel viewModel = new CompetitionInviteViewModel(inviteHash, competitionInviteResource, false, null);
 
         assertTrue(viewModel.isAlwaysOpenCompetition());
     }

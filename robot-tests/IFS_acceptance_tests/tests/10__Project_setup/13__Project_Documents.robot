@@ -663,7 +663,16 @@ the MO navigates to page
     ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    the user should see the element    jQuery = th:contains("${Grade_Crossing_Application_Title}") ~td:contains("Assigned")
     Run Keyword if  '${status}' == 'FAIL'   Assign a MO to the project and login as MO
     log in as a different user              &{monitoring_officer_one_credentials}
-    the user navigates to the page          ${server}/project-setup/project/${Grade_Crossing_Project_Id}
+    the user renavigates until element appears on page    jQuery = ul li:contains("Documents") span:contains("Incomplete")
+
+the user renavigates until element appears on page
+    [Arguments]  ${selector}
+    Wait Until Keyword Succeeds Without Screenshots     120s   5s   renavigate and check if element appears    ${selector}
+
+renavigate and check if element appears
+    [Arguments]  ${selector}
+    the user navigates to the page                          ${server}/project-setup/project/${Grade_Crossing_Project_Id}
+    Wait Until Page Contains Element Without Screenshots    ${selector}     5s
 
 Assign a MO to the project and login as MO
     the user navigates to the page                    ${server}/project-setup-management/monitoring-officer/view-all?ktp=false
