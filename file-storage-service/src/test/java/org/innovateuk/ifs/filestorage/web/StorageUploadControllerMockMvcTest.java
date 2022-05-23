@@ -42,15 +42,6 @@ class StorageUploadControllerMockMvcTest {
         .andExpect(status().isOk());
     }
 
-    @Test
-    void uploadRaw() throws Exception {
-        mockMvc.perform(post("/" + ApiVersion.VERSION_ONE + "/uploadRaw")
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.TEXT_PLAIN)
-                .content("sdsdfsddfs"))
-        .andExpect(status().isOk());
-    }
-
     private String toJson(Object obj) {
         String json = null;
         try {
