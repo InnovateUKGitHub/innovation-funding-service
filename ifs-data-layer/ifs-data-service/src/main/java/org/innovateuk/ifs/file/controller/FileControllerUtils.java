@@ -13,7 +13,6 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +31,6 @@ import static org.springframework.http.HttpStatus.OK;
  * Helpful utility methods for dealing with file uploads within Controllers
  */
 @Slf4j
-@Component
 public class FileControllerUtils {
 
     /**
@@ -96,7 +94,7 @@ public class FileControllerUtils {
         return handleFileUploadWithServiceCall(contentType, contentLength, originalFilename, fileValidator, mediaTypesContext, maxFileSizeBytes, request, voidReturner).toPutResponse();
     }
 
-    private <T, MediaTypesContext> ServiceResult<T> handleFileUploadWithServiceCall(String contentType, String contentLength, String originalFilename, FilesizeAndTypeFileValidator<MediaTypesContext> fileValidator, MediaTypesContext mediaTypesContext, long maxFileSizeBytes, HttpServletRequest request, BiFunction<FileHeaderAttributes, Supplier<InputStream>, ServiceResult<T>> uploadFileActionFn) {
+    private static <T, MediaTypesContext> ServiceResult<T> handleFileUploadWithServiceCall(String contentType, String contentLength, String originalFilename, FilesizeAndTypeFileValidator<MediaTypesContext> fileValidator, MediaTypesContext mediaTypesContext, long maxFileSizeBytes, HttpServletRequest request, BiFunction<FileHeaderAttributes, Supplier<InputStream>, ServiceResult<T>> uploadFileActionFn) {
 
         return fileValidator.validateFileHeaders(contentType, contentLength, originalFilename, mediaTypesContext, maxFileSizeBytes).handleSuccessOrFailure(
                 failure -> failureView(request, failure),
@@ -104,21 +102,21 @@ public class FileControllerUtils {
         );
     }
 
-    private Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {
+    private static Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {
         return () -> inputStream(request);
     }
 
-    private InputStream inputStream(HttpServletRequest request) {
-            try {
-                byte[] array = IOUtils.toByteArray(request.getInputStream());
-                return new ByteArrayInputStream(array);
-            } catch (IOException e) {
-                log.error("Unable to open an input stream from request", e);
-                throw new RuntimeException("Unable to open an input stream from request", e);
-            }
+    private static InputStream inputStream(HttpServletRequest request) {
+        try {
+            byte[] array = IOUtils.toByteArray(request.getInputStream());
+            return new ByteArrayInputStream(array);
+        } catch (IOException e) {
+            log.error("Unable to open an input stream from request", e);
+            throw new RuntimeException("Unable to open an input stream from request", e);
+        }
     }
 
-    private <T> ServiceResult<T> failureView(HttpServletRequest request, ServiceFailure result) {
+    private static <T> ServiceResult<T> failureView(HttpServletRequest request, ServiceFailure result) {
         // Must be called on failure to wait for upload to finish otherwise we get a connection reset error
         inputStream(request);
         return serviceFailure(result.getErrors());
