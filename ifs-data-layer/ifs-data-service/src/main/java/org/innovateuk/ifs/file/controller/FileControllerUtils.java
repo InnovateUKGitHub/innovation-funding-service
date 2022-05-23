@@ -36,7 +36,7 @@ public class FileControllerUtils {
     /**
      * A convenience method to create a response to a file download request, given a supplier of a FileAndContents
      */
-    public ResponseEntity<Object> handleFileDownload(Supplier<ServiceResult<? extends FileAndContents>> fileResultSupplier) {
+    public static ResponseEntity<Object> handleFileDownload(Supplier<ServiceResult<? extends FileAndContents>> fileResultSupplier) {
 
         try {
 
@@ -73,7 +73,7 @@ public class FileControllerUtils {
      * The {@link MediaTypesContext} generic type refers to a context from which a valid set of Media Types can be established,
      * as used by the supplied {@link FilesizeAndTypeFileValidator}.
      */
-    public <T, MediaTypesContext> RestResult<T> handleFileUpload(String contentType, String contentLength, String originalFilename,
+    public static <T, MediaTypesContext> RestResult<T> handleFileUpload(String contentType, String contentLength, String originalFilename,
                                                                  FilesizeAndTypeFileValidator<MediaTypesContext> fileValidator, MediaTypesContext mediaTypeContext, long maxFileSizeBytes,
                                                                  HttpServletRequest request, BiFunction<FileHeaderAttributes, Supplier<InputStream>, ServiceResult<T>> uploadFileActionFn) {
 
