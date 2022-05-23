@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.cfg;
 
+import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.address.repository.AddressTypeRepository;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
@@ -23,7 +24,9 @@ import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
+@Profile(IfsProfileConstants.MOCK_BEAN_TEST)
 @Configuration
 public class MockBeanRepositoryConfiguration {
 

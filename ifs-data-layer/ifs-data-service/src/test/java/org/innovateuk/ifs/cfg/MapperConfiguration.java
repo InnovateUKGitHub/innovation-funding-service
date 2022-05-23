@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.cfg;
 
+import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.assessment.period.mapper.AssessmentPeriodMapperImpl;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapperImpl;
 import org.innovateuk.ifs.category.mapper.InnovationSectorMapperImpl;
@@ -19,7 +20,9 @@ import org.innovateuk.ifs.project.grantofferletter.template.mapper.GolTemplateMa
 import org.innovateuk.ifs.user.mapper.UserMapperImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
+@Profile(IfsProfileConstants.MOCK_BEAN_TEST)
 @Configuration
 public class MapperConfiguration {
 
