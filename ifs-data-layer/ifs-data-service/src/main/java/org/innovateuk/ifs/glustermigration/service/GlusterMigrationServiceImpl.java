@@ -35,6 +35,7 @@ public class GlusterMigrationServiceImpl implements GlusterMigrationService {
 
     @Autowired
     private GlusterMigrationStatusRepository glusterMigrationStatusRepository;
+
     @Autowired
     private FileEntryRepository fileEntryRepository;
 
@@ -55,10 +56,10 @@ public class GlusterMigrationServiceImpl implements GlusterMigrationService {
         StopWatch stopWatch = new StopWatch(GlusterMigrationServiceImpl.class.getSimpleName());
         stopWatch.start();
         List<GlusterMigrationStatus> glusterMigrationStatuses = glusterMigrationStatusRepository.findGlusterMigrationStatusByStatusEquals(GlusterMigrationStatusType.FILE_NOT_FOUND.toString());
-        List<Long> fileIds = glusterMigrationStatuses.stream()
-                .map(GlusterMigrationStatus::getId)
+        List<Long> fileEntryIds = glusterMigrationStatuses.stream()
+                .map(GlusterMigrationStatus::getFileEntryId)
                 .collect(Collectors.toList());
-        List<FileEntry> fileEntries = fileEntryRepository.findByNullUUID(PageRequest.of(0, 10), fileIds);
+        List<FileEntry> fileEntries = fileEntryRepository.findByNullUUID(PageRequest.of(0, 10), fileEntryIds);
         log.info("Number of files entry retrieved " + fileEntries.size());
         for (FileEntry fileEntry : fileEntries) {
             log.info("File sequence: " + fileEntry.getId());
@@ -82,7 +83,7 @@ public class GlusterMigrationServiceImpl implements GlusterMigrationService {
 
             } else {
                 log.info("No files retrieved from gluster");
-                glusterMigrationStatusRepository.save(new GlusterMigrationStatus(fileEntry.getId(), GlusterMigrationStatusType.FILE_NOT_FOUND.toString(), ""));
+                glusterMigrationStatusRepository.save(new GlusterMigrationStatus(null, fileEntry.getId(), GlusterMigrationStatusType.FILE_NOT_FOUND.toString(), ""));
             }
 
         }

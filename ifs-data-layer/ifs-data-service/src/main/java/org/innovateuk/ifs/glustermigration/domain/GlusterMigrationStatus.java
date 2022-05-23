@@ -10,8 +10,10 @@ import java.util.Objects;
 public class GlusterMigrationStatus {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private Long fileEntryId;
 
     private String status;
 
@@ -21,8 +23,9 @@ public class GlusterMigrationStatus {
     	// no-arg constructor
     }
 
-    public GlusterMigrationStatus(Long id, String status, String errorMessage) {
+    public GlusterMigrationStatus(Long id, Long fileEntryId, String status, String errorMessage) {
         this.id = id;
+        this.fileEntryId = fileEntryId;
         this.status = status;
         this.errorMessage = errorMessage;
     }
@@ -33,6 +36,14 @@ public class GlusterMigrationStatus {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getFileEntryId() {
+        return fileEntryId;
+    }
+
+    public void setFileEntryId(Long fileEntryId) {
+        this.fileEntryId = fileEntryId;
     }
 
     public String getStatus() {
@@ -56,11 +67,11 @@ public class GlusterMigrationStatus {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GlusterMigrationStatus that = (GlusterMigrationStatus) o;
-        return id.equals(that.id) && status.equals(that.status) && errorMessage.equals(that.errorMessage);
+        return id.equals(that.id) && fileEntryId.equals(that.fileEntryId) && status.equals(that.status) && errorMessage.equals(that.errorMessage);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, status, errorMessage);
+        return Objects.hash(id, fileEntryId, status, errorMessage);
     }
 }
