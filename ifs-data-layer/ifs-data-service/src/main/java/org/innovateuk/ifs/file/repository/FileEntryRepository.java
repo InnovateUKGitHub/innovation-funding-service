@@ -13,4 +13,6 @@ public interface FileEntryRepository extends CrudRepository<FileEntry, Long> {
 
     List<FileEntry> findFileEntryByIdNotInAndFileUuidIsNull(List<Long> fileEntryIds, Pageable pageable);
 
+    List<FileEntry> findFileEntryByFileUuidIsNull(Pageable pageable);
+
 }

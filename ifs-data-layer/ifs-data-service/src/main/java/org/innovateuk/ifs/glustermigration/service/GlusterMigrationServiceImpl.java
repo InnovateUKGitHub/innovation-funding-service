@@ -25,6 +25,7 @@ import org.springframework.util.StopWatch;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -58,7 +59,8 @@ public class GlusterMigrationServiceImpl implements GlusterMigrationService {
         List<Long> fileEntryIds = glusterMigrationStatuses.stream()
                 .map(GlusterMigrationStatus::getFileEntryId)
                 .collect(Collectors.toList());
-        List<FileEntry> fileEntries = fileEntryRepository.findFileEntryByIdNotInAndFileUuidIsNull(fileEntryIds, PageRequest.of(0, 10));
+        List<FileEntry> fileEntries = Optional.of(fileEntryRepository.findFileEntryByIdNotInAndFileUuidIsNull(fileEntryIds, PageRequest.of(0, 10)))
+                .orElse(fileEntryRepository.findFileEntryByFileUuidIsNull(PageRequest.of(0, 10)));
         log.info("Number of files entry retrieved " + fileEntries.size());
         for (FileEntry fileEntry : fileEntries) {
             log.info("File sequence: " + fileEntry.getId());
