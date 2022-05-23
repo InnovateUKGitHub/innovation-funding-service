@@ -23,7 +23,7 @@ public class GlusterFilesProcessor {
     @Autowired
     private ScheduleStatusWrapper scheduleStatusWrapper;
 
-    @Scheduled(fixedDelayString = "${ifs.data.service.gluster.file.migration.millis:5000}")
+    @Scheduled(fixedDelayString = "${ifs.data.service.gluster.file.migration.millis:20000}")
     public void send() {
         scheduleStatusWrapper.doScheduledJob(JOB_NAME, () -> {
             try {
