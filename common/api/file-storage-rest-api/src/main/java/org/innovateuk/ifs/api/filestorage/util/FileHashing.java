@@ -12,6 +12,7 @@ public class FileHashing {
 
     /**
      * Consistent hash for files, md5 is fine for this purpose and s3 expects md5 base64 encoded which seems reasonable
+     * Static scanners will keep flagging this because they assume we are using it for password generation (we are not)
      * @param payload bytes
      * @return the md5 hash
      */
