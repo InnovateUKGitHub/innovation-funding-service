@@ -61,12 +61,17 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
         Pair<List<String>, String> absoluteFilePathAndName = getAbsoluteFilePathAndName(file);
         List<String> pathElements = absoluteFilePathAndName.getLeft();
         String filename = absoluteFilePathAndName.getRight();
+        log.info("filename " + filename);
         Path foldersPath = pathElementsToPath(pathElements);
+        log.info(foldersPath.toString());
+        log.info(foldersPath.toAbsolutePath().toString());
         File fileOnFilesystem = new File(foldersPath.toFile(), filename);
 
         if (fileOnFilesystem.exists()) {
+            log.info("file exists");
             return serviceSuccess(fileOnFilesystem);
         } else {
+            log.info("file not exists");
             return serviceFailure(notFoundError(FileEntry.class, file.getId()));
         }
     }

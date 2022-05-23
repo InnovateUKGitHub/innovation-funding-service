@@ -59,7 +59,7 @@ public class GlusterMigrationServiceImpl implements GlusterMigrationService {
         List<FileEntry> fileEntries = fileEntryRepository.findByNullUUID(PageRequest.of(0, 10), fileIds);
         log.info("Number of files entry retrieved " + fileEntries.size());
         for (FileEntry fileEntry : fileEntries) {
-            log.info(fileEntry.toString());
+            log.info("File sequence: " + fileEntry.getId());
             ServiceResult<File> result = finalFileStorageStrategy.getFile(fileEntry).andOnFailure(() -> scannedFileStorageStrategy.getFile(fileEntry));
             log.info("file retrieval result " + result.isSuccess());
             if (result.isSuccess()) {

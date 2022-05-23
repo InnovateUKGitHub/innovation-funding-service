@@ -10,6 +10,7 @@ import java.util.Objects;
 public class GlusterMigrationStatus {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
     private String status;
