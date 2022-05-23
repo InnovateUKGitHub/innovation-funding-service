@@ -36,7 +36,7 @@ public class FileControllerUtils {
     /**
      * A convenience method to create a response to a file download request, given a supplier of a FileAndContents
      */
-    public ResponseEntity<Object> handleFileDownload(Supplier<ServiceResult<? extends FileAndContents>> fileResultSupplier) {
+    public static ResponseEntity<Object> handleFileDownload(Supplier<ServiceResult<? extends FileAndContents>> fileResultSupplier) {
 
         try {
 
@@ -73,7 +73,7 @@ public class FileControllerUtils {
      * The {@link MediaTypesContext} generic type refers to a context from which a valid set of Media Types can be established,
      * as used by the supplied {@link FilesizeAndTypeFileValidator}.
      */
-    public <T, MediaTypesContext> RestResult<T> handleFileUpload(String contentType, String contentLength, String originalFilename,
+    public static <T, MediaTypesContext> RestResult<T> handleFileUpload(String contentType, String contentLength, String originalFilename,
                                                                  FilesizeAndTypeFileValidator<MediaTypesContext> fileValidator, MediaTypesContext mediaTypeContext, long maxFileSizeBytes,
                                                                  HttpServletRequest request, BiFunction<FileHeaderAttributes, Supplier<InputStream>, ServiceResult<T>> uploadFileActionFn) {
 
@@ -107,13 +107,13 @@ public class FileControllerUtils {
     }
 
     private static InputStream inputStream(HttpServletRequest request) {
-        try {
-            byte[] array = IOUtils.toByteArray(request.getInputStream());
-            return new ByteArrayInputStream(array);
-        } catch (IOException e) {
-            log.error("Unable to open an input stream from request", e);
-            throw new RuntimeException("Unable to open an input stream from request", e);
-        }
+            try {
+                byte[] array = IOUtils.toByteArray(request.getInputStream());
+                return new ByteArrayInputStream(array);
+            } catch (IOException e) {
+                log.error("Unable to open an input stream from request", e);
+                throw new RuntimeException("Unable to open an input stream from request", e);
+            }
     }
 
     private static <T> ServiceResult<T> failureView(HttpServletRequest request, ServiceFailure result) {

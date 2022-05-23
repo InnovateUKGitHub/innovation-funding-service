@@ -19,8 +19,7 @@ public class EuGrantTransferController {
     @Autowired
     private EuGrantTransferService euGrantTransferService;
 
-    @Autowired
-    private FileControllerUtils fileControllerUtils;
+    private FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
     @GetMapping(value = "{applicationId}", produces = "application/json")
     public RestResult<EuGrantTransferResource> getGrantTransferByApplicationId(@PathVariable("applicationId") long applicationId) {
