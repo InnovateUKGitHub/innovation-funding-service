@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.glustermigration.scheduler;
 
 import org.innovateuk.ifs.IfsProfileConstants;
-import org.innovateuk.ifs.file.service.FileEntryService;
 import org.innovateuk.ifs.glustermigration.service.GlusterMigrationService;
 import org.innovateuk.ifs.schedule.transactional.ScheduleStatusWrapper;
 import org.springframework.beans.factory.annotation.Autowired;

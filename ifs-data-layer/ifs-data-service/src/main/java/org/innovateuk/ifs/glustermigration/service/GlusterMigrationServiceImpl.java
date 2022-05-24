@@ -17,6 +17,7 @@ import org.innovateuk.ifs.glustermigration.repository.GlusterMigrationStatusRepo
 import org.innovateuk.ifs.schedule.transactional.ScheduleResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,9 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class GlusterMigrationServiceImpl implements GlusterMigrationService {
+
+    @Value("${ifs.data.service.gluster.file.migration.millis:50}")
+    private Integer fileEntryBatch;
 
     @Autowired
     private GlusterMigrationStatusRepository glusterMigrationStatusRepository;
@@ -52,37 +56,29 @@ public class GlusterMigrationServiceImpl implements GlusterMigrationService {
 
     @Override
     public ServiceResult<ScheduleResponse> processGlusterFiles() throws IOException {
-        log.info("Get files from gluster");
         StopWatch stopWatch = new StopWatch(GlusterMigrationServiceImpl.class.getSimpleName());
         stopWatch.start();
         List<GlusterMigrationStatus> glusterMigrationStatuses = glusterMigrationStatusRepository.findGlusterMigrationStatusByStatusEquals(GlusterMigrationStatusType.FILE_NOT_FOUND.toString());
         List<Long> fileEntryIds = glusterMigrationStatuses.stream()
                 .map(GlusterMigrationStatus::getFileEntryId)
                 .collect(Collectors.toList());
-        List<FileEntry> fileEntries = Optional.of(fileEntryRepository.findFileEntryByIdNotInAndFileUuidIsNull(fileEntryIds, PageRequest.of(0, 10)))
-                .orElse(fileEntryRepository.findFileEntryByFileUuidIsNull(PageRequest.of(0, 10)));
+        List<FileEntry> fileEntries = getFileEntries(fileEntryIds);
         log.info("Number of files entry retrieved " + fileEntries.size());
         for (FileEntry fileEntry : fileEntries) {
-            log.info("File sequence: " + fileEntry.getId());
             ServiceResult<File> result = finalFileStorageStrategy.getFile(fileEntry).andOnFailure(() -> scannedFileStorageStrategy.getFile(fileEntry));
-            log.info("file retrieval result " + result.isSuccess());
+            log.info("file retrieval result for file entry {} is {}", fileEntry.getId(), result.isSuccess());
             if (result.isSuccess()) {
-                log.info("file entry to process " + fileEntry.getId());
                 File file = result.getSuccess();
                 UUID fileId = UUID.randomUUID();
-                FileUploadRequest.FileUploadRequestBuilder fileUploadRequestBuilder = FileUploadRequest.builder()
-                        .fileId(fileId.toString())
-                        .fileName(fileEntry.getName())
-                        .md5Checksum(FileHashing.fileHash64(FileUtils.readFileToByteArray(file)))
-                        .mimeType(fileEntry.getMediaType())
-                        .payload(FileUtils.readFileToByteArray(file))
-                        .userId(IfsConstants.IFS_SYSTEM_USER)
-                        .fileSizeBytes(FileUtils.readFileToByteArray(file).length)
-                        .systemId(IfsConstants.IFS_SYSTEM_USER);
+                FileUploadRequest.FileUploadRequestBuilder fileUploadRequestBuilder = getFileUploadRequestBuilder(fileEntry, file, fileId);
                 ResponseEntity<FileUploadResponse> fileUploadResponseEntity = fileUpload.fileUpload(fileUploadRequestBuilder.build());
                 if (fileUploadResponseEntity.getStatusCode().is2xxSuccessful()) {
                     fileEntry.setFileUuid(fileId.toString());
                     fileEntryRepository.save(fileEntry);
+                    glusterMigrationStatusRepository.save(new GlusterMigrationStatus(null, fileEntry.getId(), GlusterMigrationStatusType.FILE_FOUND.toString(), ""));
+
+                } else {
+                    glusterMigrationStatusRepository.save(new GlusterMigrationStatus(null, fileEntry.getId(), GlusterMigrationStatusType.FILE_PROCESS_ERROR.toString(), fileUploadResponseEntity.getStatusCode().getReasonPhrase()));
                 }
 
             } else {
@@ -94,5 +90,22 @@ public class GlusterMigrationServiceImpl implements GlusterMigrationService {
         stopWatch.stop();
         log.info(stopWatch.prettyPrint());
         return ServiceResult.serviceSuccess(ScheduleResponse.noWorkNeeded());
+    }
+
+    private FileUploadRequest.FileUploadRequestBuilder getFileUploadRequestBuilder(FileEntry fileEntry, File file, UUID fileId) throws IOException {
+        return FileUploadRequest.builder()
+                .fileId(fileId.toString())
+                .fileName(fileEntry.getName())
+                .md5Checksum(FileHashing.fileHash64(FileUtils.readFileToByteArray(file)))
+                .mimeType(fileEntry.getMediaType())
+                .payload(FileUtils.readFileToByteArray(file))
+                .userId(IfsConstants.IFS_SYSTEM_USER)
+                .fileSizeBytes(FileUtils.readFileToByteArray(file).length)
+                .systemId(IfsConstants.IFS_SYSTEM_USER);
+    }
+
+    private List<FileEntry> getFileEntries(List<Long> fileEntryIds) {
+        return Optional.of(fileEntryRepository.findFileEntryByIdNotInAndFileUuidIsNull(fileEntryIds, PageRequest.of(0, fileEntryBatch)))
+                .orElse(fileEntryRepository.findFileEntryByFileUuidIsNull(PageRequest.of(0, fileEntryBatch)));
     }
 }
