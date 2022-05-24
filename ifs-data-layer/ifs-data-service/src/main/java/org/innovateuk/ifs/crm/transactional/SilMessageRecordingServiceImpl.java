@@ -19,7 +19,7 @@ import java.util.Optional;
 @Service
 public class SilMessageRecordingServiceImpl implements SilMessageRecordingService {
 
-    final int MAX_PAYLOAD_SIZE = 64000;
+    final int MAX_PAYLOAD_BYTE_SIZE = 16000000;
 
     @Autowired
     SilMessageRepository silMessageRepository;
@@ -31,7 +31,7 @@ public class SilMessageRecordingServiceImpl implements SilMessageRecordingServic
 
 
         if (payload != null &&
-                payload.length() <= MAX_PAYLOAD_SIZE) {
+                payload.getBytes().length <= MAX_PAYLOAD_BYTE_SIZE) {
 
             SilMessage silMessage = SilMessage.builder()
                     .payloadType(payloadType)
@@ -44,7 +44,7 @@ public class SilMessageRecordingServiceImpl implements SilMessageRecordingServic
 
             silMessageRepository.save(silMessage);
         } else {
-            log.warn("Payload exceeds max size {} or is null , ignoring payload {}", MAX_PAYLOAD_SIZE, payload);
+            log.warn("Payload exceeds max size {} or is null , ignoring payload {}", MAX_PAYLOAD_BYTE_SIZE, payload);
         }
 
 

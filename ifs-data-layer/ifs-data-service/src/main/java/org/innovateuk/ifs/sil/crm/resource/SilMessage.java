@@ -19,7 +19,7 @@ public class SilMessage {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column( updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false)
     private String id;
 
     @Column(nullable = false)
@@ -35,7 +35,7 @@ public class SilMessage {
     @Column
     private String keyValue;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "MEDIUMTEXT", nullable = false)
     private String payload;
 
     @Column
