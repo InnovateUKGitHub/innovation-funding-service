@@ -9,6 +9,8 @@ dependencies {
     implementation project(':common:api:file-storage-rest-api')
     implementation project(":common:starter:ifs-starter-common")
 
+    implementation 'org.json:json:20220320'
+
     implementation "com.squareup.okhttp3:okhttp"
 
 }

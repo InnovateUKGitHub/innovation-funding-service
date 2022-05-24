@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.file.transactional;
 
 import com.google.common.io.ByteStreams;
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.IfsConstants;
 import org.innovateuk.ifs.api.filestorage.util.FileHashing;
@@ -81,7 +82,7 @@ public class FileServiceImpl implements FileService {
             return serviceSuccess(
                 fileServiceTransactionHelper.updateMd5(fileEntry.getId(), fileUploadResponse.getBody().getMd5Checksum())
             );
-        } catch (IOException | NoSuchElementException e) {
+        } catch (FeignException | IOException | NoSuchElementException e) {
             return ServiceResult.serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));
         } catch (ResponseStatusException responseStatusException) {
             // TODO some sort of adaptor to map from this to CommonFailureKeys??
