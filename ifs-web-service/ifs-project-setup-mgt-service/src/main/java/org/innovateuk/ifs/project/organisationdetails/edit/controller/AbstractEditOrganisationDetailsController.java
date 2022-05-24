@@ -4,6 +4,7 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationDetailsReadOnlyViewModel;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -14,6 +15,7 @@ import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestSer
 import org.innovateuk.ifs.project.organisationdetails.edit.viewmodel.ProjectOrganisationSizeViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -48,6 +50,9 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
 
     @Autowired
     private OrganisationAddressRestService organisationAddressRestService;
+
+    @Autowired
+    private PublicContentItemRestService publicContentItemRestService;
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator')")
@@ -93,16 +98,21 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
+        PublicContentItemResource publicContentItem = publicContentItemRestService.getItemByCompetitionId(project.getCompetition()).getSuccess();
 
         boolean isMaximumFundingLevelConstant = competition.isMaximumFundingLevelConstant(
                 organisation::getOrganisationTypeEnum,
                 () -> grantClaimMaximumRestService.isMaximumFundingLevelConstant(competition.getId()).getSuccess());
+
+        String hash = publicContentItem.getPublicContentResource().getHash();
+
         ProjectOrganisationSizeViewModel projectOrganisationSizeViewModel =  new ProjectOrganisationSizeViewModel(project,
                 competition,
                 organisation,
                 isMaximumFundingLevelConstant,
                 false,
-                false);
+                false,
+                hash);
         projectOrganisationSizeViewModel.setOrgDetailsViewModel(populateOrganisationDetails(organisationId));
         projectOrganisationSizeViewModel.setPartnerOrgDisplay(true);
         return projectOrganisationSizeViewModel;

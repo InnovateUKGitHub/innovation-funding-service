@@ -26,7 +26,7 @@
                 <dl class="govuk-list govuk-!-font-size-16 govuk-!-margin-bottom-6">
                     <dt>Project number:</dt>
                     <dd th:text="${model.applicationId}"/>
-                    <dt>Competition:</dt>
+                    <dt th:text="${model.isDirectAward ? 'Award:' : 'Competition:'}"></dt>
                     <dd th:text="${model.competitionName}"/>
                     <dt>Funding body:</dt>
                     <dd>Innovate UK</dd>

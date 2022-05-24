@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.dashboard.viewmodel;
 
-import io.micrometer.core.instrument.util.StringUtils;
 import lombok.Getter;
 
 import java.time.ZonedDateTime;
@@ -22,8 +21,19 @@ public class AssessorCompetitionDashboardViewModel {
     private List<AssessorCompetitionDashboardApplicationViewModel> submitted;
     private List<AssessorCompetitionDashboardApplicationViewModel> outstanding;
     private boolean submitVisible;
+    private String hash;
 
-    public AssessorCompetitionDashboardViewModel(long competitionId, String competitionTitle, String leadTechnologist, boolean openEndCompetition, Long batchIndex, ZonedDateTime acceptDeadline, ZonedDateTime submitDeadline, List<AssessorCompetitionDashboardApplicationViewModel> submitted, List<AssessorCompetitionDashboardApplicationViewModel> outstanding, boolean submitVisible) {
+    public AssessorCompetitionDashboardViewModel(long competitionId,
+                                                 String competitionTitle,
+                                                 String leadTechnologist,
+                                                 boolean openEndCompetition,
+                                                 Long batchIndex,
+                                                 ZonedDateTime acceptDeadline,
+                                                 ZonedDateTime submitDeadline,
+                                                 List<AssessorCompetitionDashboardApplicationViewModel> submitted,
+                                                 List<AssessorCompetitionDashboardApplicationViewModel> outstanding,
+                                                 boolean submitVisible,
+                                                 String hash) {
         this.competitionId = competitionId;
         this.competitionTitle = competitionTitle;
         this.leadTechnologist = leadTechnologist;
@@ -34,6 +44,7 @@ public class AssessorCompetitionDashboardViewModel {
         this.submitted = submitted;
         this.outstanding = outstanding;
         this.submitVisible = submitVisible;
+        this.hash = hash;
     }
 
 }

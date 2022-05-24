@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.organisationdetails.view.controller;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationDetailsReadOnlyViewModel;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
@@ -16,6 +17,7 @@ import org.innovateuk.ifs.project.organisationdetails.view.viewmodel.Organisatio
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisationViewModel;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -49,6 +51,9 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
     @Autowired
     private OrganisationAddressRestService organisationAddressRestService;
 
+    @Autowired
+    private PublicContentItemRestService publicContentItemRestService;
+
     @GetMapping
     public String viewOrganisationDetails(@PathVariable long competitionId,
                                           @PathVariable long projectId,
@@ -58,6 +63,7 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        PublicContentItemResource publicContentItem = publicContentItemRestService.getItemByCompetitionId(competitionId).getSuccess();
 
         boolean includeYourOrganisationSection = isIncludeYourOrganisationSection(competitionId, organisation);
         boolean ktpCompetition = competition.isKtp();
@@ -75,6 +81,9 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
             boolean isMaximumFundingLevelConstant = competition.isMaximumFundingLevelConstant(
                     organisation::getOrganisationTypeEnum,
                     () -> grantClaimMaximumRestService.isMaximumFundingLevelConstant(competition.getId()).getSuccess());
+
+            String hash = publicContentItem.getPublicContentResource().getHash();
+
             ProjectYourOrganisationViewModel projectYourOrganisationViewModel = new ProjectYourOrganisationViewModel(
                     project.getApplication(),
                     competition,
@@ -85,7 +94,8 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
                     project.getName(),
                     true,
                     loggedInUser,
-                    isAllEligibilityAndViabilityInReview(projectId));
+                    isAllEligibilityAndViabilityInReview(projectId),
+                    hash);
             projectYourOrganisationViewModel.setOrgDetailsViewModel(populateOrganisationDetails((organisationId)));
             projectYourOrganisationViewModel.setPartnerOrgDisplay(true);
             model.addAttribute("yourOrganisation", projectYourOrganisationViewModel);

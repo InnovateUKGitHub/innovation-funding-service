@@ -166,7 +166,7 @@ The Stakeholder is able to view application T&C's
     [Documentation]  IFS-6632
     Given the user expands the section            Award terms and conditions
     When the user clicks the button/link          jQuery = a:contains("Innovate UK")
-    Then the user should see the element          jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
+    Then the user should see the element          jQuery = h1:contains("Terms and conditions of an Innovate UK Grant Award")
     And the user clicks the button/link           jQuery = a:contains("Back to application overview")
     [Teardown]  The user clicks the button/link   link = Dashboard
 

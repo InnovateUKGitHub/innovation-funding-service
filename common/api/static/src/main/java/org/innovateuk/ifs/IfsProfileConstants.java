@@ -7,6 +7,8 @@ package org.innovateuk.ifs;
  */
 public class IfsProfileConstants {
 
+    public static final String MOCK_BEAN_TEST = "MOCK_BEAN_TEST";
+
     private IfsProfileConstants() {
         // singleton
     }

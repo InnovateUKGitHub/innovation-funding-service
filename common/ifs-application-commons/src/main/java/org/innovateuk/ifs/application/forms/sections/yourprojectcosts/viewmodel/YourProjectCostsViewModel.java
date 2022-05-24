@@ -8,10 +8,8 @@ import org.innovateuk.ifs.finance.resource.cost.KtpTravelCost;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 
 import java.math.BigDecimal;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.finance.resource.cost.OverheadRateType.*;
 
@@ -78,6 +76,8 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     private final boolean hecpCompetition;
 
+    private String hash;
+
     public YourProjectCostsViewModel(long applicationId,
                                      String competitionName,
                                      long sectionId,
@@ -107,7 +107,8 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
                                      String thirdPartyProjectCostGuidanceLink,
                                      boolean ofGemCompetition,
                                      boolean thirdPartyOfgem,
-                                     boolean hecpCompetition) {
+                                     boolean hecpCompetition,
+                                     String hash) {
         this.internal = false;
         this.organisationId = organisationId;
         this.applicationId = applicationId;
@@ -139,6 +140,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.ofGemCompetition = ofGemCompetition;
         this.thirdPartyOfgem = thirdPartyOfgem;
         this.hecpCompetition = hecpCompetition;
+        this.hash = hash;
     }
 
     public YourProjectCostsViewModel(long applicationId,
@@ -165,17 +167,19 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
                                      String thirdPartyProjectCostGuidanceLink,
                                      boolean ofGemCompetition,
                                      boolean thirdPartyOfgem,
-                                     boolean hecpCompetition) {
+                                     boolean hecpCompetition,
+                                     String hash) {
         this(applicationId, competitionName, sectionId, competitionId, organisationId, complete, open,
                 includeVat, applicationName, organisationName, financesUrl, procurementCompetition, thirdPartyProcurementCompetition,
                 ktpCompetition, ktpPhase2Enabled, financeRowTypes, overheadAlwaysTwenty, showCovidGuidance, showJustificationForm, false,
                 false, null, false, null, fecModelEnabled,
-                grantClaimPercentage, thirdPartyProjectCostGuidanceLink, ofGemCompetition, thirdPartyOfgem, hecpCompetition);
+                grantClaimPercentage, thirdPartyProjectCostGuidanceLink, ofGemCompetition, thirdPartyOfgem, hecpCompetition, hash
+        );
     }
 
     public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, boolean thirdPartyProcurementCompetition,
                                      boolean ktpCompetition, boolean ktpPhase2Enabled, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty,
-                                     String competitionName, long applicationId, boolean thirdPartyOfgem, boolean hecpCompetition) {
+                                     String competitionName, long applicationId, boolean thirdPartyOfgem, boolean hecpCompetition, String hash) {
         this.open = open;
         this.internal = internal;
         this.procurementCompetition = procurementCompetition;
@@ -208,6 +212,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.thirdPartyProjectCostGuidanceLink = null;
         this.ofGemCompetition = false;
         this.thirdPartyOfgem = thirdPartyOfgem;
+        this.hash = hash;
     }
 
     @Override
@@ -352,6 +357,10 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     public boolean isHecpCompetition() {
         return hecpCompetition;
+    }
+
+    public String getHash() {
+        return hash;
     }
 
     @JsonIgnore

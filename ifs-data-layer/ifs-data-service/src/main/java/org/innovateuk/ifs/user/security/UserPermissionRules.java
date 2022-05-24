@@ -372,6 +372,11 @@ public class UserPermissionRules {
         return hasPermissionToGrantRole(user) && roleCommand.getTargetRole().equals(SUPPORTER);
     }
 
+    @PermissionRule(value = "GRANT_ROLE", description = "An admin user can grant a assessor role")
+    public boolean isGrantingAssessorAndHasPermission(GrantRoleCommand roleCommand, UserResource user) {
+        return hasPermissionToGrantRole(user) && roleCommand.getTargetRole().equals(ASSESSOR);
+    }
+
     @PermissionRule(value = "GRANT_ROLE", description = "Users such as assessor, stakeholder, monitoring_officer, live_projects_user, " +
             "supporter can request applicant role")
     public boolean isMultipleRoleDashboardUsersCanRequestApplicantRole(GrantRoleCommand roleCommand, UserResource user) {

@@ -1,7 +1,69 @@
+<!-- =================== Public content section - publish settings read only  ============================== -->
+<th:block th:fragment="publish-setting-readonly">
+    <dt>Publish setting</dt>
+    <dd th:unless="${form.publishSetting == 'invite'}">Public</dd>
+    <dd th:if="${form.publishSetting == 'invite'}">Invite only</dd>
+</th:block>
+<!-- =================== Public content section - publish setting (public, invite only display)  ============================== -->
+<th:block th:fragment="publish-setting-display">
+ <div class="govuk-form-group" th:classappend="${#fields.hasErrors('publishSetting')} ? 'govuk-form-group--error'">
+    <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+            <h2 class="govuk-fieldset__heading">Publish setting</h2>
+        </legend>
+        <span class="govuk-hint">Is this competition:</span>
+        <th:block th:if="${#fields.hasErrors('publishSetting')}">
+            <span class="govuk-error-message" th:each="err : ${#fields.errors('publishSetting')}" th:text="${err}" />
+        </th:block>
+        <div class="govuk-radios">
+            <div class="govuk-radios__item">
+                <input id="publishSetting"
+                       class="govuk-radios__input"
+                       type="radio"
+                       th:field="${form.publishSetting}"
+                       value="public"
+                       th:errorclass="field-error"
+                       required="required"
+                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.publishsetting.required}"
+                       data-conditionally-add-required="#shortDescription, #projectFundingRange, #eligibilitySummary, #keywords"/>
+                <label for="publishSetting"
+                       class="govuk-label govuk-radios__label">
+                    Public
+                </label>
+            </div>
+            <div class="govuk-radios__item" data-target="invite-only-guidance">
+                <input id="publishSetting-1"
+                       class="govuk-radios__input"
+                       type="radio"
+                       th:field="${form.publishSetting}"
+                       th:errorclass="field-error"
+                       required="required"
+                       value="invite"
+                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.publishsetting.required}"
+                       data-conditionally-remove-required="#shortDescription, #projectFundingRange, #eligibilitySummary, #keywords"/>
+                <label for="publishSetting-1"
+                       class="govuk-label govuk-radios__label">
+                    Invite only
+                </label>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<div id="invite-only-guidance" class="govuk-body panel">
+    <p class="govuk-body">
+        Selecting invite only excludes the competition from the competition listing page available to the public.
+        A URL to the competition overview page will be displayed on the public content page once the competition is published.
+    </p>
+</div>
+</th:block>
 <!-- =================== Public content section - Competition information and search  ============================== -->
 <th:block th:fragment="section-search(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:if="${model.readOnly}">
         <dl class="govuk-list readonly-list">
+            <th:block th:if="${model.isDirectAward()}">
+                <th:block th:insert="fragments/public-content :: publish-setting-readonly" />
+            </th:block>
             <dt>Short description</dt>
             <dd th:text="${form.shortDescription}"></dd>
             <dt>Project funding range</dt>
@@ -10,13 +72,16 @@
             <dd><div class="wysiwyg-styles" ifs:utext="${form.eligibilitySummary}"></div></dd>
             <dt>Keywords</dt>
             <dd th:text="${form.keywords}"></dd>
-            <dt>Publish setting</dt>
-            <dd th:unless="${form.publishSetting == 'invite'}">Public</dd>
-            <dd th:if="${form.publishSetting == 'invite'}">Invite only</dd>
+            <th:block th:unless="${model.isDirectAward()}">
+                <th:block th:insert="fragments/public-content :: publish-setting-readonly" />
+            </th:block>
         </dl>
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <p class="govuk-body">This information is used for search results and the opening section of the competition page.</p>
+        <th:block th:if="${model.isDirectAward()}">
+            <th:block th:insert="fragments/public-content :: publish-setting-display" />
+        </th:block>
         <div class="govuk-form-group" th:classappend="${#fields.hasErrors('shortDescription')} ? 'govuk-form-group--error'">
             <label class="govuk-label govuk-label--s" for="shortDescription">
                 Short description
@@ -30,7 +95,6 @@
                    type="text"
                    th:errorclass="govuk-input--error"
                    th:field="${form.shortDescription}"
-                   required="required"
                    maxlength="255"
                    th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.shortDescription.required}" />
         </div>
@@ -47,7 +111,6 @@
                    type="text"
                    th:errorclass="govuk-input--error"
                    th:field="${form.projectFundingRange}"
-                   required="required"
                    maxlength="255"
                    th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.projectFundingRange.required}" />
         </div>
@@ -65,7 +128,6 @@
                        id="eligibilitySummary"
                        ifs:utext="${form.eligibilitySummary}"
                        th:field="${form.eligibilitySummary}"
-                       required="required"
                        th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.eligibilitySummary.required}"></textarea>
             </div>
         </div>
@@ -82,58 +144,12 @@
                    type="text"
                    th:field="${form.keywords}"
                    th:errorclass="govuk-input--error"
-                   required="required"
                    maxlength="255"
                    th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.keywords.required}" />
         </div>
-        <div class="govuk-form-group" th:classappend="${#fields.hasErrors('publishSetting')} ? 'govuk-form-group--error'">
-          <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                <h2 class="govuk-fieldset__heading">Publish setting</h2>
-            </legend>
-            <span class="govuk-hint">Is this competition:</span>
-            <th:block th:if="${#fields.hasErrors('publishSetting')}">
-              <span class="govuk-error-message" th:each="err : ${#fields.errors('publishSetting')}" th:text="${err}" />
-            </th:block>
-            <div class="govuk-radios">
-                <div class="govuk-radios__item">
-                    <input id="publishSetting"
-                           class="govuk-radios__input"
-                           type="radio"
-                           th:field="${form.publishSetting}"
-                           value="public"
-                           th:errorclass="field-error"
-                           required="required"
-                           th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.publishsetting.required}" />
-                    <label for="publishSetting"
-                           class="govuk-label govuk-radios__label">
-                        Public
-                    </label>
-                </div>
-                <div class="govuk-radios__item" data-target="invite-only-guidance">
-                    <input id="publishSetting-1"
-                           class="govuk-radios__input"
-                           type="radio"
-                           th:field="${form.publishSetting}"
-                           th:errorclass="field-error"
-                           required="required"
-                           value="invite"
-                           th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.publishsetting.required}" />
-                    <label for="publishSetting-1"
-                           class="govuk-label govuk-radios__label">
-                        Invite only
-                    </label>
-                </div>
-            </div>
-
-          </fieldset>
-        </div>
-        <div id="invite-only-guidance" class="govuk-body panel">
-            <p class="govuk-body">
-                Selecting invite only excludes the competition from the competition listing page available to the public.
-                A URL to the competition overview page will be displayed on the public content page once the competition is published.
-            </p>
-        </div>
+        <th:block th:unless="${model.isDirectAward()}">
+            <th:block th:insert="fragments/public-content :: publish-setting-display" />
+        </th:block>
     </th:block>
 </th:block>
 

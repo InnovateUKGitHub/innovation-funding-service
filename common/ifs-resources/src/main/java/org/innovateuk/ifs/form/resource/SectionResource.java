@@ -23,7 +23,7 @@ public class SectionResource implements CacheableWhenCompetitionOpen {
     //Used by @Cacheable
     @JsonIgnore
     private boolean competitionOpen;
-
+    private boolean enabledForPreRegistration;
 
     public SectionResource() {
     }
@@ -133,5 +133,13 @@ public class SectionResource implements CacheableWhenCompetitionOpen {
 
     public void setCompetitionOpen(boolean competitionOpen) {
         this.competitionOpen = competitionOpen;
+    }
+
+    public boolean isEnabledForPreRegistration() {
+        return enabledForPreRegistration;
+    }
+
+    public void setEnabledForPreRegistration(boolean enabledForPreRegistration) {
+        this.enabledForPreRegistration = enabledForPreRegistration;
     }
 }
