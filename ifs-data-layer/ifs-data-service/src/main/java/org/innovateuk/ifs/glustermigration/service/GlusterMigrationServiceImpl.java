@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StopWatch;
 
 import java.io.File;
@@ -55,6 +56,7 @@ public class GlusterMigrationServiceImpl implements GlusterMigrationService {
     private FileStorageStrategy scannedFileStorageStrategy;
 
     @Override
+    @Transactional
     public ServiceResult<ScheduleResponse> processGlusterFiles() throws IOException {
         StopWatch stopWatch = new StopWatch(GlusterMigrationServiceImpl.class.getSimpleName());
         stopWatch.start();
