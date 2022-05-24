@@ -112,7 +112,7 @@ public class UploadGrantAgreementComponentTest extends MockBeanTest {
         fileEntry.setFileUuid(fileId);
         fileEntry.setId(1L);
         when(fileServiceTransactionHelper.persistInitial()).thenReturn(fileEntry);
-        when(fileServiceTransactionHelper.updateMd5(any(), any())).thenReturn(fileEntry);
+        when(fileServiceTransactionHelper.updateResponse(any(), any(), any(), any(), any())).thenReturn(fileEntry);
     }
 
     private void mockEuGrantTransfer(Long applicationId) {
