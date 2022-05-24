@@ -65,21 +65,16 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
     @Mock
     private MonitoringOfficerRestService monitoringOfficerRestService;
 
-    private long competitionId = 18L;
-    private long applicationId = 19L;
+    private final long competitionId = 18L;
+    private final long applicationId = 19L;
 
-    private long projectId = 1L;
-    private long loggedInUserId = 2L;
-    private String projectName = "Project 12";
+    private final long projectId = 1L;
+    private final long loggedInUserId = 2L;
+    private final String projectName = "Project 12";
 
-    private long documentConfigId1 = 11L;
-    private long documentConfigId2 = 12L;
-    private long collaborationAgreementId = 13L;
-    private String documentConfigTitle1 = "Risk Register";
-    private String documentConfigTitle2 = "Plan Document";
-    private String documentConfigGuidance1 = "Guidance Risk Register";
-    private String documentConfigGuidance2 = "Guidance Plan Document";
-    private String collaborationAgreement = COLLABORATION_AGREEMENT_TITLE;
+    private final long documentConfigId1 = 11L;
+    private final String documentConfigTitle1 = "Risk Register";
+    private final String documentConfigTitle2 = "Plan Document";
     private UserResource userResource;
     private List<CompetitionDocumentResource> configuredProjectDocuments;
     private ApplicationResource application;
@@ -89,11 +84,18 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
 
         super.setup();
 
+        long documentConfigId2 = 12L;
+        long collaborationAgreementId = 13L;
+        long documentConfigId3 = 14L;
+        String documentConfigGuidance1 = "Guidance Risk Register";
+        String documentConfigGuidance2 = "Guidance Plan Document";
+        String documentConfigTitle3 = "Inactive Document";
         configuredProjectDocuments = CompetitionDocumentResourceBuilder
                 .newCompetitionDocumentResource()
-                .withId(documentConfigId1, documentConfigId2, collaborationAgreementId)
-                .withTitle(documentConfigTitle1, documentConfigTitle2, collaborationAgreement)
+                .withId(documentConfigId1, documentConfigId2, collaborationAgreementId, documentConfigId3)
+                .withTitle(documentConfigTitle1, documentConfigTitle2, COLLABORATION_AGREEMENT_TITLE, documentConfigTitle3)
                 .withGuidance(documentConfigGuidance1, documentConfigGuidance2)
+                .withEnabled(true, true, true, false)
                 .build(3);
 
         CompetitionResource competition = CompetitionResourceBuilder
@@ -142,7 +144,6 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(projectRestService.getProjectManager(projectId)).thenReturn(restSuccess(projectUserResource));
         when(monitoringOfficerRestService.isMonitoringOfficerOnProject(projectId, userResource.getId())).thenReturn(restSuccess(false));
-
     }
 
     @Test
@@ -177,7 +178,7 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
     }
 
     @Test
-    public void populateAllDocumentsWithMultiplePartnerOrganisation() {
+    public void populateAllActiveDocumentsWithMultiplePartnerOrganisation() {
         List<PartnerOrganisationResource> partnerOrganisationResource = newPartnerOrganisationResource().build(4);
 
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(partnerOrganisationResource));
@@ -190,7 +191,7 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
     }
 
     @Test
-    public void populateAllDocumentsWithNoPartnerOrganisation() {
+    public void populateAllActiveDocumentsWithNoPartnerOrganisation() {
         PartnerOrganisationResource partnerOrganisationResource = newPartnerOrganisationResource().build();
 
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(singletonList(partnerOrganisationResource)));
@@ -223,7 +224,7 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
                 .withProjectDocuments(singletonList(projectDocument))
                 .build();
 
-        DocumentViewModel viewModel = populator.populateViewDocument(projectId, userResource, documentConfigId1);
+        DocumentViewModel viewModel = populator.populateViewDocument(project.getId(), userResource, documentConfigId1);
 
         assertEquals(projectId, viewModel.getProjectId());
         assertEquals(projectName, viewModel.getProjectName());

@@ -107,8 +107,8 @@ public class SetupSectionStatus {
                                                 ProjectResource project,
                                                 CompetitionResource competition,
                                                 final boolean isProjectMO) {
-        List<CompetitionDocumentResource> competitionDocuments = competition.getCompetitionDocuments();
-        List<ProjectDocumentResource> projectDocuments = project.getProjectDocuments();
+        List<CompetitionDocumentResource> competitionDocuments = competition.getActiveCompetitionDocuments();
+        List<ProjectDocumentResource> projectDocuments = project.getActiveProjectDocuments();
 
         if (!project.isCollaborativeProject()) {
             competitionDocuments.removeIf(
@@ -147,7 +147,7 @@ public class SetupSectionStatus {
             return HOURGLASS;
     }
 
-            public SectionStatus grantOfferLetterSectionStatus(final ProjectActivityStates grantOfferLetterState,
+    public SectionStatus grantOfferLetterSectionStatus(final ProjectActivityStates grantOfferLetterState,
                                                        final boolean isLeadPartner) {
         if (grantOfferLetterState == null || NOT_REQUIRED.equals(grantOfferLetterState)) {
             return EMPTY;
