@@ -49,12 +49,10 @@ class StorageUploadControllerTest {
     void testUploadFail() throws IOException {
         FileUploadRequest fileUploadRequest = TestHelper.build();
         when(storageService.fileUpload(fileUploadRequest)).thenThrow(new ServiceException(new IOException("ddd")));
-
         assertThrows(
                 ServiceException.class,
                 () -> storageUploadController.fileUpload(fileUploadRequest)
         );
-
     }
 
 }

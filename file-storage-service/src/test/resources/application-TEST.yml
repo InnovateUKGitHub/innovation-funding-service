@@ -11,6 +11,8 @@ spring:
       ddl-auto: create
   flyway:
     enabled: false
+server:
+  port: 8888
 ifs:
   filestorage:
     storage:

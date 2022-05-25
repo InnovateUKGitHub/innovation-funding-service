@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.filestorage.repository;
 
+import com.google.common.base.Objects;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -47,4 +48,16 @@ public class FileStorageRecord {
     @Column
     private String error;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FileStorageRecord that = (FileStorageRecord) o;
+        return fileSizeBytes == that.fileSizeBytes && Objects.equal(systemId, that.systemId) && Objects.equal(userId, that.userId) && Objects.equal(mimeType, that.mimeType) && Objects.equal(fileName, that.fileName) && Objects.equal(md5Checksum, that.md5Checksum) && Objects.equal(storageLocation, that.storageLocation) && Objects.equal(error, that.error);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(systemId, userId, mimeType, fileSizeBytes, fileName, md5Checksum, storageLocation, error);
+    }
 }

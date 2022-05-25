@@ -10,6 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.nio.charset.StandardCharsets;
 
+import static org.innovateuk.ifs.filestorage.virusscan.stub.StubScanProvider.EICAR;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ActiveProfiles(IfsProfileConstants.STUB_AV_SCAN)
@@ -22,12 +23,10 @@ class StubScanProviderTest {
     @Test
     void scanFile() {
         stubScanProvider.scanFile("sdfsdfsfd".getBytes(StandardCharsets.UTF_8));
-        byte[] eicar = "X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"
-                .getBytes(StandardCharsets.UTF_8);
         assertThrows(
                 VirusDetectedException.class,
                 () -> stubScanProvider
-                        .scanFile(eicar)
+                        .scanFile(EICAR)
         );
     }
 

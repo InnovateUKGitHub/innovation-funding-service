@@ -16,11 +16,7 @@ public final class FileDownloadResponse implements Serializable {
     /** uuid reference for the file */
     private String fileId;
 
-    /** Virus scan status */
-    private String virusScanStatus;
 
-    /** Result of the virus scan from provided scanner */
-    private String virusScanResultMessage;
 
     /** The file type */
     private String mimeType;
@@ -36,5 +32,8 @@ public final class FileDownloadResponse implements Serializable {
 
     /** The file payload */
     private byte[] payload;
+
+    /** Any error message */
+    private String error;
 
 }

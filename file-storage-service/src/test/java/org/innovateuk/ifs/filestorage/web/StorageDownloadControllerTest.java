@@ -52,6 +52,16 @@ class StorageDownloadControllerTest {
     }
 
     @Test
+    void testDownloadResponse() throws IOException {
+        UUID uuid = UUID.randomUUID();
+        FileDownloadResponse fileDownloadResponse = TestHelper.buildDownLoadResponse(uuid);
+        when(storageService.fileByUuid(uuid.toString())).thenReturn(fileDownloadResponse);
+        ResponseEntity<FileDownloadResponse> responseEntity = storageDownloadController.fileDownloadResponse(uuid.toString());
+        assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.OK));
+        assertThat(responseEntity.getBody().getMimeType(), equalTo(MediaType.IMAGE_JPEG.toString()));
+    }
+
+    @Test
     void testDownloadFail() throws IOException {
         when(storageService.fileByUuid("test")).thenThrow(new NoSuchRecordException("test"));
         assertThrows(NoSuchRecordException.class, () -> storageDownloadController.fileStreamByUuid("test"));
