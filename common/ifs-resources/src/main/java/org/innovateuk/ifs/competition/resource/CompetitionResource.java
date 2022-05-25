@@ -645,6 +645,10 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         return competitionDocuments;
     }
 
+    public List<CompetitionDocumentResource> getActiveCompetitionDocuments() {
+        return competitionDocuments.stream().filter(CompetitionDocumentResource::isEnabled).collect(Collectors.toList());
+    }
+
     public void setCompetitionDocuments(List<CompetitionDocumentResource> competitionDocuments) {
         this.competitionDocuments = competitionDocuments;
     }

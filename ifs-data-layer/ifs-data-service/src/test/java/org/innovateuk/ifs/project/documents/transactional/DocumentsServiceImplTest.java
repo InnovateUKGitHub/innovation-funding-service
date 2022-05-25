@@ -57,19 +57,14 @@ import static org.mockito.Mockito.*;
 
 public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsService> {
 
-    private Long projectId = 1L;
-    private Long documentConfigId = 2L;
-    private Long projectDocumentId = 3L;
-    private Long fileEntryId = 5L;
+    private final Long projectId = 1L;
+    private final Long documentConfigId = 2L;
+    private final Long fileEntryId = 5L;
 
     private Project project;
-    private Application application;
-    private Competition competition;
     private ProjectDocument projectDocument;
-    private List<CompetitionDocument> competitionDocuments;
     private CompetitionDocument configuredCompetitionDocument;
     private FileEntry fileEntry;
-    private List<PartnerOrganisation> partnerOrganisations;
 
     @Mock
     private User user;
@@ -118,22 +113,23 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
 
         fileEntry = newFileEntry().withId(fileEntryId).build();
 
+        Long projectDocumentId = 3L;
         projectDocument = newProjectDocument()
                 .withId(projectDocumentId)
                 .withCompetitionDocument(configuredCompetitionDocument)
                 .withFileEntry(fileEntry)
                 .build();
 
-        partnerOrganisations = newPartnerOrganisation()
+        List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation()
                 .build(2);
 
-        competition = newCompetition().build();
+        Competition competition = newCompetition().build();
 
-        application = newApplication()
+        Application application = newApplication()
                 .withCompetition(competition)
                 .build();
 
-        competitionDocuments = CompetitionDocumentBuilder.newCompetitionDocument()
+        List<CompetitionDocument> competitionDocuments = CompetitionDocumentBuilder.newCompetitionDocument()
                 .build(1);
 
         project.setProjectDocuments(singletonList(projectDocument));

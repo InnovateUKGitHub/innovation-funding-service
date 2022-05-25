@@ -207,7 +207,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
 
     private boolean allDocumentsSubmitted(Project project) {
         List<PartnerOrganisation> projectOrganisations = partnerOrganisationRepository.findByProjectId(project.getId());
-        List<CompetitionDocument> expectedDocuments = competitionDocumentConfigRepository.findByCompetitionId(project.getApplication().getCompetition().getId());
+        List<CompetitionDocument> expectedDocuments = project.getApplication().getCompetition().getActiveCompetitionDocuments();
 
         if (projectOrganisations.size() == 1) {
             expectedDocuments.removeIf(

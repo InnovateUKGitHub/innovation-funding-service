@@ -53,4 +53,8 @@ public class CompetitionDocumentBuilder extends BaseBuilder<CompetitionDocument,
     public CompetitionDocumentBuilder withGuidance(String... guidanceList) {
         return withArray((guidance, p) -> setField("guidance", guidance, p), guidanceList);
     }
+
+    public CompetitionDocumentBuilder withEnabled(boolean... enabledList) {
+        return withArray((enabled, p) -> setField("enabled", enabled, p), enabledList);
+    }
 }
