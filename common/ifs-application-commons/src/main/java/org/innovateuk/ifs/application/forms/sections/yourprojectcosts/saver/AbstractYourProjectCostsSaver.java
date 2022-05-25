@@ -52,6 +52,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                 case MATERIALS:
                     messages.addAll(saveRows(form.getMaterialRows(), finance).get());
                     break;
+                case EQUIPMENT:
+                    messages.addAll(saveRows(form.getEquipmentRows(), finance).get());
+                    break;
                 case OTHER_COSTS:
                     messages.addAll(saveRows(form.getOtherRows(), finance).get());
                     break;
@@ -125,6 +128,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         }
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.MATERIALS)) {
             futures.add(saveRows(form.getMaterialRows(), finance));
+        }
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.EQUIPMENT)) {
+            futures.add(saveRows(form.getEquipmentRows(), finance));
         }
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.CAPITAL_USAGE)) {
             futures.add(saveRows(form.getCapitalUsageRows(), finance));
@@ -405,6 +411,7 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         //Try to remove key from all the maps. Will have a random uuid attached.
         form.getLabour().getRows().remove(id);
         form.getMaterialRows().remove(id);
+        form.getEquipmentRows().remove(id);
         form.getCapitalUsageRows().remove(id);
         form.getSubcontractingRows().remove(id);
         form.getTravelRows().remove(id);
@@ -438,6 +445,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                 break;
             case MATERIALS:
                 map = form.getMaterialRows();
+                break;
+            case EQUIPMENT:
+                map = form.getEquipmentRows();
                 break;
             case OTHER_COSTS:
                 map = form.getOtherRows();
@@ -483,6 +493,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                 break;
             case MATERIALS:
                 clazz = MaterialRowForm.class;
+                break;
+            case EQUIPMENT:
+                clazz = EquipmentRowForm.class;
                 break;
             case OTHER_COSTS:
                 clazz = OtherCostRowForm.class;

@@ -122,10 +122,7 @@
                                 <tr class="govuk-table__row" th:each="row : ${model.table.getMonthlyCostsPerCategoryMap()}"
                                     th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'govuk-form-group--error' : ''}">
                                     <th class="govuk-table__header" scope="row">
-                                        <span th:if="${model.hecpCompetition}"
-                                              th:text="${model.table.costCategoryResourceMap.get(row.key).getHecpDisplayName()}"></span>
-                                        <span th:unless="${model.hecpCompetition}"
-                                              th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"></span>
+                                        <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"></span>
                                         <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}"
                                               class="govuk-error-message">Your total costs are higher than your eligible costs</span>
                                     </th>

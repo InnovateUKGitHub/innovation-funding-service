@@ -31,7 +31,7 @@ public class HorizonEuropeGuaranteeCostsSaver {
 
         saveLabour(form, applicationFinance);
         saveOverhead(form, applicationFinance);
-        saveMaterial(form, applicationFinance);
+        saveEquipment(form, applicationFinance);
         saveCapital(form, applicationFinance);
         saveSubcontracting(form, applicationFinance);
         saveTravel(form, applicationFinance);
@@ -74,18 +74,18 @@ public class HorizonEuropeGuaranteeCostsSaver {
     }
 
 
-    private void saveMaterial(HorizonEuropeGuaranteeCostsForm form, ApplicationFinanceResource applicationFinance) {
-        DefaultCostCategory category = (DefaultCostCategory) applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.MATERIALS);
-        Optional<Materials> cost = category.getCosts().stream().findAny().map(Materials.class::cast);
+    private void saveEquipment(HorizonEuropeGuaranteeCostsForm form, ApplicationFinanceResource applicationFinance) {
+        DefaultCostCategory category = (DefaultCostCategory) applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.EQUIPMENT);
+        Optional<Equipment> cost = category.getCosts().stream().findAny().map(Equipment.class::cast);
 
-        if (nullOrZero(form.getMaterial())) {
-            cost.map(Materials::getId).ifPresent(financeRowRestService::delete);
+        if (nullOrZero(form.getEquipment())) {
+            cost.map(Equipment::getId).ifPresent(financeRowRestService::delete);
         } else {
-            Materials materials = cost.orElseGet(() -> newCost(new Materials(applicationFinance.getId())));
-            materials.setCost(new BigDecimal(form.getMaterial()));
-            materials.setQuantity(1);
-            materials.setItem("Total material costs");
-            financeRowRestService.update(materials);
+            Equipment equipment = cost.orElseGet(() -> newCost(new Equipment(applicationFinance.getId())));
+            equipment.setCost(new BigDecimal(form.getEquipment()));
+            equipment.setQuantity(1);
+            equipment.setItem("Total equipment costs");
+            financeRowRestService.update(equipment);
         }
     }
 

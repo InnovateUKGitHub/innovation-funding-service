@@ -28,6 +28,8 @@ public class YourProjectCostsForm {
 
     private Map<String, MaterialRowForm> materialRows = new LinkedHashMap<>();
 
+    private Map<String, EquipmentRowForm> equipmentRows = new LinkedHashMap<>();
+
     private Map<String, CapitalUsageRowForm> capitalUsageRows = new LinkedHashMap<>();
 
     private Map<String, SubcontractingRowForm> subcontractingRows = new LinkedHashMap<>();
@@ -92,6 +94,14 @@ public class YourProjectCostsForm {
 
     public Map<String, MaterialRowForm> getMaterialRows() {
         return materialRows;
+    }
+
+    public Map<String, EquipmentRowForm> getEquipmentRows() {
+        return equipmentRows;
+    }
+
+    public void setEquipmentRows(Map<String, EquipmentRowForm> equipmentRows) {
+        this.equipmentRows = equipmentRows;
     }
 
     public void setMaterialRows(Map<String, MaterialRowForm> materialRows) {
@@ -285,6 +295,10 @@ public class YourProjectCostsForm {
         return calculateTotal(materialRows);
     }
 
+    public BigDecimal getTotalEquipmentCosts() {
+        return calculateTotal(equipmentRows);
+    }
+
     public BigDecimal getTotalProcurementOverheadCosts() {
         return calculateTotal(procurementOverheadRows);
     }
@@ -362,6 +376,7 @@ public class YourProjectCostsForm {
         BigDecimal total = getTotalLabourCosts()
                 .add(getTotalOverheadCosts())
                 .add(getTotalMaterialCosts())
+                .add(getTotalEquipmentCosts())
                 .add(getTotalProcurementOverheadCosts())
                 .add(getTotalCapitalUsageCosts())
                 .add(getTotalSubcontractingCosts())
@@ -412,6 +427,7 @@ public class YourProjectCostsForm {
         });
         getOverhead().setTotal(getOverhead().getTotal());
         recalculateTotal(getMaterialRows());
+        recalculateTotal(getEquipmentRows());
         recalculateTotal(getCapitalUsageRows());
         recalculateTotal(getSubcontractingRows());
         recalculateTotal(getTravelRows());

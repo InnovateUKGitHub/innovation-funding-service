@@ -30,6 +30,7 @@ import static org.innovateuk.ifs.finance.builder.AssociateSupportCostBuilder.new
 import static org.innovateuk.ifs.finance.builder.CapitalUsageBuilder.newCapitalUsage;
 import static org.innovateuk.ifs.finance.builder.ConsumablesBuilder.newConsumable;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
+import static org.innovateuk.ifs.finance.builder.EquipmentCostBuilder.newEquipment;
 import static org.innovateuk.ifs.finance.builder.EstateCostBuilder.newEstateCost;
 import static org.innovateuk.ifs.finance.builder.ExcludedCostCategoryBuilder.newExcludedCostCategory;
 import static org.innovateuk.ifs.finance.builder.IndirectCostBuilder.newIndirectCost;
@@ -128,6 +129,13 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                                 withCost(new BigDecimal("33.33"), new BigDecimal("98.51")).
                                 withQuantity(1, 2).
                                 build(2)).
+                        build(),
+                FinanceRowType.EQUIPMENT, newDefaultCostCategory().withCosts(
+                                newEquipment().
+                                        withId(1L, 2L).
+                                        withCost(new BigDecimal("33.33"), new BigDecimal("98.51")).
+                                        withQuantity(1, 2).
+                                        build(2)).
                         build(),
                 FinanceRowType.CAPITAL_USAGE, newDefaultCostCategory().withCosts(
                         newCapitalUsage().
@@ -299,6 +307,13 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                                 withCostType(FinanceRowType.MATERIALS).
                                 build(1)).
                         build(),
+//                FinanceRowType.EQUIPMENT, newDefaultCostCategory().withCosts(
+//                                newAcademicCost().
+//                                        withName("incurred_other_costs").
+//                                        withCost(new BigDecimal("100")).
+//                                        withCostType(FinanceRowType.EQUIPMENT).
+//                                        build(1)).
+//                        build(),
                 FinanceRowType.TRAVEL, newDefaultCostCategory().withCosts(
                         newAcademicCost().
                                 withName("incurred_travel_subsistence").

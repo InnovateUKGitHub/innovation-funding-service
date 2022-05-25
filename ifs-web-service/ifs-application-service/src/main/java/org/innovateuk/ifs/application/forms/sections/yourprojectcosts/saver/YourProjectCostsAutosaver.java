@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver;
 
 import org.apache.commons.lang3.BooleanUtils;
-import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.*;
@@ -19,14 +18,12 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.RoundingMode;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_PREFIX;
-import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.IndirectCostsUtil.INDIRECT_COST_PERCENTAGE;
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.IndirectCostsUtil.calculateIndirectCost;
 
 @Component
@@ -61,6 +58,8 @@ public class YourProjectCostsAutosaver {
                 return autosaveOverheadCost(field, value, finance, applicationId, organisation.getId());
             } else if (field.startsWith("materialRows")) {
                 return autosaveMaterialCost(field, value, finance);
+            } else if (field.startsWith("equipmentRows")) {
+                return autosaveEquipmentCost(field, value, finance);
             } else if (field.startsWith("capitalUsageRows")) {
                 return autosaveCapitalUsageCost(field, value, finance);
             } else if (field.startsWith("subcontractingRows")) {
@@ -420,6 +419,27 @@ public class YourProjectCostsAutosaver {
                 break;
             default:
                 throw new IFSRuntimeException(format("Auto save material field not handled %s", rowField), emptyList());
+        }
+        financeRowRestService.update(cost);
+        return Optional.of(cost.getId());
+    }
+
+    private Optional<Long> autosaveEquipmentCost(String field, String value, ApplicationFinanceResource finance) {
+        String id = idFromRowPath(field);
+        String rowField = fieldFromRowPath(field);
+        Equipment cost = getCost(id, () -> new Equipment(finance.getId()));
+        switch (rowField) {
+            case "item":
+                cost.setItem(value);
+                break;
+            case "quantity":
+                cost.setQuantity(Integer.parseInt(value));
+                break;
+            case "cost":
+                cost.setCost(new BigDecimal(value));
+                break;
+            default:
+                throw new IFSRuntimeException(format("Auto save equipment field not handled %s", rowField), emptyList());
         }
         financeRowRestService.update(cost);
         return Optional.of(cost.getId());

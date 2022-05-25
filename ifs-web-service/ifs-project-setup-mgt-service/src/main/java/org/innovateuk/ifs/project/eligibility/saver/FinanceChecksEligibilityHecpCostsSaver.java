@@ -32,7 +32,7 @@ public class FinanceChecksEligibilityHecpCostsSaver {
 
         saveLabour(form, projectFinance);
         saveOverhead(form, projectFinance);
-        saveMaterial(form, projectFinance);
+        saveEquipment(form, projectFinance);
         saveCapital(form, projectFinance);
         saveSubcontracting(form, projectFinance);
         saveTravel(form, projectFinance);
@@ -75,18 +75,18 @@ public class FinanceChecksEligibilityHecpCostsSaver {
     }
 
 
-    private void saveMaterial(HorizonEuropeGuaranteeCostsForm form, ProjectFinanceResource projectFinance) {
-        DefaultCostCategory category = (DefaultCostCategory) projectFinance.getFinanceOrganisationDetails().get(FinanceRowType.MATERIALS);
-        Optional<Materials> cost = category.getCosts().stream().findAny().map(Materials.class::cast);
+    private void saveEquipment(HorizonEuropeGuaranteeCostsForm form, ProjectFinanceResource projectFinance) {
+        DefaultCostCategory category = (DefaultCostCategory) projectFinance.getFinanceOrganisationDetails().get(FinanceRowType.EQUIPMENT);
+        Optional<Equipment> cost = category.getCosts().stream().findAny().map(Equipment.class::cast);
 
-        if (nullOrZero(form.getMaterial())) {
-            cost.map(Materials::getId).ifPresent(financeRowRestService::delete);
+        if (nullOrZero(form.getEquipment())) {
+            cost.map(Equipment::getId).ifPresent(financeRowRestService::delete);
         } else {
-            Materials materials = cost.orElseGet(() -> newCost(new Materials(projectFinance.getId())));
-            materials.setCost(new BigDecimal(form.getMaterial()));
-            materials.setQuantity(1);
-            materials.setItem("Total material costs");
-            financeRowRestService.update(materials);
+            Equipment equipment = cost.orElseGet(() -> newCost(new Equipment(projectFinance.getId())));
+            equipment.setCost(new BigDecimal(form.getEquipment()));
+            equipment.setQuantity(1);
+            equipment.setItem("Total equipment costs");
+            financeRowRestService.update(equipment);
         }
     }
 

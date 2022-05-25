@@ -30,6 +30,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.finance.builder.EquipmentCostBuilder.newEquipment;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
 
@@ -103,6 +104,17 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     public IndustrialCostDataBuilder withMaterials(String item, BigDecimal cost, Integer quantity) {
         return addCostItem("Materials", (finance) ->
                 newMaterials()
+                        .withId()
+                        .withItem(item)
+                        .withCost(cost)
+                        .withQuantity(quantity)
+                        .withTargetId(finance.getId())
+                        .build());
+    }
+
+    public IndustrialCostDataBuilder withEquipment(String item, BigDecimal cost, Integer quantity) {
+        return addCostItem("Equipment", (finance) ->
+                newEquipment()
                         .withId()
                         .withItem(item)
                         .withCost(cost)

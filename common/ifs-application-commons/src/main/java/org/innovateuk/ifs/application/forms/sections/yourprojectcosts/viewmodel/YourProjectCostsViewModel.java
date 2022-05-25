@@ -382,6 +382,11 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
     public FinanceRowType getMaterialsFinanceRowType() {
         return FinanceRowType.MATERIALS;
     }
+//
+//    @JsonIgnore
+//    public FinanceRowType getEquipmentFinanceRowType() {
+//        return FinanceRowType.EQUIPMENT;
+//    }
 
     @JsonIgnore
     public FinanceRowType getCapitalUsageFinanceRowType() {

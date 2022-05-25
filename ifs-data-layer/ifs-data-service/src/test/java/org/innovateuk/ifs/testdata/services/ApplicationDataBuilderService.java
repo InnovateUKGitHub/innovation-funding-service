@@ -579,6 +579,11 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         financeRow.metadata.get(0),
                         bd(financeRow.metadata.get(1)),
                         Integer.valueOf(financeRow.metadata.get(2)));
+            case "Equipment":
+                return builder.withEquipment(
+                        financeRow.metadata.get(0),
+                        bd(financeRow.metadata.get(1)),
+                        Integer.valueOf(financeRow.metadata.get(2)));
             case "Capital usage":
                 return builder.withCapitalUsage(
                         Integer.valueOf(financeRow.metadata.get(4)),
@@ -706,6 +711,9 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         break;
                     case MATERIALS:
                         builder[0] = builder[0].withMaterials("Generator", bd("10020"), 10);
+                        break;
+                    case EQUIPMENT:
+                        builder[0] = builder[0].withEquipment("Generator", bd("10020"), 10);
                         break;
                     case CAPITAL_USAGE:
                         builder[0] = builder[0].withCapitalUsage(12, "Depreciating Stuff", true, bd("2120"), bd("1200"), 60);
