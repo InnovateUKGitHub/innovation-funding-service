@@ -29,7 +29,7 @@
             <dd th:text="${model.fundingRules.displayName}">funding rules</dd>
         </dl>
       <th:block th:unless="${model.readOnly}">
-       <a th:unless="${model.editMode}" th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/funding-rules/edit(projectId=${model.projectId},organisationId=${model.organisationId})}" class="govuk-button govuk-button--secondary govuk-!-margin-right-4">Edit</a> -->
+       <a th:unless="${model.editMode}" th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/funding-rules/edit(projectId=${model.projectId},organisationId=${model.organisationId})}" class="govuk-button govuk-button--secondary govuk-!-margin-right-4">Edit</a>
         <th:block th:if="${model.editMode}">
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" enctype="multipart/form-data">
 
