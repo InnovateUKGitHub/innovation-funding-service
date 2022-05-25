@@ -3,36 +3,37 @@ package org.innovateuk.ifs.api.filestorage.v1.download;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 @Data
 @AllArgsConstructor
 @Builder
+@NoArgsConstructor
 public final class FileDownloadResponse implements Serializable {
 
     /** uuid reference for the file */
-    private final String fileId;
+    private String fileId;
 
-    /** Virus scan status */
-    private final String virusScanStatus;
 
-    /** Result of the virus scan from provided scanner */
-    private final String virusScanResultMessage;
 
     /** The file type */
-    private final String mimeType;
+    private String mimeType;
 
     /** The file size in bytes */
-    private final long fileSizeBytes;
+    private long fileSizeBytes;
 
     /** The file name */
-    private final String fileName;
+    private String fileName;
 
     /** The file checksum */
-    private final String md5Checksum;
+    private String md5Checksum;
 
     /** The file payload */
-    private final byte[] payload;
+    private byte[] payload;
+
+    /** Any error message */
+    private String error;
 
 }

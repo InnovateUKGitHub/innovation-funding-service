@@ -15,7 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileUploadRequestBuilder {
 
-    private static final String DEFAULT_SYSTEM_ID = "IFS";
+    public static final String DEFAULT_SYSTEM_ID = "IFS";
 
     public static FileUploadRequest.FileUploadRequestBuilder fromResource(UUID uuid, Resource resource, MediaType mediaType, String userId) throws IOException {
         byte[] payload = ByteStreams.toByteArray(resource.getInputStream());

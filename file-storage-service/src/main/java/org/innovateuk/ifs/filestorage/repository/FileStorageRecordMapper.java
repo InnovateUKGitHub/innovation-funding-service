@@ -20,7 +20,10 @@ public class FileStorageRecordMapper {
 
     public static FileStorageRecord fromError(FileUploadRequest fileUploadRequest, ResponseStatusException exception) {
         FileStorageRecord fileStorageRecord = internal(fileUploadRequest);
-        String message = exception.getClass().getSimpleName() + ":" + exception.getReason();
+        String message = exception.getReason();
+        if (message == null) {
+            message = "unknown";
+        }
         fileStorageRecord.error(message.substring(0, Math.min(message.length(), 250)));
         return fileStorageRecord;
     }

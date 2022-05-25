@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class StubScanProvider implements VirusScanProvider {
 
-    private static final byte[] EICAR
+    public static final byte[] EICAR
             = "X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*".getBytes(StandardCharsets.UTF_8);
 
     @Override

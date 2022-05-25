@@ -63,11 +63,13 @@ public class EuGrantTransferServiceImpl implements EuGrantTransferService {
     @Autowired
     private EuGrantTransferMapper mapper;
 
+    private FileControllerUtils fileControllerUtils = new FileControllerUtils();
+
     @Override
     @Transactional
     public ServiceResult<Void> uploadGrantAgreement(String contentType, String contentLength, String originalFilename, long applicationId, HttpServletRequest request) {
         return findGrantTransferByApplicationIdCreateIfNotExists(applicationId).andOnSuccess(grantTransfer ->
-                FileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypes, maxFileSize, request,
+                fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypes, maxFileSize, request,
                         (fileAttributes, inputStreamSupplier) -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
                                 .andOnSuccessReturnVoid(created ->
                                         grantTransfer.setGrantAgreement(created)

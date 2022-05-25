@@ -51,7 +51,9 @@ public class StorageService {
     private UploadValidator uploadValidator;
 
     public FileUploadResponse fileUpload(FileUploadRequest fileUploadRequest) throws VirusDetectedException, InvalidMimeTypeException {
-        StopWatch stopWatch = new StopWatch(StorageService.class.getSimpleName());
+        StopWatch stopWatch = new StopWatch(StorageService.class.getSimpleName()
+                + " id: " + fileUploadRequest.getFileId()
+                + " bytes: " + fileUploadRequest.getFileSizeBytes());
 
         try {
             stopWatch.start("Virus Scan");

@@ -30,9 +30,12 @@ public class FileServiceTransactionHelper {
     }
 
     @Transactional
-    public FileEntry updateMd5(Long id, String md5Checksum) throws NoSuchElementException {
+    public FileEntry updateResponse(Long id, String md5Checksum, String name, String mediaType, Long fileSize) throws NoSuchElementException {
         FileEntry fileEntry = fileEntryRepository.findById(id).orElseThrow(NoSuchElementException::new);
         fileEntry.setMd5Checksum(md5Checksum);
+        fileEntry.setName(name);
+        fileEntry.setMediaType(mediaType);
+        fileEntry.setFilesizeBytes(fileSize);
         return fileEntryRepository.save(fileEntry);
     }
 
