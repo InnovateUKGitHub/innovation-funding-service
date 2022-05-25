@@ -8,4 +8,4 @@ data:
   FSS_S3_AWS_BUCKET: "iukorg.org-env-0.ifs-file-storage-service-custom"
   FSS_CLAM_HOST: "clamd"
   FSS_CLAM_PORT: "3310"
-  FSS_CLAM_TIMEOUT: "5000"
+  FSS_CLAM_TIMEOUT: "2000"
