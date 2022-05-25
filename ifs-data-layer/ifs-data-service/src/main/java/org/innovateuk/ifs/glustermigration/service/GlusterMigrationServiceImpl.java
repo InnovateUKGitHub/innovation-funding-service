@@ -2,6 +2,7 @@ package org.innovateuk.ifs.glustermigration.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.IfsConstants;
 import org.innovateuk.ifs.api.filestorage.util.FileHashing;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUpload;
@@ -11,12 +12,12 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.file.transactional.gluster.FileStorageStrategy;
+import org.innovateuk.ifs.file.transactional.gluster.GlusterFileServiceImpl;
 import org.innovateuk.ifs.glustermigration.GlusterMigrationStatusType;
 import org.innovateuk.ifs.glustermigration.domain.GlusterMigrationStatus;
 import org.innovateuk.ifs.glustermigration.repository.GlusterMigrationStatusRepository;
 import org.innovateuk.ifs.schedule.transactional.ScheduleResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -48,12 +49,7 @@ public class GlusterMigrationServiceImpl implements GlusterMigrationService {
     private FileUpload fileUpload;
 
     @Autowired
-    @Qualifier("finalFileStorageStrategy")
-    private FileStorageStrategy finalFileStorageStrategy;
-
-    @Autowired
-    @Qualifier("scannedFileStorageStrategy")
-    private FileStorageStrategy scannedFileStorageStrategy;
+    private GlusterFileServiceImpl glusterFileService;
 
     @Override
     @Transactional
@@ -67,15 +63,16 @@ public class GlusterMigrationServiceImpl implements GlusterMigrationService {
         List<FileEntry> fileEntries = getFileEntries(fileEntryIds);
         log.info("Number of files entry retrieved " + fileEntries.size());
         for (FileEntry fileEntry : fileEntries) {
-            ServiceResult<File> result = finalFileStorageStrategy.getFile(fileEntry).andOnFailure(() -> scannedFileStorageStrategy.getFile(fileEntry));
+            ServiceResult<Pair<File, FileStorageStrategy>> result = glusterFileService.findFileForGet(fileEntry);
             log.info("file retrieval result for file entry {} is {}", fileEntry.getId(), result.isSuccess());
             if (result.isSuccess()) {
-                File file = result.getSuccess();
-                UUID fileId = UUID.randomUUID();
-                FileUploadRequest.FileUploadRequestBuilder fileUploadRequestBuilder = getFileUploadRequestBuilder(fileEntry, file, fileId);
+                Pair<File, FileStorageStrategy> file = result.getSuccess();
+                UUID fileUuid = UUID.randomUUID();
+                FileUploadRequest.FileUploadRequestBuilder fileUploadRequestBuilder = getFileUploadRequestBuilder(fileEntry, file.getKey(), fileUuid);
                 ResponseEntity<FileUploadResponse> fileUploadResponseEntity = fileUpload.fileUpload(fileUploadRequestBuilder.build());
                 if (fileUploadResponseEntity.getStatusCode().is2xxSuccessful()) {
-                    fileEntry.setFileUuid(fileId.toString());
+                    fileEntry.setFileUuid(fileUuid.toString());
+                    fileEntry.setMd5Checksum(fileUploadResponseEntity.getBody().getMd5Checksum());
                     fileEntryRepository.save(fileEntry);
                     glusterMigrationStatusRepository.save(new GlusterMigrationStatus(null, fileEntry.getId(), GlusterMigrationStatusType.FILE_FOUND.toString(), ""));
 
