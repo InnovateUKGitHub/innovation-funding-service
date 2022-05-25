@@ -110,7 +110,6 @@ public class FileServiceImpl implements FileService {
         } catch (NoSuchElementException ex) {
             return serviceFailure(new Error(FILES_UNABLE_TO_FIND_FILE_ENTRY_ID_FROM_FILE));
         } catch (ResponseStatusException responseStatusException) {
-            // TODO some sort of adaptor to map from this to CommonFailureKeys??
             return serviceFailure(responseStatusException);
         }
     }
