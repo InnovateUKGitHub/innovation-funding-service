@@ -28,9 +28,7 @@ import org.springframework.util.StopWatch;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -56,11 +54,7 @@ public class GlusterMigrationServiceImpl implements GlusterMigrationService {
     public ServiceResult<ScheduleResponse> processGlusterFiles() throws IOException {
         StopWatch stopWatch = new StopWatch(GlusterMigrationServiceImpl.class.getSimpleName());
         stopWatch.start();
-        List<GlusterMigrationStatus> glusterMigrationStatuses = glusterMigrationStatusRepository.findGlusterMigrationStatusByStatusEquals(GlusterMigrationStatusType.FILE_NOT_FOUND.toString());
-        List<Long> fileEntryIds = glusterMigrationStatuses.stream()
-                .map(GlusterMigrationStatus::getFileEntryId)
-                .collect(Collectors.toList());
-        List<FileEntry> fileEntries = getFileEntries(fileEntryIds);
+        List<FileEntry> fileEntries = getFileEntries();
         log.info("Number of files entry retrieved " + fileEntries.size());
         for (FileEntry fileEntry : fileEntries) {
             ServiceResult<Pair<File, FileStorageStrategy>> result = glusterFileService.findFileForGet(fileEntry);
@@ -103,8 +97,7 @@ public class GlusterMigrationServiceImpl implements GlusterMigrationService {
                 .systemId(IfsConstants.IFS_SYSTEM_USER);
     }
 
-    private List<FileEntry> getFileEntries(List<Long> fileEntryIds) {
-        return Optional.of(fileEntryRepository.findFileEntryByIdNotInAndFileUuidIsNull(fileEntryIds, PageRequest.of(0, fileEntryBatch)))
-                .orElse(fileEntryRepository.findFileEntryByFileUuidIsNull(PageRequest.of(0, fileEntryBatch)));
+    private List<FileEntry> getFileEntries() {
+        return fileEntryRepository.findFileEntryByStatusAndFileUUIDIsNUll(PageRequest.of(0, fileEntryBatch));
     }
 }
