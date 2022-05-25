@@ -36,6 +36,8 @@ data:
     ScanSWF yes
     ScanXMLDOCS yes
     ScanArchive yes
+    
+    StreamMaxLength 36M
 
   freshclam.conf: |
     Foreground yes
