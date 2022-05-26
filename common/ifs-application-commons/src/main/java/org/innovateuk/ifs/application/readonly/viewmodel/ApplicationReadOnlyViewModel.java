@@ -16,6 +16,7 @@ public class ApplicationReadOnlyViewModel {
     private List<String> overallFeedbacks;
     private Map<String, List<SupporterAssignmentReadOnlyViewModel>> assignments;
     private boolean shouldDisplayKtpApplicationFeedback;
+    private boolean shouldDisplayTeamMember;
     private final boolean ktpCompetition;
     private final boolean thirdPartyProcurement;
     private final CompetitionThirdPartyConfigResource thirdPartyConfig;
@@ -27,6 +28,7 @@ public class ApplicationReadOnlyViewModel {
                                         List<String> overallFeedbacks,
                                         Map<String, List<SupporterAssignmentReadOnlyViewModel>> assignments,
                                         boolean shouldDisplayKtpApplicationFeedback,
+                                        boolean shouldDisplayTeamMember,
                                         boolean ktpCompetition,
                                         boolean thirdPartyProcurement,
                                         CompetitionThirdPartyConfigResource thirdPartyConfig,
@@ -37,6 +39,7 @@ public class ApplicationReadOnlyViewModel {
         this.overallFeedbacks = overallFeedbacks;
         this.assignments = assignments;
         this.shouldDisplayKtpApplicationFeedback = shouldDisplayKtpApplicationFeedback;
+        this.shouldDisplayTeamMember = shouldDisplayTeamMember;
         this.ktpCompetition = ktpCompetition;
         this.thirdPartyProcurement = thirdPartyProcurement;
         this.thirdPartyConfig = thirdPartyConfig;
@@ -64,6 +67,8 @@ public class ApplicationReadOnlyViewModel {
     public boolean isShouldDisplayKtpApplicationFeedback() {
         return shouldDisplayKtpApplicationFeedback;
     }
+
+    public boolean isShouldDisplayTeamMember() { return shouldDisplayTeamMember; }
 
     public boolean isAccepted() {
         return this.assignments.containsKey("accepted");
