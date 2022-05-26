@@ -23,6 +23,8 @@ public interface ApplicationConfiguration {
 
     boolean isHorizonEuropeGuarantee();
 
+    boolean isAssessmentOnly();
+
     boolean isExpressionOfInterest();
 
     Boolean getIncludeJesForm();

@@ -367,7 +367,9 @@
             <th:block th:if="${model.showEligibilityMessage}">
                 <div class="govuk-!-margin-bottom-6">
                     <p class="govuk-body">
-                        If we decide to award you funding, you must meet the <a th:href="@{~/competition/{competitionId}/overview#eligibility(competitionId=${model.competitionId})}">eligibility criteria</a> at the time
+                        If we decide to award you funding, you must meet the <a th:href="${model.hash == null}
+                                        ? @{~/competition/{competitionId}/overview#eligibility(competitionId=${model.competitionId})}
+                                        : @{~/competition/{competitionId}/overview/{hash}#eligibility(competitionId=${model.competitionId},hash=${model.hash})}">eligibility criteria</a> at the time
                         the award is offered. If you are found to be ineligible, we will withdraw our offer.
                     </p>
                 </div>

@@ -4,7 +4,8 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
-import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
@@ -25,6 +26,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisationViewModel;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.user.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Before;
@@ -36,7 +38,6 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
 import java.time.YearMonth;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
@@ -46,7 +47,10 @@ import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.
 import static org.innovateuk.ifs.organisation.builder.OrganisationSearchResultBuilder.newOrganisationSearchResult;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckSummaryResourceBuilder.newFinanceCheckSummaryResource;
 import static org.innovateuk.ifs.project.finance.resource.ViabilityState.REVIEW;
-import static org.junit.Assert.*;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -84,14 +88,17 @@ public class OrganisationDetailsWithGrowthTableControllerTest extends BaseContro
     @Mock
     private OrganisationAddressRestService organisationAddressRestService;
 
+    @Mock
+    private PublicContentItemRestService publicContentItemRestService;
+
     @Override
     protected OrganisationDetailsWithGrowthTableController supplyControllerUnderTest() {
         return new OrganisationDetailsWithGrowthTableController();
     }
 
-    private long competitionId = 1L;
-    private long projectId = 2L;
-    private long organisationId = 3L;
+    private final long competitionId = 1L;
+    private final long projectId = 2L;
+    private final long organisationId = 3L;
 
     private CompetitionResource competition;
     private ProjectResource project;
@@ -111,20 +118,23 @@ public class OrganisationDetailsWithGrowthTableControllerTest extends BaseContro
         FinanceCheckPartnerStatusResource partner = new FinanceCheckPartnerStatusResource();
         partner.setViability(REVIEW);
         partner.setEligibility(EligibilityState.REVIEW);
-        List<FinanceCheckPartnerStatusResource> partnerStatusResources = Arrays.asList(partner);
+        List<FinanceCheckPartnerStatusResource> partnerStatusResources = List.of(partner);
         FinanceCheckSummaryResource financeCheckSummaryResource = newFinanceCheckSummaryResource()
                 .build();
         financeCheckSummaryResource.setPartnerStatusResources(partnerStatusResources);
+        PublicContentResource publicContentResource = newPublicContentResource().build();
+        PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
 
-        when(projectRestService.getProjectById(projectId)).thenReturn(new RestResult(restSuccess(project)));
-        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(new RestResult(restSuccess(organisation)));
+        when(projectRestService.getProjectById(projectId)).thenReturn((restSuccess(project)));
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn((restSuccess(organisation)));
         when(organisationAddressRestService.getOrganisationRegisterdAddressById(organisationId)).thenReturn(restSuccess(organisation.getAddresses()));
         when(projectYourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId)).thenReturn(serviceSuccess(finances));
         when(withGrowthTableFormPopulator.populate(finances)).thenReturn(form);
-        when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(new RestResult(restSuccess(Arrays.asList(new PartnerOrganisationResource()))));
-        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(new RestResult(restSuccess(competition)));
+        when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn((restSuccess(List.of(new PartnerOrganisationResource()))));
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn((restSuccess(competition)));
         when(financeCheckService.getFinanceCheckSummary(projectId)).thenReturn(serviceSuccess(financeCheckSummaryResource));
         when(grantClaimMaximumRestService.isMaximumFundingLevelConstant(competitionId)).thenReturn(restSuccess(false));
+        when(publicContentItemRestService.getItemByCompetitionId(competitionId)).thenReturn(restSuccess(publicContentItemResource));
     }
 
     private MvcResult callEndpoint() throws Exception {

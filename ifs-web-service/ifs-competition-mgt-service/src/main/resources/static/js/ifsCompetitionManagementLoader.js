@@ -21,6 +21,7 @@ IFS.competitionManagement.loadOrder = {
   common: {
     init: function () {
       IFS.competitionManagement.various.init()
+      IFS.competitionManagement.conditionallyRequired.init()
     },
     finalize: function () {
       IFS.competitionManagement.multipageSelect.init()

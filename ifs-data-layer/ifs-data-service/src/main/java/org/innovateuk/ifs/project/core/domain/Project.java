@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import static java.util.stream.Collectors.toList;
 import static javax.persistence.EnumType.STRING;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -338,6 +339,10 @@ public class Project implements ProcessActivity, Serializable {
 
     public List<ProjectDocument> getProjectDocuments() {
         return projectDocuments;
+    }
+
+    public List<ProjectDocument> getActiveProjectDocuments() {
+        return projectDocuments.stream().filter(document -> document.getCompetitionDocument().isEnabled()).collect(toList());
     }
 
     public void setProjectDocuments(List<ProjectDocument> projectDocuments) {

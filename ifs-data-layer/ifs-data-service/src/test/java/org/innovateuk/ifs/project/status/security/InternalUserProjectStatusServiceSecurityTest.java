@@ -31,7 +31,7 @@ public class InternalUserProjectStatusServiceSecurityTest extends BaseServiceSec
     @Test
     public void getCompetitionStatus(){
 
-        Long competitionId = 1L;
+        long competitionId = 1L;
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();
 
         when(competitionLookupStrategy.getCompetitionResource(competitionId)).thenReturn(competition);

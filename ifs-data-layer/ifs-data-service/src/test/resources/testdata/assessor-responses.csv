@@ -644,3 +644,49 @@ Assessment is awesome 2,Assessment is awesome 2 - Application 1,apc-assessor-use
 Assessment is awesome 2,Assessment is awesome 2 - Application 1,apc-assessor-user1@example.com,Funding,TEXTAREA,No,This is the financial commitment feedback
 Assessment is awesome 2,Assessment is awesome 2 - Application 1,apc-assessor-user1@example.com,Adding value,ASSESSOR_SCORE,No,7
 Assessment is awesome 2,Assessment is awesome 2 - Application 1,apc-assessor-user1@example.com,Adding value,TEXTAREA,No,This is the added value feedback
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,tera.maynard@example.com,Scope,ASSESSOR_RESEARCH_CATEGORY,Yes,Feasibility studies
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,tera.maynard@example.com,Scope,ASSESSOR_APPLICATION_IN_SCOPE,No,false
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,tera.maynard@example.com,Scope,TEXTAREA,No,This is the scope feedback
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,tera.maynard@example.com,Business opportunity,ASSESSOR_SCORE,No,9
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,tera.maynard@example.com,Business opportunity,TEXTAREA,No,This is the business opportunity feedback
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,tera.maynard@example.com,Potential market,ASSESSOR_SCORE,No,5
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,tera.maynard@example.com,Potential market,TEXTAREA,No,This is the market opportunity feedback
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,tera.maynard@example.com,Project exploitation,ASSESSOR_SCORE,No,6
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,tera.maynard@example.com,Project exploitation,TEXTAREA,No,This is the project exploitation feedback
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,tera.maynard@example.com,Economic benefit,ASSESSOR_SCORE,No,6
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,tera.maynard@example.com,Economic benefit,TEXTAREA,No,This is the project benefits feedback
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,tera.maynard@example.com,Technical approach,ASSESSOR_SCORE,No,1
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,tera.maynard@example.com,Technical approach,TEXTAREA,No,This is the technical approach feedback
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,tera.maynard@example.com,Innovation,ASSESSOR_SCORE,No,1
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,tera.maynard@example.com,Innovation,TEXTAREA,No,This is the innovation feedback
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,tera.maynard@example.com,Risks,ASSESSOR_SCORE,No,4
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,tera.maynard@example.com,Risks,TEXTAREA,No,This is the risks feedback
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,tera.maynard@example.com,Project team,ASSESSOR_SCORE,No,8
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,tera.maynard@example.com,Project team,TEXTAREA,No,This is the team skills feedback
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,tera.maynard@example.com,Funding,ASSESSOR_SCORE,No,2
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,tera.maynard@example.com,Funding,TEXTAREA,No,This is the financial commitment feedback
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,tera.maynard@example.com,Adding value,ASSESSOR_SCORE,No,3
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,tera.maynard@example.com,Adding value,TEXTAREA,No,This is the added value feedback
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,louise.yates@example.com,Scope,ASSESSOR_RESEARCH_CATEGORY,Yes,Feasibility studies
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,louise.yates@example.com,Scope,ASSESSOR_APPLICATION_IN_SCOPE,No,false
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,louise.yates@example.com,Scope,TEXTAREA,No,This is the scope feedback
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,louise.yates@example.com,Business opportunity,ASSESSOR_SCORE,No,9
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,louise.yates@example.com,Business opportunity,TEXTAREA,No,This is the business opportunity feedback
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,louise.yates@example.com,Potential market,ASSESSOR_SCORE,No,5
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,louise.yates@example.com,Potential market,TEXTAREA,No,This is the market opportunity feedback
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,louise.yates@example.com,Project exploitation,ASSESSOR_SCORE,No,6
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,louise.yates@example.com,Project exploitation,TEXTAREA,No,This is the project exploitation feedback
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,louise.yates@example.com,Economic benefit,ASSESSOR_SCORE,No,6
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,louise.yates@example.com,Economic benefit,TEXTAREA,No,This is the project benefits feedback
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,louise.yates@example.com,Technical approach,ASSESSOR_SCORE,No,1
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,louise.yates@example.com,Technical approach,TEXTAREA,No,This is the technical approach feedback
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,louise.yates@example.com,Innovation,ASSESSOR_SCORE,No,1
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,louise.yates@example.com,Innovation,TEXTAREA,No,This is the innovation feedback
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,louise.yates@example.com,Risks,ASSESSOR_SCORE,No,4
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,louise.yates@example.com,Risks,TEXTAREA,No,This is the risks feedback
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,louise.yates@example.com,Project team,ASSESSOR_SCORE,No,8
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,louise.yates@example.com,Project team,TEXTAREA,No,This is the team skills feedback
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,louise.yates@example.com,Funding,ASSESSOR_SCORE,No,2
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,louise.yates@example.com,Funding,TEXTAREA,No,This is the financial commitment feedback
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,louise.yates@example.com,Adding value,ASSESSOR_SCORE,No,3
+Direct award competition - Project Setup,3-Dimensional Shaped Aluminium Foam Sandwiches,louise.yates@example.com,Adding value,TEXTAREA,No,This is the added value feedback

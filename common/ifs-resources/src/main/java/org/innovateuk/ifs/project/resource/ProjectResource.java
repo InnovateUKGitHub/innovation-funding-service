@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProjectResource {
     private static final int MAX_DURATION_IN_MONTHS_DIGITS = 2;
@@ -209,6 +210,10 @@ public class ProjectResource {
 
     public void setProjectDocuments(List<ProjectDocumentResource> projectDocuments) {
         this.projectDocuments = projectDocuments;
+    }
+
+    public List<ProjectDocumentResource> getActiveProjectDocuments() {
+        return projectDocuments.stream().filter(document -> document.getCompetitionDocument().isEnabled()).collect(Collectors.toList());
     }
 
     public Long getProjectMonitoringOfficer() {

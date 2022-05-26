@@ -10,6 +10,7 @@ import org.innovateuk.ifs.commons.util.AuditableEntity;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
+import org.innovateuk.ifs.competitionsetup.domain.DocumentConfig;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.finance.domain.Finance;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
@@ -38,6 +39,7 @@ import static java.util.Optional.*;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.resource.CompetitionResource.H2020_TYPE_NAME;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
+import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.ASSESSMENT_ONLY;
 import static org.innovateuk.ifs.competition.resource.FundingRules.SUBSIDY_CONTROL;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION;
@@ -191,6 +193,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     private boolean useDocusignForGrantOfferLetter;
 
     private boolean hasAssessmentStage = true;
+
+    @Column(name="pre_registration")
+    private boolean enabledForPreRegistration = false;
 
     @Enumerated(EnumType.STRING)
     private CovidType covidType;
@@ -691,6 +696,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         return competitionDocuments;
     }
 
+    public List<CompetitionDocument> getActiveCompetitionDocuments() {
+        return competitionDocuments.stream().filter(DocumentConfig::isEnabled).collect(toList());
+    }
+
     public void setCompetitionDocuments(List<CompetitionDocument> competitionDocuments) {
         this.competitionDocuments = competitionDocuments;
     }
@@ -817,6 +826,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         return ofNullable(competitionType)
                 .map(CompetitionType::getName)
                 .map(name -> name.equals(CompetitionTypeEnum.HORIZON_EUROPE_GUARANTEE.getText()))
+                .orElse(false);
+    }
+
+    @Override
+    public boolean isAssessmentOnly() {
+        return ofNullable(competitionType)
+                .map(CompetitionType::getName)
+                .map(name -> name.equals(ASSESSMENT_ONLY.getText()))
                 .orElse(false);
     }
 
@@ -1119,5 +1136,13 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setCompetitionExternalConfig(CompetitionExternalConfig competitionExternalConfig) {
         this.competitionExternalConfig = competitionExternalConfig;
+    }
+
+    public boolean isEnabledForPreRegistration() {
+        return enabledForPreRegistration;
+    }
+
+    public void setEnabledForPreRegistration(boolean enabledForPreRegistration) {
+        this.enabledForPreRegistration = enabledForPreRegistration;
     }
 }

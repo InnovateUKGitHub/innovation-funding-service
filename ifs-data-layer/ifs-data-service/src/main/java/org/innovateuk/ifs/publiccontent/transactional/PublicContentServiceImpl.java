@@ -100,17 +100,23 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
     }
 
     private ServiceResult<Void> publish(PublicContent publicContent) {
-        return validToPublish(publicContent).andOnSuccessReturnVoid(() ->  publicContent.setPublishDate(ZonedDateTime.now()));
+        return validToPublish(publicContent)
+                .andOnSuccessReturnVoid(PublicContentServiceImpl::generateHashAndPublish);
     }
 
-    private ServiceResult<Void> validToPublish(PublicContent publicContent) {
+    private ServiceResult<PublicContent> validToPublish(PublicContent publicContent) {
         return requiredMilestonesArePopulated(publicContent).andOnSuccess(() -> {
             if (!allSectionsComplete(publicContent)) {
                 return serviceFailure(PUBLIC_CONTENT_NOT_COMPLETE_TO_PUBLISH);
             } else {
-                return serviceSuccess();
+                return serviceSuccess(publicContent);
             }
         });
+    }
+
+    private static void generateHashAndPublish(PublicContent publicContent) {
+        publicContent.generateHashIfNecessary();
+        publicContent.setPublishDate(ZonedDateTime.now());
     }
 
     private ServiceResult<Void> requiredMilestonesArePopulated(PublicContent publicContent) {

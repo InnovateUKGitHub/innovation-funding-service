@@ -338,3 +338,29 @@ applicant completes edi profile
     [Arguments]  ${ediStatus}  ${userEmail}
     execute sql string   UPDATE `${database_name}`.`user` SET `edi_status` = '${ediStatus}', `edi_review_date` = '2100-12-20 10:10:10' WHERE (`email` = '${userEmail}');
     reload page
+
+get the loans contact payload delivered to SIL
+    [Arguments]   ${uuid}
+    ${result} =  query  SELECT `payload` FROM `${database_name}`.`sil_message` where `key_value`='${uuid}' AND payload like '%Loan%';
+    log  ${result}
+    [Return]  ${result}
+
+get the loans application submission payload delivered to SIL
+    [Arguments]  ${appID}
+    ${result} =  query  SELECT `payload` FROM `${database_name}`.`sil_message` where `key_value`='${appID}' AND `payload_type`="APPLICATION_SUBMISSION";
+    log  ${result}
+    [Return]  ${result}
+
+get user uuid
+    [Arguments]  ${email}
+    ${uuid} =  query  SELECT `uid` FROM `${database_name}`.`user` where `email`="${email}";
+    ${resultuuid} =  get from list  ${uuid}  0
+    ${uuidString} =      convert to string   ${resultuuid}
+    @{uid}=     split string    ${uuidString}      '
+    [Return]  ${uid}[1]
+
+get the EDI contact payload delivered to SIL
+    [Arguments]  ${userId}
+    ${result} =  query  SELECT `payload` FROM `${database_name}`.`sil_message` where `key_value`='${userId}';
+    log  ${result}
+    [Return]  ${result}

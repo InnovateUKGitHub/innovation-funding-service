@@ -92,6 +92,7 @@ The user can navigate back to application overview in the same window from part 
     And Requesting application ID of loan competiton
     Then the user should see the element                jQuery = a:contains("Continue")
     And the user should see the element                 css = [href="https://loans-innovateuk.cs80.force.com/loansCommunity/s?CompanyNumber=60674010&IFSApplicationNumber=${newLoansApplicationID}&CompanyName=${EMPIRE_LTD_NAME}&CompetitionId=${loan_comp_appl_id}"]
+    And the user should see valid contact log message stored in db
 
 The member applicant can not continue button see B&FI question when the question is not assigned to member
     [Documentation]    IFS-11271
@@ -208,6 +209,7 @@ Loan application submission
     And the user should see the element             jQuery = span:contains("What happens next")
     And the user should see the element             jQuery = p:contains("We will make our decision based on the suitability of your business and the quality of the project.")
     And the user reads his email                    ${lead_applicant_credentials["email"]}   Complete your application for Loan Competition   You have completed your application for Loan Competition.
+    And the user should see valid application submission log message stored in db
 
 Assessor can view BFI question in application
    [Documentation]   IFS-10825
@@ -608,3 +610,25 @@ the user can see B&FI question as complete
 Requesting application ID of loan competiton
      ${newLoansApplicationID} =     get application id by name         loans b&fi application
      Set suite variable             ${newLoansApplicationID}
+
+the user should see valid contact log message stored in db
+    ${userId} =  get user uuid   steve.smith@empire.com
+    Set global variable  ${userId}
+    ${contactPayload} =  get the loans contact payload delivered to SIL  ${userId}
+    ${contactPayloadInString} =  Convert to string   ${contactPayload}
+    Should Contain  ${contactPayloadInString}    "ifsUuid" : "${userId}"
+    Should Contain  ${contactPayloadInString}    "experienceType" : "Loan"
+    Should Contain  ${contactPayloadInString}    "ifsAppID" : "${newLoansApplicationID}"
+    Should Contain  ${contactPayloadInString}    "email" : "steve.smith@empire.com"
+
+the user should see valid application submission log message stored in db
+    ${applicationSubmissionPayload} =  get the loans application submission payload delivered to SIL  ${loanApplicationID}
+    ${applicationSubmissionPayloadInString} =  Convert to string   ${applicationSubmissionPayload}
+    Should Contain  ${applicationSubmissionPayloadInString}    "appID" : ${loanApplicationID}
+    Should Contain  ${applicationSubmissionPayloadInString}    "appName" : "${loanApplicationName}"
+    Should Contain  ${applicationSubmissionPayloadInString}    "appLoc" : "AB12 3CD"
+    Should Contain  ${applicationSubmissionPayloadInString}    "compName" : "${loan_comp_application}"
+    Should Contain  ${applicationSubmissionPayloadInString}    "projectDuration" : 10
+    Should Contain  ${applicationSubmissionPayloadInString}    "projTotalCost" : 200903.0
+    Should Contain  ${applicationSubmissionPayloadInString}    "projOtherFunding" : 2468.0
+    Should Contain  ${applicationSubmissionPayloadInString}    "markedIneligible" : null

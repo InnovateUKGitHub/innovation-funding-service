@@ -22,6 +22,7 @@ public class PublicContentItemViewModelMapper {
         publicContentItemViewModel.setEligibilitySummary(publicContentResource.getEligibilitySummary());
         publicContentItemViewModel.setShortDescription(publicContentResource.getShortDescription());
         publicContentItemViewModel.setCompetitionId(publicContentResource.getCompetitionId());
+        publicContentItemViewModel.setHash(publicContentResource.getHash());
 
         return publicContentItemViewModel;
     }

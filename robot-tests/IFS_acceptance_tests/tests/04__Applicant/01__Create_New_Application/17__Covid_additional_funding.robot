@@ -51,7 +51,8 @@ New external project finance can create account
 Create application to covid comp
     [Documentation]  IFS-7441
     [Setup]  log in as a different user    &{lead_applicant_credentials}
-    Given the user navigates to the page   ${server}/competition/${COVIDcompetitionId}/overview
+    Given the user navigates to the page                            ${frontDoor}
+    When the user clicks the button/link in the paginated list      link = ${COVIDcompetitionTitle}
     Then the user completes covid application
 
 Applicant is asked for funding sought
