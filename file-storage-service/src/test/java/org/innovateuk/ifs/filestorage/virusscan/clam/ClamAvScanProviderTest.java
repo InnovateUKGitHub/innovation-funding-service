@@ -1,47 +1,47 @@
 package org.innovateuk.ifs.filestorage.virusscan.clam;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
+import com.diluv.clamchowder.ClamClient;
+import com.diluv.clamchowder.ScanResult;
 import org.innovateuk.ifs.filestorage.exception.VirusDetectedException;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.util.ReflectionTestUtils;
-import xyz.capybara.clamav.ClamavClient;
-import xyz.capybara.clamav.commands.scan.result.ScanResult;
+import org.springframework.http.HttpStatus;
 
-import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {ClamAvScanProvider.class})
 class ClamAvScanProviderTest {
 
-    private ByteArrayInputStream stream = new ByteArrayInputStream("123123123123".getBytes(StandardCharsets.UTF_8));
-
     @Autowired
     private ClamAvScanProvider clamAvScanProvider;
 
     @MockBean
-    private ClamavClient clamAVClient;
+    private ClamClient clamClient;
 
     @Test
-    @Disabled("unable to mock kotlin lib")
-    void scanFile() {
-        when(clamAVClient.scan(stream))
-                .thenReturn(ScanResult.OK.INSTANCE);
-        clamAvScanProvider.scanFile(stream.readAllBytes());
+    void scanFile() throws IOException {
+        byte[] bytes = "foo".getBytes(StandardCharsets.UTF_8);
+        when(clamClient.scan(any(InputStream.class))).thenReturn(new ScanResult("stream: OK"));
+        clamAvScanProvider.scanFile(bytes);
 
-        when(clamAVClient.scan(stream))
-                .thenReturn(new ScanResult.VirusFound(ImmutableMap.of("Virus", ImmutableList.of("1"))));
-        assertThrows(
+        when(clamClient.scan(any(InputStream.class))).thenReturn(new ScanResult("stream: XYZ virus FOUND"));
+        VirusDetectedException virusDetectedException = assertThrows(
                 VirusDetectedException.class,
-                () -> clamAvScanProvider.scanFile(stream.readAllBytes())
+                () -> clamAvScanProvider.scanFile(bytes)
         );
+        assertThat(virusDetectedException.getStatus(), equalTo(HttpStatus.BAD_REQUEST));
+        assertThat(virusDetectedException.getReason(), containsString("XYZ"));
     }
 
 }

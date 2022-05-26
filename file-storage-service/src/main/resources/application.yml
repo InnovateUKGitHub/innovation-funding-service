@@ -9,6 +9,8 @@ ifs:
       clamAv:
         host: ${FSS_CLAM_HOST:localhost}
         port: ${FSS_CLAM_PORT:3310}
+        clientTimeoutMs: ${FSS_CLIENT_TIMEOUT_MS:2000}
+        scanChunkSize: ${FSS_SCAN_CHUNK_SIZE:12582912}
     storage:
       localStorage:
         rootFolderPath: "/tmp"

@@ -8,4 +8,8 @@ public class ServiceException extends ResponseStatusException {
     public ServiceException(Throwable cause) {
         super(HttpStatus.INTERNAL_SERVER_ERROR, cause.getMessage(), cause);
     }
+
+    public ServiceException(String message) {
+        super(HttpStatus.INTERNAL_SERVER_ERROR, message);
+    }
 }
