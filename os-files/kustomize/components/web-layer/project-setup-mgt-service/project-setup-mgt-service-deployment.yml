@@ -93,7 +93,7 @@ spec:
                   name: web-config
                   key: IFS_WEB_BASEURL
             - name: JAVA_TOOL_OPTIONS
-              value: -Xms1000m -Xmx1000m -javaagent:/newrelic.jar
+              value: -Xms1000m -Xmx1000m
             - name: NEW_RELIC_APP_NAME
               value: 'ifs-$(NEW_RELIC_ENV)-project-setup-mgt-service'
           ports:

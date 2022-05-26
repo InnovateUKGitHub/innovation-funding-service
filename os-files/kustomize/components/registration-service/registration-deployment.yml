@@ -105,7 +105,7 @@ spec:
                   name: web-config
                   key: IFS_WEB_BASEURL
             - name: JAVA_TOOL_OPTIONS
-              value: -Xms256m -Xmx650m -javaagent:/newrelic.jar
+              value: -Xms256m -Xmx650m
             - name: NEW_RELIC_APP_NAME
               value: 'ifs-$(NEW_RELIC_ENV)-registration-service'
             - name: SHIBBOLETH_LDAP_REQUIREVALIDPPOLICY

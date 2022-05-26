@@ -84,7 +84,7 @@ spec:
                 name: data-service-secrets
                 key: IFS_FINANCE-TOTALS_AUTHSECRETKEY
           - name: JAVA_TOOL_OPTIONS
-            value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
+            value: -Xms750m -Xmx750m
           - name: NEW_RELIC_APP_NAME
             value: 'ifs-$(NEW_RELIC_ENV)-finance-data-service'
         ports:

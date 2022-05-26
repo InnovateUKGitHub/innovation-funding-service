@@ -84,7 +84,7 @@ spec:
                 name: web-secrets
                 key: IFS_WEB_SYSTEM_USER_UID
           - name: JAVA_TOOL_OPTIONS
-            value: -Xms800m -Xmx800m -javaagent:/newrelic.jar
+            value: -Xms800m -Xmx800m
           - name: NEW_RELIC_APP_NAME
             value: 'ifs-$(NEW_RELIC_ENV)-survey-data-service'
         ports:

@@ -153,7 +153,7 @@ spec:
                 name: web-config
                 key: IFS_EDI_SALESFORCE_PAGE_URL
           - name: JAVA_TOOL_OPTIONS
-            value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
+            value: -Xms750m -Xmx750m
           - name: NEW_RELIC_APP_NAME
             value: 'ifs-$(NEW_RELIC_ENV)-application-service'
         ports:

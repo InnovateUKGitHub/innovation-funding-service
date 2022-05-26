@@ -67,7 +67,7 @@ spec:
                   name: shibboleth-config
                   key: IDP_DOMAIN
             - name: JAVA_TOOL_OPTIONS
-              value: -Xms384M -Xmx768M -javaagent:/newrelic.jar
+              value: -Xms384M -Xmx768M
             - name: NEW_RELIC_APP_NAME
               value: 'ifs-$(NEW_RELIC_ENV)-idp-service'
             - name: HTTPS_PORT

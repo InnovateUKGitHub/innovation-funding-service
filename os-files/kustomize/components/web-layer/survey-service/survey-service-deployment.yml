@@ -68,7 +68,7 @@ spec:
                     name: web-config
                     key: IFS_WEB_BASEURL
               - name: JAVA_TOOL_OPTIONS
-                value: -Xms400m -Xmx400m -javaagent:/newrelic.jar
+                value: -Xms400m -Xmx400m
               - name: NEW_RELIC_APP_NAME
                 value: 'ifs-$(NEW_RELIC_ENV)-survey-service'
           ports:
