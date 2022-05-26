@@ -120,6 +120,11 @@ public class Application implements ProcessActivity {
     @JoinColumn(name = "applicationExternalConfigId", referencedColumnName = "id")
     private ApplicationExternalConfig applicationExternalConfig;
 
+    @Column(nullable = false)
+    private boolean isPreReg = false;
+
+    private Long preRegApplicationId;
+
     public Application() {
     }
 
@@ -156,6 +161,8 @@ public class Application implements ProcessActivity {
         this.competitionReferralSource = application.getCompetitionReferralSource();
         this.companyAge = application.getCompanyAge();
         this.companyPrimaryFocus = application.getCompanyPrimaryFocus();
+        this.isPreReg = application.isPreReg();
+        this.preRegApplicationId = application.getPreRegApplicationId();
     }
 
     protected boolean canEqual(Object other) {
@@ -553,5 +560,21 @@ public class Application implements ProcessActivity {
 
     public void setApplicationExternalConfig(ApplicationExternalConfig applicationExternalConfig) {
         this.applicationExternalConfig = applicationExternalConfig;
+    }
+
+    public boolean isPreReg() {
+        return isPreReg;
+    }
+
+    public void setPreReg(boolean preReg) {
+        isPreReg = preReg;
+    }
+
+    public Long getPreRegApplicationId() {
+        return preRegApplicationId;
+    }
+
+    public void setPreRegApplicationId(Long preRegApplicationId) {
+        this.preRegApplicationId = preRegApplicationId;
     }
 }
