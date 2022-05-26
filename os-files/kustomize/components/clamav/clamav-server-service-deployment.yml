@@ -39,7 +39,6 @@ data:
     
     StreamMaxLength 36M
     MaxThreads 20
-    MaxQueueLength 100
 
   freshclam.conf: |
     Foreground yes
