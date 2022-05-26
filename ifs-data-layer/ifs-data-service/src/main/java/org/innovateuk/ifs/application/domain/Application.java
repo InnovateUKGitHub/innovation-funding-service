@@ -121,7 +121,7 @@ public class Application implements ProcessActivity {
     private ApplicationExternalConfig applicationExternalConfig;
 
     @Column(nullable = false)
-    private boolean isPreReg = false;
+    private boolean preReg = false;
 
     private Long preRegApplicationId;
 
@@ -161,7 +161,7 @@ public class Application implements ProcessActivity {
         this.competitionReferralSource = application.getCompetitionReferralSource();
         this.companyAge = application.getCompanyAge();
         this.companyPrimaryFocus = application.getCompanyPrimaryFocus();
-        this.isPreReg = application.isPreReg();
+        this.preReg = application.isPreReg();
         this.preRegApplicationId = application.getPreRegApplicationId();
     }
 
@@ -563,11 +563,11 @@ public class Application implements ProcessActivity {
     }
 
     public boolean isPreReg() {
-        return isPreReg;
+        return preReg;
     }
 
     public void setPreReg(boolean preReg) {
-        isPreReg = preReg;
+        this.preReg = preReg;
     }
 
     public Long getPreRegApplicationId() {
