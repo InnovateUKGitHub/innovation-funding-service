@@ -291,8 +291,8 @@
             </table>
         </th:block>
 
-        <h3 class="govuk-heading-s govuk-!-margin-bottom-1" th:if="${shouldDisplayTeamMember}">Team members</h3>
-        <table class="govuk-table" th:if="${shouldDisplayTeamMember}">
+        <h3 class="govuk-heading-s govuk-!-margin-bottom-1" th:classappend="${shouldDisplayTeamMember ? '' : 'print-bar'}">Team members</h3>
+        <table class="govuk-table" th:classappend="${shouldDisplayTeamMember ? '' : 'print-bar'}">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
                 <th scope="col" class="govuk-table__header table-header-width-one-third">Full name</th>
