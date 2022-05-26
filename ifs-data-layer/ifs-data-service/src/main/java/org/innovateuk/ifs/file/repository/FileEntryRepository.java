@@ -12,7 +12,12 @@ import java.util.List;
  */
 public interface FileEntryRepository extends PagingAndSortingRepository<FileEntry, Long> {
 
-    @Query("SELECT a from FileEntry a WHERE a.fileUuid IS NULL AND a.id NOT IN (SELECT b.fileEntryId from GlusterMigrationStatus b WHERE b.status = 'FILE_NOT_FOUND' )")
+    @Query("SELECT t1 " +
+            "FROM FileEntry t1 " +
+            "LEFT JOIN  GlusterMigrationStatus t3 ON t3.fileEntryId <> t1.id " +
+            "AND t3.status = 'FILE_FOUND' " +
+            "LEFT JOIN GlusterMigrationStatus t2 ON t2.fileEntryId <> t1.id " +
+            "AND t2.status = 'FILE_NOT_FOUND'")
     List<FileEntry> findFileEntryByStatusAndFileUUIDIsNUll(Pageable pageable);
 
 }
