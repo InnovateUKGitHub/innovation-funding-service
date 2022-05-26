@@ -26,6 +26,7 @@ Applicant can view EDI section in profile page
     Given External user starts a new application
     When the user clicks the button/link            link = Profile
     Then the user should see EDI section details    Incomplete  Not Applicable  Start now
+    And the user should see valid EDI contact log message stored in db
 
 Applicant checks the status of EDI as Incomplete When user not started the edi survey
     [Documentation]  IFS-11253  IFS-11341  IFS-11924
@@ -232,3 +233,11 @@ External user starts a new application
     the user reads his email and clicks the link                    ediFirstName.SurName@gmail.com  Please verify your email address  Once verified you can sign into your account.
     the user clicks the button/link                                 link = Sign in
     Logging in and Error Checking                                   ediFirstName.SurName@gmail.com  ${short_password}
+
+the user should see valid EDI contact log message stored in db
+    ${userId} =  get user uuid   ediFirstName.SurName@gmail.com
+    Set global variable  ${userId}
+    ${contactPayload} =  get the EDI contact payload delivered to SIL  ${userId}
+    ${contactPayloadInString} =  Convert to string   ${contactPayload}
+    Should Contain  ${contactPayloadInString}    "ifsUuid" : "${userId}"
+    Should Contain  ${contactPayloadInString}    "email" : "ediFirstName.SurName@gmail.com"
