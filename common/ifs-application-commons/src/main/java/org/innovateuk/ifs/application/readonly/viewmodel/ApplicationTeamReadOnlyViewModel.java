@@ -16,20 +16,20 @@ public class ApplicationTeamReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     private final List<ApplicationTeamOrganisationReadOnlyViewModel> organisations;
     private final Optional<ProcessRoleResource> ktaProcessRole;
     private final boolean internal;
-    private final boolean isAssessor;
+    private final boolean shouldShowTeamMember;
     private final boolean ktpCompetition;
     private final String ktaPhoneNumber;
     private final boolean ediUpdateEnabled;
 
     public ApplicationTeamReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource question, List<ApplicationTeamOrganisationReadOnlyViewModel> organisations,
-                                            Optional<ProcessRoleResource> ktaProcessRole, String ktaPhoneNumber, boolean internal, boolean isAssessor, boolean ediUpdateEnabled) {
+                                            Optional<ProcessRoleResource> ktaProcessRole, String ktaPhoneNumber, boolean internal, boolean shouldShowTeamMember, boolean ediUpdateEnabled) {
         super(data, question);
         this.organisations = organisations;
         this.ktpCompetition = data.getCompetition().isKtp();
         this.ktaProcessRole = ktaProcessRole;
         this.ktaPhoneNumber = ktaPhoneNumber;
         this.internal = internal;
-        this.isAssessor = isAssessor;
+        this.shouldShowTeamMember = shouldShowTeamMember;
         this.ediUpdateEnabled = ediUpdateEnabled;
     }
 
@@ -64,5 +64,5 @@ public class ApplicationTeamReadOnlyViewModel extends AbstractQuestionReadOnlyVi
         return ediUpdateEnabled;
     }
 
-    public boolean isShouldDisplayTeamMember() { return !isAssessor; }
+    public boolean isShouldDisplayTeamMember() { return shouldShowTeamMember; }
 }

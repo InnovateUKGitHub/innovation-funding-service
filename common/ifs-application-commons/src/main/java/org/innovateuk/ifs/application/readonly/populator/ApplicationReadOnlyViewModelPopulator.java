@@ -153,7 +153,6 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                                 assignment.getUserSimpleOrganisation()))
                         .collect(Collectors.groupingBy(SupporterAssignmentReadOnlyViewModel::getState)) : emptyMap(),
                 shouldDisplayKtpApplicationFeedback(competition, user, processRoles),
-                shouldDisplayTeamMember(user),
                 competition.isKtp(),
                 competition.getTermsAndConditions().isProcurementThirdParty(),
                 competition.getCompetitionThirdPartyConfigResource(),
@@ -165,10 +164,6 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         boolean isKta = processRoles.stream()
                 .anyMatch(pr -> pr.getUser().equals(user.getId()) && pr.getRole().isKta());
         return competition.isKtp() && isKta;
-    }
-  
-    private boolean shouldDisplayTeamMember(UserResource user) {
-        return !user.hasRole(Role.ASSESSOR);
     }
 
     private ApplicationSectionReadOnlyViewModel sectionView(SectionResource section, ApplicationReadOnlySettings settings, ApplicationReadOnlyData data) {

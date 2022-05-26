@@ -71,7 +71,7 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
     @Override
     public ApplicationTeamReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         boolean internalUser = data.getUser().isInternalUser();
-        boolean isAssessor = data.getUser().hasRole(Role.ASSESSOR);
+        boolean shouldShowTeamMember = settings.isIncludeTeamMember();
         List<ProcessRoleResource> applicationProcessRoles = processRoleRestService.findProcessRole(data.getApplication().getId()).getSuccess();
         List<ProcessRoleResource> processRoles = applicationProcessRoles.stream()
                 .filter(role -> applicantProcessRoles().contains(role.getRole()))
@@ -117,7 +117,7 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
                 .collect(toList()));
 
         return new ApplicationTeamReadOnlyViewModel(data, question, organisationViewModels, ktaProcessRole, ktaPhoneNumber,
-                internalUser, isAssessor, ediUpdateEnabled);
+                internalUser, shouldShowTeamMember, ediUpdateEnabled);
     }
 
     private boolean showInvites(ApplicationReadOnlyData data) {

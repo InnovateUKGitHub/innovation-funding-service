@@ -40,13 +40,14 @@ public class ApplicationPrintPopulator {
     private ProcessRoleRestService processRoleRestService;
 
     public String print(final Long applicationId,
-                        Model model, UserResource user) {
+                        Model model, UserResource user, boolean includeTeamMember) {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         ApplicationReadOnlySettings settings = defaultSettings()
                 .setIncludeAllAssessorFeedback(userCanViewFeedback(user, competition, application))
-                .setIncludeAllSupporterFeedback(userCanViewSupporterFeedback(user, competition, application));
+                .setIncludeAllSupporterFeedback(userCanViewSupporterFeedback(user, competition, application))
+                .setIncludeTeamMember(includeTeamMember);
 
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationReadOnlyViewModelPopulator.populate(applicationId, user, settings);
         model.addAttribute("model", applicationReadOnlyViewModel);
