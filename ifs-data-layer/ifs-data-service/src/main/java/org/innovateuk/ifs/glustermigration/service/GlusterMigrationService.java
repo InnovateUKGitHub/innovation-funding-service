@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public interface GlusterMigrationService {
 
-    @NotSecured(value = "Gluster migration scheduler", mustBeSecuredByOtherServices = false)
+    @NotSecured(value = "Gluster migration scheduler")
     ServiceResult<ScheduleResponse> processGlusterFiles() throws IOException;
 
 }
