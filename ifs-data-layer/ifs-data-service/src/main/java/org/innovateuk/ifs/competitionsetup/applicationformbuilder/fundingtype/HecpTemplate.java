@@ -38,7 +38,7 @@ public class HecpTemplate implements FundingTypeTemplate {
                         EQUIPMENT,
                         OTHER_GOODS,
                         OTHER_COSTS,
-                        OVERHEADS,
+                        HECP_INDIRECT_COSTS,
                         FINANCE,
                         OTHER_FUNDING,
                         YOUR_FINANCE);

@@ -158,6 +158,12 @@ public class GrantOfferLetterTemplateViewModel {
     }
 
     @JsonIgnore
+    public FinanceRowType getHecpIndirectCostsFinanceRowType() {
+        return FinanceRowType.HECP_INDIRECT_COSTS;
+    }
+
+
+    @JsonIgnore
     public FinanceRowType getMaterialsFinanceRowType() {
         return FinanceRowType.MATERIALS;
     }

@@ -56,6 +56,8 @@ public class YourProjectCostsAutosaver {
                 return autosaveLabourCost(field, value, finance);
             } else if (field.startsWith("overhead")) {
                 return autosaveOverheadCost(field, value, finance, applicationId, organisation.getId());
+            } else if (field.startsWith("hecpIndirectCosts")) {
+                return autosaveHecpIndirectCosts(field, value, finance, applicationId, organisation.getId());
             } else if (field.startsWith("materialRows")) {
                 return autosaveMaterialCost(field, value, finance);
             } else if (field.startsWith("equipmentRows")) {
@@ -392,6 +394,17 @@ public class YourProjectCostsAutosaver {
             Overhead overheadCost = (Overhead) category.getCosts().get(0);
             overheadCost.setRate(Integer.valueOf(value));
             financeRowRestService.update(overheadCost);
+        }
+        return Optional.empty();
+    }
+
+    private Optional<Long> autosaveHecpIndirectCosts(String field, String value, ApplicationFinanceResource finance, long applicationId, Long organisationId) {
+        if (field.equals("hecpIndirectCosts.totalSpreadsheet")) {
+            finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
+            HecpIndirectCostsCostCategory category = (HecpIndirectCostsCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.HECP_INDIRECT_COSTS);
+            HecpIndirectCosts hecpIndirectCosts = (HecpIndirectCosts) category.getCosts().get(0);
+            hecpIndirectCosts.setRate(Integer.valueOf(value));
+            financeRowRestService.update(hecpIndirectCosts);
         }
         return Optional.empty();
     }

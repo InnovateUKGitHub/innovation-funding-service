@@ -21,7 +21,7 @@ public class FinanceChecksEligibilityHecpCostsFormPopulator {
         HorizonEuropeGuaranteeCostsForm form = new HorizonEuropeGuaranteeCostsForm();
 
         form.setLabour(projectFinance.getFinanceOrganisationDetails().get(FinanceRowType.LABOUR).getTotal().toBigInteger());
-        form.setOverhead(projectFinance.getFinanceOrganisationDetails().get(FinanceRowType.OVERHEADS).getTotal().toBigInteger());
+        form.setHecpIndirectCosts(projectFinance.getFinanceOrganisationDetails().get(FinanceRowType.HECP_INDIRECT_COSTS).getTotal().toBigInteger());
         form.setEquipment(projectFinance.getFinanceOrganisationDetails().get(FinanceRowType.EQUIPMENT).getTotal().toBigInteger());
         form.setOtherGoods(projectFinance.getFinanceOrganisationDetails().get(FinanceRowType.OTHER_GOODS).getTotal().toBigInteger());
         form.setSubcontracting(projectFinance.getFinanceOrganisationDetails().get(FinanceRowType.SUBCONTRACTING_COSTS).getTotal().toBigInteger());

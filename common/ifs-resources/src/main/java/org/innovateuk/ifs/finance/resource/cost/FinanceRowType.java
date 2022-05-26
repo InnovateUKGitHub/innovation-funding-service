@@ -51,7 +51,8 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     INDIRECT_COSTS("indirect costs", "Indirect costs", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
 
     EQUIPMENT("equipment", "Equipment", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
-    OTHER_GOODS("other_goods", "Other goods, works and services", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION);
+    OTHER_GOODS("other_goods", "Other goods, works and services", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
+    HECP_INDIRECT_COSTS("hecp_indirect_costs", "Indirect costs", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION);
 
     enum FinanceRowOptions {
         INCLUDE_IN_SPEND_PROFILE,
@@ -107,8 +108,6 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
                 return "Personnel costs";
             case SUBCONTRACTING_COSTS:
                 return "Subcontracting costs";
-            case OVERHEADS:
-                return "Indirect costs";
             default:
                 return getDisplayName();
         }
@@ -137,7 +136,7 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     }
 
     public static List<FinanceRowType> getHecpSpecificFinanceRowTypes() {
-        return asList(LABOUR, SUBCONTRACTING_COSTS, TRAVEL, EQUIPMENT, OTHER_GOODS, OTHER_COSTS, OVERHEADS);
+        return asList(LABOUR, SUBCONTRACTING_COSTS, TRAVEL, EQUIPMENT, OTHER_GOODS, OTHER_COSTS, HECP_INDIRECT_COSTS);
     }
 
     public static List<FinanceRowType> getKtpFinanceRowTypes() {

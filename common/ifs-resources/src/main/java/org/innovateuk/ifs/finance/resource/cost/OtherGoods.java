@@ -40,7 +40,7 @@ public class OtherGoods extends AbstractFinanceRowItem {
     @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = NO_DECIMAL_VALUES)
     private Integer utilisation;
 
-    private OtherGoods() {
+    public OtherGoods() {
         this(null);
     }
 

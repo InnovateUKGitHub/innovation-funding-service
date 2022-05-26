@@ -113,7 +113,7 @@ public class ApplicationValidationUtil {
         if (SectionType.PROJECT_COST_FINANCES == section.getType()) {
             boolean isHecpCompetition = application.getCompetition().isHorizonEuropeGuarantee();
             if (isHecpCompetition) {
-                ImmutableSet.of(LABOUR, OVERHEADS, EQUIPMENT, OTHER_GOODS, SUBCONTRACTING_COSTS, TRAVEL, OTHER_COSTS)
+                ImmutableSet.of(LABOUR, HECP_INDIRECT_COSTS, EQUIPMENT, OTHER_GOODS, SUBCONTRACTING_COSTS, TRAVEL, OTHER_COSTS)
                         .stream()
                         .filter(competitionFinanceTypes::contains)
                         .forEach(type -> validationMessages.addAll(applicationValidatorService.validateCostItem(application.getId(), type, markedAsCompleteById)));

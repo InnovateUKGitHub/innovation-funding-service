@@ -39,6 +39,7 @@ public abstract class AbstractYourProjectCostsFormPopulator {
 
         form.setThirdPartyOfgem(thirdPartyOfgem);
         form.setOverhead(overhead(finance));
+        form.setHecpIndirectCosts(hecpIndirectCosts(finance));
         form.setLabour(labour(finance, form));
         form.setCapitalUsageRows(toRows(finance, FinanceRowType.CAPITAL_USAGE,
                 CapitalUsageRowForm.class, CapitalUsage.class));
@@ -135,6 +136,16 @@ public abstract class AbstractYourProjectCostsFormPopulator {
             return new OverheadForm(overhead, filename);
         }
         return new OverheadForm();
+    }
+
+    private HecpIndirectCostsForm hecpIndirectCosts(BaseFinanceResource finance) {
+        HecpIndirectCostsCostCategory costCategory = (HecpIndirectCostsCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.HECP_INDIRECT_COSTS);
+        if (costCategory != null) {
+            HecpIndirectCosts hecpIndirectCosts = costCategory.getCosts().stream().findFirst().map(HecpIndirectCosts.class::cast).orElseThrow(() -> new IFSRuntimeException("Missing expected HECP indirect costs."));
+            String filename = overheadFile(hecpIndirectCosts.getId()).map(FileEntryResource::getName).orElse(null);
+            return new HecpIndirectCostsForm(hecpIndirectCosts, filename);
+        }
+        return new HecpIndirectCostsForm();
     }
 
     private Map<String, LabourRowForm> labourCosts(LabourCostCategory costCategory, boolean thirdPartyOfgem) {

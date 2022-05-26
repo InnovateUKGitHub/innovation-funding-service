@@ -58,6 +58,9 @@ public class YourProjectCostsFormValidator {
             case OVERHEADS:
                 validateOverhead(form.getOverhead(), validationHandler);
                 break;
+            case HECP_INDIRECT_COSTS:
+                validateHecpIndirectCosts(form.getHecpIndirectCosts(), validationHandler);
+                break;
             case PROCUREMENT_OVERHEADS:
                 validateRows(form.getProcurementOverheadRows(),"procurementOverheadRows[%s].", validationHandler);
                 break;
@@ -190,6 +193,21 @@ public class YourProjectCostsFormValidator {
                 boolean hasOverheadFile = overheadFileRestService.getOverheadFileDetails(overhead.getCostId()).isSuccess();
                 if (!hasOverheadFile) {
                     validationHandler.addAnyErrors(new ValidationMessages(fieldError("overhead.file", null, "validation.finance.overhead.file.required")));
+                }
+            }
+        }
+    }
+
+    private void validateHecpIndirectCosts(HecpIndirectCostsForm hecpIndirectCosts, ValidationHandler validationHandler) {
+        if (OverheadRateType.TOTAL.equals(hecpIndirectCosts.getRateType())) {
+            validateForm(hecpIndirectCosts, validationHandler, "hecpIndirectCosts");
+            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
+                    .getRequestAttributes()).getRequest();
+            UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+            if (!user.isInternalUser()) {
+                boolean hasOverheadFile = overheadFileRestService.getOverheadFileDetails(hecpIndirectCosts.getCostId()).isSuccess();
+                if (!hasOverheadFile) {
+                    validationHandler.addAnyErrors(new ValidationMessages(fieldError("hecpIndirectCosts.file", null, "validation.finance.hecpIndirectCosts.file.required")));
                 }
             }
         }

@@ -22,12 +22,12 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.builder.CapitalUsageBuilder.newCapitalUsage;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
+import static org.innovateuk.ifs.finance.builder.HecpIndirectCostsCategoryBuilder.newHecpIndirectCostsCostCategory;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
 import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
 import static org.innovateuk.ifs.finance.builder.OtherCostBuilder.newOtherCost;
 import static org.innovateuk.ifs.finance.builder.OverheadBuilder.newOverhead;
-import static org.innovateuk.ifs.finance.builder.OverheadCostCategoryBuilder.newOverheadCostCategory;
 import static org.innovateuk.ifs.finance.builder.SubcontractingCostBuilder.newSubContractingCost;
 import static org.innovateuk.ifs.finance.builder.TravelCostBuilder.newTravelCost;
 import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
@@ -64,7 +64,7 @@ public class HorizonEuropeGuaranteeCostsSaverTest {
                 .build();
         ApplicationFinanceResource finance = newApplicationFinanceResource().withFinanceOrganisationDetails(asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(singletonList(workingDays)).build(),
-                FinanceRowType.OVERHEADS, newOverheadCostCategory().withCosts(singletonList(overhead)).build(),
+                FinanceRowType.HECP_INDIRECT_COSTS, newHecpIndirectCostsCostCategory().withCosts(singletonList(overhead)).build(),
                 FinanceRowType.MATERIALS, newDefaultCostCategory().withCosts(emptyList()).build(),
                 FinanceRowType.CAPITAL_USAGE, newDefaultCostCategory().withCosts(emptyList()).build(),
                 FinanceRowType.SUBCONTRACTING_COSTS, newDefaultCostCategory().withCosts(emptyList()).build(),
@@ -90,9 +90,9 @@ public class HorizonEuropeGuaranteeCostsSaverTest {
 
         HorizonEuropeGuaranteeCostsForm form = new HorizonEuropeGuaranteeCostsForm();
         form.setLabour(BigInteger.valueOf(1L));
-        form.setOverhead(BigInteger.valueOf(2L));
-        form.setMaterial(BigInteger.valueOf(3L));
-        form.setCapital(BigInteger.valueOf(4L));
+        form.setHecpIndirectCosts(BigInteger.valueOf(2L));
+        form.setEquipment(BigInteger.valueOf(3L));
+        form.setOtherGoods(BigInteger.valueOf(4L));
         form.setSubcontracting(BigInteger.valueOf(5L));
         form.setTravel(BigInteger.valueOf(6L));
         form.setOther(BigInteger.valueOf(7L));
@@ -141,7 +141,7 @@ public class HorizonEuropeGuaranteeCostsSaverTest {
                 .build();
         ApplicationFinanceResource finance = newApplicationFinanceResource().withFinanceOrganisationDetails(asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(asList(workingDays, newLabourCost().build())).build(),
-                FinanceRowType.OVERHEADS, newOverheadCostCategory().withCosts(singletonList(overhead)).build(),
+                FinanceRowType.HECP_INDIRECT_COSTS, newHecpIndirectCostsCostCategory().withCosts(singletonList(overhead)).build(),
                 FinanceRowType.MATERIALS, newDefaultCostCategory().withCosts(newMaterials().build(1)).build(),
                 FinanceRowType.CAPITAL_USAGE, newDefaultCostCategory().withCosts(newCapitalUsage().build(1)).build(),
                 FinanceRowType.SUBCONTRACTING_COSTS, newDefaultCostCategory().withCosts(newSubContractingCost().build(1)).build(),
@@ -153,9 +153,9 @@ public class HorizonEuropeGuaranteeCostsSaverTest {
 
         HorizonEuropeGuaranteeCostsForm form = new HorizonEuropeGuaranteeCostsForm();
         form.setLabour(BigInteger.valueOf(0L));
-        form.setOverhead(BigInteger.valueOf(0L));
-        form.setMaterial(BigInteger.valueOf(0L));
-        form.setCapital(BigInteger.valueOf(0L));
+        form.setHecpIndirectCosts(BigInteger.valueOf(0L));
+        form.setEquipment(BigInteger.valueOf(0L));
+        form.setOtherGoods(BigInteger.valueOf(0L));
         form.setSubcontracting(BigInteger.valueOf(0L));
         form.setTravel(BigInteger.valueOf(0L));
         form.setOther(BigInteger.valueOf(0L));

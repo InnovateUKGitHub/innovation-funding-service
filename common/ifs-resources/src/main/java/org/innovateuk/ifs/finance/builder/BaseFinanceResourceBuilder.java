@@ -33,6 +33,8 @@ import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newD
 import static org.innovateuk.ifs.finance.builder.EquipmentCostBuilder.newEquipment;
 import static org.innovateuk.ifs.finance.builder.EstateCostBuilder.newEstateCost;
 import static org.innovateuk.ifs.finance.builder.ExcludedCostCategoryBuilder.newExcludedCostCategory;
+import static org.innovateuk.ifs.finance.builder.HecpIndirectCostsBuilder.newHecpIndirectCosts;
+import static org.innovateuk.ifs.finance.builder.HecpIndirectCostsCategoryBuilder.newHecpIndirectCostsCostCategory;
 import static org.innovateuk.ifs.finance.builder.IndirectCostBuilder.newIndirectCost;
 import static org.innovateuk.ifs.finance.builder.KnowledgeBaseCostBuilder.newKnowledgeBaseCost;
 import static org.innovateuk.ifs.finance.builder.KtpTravelCostBuilder.newKtpTravelCost;
@@ -123,6 +125,13 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                                 withRateType(OverheadRateType.TOTAL).
                                 withRate(1000).
                                 build(1)).
+                        build(),
+                FinanceRowType.HECP_INDIRECT_COSTS, newHecpIndirectCostsCostCategory().withCosts(
+                                newHecpIndirectCosts().
+                                        withId(1L).
+                                        withRateType(OverheadRateType.TOTAL).
+                                        withRate(1000).
+                                        build(1)).
                         build(),
                 FinanceRowType.MATERIALS, newDefaultCostCategory().withCosts(
                         newMaterials().
@@ -310,6 +319,13 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                                 withCost(new BigDecimal("100")).
                                 withCostType(FinanceRowType.OVERHEADS).
                                 build(1)).
+                        build(),
+                FinanceRowType.HECP_INDIRECT_COSTS, newDefaultCostCategory().withCosts(
+                                newAcademicCost().
+                                        withName("indirect_costs").
+                                        withCost(new BigDecimal("100")).
+                                        withCostType(FinanceRowType.HECP_INDIRECT_COSTS).
+                                        build(1)).
                         build(),
                 FinanceRowType.MATERIALS, newDefaultCostCategory().withCosts(
                         newAcademicCost().

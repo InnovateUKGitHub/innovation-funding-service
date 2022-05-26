@@ -23,6 +23,7 @@ import java.math.BigDecimal;
         @JsonSubTypes.Type(value = OtherCost.class, name = "otherCost"),
         @JsonSubTypes.Type(value = OtherFunding.class, name = "otherFunding"),
         @JsonSubTypes.Type(value = Overhead.class, name = "overhead"),
+        @JsonSubTypes.Type(value = HecpIndirectCosts.class, name = "hecpIndirectCosts"),
         @JsonSubTypes.Type(value = SubContractingCost.class, name = "subContractingCost"),
         @JsonSubTypes.Type(value = TravelCost.class, name = "travelCost"),
         @JsonSubTypes.Type(value = Vat.class, name = "VAT"),

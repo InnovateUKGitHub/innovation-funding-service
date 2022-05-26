@@ -250,12 +250,24 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
         return doSetAdministrativeSupportCosts(OverheadRateType.NONE, OverheadRateType.NONE.getRate());
     }
 
+    public IndustrialCostDataBuilder withHecpAdministrationSupportCostsNone() {
+        return doSetAdministrativeSupportCostsHecp(OverheadRateType.NONE, OverheadRateType.NONE.getRate());
+    }
+
     public IndustrialCostDataBuilder withAdministrationSupportCostsDefaultRate() {
         return doSetAdministrativeSupportCosts(OverheadRateType.DEFAULT_PERCENTAGE, OverheadRateType.DEFAULT_PERCENTAGE.getRate());
     }
 
+    public IndustrialCostDataBuilder withHecpAdministrationSupportCostsDefaultRate() {
+        return doSetAdministrativeSupportCostsHecp(OverheadRateType.DEFAULT_PERCENTAGE, OverheadRateType.DEFAULT_PERCENTAGE.getRate());
+    }
+
     public IndustrialCostDataBuilder withAdministrationSupportCostsTotalRate(Integer customRate) {
         return doSetAdministrativeSupportCosts(OverheadRateType.TOTAL, customRate);
+    }
+
+    public IndustrialCostDataBuilder withHecpAdministrationSupportCostsTotalRate(Integer customRate) {
+        return doSetAdministrativeSupportCostsHecp(OverheadRateType.TOTAL, customRate);
     }
 
     public IndustrialCostDataBuilder withProcurementOverheads(String item, int project, int company) {
@@ -325,6 +337,13 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     private IndustrialCostDataBuilder doSetAdministrativeSupportCosts(OverheadRateType rateType, Integer rate) {
         return updateCostItem(Overhead.class, FinanceRowType.OVERHEADS, existingCost -> {
             Overhead updated = new Overhead(existingCost.getId(), rateType, rate, existingCost.getTargetId());
+            financeRowCostsService.update(existingCost.getId(), updated);
+        });
+    }
+
+    private IndustrialCostDataBuilder doSetAdministrativeSupportCostsHecp(OverheadRateType rateType, Integer rate) {
+        return updateCostItem(HecpIndirectCosts.class, FinanceRowType.HECP_INDIRECT_COSTS, existingCost -> {
+            HecpIndirectCosts updated = new HecpIndirectCosts(existingCost.getId(), rateType, rate, existingCost.getTargetId());
             financeRowCostsService.update(existingCost.getId(), updated);
         });
     }

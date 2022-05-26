@@ -46,6 +46,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                 case OVERHEADS:
                     messages.addAll(saveOverheads(form.getOverhead(), finance).get());
                     break;
+                case HECP_INDIRECT_COSTS:
+                    messages.addAll(saveHecpIndirectCosts(form.getHecpIndirectCosts(), finance).get());
+                    break;
                 case CAPITAL_USAGE:
                     messages.addAll(saveRows(form.getCapitalUsageRows(), finance).get());
                     break;
@@ -128,6 +131,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         }
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.OVERHEADS)) {
             futures.add(saveOverheads(form.getOverhead(), finance));
+        }
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.HECP_INDIRECT_COSTS)) {
+            futures.add(saveHecpIndirectCosts(form.getHecpIndirectCosts(), finance));
         }
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.MATERIALS)) {
             futures.add(saveRows(form.getMaterialRows(), finance));
@@ -284,6 +290,23 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
             }
 
             return getFinanceRowService().update(overheadCost).getSuccess();
+        });
+    }
+
+    private CompletableFuture<ValidationMessages> saveHecpIndirectCosts(HecpIndirectCostsForm hecpIndirectCosts, BaseFinanceResource finance) {
+        return async(() -> {
+            HecpIndirectCostsCostCategory hecpIndirectCostsCostCategory = (HecpIndirectCostsCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.HECP_INDIRECT_COSTS);
+            HecpIndirectCosts hecpIndirectCost = (HecpIndirectCosts) hecpIndirectCostsCostCategory.getCosts().stream().findFirst().get();
+
+            hecpIndirectCost.setRateType(hecpIndirectCosts.getRateType());
+
+            if (hecpIndirectCosts.getRateType().equals(OverheadRateType.TOTAL)) {
+                hecpIndirectCost.setRate(ofNullable(hecpIndirectCosts.getTotalSpreadsheet()).orElse(0));
+            } else {
+                hecpIndirectCost.setRate(hecpIndirectCosts.getRateType().getRate());
+            }
+
+            return getFinanceRowService().update(hecpIndirectCost).getSuccess();
         });
     }
 

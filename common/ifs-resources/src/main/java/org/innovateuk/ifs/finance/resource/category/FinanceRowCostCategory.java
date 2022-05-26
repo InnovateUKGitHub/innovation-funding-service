@@ -17,6 +17,7 @@ import java.util.List;
         @JsonSubTypes.Type(value=LabourCostCategory.class, name="labourCostCategory"),
         @JsonSubTypes.Type(value=OtherFundingCostCategory.class, name="otherFundingCostCategory"),
         @JsonSubTypes.Type(value=OverheadCostCategory.class, name="overheadCostCategory"),
+        @JsonSubTypes.Type(value=HecpIndirectCostsCostCategory.class, name="hecpIndirectCostsCostCategory"),
         @JsonSubTypes.Type(value=ExcludedCostCategory.class, name="excludedCostCategory"),
         @JsonSubTypes.Type(value=AdditionalCompanyCostCategory.class, name="additionalCompanyCostCategory"),
         @JsonSubTypes.Type(value=VatCostCategory.class, name="vatCategory"),

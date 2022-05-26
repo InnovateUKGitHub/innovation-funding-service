@@ -355,15 +355,15 @@
                             th:each="(organisation : ${model.industrialFinanceTable.organisations})"
                             th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">
                             &pound;<th:block th:with="category = ${model.isProcurement() ?
-                            organisationFinance.getFinanceOrganisationDetails(model.getProcurementOverheadsFinanceRowType()) :
-                            organisationFinance.getFinanceOrganisationDetails(model.getOverheadsFinanceRowType())}"
+                            organisationFinance.getFinanceOrganisationDetails(model.getHecpIndirectCostsFinanceRowType()) :
+                            organisationFinance.getFinanceOrganisationDetails(model.getHecpIndirectCostsFinanceRowType())}"
                                              th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">£0</th:block>
                         </td>
                         <td style="text-align:right;"
                             th:if="${model.industrialFinanceTable.showTotalsColumn}"
                             th:with="total=${model.isProcurement() ?
                             model.industrialFinanceTable.getTotalForType(model.getProcurementOverheadsFinanceRowType()) :
-                            model.industrialFinanceTable.getTotalForType(model.getOverheadsFinanceRowType())}">
+                            model.industrialFinanceTable.getTotalForType(model.getHecpIndirectCostsFinanceRowType())}">
                             &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
                         </td>
                     </tr>

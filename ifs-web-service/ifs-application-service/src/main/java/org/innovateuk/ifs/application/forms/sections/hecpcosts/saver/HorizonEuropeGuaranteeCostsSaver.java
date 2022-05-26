@@ -4,8 +4,8 @@ import org.innovateuk.ifs.application.forms.hecpcosts.form.HorizonEuropeGuarante
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.DefaultCostCategory;
+import org.innovateuk.ifs.finance.resource.category.HecpIndirectCostsCostCategory;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
-import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
@@ -30,7 +30,7 @@ public class HorizonEuropeGuaranteeCostsSaver {
         ApplicationFinanceResource applicationFinance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
 
         saveLabour(form, applicationFinance);
-        saveOverhead(form, applicationFinance);
+        saveHecpIndirectCosts(form, applicationFinance);
         saveEquipment(form, applicationFinance);
         saveOtherGoods(form, applicationFinance);
         saveSubcontracting(form, applicationFinance);
@@ -59,16 +59,16 @@ public class HorizonEuropeGuaranteeCostsSaver {
         }
     }
 
-    private void saveOverhead(HorizonEuropeGuaranteeCostsForm form, ApplicationFinanceResource applicationFinance) {
-        OverheadCostCategory category = (OverheadCostCategory) applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.OVERHEADS);
-        Overhead cost = category.getCosts().stream().findAny().map(Overhead.class::cast).get();
+    private void saveHecpIndirectCosts(HorizonEuropeGuaranteeCostsForm form, ApplicationFinanceResource applicationFinance) {
+        HecpIndirectCostsCostCategory category = (HecpIndirectCostsCostCategory) applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.HECP_INDIRECT_COSTS);
+        HecpIndirectCosts cost = category.getCosts().stream().findAny().map(HecpIndirectCosts.class::cast).get();
 
-        if (nullOrZero(form.getOverhead())) {
+        if (nullOrZero(form.getHecpIndirectCosts())) {
             cost.setRateType(OverheadRateType.NONE);
             cost.setRate(0);
         } else {
             cost.setRateType(OverheadRateType.HORIZON_EUROPE_GUARANTEE_TOTAL);
-            cost.setRate(form.getOverhead().intValue());
+            cost.setRate(form.getHecpIndirectCosts().intValue());
         }
         financeRowRestService.update(cost);
     }

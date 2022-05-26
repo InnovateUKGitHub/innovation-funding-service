@@ -160,6 +160,9 @@ public class ProjectFinanceChangesViewModelPopulator {
         if (FundingType.GRANT == competition.getFundingType() && FinanceRowType.OVERHEADS == rowType) {
             return "Overhead costs";
         }
+        if (FundingType.HECP == competition.getFundingType() && FinanceRowType.SUBCONTRACTING_COSTS == rowType) {
+            return "Subcontracting costs";
+        }
         if (FinanceRowType.PROCUREMENT_OVERHEADS == rowType) {
             return "Overhead costs";
         }

@@ -172,6 +172,8 @@
                     class="govuk-table__header govuk-table__header--numeric">Labour (&pound;)</th>
                 <th scope="col" th:if="${financeTotalPerType.containsKey(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS)}"
                     class="govuk-table__header govuk-table__header--numeric">Overhead costs (&pound;)</th>
+                <th scope="col" th:if="${financeTotalPerType.containsKey(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).HECP_INDIRECT_COSTS)}"
+                    class="govuk-table__header govuk-table__header--numeric">Indirect costs (&pound;)</th>
                 <th scope="col" th:if="${financeTotalPerType.containsKey(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PROCUREMENT_OVERHEADS)}"
                     class="govuk-table__header govuk-table__header--numeric">Overhead costs (&pound;)</th>
                 <th scope="col" th:if="${financeTotalPerType.containsKey(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).MATERIALS)}"
@@ -214,6 +216,10 @@
                     </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric" th:if="${organisationFinance.financeOrganisationDetails.containsKey(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS)}"
                         th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS)}"
+                        th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:if="${organisationFinance.financeOrganisationDetails.containsKey(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).HECP_INDIRECT_COSTS)}"
+                        th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).HECP_INDIRECT_COSTS)}"
                         th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">
                     </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric" th:if="${organisationFinance.financeOrganisationDetails.containsKey(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PROCUREMENT_OVERHEADS)}"
@@ -275,6 +281,10 @@
                 </td>
                 <td class="govuk-table__cell govuk-table__cell--numeric" th:if="${financeTotalPerType.containsKey(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS)}"
                     th:with="financeTotal = ${financeTotalPerType.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS)}"
+                    th:text="${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}">
+                </td>
+                <td class="govuk-table__cell govuk-table__cell--numeric" th:if="${financeTotalPerType.containsKey(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).HECP_INDIRECT_COSTS)}"
+                    th:with="financeTotal = ${financeTotalPerType.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).HECP_INDIRECT_COSTS)}"
                     th:text="${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}">
                 </td>
                 <td class="govuk-table__cell govuk-table__cell--numeric" th:if="${financeTotalPerType.containsKey(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PROCUREMENT_OVERHEADS)}"

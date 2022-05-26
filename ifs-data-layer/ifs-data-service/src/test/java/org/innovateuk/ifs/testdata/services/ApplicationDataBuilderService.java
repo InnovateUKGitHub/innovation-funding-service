@@ -574,6 +574,18 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                     default:
                         throw new RuntimeException("Unknown rate type " + financeRow.metadata.get(0).toLowerCase());
                 }
+            case "Hecp indirect costs":
+                switch (financeRow.metadata.get(0).toLowerCase()) {
+                    case "total":
+                        return builder.withHecpAdministrationSupportCostsTotalRate(
+                                Integer.valueOf(financeRow.metadata.get(1)));
+                    case "default":
+                        return builder.withHecpAdministrationSupportCostsDefaultRate();
+                    case "none":
+                        return builder.withHecpAdministrationSupportCostsNone();
+                    default:
+                        throw new RuntimeException("Unknown rate type " + financeRow.metadata.get(0).toLowerCase());
+                }
             case "Materials":
                 return builder.withMaterials(
                         financeRow.metadata.get(0),
@@ -713,6 +725,9 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         break;
                     case OVERHEADS:
                         builder[0] = builder[0].withAdministrationSupportCostsNone();
+                        break;
+                    case HECP_INDIRECT_COSTS:
+                        builder[0] = builder[0].withHecpAdministrationSupportCostsNone();
                         break;
                     case PROCUREMENT_OVERHEADS:
                         builder[0] = builder[0].withProcurementOverheads("procurement overhead" , 1000, 2000);
