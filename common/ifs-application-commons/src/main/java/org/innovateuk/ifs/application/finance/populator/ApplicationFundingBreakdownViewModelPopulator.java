@@ -118,9 +118,6 @@ public class ApplicationFundingBreakdownViewModelPopulator {
         if (competition.isKtp()) {
             financeRowTypes = competition.getFinanceRowTypesByFinance(finance);
         }
-//        if(competition.isHorizonEuropeGuarantee()) {
-//            financeRowTypes = FinanceRowType.getHecpSpecificFinanceRowTypes();
-//        }
 
         return financeRowTypes.stream().filter(FinanceRowType::isCost).collect(toList());
     }

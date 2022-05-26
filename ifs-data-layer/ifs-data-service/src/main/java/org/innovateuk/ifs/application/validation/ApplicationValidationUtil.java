@@ -113,18 +113,17 @@ public class ApplicationValidationUtil {
         if (SectionType.PROJECT_COST_FINANCES == section.getType()) {
             boolean isHecpCompetition = application.getCompetition().isHorizonEuropeGuarantee();
             if (isHecpCompetition) {
-                ImmutableSet.of(LABOUR, OVERHEADS, EQUIPMENT, CAPITAL_USAGE, SUBCONTRACTING_COSTS, TRAVEL, OTHER_COSTS)
+                ImmutableSet.of(LABOUR, OVERHEADS, EQUIPMENT, OTHER_GOODS, SUBCONTRACTING_COSTS, TRAVEL, OTHER_COSTS)
                         .stream()
                         .filter(competitionFinanceTypes::contains)
                         .forEach(type -> validationMessages.addAll(applicationValidatorService.validateCostItem(application.getId(), type, markedAsCompleteById)));
-                validationMessages.addAll(applicationValidatorService.validateAcademicUpload(application, markedAsCompleteById));
             } else {
                 ImmutableSet.of(LABOUR, OVERHEADS, MATERIALS, CAPITAL_USAGE, SUBCONTRACTING_COSTS, TRAVEL, OTHER_COSTS)
                         .stream()
                         .filter(competitionFinanceTypes::contains)
                         .forEach(type -> validationMessages.addAll(applicationValidatorService.validateCostItem(application.getId(), type, markedAsCompleteById)));
-                validationMessages.addAll(applicationValidatorService.validateAcademicUpload(application, markedAsCompleteById));
             }
+            validationMessages.addAll(applicationValidatorService.validateAcademicUpload(application, markedAsCompleteById));
         } else if (SectionType.FUNDING_FINANCES == section.getType()) {
             ImmutableSet.of(FINANCE, OTHER_FUNDING)
                     .stream()

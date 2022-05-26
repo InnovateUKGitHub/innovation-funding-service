@@ -12,7 +12,7 @@ public class HorizonEuropeGuaranteeCostsForm {
     private BigInteger labour;
     private BigInteger overhead;
     private BigInteger equipment;
-    private BigInteger capital;
+    private BigInteger otherGoods;
     private BigInteger subcontracting;
     private BigInteger travel;
     private BigInteger other;
@@ -41,12 +41,12 @@ public class HorizonEuropeGuaranteeCostsForm {
         this.equipment = equipment;
     }
 
-    public BigInteger getCapital() {
-        return capital;
+    public BigInteger getOtherGoods() {
+        return otherGoods;
     }
 
-    public void setCapital(BigInteger capital) {
-        this.capital = capital;
+    public void setOtherGoods(BigInteger otherGoods) {
+        this.otherGoods = otherGoods;
     }
 
     public BigInteger getSubcontracting() {
@@ -78,7 +78,7 @@ public class HorizonEuropeGuaranteeCostsForm {
         return labour
                 .add(overhead)
                 .add(equipment)
-                .add(capital)
+                .add(otherGoods)
                 .add(subcontracting)
                 .add(travel)
                 .add(other);

@@ -64,6 +64,9 @@ public class YourProjectCostsFormValidator {
             case CAPITAL_USAGE:
                 validateRows(form.getCapitalUsageRows(), "capitalUsageRows[%s].", validationHandler);
                 break;
+            case OTHER_GOODS:
+                validateRows(form.getOtherGoodsRows(), "otherGoodsRows[%s].", validationHandler);
+                break;
             case MATERIALS:
                 validateRows(form.getMaterialRows(), "materialRows[%s].", validationHandler);
                 break;

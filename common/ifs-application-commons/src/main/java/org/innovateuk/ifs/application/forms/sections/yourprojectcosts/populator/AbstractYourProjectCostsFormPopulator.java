@@ -42,6 +42,8 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         form.setLabour(labour(finance, form));
         form.setCapitalUsageRows(toRows(finance, FinanceRowType.CAPITAL_USAGE,
                 CapitalUsageRowForm.class, CapitalUsage.class));
+        form.setOtherGoodsRows(toRows(finance, FinanceRowType.OTHER_GOODS,
+                OtherGoodsRowForm.class, OtherGoods.class));
         form.setMaterialRows(toRows(finance, FinanceRowType.MATERIALS,
                 MaterialRowForm.class, Materials.class));
         form.setEquipmentRows(toRows(finance, FinanceRowType.EQUIPMENT,

@@ -49,6 +49,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                 case CAPITAL_USAGE:
                     messages.addAll(saveRows(form.getCapitalUsageRows(), finance).get());
                     break;
+                case OTHER_GOODS:
+                    messages.addAll(saveRows(form.getOtherGoodsRows(), finance).get());
+                    break;
                 case MATERIALS:
                     messages.addAll(saveRows(form.getMaterialRows(), finance).get());
                     break;
@@ -134,6 +137,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         }
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.CAPITAL_USAGE)) {
             futures.add(saveRows(form.getCapitalUsageRows(), finance));
+        }
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.OTHER_GOODS)) {
+            futures.add(saveRows(form.getOtherGoodsRows(), finance));
         }
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.SUBCONTRACTING_COSTS)) {
             futures.add(saveRows(form.getSubcontractingRows(), finance));
@@ -413,6 +419,7 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         form.getMaterialRows().remove(id);
         form.getEquipmentRows().remove(id);
         form.getCapitalUsageRows().remove(id);
+        form.getOtherGoodsRows().remove(id);
         form.getSubcontractingRows().remove(id);
         form.getTravelRows().remove(id);
         form.getOtherRows().remove(id);
@@ -442,6 +449,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                 break;
             case CAPITAL_USAGE:
                 map = form.getCapitalUsageRows();
+                break;
+            case OTHER_GOODS:
+                map = form.getOtherGoodsRows();
                 break;
             case MATERIALS:
                 map = form.getMaterialRows();
@@ -490,6 +500,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                 break;
             case CAPITAL_USAGE:
                 clazz = CapitalUsageRowForm.class;
+                break;
+            case OTHER_GOODS:
+                clazz = OtherGoodsRowForm.class;
                 break;
             case MATERIALS:
                 clazz = MaterialRowForm.class;

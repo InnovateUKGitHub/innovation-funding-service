@@ -32,6 +32,8 @@ public class YourProjectCostsForm {
 
     private Map<String, CapitalUsageRowForm> capitalUsageRows = new LinkedHashMap<>();
 
+    private Map<String, OtherGoodsRowForm> otherGoodsRows = new LinkedHashMap<>();
+
     private Map<String, SubcontractingRowForm> subcontractingRows = new LinkedHashMap<>();
 
     private Map<String, TravelRowForm> travelRows = new LinkedHashMap<>();
@@ -114,6 +116,14 @@ public class YourProjectCostsForm {
 
     public void setCapitalUsageRows(Map<String, CapitalUsageRowForm> capitalUsageRows) {
         this.capitalUsageRows = capitalUsageRows;
+    }
+
+    public Map<String, OtherGoodsRowForm> getOtherGoodsRows() {
+        return otherGoodsRows;
+    }
+
+    public void setOtherGoodsRows(Map<String, OtherGoodsRowForm> otherGoodsRows) {
+        this.otherGoodsRows = otherGoodsRows;
     }
 
     public Map<String, SubcontractingRowForm> getSubcontractingRows() {
@@ -307,6 +317,10 @@ public class YourProjectCostsForm {
         return calculateTotal(capitalUsageRows);
     }
 
+    public BigDecimal getTotalOtherGoodsCosts() {
+        return calculateTotal(otherGoodsRows);
+    }
+
     public BigDecimal getTotalSubcontractingCosts() {
         return calculateTotal(subcontractingRows);
     }
@@ -379,6 +393,7 @@ public class YourProjectCostsForm {
                 .add(getTotalEquipmentCosts())
                 .add(getTotalProcurementOverheadCosts())
                 .add(getTotalCapitalUsageCosts())
+                .add(getTotalOtherGoodsCosts())
                 .add(getTotalSubcontractingCosts())
                 .add(getTotalTravelCosts())
                 .add(getTotalOtherCosts())
@@ -429,6 +444,7 @@ public class YourProjectCostsForm {
         recalculateTotal(getMaterialRows());
         recalculateTotal(getEquipmentRows());
         recalculateTotal(getCapitalUsageRows());
+        recalculateTotal(getOtherGoodsRows());
         recalculateTotal(getSubcontractingRows());
         recalculateTotal(getTravelRows());
         recalculateTotal(getOtherRows());

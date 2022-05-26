@@ -40,6 +40,7 @@ import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost
 import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
 import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
 import static org.innovateuk.ifs.finance.builder.OtherCostBuilder.newOtherCost;
+import static org.innovateuk.ifs.finance.builder.OtherGoodsBuilder.newOtherGoods;
 import static org.innovateuk.ifs.finance.builder.OverheadBuilder.newOverhead;
 import static org.innovateuk.ifs.finance.builder.OverheadCostCategoryBuilder.newOverheadCostCategory;
 import static org.innovateuk.ifs.finance.builder.ProcurementOverheadBuilder.newProcurementOverhead;
@@ -146,6 +147,16 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                                 withUtilisation(80, 70).
                                 withExisting("New", "Existing").
                                 build(2)).
+                        build(),
+                FinanceRowType.OTHER_GOODS, newDefaultCostCategory().withCosts(
+                                newOtherGoods().
+                                        withId(1L, 2L).
+                                        withNpv(new BigDecimal("30"), new BigDecimal("70")).
+                                        withResidualValue(new BigDecimal("10"), new BigDecimal("35")).
+                                        withDeprecation(12, 20).
+                                        withUtilisation(80, 70).
+                                        withExisting("New", "Existing").
+                                        build(2)).
                         build(),
                 FinanceRowType.SUBCONTRACTING_COSTS, newDefaultCostCategory().withCosts(
                         newSubContractingCost().
@@ -307,13 +318,13 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                                 withCostType(FinanceRowType.MATERIALS).
                                 build(1)).
                         build(),
-//                FinanceRowType.EQUIPMENT, newDefaultCostCategory().withCosts(
-//                                newAcademicCost().
-//                                        withName("incurred_other_costs").
-//                                        withCost(new BigDecimal("100")).
-//                                        withCostType(FinanceRowType.EQUIPMENT).
-//                                        build(1)).
-//                        build(),
+                FinanceRowType.EQUIPMENT, newDefaultCostCategory().withCosts(
+                                newAcademicCost().
+                                        withName("incurred_other_costs").
+                                        withCost(new BigDecimal("100")).
+                                        withCostType(FinanceRowType.EQUIPMENT).
+                                        build(1)).
+                        build(),
                 FinanceRowType.TRAVEL, newDefaultCostCategory().withCosts(
                         newAcademicCost().
                                 withName("incurred_travel_subsistence").

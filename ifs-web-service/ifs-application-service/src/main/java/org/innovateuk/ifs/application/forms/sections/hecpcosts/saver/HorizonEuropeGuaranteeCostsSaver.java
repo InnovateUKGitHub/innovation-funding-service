@@ -32,7 +32,7 @@ public class HorizonEuropeGuaranteeCostsSaver {
         saveLabour(form, applicationFinance);
         saveOverhead(form, applicationFinance);
         saveEquipment(form, applicationFinance);
-        saveCapital(form, applicationFinance);
+        saveOtherGoods(form, applicationFinance);
         saveSubcontracting(form, applicationFinance);
         saveTravel(form, applicationFinance);
         saveOther(form, applicationFinance);
@@ -89,22 +89,22 @@ public class HorizonEuropeGuaranteeCostsSaver {
         }
     }
 
-    private void saveCapital(HorizonEuropeGuaranteeCostsForm form, ApplicationFinanceResource applicationFinance) {
-        DefaultCostCategory category = (DefaultCostCategory) applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.CAPITAL_USAGE);
-        Optional<CapitalUsage> cost = category.getCosts().stream().findAny().map(CapitalUsage.class::cast);
+    private void saveOtherGoods(HorizonEuropeGuaranteeCostsForm form, ApplicationFinanceResource applicationFinance) {
+        DefaultCostCategory category = (DefaultCostCategory) applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.OTHER_GOODS);
+        Optional<OtherGoods> cost = category.getCosts().stream().findAny().map(OtherGoods.class::cast);
 
-        if (nullOrZero(form.getCapital())) {
-            cost.map(CapitalUsage::getId).ifPresent(financeRowRestService::delete);
+        if (nullOrZero(form.getOtherGoods())) {
+            cost.map(OtherGoods::getId).ifPresent(financeRowRestService::delete);
         } else {
-            CapitalUsage capitalUsage = cost.orElseGet(() -> newCost(new CapitalUsage(applicationFinance.getId())));
-            capitalUsage.setUtilisation(100);
+            OtherGoods otherGoods = cost.orElseGet(() -> newCost(new OtherGoods(applicationFinance.getId())));
+            otherGoods.setUtilisation(100);
             //Add one and leave residual value as 1.
-            capitalUsage.setNpv(new BigDecimal(form.getCapital()).add(BigDecimal.ONE));
-            capitalUsage.setResidualValue(BigDecimal.ONE);
-            capitalUsage.setDeprecation(1);
-            capitalUsage.setExisting("New");
-            capitalUsage.setDescription("Total capital usage costs");
-            financeRowRestService.update(capitalUsage);
+            otherGoods.setNpv(new BigDecimal(form.getOtherGoods()).add(BigDecimal.ONE));
+            otherGoods.setResidualValue(BigDecimal.ONE);
+            otherGoods.setDeprecation(1);
+            otherGoods.setExisting("New");
+            otherGoods.setDescription("Total other goods costs");
+            financeRowRestService.update(otherGoods);
         }
     }
 

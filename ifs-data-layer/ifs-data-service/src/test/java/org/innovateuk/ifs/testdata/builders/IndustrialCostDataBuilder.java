@@ -130,6 +130,13 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
                 new CapitalUsage(null, depreciation, description, existing ? "Existing" : "New", presentValue, residualValue, utilisation, finance.getId()));
     }
 
+    public IndustrialCostDataBuilder withOtherGoods(Integer depreciation, String description, boolean existing,
+                                                      BigDecimal presentValue, BigDecimal residualValue,
+                                                      Integer utilisation) {
+        return addCostItem("Other Goods", (finance) ->
+                new OtherGoods(null, depreciation, description, existing ? "Existing" : "New", presentValue, residualValue, utilisation, finance.getId()));
+    }
+
     public IndustrialCostDataBuilder withSubcontractingCost(String name, String country, String role, BigDecimal cost) {
         return addCostItem("Sub-contracting costs", (finance) ->
                 new SubContractingCost(null, cost, country, name, role, finance.getId()));

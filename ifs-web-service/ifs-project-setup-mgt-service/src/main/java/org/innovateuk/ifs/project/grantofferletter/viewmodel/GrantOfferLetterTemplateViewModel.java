@@ -173,6 +173,11 @@ public class GrantOfferLetterTemplateViewModel {
     }
 
     @JsonIgnore
+    public FinanceRowType getOtherGoodsFinanceRowType() {
+        return FinanceRowType.OTHER_GOODS;
+    }
+
+    @JsonIgnore
     public FinanceRowType getSubContractingCostsFinanceRowType() {
         return FinanceRowType.SUBCONTRACTING_COSTS;
     }

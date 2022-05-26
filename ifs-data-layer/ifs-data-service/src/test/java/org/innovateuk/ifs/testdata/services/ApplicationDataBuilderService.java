@@ -592,6 +592,14 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         bd(financeRow.metadata.get(2)),
                         bd(financeRow.metadata.get(3)),
                         Integer.valueOf(financeRow.metadata.get(5)));
+            case "Other goods":
+                return builder.withOtherGoods(
+                        Integer.valueOf(financeRow.metadata.get(4)),
+                        financeRow.metadata.get(0),
+                        Boolean.parseBoolean(financeRow.metadata.get(1)),
+                        bd(financeRow.metadata.get(2)),
+                        bd(financeRow.metadata.get(3)),
+                        Integer.valueOf(financeRow.metadata.get(5)));
             case "Subcontracting":
                 return builder.withSubcontractingCost(
                         financeRow.metadata.get(0),

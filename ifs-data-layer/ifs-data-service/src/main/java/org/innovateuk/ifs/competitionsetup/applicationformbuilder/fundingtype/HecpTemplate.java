@@ -36,7 +36,7 @@ public class HecpTemplate implements FundingTypeTemplate {
                         SUBCONTRACTING_COSTS,
                         TRAVEL,
                         EQUIPMENT,
-                        CAPITAL_USAGE,
+                        OTHER_GOODS,
                         OTHER_COSTS,
                         OVERHEADS,
                         FINANCE,

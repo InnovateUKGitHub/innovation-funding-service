@@ -62,6 +62,8 @@ public class YourProjectCostsAutosaver {
                 return autosaveEquipmentCost(field, value, finance);
             } else if (field.startsWith("capitalUsageRows")) {
                 return autosaveCapitalUsageCost(field, value, finance);
+            } else if (field.startsWith("otherGoods")) {
+                return autosaveOtherGoodsCost(field, value, finance);
             } else if (field.startsWith("subcontractingRows")) {
                 return autosaveSubcontractingCost(field, value, finance);
             } else if (field.startsWith("travelRows")) {
@@ -470,6 +472,36 @@ public class YourProjectCostsAutosaver {
         String id = idFromRowPath(field);
         String rowField = fieldFromRowPath(field);
         CapitalUsage cost = getCost(id, () -> new CapitalUsage(finance.getId()));
+        switch (rowField) {
+            case "item":
+                cost.setDescription(value);
+                break;
+            case "newItem":
+                cost.setExisting(Boolean.parseBoolean(value) ? "New" : "Existing");
+                break;
+            case "deprecation":
+                cost.setDeprecation(Integer.valueOf(value));
+                break;
+            case "netValue":
+                cost.setNpv(new BigDecimal(value));
+                break;
+            case "residualValue":
+                cost.setResidualValue(new BigDecimal(value));
+                break;
+            case "utilisation":
+                cost.setUtilisation(Integer.valueOf(value));
+                break;
+            default:
+                throw new IFSRuntimeException(format("Auto save capital usage field not handled %s", rowField), emptyList());
+        }
+        financeRowRestService.update(cost);
+        return Optional.of(cost.getId());
+    }
+
+    private Optional<Long> autosaveOtherGoodsCost(String field, String value, ApplicationFinanceResource finance) {
+        String id = idFromRowPath(field);
+        String rowField = fieldFromRowPath(field);
+        OtherGoods cost = getCost(id, () -> new OtherGoods(finance.getId()));
         switch (rowField) {
             case "item":
                 cost.setDescription(value);
