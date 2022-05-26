@@ -20,6 +20,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.innovateuk.ifs.IfsProfileConstants.*;
 import static org.innovateuk.ifs.filestorage.cfg.storage.BackingStoreConfigurationProperties.BACKING_STORE_CONFIG_PREFIX;
+import static org.innovateuk.ifs.filestorage.cfg.virusscan.VirusScanConfigurationProperties.VIRUS_SCAN_CONFIG_PREFIX;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class StorageServiceConfigurationTest {
@@ -47,7 +48,9 @@ class StorageServiceConfigurationTest {
     void testClamDefaultScannerLocalStorage() {
         new ApplicationContextRunner()
                 .withSystemProperties(
-                        TestHelper.activeProfilesString(ImmutableList.of(LOCAL_STORAGE))
+                        TestHelper.activeProfilesString(ImmutableList.of(LOCAL_STORAGE)),
+                        VIRUS_SCAN_CONFIG_PREFIX + ".clamAv.host=localhost",
+                        VIRUS_SCAN_CONFIG_PREFIX + ".clamAv.port=3311"
                 )
                 .withConfiguration(
                         UserConfigurations.of(BackingStoreConfiguration.class, VirusScanConfiguration.class)
@@ -68,7 +71,9 @@ class StorageServiceConfigurationTest {
                         TestHelper.activeProfilesString(ImmutableList.of(S3_STORAGE)),
                         BACKING_STORE_CONFIG_PREFIX + ".s3.awsAccessKey=123",
                         BACKING_STORE_CONFIG_PREFIX + ".s3.awsSecretKey=123",
-                        BACKING_STORE_CONFIG_PREFIX + ".s3.awsRegion=eu-west-2"
+                        BACKING_STORE_CONFIG_PREFIX + ".s3.awsRegion=eu-west-2",
+                        VIRUS_SCAN_CONFIG_PREFIX + ".clamAv.host=localhost",
+                        VIRUS_SCAN_CONFIG_PREFIX + ".clamAv.port=3311"
                 )
                 .withConfiguration(
                         UserConfigurations.of(BackingStoreConfiguration.class, VirusScanConfiguration.class)
