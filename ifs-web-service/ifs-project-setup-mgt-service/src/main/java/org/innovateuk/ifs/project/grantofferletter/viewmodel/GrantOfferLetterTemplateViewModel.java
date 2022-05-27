@@ -147,6 +147,12 @@ public class GrantOfferLetterTemplateViewModel {
     public FinanceRowType getLabourFinanceRowType() {
         return FinanceRowType.LABOUR;
     }
+
+    @JsonIgnore
+    public FinanceRowType getPersonnelFinanceRowType() {
+        return FinanceRowType.PERSONNEL;
+    }
+
     @JsonIgnore
     public FinanceRowType getProcurementOverheadsFinanceRowType() {
         return FinanceRowType.PROCUREMENT_OVERHEADS;

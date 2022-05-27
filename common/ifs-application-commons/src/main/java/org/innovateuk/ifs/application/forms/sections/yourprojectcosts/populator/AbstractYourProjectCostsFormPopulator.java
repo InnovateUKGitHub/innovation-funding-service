@@ -41,6 +41,7 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         form.setOverhead(overhead(finance));
         form.setHecpIndirectCosts(hecpIndirectCosts(finance));
         form.setLabour(labour(finance, form));
+        form.setPersonnel(personnel(finance, form));
         form.setCapitalUsageRows(toRows(finance, FinanceRowType.CAPITAL_USAGE,
                 CapitalUsageRowForm.class, CapitalUsage.class));
         form.setOtherGoodsRows(toRows(finance, FinanceRowType.OTHER_GOODS,
@@ -128,6 +129,18 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         return labourForm;
     }
 
+    private PersonnelForm personnel(BaseFinanceResource finance, YourProjectCostsForm form) {
+        PersonnelCostCategory costCategory = (PersonnelCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.PERSONNEL);
+
+        PersonnelForm personnelForm = new PersonnelForm();
+        if (costCategory != null) {
+            costCategory.calculateTotal();
+            personnelForm.setWorkingDaysPerYear(costCategory.getWorkingDaysPerYear());
+            personnelForm.setRows(personnelCosts(costCategory, form.isThirdPartyOfgem()));
+        }
+        return personnelForm;
+    }
+
     private OverheadForm overhead(BaseFinanceResource finance) {
         OverheadCostCategory costCategory = (OverheadCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.OVERHEADS);
         if (costCategory != null) {
@@ -157,6 +170,20 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         if (shouldAddEmptyRow()) {
             LabourRowForm labourRowForm = new LabourRowForm(thirdPartyOfgem);
             rows.put(generateUnsavedRowId(), labourRowForm);
+        }
+
+        return rows;
+    }
+
+    private Map<String, PersonnelRowForm> personnelCosts(PersonnelCostCategory costCategory, boolean thirdPartyOfgem) {
+        Map<String, PersonnelRowForm> rows = costCategory.getCosts().stream()
+                .map(PersonnelCost.class::cast)
+                .map(PersonnelRowForm::new)
+                .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
+
+        if (shouldAddEmptyRow()) {
+            PersonnelRowForm personnelRowForm = new PersonnelRowForm(thirdPartyOfgem);
+            rows.put(generateUnsavedRowId(), personnelRowForm);
         }
 
         return rows;

@@ -20,7 +20,7 @@ public class HorizonEuropeGuaranteeCostsFormPopulator {
 
         HorizonEuropeGuaranteeCostsForm form = new HorizonEuropeGuaranteeCostsForm();
 
-        form.setLabour(applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.LABOUR).getTotal().toBigInteger());
+        form.setPersonnel(applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.PERSONNEL).getTotal().toBigInteger());
         form.setHecpIndirectCosts(applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.HECP_INDIRECT_COSTS).getTotal().toBigInteger());
         form.setEquipment(applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.EQUIPMENT).getTotal().toBigInteger());
         form.setOtherGoods(applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.OTHER_GOODS).getTotal().toBigInteger());

@@ -43,6 +43,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                 case LABOUR:
                     messages.addAll(saveLabourCosts(form.getLabour(), finance, form.isThirdPartyOfgem()).get());
                     break;
+                case PERSONNEL:
+                    messages.addAll(savePersonnelCosts(form.getPersonnel(), finance, form.isThirdPartyOfgem()).get());
+                    break;
                 case OVERHEADS:
                     messages.addAll(saveOverheads(form.getOverhead(), finance).get());
                     break;
@@ -128,6 +131,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
 
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.LABOUR)) {
             futures.add(saveLabourCosts(form.getLabour(), finance, form.isThirdPartyOfgem()));
+        }
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.PERSONNEL)) {
+            futures.add(savePersonnelCosts(form.getPersonnel(), finance, form.isThirdPartyOfgem()));
         }
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.OVERHEADS)) {
             futures.add(saveOverheads(form.getOverhead(), finance));
@@ -272,6 +278,20 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                 messages.addAll(getFinanceRowService().update(labourCostCategory.getWorkingDaysPerYearCostItem()).getSuccess());
            }
             messages.addAll(saveRows(labourForm.getRows(), finance).get());
+            return messages;
+        });
+    }
+
+    private CompletableFuture<ValidationMessages> savePersonnelCosts(PersonnelForm personnelForm, BaseFinanceResource finance, boolean thirdPartyOfgem) {
+        return async(() -> {
+            ValidationMessages messages = new ValidationMessages();
+
+            PersonnelCostCategory personnelCostCategory = (PersonnelCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.PERSONNEL);
+            if (!thirdPartyOfgem) {
+                personnelCostCategory.getWorkingDaysPerYearCostItem().setLabourDays(personnelForm.getWorkingDaysPerYear());
+                messages.addAll(getFinanceRowService().update(personnelCostCategory.getWorkingDaysPerYearCostItem()).getSuccess());
+            }
+            messages.addAll(saveRows(personnelForm.getRows(), finance).get());
             return messages;
         });
     }

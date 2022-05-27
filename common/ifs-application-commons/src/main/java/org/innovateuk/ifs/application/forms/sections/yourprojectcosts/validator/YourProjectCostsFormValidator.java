@@ -55,6 +55,9 @@ public class YourProjectCostsFormValidator {
             case LABOUR:
                 validateLabour(form.getLabour(), validationHandler);
                 break;
+            case PERSONNEL:
+                validatePersonnel(form.getPersonnel(), validationHandler);
+                break;
             case OVERHEADS:
                 validateOverhead(form.getOverhead(), validationHandler);
                 break;
@@ -216,6 +219,11 @@ public class YourProjectCostsFormValidator {
     private void validateLabour(LabourForm labour, ValidationHandler validationHandler) {
         validateForm(labour, validationHandler, "labour.");
         validateRows(labour.getRows(), "labour.rows[%s].", validationHandler);
+    }
+
+    private void validatePersonnel(PersonnelForm personnel, ValidationHandler validationHandler) {
+        validateForm(personnel, validationHandler, "personnel.");
+        validateRows(personnel.getRows(), "personnel.rows[%s].", validationHandler);
     }
 
     private void validateVat(VatForm vatForm, ValidationHandler validationHandler) {

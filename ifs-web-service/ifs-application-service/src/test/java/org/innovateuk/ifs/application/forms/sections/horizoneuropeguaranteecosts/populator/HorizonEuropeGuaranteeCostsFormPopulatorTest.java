@@ -35,7 +35,7 @@ public class HorizonEuropeGuaranteeCostsFormPopulatorTest {
 
         HorizonEuropeGuaranteeCostsForm form = populator.populate(APPLICATION_ID, ORGANISATION_ID);
 
-        assertEquals(form.getLabour(), finance.getFinanceOrganisationDetails().get(FinanceRowType.LABOUR).getTotal().toBigInteger());
+        assertEquals(form.getPersonnel(), finance.getFinanceOrganisationDetails().get(FinanceRowType.PERSONNEL).getTotal().toBigInteger());
         assertEquals(form.getOverhead(), finance.getFinanceOrganisationDetails().get(FinanceRowType.OVERHEADS).getTotal().toBigInteger());
         assertEquals(form.getMaterial(), finance.getFinanceOrganisationDetails().get(FinanceRowType.MATERIALS).getTotal().toBigInteger());
         assertEquals(form.getCapital(), finance.getFinanceOrganisationDetails().get(FinanceRowType.CAPITAL_USAGE).getTotal().toBigInteger());

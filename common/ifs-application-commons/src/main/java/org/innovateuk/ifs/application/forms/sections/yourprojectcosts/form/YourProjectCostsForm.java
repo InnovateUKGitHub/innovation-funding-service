@@ -22,6 +22,8 @@ public class YourProjectCostsForm {
 
     private LabourForm labour = new LabourForm();
 
+    private PersonnelForm personnel = new PersonnelForm();
+
     private OverheadForm overhead = new OverheadForm();
 
     private HecpIndirectCostsForm hecpIndirectCosts = new HecpIndirectCostsForm();
@@ -176,6 +178,14 @@ public class YourProjectCostsForm {
         this.labour = labour;
     }
 
+    public PersonnelForm getPersonnel() {
+        return personnel;
+    }
+
+    public void setPersonnel(PersonnelForm personnel) {
+        this.personnel = personnel;
+    }
+
     public Map<String, AssociateSalaryCostRowForm> getAssociateSalaryCostRows() {
         return associateSalaryCostRows;
     }
@@ -283,6 +293,10 @@ public class YourProjectCostsForm {
 
     public BigDecimal getTotalLabourCosts() {
         return labour == null ? BigDecimal.ZERO : calculateTotal(labour.getRows());
+    }
+
+    public BigDecimal getTotalPersonnelCosts() {
+        return personnel == null ? BigDecimal.ZERO : calculateTotal(personnel.getRows());
     }
 
     public BigDecimal getTotalAssociateSalaryCosts() {

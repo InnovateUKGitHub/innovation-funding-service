@@ -102,7 +102,7 @@ public class ApplicationSummarisationServiceImpl implements ApplicationSummarisa
     }
 
     private boolean totalProjectCostTypes(FinanceRowType t) {
-        return t.equals(FinanceRowType.LABOUR) || t.equals(FinanceRowType.OVERHEADS) || t.equals(FinanceRowType.HECP_INDIRECT_COSTS) ||
+        return t.equals(FinanceRowType.LABOUR) || t.equals(FinanceRowType.PERSONNEL) || t.equals(FinanceRowType.OVERHEADS) || t.equals(FinanceRowType.HECP_INDIRECT_COSTS) ||
                 t.equals(FinanceRowType.MATERIALS) || t.equals(FinanceRowType.EQUIPMENT) || t.equals(FinanceRowType.CAPITAL_USAGE) ||
                 t.equals(FinanceRowType.OTHER_GOODS) || t.equals(FinanceRowType.SUBCONTRACTING_COSTS) || t.equals(FinanceRowType.TRAVEL) ||
                 t.equals(FinanceRowType.OTHER_COSTS);

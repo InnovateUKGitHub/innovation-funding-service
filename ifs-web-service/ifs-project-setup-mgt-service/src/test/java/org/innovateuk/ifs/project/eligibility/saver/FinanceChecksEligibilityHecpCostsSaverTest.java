@@ -91,7 +91,7 @@ public class FinanceChecksEligibilityHecpCostsSaverTest {
         when(projectFinanceRestService.getProjectFinance(PROJECT_ID, ORGANISATION_ID)).thenReturn(restSuccess(finance));
 
         HorizonEuropeGuaranteeCostsForm form = new HorizonEuropeGuaranteeCostsForm();
-        form.setLabour(BigInteger.valueOf(1L));
+        form.setPersonnel(BigInteger.valueOf(1L));
         form.setHecpIndirectCosts(BigInteger.valueOf(2L));
         form.setEquipment(BigInteger.valueOf(3L));
         form.setOtherGoods(BigInteger.valueOf(4L));
@@ -154,7 +154,7 @@ public class FinanceChecksEligibilityHecpCostsSaverTest {
         when(projectFinanceRestService.getProjectFinance(PROJECT_ID, ORGANISATION_ID)).thenReturn(restSuccess(finance));
 
         HorizonEuropeGuaranteeCostsForm form = new HorizonEuropeGuaranteeCostsForm();
-        form.setLabour(BigInteger.valueOf(0L));
+        form.setPersonnel(BigInteger.valueOf(0L));
         form.setHecpIndirectCosts(BigInteger.valueOf(0L));
         form.setEquipment(BigInteger.valueOf(0L));
         form.setOtherGoods(BigInteger.valueOf(0L));

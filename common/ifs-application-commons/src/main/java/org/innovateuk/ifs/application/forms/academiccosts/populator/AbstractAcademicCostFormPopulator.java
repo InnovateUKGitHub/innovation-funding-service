@@ -82,12 +82,16 @@ public abstract class AbstractAcademicCostFormPopulator<F extends BaseFinanceRes
                 return YOUR_FINANCE;
             case "incurred_staff":
                 return LABOUR;
+            case "incurred_staff_hecp":
+                return PERSONNEL;
             case "incurred_travel_subsistence":
                 return TRAVEL;
             case "incurred_other_costs":
                 return MATERIALS;
             case "allocated_investigators":
                 return LABOUR;
+            case "allocated_investigators_hecp":
+                return PERSONNEL;
             case "allocated_estates_costs":
                 return OTHER_COSTS;
             case "allocated_other_costs":
@@ -96,6 +100,8 @@ public abstract class AbstractAcademicCostFormPopulator<F extends BaseFinanceRes
                 return OVERHEADS;
             case "exceptions_staff":
                 return LABOUR;
+            case "exceptions_staff_hecp":
+                return PERSONNEL;
             case "exceptions_other_costs":
                 return OTHER_COSTS;
             default:
