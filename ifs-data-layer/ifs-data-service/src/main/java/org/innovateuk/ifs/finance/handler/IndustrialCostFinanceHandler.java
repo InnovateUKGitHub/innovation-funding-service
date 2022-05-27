@@ -102,6 +102,8 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
         switch (costType) {
             case LABOUR:
                 return new LabourCostCategory();
+            case PERSONNEL:
+                return new PersonnelCostCategory();
             case OTHER_FUNDING:
                 return new OtherFundingCostCategory();
             case OVERHEADS:
