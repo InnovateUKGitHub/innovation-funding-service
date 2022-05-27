@@ -313,6 +313,13 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                                 withCostType(FinanceRowType.LABOUR, FinanceRowType.LABOUR, FinanceRowType.LABOUR).
                                 build(3)).
                         build(),
+                FinanceRowType.PERSONNEL, newDefaultCostCategory().withCosts(
+                        newAcademicCost().
+                                withName("incurred_staff_hecp", "allocated_investigators_hecp", "exceptions_staff_hecp").
+                                withCost(new BigDecimal("100"), new BigDecimal("200"), new BigDecimal("300")).
+                                withCostType(FinanceRowType.PERSONNEL, FinanceRowType.PERSONNEL, FinanceRowType.PERSONNEL).
+                                build(3)).
+                        build(),
                 FinanceRowType.OVERHEADS, newDefaultCostCategory().withCosts(
                         newAcademicCost().
                                 withName("indirect_costs").

@@ -32,7 +32,7 @@ public class HecpTemplate implements FundingTypeTemplate {
     public Competition initialiseFinanceTypes(Competition competition) {
         List<FinanceRowType> types =
                 newArrayList(
-                        LABOUR,
+                        PERSONNEL,
                         SUBCONTRACTING_COSTS,
                         TRAVEL,
                         EQUIPMENT,

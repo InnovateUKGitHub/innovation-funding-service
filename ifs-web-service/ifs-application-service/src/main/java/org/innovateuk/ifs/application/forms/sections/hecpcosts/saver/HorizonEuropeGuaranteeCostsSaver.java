@@ -5,7 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.DefaultCostCategory;
 import org.innovateuk.ifs.finance.resource.category.HecpIndirectCostsCostCategory;
-import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
+import org.innovateuk.ifs.finance.resource.category.PersonnelCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
@@ -29,7 +29,7 @@ public class HorizonEuropeGuaranteeCostsSaver {
     public ServiceResult<Void> save(HorizonEuropeGuaranteeCostsForm form, long applicationId, long organisationId) {
         ApplicationFinanceResource applicationFinance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
 
-        saveLabour(form, applicationFinance);
+        savePersonnel(form, applicationFinance);
         saveHecpIndirectCosts(form, applicationFinance);
         saveEquipment(form, applicationFinance);
         saveOtherGoods(form, applicationFinance);
@@ -40,22 +40,22 @@ public class HorizonEuropeGuaranteeCostsSaver {
         return ServiceResult.serviceSuccess();
     }
 
-    private void saveLabour(HorizonEuropeGuaranteeCostsForm form, ApplicationFinanceResource applicationFinance) {
-        LabourCostCategory category = (LabourCostCategory) applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.LABOUR);
-        Optional<LabourCost> cost = category.getCosts().stream().findAny().map(LabourCost.class::cast);
+    private void savePersonnel(HorizonEuropeGuaranteeCostsForm form, ApplicationFinanceResource applicationFinance) {
+        PersonnelCostCategory category = (PersonnelCostCategory) applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.PERSONNEL);
+        Optional<PersonnelCost> cost = category.getCosts().stream().findAny().map(PersonnelCost.class::cast);
 
-        LabourCost workingDays = category.getWorkingDaysPerYearCostItem();
+        PersonnelCost workingDays = category.getWorkingDaysPerYearCostItem();
         workingDays.setLabourDays(1);
         financeRowRestService.update(workingDays);
 
-        if (nullOrZero(form.getLabour())) {
-            cost.map(LabourCost::getId).ifPresent(financeRowRestService::delete);
+        if (nullOrZero(form.getPersonnel())) {
+            cost.map(PersonnelCost::getId).ifPresent(financeRowRestService::delete);
         } else {
-            LabourCost labour = cost.orElseGet(() -> newCost(new LabourCost(applicationFinance.getId())));
-            labour.setLabourDays(1);
-            labour.setGrossEmployeeCost(new BigDecimal(form.getLabour()));
-            labour.setRole("Total Labour costs");
-            financeRowRestService.update(labour);
+            PersonnelCost personnel = cost.orElseGet(() -> newCost(new PersonnelCost(applicationFinance.getId())));
+            personnel.setLabourDays(1);
+            personnel.setGrossEmployeeCost(new BigDecimal(form.getPersonnel()));
+            personnel.setRole("Total Personnel costs");
+            financeRowRestService.update(personnel);
         }
     }
 

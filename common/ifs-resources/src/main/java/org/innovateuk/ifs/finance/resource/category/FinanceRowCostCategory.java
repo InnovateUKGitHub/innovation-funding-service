@@ -11,10 +11,11 @@ import java.util.List;
  * {@code FinanceRowCostCategory} interface is for defined for retrieving updating and calculating costs
  * of which a cost Category consists.
  */
-@JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="type")
+@JsonTypeInfo(use=JsonTypeInfo.Id.NAME, property="type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value=DefaultCostCategory.class, name="defaultCostCategory"),
         @JsonSubTypes.Type(value=LabourCostCategory.class, name="labourCostCategory"),
+        @JsonSubTypes.Type(value=PersonnelCostCategory.class, name="personnelCostCategory"),
         @JsonSubTypes.Type(value=OtherFundingCostCategory.class, name="otherFundingCostCategory"),
         @JsonSubTypes.Type(value=OverheadCostCategory.class, name="overheadCostCategory"),
         @JsonSubTypes.Type(value=HecpIndirectCostsCostCategory.class, name="hecpIndirectCostsCostCategory"),

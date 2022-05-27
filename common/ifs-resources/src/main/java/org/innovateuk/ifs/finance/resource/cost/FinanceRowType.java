@@ -52,7 +52,8 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
 
     EQUIPMENT("equipment", "Equipment", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
     OTHER_GOODS("other_goods", "Other goods, works and services", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
-    HECP_INDIRECT_COSTS("hecp_indirect_costs", "Indirect costs", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION);
+    HECP_INDIRECT_COSTS("hecp_indirect_costs", "Indirect costs", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
+    PERSONNEL("personnel", "Personnel costs", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION);
 
     enum FinanceRowOptions {
         INCLUDE_IN_SPEND_PROFILE,
@@ -136,7 +137,7 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     }
 
     public static List<FinanceRowType> getHecpSpecificFinanceRowTypes() {
-        return asList(LABOUR, SUBCONTRACTING_COSTS, TRAVEL, EQUIPMENT, OTHER_GOODS, OTHER_COSTS, HECP_INDIRECT_COSTS);
+        return asList(PERSONNEL, SUBCONTRACTING_COSTS, TRAVEL, EQUIPMENT, OTHER_GOODS, OTHER_COSTS, HECP_INDIRECT_COSTS);
     }
 
     public static List<FinanceRowType> getKtpFinanceRowTypes() {
