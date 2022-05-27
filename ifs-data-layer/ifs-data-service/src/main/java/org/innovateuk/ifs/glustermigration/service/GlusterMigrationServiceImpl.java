@@ -34,7 +34,7 @@ import java.util.UUID;
 @Slf4j
 public class GlusterMigrationServiceImpl implements GlusterMigrationService {
 
-    @Value("${ifs.data.service.gluster.file.migration.millis:50}")
+    @Value("${ifs.data.service.gluster.file.migration.batch.size:50}")
     private Integer fileEntryBatch;
 
     @Autowired
@@ -98,6 +98,6 @@ public class GlusterMigrationServiceImpl implements GlusterMigrationService {
     }
 
     private List<FileEntry> getFileEntries() {
-        return fileEntryRepository.findFileEntryByStatusAndFileUUIDIsNUll(PageRequest.of(0, fileEntryBatch));
+        return fileEntryRepository.findFileEntryByStatusAndFileUUIDIsNUll(PageRequest.of(0, fileEntryBatch)).toList();
     }
 }
