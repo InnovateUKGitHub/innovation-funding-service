@@ -98,7 +98,7 @@ public class ApplicationPrintPopulatorTest {
                 .thenReturn(viewModel);
         when(processRoleRestService.findProcessRole(applicationId)).thenReturn(restSuccess(Collections.singletonList(assessor)));
 
-        applicationPrintPopulator.print(applicationId, model, user);
+        applicationPrintPopulator.print(applicationId, model, user, true);
 
         verify(model).addAttribute("model", viewModel);
         verify(applicationReadOnlyViewModelPopulator).populate(eq(applicationId), eq(user), settingsArgumentCaptor.capture());
@@ -147,7 +147,7 @@ public class ApplicationPrintPopulatorTest {
                 .thenReturn(viewModel);
         when(processRoleRestService.findProcessRole(applicationId)).thenReturn(restSuccess(Collections.singletonList(assessorProcessRole)));
 
-        applicationPrintPopulator.print(applicationId, model, stakeholder);
+        applicationPrintPopulator.print(applicationId, model, stakeholder, true);
 
         verify(model).addAttribute("model", viewModel);
         verify(applicationReadOnlyViewModelPopulator).populate(eq(applicationId), eq(stakeholder), settingsArgumentCaptor.capture());
@@ -187,7 +187,7 @@ public class ApplicationPrintPopulatorTest {
                 .thenReturn(viewModel);
         when(processRoleRestService.findProcessRole(applicationId)).thenReturn(restSuccess(Collections.emptyList()));
 
-        applicationPrintPopulator.print(applicationId, model, stakeholder);
+        applicationPrintPopulator.print(applicationId, model, stakeholder, true);
 
         verify(model).addAttribute("model", viewModel);
         verify(applicationReadOnlyViewModelPopulator).populate(eq(applicationId), eq(stakeholder), settingsArgumentCaptor.capture());
@@ -231,7 +231,7 @@ public class ApplicationPrintPopulatorTest {
                 .thenReturn(viewModel);
         when(processRoleRestService.findProcessRole(applicationId)).thenReturn(restSuccess(kta));
 
-        applicationPrintPopulator.print(applicationId, model, user);
+        applicationPrintPopulator.print(applicationId, model, user, true);
 
         verify(model).addAttribute("model", viewModel);
         verify(applicationReadOnlyViewModelPopulator).populate(eq(applicationId), eq(user), settingsArgumentCaptor.capture());
