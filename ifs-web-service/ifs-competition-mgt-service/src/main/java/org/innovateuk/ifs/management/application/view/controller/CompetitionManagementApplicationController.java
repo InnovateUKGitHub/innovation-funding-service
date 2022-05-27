@@ -156,7 +156,7 @@ public class CompetitionManagementApplicationController {
                                              @PathVariable("competitionId") Long competitionId,
                                              UserResource user,
                                              Model model) {
-        return applicationPrintPopulator.print(applicationId, model, user);
+        return applicationPrintPopulator.print(applicationId, model, user, true);
     }
 
     private String doReinstateIneligibleApplicationConfirm(final Model model, final long applicationId) {
