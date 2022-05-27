@@ -7,6 +7,7 @@ import org.innovateuk.ifs.IfsConstants;
 import org.innovateuk.ifs.api.filestorage.util.FileHashing;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownload;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
+import org.innovateuk.ifs.api.filestorage.v1.upload.FileDeletionRequest;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUpload;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadResponse;
@@ -101,7 +102,7 @@ public class FileServiceImpl implements FileService {
     public ServiceResult<Supplier<InputStream>> getFileByFileEntryId(Long fileEntryId) {
         try {
             FileEntry fileEntry = fileServiceTransactionHelper.find(fileEntryId);
-            if (fileEntry.getFileUuid() == null || fileEntry.getFileUuid().isEmpty()) {
+            if (!isS3Storage(fileEntry)) {
                 // no uuid means it must be a gluster file
                 return glusterPath(fileEntry);
             }
@@ -114,6 +115,10 @@ public class FileServiceImpl implements FileService {
         }
     }
 
+    private boolean isS3Storage(FileEntry fileEntry) {
+        return fileEntry.getFileUuid() != null && !fileEntry.getFileUuid().isEmpty();
+    }
+
     // old path via gluster - see gluster package - delete after migration
     private ServiceResult<Supplier<InputStream>> glusterPath(FileEntry fileEntry) {
         return glusterFileService.findFileForGet(fileEntry).
@@ -122,10 +127,14 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public ServiceResult<FileEntry> deleteFileIgnoreNotFound(long fileEntryId) {
+        FileEntry fileEntry = fileServiceTransactionHelper.find(fileEntryId);
+        String fileUuid = fileEntry.getFileUuid();
         fileServiceTransactionHelper.delete(fileEntryId);
-        // TODO Async call to storage service to delete file - not that fussed though we can leave it in there
-        // Why would you return the entity after delete? return new to fit interface
-        return serviceSuccess(new FileEntry());
+        if (isS3Storage(fileEntry)) {
+            fileUploadFeign.deleteFile(new FileDeletionRequest(fileUuid));
+        }
+        // Why would you return the entity after delete? return new to fit existing interface
+        return serviceSuccess(fileEntry);
     }
 
 }

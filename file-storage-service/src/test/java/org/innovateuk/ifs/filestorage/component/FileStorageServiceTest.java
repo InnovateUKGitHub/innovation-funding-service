@@ -3,6 +3,8 @@ package org.innovateuk.ifs.filestorage.component;
 import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.api.filestorage.util.FileUploadRequestBuilder;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
+import org.innovateuk.ifs.api.filestorage.v1.upload.FileDeletionRequest;
+import org.innovateuk.ifs.api.filestorage.v1.upload.FileDeletionResponse;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadResponse;
 import org.innovateuk.ifs.filestorage.exception.NoSuchRecordException;
@@ -92,6 +94,13 @@ class FileStorageServiceTest {
         assertThat(download.getBody().getMd5Checksum(), equalTo(fileUploadRequest.getMd5Checksum()));
         assertThat(download.getBody().getPayload().length, equalTo(Long.valueOf(fileUploadRequest.getFileSizeBytes()).intValue()));
         assertThat(download.getBody().getError(), is(emptyOrNullString()));
+
+        ResponseEntity<FileDeletionResponse> deletion = fileUpload.deleteFile(new FileDeletionRequest(fileUploadRequest.getFileId()));
+        assertThat(deletion.getStatusCode(), equalTo(HttpStatus.OK));
+
+        ResponseStatusException noSuchRecordException = assertThrows(ResponseStatusException.class,
+                () -> fileDownloadFeign.fileDownloadResponse(fileUploadRequest.getFileId()));
+        assertThat(noSuchRecordException.getStatus(), equalTo(HttpStatus.NOT_FOUND));
     }
 
     @Test

@@ -2,9 +2,7 @@ package org.innovateuk.ifs.filestorage.web;
 
 import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.api.filestorage.util.FileHashing;
-import org.innovateuk.ifs.api.filestorage.v1.upload.FileUpload;
-import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
-import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadResponse;
+import org.innovateuk.ifs.api.filestorage.v1.upload.*;
 import org.innovateuk.ifs.filestorage.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -38,6 +36,11 @@ public class StorageUploadController implements FileUpload {
                 .payload(payload)
                 .build();
         return fileUpload(fileUploadRequest);
+    }
+
+    @Override
+    public ResponseEntity<FileDeletionResponse> deleteFile(FileDeletionRequest fileDeletionRequest) {
+        return ResponseEntity.ok(storageService.deleteFile(fileDeletionRequest));
     }
 
 }

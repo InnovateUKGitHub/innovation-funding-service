@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
 import lombok.extern.slf4j.Slf4j;
+import org.innovateuk.ifs.api.filestorage.v1.upload.FileDeletionRequest;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.filestorage.cfg.storage.BackingStoreConfigurationProperties;
 import org.innovateuk.ifs.filestorage.exception.ServiceException;
@@ -55,9 +56,22 @@ public class S3StorageProvider implements ReadableStorageProvider, WritableStora
                     ByteSource.wrap(fileUploadRequest.getPayload()).openStream(),
                     objectMetadata
             );
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new ServiceException(e);
         }
         return amazonS3.getUrl(backingConfig.getS3().getFileStoreS3Bucket(), fileUploadRequest.getFileId()).toString();
+    }
+
+    @Override
+    public String deleteFile(FileDeletionRequest fileDeletionRequest) {
+        try {
+            amazonS3.deleteObject(
+                    backingConfig.getS3().getFileStoreS3Bucket(),
+                    fileDeletionRequest.getFileId()
+            );
+            return fileDeletionRequest.getFileId();
+        } catch (Exception e) {
+            throw new ServiceException(e);
+        }
     }
 }

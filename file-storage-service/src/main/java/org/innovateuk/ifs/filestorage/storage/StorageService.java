@@ -2,6 +2,8 @@ package org.innovateuk.ifs.filestorage.storage;
 
 import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
+import org.innovateuk.ifs.api.filestorage.v1.upload.FileDeletionRequest;
+import org.innovateuk.ifs.api.filestorage.v1.upload.FileDeletionResponse;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadResponse;
 import org.innovateuk.ifs.filestorage.cfg.StorageServiceConfigurationProperties;
@@ -106,4 +108,7 @@ public class StorageService {
         throw new NoSuchRecordException(uuid);
     }
 
+    public FileDeletionResponse deleteFile(FileDeletionRequest fileDeletionRequest) {
+        return new FileDeletionResponse(writableStorageProvider.deleteFile(fileDeletionRequest));
+    }
 }
