@@ -51,4 +51,17 @@ public class FinanceRowTypeTest {
 
         financeRowTypes.forEach(financeRowType -> assertTrue(financeRowType.isIncludedInSpendProfile()));
     }
+
+    @Test
+    public void getHecpSpecificFinanceRowTypes() {
+        List<FinanceRowType> financeRowTypes = FinanceRowType.getHecpSpecificFinanceRowTypes();
+        assertNotNull(financeRowTypes);
+        assertEquals(Arrays.asList(FinanceRowType.LABOUR,
+                FinanceRowType.SUBCONTRACTING_COSTS,
+                FinanceRowType.TRAVEL,
+                FinanceRowType.EQUIPMENT,
+                FinanceRowType.OTHER_GOODS,
+                FinanceRowType.OTHER_COSTS,
+                FinanceRowType.HECP_INDIRECT_COSTS), financeRowTypes);
+    }
 }

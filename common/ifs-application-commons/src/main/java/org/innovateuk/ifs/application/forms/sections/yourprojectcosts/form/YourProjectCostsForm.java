@@ -310,22 +310,22 @@ public class YourProjectCostsForm {
         }
         return BigDecimal.ZERO;
     }
-//
-//    public BigDecimal getTotalHecpIndirectCosts() {
-//        if (hecpIndirectCosts != null && hecpIndirectCosts.getRateType() != null) {
-//            switch (hecpIndirectCosts.getRateType()) {
-//                case NONE:
-//                    return BigDecimal.ZERO;
-//                case DEFAULT_PERCENTAGE:
-//                    return getTotalLabourCosts().multiply(new BigDecimal("0.2"));
-//                case TOTAL:
-//                    return Optional.ofNullable(getHecpIndirectCosts().getTotalSpreadsheet()).map(BigDecimal::valueOf).orElse(BigDecimal.ZERO);
-//                default:
-//                    return BigDecimal.ZERO;
-//            }
-//        }
-//        return BigDecimal.ZERO;
-//    }
+
+    public BigDecimal getTotalHecpIndirectCosts() {
+        if (hecpIndirectCosts != null && hecpIndirectCosts.getRateType() != null) {
+            switch (hecpIndirectCosts.getRateType()) {
+                case NONE:
+                    return BigDecimal.ZERO;
+                case DEFAULT_PERCENTAGE:
+                    return getTotalLabourCosts().multiply(new BigDecimal("0.2"));
+                case HORIZON_EUROPE_GUARANTEE_TOTAL:
+                    return Optional.ofNullable(getHecpIndirectCosts().getTotalSpreadsheet()).map(BigDecimal::valueOf).orElse(BigDecimal.ZERO);
+                default:
+                    return BigDecimal.ZERO;
+            }
+        }
+        return BigDecimal.ZERO;
+    }
 
     public BigDecimal getTotalMaterialCosts() {
         return calculateTotal(materialRows);
@@ -415,6 +415,7 @@ public class YourProjectCostsForm {
     public BigDecimal getOrganisationFinanceTotal() {
         BigDecimal total = getTotalLabourCosts()
                 .add(getTotalOverheadCosts())
+                .add(getTotalHecpIndirectCosts())
                 .add(getTotalMaterialCosts())
                 .add(getTotalEquipmentCosts())
                 .add(getTotalProcurementOverheadCosts())

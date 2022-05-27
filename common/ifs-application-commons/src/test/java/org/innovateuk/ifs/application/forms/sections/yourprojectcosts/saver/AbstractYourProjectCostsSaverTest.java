@@ -27,6 +27,8 @@ import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.for
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.builder.AssociateSalaryCostBuilder.newAssociateSalaryCost;
+import static org.innovateuk.ifs.finance.resource.cost.OverheadRateType.HORIZON_EUROPE_GUARANTEE_TOTAL;
+import static org.innovateuk.ifs.finance.resource.cost.OverheadRateType.TOTAL;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
@@ -123,9 +125,14 @@ public class AbstractYourProjectCostsSaverTest {
         form.setLabour(labourForm);
 
         OverheadForm overheadForm = new OverheadForm();
-        overheadForm.setRateType(OverheadRateType.TOTAL);
+        overheadForm.setRateType(TOTAL);
         overheadForm.setTotalSpreadsheet(100);
         form.setOverhead(overheadForm);
+
+        HecpIndirectCostsForm hecpIndirectCostsForm = new HecpIndirectCostsForm();
+        hecpIndirectCostsForm.setRateType(HORIZON_EUROPE_GUARANTEE_TOTAL);
+        hecpIndirectCostsForm.setTotalSpreadsheet(150);
+        form.setHecpIndirectCosts(hecpIndirectCostsForm);
 
         MaterialRowForm materialRow = new MaterialRowForm();
         materialRow.setCost(new BigDecimal(123));
@@ -175,7 +182,7 @@ public class AbstractYourProjectCostsSaverTest {
         verify(financeRowRestService).update(workingDaysCost);
 
         Overhead overhead = (Overhead) APPLICATION_FINANCE_RESOURCE.getFinanceOrganisationDetails().get(FinanceRowType.OVERHEADS).getCosts().get(0);
-        assertEquals(overhead.getRateType(), OverheadRateType.TOTAL);
+        assertEquals(overhead.getRateType(), TOTAL);
         assertEquals(overhead.getRate(), (Integer) 100);
         verify(financeRowRestService).update(overhead);
 
@@ -197,6 +204,11 @@ public class AbstractYourProjectCostsSaverTest {
         verify(financeRowRestService, times(2)).update(isA(AssociateSalaryCost.class));
         verify(financeRowRestService, times(1)).update(isA(IndirectCost.class));
         verify(financeRowRestService, times(6)).update(mockResponse);
+
+        HecpIndirectCosts hecpIndirectCosts = (HecpIndirectCosts) APPLICATION_FINANCE_RESOURCE.getFinanceOrganisationDetails().get(FinanceRowType.HECP_INDIRECT_COSTS).getCosts().get(0);
+        assertEquals(hecpIndirectCosts.getRateType(), HORIZON_EUROPE_GUARANTEE_TOTAL);
+        assertNull(hecpIndirectCosts.getRate());
+        verify(financeRowRestService).update(hecpIndirectCosts);
 
         verifyNoMoreInteractions(financeRowRestService);
     }

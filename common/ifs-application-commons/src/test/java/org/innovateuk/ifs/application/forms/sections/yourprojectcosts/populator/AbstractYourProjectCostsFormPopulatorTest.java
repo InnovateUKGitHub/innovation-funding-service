@@ -88,11 +88,14 @@ public class AbstractYourProjectCostsFormPopulatorTest {
 
         assertEquals((Long) 1L, form.getOverhead().getCostId());
         assertEquals(OverheadRateType.TOTAL, form.getOverhead().getRateType());
+        assertEquals(OverheadRateType.HORIZON_EUROPE_GUARANTEE_TOTAL, form.getHecpIndirectCosts().getRateType());
         assertEquals("filename", form.getOverhead().getFilename());
         assertEquals((Integer) 1000, form.getOverhead().getTotalSpreadsheet());
 
         assertEquals(3, form.getMaterialRows().size());
+        assertEquals(3, form.getEquipmentRows().size());
         assertEquals(3, form.getCapitalUsageRows().size());
+        assertEquals(3, form.getOtherGoodsRows().size());
         assertEquals(3, form.getSubcontractingRows().size());
         assertEquals(3, form.getTravelRows().size());
         assertEquals(3, form.getOtherRows().size());

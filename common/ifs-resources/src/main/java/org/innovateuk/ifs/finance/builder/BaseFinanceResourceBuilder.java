@@ -129,7 +129,7 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                 FinanceRowType.HECP_INDIRECT_COSTS, newHecpIndirectCostsCostCategory().withCosts(
                                 newHecpIndirectCosts().
                                         withId(1L).
-                                        withRateType(OverheadRateType.TOTAL).
+                                        withRateType(OverheadRateType.HORIZON_EUROPE_GUARANTEE_TOTAL).
                                         withRate(1000).
                                         build(1)).
                         build(),
@@ -322,7 +322,7 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                         build(),
                 FinanceRowType.HECP_INDIRECT_COSTS, newDefaultCostCategory().withCosts(
                                 newAcademicCost().
-                                        withName("indirect_costs").
+                                        withName("hecp_indirect_costs").
                                         withCost(new BigDecimal("100")).
                                         withCostType(FinanceRowType.HECP_INDIRECT_COSTS).
                                         build(1)).
@@ -336,7 +336,7 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                         build(),
                 FinanceRowType.EQUIPMENT, newDefaultCostCategory().withCosts(
                                 newAcademicCost().
-                                        withName("incurred_other_costs").
+                                        withName("equipment").
                                         withCost(new BigDecimal("100")).
                                         withCostType(FinanceRowType.EQUIPMENT).
                                         build(1)).
