@@ -23,7 +23,9 @@ public class VirusScanConfigurationProperties {
 
         private int port;
 
-        private int timeout = 500;
+        private int clientTimeoutMs = 2000;
+
+        private int scanChunkSizeBytes = 4194304;
 
     }
 }

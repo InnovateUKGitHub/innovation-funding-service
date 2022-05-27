@@ -38,6 +38,7 @@ data:
     ScanArchive yes
     
     StreamMaxLength 36M
+    MaxThreads 20
 
   freshclam.conf: |
     Foreground yes

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.filestorage.cfg.virusscan;
 
-import fi.solita.clamav.ClamAVClient;
+import com.diluv.clamchowder.ClamClient;
+import com.diluv.clamchowder.Constants;
 import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.filestorage.virusscan.VirusScanProvider;
 import org.innovateuk.ifs.filestorage.virusscan.clam.ClamAvScanProvider;
@@ -30,11 +31,13 @@ public class VirusScanConfiguration {
 
     @Bean
     @Profile(IfsProfileConstants.NOT_STUB_AV_SCAN)
-    public ClamAVClient clamAVClient() {
-        return new ClamAVClient(
+    public ClamClient clamClient() {
+        return new ClamClient(
                 virusScanConfigurationProperties.getClamAv().getHost(),
                 virusScanConfigurationProperties.getClamAv().getPort(),
-                virusScanConfigurationProperties.getClamAv().getTimeout()
+                virusScanConfigurationProperties.getClamAv().getClientTimeoutMs(),
+                virusScanConfigurationProperties.getClamAv().getScanChunkSizeBytes(),
+                Constants.DEFAULT_READ_BUFFER_SIZE
         );
     }
 

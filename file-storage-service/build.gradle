@@ -16,7 +16,7 @@ dependencies {
 
     implementation 'org.flywaydb:flyway-core'
 
-    implementation 'fi.solita.clamav:clamav-client:1.0.1'
+    implementation 'com.diluv.clamchowder:Clam-Chowder:1.0.0'
 
     implementation "org.apache.tika:tika-core:2.4.0"
 

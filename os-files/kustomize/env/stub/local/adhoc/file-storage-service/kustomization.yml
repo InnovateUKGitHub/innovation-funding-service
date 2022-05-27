@@ -11,3 +11,5 @@ components:
   - ../../../../../patches/
   - ../../patches/
 
+patchesStrategicMerge:
+  - file-storage-service.yml
