@@ -42,6 +42,7 @@ spec:
           timeoutSeconds: 5
           successThreshold: 1
           failureThreshold: 1
+        envFrom: []
         env:
           - name: JAVA_TOOL_OPTIONS
             value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
