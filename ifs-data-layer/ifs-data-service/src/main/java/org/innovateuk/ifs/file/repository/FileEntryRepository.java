@@ -15,7 +15,7 @@ public interface FileEntryRepository extends PagingAndSortingRepository<FileEntr
             "WHERE a.file_uuid IS NULL " +
             "AND a.id NOT IN " +
             "(SELECT b.file_entry_id from ifs.gluster_migration_status b " +
-            "WHERE b.status = 'FILE_NOT_FOUND' ) " +
+            "WHERE b.status = 'FILE_NOT_FOUND' OR  b.status = 'FILE_FOUND' ) " +
             "LIMIT :batchSize ", nativeQuery = true)
     List<FileEntry> findFileEntryByStatusAndFileUUIDIsNUll(int batchSize);
 
