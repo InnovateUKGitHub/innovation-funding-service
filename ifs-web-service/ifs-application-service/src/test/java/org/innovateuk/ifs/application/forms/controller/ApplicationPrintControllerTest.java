@@ -54,12 +54,12 @@ public class ApplicationPrintControllerTest extends AbstractApplicationMockMVCTe
     public void applicationPrint() throws Exception {
         ApplicationResource app = applications.get(0);
 
-        when(applicationPrintPopulator.print(eq(1L), any(Model.class), any(UserResource.class))).thenReturn("uri");
+        when(applicationPrintPopulator.print(eq(1L), any(Model.class), any(UserResource.class), anyBoolean())).thenReturn("uri");
 
         mockMvc.perform(get("/application/" + app.getId() + "/print"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("uri"));
 
-        verify(applicationPrintPopulator).print(eq(1L), any(Model.class), any(UserResource.class));
+        verify(applicationPrintPopulator).print(eq(1L), any(Model.class), any(UserResource.class), anyBoolean());
     }
 }

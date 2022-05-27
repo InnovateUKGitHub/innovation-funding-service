@@ -22,6 +22,6 @@ public class ApplicationPrintControllerSecurityTest extends BaseControllerSecuri
         roles.add(Role.SUPPORTER);
         roles.add(Role.MONITORING_OFFICER);
 
-        assertRolesCanPerform(() -> classUnderTest.printApplication(0L, null, null), roles);
+        assertRolesCanPerform(() -> classUnderTest.printApplication(0L, true, null, null), roles);
     }
 }
