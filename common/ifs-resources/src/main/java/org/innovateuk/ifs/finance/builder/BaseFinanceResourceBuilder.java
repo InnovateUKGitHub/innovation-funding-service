@@ -45,6 +45,8 @@ import static org.innovateuk.ifs.finance.builder.OtherCostBuilder.newOtherCost;
 import static org.innovateuk.ifs.finance.builder.OtherGoodsBuilder.newOtherGoods;
 import static org.innovateuk.ifs.finance.builder.OverheadBuilder.newOverhead;
 import static org.innovateuk.ifs.finance.builder.OverheadCostCategoryBuilder.newOverheadCostCategory;
+import static org.innovateuk.ifs.finance.builder.PersonnelCostBuilder.newPersonnelCost;
+import static org.innovateuk.ifs.finance.builder.PersonnelCostCategoryBuilder.newPersonnelCostCategory;
 import static org.innovateuk.ifs.finance.builder.ProcurementOverheadBuilder.newProcurementOverhead;
 import static org.innovateuk.ifs.finance.builder.SubcontractingCostBuilder.newSubContractingCost;
 import static org.innovateuk.ifs.finance.builder.TravelCostBuilder.newTravelCost;
@@ -110,12 +112,23 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
     }
 
     public S withIndustrialCosts() {
+        String developers = "Developers";
+        String testers = "Testers";
+
         return withFinanceOrganisationDetails(asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
                                 withId(1L, 2L).
                                 withGrossEmployeeCost(new BigDecimal("10000.23"), new BigDecimal("5100.11"), BigDecimal.ZERO).
-                                withDescription("Developers", "Testers", WORKING_DAYS_PER_YEAR).
+                                withDescription(developers, testers, WORKING_DAYS_PER_YEAR).
+                                withLabourDays(100, 120, 250).
+                                build(3)).
+                        build(),
+                FinanceRowType.PERSONNEL, newPersonnelCostCategory().withCosts(
+                        newPersonnelCost().
+                                withId(1L, 2L).
+                                withGrossEmployeeCost(new BigDecimal("10000.23"), new BigDecimal("5100.11"), BigDecimal.ZERO).
+                                withDescription(developers, testers, WORKING_DAYS_PER_YEAR).
                                 withLabourDays(100, 120, 250).
                                 build(3)).
                         build(),

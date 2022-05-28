@@ -127,7 +127,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 .filter(ApplicationInviteResource::isInviteNameConfirmed)
                 .map(ApplicationInviteResource::getInviteOrganisationNameConfirmedSafe)
                 .distinct()
-                .map((name) -> BreakdownTableRow.pendingOrganisation(name, types))
+                .map(name -> BreakdownTableRow.pendingOrganisation(name, types))
                 .collect(toList());
     }
 

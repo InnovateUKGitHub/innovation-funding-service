@@ -36,9 +36,9 @@ public class HorizonEuropeGuaranteeCostsFormPopulatorTest {
         HorizonEuropeGuaranteeCostsForm form = populator.populate(APPLICATION_ID, ORGANISATION_ID);
 
         assertEquals(form.getPersonnel(), finance.getFinanceOrganisationDetails().get(FinanceRowType.PERSONNEL).getTotal().toBigInteger());
-        assertEquals(form.getOverhead(), finance.getFinanceOrganisationDetails().get(FinanceRowType.OVERHEADS).getTotal().toBigInteger());
-        assertEquals(form.getMaterial(), finance.getFinanceOrganisationDetails().get(FinanceRowType.MATERIALS).getTotal().toBigInteger());
-        assertEquals(form.getCapital(), finance.getFinanceOrganisationDetails().get(FinanceRowType.CAPITAL_USAGE).getTotal().toBigInteger());
+        assertEquals(form.getHecpIndirectCosts(), finance.getFinanceOrganisationDetails().get(FinanceRowType.INDIRECT_COSTS).getTotal().toBigInteger());
+        assertEquals(form.getEquipment(), finance.getFinanceOrganisationDetails().get(FinanceRowType.EQUIPMENT).getTotal().toBigInteger());
+        assertEquals(form.getOtherGoods(), finance.getFinanceOrganisationDetails().get(FinanceRowType.OTHER_GOODS).getTotal().toBigInteger());
         assertEquals(form.getSubcontracting(), finance.getFinanceOrganisationDetails().get(FinanceRowType.SUBCONTRACTING_COSTS).getTotal().toBigInteger());
         assertEquals(form.getTravel(), finance.getFinanceOrganisationDetails().get(FinanceRowType.TRAVEL).getTotal().toBigInteger());
         assertEquals(form.getOther(), finance.getFinanceOrganisationDetails().get(FinanceRowType.OTHER_COSTS).getTotal().toBigInteger());

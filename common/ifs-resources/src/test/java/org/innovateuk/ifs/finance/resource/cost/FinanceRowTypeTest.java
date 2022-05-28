@@ -2,9 +2,9 @@ package org.innovateuk.ifs.finance.resource.cost;
 
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 
 public class FinanceRowTypeTest {
@@ -14,7 +14,7 @@ public class FinanceRowTypeTest {
         List<FinanceRowType> financeRowTypes = FinanceRowType.getKtpFinanceRowTypes();
 
         assertNotNull(financeRowTypes);
-        assertEquals(Arrays.asList(FinanceRowType.OTHER_COSTS,
+        assertEquals(asList(FinanceRowType.OTHER_COSTS,
                 FinanceRowType.FINANCE,
                 FinanceRowType.ASSOCIATE_SALARY_COSTS,
                 FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS,
@@ -34,7 +34,7 @@ public class FinanceRowTypeTest {
         List<FinanceRowType> financeRowTypes = FinanceRowType.getFecSpecificFinanceRowTypes();
 
         assertNotNull(financeRowTypes);
-        assertEquals(Arrays.asList(FinanceRowType.ASSOCIATE_SUPPORT,
+        assertEquals(asList(FinanceRowType.ASSOCIATE_SUPPORT,
                 FinanceRowType.KNOWLEDGE_BASE,
                 FinanceRowType.ESTATE_COSTS), financeRowTypes);
 
@@ -46,7 +46,7 @@ public class FinanceRowTypeTest {
         List<FinanceRowType> financeRowTypes = FinanceRowType.getNonFecSpecificFinanceRowTypes();
 
         assertNotNull(financeRowTypes);
-        assertEquals(Arrays.asList(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT,
+        assertEquals(asList(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT,
                 FinanceRowType.INDIRECT_COSTS), financeRowTypes);
 
         financeRowTypes.forEach(financeRowType -> assertTrue(financeRowType.isIncludedInSpendProfile()));
@@ -56,7 +56,8 @@ public class FinanceRowTypeTest {
     public void getHecpSpecificFinanceRowTypes() {
         List<FinanceRowType> financeRowTypes = FinanceRowType.getHecpSpecificFinanceRowTypes();
         assertNotNull(financeRowTypes);
-        assertEquals(Arrays.asList(FinanceRowType.LABOUR,
+        assertEquals(asList(
+                FinanceRowType.PERSONNEL,
                 FinanceRowType.SUBCONTRACTING_COSTS,
                 FinanceRowType.TRAVEL,
                 FinanceRowType.EQUIPMENT,
