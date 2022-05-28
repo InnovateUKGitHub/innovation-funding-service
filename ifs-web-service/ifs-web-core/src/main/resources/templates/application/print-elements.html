@@ -170,6 +170,8 @@
                 <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total</th>
                 <th scope="col" th:if="${financeTotalPerType.containsKey(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).LABOUR)}"
                     class="govuk-table__header govuk-table__header--numeric">Labour (&pound;)</th>
+                <th scope="col" th:if="${financeTotalPerType.containsKey(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PERSONNEL)}"
+                    class="govuk-table__header govuk-table__header--numeric">Personnel costs (&pound;)</th>
                 <th scope="col" th:if="${financeTotalPerType.containsKey(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS)}"
                     class="govuk-table__header govuk-table__header--numeric">Overhead costs (&pound;)</th>
                 <th scope="col" th:if="${financeTotalPerType.containsKey(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).HECP_INDIRECT_COSTS)}"
@@ -212,6 +214,10 @@
                     </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric" th:if="${organisationFinance.financeOrganisationDetails.containsKey(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).LABOUR)}"
                         th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).LABOUR)}"
+                        th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:if="${organisationFinance.financeOrganisationDetails.containsKey(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PERSONNEL)}"
+                        th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PERSONNEL)}"
                         th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">
                     </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric" th:if="${organisationFinance.financeOrganisationDetails.containsKey(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS)}"

@@ -270,12 +270,12 @@
                         <td style="text-align:right;"
                             th:each="(organisation : ${model.industrialFinanceTable.organisations})"
                             th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">
-                            &pound;<th:block th:with="category = ${organisationFinance.getFinanceOrganisationDetails(model.getLabourFinanceRowType())}"
+                            &pound;<th:block th:with="category = ${organisationFinance.getFinanceOrganisationDetails(model.getPersonnelFinanceRowType())}"
                                th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">£0</th:block>
                         </td>
                         <td style="text-align:right;"
                             th:if="${model.industrialFinanceTable.showTotalsColumn}"
-                            th:with="total=${model.industrialFinanceTable.getTotalForType(model.getLabourFinanceRowType())}">
+                            th:with="total=${model.industrialFinanceTable.getTotalForType(model.getPersonnelFinanceRowType())}">
                             &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
                         </td>
                     </tr>
