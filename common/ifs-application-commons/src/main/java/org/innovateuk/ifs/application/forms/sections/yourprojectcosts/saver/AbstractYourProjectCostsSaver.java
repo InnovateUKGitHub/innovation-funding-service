@@ -320,7 +320,7 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
 
             hecpIndirectCost.setRateType(hecpIndirectCosts.getRateType());
 
-            if (hecpIndirectCosts.getRateType().equals(OverheadRateType.TOTAL)) {
+            if (hecpIndirectCosts.getRateType().equals(OverheadRateType.HORIZON_EUROPE_GUARANTEE_TOTAL)) {
                 hecpIndirectCost.setRate(ofNullable(hecpIndirectCosts.getTotalSpreadsheet()).orElse(0));
             } else {
                 hecpIndirectCost.setRate(hecpIndirectCosts.getRateType().getRate());
@@ -459,6 +459,7 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
     public void removeRowFromForm(YourProjectCostsForm form, String id) {
         //Try to remove key from all the maps. Will have a random uuid attached.
         form.getLabour().getRows().remove(id);
+        form.getPersonnel().getRows().remove(id);
         form.getMaterialRows().remove(id);
         form.getEquipmentRows().remove(id);
         form.getCapitalUsageRows().remove(id);
