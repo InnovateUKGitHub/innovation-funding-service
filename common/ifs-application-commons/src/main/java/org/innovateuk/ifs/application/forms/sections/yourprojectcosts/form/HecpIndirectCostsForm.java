@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.*;
-import static org.innovateuk.ifs.finance.resource.cost.OverheadRateType.TOTAL;
+import static org.innovateuk.ifs.finance.resource.cost.OverheadRateType.HORIZON_EUROPE_GUARANTEE_TOTAL;
 
 public class HecpIndirectCostsForm {
 
@@ -32,7 +32,7 @@ public class HecpIndirectCostsForm {
 
     public HecpIndirectCostsForm(HecpIndirectCosts hecpIndirectCosts, String filename) {
         this.rateType = hecpIndirectCosts.getRateType();
-        if (TOTAL.equals(rateType)) {
+        if (HORIZON_EUROPE_GUARANTEE_TOTAL.equals(rateType)) {
             this.totalSpreadsheet = hecpIndirectCosts.getRate();
         } else {
             this.totalSpreadsheet = 0;

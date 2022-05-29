@@ -31,6 +31,7 @@ public class SpendProfileCostFilterTest {
         List<FinanceCostTotalResource> expectedCostTotalResources = newFinanceCostTotalResource()
                 .withFinanceRowType(
                         FinanceRowType.LABOUR,
+                        FinanceRowType.PERSONNEL,
                         FinanceRowType.OVERHEADS,
                         FinanceRowType.MATERIALS,
                         FinanceRowType.EQUIPMENT,
@@ -52,7 +53,7 @@ public class SpendProfileCostFilterTest {
                         FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT,
                         FinanceRowType.INDIRECT_COSTS
                 )
-                .build(21);
+                .build(22);
 
         assertThat(financeCostTotalResourceResult)
                 .usingRecursiveFieldByFieldElementComparator()

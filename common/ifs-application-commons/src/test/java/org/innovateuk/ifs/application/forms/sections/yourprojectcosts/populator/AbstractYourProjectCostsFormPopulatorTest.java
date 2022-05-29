@@ -85,12 +85,18 @@ public class AbstractYourProjectCostsFormPopulatorTest {
 
         assertEquals((Integer) 250, form.getLabour().getWorkingDaysPerYear());
         assertEquals(3, form.getLabour().getRows().size());
+        assertEquals((Integer) 250, form.getPersonnel().getWorkingDaysPerYear());
+        assertEquals(3, form.getPersonnel().getRows().size());
 
         assertEquals((Long) 1L, form.getOverhead().getCostId());
         assertEquals(OverheadRateType.TOTAL, form.getOverhead().getRateType());
-        assertEquals(OverheadRateType.HORIZON_EUROPE_GUARANTEE_TOTAL, form.getHecpIndirectCosts().getRateType());
         assertEquals("filename", form.getOverhead().getFilename());
         assertEquals((Integer) 1000, form.getOverhead().getTotalSpreadsheet());
+
+        assertEquals((Long) 1L, form.getHecpIndirectCosts().getCostId());
+        assertEquals(OverheadRateType.HORIZON_EUROPE_GUARANTEE_TOTAL, form.getHecpIndirectCosts().getRateType());
+        assertEquals("filename", form.getHecpIndirectCosts().getFilename());
+        assertEquals((Integer) 1000, form.getHecpIndirectCosts().getTotalSpreadsheet());
 
         assertEquals(3, form.getMaterialRows().size());
         assertEquals(3, form.getEquipmentRows().size());

@@ -6,6 +6,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.KtpTravelCost;
 import org.innovateuk.ifs.finance.resource.cost.KtpTravelCost.KtpTravelCostType;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
+import org.innovateuk.ifs.finance.resource.cost.PersonnelCost;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -331,7 +332,7 @@ public class YourProjectCostsForm {
                 case NONE:
                     return BigDecimal.ZERO;
                 case DEFAULT_PERCENTAGE:
-                    return getTotalLabourCosts().multiply(new BigDecimal("0.2"));
+                    return getTotalPersonnelCosts().multiply(new BigDecimal("0.2"));
                 case HORIZON_EUROPE_GUARANTEE_TOTAL:
                     return Optional.ofNullable(getHecpIndirectCosts().getTotalSpreadsheet()).map(BigDecimal::valueOf).orElse(BigDecimal.ZERO);
                 default:
@@ -428,6 +429,7 @@ public class YourProjectCostsForm {
 
     public BigDecimal getOrganisationFinanceTotal() {
         BigDecimal total = getTotalLabourCosts()
+                .add(getTotalPersonnelCosts())
                 .add(getTotalOverheadCosts())
                 .add(getTotalHecpIndirectCosts())
                 .add(getTotalMaterialCosts())
@@ -481,7 +483,17 @@ public class YourProjectCostsForm {
                 row.setRate(cost.getRate(getLabour().getWorkingDaysPerYear()));
            }
         });
+        getPersonnel().getRows().forEach((id, row) -> {
+            PersonnelCost cost = row.toCost(null);
+            row.setTotal(cost.getTotal(getPersonnel().getWorkingDaysPerYear()));
+            if (isThirdPartyOfgem()) {
+                row.setRate(cost.getRate());
+            } else {
+                row.setRate(cost.getRate(getPersonnel().getWorkingDaysPerYear()));
+            }
+        });
         getOverhead().setTotal(getOverhead().getTotal());
+        getHecpIndirectCosts().setTotal(getHecpIndirectCosts().getTotal());
         recalculateTotal(getMaterialRows());
         recalculateTotal(getEquipmentRows());
         recalculateTotal(getCapitalUsageRows());
