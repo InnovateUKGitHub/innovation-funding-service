@@ -23,6 +23,9 @@ public class StorageUploadController implements FileUpload {
         return ResponseEntity.ok(storageService.fileUpload(fileUploadRequest));
     }
 
+    /**
+     * Keep this in until end of load testing...
+     */
     @Override
     public ResponseEntity<FileUploadResponse> fileUploadRaw(byte[] payload) {
         FileUploadRequest fileUploadRequest = FileUploadRequest.builder()
