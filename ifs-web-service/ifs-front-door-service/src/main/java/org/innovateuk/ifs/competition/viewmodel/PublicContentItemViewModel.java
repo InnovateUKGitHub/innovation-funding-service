@@ -23,6 +23,7 @@ public class PublicContentItemViewModel {
     private PublicContentStatusText publicContentStatusText;
     private boolean alwaysOpen;
     private String hash;
+    private boolean eoiEnabled;
 
     public String getNullCloseDateText() {
         return alwaysOpen ? "No submission deadline" : "Unknown";
