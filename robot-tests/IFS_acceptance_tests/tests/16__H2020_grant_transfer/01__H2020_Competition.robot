@@ -245,11 +245,12 @@ The internal user is able to progress an application to project set up
     the user clicks the button/link                             link = Manage funding notifications
 
 The user starts an H2020 applcation
-   the user navigates to the page                   ${server}/competition/${competitionId}/overview
-   the user clicks the button/link                  jQuery = a:contains("Start new application")
+   the user navigates to the page                           ${frontDoor}
+   the user clicks the button/link in the paginated list    link = ${competitionTitle}
+   the user clicks the button/link                          jQuery = a:contains("Start new application")
    check if there is an existing application in progress for this competition
-   the user clicks the button/link                  jQuery=.govuk-button:contains("Save and continue")
-   the user should see the element                  jQuery = h1:contains("Application overview")
+   the user clicks the button/link                          jQuery=.govuk-button:contains("Save and continue")
+   the user should see the element                          jQuery = h1:contains("Application overview")
 
 A user starts a new competition
     the user navigates to the page        ${CA_UpcomingComp}
@@ -304,7 +305,7 @@ The user fills in the public content competition inforation and search
     the user enters text to a text field    id = shortDescription  Horizon 2020 competition
     the user enters text to a text field    id = projectFundingRange  Up to £5million
     the user enters text to a text field    css = [aria-labelledby = "eligibilitySummary-label"]  Summary of eligiblity
-    the user selects the radio button       publishSetting  invite
+    the user selects the radio button       publishSetting  public
     the user enters text to a text field    id = keywords  Search, Testing, Robot
     the user clicks the button/link         jQuery = button:contains("Save and review")
     the user clicks the button/link         link = Return to public content

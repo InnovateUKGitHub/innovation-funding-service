@@ -55,7 +55,9 @@
 
                 <div class="govuk-grid-column-one-half">
                     <p class="govuk-body">
-                        <a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}"
+                        <a th:href="${model.hash == null}
+                        ? @{~/competition/{cid}/overview(cid=${model.competitionId})}
+                        : @{~/competition/{cid}/overview/{hash}(cid=${model.competitionId},hash=${model.hash})}"
                            class="govuk-link"
                            target="_blank"
                            rel="external noopener noreferrer">View competition brief (opens in a new window)</a>.

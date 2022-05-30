@@ -319,7 +319,7 @@
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-one-half">
                         <dl class="govuk-list govuk-!-font-size-16">
-                            <dt>Competition name</dt>
+                            <dt th:text="${model.isDirectAward ? 'Award name' : 'Competition name'}"></dt>
                             <dd th:text="${model.application.competitionName}"></dd>
                             <dt>Application name</dt>
                             <dd th:text="${model.application.name}"></dd>

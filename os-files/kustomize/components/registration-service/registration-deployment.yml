@@ -109,6 +109,8 @@ spec:
               value: -Xms256m -Xmx650m -javaagent:/newrelic.jar
             - name: NEW_RELIC_APP_NAME
               value: 'ifs-$(NEW_RELIC_ENV)-registration-service'
+            - name: SHIBBOLETH_LDAP_REQUIREVALIDPPOLICY
+              value: "false"
           ports:
             - containerPort: 8080
           resources:

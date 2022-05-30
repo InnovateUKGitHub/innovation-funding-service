@@ -195,7 +195,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 .build();
 
         competition = newCompetition()
-                .withCompetitionDocuments(singletonList(newCompetitionDocument().build()))
+                .withCompetitionDocuments(singletonList(newCompetitionDocument().withEnabled(true).build()))
                 .build();
 
         long applicationId = 456L;

@@ -67,13 +67,15 @@
                     </h2>
 
                     <p class="govuk-body">
-                        <a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}"
+                        <a th:href="${model.hash == null}
+                            ? @{~/competition/{cid}/overview(cid=${model.competitionId})}
+                            : @{~/competition/{cid}/overview/{hash}(cid=${model.competitionId},hash=${model.hash})}"
                            class="govuk-link"
                            target="_blank"
                            rel="external noopener noreferrer">See the competition brief (opens in a new window)</a>
                     </p>
 
-                    <p class="govuk-body">If you have any queries, please contact Innovate UK <a href="mailto:competitions@innovate.ukri.org" class="govuk-link">competitions@innovate.ukri.org</a>.</p>
+                    <p class="govuk-body">If you have any queries, please contact Innovate UK <a href="mailto:competitions@iuk.ukri.org" class="govuk-link">competitions@iuk.ukri.org</a>.</p>
                 </section>
 
                 <th:block th:insert="fragments/layout :: main-content-end" />

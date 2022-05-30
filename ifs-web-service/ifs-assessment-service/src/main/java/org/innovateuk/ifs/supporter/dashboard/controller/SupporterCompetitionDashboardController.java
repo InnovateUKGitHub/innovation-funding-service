@@ -1,11 +1,13 @@
 package org.innovateuk.ifs.supporter.dashboard.controller;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.supporter.dashboard.viewmodel.SupporterCompetitionDashboardViewModel;
 import org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationPageResource;
 import org.innovateuk.ifs.supporter.service.SupporterDashboardRestService;
-import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,14 +30,22 @@ public class SupporterCompetitionDashboardController {
     @Autowired
     private CompetitionRestService competitionRestService;
 
+    @Autowired
+    private PublicContentItemRestService publicContentItemRestService;
+
     @GetMapping
     public String view(@PathVariable long competitionId,
                        @RequestParam(name = "page", defaultValue = "1") int page,
                        UserResource loggedInUser,
                        Model model) {
+
         SupporterDashboardApplicationPageResource pageResource = supporterDashboardRestService.getSupporterCompetitionDashboardApplications(loggedInUser.getId(), competitionId, page - 1).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        model.addAttribute("model", new SupporterCompetitionDashboardViewModel(pageResource, competition));
+        PublicContentItemResource publicContentItem = publicContentItemRestService.getItemByCompetitionId(competitionId).getSuccess();
+
+        String hash = publicContentItem.getPublicContentResource().getHash();
+
+        model.addAttribute("model", new SupporterCompetitionDashboardViewModel(pageResource, competition, hash));
         return "supporter/supporter-competition-dashboard";
     }
 }

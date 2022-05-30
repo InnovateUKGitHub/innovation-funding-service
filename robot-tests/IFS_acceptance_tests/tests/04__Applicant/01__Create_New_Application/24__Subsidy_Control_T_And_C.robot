@@ -87,7 +87,7 @@ Creating a new comp to confirm Innovateuk subsidy control T&C's
     When the user clicks the button/link        link = Terms and conditions
     And the user clicks the button twice        jQuery = label:contains("Innovate UK - Subsidy control")
     And the user clicks the button/link         jQuery = button:contains("Done")
-    And the user selects the radio button       termsAndConditionsId    termsAndConditionsId12
+    And the user selects the radio button       termsAndConditionsId    termsAndConditionsId13
     Then the user clicks the button/link        jQuery = button:contains("Done")
     And the user should see the element         jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Innovate UK - Subsidy control")
     And the user should see the element         jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Innovate UK")
@@ -199,7 +199,7 @@ Lead applicant completes state aid subsidy basis application
 Lead applicant accepts state aid terms and conditions based on NI declaration
     [Documentation]  IFS-9233
     When the user clicks the button/link          link = Award terms and conditions
-    Then the user should see the element          jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
+    Then the user should see the element          jQuery = h1:contains("Terms and conditions of an Innovate UK Grant Award")
     And the user should not see the element       jQuery = ul li:contains("shall continue after the project term for a period of 6 years.")
     And the user accepts terms and conditions
 
@@ -283,7 +283,7 @@ Partner completes project finances and terms and conditions of subsidy control a
 Partner applicant can accept state aid terms and conditions based on NI declaration
     [Documentation]  IFS-9223
     When the user clicks the button/link          link = Award terms and conditions
-    Then the user should see the element          jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
+    Then the user should see the element          jQuery = h1:contains("Terms and conditions of an Innovate UK Grant Award")
     And the user should not see the element       jQuery = ul li:contains("shall continue after the project term for a period of 6 years.")
     And the user accepts terms and conditions
 

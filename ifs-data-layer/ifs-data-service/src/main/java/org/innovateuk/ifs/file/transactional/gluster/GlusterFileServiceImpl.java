@@ -44,7 +44,7 @@ public class GlusterFileServiceImpl extends RootTransactionalService {
     @Autowired
     private FileEntryRepository fileEntryRepository;
 
-    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = false)
     public ServiceResult<Pair<File, FileStorageStrategy>> findFileForGet(FileEntry fileEntry) {
         return findFileInSafeLocation(fileEntry);
     }

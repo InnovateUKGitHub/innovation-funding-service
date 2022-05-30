@@ -3,4 +3,4 @@ apiVersion: v1
 metadata:
   name: spring-profile-env
 data:
-  SPRING_PROFILES_ACTIVE: "perf"
+  SPRING_PROFILES_ACTIVE: "perf,S3_STORAGE"

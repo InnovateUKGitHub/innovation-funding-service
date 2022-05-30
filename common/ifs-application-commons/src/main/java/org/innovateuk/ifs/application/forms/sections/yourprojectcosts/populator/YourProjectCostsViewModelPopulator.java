@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CovidType;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -18,6 +19,7 @@ import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -66,6 +68,8 @@ public class YourProjectCostsViewModelPopulator {
     @Autowired
     private CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
 
+    @Autowired
+    private PublicContentItemRestService publicContentItemRestService;
 
     @Value("${ifs.ktp.fec.finance.model.enabled}")
     private boolean fecFinanceModelEnabled;
@@ -76,6 +80,7 @@ public class YourProjectCostsViewModelPopulator {
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         ApplicantSectionResource section = applicantRestService.getSection(user.getId(), applicationId, sectionId);
         BaseFinanceResource finance = applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
+        PublicContentItemResource publicContentItem = publicContentItemRestService.getItemByCompetitionId(application.getCompetition()).getSuccess();
 
         List<Long> completedSectionIds = sectionService.getCompleted(applicationId, organisationId);
 
@@ -88,8 +93,10 @@ public class YourProjectCostsViewModelPopulator {
 
         boolean includeVat = STANDARD_WITH_VAT.equals(competition.getApplicationFinanceType());
 
+        String hash = publicContentItem.getPublicContentResource().getHash();
+
         if (isUserCanEditFecFinance(competition, section, open)) {
-            return getYourFecProjectCostsViewModel(application, competition, organisation, section, finance, completedSectionIds, open, complete, includeVat);
+            return getYourFecProjectCostsViewModel(application, competition, organisation, section, finance, completedSectionIds, open, complete, includeVat, hash);
         } else {
             return new YourProjectCostsViewModel(applicationId,
                     competition.getName(),
@@ -115,7 +122,8 @@ public class YourProjectCostsViewModelPopulator {
                     getThirdPartyProjectCostGuidanceLink(competition),
                     competition.isOfGemCompetition(),
                     competition.isThirdPartyOfgem(),
-                    competition.isHorizonEuropeGuarantee());
+                    competition.isHorizonEuropeGuarantee(),
+                    hash);
         }
     }
 
@@ -129,7 +137,7 @@ public class YourProjectCostsViewModelPopulator {
     private YourProjectCostsViewModel getYourFecProjectCostsViewModel(ApplicationResource application, CompetitionResource competition,
                                                                       OrganisationResource organisation, ApplicantSectionResource section,
                                                                       BaseFinanceResource finance, List<Long> completedSectionIds,
-                                                                      boolean open, boolean complete, boolean includeVat) {
+                                                                      boolean open, boolean complete, boolean includeVat, String hash) {
         Long yourFundingSectionId = getYourFundingSectionId(section);
         boolean yourFundingRequired = !completedSectionIds.contains(yourFundingSectionId);
         Long yourFecCostSectionId = getYourFecCostSectionId(section);
@@ -165,7 +173,8 @@ public class YourProjectCostsViewModelPopulator {
                 getThirdPartyProjectCostGuidanceLink(competition),
                 competition.isOfGemCompetition(),
                 competition.isThirdPartyOfgem(),
-                competition.isHorizonEuropeGuarantee());
+                competition.isHorizonEuropeGuarantee(),
+                hash);
     }
 
     private boolean isYourFecCostRequired(List<Long> completedSectionIds, Long yourFecCostSectionId) {

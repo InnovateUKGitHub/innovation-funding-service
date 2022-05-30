@@ -41,6 +41,7 @@ import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
+import org.innovateuk.ifs.user.transactional.RoleProfileStatusService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.innovateuk.ifs.user.transactional.UserServiceImpl;
 import org.innovateuk.ifs.userorganisation.domain.UserOrganisation;
@@ -52,6 +53,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -169,6 +171,8 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Mock
     private RoleProfileStatusRepository roleProfileStatusRepositoryMock;
 
+    @Mock
+    protected RoleProfileStatusService roleProfileStatusService;
 
     private static final ZonedDateTime fixedClock = ZonedDateTime.parse("2021-10-12T09:38:12.850Z");
     private static final String emailToFind = "master@gmail.com";
@@ -764,6 +768,20 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         assertTrue(result.isSuccess());
         assertTrue(user.hasRole(APPLICANT));
     }
+
+
+    @Test
+    public void grantAssessorRole() {
+        GrantRoleCommand grantRoleCommand = new GrantRoleCommand(1L, ASSESSOR);
+        User user = newUser().build();
+        when(userRepositoryMock.findById(grantRoleCommand.getUserId())).thenReturn(Optional.of(user));
+
+        ServiceResult<UserResource> result = service.grantRole(grantRoleCommand);
+
+        assertTrue(result.isSuccess());
+        assertTrue(user.hasRole(ASSESSOR));
+    }
+
 
     @Test
     public void grantRole_invalidEmail() {
