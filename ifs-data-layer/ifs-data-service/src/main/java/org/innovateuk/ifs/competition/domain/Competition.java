@@ -10,6 +10,7 @@ import org.innovateuk.ifs.commons.util.AuditableEntity;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
+import org.innovateuk.ifs.competitionsetup.domain.DocumentConfig;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.finance.domain.Finance;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
@@ -693,6 +694,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public List<CompetitionDocument> getCompetitionDocuments() {
         return competitionDocuments;
+    }
+
+    public List<CompetitionDocument> getActiveCompetitionDocuments() {
+        return competitionDocuments.stream().filter(DocumentConfig::isEnabled).collect(toList());
     }
 
     public void setCompetitionDocuments(List<CompetitionDocument> competitionDocuments) {

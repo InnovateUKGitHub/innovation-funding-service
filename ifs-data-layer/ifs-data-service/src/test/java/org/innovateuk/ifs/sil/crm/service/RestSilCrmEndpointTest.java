@@ -1,13 +1,17 @@
 package org.innovateuk.ifs.sil.crm.service;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.crm.transactional.SilMessageRecordingService;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.config.rest.RestTemplateAdaptorFactory;
+import org.innovateuk.ifs.sil.SilPayloadKeyType;
+import org.innovateuk.ifs.sil.SilPayloadType;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.AsyncRestTemplate;
@@ -40,6 +44,13 @@ public class RestSilCrmEndpointTest extends BaseUnitTestMocksTest {
         ReflectionTestUtils.setField(service, "adaptor", adaptor);
         ReflectionTestUtils.setField(service, "silRestServiceUrl", "http://sil.com");
         ReflectionTestUtils.setField(service, "silCrmContacts", "/silstub/contacts");
+        ReflectionTestUtils.setField(service, "silMessagingService", new SilMessageRecordingService() {
+            @Override
+            public void recordSilMessage(SilPayloadType sIlPayloadType, SilPayloadKeyType sIlPayloadKeyType, String key, String payload, HttpStatus httpStatus) {
+                //Simple stubbing
+            }
+        });
+
         adaptor.setAsyncRestTemplate(mockAsyncRestTemplate);
         adaptor.setRestTemplate(mockRestTemplate);
     }

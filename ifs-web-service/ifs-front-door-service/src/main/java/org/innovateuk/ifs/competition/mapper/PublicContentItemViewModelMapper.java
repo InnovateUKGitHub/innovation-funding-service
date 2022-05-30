@@ -23,6 +23,7 @@ public class PublicContentItemViewModelMapper {
         publicContentItemViewModel.setShortDescription(publicContentResource.getShortDescription());
         publicContentItemViewModel.setCompetitionId(publicContentResource.getCompetitionId());
         publicContentItemViewModel.setHash(publicContentResource.getHash());
+        publicContentItemViewModel.setEoiEnabled(publicContentItemResource.isEoiEnabled());
 
         return publicContentItemViewModel;
     }

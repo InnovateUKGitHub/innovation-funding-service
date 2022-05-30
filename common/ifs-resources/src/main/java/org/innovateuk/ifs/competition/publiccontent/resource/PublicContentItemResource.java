@@ -20,6 +20,7 @@ public class PublicContentItemResource {
     private FundingType fundingType;
     private String competitionType;
     private boolean alwaysOpen;
+    private boolean eoiEnabled;
 
     public PublicContentItemResource() {
     }
@@ -120,6 +121,14 @@ public class PublicContentItemResource {
     public PublicContentItemResource setAlwaysOpen(boolean alwaysOpen) {
         this.alwaysOpen = alwaysOpen;
         return this;
+    }
+
+    public boolean isEoiEnabled() {
+        return eoiEnabled;
+    }
+
+    public void setEoiEnabled(boolean eoiEnabled) {
+        this.eoiEnabled = eoiEnabled;
     }
 
     @JsonIgnore
