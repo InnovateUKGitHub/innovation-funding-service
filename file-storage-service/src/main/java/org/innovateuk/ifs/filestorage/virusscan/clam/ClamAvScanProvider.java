@@ -11,9 +11,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 @Slf4j
 public class ClamAvScanProvider implements VirusScanProvider {
+
+    private static final byte[] CMD_STATS = encode("STATS", true);
 
     @Autowired
     private ClamClient clamAVClient;
@@ -21,7 +24,8 @@ public class ClamAvScanProvider implements VirusScanProvider {
     @Scheduled(initialDelay = 2000L, fixedDelay = 10000L)
     public void getStats() {
         try {
-            log.info(clamAVClient.getVersion());
+            log.debug(clamAVClient.getVersion());
+            log.debug(new String(clamAVClient.sendCommand(CMD_STATS), StandardCharsets.US_ASCII));
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
@@ -45,6 +49,11 @@ public class ClamAvScanProvider implements VirusScanProvider {
             case UNKNOWN:
                 throw new ServiceException(scanResult.getResponse());
         }
+    }
+
+    private static byte[] encode (String command, boolean outgoing) {
+        final String toEncode = outgoing ? "z" + command + "\0" : command + "\0";
+        return toEncode.getBytes(StandardCharsets.US_ASCII);
     }
 
 }

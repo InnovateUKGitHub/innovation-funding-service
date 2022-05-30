@@ -41,6 +41,7 @@ spec:
           timeoutSeconds: 25
           successThreshold: 1
           failureThreshold: 3
+        envFrom: []
         env:
         - name: IFS_NEW_ORGANISATION_SEARCH_ENABLED
           valueFrom:
