@@ -268,8 +268,11 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
     }
 
     private static String getQuestionTitle(QuestionResource question, CompetitionResource competition) {
+        boolean preRegistration = competition.isEnabledForPreRegistration();
+        String questionTitle = preRegistration ? format("%s", question.getShortName()) : format("%s. %s", question.getQuestionNumber(), question.getShortName());
+
         return (question.getQuestionSetupType() == ASSESSED_QUESTION) ?
-                format("%s. %s", question.getQuestionNumber(), question.getShortName()) : thirdPartyTermsAndConditionsQuestion(question, competition) ?
+                questionTitle : thirdPartyTermsAndConditionsQuestion(question, competition) ?
                 getThirdPartyTermsAndConditionsQuestionTitle(competition) : question.getShortName();
     }
 
