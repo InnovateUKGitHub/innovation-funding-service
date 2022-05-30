@@ -62,7 +62,7 @@ assessors can not view team members in the print view
     [Documentation]    IFS-12082
     [Tags]  HappyPath
     When the user navigates to the page without the usual headers   ${SERVER}/application/${assessmentApplicationforPrintID}/print?noprint&team=false
-    Then the user should see the element                        jQuery = h3:contains("Team members")
+    Then the user should not see the element                        jQuery = h3:contains("Team members")
 
 Summary:Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
