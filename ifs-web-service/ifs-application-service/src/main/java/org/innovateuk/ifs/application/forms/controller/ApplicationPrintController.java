@@ -32,9 +32,8 @@ public class ApplicationPrintController {
      */
     @GetMapping(value = "/{applicationId}/print")
     public String printApplication(@PathVariable("applicationId") long applicationId,
-                                   @RequestParam(value="team", required = false, defaultValue = "true") boolean includeTeamMember,
                                    Model model,
                                    UserResource user) {
-        return applicationPrintPopulator.print(applicationId, model, user, includeTeamMember);
+        return applicationPrintPopulator.print(applicationId, model, user);
     }
 }
