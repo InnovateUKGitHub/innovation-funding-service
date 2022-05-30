@@ -150,7 +150,6 @@ Applicant - User should be redirected to IFS post award service on click project
      [Documentation]  IFS-7017
      Given the user navigates to the page                           ${server}/dashboard-selection
      And log in as a different user                                 ${projectManagerEmailLeadOrganisation}  ${short_password}
-     #When the user navigates to the page                        ${server}/dashboard-selection
      And the user reloads page until project tile appears on page   id = dashboard-link-LIVE_PROJECTS_USER
      And the user clicks the live project tile in dashboard         id = dashboard-link-LIVE_PROJECTS_USER
      Then the user should see live projects landing page
@@ -158,7 +157,6 @@ Applicant - User should be redirected to IFS post award service on click project
 Applicant - User should be redirected to IFS post award service on click review its progress for post award service applications
      [Documentation]  IFS-7017
      Given the user navigates to the page                    ${server}/dashboard-selection
-     #And log in as a different user                          ${projectManagerEmailLeadOrganisation}  ${short_password}
      When the user navigates to the page                     ${server}/project-setup/project/${postAwardServiceProjectID}
      And the user clicks the button/link                     link = ${reviewProgressLink}
      Then the user should see live projects landing page

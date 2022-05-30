@@ -361,6 +361,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArraySetFieldByReflection("alwaysOpen", alwaysOpen);
     }
 
+    public CompetitionBuilder witheEnabledForPreRegistration(boolean... enabledForPreRegistration) {
+        return withArraySetFieldByReflection("enabledForPreRegistration", enabledForPreRegistration);
+    }
+
     @Override
     protected void postProcess(int index, Competition competition) {
         List<AssessmentPeriod> assessmentPeriods = competition.getAssessmentPeriods();
