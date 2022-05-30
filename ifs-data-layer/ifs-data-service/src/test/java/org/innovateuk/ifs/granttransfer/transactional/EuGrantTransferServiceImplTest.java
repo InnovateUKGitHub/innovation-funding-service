@@ -120,8 +120,10 @@ public class EuGrantTransferServiceImplTest extends BaseServiceUnitTest<EuGrantT
 
     @Test
     public void uploadGrantAgreement() {
+        FileControllerUtils fileControllerUtils = mock(FileControllerUtils.class);
         Long maxFileSize = 2L;
         List<String> validMediaTypes = asList("PDF");
+        setField(service, "fileControllerUtils", fileControllerUtils);
         setField(service, "maxFileSize", maxFileSize);
         setField(service, "validMediaTypes", validMediaTypes);
 
@@ -135,8 +137,8 @@ public class EuGrantTransferServiceImplTest extends BaseServiceUnitTest<EuGrantT
                 .build();
         FileEntry created = newFileEntry().build();
         when(euGrantTransferRepository.findByApplicationId(applicationId)).thenReturn(grantTransfer);
-//        when(fileControllerUtils.handleFileUpload(eq(contentType), eq(contentLength), eq(originalFilename), eq(fileValidator), eq(validMediaTypes), eq(maxFileSize), eq(request), any()))
-//                .thenReturn(restSuccess(Void.class));
+        when(fileControllerUtils.handleFileUpload(eq(contentType), eq(contentLength), eq(originalFilename), eq(fileValidator), eq(validMediaTypes), eq(maxFileSize), eq(request), any()))
+                .thenReturn(restSuccess(Void.class));
         FileHeaderAttributes attributes = mock(FileHeaderAttributes.class);
         Supplier<InputStream> inputStreamSupplier = mock(Supplier.class);
         FileEntryResource fileEntryResource = newFileEntryResource().build();
@@ -147,7 +149,7 @@ public class EuGrantTransferServiceImplTest extends BaseServiceUnitTest<EuGrantT
         assertTrue(response.isSuccess());
 
         ArgumentCaptor<BiFunction<FileHeaderAttributes, Supplier<InputStream>, ServiceResult<Void>>> argument = ArgumentCaptor.forClass(BiFunction.class);
-//        verify(fileControllerUtils).handleFileUpload(eq(contentType), eq(contentLength), eq(originalFilename), eq(fileValidator), eq(validMediaTypes), eq(maxFileSize), eq(request), argument.capture());
+        verify(fileControllerUtils).handleFileUpload(eq(contentType), eq(contentLength), eq(originalFilename), eq(fileValidator), eq(validMediaTypes), eq(maxFileSize), eq(request), argument.capture());
 
         when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).thenReturn(serviceSuccess(created));
         argument.getValue().apply(attributes, inputStreamSupplier);
