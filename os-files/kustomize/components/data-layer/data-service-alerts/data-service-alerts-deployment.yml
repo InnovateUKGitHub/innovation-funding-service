@@ -44,7 +44,7 @@ spec:
           failureThreshold: 1
         env:
           - name: JAVA_TOOL_OPTIONS
-            value: -Xms750m -Xmx750m
+            value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
             value: 'ifs-$(NEW_RELIC_ENV)-data-service-alerts'
           - name: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE

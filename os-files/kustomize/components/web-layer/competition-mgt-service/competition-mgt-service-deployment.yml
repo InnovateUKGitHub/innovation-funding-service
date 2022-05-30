@@ -118,7 +118,7 @@ spec:
                 name: web-config
                 key: IFS_WEB_BASEURL
           - name: JAVA_TOOL_OPTIONS
-            value: -Xms750m -Xmx750m
+            value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
             value: 'ifs-$(NEW_RELIC_ENV)-competition-mgt-service'
         ports:

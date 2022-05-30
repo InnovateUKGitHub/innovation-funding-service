@@ -21,6 +21,12 @@ spec:
       labels:
         app: registration-svc
     spec:
+      initContainers:
+        - name: init-cacerts
+          image: eclipse-temurin:11-jre@sha256:2c88bc2ee062fb68b161fd1df31faa93222d1957218e6b080602f2943eb61319
+          volumeMounts:
+            - mountPath: /var/certs
+              name: registration-keys-volume
       containers:
         - name: spring-boot-service-container
           image: registration-service
@@ -118,10 +124,10 @@ spec:
             requests:
               cpu: 100m
               memory: 1G
-          lifecycle:
-            postStart:
-              exec:
-                command: ["/bin/sh", "-c", "$JAVA_HOME/bin/keytool -import -trustcacerts -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit -noprompt -alias iuk-auth-localdev -file /var/certs/ldap-encryption.crt"]
+#          lifecycle:
+#            postStart:
+#              exec:
+#                command: ["/bin/sh", "-c", "$JAVA_HOME/bin/keytool -import -trustcacerts -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit -noprompt -alias iuk-auth-localdev -file /var/certs/ldap-encryption.crt"]
           volumeMounts:
             - mountPath: /var/certs
               name: registration-keys-volume

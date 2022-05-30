@@ -317,7 +317,7 @@ spec:
               name: flyway-config
               key: FLYWAY_TABLE
         - name: JAVA_TOOL_OPTIONS
-          value: -Xms1500m -Xmx1500m
+          value: -Xms1500m -Xmx1500m -javaagent:/newrelic.jar
         - name: NEW_RELIC_APP_NAME
           value: 'ifs-$(NEW_RELIC_ENV)-data-service'
         ports:
