@@ -121,9 +121,9 @@ public class Application implements ProcessActivity {
     private ApplicationExternalConfig applicationExternalConfig;
 
     @Column(nullable = false)
-    private boolean preReg = false;
+    private boolean preRegistration = false;
 
-    private Long preRegApplicationId;
+    private Long preRegistrationApplicationId;
 
     public Application() {
     }
@@ -161,8 +161,8 @@ public class Application implements ProcessActivity {
         this.competitionReferralSource = application.getCompetitionReferralSource();
         this.companyAge = application.getCompanyAge();
         this.companyPrimaryFocus = application.getCompanyPrimaryFocus();
-        this.preReg = application.isPreReg();
-        this.preRegApplicationId = application.getPreRegApplicationId();
+        this.preRegistration = application.isPreRegistration();
+        this.preRegistrationApplicationId = application.getPreRegistrationApplicationId();
     }
 
     protected boolean canEqual(Object other) {
@@ -562,19 +562,19 @@ public class Application implements ProcessActivity {
         this.applicationExternalConfig = applicationExternalConfig;
     }
 
-    public boolean isPreReg() {
-        return preReg;
+    public boolean isPreRegistration() {
+        return preRegistration;
     }
 
-    public void setPreReg(boolean preReg) {
-        this.preReg = preReg;
+    public void setPreRegistration(boolean preRegistration) {
+        this.preRegistration = preRegistration;
     }
 
-    public Long getPreRegApplicationId() {
-        return preRegApplicationId;
+    public Long getPreRegistrationApplicationId() {
+        return preRegistrationApplicationId;
     }
 
-    public void setPreRegApplicationId(Long preRegApplicationId) {
-        this.preRegApplicationId = preRegApplicationId;
+    public void setPreRegistrationApplicationId(Long preRegistrationApplicationId) {
+        this.preRegistrationApplicationId = preRegistrationApplicationId;
     }
 }

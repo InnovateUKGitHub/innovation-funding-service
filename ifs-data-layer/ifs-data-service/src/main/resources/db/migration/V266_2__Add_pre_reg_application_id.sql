@@ -1,1 +1,1 @@
-ALTER TABLE application ADD COLUMN pre_reg_application_id bigint(20) NULL;
+ALTER TABLE application ADD COLUMN pre_registration_application_id bigint(20) NULL;
