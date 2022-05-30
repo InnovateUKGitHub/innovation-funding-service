@@ -104,6 +104,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                 .sorted(comparing(SectionResource::getPriority))
                 .filter(section -> section.getParentSection() == null)
                 .filter(section -> section.getType() != SectionType.KTP_ASSESSMENT)
+                .filter(SectionResource::isEnabledForPreRegistration)
                 .map(section -> sectionViewModel(section, data))
                 .collect(toCollection(LinkedHashSet::new));
 
@@ -117,6 +118,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                     .stream()
                     .map(data.getSections()::get)
                     .filter(childSection -> !(data.getCompetition().isFullyFunded() && childSection.getType().equals(OVERVIEW_FINANCES)))
+                    .filter(SectionResource::isEnabledForPreRegistration)
                     .map(childSection ->
                             new ApplicationOverviewRowViewModel(
                                     childSection.getName(),
@@ -130,6 +132,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
             rows = section.getQuestions()
                     .stream()
                     .map(data.getQuestions()::get)
+                    .filter(QuestionResource::isEnabledForPreRegistration)
                     .map(question -> getApplicationOverviewRowViewModel(data, question, section))
                     .collect(toCollection(LinkedHashSet::new));
         }
@@ -183,12 +186,12 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
 
     private ApplicationOverviewRowViewModel getApplicationOverviewRowViewModel(ApplicationOverviewData data, QuestionResource question, SectionResource section) {
         boolean complete = (question.getQuestionSetupType() == QuestionSetupType.NORTHERN_IRELAND_DECLARATION) ? isSubsidyBasisComplete(data, question) :
-                    (section.isTermsAndConditions() ? isTermsAndConditionsComplete(data, question, section) :
-                                (data.getStatuses().get(question.getId())
-                                            .stream()
-                                            .anyMatch(status -> TRUE.equals(status.getMarkedAsComplete()))
-                                )
-                    );
+                (section.isTermsAndConditions() ? isTermsAndConditionsComplete(data, question, section) :
+                        (data.getStatuses().get(question.getId())
+                                .stream()
+                                .anyMatch(status -> TRUE.equals(status.getMarkedAsComplete()))
+                        )
+                );
 
         boolean showStatus = !(section.isTermsAndConditions() && data.getCompetition().isExpressionOfInterest());
 
