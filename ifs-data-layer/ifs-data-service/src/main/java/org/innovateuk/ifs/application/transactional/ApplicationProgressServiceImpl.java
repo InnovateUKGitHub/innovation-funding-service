@@ -56,7 +56,7 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
                     BigDecimal percentageProgress = calculateApplicationProgress(application);
                     application.setCompletion(percentageProgress);
                     return percentageProgress;
-        });
+                });
     }
 
     @Override
@@ -73,10 +73,22 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
     }
 
     private BigDecimal calculateApplicationProgress(Application application) {
+
+        long questionsWithMultipleStatuses;
+        long questionsWithSingleStatus;
+
         long competitionId = application.getCompetition().getId();
         long organisations = organisationRepository.countDistinctByProcessRolesApplicationId(application.getId());
-        long questionsWithMultipleStatuses = questionRepository.countQuestionsWithMultipleStatuses(competitionId);
-        long questionsWithSingleStatus = questionRepository.countQuestionsWithSingleStatus(competitionId);
+
+        //TODO DON"t MERGE IT WITHOUT DOMAIN MODEL UPDATES
+        if (true) {
+            questionsWithMultipleStatuses = questionRepository.countPreRegQuestionsWithMultipleStatuses(competitionId);
+            questionsWithSingleStatus = questionRepository.countPreRegQuestionsWithSingleStatus(competitionId);
+        } else {
+            questionsWithMultipleStatuses = questionRepository.countQuestionsWithMultipleStatuses(competitionId);
+            questionsWithSingleStatus = questionRepository.countQuestionsWithSingleStatus(competitionId);
+        }
+
         long completedQuestionStatuses = questionStatusRepository.countByApplicationIdAndMarkedAsCompleteTrue(application.getId());
         long totalQuestions = questionsWithMultipleStatuses * organisations + questionsWithSingleStatus;
         return percentage(completedQuestionStatuses, totalQuestions);
