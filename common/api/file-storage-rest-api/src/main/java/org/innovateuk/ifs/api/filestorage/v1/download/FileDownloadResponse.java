@@ -16,8 +16,6 @@ public final class FileDownloadResponse implements Serializable {
     /** uuid reference for the file */
     private String fileId;
 
-
-
     /** The file type */
     private String mimeType;
 
