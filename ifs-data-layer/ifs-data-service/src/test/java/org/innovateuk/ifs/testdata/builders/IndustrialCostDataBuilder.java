@@ -33,6 +33,7 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.finance.builder.EquipmentCostBuilder.newEquipment;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
+import static org.innovateuk.ifs.finance.resource.cost.OverheadRateType.HORIZON_EUROPE_GUARANTEE_TOTAL;
 
 /**
  * Generates Indisutrial Finances for an Organisation on an Application
@@ -251,7 +252,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     }
 
     public IndustrialCostDataBuilder withHecpAdministrationSupportCostsNone() {
-        return doSetAdministrativeSupportCostsHecp(OverheadRateType.NONE, OverheadRateType.NONE.getRate());
+        return doSetAdministrativeSupportCostsHecp(HORIZON_EUROPE_GUARANTEE_TOTAL, HORIZON_EUROPE_GUARANTEE_TOTAL.getRate());
     }
 
     public IndustrialCostDataBuilder withAdministrationSupportCostsDefaultRate() {
@@ -259,7 +260,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     }
 
     public IndustrialCostDataBuilder withHecpAdministrationSupportCostsDefaultRate() {
-        return doSetAdministrativeSupportCostsHecp(OverheadRateType.DEFAULT_PERCENTAGE, OverheadRateType.DEFAULT_PERCENTAGE.getRate());
+        return doSetAdministrativeSupportCostsHecp(HORIZON_EUROPE_GUARANTEE_TOTAL, HORIZON_EUROPE_GUARANTEE_TOTAL.getRate());
     }
 
     public IndustrialCostDataBuilder withAdministrationSupportCostsTotalRate(Integer customRate) {
@@ -267,7 +268,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     }
 
     public IndustrialCostDataBuilder withHecpAdministrationSupportCostsTotalRate(Integer customRate) {
-        return doSetAdministrativeSupportCostsHecp(OverheadRateType.TOTAL, customRate);
+        return doSetAdministrativeSupportCostsHecp(HORIZON_EUROPE_GUARANTEE_TOTAL, customRate);
     }
 
     public IndustrialCostDataBuilder withProcurementOverheads(String item, int project, int company) {

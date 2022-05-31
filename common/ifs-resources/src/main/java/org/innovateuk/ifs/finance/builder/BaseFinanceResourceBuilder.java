@@ -288,6 +288,151 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
         );
     }
 
+    public S withNonHecpIndustrialCosts() {
+        String developers = "Developers";
+        String testers = "Testers";
+
+        return withFinanceOrganisationDetails(asMap(
+                        FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
+                                        newLabourCost().
+                                                withId(1L, 2L).
+                                                withGrossEmployeeCost(new BigDecimal("10000.23"), new BigDecimal("5100.11"), BigDecimal.ZERO).
+                                                withDescription(developers, testers, WORKING_DAYS_PER_YEAR).
+                                                withLabourDays(100, 120, 250).
+                                                build(3)).
+                                build(),
+                        FinanceRowType.OVERHEADS, newOverheadCostCategory().withCosts(
+                                        newOverhead().
+                                                withId(1L).
+                                                withRateType(OverheadRateType.TOTAL).
+                                                withRate(1000).
+                                                build(1)).
+                                build(),
+                        FinanceRowType.MATERIALS, newDefaultCostCategory().withCosts(
+                                        newMaterials().
+                                                withId(1L, 2L).
+                                                withCost(new BigDecimal("33.33"), new BigDecimal("98.51")).
+                                                withQuantity(1, 2).
+                                                build(2)).
+                                build(),
+                        FinanceRowType.CAPITAL_USAGE, newDefaultCostCategory().withCosts(
+                                        newCapitalUsage().
+                                                withId(1L, 2L).
+                                                withNpv(new BigDecimal("30"), new BigDecimal("70")).
+                                                withResidualValue(new BigDecimal("10"), new BigDecimal("35")).
+                                                withDeprecation(12, 20).
+                                                withUtilisation(80, 70).
+                                                withExisting("New", "Existing").
+                                                build(2)).
+                                build(),
+                        FinanceRowType.SUBCONTRACTING_COSTS, newDefaultCostCategory().withCosts(
+                                        newSubContractingCost().
+                                                withId(1L, 2L).
+                                                withName("Bob", "Jim").
+                                                withCountry("UK", "Sweden").
+                                                withRole("Developer", "BA").
+                                                withCost(new BigDecimal("5000"), new BigDecimal("3000")).
+                                                build(2)).
+                                build(),
+                        FinanceRowType.TRAVEL, newDefaultCostCategory().withCosts(
+                                        newTravelCost().
+                                                withId(1L, 2L).
+                                                withCost(new BigDecimal("30"), new BigDecimal("50")).
+                                                withItem("Train", "Bus").
+                                                withQuantity(20, 30).
+                                                build(2))
+                                .build(),
+                        FinanceRowType.OTHER_COSTS, newDefaultCostCategory().withCosts(
+                                        newOtherCost().
+                                                withId(1L, 2L).
+                                                withDescription("Something", "Else").
+                                                withCost(new BigDecimal("100"), new BigDecimal("300")).
+                                                build(2))
+                                .build(),
+                        FinanceRowType.VAT, newVATCategory().withCosts(
+                                        newVATCost().
+                                                withId(1L).
+                                                withRegistered(false)
+                                                .build(1))
+                                .build(),
+                        FinanceRowType.PROCUREMENT_OVERHEADS, newDefaultCostCategory().withCosts(
+                                        newProcurementOverhead().
+                                                withId(1L, 2L).
+                                                withCompanyCost(1, 2).
+                                                withProjectCost(new BigDecimal("100"), new BigDecimal("300")).
+                                                build(2))
+                                .build(),
+                        FinanceRowType.ASSOCIATE_SALARY_COSTS, newDefaultCostCategory().withCosts(
+                                        newAssociateSalaryCost().
+                                                withId(1L, 2L).
+                                                withRole("Role 1", "Role 2").
+                                                withDuration(5, 10).
+                                                withCost(new BigInteger("100"), new BigInteger("200")).
+                                                build(2))
+                                .build(),
+                        FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS, newDefaultCostCategory().withCosts(
+                                        newAssociateDevelopmentCost().
+                                                withId(1L, 2L).
+                                                withRole("Role 1", "Role 2").
+                                                withCost(new BigInteger("100"), new BigInteger("200")).
+                                                build(2))
+                                .build(),
+                        FinanceRowType.CONSUMABLES, newDefaultCostCategory().withCosts(
+                                        newConsumable().
+                                                withId(1L, 2L).
+                                                withCost(new BigInteger("33"), new BigInteger("98")).
+                                                withQuantity(1, 2).
+                                                build(2)).
+                                build(),
+                        FinanceRowType.ASSOCIATE_SUPPORT, newDefaultCostCategory().withCosts(
+                                        newAssociateSupportCost().
+                                                withId(1L, 2L).
+                                                withCost(new BigInteger("33"), new BigInteger("98")).
+                                                withDescription("Desc 1", "Desc 2").
+                                                build(2))
+                                .build(),
+                        FinanceRowType.KNOWLEDGE_BASE, newDefaultCostCategory().withCosts(
+                                        newKnowledgeBaseCost().
+                                                withId(1L, 2L).
+                                                withCost(new BigInteger("33"), new BigInteger("98")).
+                                                withDescription("Desc 1", "Desc 2").
+                                                build(2))
+                                .build(),
+                        FinanceRowType.ESTATE_COSTS, newDefaultCostCategory().withCosts(
+                                        newEstateCost().
+                                                withId(1L, 2L).
+                                                withCost(new BigInteger("33"), new BigInteger("98")).
+                                                withDescription("Desc 1", "Desc 2").
+                                                build(2))
+                                .build(),
+                        FinanceRowType.KTP_TRAVEL, newDefaultCostCategory().withCosts(
+                                        newKtpTravelCost().
+                                                withId(1L, 2L).
+                                                withType(KtpTravelCostType.ASSOCIATE, KtpTravelCostType.SUPERVISOR).
+                                                withCost(new BigDecimal("30"), new BigDecimal("50")).
+                                                withDescription("Train", "Bus").
+                                                withQuantity(20, 30).
+                                                build(2))
+                                .build(),
+                        FinanceRowType.ADDITIONAL_COMPANY_COSTS, newAdditionalCompanyCostCategory().withCosts(
+                                        newAdditionalCompanyCost().
+                                                withId(1L, 2L).
+                                                withType(AdditionalCompanyCostType.ASSOCIATE_SALARY, AdditionalCompanyCostType.MANAGEMENT_SUPERVISION, AdditionalCompanyCostType.OTHER_STAFF, AdditionalCompanyCostType.CAPITAL_EQUIPMENT, AdditionalCompanyCostType.OTHER_COSTS, AdditionalCompanyCostType.CONSUMABLES).
+                                                withCost(new BigInteger("123")).
+                                                withDescription("Something").
+                                                build(6))
+                                .build(),
+                        FinanceRowType.INDIRECT_COSTS, newDefaultCostCategory().withCosts(
+                                Collections.singletonList(
+                                        newIndirectCost()
+                                                .withId(1L)
+                                                .withCost(BigInteger.ZERO)
+                                                .build())
+                        ).build()
+                )
+        );
+    }
+
     public S withIndustrialCostsForThirdPartyOfgem() {
         return withFinanceOrganisationDetails(asMap(
                         FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
@@ -374,6 +519,52 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                                 withCost(new BigDecimal("100"), new BigDecimal("200"), new BigDecimal("300")).
                                 withCostType(FinanceRowType.OTHER_COSTS, FinanceRowType.OTHER_COSTS, FinanceRowType.OTHER_COSTS).
                                 build(3))
+                        .build()));
+    }
+
+    public S withNonAcademicCosts() {
+        return withFinanceOrganisationDetails(asMap(
+                FinanceRowType.YOUR_FINANCE, newDefaultCostCategory().withCosts(
+                                newAcademicCost().
+                                        withName("tsb_reference").
+                                        withItem("TSBReference").
+                                        withCostType(FinanceRowType.YOUR_FINANCE).
+                                        build(1)).
+                        build(),
+                FinanceRowType.LABOUR, newDefaultCostCategory().withCosts(
+                                newAcademicCost().
+                                        withName("incurred_staff", "allocated_investigators", "exceptions_staff").
+                                        withCost(new BigDecimal("100"), new BigDecimal("200"), new BigDecimal("300")).
+                                        withCostType(FinanceRowType.LABOUR, FinanceRowType.LABOUR, FinanceRowType.LABOUR).
+                                        build(3)).
+                        build(),
+                FinanceRowType.OVERHEADS, newDefaultCostCategory().withCosts(
+                                newAcademicCost().
+                                        withName("indirect_costs").
+                                        withCost(new BigDecimal("100")).
+                                        withCostType(FinanceRowType.OVERHEADS).
+                                        build(1)).
+                        build(),
+                FinanceRowType.MATERIALS, newDefaultCostCategory().withCosts(
+                                newAcademicCost().
+                                        withName("incurred_other_costs").
+                                        withCost(new BigDecimal("100")).
+                                        withCostType(FinanceRowType.MATERIALS).
+                                        build(1)).
+                        build(),
+                FinanceRowType.TRAVEL, newDefaultCostCategory().withCosts(
+                                newAcademicCost().
+                                        withName("incurred_travel_subsistence").
+                                        withCost(new BigDecimal("100")).
+                                        withCostType(FinanceRowType.MATERIALS).
+                                        build(1)).
+                        build(),
+                FinanceRowType.OTHER_COSTS, newDefaultCostCategory().withCosts(
+                                newAcademicCost().
+                                        withName("allocated_estates_costs", "allocated_other_costs", "exceptions_other_costs").
+                                        withCost(new BigDecimal("100"), new BigDecimal("200"), new BigDecimal("300")).
+                                        withCostType(FinanceRowType.OTHER_COSTS, FinanceRowType.OTHER_COSTS, FinanceRowType.OTHER_COSTS).
+                                        build(3))
                         .build()));
     }
 
