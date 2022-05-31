@@ -297,6 +297,8 @@ public class ServiceResult<T> extends BaseFailingOrSucceedingResult<T, ServiceFa
 
     /**
      * A factory method to generate a failing ServiceResult based upon an ResponseStatusException.
+     *
+     * Allows additional ExceptionErrorAdaptor for extra control over the ServiceResult.
      */
     public static <T> ServiceResult<T> serviceFailure(ResponseStatusException responseStatusException,
                                                       ExceptionErrorAdaptor exceptionErrorAdaptor) {

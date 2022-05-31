@@ -10,7 +10,6 @@ import java.io.Serializable;
 @Builder
 public final class FileUploadRequest implements Serializable {
 
-
     @NotNull
     /** uuid reference for the file */
     private final String fileId;

@@ -25,13 +25,13 @@ public class BackingStoreConfiguration {
     }
 
     @Bean
-    @Profile(IfsProfileConstants.S3_STORAGE)
+    @Profile(IfsProfileConstants.NOT_LOCAL_STORAGE)
     public S3StorageProvider s3StorageProvider() {
         return new S3StorageProvider();
     }
 
     @Bean
-    @Profile(IfsProfileConstants.S3_STORAGE)
+    @Profile(IfsProfileConstants.NOT_LOCAL_STORAGE)
     public AmazonS3 amazonS3() {
         final BasicAWSCredentials basicAWSCredentials =
                 new BasicAWSCredentials(backingConfig.getS3().getAwsAccessKey(), backingConfig.getS3().getAwsSecretKey());
