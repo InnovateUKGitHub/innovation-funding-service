@@ -120,10 +120,8 @@ public class Application implements ProcessActivity {
     @JoinColumn(name = "applicationExternalConfigId", referencedColumnName = "id")
     private ApplicationExternalConfig applicationExternalConfig;
 
-    @Column(nullable = false)
-    private boolean preRegistration = false;
-
-    private Long preRegistrationApplicationId;
+    @Column(name = "pre_registration", nullable = false)
+    private boolean enableForEOI = false;
 
     public Application() {
     }
@@ -161,8 +159,7 @@ public class Application implements ProcessActivity {
         this.competitionReferralSource = application.getCompetitionReferralSource();
         this.companyAge = application.getCompanyAge();
         this.companyPrimaryFocus = application.getCompanyPrimaryFocus();
-        this.preRegistration = application.isPreRegistration();
-        this.preRegistrationApplicationId = application.getPreRegistrationApplicationId();
+        this.enableForEOI = application.isEnableForEOI();
     }
 
     protected boolean canEqual(Object other) {
@@ -562,19 +559,12 @@ public class Application implements ProcessActivity {
         this.applicationExternalConfig = applicationExternalConfig;
     }
 
-    public boolean isPreRegistration() {
-        return preRegistration;
+    public boolean isEnableForEOI() {
+        return enableForEOI;
     }
 
-    public void setPreRegistration(boolean preRegistration) {
-        this.preRegistration = preRegistration;
+    public void setEnableForEOI(boolean enableForEOI) {
+        this.enableForEOI = enableForEOI;
     }
 
-    public Long getPreRegistrationApplicationId() {
-        return preRegistrationApplicationId;
-    }
-
-    public void setPreRegistrationApplicationId(Long preRegistrationApplicationId) {
-        this.preRegistrationApplicationId = preRegistrationApplicationId;
-    }
 }

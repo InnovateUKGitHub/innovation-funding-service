@@ -1,1 +1,0 @@
-ALTER TABLE application ADD COLUMN pre_registration_application_id bigint(20) NULL;
