@@ -499,7 +499,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         Organisation org = organisationRepository.findOneByName(usersOrganisations.get(line.leadApplicant));
 
         ApplicationDataBuilder baseBuilder = applicationDataBuilder.withCompetition(competition.getCompetition()).
-                withBasicDetails(leadApplicant, line.title, line.researchCategory, line.resubmission, org.getId(), line.enableForEOI).
+                withBasicDetails(leadApplicant, line.title, line.researchCategory, line.resubmission, org.getId()).
                 withInnovationArea(line.innovationArea).
                 withStartDate(line.startDate).
                 withDurationInMonths(line.durationInMonths);
