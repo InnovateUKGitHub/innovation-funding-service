@@ -67,7 +67,8 @@
                         <dd>Innovate UK, as part of UK Research and Innovation</dd>
                     </th:block>
                 </dl>
-                <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Application progress</h2>
+                <!--TODO DO NOT MERGE use flag in APPLICATION instead-->
+                <h2 class="govuk-heading-m govuk-!-margin-bottom-0" th:text="${model.competition.enabledForPreRegistration}?'Expression of interest overview':'Application progress'"/>
                 <div th:include="fragments/elements :: progress-indicator"
                      th:with="percentage=${model.application.completion.intValue()},size='medium'" class="govuk-!-margin-top-6"/>
             </div>
