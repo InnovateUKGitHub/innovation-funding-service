@@ -80,8 +80,8 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
         long competitionId = application.getCompetition().getId();
         long organisations = organisationRepository.countDistinctByProcessRolesApplicationId(application.getId());
 
-        //TODO DON"t MERGE IT WITHOUT DOMAIN MODEL UPDATES
-        if (true) {
+
+        if (application.isEnableForEOI()) {
             questionsWithMultipleStatuses = questionRepository.countPreRegQuestionsWithMultipleStatuses(competitionId);
             questionsWithSingleStatus = questionRepository.countPreRegQuestionsWithSingleStatus(competitionId);
         } else {

@@ -40,7 +40,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  * Implements {@link SectionStatusService}
  */
 
-//TODO do not merge, application.isPreReg() == true
+
 @Service
 public class SectionStatusServiceImpl extends BaseTransactionalService implements SectionStatusService {
 
@@ -100,7 +100,7 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
 
         Section financeSection = sections.stream()
                 .filter(section -> section.getType() == FINANCE)
-                .filter(section -> true ? section.isEnabledForPreRegistration() : true)
+                .filter(section -> !application.isEnableForEOI() || section.isEnabledForPreRegistration())
                 .collect(toList()).get(0);
 
         for (long organisationId : applicationOrganisations) {
@@ -156,11 +156,11 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
             resetProcurementMilestoneIfProjectCostsAreNotEqualToPaymentTotal(application, markedAsCompleteById);
         }
         sectionService.getQuestionsForSectionAndSubsections(section.getId())
-                .andOnSuccessReturnVoid(questions -> questions.stream()
+                .andOnSuccessReturnVoid(questions -> questions
                         .forEach(q -> {
                             QuestionResource questionResource =  questionService.getQuestionById(q).getSuccess();
-                            if (!true
-                                    || (true && questionResource.isEnabledForPreRegistration())) {
+                            if (!application.isEnableForEOI()
+                                    || (application.isEnableForEOI() && questionResource.isEnabledForPreRegistration())) {
                                 questionStatusService.markAsCompleteNoValidate(new QuestionApplicationCompositeId(q, application.getId()), markedAsCompleteById);
                                 // Assign back to lead applicant.
                                 // TODO seems weird? Remove??
@@ -249,8 +249,8 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
 
         if (section.hasChildSections()) {
             for (Section childSection : section.getChildSections()) {
-                if (!true
-                        || (true && childSection.isEnabledForPreRegistration())) {
+                if (!application.isEnableForEOI()
+                        || (application.isEnableForEOI() && childSection.isEnabledForPreRegistration())) {
                     boolean complete = isSectionComplete(childSection, completedQuestionsByOrganisations, application, organisationId, applicationOrganisations);
                     if (!complete) {
                         return false;
@@ -260,8 +260,8 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
         }
 
         for (Question question : section.getQuestions()) {
-            if (!true
-                    || (true && question.isEnabledForPreRegistration())) {
+            if (!application.isEnableForEOI()
+                    || (application.isEnableForEOI() && question.isEnabledForPreRegistration())) {
                 if (!completedQuestionsByOrganisations.containsKey(organisationId)
                         || !completedQuestionsByOrganisations.get(organisationId).contains((question.getId()))) {
                     return false;
