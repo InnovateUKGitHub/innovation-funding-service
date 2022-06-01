@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 public interface FileDownload {
 
-    @GetMapping(ApiVersion.VERSION_ONE + "/download/{uuid}")
+    @GetMapping(ApiVersion.VERSION_ONE + "/stream/{uuid}")
     ResponseEntity<Resource> fileStreamByUuid(@PathVariable("uuid") final String uuid);
 
-    @GetMapping(ApiVersion.VERSION_ONE + "/fileDownloadResponse/{uuid}")
+    @GetMapping(ApiVersion.VERSION_ONE + "/download/{uuid}")
     ResponseEntity<FileDownloadResponse> fileDownloadResponse(@PathVariable("uuid") final String uuid);
 
 }
