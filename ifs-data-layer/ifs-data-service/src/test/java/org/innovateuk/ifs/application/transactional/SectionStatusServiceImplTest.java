@@ -123,6 +123,7 @@ public class SectionStatusServiceImplTest extends BaseUnitTestMocksTest {
                 .withId(financeSectionId)
                 .withSectionType(SectionType.FINANCE)
                 .withQuestions(questions)
+                .withEnabledForPreRegistration(true)
                 .build();
 
         Section financeOverviewSection = newSection()
