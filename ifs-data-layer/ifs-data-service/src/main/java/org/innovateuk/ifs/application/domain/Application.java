@@ -121,7 +121,7 @@ public class Application implements ProcessActivity {
     private ApplicationExternalConfig applicationExternalConfig;
 
     @Column(name = "pre_registration", nullable = false)
-    private boolean enableForEOI;
+    private boolean enableForEOI = false;
 
     public Application() {
     }
