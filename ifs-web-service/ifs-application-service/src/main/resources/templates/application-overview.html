@@ -67,7 +67,7 @@
                         <dd>Innovate UK, as part of UK Research and Innovation</dd>
                     </th:block>
                 </dl>
-                <h2 class="govuk-heading-m govuk-!-margin-bottom-0" th:text="${model.application.enableForEOI}?'Expression of interest overview':'Application progress'"/>
+                <h2 class="govuk-heading-m govuk-!-margin-bottom-0" th:text="${model.application.enableForEOI}?'Expression of interest progress':'Application progress'"/>
                 <div th:include="fragments/elements :: progress-indicator"
                      th:with="percentage=${model.application.completion.intValue()},size='medium'" class="govuk-!-margin-top-6"/>
             </div>
