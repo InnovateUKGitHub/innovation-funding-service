@@ -104,11 +104,13 @@ public class ApplicationOverviewModelPopulatorTest {
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
+                .withEnableForEOI(true)
                 .build();
         List<QuestionResource> questions = newQuestionResource()
                 .withShortName("A question")
                 .withQuestionSetupType(ASSESSED_QUESTION)
                 .withQuestionNumber("4")
+                .withEnabledForPreRegistration(true)
                 .build(1);
         UserResource user = newUserResource().build();
         OrganisationResource organisation = newOrganisationResource().build();
@@ -126,13 +128,17 @@ public class ApplicationOverviewModelPopulatorTest {
         SectionResource childSection = newSectionResource()
                 .withName("Child finance")
                 .withPriority(3)
+                .withEnabledForPreRegistration(true)
                 .build();
+
         List<SectionResource> sections = newSectionResource()
                 .withPriority(1, 2, 3, 4)
                 .withName("Section with questions", "Finances", "Project details", "Terms and conditions")
                 .withType(SectionType.GENERAL, SectionType.FINANCES, SectionType.PROJECT_DETAILS, SectionType.TERMS_AND_CONDITIONS)
                 .withChildSections(emptyList(), Collections.singletonList(childSection.getId()), emptyList(), emptyList())
+                .withEnabledForPreRegistration(true)
                 .withQuestions(questions.stream().map(QuestionResource::getId).collect(Collectors.toList()), emptyList(), emptyList(), emptyList())
+
                 .build(4);
         sections.add(childSection);
         childSection.setParentSection(sections.get(1).getId());
@@ -222,11 +228,13 @@ public class ApplicationOverviewModelPopulatorTest {
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
+                .withEnableForEOI(true)
                 .build();
         List<QuestionResource> questions = newQuestionResource()
                 .withShortName("A question")
                 .withQuestionSetupType(ASSESSED_QUESTION)
                 .withQuestionNumber("4")
+                .withEnabledForPreRegistration(true)
                 .build(1);
         UserResource user = newUserResource().build();
         OrganisationResource organisation = newOrganisationResource().build();
@@ -244,6 +252,7 @@ public class ApplicationOverviewModelPopulatorTest {
         SectionResource childSection = newSectionResource()
                 .withName("Child finance")
                 .withPriority(3)
+                .withEnabledForPreRegistration(true)
                 .build();
         List<SectionResource> sections = newSectionResource()
                 .withPriority(1, 2, 3, 4)
@@ -251,6 +260,7 @@ public class ApplicationOverviewModelPopulatorTest {
                 .withType(SectionType.GENERAL, SectionType.FINANCES, SectionType.PROJECT_DETAILS, SectionType.TERMS_AND_CONDITIONS)
                 .withChildSections(emptyList(), Collections.singletonList(childSection.getId()), emptyList(), emptyList())
                 .withQuestions(questions.stream().map(QuestionResource::getId).collect(Collectors.toList()), emptyList(), emptyList(), emptyList())
+                .withEnabledForPreRegistration(true)
                 .build(4);
         sections.add(childSection);
         childSection.setParentSection(sections.get(1).getId());
