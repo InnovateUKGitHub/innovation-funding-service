@@ -6,7 +6,7 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
 import lombok.extern.slf4j.Slf4j;
-import org.innovateuk.ifs.api.filestorage.v1.upload.FileDeletionRequest;
+import org.innovateuk.ifs.api.filestorage.v1.delete.FileDeletionRequest;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.filestorage.cfg.storage.BackingStoreConfigurationProperties;
 import org.innovateuk.ifs.filestorage.exception.ServiceException;

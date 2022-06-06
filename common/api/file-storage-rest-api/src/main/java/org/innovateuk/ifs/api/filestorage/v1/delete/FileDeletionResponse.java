@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.api.filestorage.v1.upload;
+package org.innovateuk.ifs.api.filestorage.v1.delete;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

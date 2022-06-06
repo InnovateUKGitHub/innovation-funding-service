@@ -15,7 +15,4 @@ public interface FileUpload {
     @PostMapping(value = ApiVersion.VERSION_ONE + "/uploadRaw")
     ResponseEntity<FileUploadResponse> fileUploadRaw(@RequestBody byte[] payload);
 
-    @PostMapping(value = ApiVersion.VERSION_ONE + "/delete")
-    ResponseEntity<FileDeletionResponse> deleteFile(@Valid @RequestBody FileDeletionRequest fileDeletionRequest);
-
 }

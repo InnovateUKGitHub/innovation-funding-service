@@ -5,9 +5,10 @@ import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.IfsConstants;
 import org.innovateuk.ifs.api.filestorage.util.FileHashing;
+import org.innovateuk.ifs.api.filestorage.v1.delete.FileDeletion;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownload;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
-import org.innovateuk.ifs.api.filestorage.v1.upload.FileDeletionRequest;
+import org.innovateuk.ifs.api.filestorage.v1.delete.FileDeletionRequest;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUpload;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadResponse;
@@ -46,6 +47,9 @@ public class FileServiceImpl implements FileService {
 
     @Autowired
     private FileUpload fileUploadFeign;
+
+    @Autowired
+    private FileDeletion fileDeletionFeign;
 
     @Autowired
     private GlusterFileServiceImpl glusterFileService;
@@ -145,7 +149,7 @@ public class FileServiceImpl implements FileService {
         String fileUuid = fileEntry.getFileUuid();
         fileServiceTransactionHelper.delete(fileEntryId);
         if (isS3Storage(fileEntry)) {
-            fileUploadFeign.deleteFile(new FileDeletionRequest(fileUuid));
+            fileDeletionFeign.deleteFile(new FileDeletionRequest(fileUuid));
         }
         // Why would you return the entity after delete? return new to fit existing interface
         return serviceSuccess(fileEntry);
