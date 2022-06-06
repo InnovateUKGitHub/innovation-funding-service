@@ -11,6 +11,8 @@ include("common:api:file-storage-rest-api")
 
 // Starters - should only depend on external libs (mostly spring)
 include("common:starter:ifs-starter-audit")
+include("common:starter:ifs-starter-audit:ifs-starter-audit-amqp")
+include("common:starter:ifs-starter-audit:ifs-starter-audit-newrelic")
 include("common:starter:ifs-starter-cache")
 include("common:starter:ifs-starter-common")
 include("common:starter:ifs-starter-feign")
