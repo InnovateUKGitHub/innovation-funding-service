@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.filestorage.storage;
 
 import lombok.extern.slf4j.Slf4j;
+import org.innovateuk.ifs.api.audit.Audit;
+import org.innovateuk.ifs.api.audit.AuditMessageBuilder;
+import org.innovateuk.ifs.api.audit.AuditType;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
 import org.innovateuk.ifs.api.filestorage.v1.delete.FileDeletionRequest;
 import org.innovateuk.ifs.api.filestorage.v1.delete.FileDeletionResponse;
@@ -17,6 +20,7 @@ import org.innovateuk.ifs.filestorage.storage.validator.TikaFileValidator;
 import org.innovateuk.ifs.filestorage.storage.validator.UploadValidator;
 import org.innovateuk.ifs.filestorage.util.FileUploadResponseMapper;
 import org.innovateuk.ifs.filestorage.virusscan.VirusScanProvider;
+import org.innovateuk.ifs.starters.audit.AuditAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.InvalidMimeTypeException;
 import org.springframework.util.StopWatch;
@@ -52,6 +56,9 @@ public class StorageService {
     @Autowired
     private UploadValidator uploadValidator;
 
+    @Autowired
+    private AuditAdapter auditAdapter;
+
     public FileUploadResponse fileUpload(FileUploadRequest fileUploadRequest) throws VirusDetectedException, InvalidMimeTypeException {
         StopWatch stopWatch = new StopWatch(StorageService.class.getSimpleName()
                 + " id: " + fileUploadRequest.getFileId()
@@ -78,12 +85,14 @@ public class StorageService {
 
             stopWatch.start("Update Stored Status in DB");
             storageServiceHelper.saveProviderResult(fileUploadRequest, providerLocation);
+            auditAdapter.audit(AuditMessageBuilder.builder(AuditType.FILE_STORAGE_SUCCESS_EVENT).build());
             stopWatch.stop();
             log.info(stopWatch.prettyPrint());
         } catch (ResponseStatusException responseStatusException) {
             stopWatch.stop();
             stopWatch.start("Update Failed Status in DB");
             storageServiceHelper.saveErrorResult(fileUploadRequest, responseStatusException);
+            auditAdapter.audit(AuditMessageBuilder.builder(AuditType.FILE_STORAGE_FAILURE_EVENT).build());
             stopWatch.stop();
             log.info(stopWatch.prettyPrint());
             throw responseStatusException;

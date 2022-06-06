@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-org.innovateuk.ifs.starters.audit.log.cfg.AuditAutoConfiguration
+org.innovateuk.ifs.starters.audit.cfg.AuditAutoConfiguration
