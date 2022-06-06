@@ -53,7 +53,6 @@ public class ApplicationResource {
     private FundingDecision fundingDecision;
     private Long assessmentPeriodId;
     private ZonedDateTime feedbackReleased;
-    private boolean enableForEOI;
 
     public Long getId() {
         return id;
@@ -351,14 +350,6 @@ public class ApplicationResource {
         return feedbackReleased != null && ZonedDateTime.now().isAfter(feedbackReleased);
     }
 
-    public boolean isEnableForEOI() {
-        return enableForEOI;
-    }
-
-    public void setEnableForEOI(boolean enableForEOI) {
-        this.enableForEOI = enableForEOI;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -395,7 +386,6 @@ public class ApplicationResource {
                 .append(event, that.event)
                 .append(lastStateChangeDate, that.lastStateChangeDate)
                 .append(assessmentPeriodId, that.assessmentPeriodId)
-                .append(enableForEOI, that.enableForEOI)
                 .isEquals();
     }
 
@@ -429,7 +419,6 @@ public class ApplicationResource {
                 .append(event)
                 .append(lastStateChangeDate)
                 .append(assessmentPeriodId)
-                .append(enableForEOI)
                 .toHashCode();
     }
 }
