@@ -11,7 +11,13 @@ public class NewRelicAuditChannel implements AuditChannel {
 
     @Override
     public void doSendMessage(AuditMessage auditMessage) {
-        Map<String, Object> eventAttributes = new HashMap<String, Object>();
-        NewRelic.getAgent().getInsights().recordCustomEvent("MyCustomEvent", eventAttributes);
+        Map<String, Object> eventAttributes = new HashMap<>();
+        eventAttributes.put("userId", auditMessage.getUserId());
+        eventAttributes.put("created", auditMessage.getCreated());
+        eventAttributes.put("span", auditMessage.getSpanId());
+        eventAttributes.put("trace", auditMessage.getTraceId());
+        eventAttributes.put("uuid", auditMessage.getUuid());
+        eventAttributes.put("payload", auditMessage.getPayload());
+        NewRelic.getAgent().getInsights().recordCustomEvent(auditMessage.getAuditType(), eventAttributes);
     }
 }
