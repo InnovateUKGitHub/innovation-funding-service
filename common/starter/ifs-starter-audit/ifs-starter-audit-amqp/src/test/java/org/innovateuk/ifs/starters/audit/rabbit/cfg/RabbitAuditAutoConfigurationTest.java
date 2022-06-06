@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.starters.audit.cfg.audit;
+package org.innovateuk.ifs.starters.audit.rabbit.cfg;
 
 import org.innovateuk.ifs.api.audit.AuditChannel;
 import org.innovateuk.ifs.starter.common.util.ProfileUtils;
@@ -7,7 +7,6 @@ import org.innovateuk.ifs.starters.audit.log.LogAuditChannel;
 import org.innovateuk.ifs.starters.audit.log.cfg.AuditAutoConfiguration;
 import org.innovateuk.ifs.starters.audit.rabbit.RabbitAuditChannel;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.ResourceLock;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
@@ -17,16 +16,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.innovateuk.ifs.IfsProfileConstants.AMQP_PROFILE;
-import static org.innovateuk.ifs.starters.audit.cfg.AuditConfigurationProperties.AUDIT_CONFIG_PREFIX;
-import static org.innovateuk.ifs.starters.audit.cfg.rabbit.RabbitAuditConfiguration.AUDIT_OBJECT_MAPPER_BEAN_NAME;
-import static org.innovateuk.ifs.starters.audit.cfg.rabbit.RabbitAuditConfiguration.AUDIT_QUEUE_BEAN_NAME;
+import static org.innovateuk.ifs.starters.audit.rabbit.cfg.RabbitAuditAutoConfiguration.AUDIT_OBJECT_MAPPER_BEAN_NAME;
+import static org.innovateuk.ifs.starters.audit.rabbit.cfg.RabbitAuditAutoConfiguration.AUDIT_QUEUE_BEAN_NAME;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class RabbitAuditAutoConfigurationTest {
+public class RabbitAuditAutoConfigurationTest {
 
     @Test
-    @ResourceLock(CONTEXT_RESOURCE_LOCK)
-    void auditContextConfiguration() {
+    public void auditContextConfiguration() {
         ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withSystemProperties(ProfileUtils.activeProfilesString(AMQP_PROFILE))
             .withInitializer(new IfsRabbitContextInitializer())
