@@ -157,4 +157,70 @@ public class SectionStatusServiceImplTest extends BaseUnitTestMocksTest {
         assertTrue(result.contains(financeSectionId));
         assertTrue(result.contains(financeOverviewSectionId));
     }
+
+    @Test
+    public void completeSectionWithoutPreRegistration() {
+
+        long applicationId = 1L;
+        long organisationId = 2L;
+        long financeSectionId = 3L;
+        long financeOverviewSectionId = 4L;
+
+        ProcessRole processRole = newProcessRole()
+                .withOrganisationId(organisationId)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
+                .build();
+
+        List<Question> questions = newQuestion()
+                .withMultipleStatuses(true)
+                .withMarksAsCompleteEnabled(true)
+                .withEnabledForPreRegistration(true,false)
+                .build(2);
+
+        List<QuestionStatusResource> questionStatusResources = newQuestionStatusResource()
+                .withMarkedAsComplete(true)
+                .withMarkedAsCompleteByOrganisationId(organisationId)
+                .withQuestion(questions.get(0).getId())
+                .build(1);
+
+        Section financeSection = newSection()
+                .withId(financeSectionId)
+                .withSectionType(SectionType.FINANCE)
+                .withQuestions(questions)
+                .withEnabledForPreRegistration(true)
+                .build();
+
+        Section financeOverviewSection = newSection()
+                .withId(financeOverviewSectionId)
+                .withSectionType(SectionType.OVERVIEW_FINANCES)
+                .withQuestions(questions)
+                .withEnabledForPreRegistration(false)
+                .build();
+
+        Competition competition = newCompetition()
+                .withSections(asList(financeSection, financeOverviewSection))
+                .withQuestions(questions)
+                .build();
+
+        Application application = newApplication()
+                .withId(applicationId)
+                .withCompetition(competition)
+                .withProcessRoles(processRole)
+                .withEnableForEOI(true)
+                .build();
+
+        Map<Long, List<QuestionStatusResource>> completedQuestionStatuses = new HashMap<>();
+        completedQuestionStatuses.put(organisationId, questionStatusResources);
+
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
+        when(questionStatusServiceMock.findCompletedQuestionsByApplicationId(applicationId)).thenReturn(serviceSuccess(questionStatusResources));
+        when(financeServiceMock.collaborativeFundingCriteriaMet(application.getId())).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.fundingSoughtValid(application.getId())).thenReturn(serviceSuccess(true));
+        when(applicationValidatorService.isFinanceOverviewComplete(application)).thenReturn(true);
+
+        Set<Long> result = sectionStatusService.getCompletedSections(applicationId, organisationId).getSuccess();
+
+        assertTrue(result.contains(financeSectionId));
+        assertTrue(result.contains(financeOverviewSectionId));
+    }
 }

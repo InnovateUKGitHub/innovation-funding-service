@@ -211,6 +211,84 @@ public class ApplicationOverviewModelPopulatorTest {
         verify(questionService).removeNotifications(questionStatuses);
     }
 
+
+    @Test
+    public void populateModelWithAndWithoutPreRegistration() {
+        GrantTermsAndConditionsResource termsAndCondition = newGrantTermsAndConditionsResource().withName("Innovate UK").build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCollaborationLevel(SINGLE)
+                .withTermsAndConditions(termsAndCondition)
+                .build();
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competition.getId())
+                .withEnableForEOI(true)
+                .build();
+        List<QuestionResource> questions = newQuestionResource()
+                .withShortName("A question")
+                .withQuestionSetupType(ASSESSED_QUESTION)
+                .withQuestionNumber("4")
+                .withEnabledForPreRegistration(true)
+                .build(1);
+        UserResource user = newUserResource().build();
+        OrganisationResource organisation = newOrganisationResource().build();
+        List<ProcessRoleResource> processRoles = newProcessRoleResource()
+                .withUser(user, newUserResource().build())
+                .withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR)
+                .withOrganisation(organisation.getId(), 99L)
+                .build(2);
+        List<QuestionStatusResource> questionStatuses = newQuestionStatusResource()
+                .withQuestion(questions.get(0).getId())
+                .withMarkedAsComplete(false)
+                .withAssignee(processRoles.get(1).getId())
+                .build(1);
+
+        SectionResource childSection = newSectionResource()
+                .withName("Child finance")
+                .withPriority(3)
+                .withEnabledForPreRegistration(true)
+                .build();
+
+        List<SectionResource> sections = newSectionResource()
+                .withPriority(1, 2, 3, 4)
+                .withName("Section with questions", "Finances", "Project details", "Terms and conditions")
+                .withType(SectionType.GENERAL, SectionType.FINANCES, SectionType.PROJECT_DETAILS, SectionType.TERMS_AND_CONDITIONS)
+                .withChildSections(emptyList(), Collections.singletonList(childSection.getId()), emptyList(), emptyList())
+                .withEnabledForPreRegistration(false,false,true,true)
+                .withQuestions(questions.stream().map(QuestionResource::getId).collect(Collectors.toList()), emptyList(), emptyList(), emptyList())
+
+                .build(4);
+        sections.add(childSection);
+        childSection.setParentSection(sections.get(1).getId());
+
+        Map<Long, Set<Long>> completedSectionsByOrganisation = emptyMap();
+
+        when(organisationRestService.getByUserAndApplicationId(user.getId(), application.getId())).thenReturn(restSuccess(organisation));
+        when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
+        when(sectionRestService.getByCompetition(application.getCompetition())).thenReturn(restSuccess(sections));
+        when(questionRestService.findByCompetition(application.getCompetition())).thenReturn(restSuccess(questions));
+        when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(processRoles));
+        when(questionStatusRestService.findByApplicationAndOrganisation(application.getId(), organisation.getId())).thenReturn(restSuccess(questionStatuses));
+        when(sectionStatusRestService.getCompletedSectionIds(application.getId(), organisation.getId())).thenReturn(restSuccess(asList(sections.get(1).getId(), childSection.getId())));
+        when(questionService.getNotificationsForUser(questionStatuses, user.getId())).thenReturn(questionStatuses);
+        when(messageSource.getMessage("ifs.section.finances.description", null, Locale.getDefault())).thenReturn("Finance description");
+        when(messageSource.getMessage("ifs.section.projectDetails.description", null, Locale.getDefault())).thenReturn("Project details description");
+        when(messageSource.getMessage("ifs.section.termsAndConditions.description", null, Locale.getDefault())).thenReturn("T&Cs description");
+        when(applicationUrlHelper.getQuestionUrl(any(), anyLong(), anyLong(), anyLong())).thenReturn(Optional.of("/the-question-url"));
+        when(sectionStatusRestService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(restSuccess(completedSectionsByOrganisation));
+        when(grantTermsAndConditionsResource.isProcurementThirdParty()).thenReturn(false);
+
+        ApplicationOverviewViewModel viewModel = populator.populateModel(application, user);
+
+        assertEquals(application, viewModel.getApplication());
+        assertEquals(competition, viewModel.getCompetition());
+        assertEquals(processRoles.get(0), viewModel.getProcessRole());
+        assertTrue(viewModel.isLead());
+
+        assertEquals(2, viewModel.getSections().size());
+
+
+    }
+
     @Test
     public void thirdPartyApplication() {
         GrantTermsAndConditionsResource termsAndCondition = newGrantTermsAndConditionsResource()
