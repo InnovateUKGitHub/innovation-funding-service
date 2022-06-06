@@ -18,6 +18,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileService;
 import org.innovateuk.ifs.file.transactional.gluster.GlusterFileServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -28,8 +29,7 @@ import java.io.InputStream;
 import java.util.NoSuchElementException;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_CREATE_FILE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_FIND_FILE_ENTRY_ID_FROM_FILE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
@@ -92,9 +92,23 @@ public class FileServiceImpl implements FileService {
             log.error("Failed to save file", e);
             return ServiceResult.serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));
         } catch (ResponseStatusException responseStatusException) {
-            // TODO some sort of adaptor to map from this to CommonFailureKeys??
             log.error("Failed to save file", responseStatusException);
-            return serviceFailure(responseStatusException);
+            // Map these back to the existing client contract
+            if (responseStatusException.getStatus().equals(HttpStatus.BAD_REQUEST)) {
+                if (responseStatusException.getReason().contains("InvalidUploadException")) {
+                    return ServiceResult.serviceFailure(new Error(FILES_INCORRECTLY_REPORTED_FILESIZE));
+                }
+                if (responseStatusException.getReason().contains("MimeMismatchException")) {
+                    return ServiceResult.serviceFailure(new Error(FILES_INCORRECTLY_REPORTED_MEDIA_TYPE));
+                }
+                if (responseStatusException.getReason().contains("MimeMismatchException")) {
+                    return ServiceResult.serviceFailure(new Error(FILES_INCORRECTLY_REPORTED_MEDIA_TYPE));
+                }
+                if (responseStatusException.getReason().contains("VirusDetectedException")) {
+                    return ServiceResult.serviceFailure(new Error(FILES_FILE_QUARANTINED));
+                }
+            }
+            return ServiceResult.serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));
         }
     }
 
