@@ -120,6 +120,10 @@ public class Application implements ProcessActivity {
     @JoinColumn(name = "applicationExternalConfigId", referencedColumnName = "id")
     private ApplicationExternalConfig applicationExternalConfig;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "applicationPreRegConfigId", referencedColumnName = "id")
+    private ApplicationPreRegConfig applicationPreRegConfig;
+
     public Application() {
     }
 
@@ -553,5 +557,13 @@ public class Application implements ProcessActivity {
 
     public void setApplicationExternalConfig(ApplicationExternalConfig applicationExternalConfig) {
         this.applicationExternalConfig = applicationExternalConfig;
+    }
+
+    public ApplicationPreRegConfig getApplicationPreRegConfig() {
+        return applicationPreRegConfig;
+    }
+
+    public void setApplicationPreRegConfig(ApplicationPreRegConfig applicationPreRegConfig) {
+        this.applicationPreRegConfig = applicationPreRegConfig;
     }
 }
