@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.filestorage.component;
 
+import org.innovateuk.ifs.IfsConstants;
 import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.api.filestorage.util.FileUploadRequestBuilder;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
@@ -35,7 +36,6 @@ import java.io.IOException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.innovateuk.ifs.api.filestorage.util.FileUploadRequestBuilder.DEFAULT_SYSTEM_ID;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
@@ -73,7 +73,7 @@ class FileStorageServiceTest {
         assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
 
         FileStorageRecord fileStorageRecord = fileStorageRecordRepository.findById(fileUploadRequest.getFileId()).get();
-        assertThat(fileStorageRecord.systemId(), equalTo(DEFAULT_SYSTEM_ID));
+        assertThat(fileStorageRecord.systemId(), equalTo(IfsConstants.IFS_SYSTEM_USER));
         assertThat(fileStorageRecord.userId(), equalTo(FileStorageServiceTest.class.getSimpleName()));
         assertThat(fileStorageRecord.mimeType(), equalTo(MediaType.IMAGE_JPEG_VALUE));
         assertThat(fileStorageRecord.fileSizeBytes(), equalTo(fileUploadRequest.getFileSizeBytes()));
@@ -117,7 +117,7 @@ class FileStorageServiceTest {
         assertThat(rse.getReason(), equalTo("MimeMismatchException->image/jpeg when image/gif was specified"));
 
         FileStorageRecord fileStorageRecord = fileStorageRecordRepository.findById(fileUploadRequest.getFileId()).get();
-        assertThat(fileStorageRecord.systemId(), equalTo(DEFAULT_SYSTEM_ID));
+        assertThat(fileStorageRecord.systemId(), equalTo(IfsConstants.IFS_SYSTEM_USER));
         assertThat(fileStorageRecord.userId(), equalTo(FileStorageServiceTest.class.getSimpleName()));
         assertThat(fileStorageRecord.mimeType(), equalTo(MediaType.IMAGE_GIF_VALUE));
         assertThat(fileStorageRecord.fileSizeBytes(), equalTo(fileUploadRequest.getFileSizeBytes()));
