@@ -10,6 +10,7 @@ import java.time.ZonedDateTime;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class PublicContentItemViewModelMapperTest {
     @Test
@@ -31,7 +32,9 @@ public class PublicContentItemViewModelMapperTest {
                 .withCompetitionOpenDate(openDate)
                 .withCompetitionCloseDate(closedDate)
                 .withCompetitionTitle(competitionTitle)
-                .withPublicContentResource(publicContentResource).build();
+                .withPublicContentResource(publicContentResource)
+                .withEoiEnabled(true)
+                .build();
 
         PublicContentItemViewModelMapper contentItemViewModelMapper = new PublicContentItemViewModelMapper();
         PublicContentItemViewModel result = contentItemViewModelMapper.mapToViewModel(publicContentItemResource);
@@ -43,6 +46,7 @@ public class PublicContentItemViewModelMapperTest {
         assertEquals(eligibilitySummary, result.getEligibilitySummary());
         assertEquals(shortDescription, result.getShortDescription());
         assertEquals(competitionId, result.getCompetitionId());
+        assertTrue(result.isEoiEnabled());
     }
 
 }
