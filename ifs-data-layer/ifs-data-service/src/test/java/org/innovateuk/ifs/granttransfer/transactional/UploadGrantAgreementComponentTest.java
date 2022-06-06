@@ -2,6 +2,7 @@ package org.innovateuk.ifs.granttransfer.transactional;
 
 import com.google.common.io.ByteStreams;
 import org.innovateuk.ifs.api.filestorage.util.FileHashing;
+import org.innovateuk.ifs.api.filestorage.v1.delete.FileDeletion;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownload;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUpload;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadResponse;
@@ -52,6 +53,9 @@ public class UploadGrantAgreementComponentTest extends MockBeanTest {
 
     @Autowired
     private EuGrantTransferController euGrantTransferController;
+
+    @MockBean // Feign microservice call
+    private FileDeletion fileDeletion;
 
     @MockBean // Feign microservice call
     private FileDownload fileDownload;
