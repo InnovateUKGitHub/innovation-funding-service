@@ -51,9 +51,13 @@ public class PublicContentMenuViewModel {
     }
 
     public String getCompetitionURL() {
-        return isInviteOnly()?
+        return hasHash() ?
                 String.format(PRIVATE_COMPETITION_OVERVIEW_URL, webBaseUrl, competition.getId(), this.hash) :
                 String.format(COMPETITION_OVERVIEW_URL, webBaseUrl, competition.getId());
+    }
+
+    private boolean hasHash() {
+        return this.hash != null;
     }
 
 }
