@@ -137,7 +137,7 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
         return withArray((feedbackReleased, application) -> application.setFeedbackReleased(feedbackReleased), feedbackReleaseds);
     }
 
-    public ApplicationResourceBuilder withEnableForEOI(Boolean... enableForEOIs) {
-        return withArray((enableForEOI, object) -> setField("enableForEOI", enableForEOI, object), enableForEOIs);
+    public ApplicationResourceBuilder withEnableForEOI(boolean... enableForEOIs) {
+        return withArray((enableForEOI, application) -> application.setEnableForEOI(enableForEOI), enableForEOIs);
     }
 }
