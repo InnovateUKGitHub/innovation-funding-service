@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: file-storage-service
+  annotations:
+    monitor: monitor
+    waitForDb: waitForDb
+    javaDebug: javaDebug
+    pullSecrets: pullSecrets
+    slow: slow
+    newRelic: newRelic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: file-storage-service
+  template:
+    metadata:
+      labels:
+        app: file-storage-service
+    spec:
+      containers:
+      - name: spring-boot-service-container
+        image: file-storage-service
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /monitoring/health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 31
+          timeoutSeconds: 25
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /monitoring/health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          timeoutSeconds: 25
+          successThreshold: 1
+          failureThreshold: 3
+        envFrom:
+          - secretRef:
+              name: file-storage-service-secrets
+          - configMapRef:
+              name: file-storage-service-config
+        env:
+        - name: JAVA_TOOL_OPTIONS
+          value: -Xms3500m -Xmx3500m -javaagent:/newrelic.jar
+        - name: NEW_RELIC_APP_NAME
+          value: 'ifs-$(NEW_RELIC_ENV)-file-storage-service'
+        ports:
+          - containerPort: 8080
+        resources:
+          limits:
+            cpu: 2000m
+          requests:
+            cpu: 400m
+            memory: 4000M
+

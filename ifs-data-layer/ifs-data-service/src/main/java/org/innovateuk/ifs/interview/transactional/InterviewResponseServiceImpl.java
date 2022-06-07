@@ -4,12 +4,12 @@ package org.innovateuk.ifs.interview.transactional;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.file.resource.BasicFileAndContents;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.BasicFileAndContents;
-import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
-import org.innovateuk.ifs.file.transactional.FileEntryService;
-import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.file.resource.FileAndContents;
+import org.innovateuk.ifs.file.controller.FilesizeAndTypeFileValidator;
+import org.innovateuk.ifs.file.service.FileEntryService;
+import org.innovateuk.ifs.file.service.FileService;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.domain.InterviewAssignmentResponseOutcome;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
@@ -70,7 +70,7 @@ public class InterviewResponseServiceImpl implements InterviewResponseService {
                         (fileAttributes, inputStreamSupplier) -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
                                 .andOnSuccessReturnVoid(created -> {
                                     InterviewAssignmentResponseOutcome outcome = new InterviewAssignmentResponseOutcome();
-                                    outcome.setFileResponse(created.getValue());
+                                    outcome.setFileResponse(created);
                                     outcome.setProcess(interviewAssignment);
                                     interviewAssignmentWorkflowHandler.respondToInterviewPanel(interviewAssignment, outcome);
                                 })).toServiceResult());

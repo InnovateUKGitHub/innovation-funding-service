@@ -15,3 +15,4 @@ patchesStrategicMerge:
   - new-relic-config.yml
   - shibboleth-config.yml
   - web-config.yml
+  - file-storage-service-config.yml

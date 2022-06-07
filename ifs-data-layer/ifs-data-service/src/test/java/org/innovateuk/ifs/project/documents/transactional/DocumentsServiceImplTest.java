@@ -16,7 +16,7 @@ import org.innovateuk.ifs.file.builder.FileTypeBuilder;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.file.resource.FileAndContents;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
@@ -187,9 +187,8 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
         FileEntry fileEntry = newFileEntry().build();
         FileEntryResource fileEntryResource = FileEntryResourceBuilder.newFileEntryResource().build();
         Supplier<InputStream> inputStreamSupplier = () -> null;
-        ServiceResult<Pair<File, FileEntry>> fileDetails = serviceSuccess(Pair.of(new File("newfile"), fileEntry));
 
-        when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).thenReturn(fileDetails);
+        when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).thenReturn(serviceSuccess(fileEntry));
         when(fileEntryMapperMock.mapToResource(fileEntry)).thenReturn(fileEntryResource);
 
         ServiceResult<FileEntryResource> result = service.createDocumentFileEntry(projectId, documentConfigId, fileEntryResource, inputStreamSupplier);

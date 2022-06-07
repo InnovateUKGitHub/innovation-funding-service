@@ -2,7 +2,6 @@ package org.innovateuk.ifs.starters.audit.cfg.testcfg;
 
 import com.github.fridujo.rabbitmq.mock.compatibility.MockConnectionFactoryFactory;
 import org.innovateuk.ifs.starters.audit.cfg.AuditAutoConfiguration;
-import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.config.DirectRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -14,12 +13,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+import java.util.Queue;
+
 @Configuration
 @Import(AuditAutoConfiguration.class)
 public class RabbitAuditTestConfiguration {
 
     @Autowired
     private Queue queue;
+
+    public static final String CONTEXT_RESOURCE_LOCK = "CONTEXT_RESOURCE_LOCK";
 
     @Bean
     public ConnectionFactory connectionFactory() {

@@ -7,10 +7,12 @@ commonAnnotations:
 
 components:
   - ../../../components/sba
+  - ../../../components/clamav
   - ../../../components/mail
   - ../../../components/sil-stub
   - ../../../components/ifs-database
   - ../../../components/cache-provider
+  - ../../../components/file-storage-service
   - ../../../components/registration-service
   - ../../../components/data-layer
   - ../../../components/web-layer
@@ -23,6 +25,7 @@ resources:
   - ../../../config-mgmt/env/aws/custom
   - routes/mail-route.yml
   - routes/sba-route.yml
+  - routes/fss-route.yml
   - storage/gluster.yml
   - storage/gluster-ep.yml
   - storage/persistent-volume-claim.yml

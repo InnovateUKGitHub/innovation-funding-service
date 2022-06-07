@@ -3,7 +3,6 @@ package org.innovateuk.ifs.file.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileUploadService;
-import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;

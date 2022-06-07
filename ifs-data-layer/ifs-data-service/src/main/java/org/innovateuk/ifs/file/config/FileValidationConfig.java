@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.file.config;
 
+import org.innovateuk.ifs.file.controller.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.file.service.ByFormInputMediaTypesGenerator;
 import org.innovateuk.ifs.file.service.ByMediaTypeStringsMediaTypesGenerator;
-import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
