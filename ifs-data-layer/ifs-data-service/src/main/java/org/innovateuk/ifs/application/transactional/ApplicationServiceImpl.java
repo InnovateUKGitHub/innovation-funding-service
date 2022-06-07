@@ -167,6 +167,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         application.setCompetitionReferralSource(resource.getCompetitionReferralSource());
         application.setCompanyAge(resource.getCompanyAge());
         application.setCompanyPrimaryFocus(resource.getCompanyPrimaryFocus());
+        application.setEnableForEOI(resource.isEnableForEOI());
     }
 
     @Override
