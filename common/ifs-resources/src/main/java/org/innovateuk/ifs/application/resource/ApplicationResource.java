@@ -53,6 +53,7 @@ public class ApplicationResource {
     private FundingDecision fundingDecision;
     private Long assessmentPeriodId;
     private ZonedDateTime feedbackReleased;
+    private Long applicationPreRegConfigId;
 
     public Long getId() {
         return id;
@@ -350,6 +351,14 @@ public class ApplicationResource {
         return feedbackReleased != null && ZonedDateTime.now().isAfter(feedbackReleased);
     }
 
+    public Long getApplicationPreRegConfigId() {
+        return applicationPreRegConfigId;
+    }
+
+    public void setApplicationPreRegConfigId(Long applicationPreRegConfigId) {
+        this.applicationPreRegConfigId = applicationPreRegConfigId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -386,6 +395,7 @@ public class ApplicationResource {
                 .append(event, that.event)
                 .append(lastStateChangeDate, that.lastStateChangeDate)
                 .append(assessmentPeriodId, that.assessmentPeriodId)
+                .append(applicationPreRegConfigId, that.applicationPreRegConfigId)
                 .isEquals();
     }
 
@@ -419,6 +429,7 @@ public class ApplicationResource {
                 .append(event)
                 .append(lastStateChangeDate)
                 .append(assessmentPeriodId)
+                .append(applicationPreRegConfigId)
                 .toHashCode();
     }
 }
