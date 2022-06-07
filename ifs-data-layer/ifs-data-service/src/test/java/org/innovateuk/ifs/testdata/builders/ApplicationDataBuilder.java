@@ -48,7 +48,6 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
     public ApplicationDataBuilder withBasicDetails(UserResource leadApplicant, String applicationName, String researchCategory, boolean resubmission, long organisationId, boolean enableForEOI) {
 
         return with(data -> doAs(leadApplicant, () -> {
-            LOG.info("eoi" + enableForEOI);
 
             ApplicationResource created = applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(
                     applicationName, data.getCompetition().getId(), leadApplicant.getId(), organisationId).
