@@ -13,3 +13,6 @@ components:
 resources:
   - ../../../../config-mgmt/env/local
   - ../../../../secrets-mgmt/env/local
+
+patchesStrategicMerge:
+  - web-layer/registration-service/registration-service-deployment.yml
