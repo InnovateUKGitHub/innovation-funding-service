@@ -39,8 +39,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 /**
  * Implements {@link SectionStatusService}
  */
-
-
 @Service
 public class SectionStatusServiceImpl extends BaseTransactionalService implements SectionStatusService {
 

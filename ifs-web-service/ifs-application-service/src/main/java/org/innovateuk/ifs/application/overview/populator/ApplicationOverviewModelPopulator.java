@@ -104,7 +104,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                 .sorted(comparing(SectionResource::getPriority))
                 .filter(section -> section.getParentSection() == null)
                 .filter(section -> section.getType() != SectionType.KTP_ASSESSMENT)
-                .filter(SectionResource::isEnabledForPreRegistration)
+                .filter(section -> !application.isEnableForEOI() || section.isEnabledForPreRegistration())
                 .map(section -> sectionViewModel(section, data))
                 .collect(toCollection(LinkedHashSet::new));
 
