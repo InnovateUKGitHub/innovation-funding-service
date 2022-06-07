@@ -34,12 +34,6 @@ public class CostCategoryResource {
     public CostCategoryGroupResource getCostCategoryGroup() {
         return costCategoryGroup;
     }
-
-//    @JsonIgnore
-//    public String getHecpDisplayName() {
-//        return FinanceRowType.getByName(name).get().getHecpDisplayName();
-//    }
-
     public void setCostCategoryGroup(CostCategoryGroupResource costCategoryGroup) {
         this.costCategoryGroup = costCategoryGroup;
     }

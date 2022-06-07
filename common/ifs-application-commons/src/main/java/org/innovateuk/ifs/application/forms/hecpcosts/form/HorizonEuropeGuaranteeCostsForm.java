@@ -1,8 +1,13 @@
 package org.innovateuk.ifs.application.forms.hecpcosts.form;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.math.BigInteger;
 
 
+@Setter
+@Getter
 public class HorizonEuropeGuaranteeCostsForm {
 
     private BigInteger personnel;
@@ -24,59 +29,4 @@ public class HorizonEuropeGuaranteeCostsForm {
                 .add(other);
     }
 
-    public BigInteger getPersonnel() {
-        return personnel;
-    }
-
-    public void setPersonnel(BigInteger personnel) {
-        this.personnel = personnel;
-    }
-
-    public BigInteger getHecpIndirectCosts() {
-        return hecpIndirectCosts;
-    }
-
-    public void setHecpIndirectCosts(BigInteger hecpIndirectCosts) {
-        this.hecpIndirectCosts = hecpIndirectCosts;
-    }
-
-    public BigInteger getEquipment() {
-        return equipment;
-    }
-
-    public void setEquipment(BigInteger equipment) {
-        this.equipment = equipment;
-    }
-
-    public BigInteger getOtherGoods() {
-        return otherGoods;
-    }
-
-    public void setOtherGoods(BigInteger otherGoods) {
-        this.otherGoods = otherGoods;
-    }
-
-    public BigInteger getSubcontracting() {
-        return subcontracting;
-    }
-
-    public void setSubcontracting(BigInteger subcontracting) {
-        this.subcontracting = subcontracting;
-    }
-
-    public BigInteger getTravel() {
-        return travel;
-    }
-
-    public void setTravel(BigInteger travel) {
-        this.travel = travel;
-    }
-
-    public BigInteger getOther() {
-        return other;
-    }
-
-    public void setOther(BigInteger other) {
-        this.other = other;
-    }
 }

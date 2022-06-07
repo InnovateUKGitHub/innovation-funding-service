@@ -171,7 +171,6 @@ public class ProjectFinanceChangesViewModelPopulator {
         }
 
         return rowType.getDisplayName();
-//        return competition.isHorizonEuropeGuarantee() ? rowType.getHecpDisplayName() : rowType.getDisplayName();
     }
 
     private ProjectFinanceChangesFinanceSummaryViewModel getFinanceSummaryViewModel(CompetitionResource competition, ApplicationFinanceResource appFinanceResource,
