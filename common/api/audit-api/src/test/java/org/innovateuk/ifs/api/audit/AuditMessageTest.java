@@ -49,7 +49,7 @@ public class AuditMessageTest {
     public void builderTest() {
         assertThat(auditMessage.getUuid(), notNullValue());
         assertThat(auditMessage.toString(), containsString("foo"));
-        assertThat(auditMessage.getAuditType(), equalTo(AuditType.MISC.name()));
+        assertThat(auditMessage.getAuditType(), equalTo(AuditType.MISC));
         assertThat(auditMessage.getPayload(), equalTo("foo"));
         assertThat(auditMessage.getUserId(), equalTo("user"));
         assertThat(auditMessage.getSpanId(), notNullValue());
@@ -60,7 +60,7 @@ public class AuditMessageTest {
     @Test
     public void builderTestPartialBuilder() {
         assertThat(auditMessagePartial.getUuid(), notNullValue());
-        assertThat(auditMessagePartial.getAuditType(), equalTo(AuditType.MISC.name()));
+        assertThat(auditMessagePartial.getAuditType(), equalTo(AuditType.MISC));
         assertThat(auditMessagePartial.getCreated(), notNullValue());
     }
 

@@ -10,7 +10,7 @@ import java.util.UUID;
 public class AuditMessageBuilder {
 
     private final UUID uuid;
-    private final String auditType;
+    private final AuditType auditType;
     private final LocalDateTime created;
     private String userId;
     private String traceId;
@@ -18,12 +18,6 @@ public class AuditMessageBuilder {
     private String payload;
 
     private AuditMessageBuilder(UUID uuid, AuditType auditType, LocalDateTime created) {
-        this.uuid = uuid;
-        this.auditType = auditType.name();
-        this.created = created;
-    }
-
-    private AuditMessageBuilder(UUID uuid, String auditType, LocalDateTime created) {
         this.uuid = uuid;
         this.auditType = auditType;
         this.created = created;
@@ -34,17 +28,7 @@ public class AuditMessageBuilder {
         return auditMessageBuilder;
     }
 
-    public static AuditMessageBuilder builder(String auditType) {
-        AuditMessageBuilder auditMessageBuilder = new AuditMessageBuilder(UUID.randomUUID(), auditType, LocalDateTime.now());
-        return auditMessageBuilder;
-    }
-
     public static AuditMessageBuilder builder(UUID uuid, AuditType auditType) {
-        AuditMessageBuilder auditMessageBuilder = new AuditMessageBuilder(uuid, auditType, LocalDateTime.now());
-        return auditMessageBuilder;
-    }
-
-    public static AuditMessageBuilder builder(UUID uuid, String auditType) {
         AuditMessageBuilder auditMessageBuilder = new AuditMessageBuilder(uuid, auditType, LocalDateTime.now());
         return auditMessageBuilder;
     }

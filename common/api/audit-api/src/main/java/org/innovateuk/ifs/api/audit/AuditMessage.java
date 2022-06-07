@@ -16,7 +16,7 @@ import java.util.UUID;
 public final class AuditMessage {
 
     private UUID uuid;
-    private String auditType;
+    private AuditType auditType;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -38,5 +38,7 @@ public final class AuditMessage {
         this.spanId = auditMessageBuilder.getSpanId();
         this.payload = auditMessageBuilder.getPayload();
     }
+
+
 
 }
