@@ -1,9 +1,12 @@
 package org.innovateuk.ifs.filestorage.storage;
 
 import lombok.extern.slf4j.Slf4j;
-import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
+import org.innovateuk.ifs.api.audit.Audit;
+import org.innovateuk.ifs.api.audit.AuditMessageBuilder;
+import org.innovateuk.ifs.api.audit.AuditType;
 import org.innovateuk.ifs.api.filestorage.v1.delete.FileDeletionRequest;
 import org.innovateuk.ifs.api.filestorage.v1.delete.FileDeletionResponse;
+import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadResponse;
 import org.innovateuk.ifs.filestorage.cfg.StorageServiceConfigurationProperties;
@@ -18,6 +21,7 @@ import org.innovateuk.ifs.filestorage.storage.validator.UploadValidator;
 import org.innovateuk.ifs.filestorage.util.FileUploadResponseMapper;
 import org.innovateuk.ifs.filestorage.virusscan.VirusScanProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.InvalidMimeTypeException;
 import org.springframework.util.StopWatch;
 import org.springframework.web.server.ResponseStatusException;
@@ -27,6 +31,14 @@ import java.util.Optional;
 
 @Slf4j
 public class StorageService {
+
+    @Autowired
+    private Audit audit;
+
+    @Scheduled(initialDelay = 2000, fixedDelay = 1000)
+    public void testAudit() {
+        audit.audit(AuditMessageBuilder.builder(AuditType.MISC).build());
+    }
 
     @Autowired
     private StorageServiceConfigurationProperties storageServiceConfigurationProperties;
