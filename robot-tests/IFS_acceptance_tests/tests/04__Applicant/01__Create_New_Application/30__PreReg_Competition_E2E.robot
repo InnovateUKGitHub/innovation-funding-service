@@ -1,6 +1,9 @@
 *** Settings ***
 Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an expression of interest application
 ...
+...               IFS-12077 Pre-Registration (Applicant Journey) Application overview - content changes
+...
+
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
