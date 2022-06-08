@@ -118,7 +118,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                     .stream()
                     .map(data.getSections()::get)
                     .filter(childSection -> !(data.getCompetition().isFullyFunded() && childSection.getType().equals(OVERVIEW_FINANCES)))
-                    .filter(SectionResource::isEnabledForPreRegistration)
+                    .filter(childSection -> !data.getApplication().isEnableForEOI() || section.isEnabledForPreRegistration())
                     .map(childSection ->
                             new ApplicationOverviewRowViewModel(
                                     childSection.getName(),
