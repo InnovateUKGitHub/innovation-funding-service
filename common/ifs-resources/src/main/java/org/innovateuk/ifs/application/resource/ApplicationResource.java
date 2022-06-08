@@ -7,6 +7,7 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -53,7 +54,7 @@ public class ApplicationResource {
     private FundingDecision fundingDecision;
     private Long assessmentPeriodId;
     private ZonedDateTime feedbackReleased;
-    private Long applicationPreRegConfigId;
+    private ApplicationPreRegConfigResource applicationPreRegConfigResource;
 
     public Long getId() {
         return id;
@@ -351,12 +352,12 @@ public class ApplicationResource {
         return feedbackReleased != null && ZonedDateTime.now().isAfter(feedbackReleased);
     }
 
-    public Long getApplicationPreRegConfigId() {
-        return applicationPreRegConfigId;
+    public ApplicationPreRegConfigResource getApplicationPreRegConfigResource() {
+        return applicationPreRegConfigResource;
     }
 
-    public void setApplicationPreRegConfigId(Long applicationPreRegConfigId) {
-        this.applicationPreRegConfigId = applicationPreRegConfigId;
+    public void setApplicationPreRegConfigResource(ApplicationPreRegConfigResource applicationPreRegConfigResource) {
+        this.applicationPreRegConfigResource = applicationPreRegConfigResource;
     }
 
     @Override
@@ -395,7 +396,7 @@ public class ApplicationResource {
                 .append(event, that.event)
                 .append(lastStateChangeDate, that.lastStateChangeDate)
                 .append(assessmentPeriodId, that.assessmentPeriodId)
-                .append(applicationPreRegConfigId, that.applicationPreRegConfigId)
+                .append(applicationPreRegConfigResource, that.applicationPreRegConfigResource)
                 .isEquals();
     }
 
@@ -429,7 +430,7 @@ public class ApplicationResource {
                 .append(event)
                 .append(lastStateChangeDate)
                 .append(assessmentPeriodId)
-                .append(applicationPreRegConfigId)
+                .append(applicationPreRegConfigResource)
                 .toHashCode();
     }
 }

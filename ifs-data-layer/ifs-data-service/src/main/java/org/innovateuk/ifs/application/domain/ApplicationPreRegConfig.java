@@ -2,6 +2,8 @@ package org.innovateuk.ifs.application.domain;
 
 import javax.persistence.*;
 
+@Entity
+@Table(name = "application_pre_reg_config")
 public class ApplicationPreRegConfig {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
