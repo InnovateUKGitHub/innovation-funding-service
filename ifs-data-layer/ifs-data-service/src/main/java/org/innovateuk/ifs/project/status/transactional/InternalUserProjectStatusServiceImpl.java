@@ -310,8 +310,9 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
     }
 
     private ProjectActivityStates getDocumentsStatus(Project project) {
-        List<ProjectDocument> projectDocuments = project.getProjectDocuments();
-        List<CompetitionDocument> expectedDocuments = project.getApplication().getCompetition().getCompetitionDocuments();
+        List<ProjectDocument> projectDocuments = project.getActiveProjectDocuments();
+        List<CompetitionDocument> expectedDocuments = project.getApplication().getCompetition().getActiveCompetitionDocuments();
+
         if (!project.isCollaborativeProject()) {
             projectDocuments = projectDocuments.stream()
                 .filter(doc -> !COLLABORATION_AGREEMENT_TITLE.equals(doc.getCompetitionDocument().getTitle()))

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.upcoming.viewmodel;
 
+import lombok.Getter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
@@ -11,6 +12,7 @@ import java.time.ZonedDateTime;
 /**
  * ViewModel of an UpcomingCompetition.
  */
+@Getter
 public class UpcomingCompetitionViewModel {
 
     private long competitionId;
@@ -21,8 +23,9 @@ public class UpcomingCompetitionViewModel {
     private BigDecimal assessorPay;
     private boolean ktpCompetition;
     private boolean alwaysOpenCompetition;
+    private String hash;
 
-    public UpcomingCompetitionViewModel(CompetitionResource competitionResource, CompetitionAssessmentConfigResource competitionAssessmentConfigResource) {
+    public UpcomingCompetitionViewModel(CompetitionResource competitionResource, CompetitionAssessmentConfigResource competitionAssessmentConfigResource, String hash) {
         this.competitionId = competitionResource.getId();
         this.competitionName = competitionResource.getName();
         this.assessmentPeriodDateFrom = competitionResource.getAssessorAcceptsDate();
@@ -31,58 +34,27 @@ public class UpcomingCompetitionViewModel {
         this.assessorBriefingDate = competitionResource.getAssessorBriefingDate();
         this.ktpCompetition = competitionResource.isKtp();
         this.alwaysOpenCompetition = competitionResource.isAlwaysOpen();
-    }
-
-    public long getCompetitionId() {
-        return competitionId;
-    }
-
-    public String getCompetitionName() {
-        return competitionName;
+        this.hash = hash;
     }
 
     public void setCompetitionName(String competitionName) {
         this.competitionName = competitionName;
     }
 
-    public ZonedDateTime getAssessmentPeriodDateFrom() {
-        return assessmentPeriodDateFrom;
-    }
-
     public void setAssessmentPeriodDateFrom(ZonedDateTime assessmentPeriodDateFrom) {
         this.assessmentPeriodDateFrom = assessmentPeriodDateFrom;
-    }
-
-    public ZonedDateTime getAssessmentPeriodDateTo() {
-        return assessmentPeriodDateTo;
     }
 
     public void setAssessmentPeriodDateTo(ZonedDateTime assessmentPeriodDateTo) {
         this.assessmentPeriodDateTo = assessmentPeriodDateTo;
     }
 
-    public ZonedDateTime getAssessorBriefingDate() {
-        return assessorBriefingDate;
-    }
-
     public void setAssessorBriefingDate(ZonedDateTime assessorBriefingDate) {
         this.assessorBriefingDate = assessorBriefingDate;
     }
 
-    public BigDecimal getAssessorPay() {
-        return assessorPay;
-    }
-
     public void setAssessorPay(BigDecimal assessorPay) {
         this.assessorPay = assessorPay;
-    }
-
-    public boolean isKtpCompetition() {
-        return ktpCompetition;
-    }
-
-    public boolean isAlwaysOpenCompetition() {
-        return alwaysOpenCompetition;
     }
 
     @Override

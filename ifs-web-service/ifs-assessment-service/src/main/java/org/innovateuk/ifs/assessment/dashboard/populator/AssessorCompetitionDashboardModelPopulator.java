@@ -5,6 +5,8 @@ import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionDash
 import org.innovateuk.ifs.assessment.resource.dashboard.ApplicationAssessmentResource;
 import org.innovateuk.ifs.assessment.resource.dashboard.AssessorCompetitionDashboardResource;
 import org.innovateuk.ifs.assessment.service.AssessorCompetitionDashboardRestService;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,15 +24,21 @@ public class AssessorCompetitionDashboardModelPopulator {
     @Autowired
     private AssessorCompetitionDashboardRestService assessorCompetitionDashboardRestService;
 
+    @Autowired
+    private PublicContentItemRestService publicContentItemRestService;
+
     public AssessorCompetitionDashboardViewModel populateModel(Long competitionId, Long userId) {
 
         AssessorCompetitionDashboardResource assessorCompetitionDashboard = assessorCompetitionDashboardRestService.getAssessorCompetitionDashboard(competitionId, userId).getSuccess();
+        PublicContentItemResource publicContentItem = getPublicContentItemResource(competitionId);
 
         List<AssessorCompetitionDashboardApplicationViewModel> outstanding = getOutstandingAssessments(assessorCompetitionDashboard.getApplicationAssessments());
         List<AssessorCompetitionDashboardApplicationViewModel> submitted = getSubmittedAssessments(assessorCompetitionDashboard.getApplicationAssessments());
 
         boolean submitVisible = outstanding.stream()
                 .anyMatch(AssessorCompetitionDashboardApplicationViewModel::isReadyToSubmit);
+
+        String hash = publicContentItem.getPublicContentResource().getHash();
 
         return new AssessorCompetitionDashboardViewModel(
                 assessorCompetitionDashboard.getCompetitionId(),
@@ -42,19 +50,23 @@ public class AssessorCompetitionDashboardModelPopulator {
                 assessorCompetitionDashboard.getAssessorDeadlineDate(),
                 submitted,
                 outstanding,
-                submitVisible
+                submitVisible,
+                hash
         );
     }
 
     public AssessorCompetitionDashboardViewModel populateModel(Long competitionId, Long assessmentPeriodId, Long userId) {
 
         AssessorCompetitionDashboardResource assessorCompetitionDashboard = assessorCompetitionDashboardRestService.getAssessorCompetitionDashboard(competitionId, assessmentPeriodId, userId).getSuccess();
+        PublicContentItemResource publicContentItem = getPublicContentItemResource(competitionId);
 
         List<AssessorCompetitionDashboardApplicationViewModel> outstanding = getOutstandingAssessments(assessorCompetitionDashboard.getApplicationAssessments());
         List<AssessorCompetitionDashboardApplicationViewModel> submitted = getSubmittedAssessments(assessorCompetitionDashboard.getApplicationAssessments());
 
         boolean submitVisible = outstanding.stream()
                 .anyMatch(AssessorCompetitionDashboardApplicationViewModel::isReadyToSubmit);
+
+        String hash = publicContentItem.getPublicContentResource().getHash();
 
         return new AssessorCompetitionDashboardViewModel(
                 assessorCompetitionDashboard.getCompetitionId(),
@@ -66,7 +78,8 @@ public class AssessorCompetitionDashboardModelPopulator {
                 assessorCompetitionDashboard.getAssessorDeadlineDate(),
                 submitted,
                 outstanding,
-                submitVisible
+                submitVisible,
+                hash
         );
     }
 
@@ -99,5 +112,9 @@ public class AssessorCompetitionDashboardModelPopulator {
                 assessment.getOverallScore(),
                 assessment.getRecommended()
         );
+    }
+
+    private PublicContentItemResource getPublicContentItemResource(Long competitionId) {
+        return publicContentItemRestService.getItemByCompetitionId(competitionId).getSuccess();
     }
 }

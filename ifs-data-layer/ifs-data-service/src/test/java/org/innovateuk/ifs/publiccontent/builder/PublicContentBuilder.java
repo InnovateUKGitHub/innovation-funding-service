@@ -68,6 +68,10 @@ public class PublicContentBuilder extends BaseBuilder<PublicContent, PublicConte
         return with(publicContent -> setField("inviteOnly", inviteOnly, publicContent));
     }
 
+    public PublicContentBuilder withHash(String hash) {
+        return with(publicContent -> setField("hash", hash, publicContent));
+    }
+
     @Override
     protected PublicContentBuilder createNewBuilderWithActions(List<BiConsumer<Integer, PublicContent>> actions) {
         return new PublicContentBuilder(actions);

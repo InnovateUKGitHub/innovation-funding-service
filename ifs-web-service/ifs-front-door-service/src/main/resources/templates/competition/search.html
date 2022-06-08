@@ -56,12 +56,23 @@
                     <ul class="govuk-list" th:unless="${model.totalResults == 0}">
                        <li th:each="(publicContentItem, iteration : ${model.publicContentItems})">
                            <h2 class="govuk-heading-m govuk-!-margin-top-0 govuk-!-margin-bottom-6">
-                               <a class="govuk-link" th:text="${publicContentItem.competitionTitle}" th:href="@{/competition/{competitionId}/overview(competitionId=${publicContentItem.competitionId})}">Competition title</a>
+                               <th:block>
+                                   <a class="govuk-link"
+                                      th:text="${publicContentItem.competitionTitle}"
+                                      th:href="${publicContentItem.hash == null}
+                                        ? @{/competition/{competitionId}/overview(competitionId=${publicContentItem.competitionId})}
+                                        : @{/competition/{competitionId}/overview/{hash}(competitionId=${publicContentItem.competitionId},hash=${publicContentItem.hash})}">
+                                       Competition title
+                                   </a>
+                               </th:block>
                            </h2>
                            <div class="wysiwyg-styles govuk-!-margin-bottom-4" ifs:utext="${publicContentItem.shortDescription}">Description of the competition</div>
                            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Eligibility</h3>
                            <div class="wysiwyg-styles govuk-!-margin-bottom-4" ifs:utext="${publicContentItem.eligibilitySummary}"></div>
                            <h3 class="govuk-heading-s govuk-!-margin-bottom-0" th:text="${publicContentItem.publicContentStatusText?.getHeader()}"/>
+                           <th:block th:if="${publicContentItem.eoiEnabled}">
+                               <div class="wysiwyg-styles govuk-!-margin-bottom-2">Refer to competition date for competition submission deadlines.</div>
+                           </th:block>
                            <dl class="date-definition-list govuk-!-margin-top-0">
                                 <dt><th:block th:text="${publicContentItem.publicContentStatusText?.getOpenTense()}"/>:</dt>
                                 <dd th:text="${#temporals.format(publicContentItem.competitionOpenDate, 'd MMMM yyyy')}" />

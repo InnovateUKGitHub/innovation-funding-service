@@ -20,7 +20,7 @@ import org.innovateuk.ifs.docusign.resource.DocusignRequest;
 import org.innovateuk.ifs.docusign.resource.DocusignType;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.file.service.FileService;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.schedule.transactional.ScheduleResponse;
@@ -296,7 +296,7 @@ public class DocusignServiceImpl extends RootTransactionalService implements Doc
 
             fileService.createFile(fileEntryResource, () -> stream)
                     .andOnSuccessReturnVoid(fileDetails -> {
-                        FileEntry fileEntry = fileDetails.getValue();
+                        FileEntry fileEntry = fileDetails;
                         project.setSignedGrantOfferLetter(fileEntry);
                         project.setOfferSubmittedDate(ZonedDateTime.now());
                         grantOfferLetterWorkflowHandler.sign(project);

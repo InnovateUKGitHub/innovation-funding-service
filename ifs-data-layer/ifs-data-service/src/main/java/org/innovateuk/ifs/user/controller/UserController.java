@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.user.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.crm.transactional.SilMessageRecordingService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
@@ -10,6 +12,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
+import org.innovateuk.ifs.sil.SilPayloadKeyType;
+import org.innovateuk.ifs.sil.SilPayloadType;
 import org.innovateuk.ifs.sil.crm.resource.SilEDIStatus;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
@@ -62,6 +66,8 @@ public class UserController {
     private static final String DEFAULT_PAGE_SIZE = "40";
 
     @Autowired
+    ObjectMapper objectMapper;
+    @Autowired
     private BaseUserService baseUserService;
 
     @Autowired
@@ -78,6 +84,9 @@ public class UserController {
 
     @Autowired
     private CrmService crmService;
+
+    @Autowired
+    SilMessageRecordingService silMessagingService;
 
     @GetMapping("/uid/{uid}")
     public RestResult<UserResource> getUserByUid(@PathVariable String uid) {
@@ -280,7 +289,8 @@ public class UserController {
     @PatchMapping(value = "/v1/edi")
     public RestResult<Void> updateUser(
             @Valid @RequestBody SilEDIStatus surveyStatus,
-            BindingResult bindingResult, HttpServletRequest request) {
+            BindingResult bindingResult, HttpServletRequest request) throws JsonProcessingException {
+
 
         if (bindingResult.hasErrors()) {
             log.error(String.format("edi-status-update error: incorrect json: %s ", surveyStatus));
@@ -293,6 +303,11 @@ public class UserController {
         }
 
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        String surveyStatusJson = objectMapper.writer().writeValueAsString(surveyStatus);
+        silMessagingService.recordSilMessage(SilPayloadType.USER_UPDATE, SilPayloadKeyType.USER_ID, user==null?null:user.getUid(),
+                surveyStatusJson, null);
+
+
         if (user == null) {
             log.error("edi-status-update error: user not found ");
             return RestResult.restFailure(HttpStatus.UNAUTHORIZED);

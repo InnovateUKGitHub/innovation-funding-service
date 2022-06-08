@@ -5,10 +5,12 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ErrorTemplate;
+import org.innovateuk.ifs.commons.error.ErrorTemplateImpl;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.util.Either;
 import org.innovateuk.ifs.util.ExceptionThrowingConsumer;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -291,6 +293,23 @@ public class ServiceResult<T> extends BaseFailingOrSucceedingResult<T, ServiceFa
      */
     public static <T> ServiceResult<T> serviceFailure(Error error) {
         return serviceFailure(singletonList(error));
+    }
+
+    /**
+     * A factory method to generate a failing ServiceResult based upon an ResponseStatusException.
+     *
+     * Allows additional ExceptionErrorAdaptor for extra control over the ServiceResult.
+     */
+    public static <T> ServiceResult<T> serviceFailure(ResponseStatusException responseStatusException,
+                                                      ExceptionErrorAdaptor exceptionErrorAdaptor) {
+        return serviceFailure(singletonList(exceptionErrorAdaptor.toError(responseStatusException)));
+    }
+
+    /**
+     * A factory method to generate a failing ServiceResult based upon an ResponseStatusException.
+     */
+    public static <T> ServiceResult<T> serviceFailure(ResponseStatusException responseStatusException) {
+        return serviceFailure(new ErrorTemplateImpl(responseStatusException.getMessage(), responseStatusException.getStatus()));
     }
 
     /**

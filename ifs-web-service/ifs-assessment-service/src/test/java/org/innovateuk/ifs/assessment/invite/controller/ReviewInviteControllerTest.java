@@ -4,9 +4,12 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.invite.form.ReviewInviteForm;
 import org.innovateuk.ifs.assessment.invite.populator.ReviewInviteModelPopulator;
 import org.innovateuk.ifs.assessment.invite.viewmodel.ReviewInviteViewModel;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
 import org.innovateuk.ifs.invite.resource.ReviewInviteResource;
 import org.innovateuk.ifs.invite.service.RejectionReasonRestService;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.review.service.ReviewInviteRestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,6 +34,8 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOU
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.review.builder.ReviewInviteResourceBuilder.newReviewInviteResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -54,6 +59,9 @@ public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<Review
     @Mock
     private ReviewInviteRestService reviewInviteRestService;
 
+    @Mock
+    private PublicContentItemRestService publicContentItemRestService;
+
     private List<RejectionReasonResource> rejectionReasons = newRejectionReasonResource()
             .withReason("Reason 1", "Reason 2")
             .build(2);
@@ -72,11 +80,11 @@ public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<Review
 
     @Test
     public void acceptInvite_loggedIn() throws Exception {
-        Boolean accept = true;
+        boolean accept = true;
 
         mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("acceptInvitation", accept.toString()))
+                .param("acceptInvitation", Boolean.toString(accept)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/invite-accept/panel/hash/accept"));
 
@@ -87,21 +95,25 @@ public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<Review
     public void acceptInvite_notLoggedInAndExistingUser() throws Exception {
         setLoggedInUser(null);
         ZonedDateTime panelDate = ZonedDateTime.now();
-        Boolean accept = true;
+        boolean accept = true;
 
         ReviewInviteResource inviteResource = newReviewInviteResource()
                 .withCompetitionName("my competition")
                 .withPanelDate(panelDate)
                 .build();
 
-        ReviewInviteViewModel expectedViewModel = new ReviewInviteViewModel("hash", inviteResource, false);
+        PublicContentResource publicContentResource = newPublicContentResource().build();
+        PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
+
+        ReviewInviteViewModel expectedViewModel = new ReviewInviteViewModel("hash", inviteResource, false, null);
 
         when(reviewInviteRestService.checkExistingUser("hash")).thenReturn(restSuccess(TRUE));
         when(reviewInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
+        when(publicContentItemRestService.getItemByCompetitionId(inviteResource.getCompetitionId())).thenReturn(restSuccess(publicContentItemResource));
 
         mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("acceptInvitation", accept.toString()))
+                .param("acceptInvitation", Boolean.toString(accept)))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("assessor-panel-accept-user-exists-but-not-logged-in"));
@@ -141,9 +153,14 @@ public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<Review
                 .withPanelDate(panelDate)
                 .build();
 
-        ReviewInviteViewModel expectedViewModel = new ReviewInviteViewModel("hash", inviteResource, true);
+        PublicContentResource publicContentResource = newPublicContentResource().build();
+        PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
+
+        ReviewInviteViewModel expectedViewModel = new ReviewInviteViewModel("hash", inviteResource, true, null);
 
         when(reviewInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
+        when(publicContentItemRestService.getItemByCompetitionId(inviteResource.getCompetitionId())).thenReturn(restSuccess(publicContentItemResource));
+
         mockMvc.perform(get(restUrl + "{inviteHash}", "hash"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("assessor-panel-invite"))
@@ -165,8 +182,11 @@ public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<Review
     @Test
     public void noDecisionMade() throws Exception {
         ReviewInviteResource inviteResource = newReviewInviteResource().withCompetitionName("my competition").build();
+        PublicContentResource publicContentResource = newPublicContentResource().build();
+        PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
 
         when(reviewInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
+        when(publicContentItemRestService.getItemByCompetitionId(inviteResource.getCompetitionId())).thenReturn(restSuccess(publicContentItemResource));
 
         ReviewInviteForm expectedForm = new ReviewInviteForm();
 
@@ -200,13 +220,13 @@ public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<Review
 
     @Test
     public void rejectInvite() throws Exception {
-        Boolean accept = false;
+        boolean accept = false;
 
         when(reviewInviteRestService.rejectInvite("hash")).thenReturn(restSuccess());
 
         mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("acceptInvitation", accept.toString()))
+                .param("acceptInvitation", Boolean.toString(accept)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/invite/panel/hash/reject/thank-you"));
 

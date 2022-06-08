@@ -51,6 +51,10 @@ public class PublicContentResourceBuilder extends BaseBuilder<PublicContentResou
         return with(publicContent -> setField("summary", summary, publicContent));
     }
 
+    public PublicContentResourceBuilder withHash(String hash) {
+        return with(publicContent -> setField("hash", hash, publicContent));
+    }
+
     public PublicContentResourceBuilder withContentSections(List<PublicContentSectionResource> contentSections) {
         return with(publicContent -> setField("contentSections", contentSections, publicContent));
     }

@@ -174,6 +174,7 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         publicContentItemResource.setFundingType(competition.getFundingType());
         publicContentItemResource.setCompetitionType(ofNullable(competition.getCompetitionType()).map(CompetitionType::getName).orElse(null));
         publicContentItemResource.setAlwaysOpen(competition.isAlwaysOpen());
+        publicContentItemResource.setEoiEnabled(competition.isEnabledForPreRegistration());
 
         return publicContentItemResource;
     }

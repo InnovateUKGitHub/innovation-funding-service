@@ -20,6 +20,7 @@ public class PublicContentItemResource {
     private FundingType fundingType;
     private String competitionType;
     private boolean alwaysOpen;
+    private boolean eoiEnabled;
 
     public PublicContentItemResource() {
     }
@@ -122,10 +123,23 @@ public class PublicContentItemResource {
         return this;
     }
 
+    public boolean isEoiEnabled() {
+        return eoiEnabled;
+    }
+
+    public void setEoiEnabled(boolean eoiEnabled) {
+        this.eoiEnabled = eoiEnabled;
+    }
+
     @JsonIgnore
     public boolean isH2020() {
         return ofNullable(competitionType)
                 .map(name -> name.equals(H2020_TYPE_NAME))
                 .orElse(false);
+    }
+
+    @JsonIgnore
+    public boolean isProtected() {
+        return null != this.publicContentResource.getHash();
     }
 }

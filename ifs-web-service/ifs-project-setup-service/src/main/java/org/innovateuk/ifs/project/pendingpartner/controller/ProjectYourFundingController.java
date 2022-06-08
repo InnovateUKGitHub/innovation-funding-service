@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.project.pendingpartner.controller;
 
-import static java.lang.String.format;
-
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.*;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.AbstractYourFundingForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.OtherFundingRowForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingAmountForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -28,6 +28,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+import static java.lang.String.format;
 
 @SuppressWarnings("unchecked")
 @Controller
@@ -61,9 +63,11 @@ public class ProjectYourFundingController {
                                   @PathVariable long organisationId) {
         ProjectYourFundingViewModel viewModel = viewModelPopulator.populate(projectId, organisationId);
         model.addAttribute("model", viewModel);
+
         if (viewModel.isFundingSectionLocked()) {
             return VIEW;
         }
+
         AbstractYourFundingForm<?, ?> form = formPopulator.populateForm(projectId, organisationId);
         model.addAttribute("form", form);
         return VIEW;

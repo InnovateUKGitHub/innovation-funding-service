@@ -2,14 +2,16 @@ package org.innovateuk.ifs.assessment.dashboard.populator;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForPanelDashboardApplicationViewModel;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForPanelDashboardViewModel;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.review.service.ReviewRestService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
@@ -27,38 +29,45 @@ public class AssessorCompetitionForPanelDashboardModelPopulator {
     private ApplicationService applicationService;
     private ReviewRestService reviewRestService;
     private OrganisationRestService organisationRestService;
+    private PublicContentItemRestService publicContentItemRestService;
 
     public AssessorCompetitionForPanelDashboardModelPopulator(CompetitionRestService competitionRestService,
                                                               ApplicationService applicationService,
                                                               ReviewRestService reviewRestService,
-                                                              OrganisationRestService organisationRestService) {
+                                                              OrganisationRestService organisationRestService,
+                                                              PublicContentItemRestService publicContentItemRestService) {
         this.competitionRestService = competitionRestService;
         this.applicationService = applicationService;
         this.reviewRestService = reviewRestService;
         this.organisationRestService = organisationRestService;
+        this.publicContentItemRestService = publicContentItemRestService;
     }
 
     public AssessorCompetitionForPanelDashboardViewModel populateModel(Long competitionId, Long userId) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        PublicContentItemResource publicContentItem = publicContentItemRestService.getItemByCompetitionId(competitionId).getSuccess();
+
+        String hash = publicContentItem.getPublicContentResource().getHash();
         ZonedDateTime panelDate = competition.getFundersPanelDate();
 
-        List<AssessorCompetitionForPanelDashboardApplicationViewModel> applications = getApplications(userId, competitionId);
+        List<AssessorCompetitionForPanelDashboardApplicationViewModel> applications = getApplications(userId, competitionId, hash);
 
         return new AssessorCompetitionForPanelDashboardViewModel(
                 competition.getId(),
                 competition.getName(),
                 competition.getLeadTechnologistName(),
                 panelDate,
-                applications
+                applications,
+                hash
         );
     }
 
-    private List<AssessorCompetitionForPanelDashboardApplicationViewModel> getApplications(long userId, long competitionId) {
+    private List<AssessorCompetitionForPanelDashboardApplicationViewModel> getApplications(long userId, long competitionId, String hash) {
         List<ReviewResource> reviews = reviewRestService.getAssessmentReviews(userId, competitionId).getSuccess();
-        return simpleMap(reviews, review -> createApplicationViewModel(review));
+        return simpleMap(reviews, review -> createApplicationViewModel(review, hash));
     }
 
-    private AssessorCompetitionForPanelDashboardApplicationViewModel createApplicationViewModel(ReviewResource assessmentReview) {
+    private AssessorCompetitionForPanelDashboardApplicationViewModel createApplicationViewModel(ReviewResource assessmentReview, String hash) {
         ApplicationResource application = applicationService.getById(assessmentReview.getApplication());
         OrganisationResource leadOrganisation = organisationRestService.getOrganisationById(application.getLeadOrganisationId()).getSuccess();
 
@@ -66,6 +75,7 @@ public class AssessorCompetitionForPanelDashboardModelPopulator {
                 assessmentReview.getId(),
                 application.getName(),
                 leadOrganisation.getName(),
-                assessmentReview.getReviewState());
+                assessmentReview.getReviewState(),
+                hash);
     }
 }

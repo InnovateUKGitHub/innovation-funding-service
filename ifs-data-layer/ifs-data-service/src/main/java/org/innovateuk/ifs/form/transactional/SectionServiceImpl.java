@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -145,5 +146,12 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                 .getChildSections().stream()
                 .map(sectionMapper::mapToResource)
                 .collect(toList()));
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<SectionResource> save(SectionResource sectionResource) {
+        return find(section(sectionResource.getId()), notFoundError(Section.class, sectionResource.getId()))
+                .andOnSuccessReturn(section -> sectionMapper.mapToResource(sectionRepository.save(sectionMapper.mapToDomain(sectionResource))));
     }
 }

@@ -1,0 +1,12 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: file-storage-service-config
+data:
+  FSS_GLUSTER_ROOT_FOLDER_PATH: "/mnt/ifs_storage"
+  FSS_S3_AWS_REGION: "eu-west-2"
+  FSS_S3_AWS_BUCKET: "iukorg.org-env-0.ifs-file-storage-service-custom"
+  FSS_CLAM_HOST: "clamd"
+  FSS_CLAM_PORT: "3310"
+  FSS_CLIENT_TIMEOUT_MS: "5000"
+  FSS_SCAN_CHUNK_SIZE_BYTES: "12582912"
