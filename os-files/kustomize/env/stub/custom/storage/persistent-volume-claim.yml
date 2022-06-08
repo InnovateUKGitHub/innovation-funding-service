@@ -1,17 +1,15 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: file-upload-claim
   annotations:
-    volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/aws-ebs
-    volume.kubernetes.io/storage-provisioner: kubernetes.io/aws-ebs
-    pv.kubernetes.io/bound-by-controller: 'yes'
-    volume.kubernetes.io/selected-node: ip-10-40-7-134.eu-west-2.compute.internal
+    volume.kubernetes.io/storage-provisioner: openshift-storage.cephfs.csi.ceph.com
+    volume.beta.kubernetes.io/storage-provisioner: openshift-storage.cephfs.csi.ceph.com
+  name: file-upload-claim
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 400M
-  storageClassName: gp2
+  storageClassName: ocs-storagecluster-cephfs-retain
   volumeMode: Filesystem
