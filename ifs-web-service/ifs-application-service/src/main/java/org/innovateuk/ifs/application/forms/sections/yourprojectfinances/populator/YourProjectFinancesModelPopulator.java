@@ -57,7 +57,7 @@ public class YourProjectFinancesModelPopulator {
         List<YourFinancesRowViewModel> rows = sectionRestService.getChildSectionsByParentId(sectionId).getSuccess()
                 .stream()
                 .filter(subSection -> !subSection.getType().isSectionTypeNotRequiredForOrganisationAndCompetition(competition, organisation.getOrganisationTypeEnum(), organisation.getId().equals(application.getLeadOrganisationId())))
-                .filter(subSection -> !competition.isEnabledForPreRegistration() || subSection.isEnabledForPreRegistration())
+                .filter(subSection -> !application.isEnableForEOI() || subSection.isEnabledForPreRegistration())
                 .map(subSection ->
                         new YourFinancesRowViewModel(sectionName(competition, application, organisation, subSection),
                                 applicationUrlHelper.getSectionUrl(subSection.getType(), subSection.getId(), applicationId, organisationId, application.getCompetition()).get(),
