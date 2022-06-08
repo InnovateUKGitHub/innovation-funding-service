@@ -19,6 +19,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
  *
  * @deprecated There must be a suitable collections lib out there already
  */
+@Deprecated
 public final class MapFunctions {
 
 	private MapFunctions() {}

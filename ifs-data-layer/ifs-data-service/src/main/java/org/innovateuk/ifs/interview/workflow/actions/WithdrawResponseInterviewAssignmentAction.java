@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.interview.workflow.actions;
 
-import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.file.service.FileService;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.domain.InterviewAssignmentResponseOutcome;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentResponseOutcomeRepository;

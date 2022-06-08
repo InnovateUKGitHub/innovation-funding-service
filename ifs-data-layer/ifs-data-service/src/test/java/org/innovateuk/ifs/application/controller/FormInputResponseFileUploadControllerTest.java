@@ -10,9 +10,9 @@ import org.innovateuk.ifs.application.transactional.FormInputResponseFileAndCont
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.file.controller.FileHeaderAttributes;
+import org.innovateuk.ifs.file.controller.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
-import org.innovateuk.ifs.file.transactional.FileHeaderAttributes;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.junit.Before;

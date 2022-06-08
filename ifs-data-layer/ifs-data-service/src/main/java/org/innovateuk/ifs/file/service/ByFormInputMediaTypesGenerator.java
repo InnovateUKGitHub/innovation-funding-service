@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.file.service;
 
+import org.innovateuk.ifs.file.controller.MediaTypesGenerator;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.resource.FormInputResource;

@@ -7,9 +7,9 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.file.resource.FileAndContents;
+import org.innovateuk.ifs.file.service.FileService;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
-import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -75,7 +75,7 @@ public abstract class BaseServiceUnitTest<ServiceType> extends BaseUnitTestMocks
         FileEntry createdFile = newFileEntry().build();
         FileEntryResource createdFileResource = newFileEntryResource().build();
 
-        when(fileServiceMock.createFile(fileToCreate, inputStreamSupplier)).thenReturn(serviceSuccess(Pair.of(new File("blah"), createdFile)));
+        when(fileServiceMock.createFile(fileToCreate, inputStreamSupplier)).thenReturn(serviceSuccess(createdFile));
         when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(createdFileResource);
 
         ServiceResult<FileEntryResource> result = createFileFn.apply(fileToCreate, inputStreamSupplier);
@@ -138,7 +138,7 @@ public abstract class BaseServiceUnitTest<ServiceType> extends BaseUnitTestMocks
         FileEntry updatedFile = newFileEntry().build();
         FileEntryResource updatedFileResource = newFileEntryResource().build();
 
-        when(fileServiceMock.updateFile(fileToUpdate, inputStreamSupplier)).thenReturn(serviceSuccess(Pair.of(new File("blah"), updatedFile)));
+        when(fileServiceMock.updateFile(fileToUpdate, inputStreamSupplier)).thenReturn(serviceSuccess(updatedFile));
         when(fileEntryMapperMock.mapToResource(updatedFile)).thenReturn(updatedFileResource);
 
         ServiceResult<Void> result = updateFileFn.apply(fileToUpdate, inputStreamSupplier);
