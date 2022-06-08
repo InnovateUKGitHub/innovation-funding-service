@@ -62,7 +62,7 @@ public class CompetitionSetupQuestionResource {
     /* multiple choice */
     private Boolean multipleChoice;
     @Valid
-    @Size(min = 2, max = 15, groups = MultipleChoiceValidationGroup.class)
+    @Size(min = 2, max = 30, groups = MultipleChoiceValidationGroup.class)
     private List<MultipleChoiceOptionResource> choices = new ArrayList<>();
 
     /* appendix */
