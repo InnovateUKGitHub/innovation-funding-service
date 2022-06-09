@@ -54,8 +54,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                     getSuccess();
 
             created.setResubmission(resubmission);
-            //TODO Web test data for new table
-        //    created.setEnableForEOI(enableForEOI);
+            created.setEnableForEOI(enableForEOI);
             ValidationMessages validationMessages = applicationService.saveApplicationDetails(created.getId(), created)
                     .getSuccess();
 

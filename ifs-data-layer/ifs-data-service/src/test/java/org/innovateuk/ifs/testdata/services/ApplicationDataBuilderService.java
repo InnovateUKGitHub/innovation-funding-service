@@ -491,15 +491,22 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             CompetitionData competition,
             ApplicationLine line,
             List<InviteLine> inviteLines,
-            List<ExternalUserLine> externalUsers) {
-
+            List<ExternalUserLine> externalUsers,
+            List<EnableForEOILine> eoiEnabledApplications) {
+         boolean eoiEnabled = false;
         UserResource leadApplicant = retrieveUserByEmail(line.leadApplicant);
 
         Map<String, String> usersOrganisations = simpleToMap(externalUsers, user -> user.emailAddress, user -> user.organisationName);
         Organisation org = organisationRepository.findOneByName(usersOrganisations.get(line.leadApplicant));
 
+        CsvUtils.EnableForEOILine eoiEnabledAppLine = simpleFilter(eoiEnabledApplications,
+                eoiEnabledApplication -> line.title.equals(eoiEnabledApplication.applicationName)).get(0);
+        if (eoiEnabledAppLine != null) {
+            eoiEnabled = eoiEnabledAppLine.enableForEOI;
+        }
+
         ApplicationDataBuilder baseBuilder = applicationDataBuilder.withCompetition(competition.getCompetition()).
-                withBasicDetails(leadApplicant, line.title, line.researchCategory, line.resubmission, org.getId(), line.enableForEOI).
+                withBasicDetails(leadApplicant, line.title, line.researchCategory, line.resubmission, org.getId(), eoiEnabled).
                 withInnovationArea(line.innovationArea).
                 withStartDate(line.startDate).
                 withDurationInMonths(line.durationInMonths);

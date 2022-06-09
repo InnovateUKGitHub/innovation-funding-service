@@ -353,8 +353,11 @@ public class ApplicationResource {
     }
 
     public boolean isEnableForEOI() {
-        return applicationPreRegConfigResource != null && applicationPreRegConfigResource.getApplicationId() == id
-                ? applicationPreRegConfigResource.isEnableForEOI() : enableForEOI;
+        return applicationPreRegConfigResource != null ? applicationPreRegConfigResource.isEnableForEOI() : enableForEOI;
+    }
+
+    public void setEnableForEOI(boolean enableForEOI) {
+        this.enableForEOI = enableForEOI;
     }
 
     public ApplicationPreRegConfigResource getApplicationPreRegConfigResource() {
@@ -364,6 +367,8 @@ public class ApplicationResource {
     public void setApplicationPreRegConfigResource(ApplicationPreRegConfigResource applicationPreRegConfigResource) {
         this.applicationPreRegConfigResource = applicationPreRegConfigResource;
     }
+
+
 
     @Override
     public boolean equals(Object o) {
