@@ -1,1 +1,0 @@
-ALTER TABLE application ADD COLUMN pre_registration BIT(1) NOT NULL DEFAULT FALSE;

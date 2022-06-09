@@ -123,6 +123,8 @@ public class Application implements ProcessActivity {
     @OneToOne(mappedBy = "application", fetch = FetchType.LAZY)
     private ApplicationPreRegConfig applicationPreRegConfig;
 
+    private boolean enableForEOI = false;
+
 
     public Application() {
     }
@@ -161,6 +163,7 @@ public class Application implements ProcessActivity {
         this.companyAge = application.getCompanyAge();
         this.companyPrimaryFocus = application.getCompanyPrimaryFocus();
         this.applicationPreRegConfig = application.getApplicationPreRegConfig();
+        this.enableForEOI = application.isEnableForEOI();
     }
 
     protected boolean canEqual(Object other) {
@@ -566,5 +569,13 @@ public class Application implements ProcessActivity {
 
     public void setApplicationPreRegConfig(ApplicationPreRegConfig applicationPreRegConfig) {
         this.applicationPreRegConfig = applicationPreRegConfig;
+    }
+
+    public boolean isEnableForEOI() {
+        return applicationPreRegConfig != null ? applicationPreRegConfig.isEnableForEOI() : enableForEOI;
+    }
+
+    public void setEnableForEOI(boolean enableForEOI) {
+        this.enableForEOI = enableForEOI;
     }
 }
