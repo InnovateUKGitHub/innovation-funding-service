@@ -128,9 +128,6 @@ public class ProjectDataBuilderService extends BaseDataBuilderService {
             }
         };
 
-        System.err.println(line.name);
-        System.err.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-
         doAs(retrieveUserByEmail(IFS_SYSTEM_MAINTENANCE_USER_EMAIL), () ->
                 testService.doWithinTransaction(() ->
                         assignProjectManagerIfNecessary.

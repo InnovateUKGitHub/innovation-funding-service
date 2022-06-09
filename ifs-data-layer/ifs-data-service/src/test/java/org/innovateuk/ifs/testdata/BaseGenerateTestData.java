@@ -178,13 +178,13 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private Executor taskExecutor;
 
     @MockBean
-    FileDeletion fileDeletion;
+    private FileDeletion fileDeletion;
 
     @MockBean
-    FileUpload fileUpload;
+    private FileUpload fileUpload;
 
     @MockBean
-    FileDownload fileDownload;
+    private FileDownload fileDownload;
 
     @Autowired
     private CompetitionDataBuilderService competitionDataBuilderService;
