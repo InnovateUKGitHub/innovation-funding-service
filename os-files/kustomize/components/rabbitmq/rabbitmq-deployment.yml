@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: rabbitmq-k8s
-          image: rabbitmq:3.10-management
+          image: rabbitmq:3.9.13-management
           ports:
             - name: http
               protocol: TCP
