@@ -121,6 +121,7 @@ Member can access salesforce form through B&FI question
 
 Member can mark the B&FI question as complete
     [Documentation]    IFS-11271
+    API POST
     Given the sales force submits/unsubmits b&fi survey     1  ${newLoansApplicationID}
     When the user navigates to the page                     ${server}/applicant/dashboard
     And the user clicks the button/link                     link = loans b&fi application
@@ -632,3 +633,15 @@ the user should see valid application submission log message stored in db
     Should Contain  ${applicationSubmissionPayloadInString}    "projTotalCost" : 200903.0
     Should Contain  ${applicationSubmissionPayloadInString}    "projOtherFunding" : 2468.0
     Should Contain  ${applicationSubmissionPayloadInString}    "markedIneligible" : null
+
+
+API POST1
+    ${userId1} =  get user uuid   troy.ward@gmail.com
+    Set global variable  ${userId1}
+    ${dataServiceName}    Run Process    kubectl get pod -l app=data-service -o jsonpath="{.items[0].metadata.name}"
+    log  ${dataServiceName}
+    set global variable  ${dataServiceName}
+    ${markAsComplete}    Run Process    kubectl exec -it  ${dataServiceName} -- curl -v -X PATCH --header 'Content-Type:application/json' --header 'IFS_AUTH_TOKEN:${userId1}' --url http://localhost:8080/application-update/${newLoansApplicationID}  --data '{"ediStatus":"Complete","ediReviewDate":"2022-04-11T12:15:45.000Z"}'
+    log   ${markAsComplete}
+    log   ${markAsComplete.stdout}
+    Should Contain    ${markAsComplete.stdout}    HTTP/1.1 200 OK

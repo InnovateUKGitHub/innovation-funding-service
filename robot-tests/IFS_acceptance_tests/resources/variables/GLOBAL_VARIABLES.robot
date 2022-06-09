@@ -198,6 +198,9 @@ ${ods_file}                   file_example_ODS.ods
 ${assessment-as-service}      assessment-as-service.csv
 ${32MB_large_pdf}             32mb_file.pdf
 
+#shell scripts folder
+${shellScriptFolder}              shell_scripts
+${scriptName}                     curl.sh
 # Assessor variables
 ${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}     ${assessment_ids["${IN_ASSESSMENT_APPLICATION_4_TITLE}"]["${assessor_credentials["email"]}"]}
 ${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}     ${assessment_ids["${IN_ASSESSMENT_APPLICATION_4_TITLE}"]["${assessor2_credentials["email"]}"]}

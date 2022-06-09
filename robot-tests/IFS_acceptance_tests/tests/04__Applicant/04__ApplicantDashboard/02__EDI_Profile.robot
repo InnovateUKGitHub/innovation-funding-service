@@ -18,6 +18,8 @@ ${competitionNameEDI}           Performance testing competition
 ${assessorcompetitionNameEDI}   EDI Testing Competition
 ${applicationNameEDI}           EDI Application
 ${AssessorapplicationNameEDI}   EDI Assessor application
+${ediStatus}                    In Progress
+${ediDate}                      2076-01-22T01:02:03Z
 
 
 *** Test Cases ***
@@ -54,6 +56,7 @@ Lead applicant can not mark the application team as complete when the edi survey
 Applicant can view the EDI incomplete status
     [Documentation]  IFS-11252  IFS-11490  IFS-11924
     Given the user clicks the button/link           jQuery = a:contains("Start survey")
+    API POST
     When the user changed EDI survey status         INPROGRESS  2076-01-22 01:02:03
     Then the user should see EDI section details    Incomplete  22 January 2076  Continue
 
@@ -223,6 +226,7 @@ the user edit the profile of an assessor
     the user clicks the button/link        link = Profile
 
 External user starts a new application
+    log in as a different user
     the user select the competition and starts application          ${competitionNameEDI}
     the user clicks the button/link                                 link = Continue and create an account
     the user selects the radio button                               organisationTypeId    radio-1
@@ -241,3 +245,11 @@ the user should see valid EDI contact log message stored in db
     ${contactPayloadInString} =  Convert to string   ${contactPayload}
     Should Contain  ${contactPayloadInString}    "ifsUuid" : "${userId}"
     Should Contain  ${contactPayloadInString}    "email" : "ediFirstName.SurName@gmail.com"
+
+API POST
+#    ${ediUserId} =  get user uuid   ediFirstName.SurName@gmail.com
+#    Set global variable  ${ediUserId}
+    ${ediStatus} =   Run Process    ${shellScriptFolder}/${scriptName}
+    log   ${ediStatus.rc}
+    log   ${ediStatus.stdout}
+    log   ${ediStatus.stderr}
