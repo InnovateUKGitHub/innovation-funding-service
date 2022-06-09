@@ -1,0 +1,6 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+org.innovateuk.ifs.starters.feign.cfg.IfsFeignAutoConfiguration
+
+# Environment Post Processors
+org.springframework.context.ApplicationContextInitializer=\
+org.innovateuk.ifs.starters.feign.cfg.IfsFeignConfigContextInitializer

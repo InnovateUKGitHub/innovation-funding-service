@@ -2,12 +2,12 @@ package org.innovateuk.ifs.threads.attachments.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
+import org.innovateuk.ifs.file.resource.BasicFileAndContents;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.BasicFileAndContents;
-import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
-import org.innovateuk.ifs.file.transactional.FileEntryService;
-import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.file.resource.FileAndContents;
+import org.innovateuk.ifs.file.controller.FilesizeAndTypeFileValidator;
+import org.innovateuk.ifs.file.service.FileEntryService;
+import org.innovateuk.ifs.file.service.FileService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.attachments.domain.Attachment;
@@ -80,13 +80,13 @@ public class ProjectFinanceAttachmentsServiceImpl implements ProjectFinanceAttac
 
             return fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForProjectFinanceThreadsAttachmentsInternal, maxFilesizeBytesForProjectFinanceThreadsAttachments, request,
                     (fileAttributes, inputStreamSupplier) -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
-                            .andOnSuccess(created -> save(new Attachment(loggedInUserSupplier.get(), created.getRight(), now()))
+                            .andOnSuccess(created -> save(new Attachment(loggedInUserSupplier.get(), created, now()))
                                     .andOnSuccessReturn(mapper::mapToResource))).toServiceResult();
         }
 
         return fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForProjectFinanceThreadsAttachmentsExternal, maxFilesizeBytesForProjectFinanceThreadsAttachments, request,
                 (fileAttributes, inputStreamSupplier) -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
-                        .andOnSuccess(created -> save(new Attachment(loggedInUserSupplier.get(), created.getRight(), now()))
+                        .andOnSuccess(created -> save(new Attachment(loggedInUserSupplier.get(), created, now()))
                                 .andOnSuccessReturn(mapper::mapToResource))).toServiceResult();
     }
 

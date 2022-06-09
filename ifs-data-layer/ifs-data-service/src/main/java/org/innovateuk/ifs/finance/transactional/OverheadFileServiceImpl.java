@@ -4,10 +4,10 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
+import org.innovateuk.ifs.file.resource.BasicFileAndContents;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.BasicFileAndContents;
-import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.file.resource.FileAndContents;
+import org.innovateuk.ifs.file.service.FileService;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaValue;
@@ -132,16 +132,16 @@ public class OverheadFileServiceImpl extends BaseTransactionalService implements
         fileEntryResource.setId(Long.valueOf(financeRowMetaValue.getValue()));
 
         return fileService.updateFile(fileEntryResource, fileAndContents.getContentsSupplier()).
-                andOnSuccess(updatedFileEntry -> serviceSuccess(fileEntryMapper.mapToResource(updatedFileEntry.getValue())));
+                andOnSuccess(updatedFileEntry -> serviceSuccess(fileEntryMapper.mapToResource(updatedFileEntry)));
     }
 
     private ServiceResult<FileEntryResource> createFileAndMetaValue(FinanceRow overheadFinanceRow, FinanceRowMetaField metaField, BasicFileAndContents fileAndContents) {
         return fileService.createFile(fileAndContents.getFileEntry(), fileAndContents.getContentsSupplier()).
                 andOnSuccess(fileEntry -> {
                     financeRowMetaValueRepository.save(
-                            new FinanceRowMetaValue(overheadFinanceRow, metaField, fileEntry.getValue().getId().toString())
+                            new FinanceRowMetaValue(overheadFinanceRow, metaField, fileEntry.getId().toString())
                     );
-                    return serviceSuccess(fileEntryMapper.mapToResource(fileEntry.getValue()));
+                    return serviceSuccess(fileEntryMapper.mapToResource(fileEntry));
                 });
     }
 

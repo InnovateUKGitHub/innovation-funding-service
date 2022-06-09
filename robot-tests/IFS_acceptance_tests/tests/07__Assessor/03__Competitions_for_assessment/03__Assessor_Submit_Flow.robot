@@ -29,6 +29,8 @@ Documentation     INFUND-550 As an assessor I want the ‘Assessment summary’ 
 ...
 ...               IFS-10028 "Upload successful" message should be displayed when uploading the assessment as a service csv file
 ...
+...               IFS-12082 Print template amendments for assessor
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        Assessor
@@ -39,6 +41,8 @@ Resource          ../../../resources/common/Assessor_Commons.robot
 ${assessor_as_a_service_url}            management/admin/upload-files
 ${AssessorAsAServiceComp}               Rolling stock future developments - Assessor as a Service
 ${AssessorAsAServiceApplicationTitle}   High-speed rail and its effects on soil compaction - AAS
+${assessmentApplicationforPrint}        Assessment is awesome - Application 3
+${assessmentApplicationforPrintID}      ${application_ids["${assessmentApplicationforPrint}"]}
 
 
 *** Test Cases ***
@@ -54,9 +58,19 @@ Summary:All the sections are present
     And the user should see the element                     id = form-input-feedback
     And the user should see the element                     id = form-input-comments
 
+assessors can not view team members in the print view
+    [Documentation]    IFS-12082
+    [Tags]  HappyPath
+    When the user navigates to the page without the usual headers   ${SERVER}/application/${assessmentApplicationforPrintID}/print?noprint&team=false
+    Then the user should not see the element                        jQuery = h3:contains("Team members")
+
 Summary:Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
-    Given The user should see the element    jQuery = .deadline:contains("days left to submit")
+    Given the user navigates to the page                    ${server}/assessment/assessor/dashboard
+    And The user clicks the button/link                     link = Assessment is awesome
+    When the user clicks the button/link                    link = Assessment is awesome - Application 3
+    And the user clicks the button/link                     jQuery = .govuk-button:contains("Review and complete your assessment")
+    Then The user should see the element                   jQuery = .deadline:contains("days left to submit")
     # And the days remaining should be correct (Top of the page)  ${getSimpleMilestoneDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
     # TODO IFS-3176
 

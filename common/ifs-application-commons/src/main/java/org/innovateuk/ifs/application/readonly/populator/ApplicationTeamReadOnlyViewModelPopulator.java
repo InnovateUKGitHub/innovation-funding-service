@@ -18,6 +18,7 @@ import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
@@ -70,6 +71,7 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
     @Override
     public ApplicationTeamReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         boolean internalUser = data.getUser().isInternalUser();
+        boolean shouldShowTeamMember = settings.isIncludeTeamMember();
         List<ProcessRoleResource> applicationProcessRoles = processRoleRestService.findProcessRole(data.getApplication().getId()).getSuccess();
         List<ProcessRoleResource> processRoles = applicationProcessRoles.stream()
                 .filter(role -> applicantProcessRoles().contains(role.getRole()))
@@ -115,7 +117,7 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
                 .collect(toList()));
 
         return new ApplicationTeamReadOnlyViewModel(data, question, organisationViewModels, ktaProcessRole, ktaPhoneNumber,
-                internalUser, ediUpdateEnabled);
+                internalUser, shouldShowTeamMember, ediUpdateEnabled);
     }
 
     private boolean showInvites(ApplicationReadOnlyData data) {

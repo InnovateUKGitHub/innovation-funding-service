@@ -7,6 +7,7 @@ import org.innovateuk.ifs.starters.audit.cfg.AuditConfigurationProperties;
 import org.innovateuk.ifs.starters.audit.log.LogAuditChannel;
 import org.innovateuk.ifs.starters.audit.rabbit.RabbitAuditChannel;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.context.annotation.UserConfigurations;
@@ -15,12 +16,14 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.innovateuk.ifs.starters.audit.cfg.testcfg.RabbitAuditTestConfiguration.CONTEXT_RESOURCE_LOCK;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class LogAuditAutoConfigurationTest {
+class LogAuditAutoConfigurationTest {
 
     @Test
-    public void logContextConfiguration() {
+    @ResourceLock(CONTEXT_RESOURCE_LOCK)
+    void logContextConfiguration() {
         ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withConfiguration(UserConfigurations.of(AuditConfigurationProperties.class))
             .withConfiguration(AutoConfigurations.of(AuditAutoConfiguration.class));

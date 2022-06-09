@@ -44,12 +44,15 @@ public class ApplicationPrintPopulator {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+        boolean includeTeamMember = (!user.hasAnyRoles(Role.ASSESSOR, Role.KNOWLEDGE_TRANSFER_ADVISER)) || userIsApplicantOrCollaborator(user, application);
         ApplicationReadOnlySettings settings = defaultSettings()
                 .setIncludeAllAssessorFeedback(userCanViewFeedback(user, competition, application))
-                .setIncludeAllSupporterFeedback(userCanViewSupporterFeedback(user, competition, application));
+                .setIncludeAllSupporterFeedback(userCanViewSupporterFeedback(user, competition, application))
+                .setIncludeTeamMember(includeTeamMember);
 
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationReadOnlyViewModelPopulator.populate(applicationId, user, settings);
         model.addAttribute("model", applicationReadOnlyViewModel);
+        model.addAttribute("print", true);
         return "application/print";
     }
 
@@ -73,6 +76,12 @@ public class ApplicationPrintPopulator {
         return isKta
                 && competition.isKtp()
                 && shouldDisplayFeedback(application);
+    }
+
+    private boolean userIsApplicantOrCollaborator(UserResource user, ApplicationResource application) {
+        List<ProcessRoleResource> processRoles = processRoleRestService.findProcessRole(application.getId()).getSuccess();
+        return processRoles.stream()
+                .anyMatch(pr -> pr.getUser().equals(user.getId()) && (pr.getRole().isLeadApplicant() || pr.getRole().isCollaborator()));
     }
 
     private boolean userCanViewSupporterFeedback(UserResource user, CompetitionResource competition, ApplicationResource application) {

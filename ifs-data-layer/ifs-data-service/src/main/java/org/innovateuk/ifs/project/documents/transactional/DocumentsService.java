@@ -2,8 +2,8 @@ package org.innovateuk.ifs.project.documents.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.file.resource.FileAndContents;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
 import org.springframework.security.access.prepost.PreAuthorize;
 

@@ -4,7 +4,8 @@ test {
     testLogging {
         events "passed", "skipped", "failed"
     }
-    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+    // Let junit 5 config determine this
+    maxParallelForks = 1
 }
 
 dependencies {

@@ -9,6 +9,7 @@ resources:
   - data-service-secrets.yml
   - db-secrets.yml
   - docusign-secrets.yml
+  - file-storage-service-secrets.yml
   - finance-data-service-secrets.yml
   - flyway-secrets.yml
   - idp-keys-secrets.yml
