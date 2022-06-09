@@ -24,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,6 +57,13 @@ public class FileServiceImpl implements FileService {
 
     @Autowired
     private FileServiceTransactionHelper fileServiceTransactionHelper;
+
+    @PostConstruct
+    public void debugMockBean() {
+        log.error(fileDeletionFeign.getClass().getSimpleName());
+        log.error(fileUploadFeign.getClass().getSimpleName());
+        log.error(fileDownloadFeign.getClass().getSimpleName());
+    }
 
     @Override
     public ServiceResult<FileEntry> createFile(FileEntryResource resource, Supplier<InputStream> inputStreamSupplier) {
