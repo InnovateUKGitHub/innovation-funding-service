@@ -9,16 +9,11 @@ public class ApplicationPreRegConfig {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private boolean enableForEOI;
-
-    @OneToOne(mappedBy = "applicationPreRegConfig", fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name="applicationId", referencedColumnName="id")
     private Application application;
 
-    public ApplicationPreRegConfig(Long id, boolean enableForEOI, Application application) {
-        this.id = id;
-        this.enableForEOI = enableForEOI;
-        this.application = application;
-    }
+    private boolean enableForEOI;
 
     public Long getId() {
         return id;
@@ -28,19 +23,19 @@ public class ApplicationPreRegConfig {
         this.id = id;
     }
 
-    public boolean isEnableForEOI() {
-        return enableForEOI;
-    }
-
-    public void setEnableForEOI(boolean enableForEOI) {
-        this.enableForEOI = enableForEOI;
-    }
-
     public Application getApplication() {
         return application;
     }
 
     public void setApplication(Application application) {
         this.application = application;
+    }
+
+    public boolean isEnableForEOI() {
+        return enableForEOI;
+    }
+
+    public void setEnableForEOI(boolean enableForEOI) {
+        this.enableForEOI = enableForEOI;
     }
 }

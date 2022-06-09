@@ -4,17 +4,17 @@ public class ApplicationPreRegConfigResource {
 
     private Long id;
 
-    private boolean enableForEOI;
-
     private Long applicationId;
+
+    private boolean enableForEOI;
 
     public ApplicationPreRegConfigResource() {
     }
 
-    public ApplicationPreRegConfigResource(Long id, boolean enableForEOI, Long applicationId) {
+    public ApplicationPreRegConfigResource(Long id, Long applicationId, boolean enableForEOI) {
         this.id = id;
-        this.enableForEOI = enableForEOI;
         this.applicationId = applicationId;
+        this.enableForEOI = enableForEOI;
     }
 
     public Long getId() {
@@ -25,19 +25,19 @@ public class ApplicationPreRegConfigResource {
         this.id = id;
     }
 
-    public boolean isEnableForEOI() {
-        return enableForEOI;
-    }
-
-    public void setEnableForEOI(boolean enableForEOI) {
-        this.enableForEOI = enableForEOI;
-    }
-
     public Long getApplicationId() {
         return applicationId;
     }
 
     public void setApplicationId(Long applicationId) {
         this.applicationId = applicationId;
+    }
+
+    public boolean isEnableForEOI() {
+        return enableForEOI;
+    }
+
+    public void setEnableForEOI(boolean enableForEOI) {
+        this.enableForEOI = enableForEOI;
     }
 }
