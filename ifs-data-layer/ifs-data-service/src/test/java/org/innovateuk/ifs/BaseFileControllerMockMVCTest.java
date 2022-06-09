@@ -1,11 +1,11 @@
 package org.innovateuk.ifs;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.file.controller.FileHeaderAttributes;
+import org.innovateuk.ifs.file.controller.FilesizeAndTypeFileValidator;
+import org.innovateuk.ifs.file.resource.BasicFileAndContents;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.BasicFileAndContents;
-import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
-import org.innovateuk.ifs.file.transactional.FileHeaderAttributes;
+import org.innovateuk.ifs.file.resource.FileAndContents;
 import org.junit.Before;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;

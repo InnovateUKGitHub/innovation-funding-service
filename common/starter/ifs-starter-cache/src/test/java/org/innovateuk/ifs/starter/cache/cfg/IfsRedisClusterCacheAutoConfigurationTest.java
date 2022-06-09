@@ -5,6 +5,7 @@ import org.innovateuk.ifs.starter.common.util.ProfileUtils;
 import org.innovateuk.ifs.starters.cache.cfg.IfsCacheAutoConfiguration;
 import org.innovateuk.ifs.starters.cache.cfg.IfsCacheContextInitializer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
@@ -20,7 +21,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.innovateuk.ifs.starter.cache.cfg.IfsRedisStandaloneCacheAutoConfigurationTest.ENVIRONMENT_CACHE_CONFIG_COMMON;
 
-public class IfsRedisClusterCacheAutoConfigurationTest {
+class IfsRedisClusterCacheAutoConfigurationTest {
 
     /** For cluster mode */
     private static final String[] ENVIRONMENT_CACHE_CONFIG_CLUSTER = new String[] {
@@ -31,7 +32,8 @@ public class IfsRedisClusterCacheAutoConfigurationTest {
     };
 
     @Test
-    public void testConfigClusterMode() {
+    @ResourceLock("ApplicationContextRunner")
+    void testConfigClusterMode() {
         new ApplicationContextRunner()
             .withSystemProperties(
                 ObjectArrays.concat(ENVIRONMENT_CACHE_CONFIG_COMMON, ENVIRONMENT_CACHE_CONFIG_CLUSTER, String.class)

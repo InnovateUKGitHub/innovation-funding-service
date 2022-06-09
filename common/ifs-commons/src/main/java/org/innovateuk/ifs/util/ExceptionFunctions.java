@@ -3,6 +3,7 @@ package org.innovateuk.ifs.util;
 /**
  * @deprecated barely used and Optional seems a better choice
  */
+@Deprecated
 public final class ExceptionFunctions {
 
     private ExceptionFunctions() {}

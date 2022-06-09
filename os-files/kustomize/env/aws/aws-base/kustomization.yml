@@ -9,6 +9,8 @@ bases:
 
 components:
   - ../../../components/sba
+  - ../../../components/clamav
   - ../../../components/registration-service
   - ../../../components/data-layer/
   - ../../../components/web-layer
+  - ../../../components/file-storage-service

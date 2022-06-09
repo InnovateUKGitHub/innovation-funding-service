@@ -120,9 +120,9 @@ public class Application implements ProcessActivity {
     @JoinColumn(name = "applicationExternalConfigId", referencedColumnName = "id")
     private ApplicationExternalConfig applicationExternalConfig;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "applicationPreRegConfigId", referencedColumnName = "id")
+    @OneToOne(mappedBy = "application", fetch = FetchType.LAZY)
     private ApplicationPreRegConfig applicationPreRegConfig;
+
 
     public Application() {
     }
@@ -160,6 +160,7 @@ public class Application implements ProcessActivity {
         this.competitionReferralSource = application.getCompetitionReferralSource();
         this.companyAge = application.getCompanyAge();
         this.companyPrimaryFocus = application.getCompanyPrimaryFocus();
+        this.applicationPreRegConfig = application.getApplicationPreRegConfig();
     }
 
     protected boolean canEqual(Object other) {

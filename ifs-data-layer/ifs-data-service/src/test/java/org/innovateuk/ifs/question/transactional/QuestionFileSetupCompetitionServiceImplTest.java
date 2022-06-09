@@ -3,7 +3,7 @@ package org.innovateuk.ifs.question.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
-import org.innovateuk.ifs.file.transactional.FileEntryService;
+import org.innovateuk.ifs.file.service.FileEntryService;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputScope;

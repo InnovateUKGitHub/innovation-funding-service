@@ -5,6 +5,7 @@ import org.innovateuk.ifs.starter.common.util.ProfileUtils;
 import org.innovateuk.ifs.starters.cache.cfg.IfsCacheAutoConfiguration;
 import org.innovateuk.ifs.starters.cache.cfg.IfsCacheContextInitializer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
@@ -20,7 +21,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.innovateuk.ifs.IfsProfileConstants.REDIS_STANDALONE_CACHE;
 
-public class IfsRedisStandaloneCacheAutoConfigurationTest {
+class IfsRedisStandaloneCacheAutoConfigurationTest {
 
     /** Expected from the environment i.e. k8s config-maps/secrets */
     protected static final String[] ENVIRONMENT_CACHE_CONFIG_COMMON = new String[] {
@@ -41,7 +42,8 @@ public class IfsRedisStandaloneCacheAutoConfigurationTest {
     };
 
     @Test
-    public void testConfigWithSimpleCacheProfile() {
+    @ResourceLock("ApplicationContextRunner")
+    void testConfigWithSimpleCacheProfile() {
 
         new ApplicationContextRunner()
             .withSystemProperties(

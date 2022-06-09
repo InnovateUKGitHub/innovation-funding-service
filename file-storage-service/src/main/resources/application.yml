@@ -1,0 +1,57 @@
+server:
+  port: 8080
+  error:
+    include-message: always
+ifs:
+  filestorage:
+    mimeCheckEnabled: true
+    virusscan:
+      clamAv:
+        host: ${FSS_CLAM_HOST:localhost}
+        port: ${FSS_CLAM_PORT:3310}
+        clientTimeoutMs: ${FSS_CLIENT_TIMEOUT_MS:2000}
+        scanChunkSizeBytes: ${FSS_SCAN_CHUNK_SIZE_BYTES:12582912}
+    storage:
+      localStorage:
+        rootFolderPath: "/tmp"
+      s3:
+        awsAccessKey:  ${FSS_S3_AWS_ACCESS_KEY}
+        awsSecretKey:  ${FSS_S3_AWS_SECRET_KEY}
+        awsRegion: ${FSS_S3_AWS_REGION}
+        fileStoreS3Bucket: ${FSS_S3_AWS_BUCKET}
+
+spring:
+  datasource:
+    url: ${FSS_DB_URL:jdbc:mysql://ifs-database:3306/ifs_file_storage}
+    username: ${FSS_DB_USER:root}
+    password: ${FSS_DB_PASS:password}
+    test-on-borrow: true
+    validation-query: SELECT 1
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+
+management:
+  endpoints:
+    enabled-by-default: true
+    health:
+      show-details: ALWAYS
+      show-components: ALWAYS
+      enabled: true
+    info:
+      enabled: true
+    shutdown:
+      enabled: false
+    web:
+      base-path: /monitoring
+      exposure:
+        include: '*'
+        exclude: threaddump,heapdump
+  endpoint:
+    restart:
+      enabled: false

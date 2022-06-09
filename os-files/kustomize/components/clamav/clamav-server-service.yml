@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: clamd
+  labels:
+    app: clamd
+spec:
+  selector:
+    app: clamd
+  ports:
+    - name: 3310-tcp
+      port: 3310
+      targetPort: 3310
