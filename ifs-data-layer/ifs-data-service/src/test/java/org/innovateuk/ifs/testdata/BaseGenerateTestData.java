@@ -227,11 +227,12 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
     private List<CsvUtils.InviteLine> inviteLines;
     private List<CsvUtils.QuestionnaireResponseLine> questionnaireResponseLines;
-    private List<CsvUtils.EnableForEOILine> enableForEOILines;
+  //  private List<CsvUtils.EnableForEOILine> enableForEOILines;
 
     @Value("${ifs.generate.test.data.competition.filter.name:Subsidy control comp in assessment}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
-       BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
+      // BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
+        BaseGenerateTestData.competitionNameForFilter = "Horizon Europe Guarantee Competition For Pre Registration";
     }
 
     @Before
@@ -266,7 +267,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         applicationFinanceLines = readApplicationFinances();
         competitionLines = buildCompetitionLines();
         questionnaireResponseLines = readQuestionnaireResponseLines();
-        enableForEOILines = readEnableForEOILines();
     }
 
     @PostConstruct
@@ -545,7 +545,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         competitionDataBuilderService.moveCompetitionIntoOpenStatus(competition);
 
         return simpleMap(applicationsForCompetition, applicationLine -> CompletableFuture.supplyAsync(() ->
-                applicationDataBuilderService.createApplication(competition, applicationLine, inviteLines, externalUserLines, enableForEOILines), taskExecutor));
+                applicationDataBuilderService.createApplication(competition, applicationLine, inviteLines, externalUserLines), taskExecutor));
     }
 
     private CompletableFuture<Void> waitForFutureList(List<? extends CompletableFuture<?>> createApplicationsFutures) {

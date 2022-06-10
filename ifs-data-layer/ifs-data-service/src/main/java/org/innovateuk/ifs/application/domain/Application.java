@@ -120,11 +120,8 @@ public class Application implements ProcessActivity {
     @JoinColumn(name = "applicationExternalConfigId", referencedColumnName = "id")
     private ApplicationExternalConfig applicationExternalConfig;
 
-    @OneToOne(mappedBy = "application", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private ApplicationPreRegConfig applicationPreRegConfig;
-
-    private boolean enableForEOI = false;
-
 
     public Application() {
     }
@@ -163,7 +160,7 @@ public class Application implements ProcessActivity {
         this.companyAge = application.getCompanyAge();
         this.companyPrimaryFocus = application.getCompanyPrimaryFocus();
         this.applicationPreRegConfig = application.getApplicationPreRegConfig();
-        this.enableForEOI = application.isEnableForEOI();
+   //     this.enableForEOI = application.isEnableForEOI();
     }
 
     protected boolean canEqual(Object other) {
@@ -571,11 +568,8 @@ public class Application implements ProcessActivity {
         this.applicationPreRegConfig = applicationPreRegConfig;
     }
 
+    @Transient
     public boolean isEnableForEOI() {
-        return applicationPreRegConfig != null ? applicationPreRegConfig.isEnableForEOI() : enableForEOI;
-    }
-
-    public void setEnableForEOI(boolean enableForEOI) {
-        this.enableForEOI = enableForEOI;
+        return applicationPreRegConfig != null ? applicationPreRegConfig.isEnableForEOI() : false;
     }
 }

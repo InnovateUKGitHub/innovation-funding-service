@@ -13,6 +13,7 @@ public class ApplicationPreRegConfig {
     @JoinColumn(name="applicationId", referencedColumnName="id")
     private Application application;
 
+    @Column(name = "pre_registration", nullable = false)
     private boolean enableForEOI;
 
     public Long getId() {

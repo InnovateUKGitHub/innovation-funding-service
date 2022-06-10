@@ -3,9 +3,11 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
+import org.innovateuk.ifs.application.domain.ApplicationPreRegConfig;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.repository.ApplicationOrganisationAddressRepository;
+import org.innovateuk.ifs.application.repository.ApplicationPreRegConfigRepository;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -75,6 +77,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private OrganisationAddressRepository organisationAddressRepository;
 
+    @Autowired
+    private ApplicationPreRegConfigRepository applicationPreRegConfigRepository;
+
     private static final Map<String, Sort> APPLICATION_SORT_FIELD_MAP;
 
     static {
@@ -117,11 +122,22 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         setInnovationArea(application, competition);
 
         application = applicationRepository.save(application);
-        generateProcessRolesForApplication(user, ProcessRoleType.LEADAPPLICANT, application, organisationId);
+        setEOIApplication(competition, application);
 
+        generateProcessRolesForApplication(user, ProcessRoleType.LEADAPPLICANT, application, organisationId);
         linkAddressesToOrganisation(organisationId, application.getId());
 
         return serviceSuccess(applicationMapper.mapToResource(application));
+    }
+
+    private void setEOIApplication(Competition competition, Application application) {
+        if (competition.isEnabledForPreRegistration()) {
+            ApplicationPreRegConfig applicationPreRegConfig = new ApplicationPreRegConfig();
+            applicationPreRegConfig.setApplication(application);
+            applicationPreRegConfig.setEnableForEOI(true);
+            applicationPreRegConfigRepository.save(applicationPreRegConfig);
+            application.setApplicationPreRegConfig(applicationPreRegConfig);
+        }
     }
 
     // Default to the competition's innovation area if only one set.
@@ -167,7 +183,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         application.setCompetitionReferralSource(resource.getCompetitionReferralSource());
         application.setCompanyAge(resource.getCompanyAge());
         application.setCompanyPrimaryFocus(resource.getCompanyPrimaryFocus());
-        application.setEnableForEOI(resource.isEnableForEOI());
+      //  application.setEnableForEOI(resource.isEnableForEOI());
     }
 
     @Override
