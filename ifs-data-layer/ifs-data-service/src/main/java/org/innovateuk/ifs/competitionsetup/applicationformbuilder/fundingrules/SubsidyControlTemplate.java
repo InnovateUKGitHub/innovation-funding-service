@@ -144,6 +144,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         activitiesQuestion.setQuestion("Will the Innovate UK funding directly or indirectly have an effect upon either:");
         // TODO: Add the full question content.
         activitiesQuestion.setQuestionnaire(questionnaire.getId());
+        activitiesQuestion.setQuestionName("activities");
         activitiesQuestion = questionnaireQuestionService.create(activitiesQuestion).getSuccess();
 
         // question 1.5 - no to first question
