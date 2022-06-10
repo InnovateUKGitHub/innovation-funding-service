@@ -17,6 +17,7 @@ spec:
       containers:
         - name: rabbitmq-k8s
           image: rabbitmq:3.9.13-management
+          envFrom: []
           ports:
             - name: http
               protocol: TCP
@@ -35,8 +36,3 @@ spec:
               command: ["rabbitmq-diagnostics", "ping"]
             initialDelaySeconds: 5
           imagePullPolicy: IfNotPresent
-          env:
-            - name: RABBITMQ_DEFAULT_USER
-              value: "campervan"
-            - name: RABBITMQ_DEFAULT_PASS
-              value: "disco"
