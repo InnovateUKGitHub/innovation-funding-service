@@ -54,6 +54,7 @@ public class ReviewAndSubmitViewModelPopulator {
         boolean isWaitingForPartnerSubsidyBasisOnly = isWaitingForPartnerSubsidyBasisOnly(application, competition);
 
         ApplicationReadOnlyViewModel applicationSummaryViewModel = applicationRowsSummaryViewModelPopulator.populate(application, competition, user, defaultSettings()
+                .setIncludeQuestionNumber(!application.isEnableForEOI())
                 .setIncludeQuestionLinks(true)
                 .setIncludeStatuses(true));
         return new ReviewAndSubmitViewModel(applicationSummaryViewModel, application, competition,

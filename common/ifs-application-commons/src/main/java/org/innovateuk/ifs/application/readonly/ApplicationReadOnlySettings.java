@@ -7,6 +7,7 @@ public class ApplicationReadOnlySettings {
 
     private boolean includeStatuses = false;
     private boolean includeQuestionLinks = false;
+    private boolean includeQuestionNumber = true;
     private boolean includeAllAssessorFeedback = false;
     private boolean includeAllSupporterFeedback = false;
     private boolean includeTeamMember = true;
@@ -33,6 +34,15 @@ public class ApplicationReadOnlySettings {
 
     public ApplicationReadOnlySettings setIncludeQuestionLinks(boolean includeQuestionLinks) {
         this.includeQuestionLinks = includeQuestionLinks;
+        return this;
+    }
+
+    public boolean isIncludeQuestionNumber() {
+        return includeQuestionNumber;
+    }
+
+    public ApplicationReadOnlySettings setIncludeQuestionNumber(boolean includeQuestionNumber) {
+        this.includeQuestionNumber = includeQuestionNumber;
         return this;
     }
 

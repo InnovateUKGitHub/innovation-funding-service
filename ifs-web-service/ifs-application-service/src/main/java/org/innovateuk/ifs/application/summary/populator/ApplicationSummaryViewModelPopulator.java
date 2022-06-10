@@ -48,6 +48,7 @@ public class ApplicationSummaryViewModelPopulator {
 
     public ApplicationSummaryViewModel populate(ApplicationResource application, CompetitionResource competition, UserResource user) {
         ApplicationReadOnlySettings settings = defaultSettings()
+                .setIncludeQuestionNumber(!application.isEnableForEOI())
                 .setIncludeAllAssessorFeedback(shouldDisplayFeedback(competition, application, user))
                 .setIncludeAllSupporterFeedback(shouldDisplaySupporterFeedback(competition, application, user));
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationReadOnlyViewModelPopulator.populate(application, competition, user, settings);

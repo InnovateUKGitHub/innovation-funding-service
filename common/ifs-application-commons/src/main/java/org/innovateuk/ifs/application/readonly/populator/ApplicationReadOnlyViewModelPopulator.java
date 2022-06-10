@@ -173,9 +173,14 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         Set<ApplicationQuestionReadOnlyViewModel> questionViews = section.getQuestions()
                 .stream()
                 .map(questionId -> data.getQuestionIdToQuestion().get(questionId))
-                .map(question ->  populateQuestionViewModel(question, data, settings))
+                .filter(question -> data.getApplication().isEnableForEOI() ? question.isEnabledForPreRegistration() : true)
+                .map(question -> populateQuestionViewModel(question, data, settings))
                 .collect(toCollection(LinkedHashSet::new));
-        return new ApplicationSectionReadOnlyViewModel(section.getName(), false, section.isTermsAndConditions(), questionViews);
+        return new ApplicationSectionReadOnlyViewModel(sectionName(section, data), false, section.isTermsAndConditions(), questionViews);
+    }
+
+    private String sectionName(SectionResource section, ApplicationReadOnlyData data) {
+        return data.getApplication().isEnableForEOI() ? (section.getName().equals("Application questions") ? "Expression of interest questions" : section.getName()) : section.getName();
     }
 
     //Currently only theA finance section has child sections.
