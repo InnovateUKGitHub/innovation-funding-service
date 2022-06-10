@@ -33,12 +33,22 @@ Back button takes you to the previous page
     Given the user clicks the button/link                     link = Back to assessments
     Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
 
-Assessor agreement
+the user can view download an assessor agreement link
+    [Documentation]    IFS-12130
+    When the user clicks the button/link     jQuery = a:contains("your assessor agreement")
+    Then the user should see the element     link = Download assessor agreement
+
+the user can download an assessor agreement
+    [Documentation]    IFS-12130
+    When the user navigates to the page   ${server}/assessment/profile/agreement/print?noprint
+    Then the user should see the element  jQuery = h2:contains("1. Appointment")
+
+Assessor agreement link should not display in the banner
     [Documentation]    INFUND-1481
-    Given the user opens assessor agreement in new window
+    Given the user navigates to the page                      ${server}/assessment/profile/agreement
     When the user clicks the button/link                      jQuery = button:contains("Save and return to assessments")
     Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
-    And the user should not see the element                   jQuery = .message-alert a:contains('your assessor agreement')    #his checks the alert message on the top od the page
+    And the user should not see the element                   jQuery = .message-alert a:contains('your assessor agreement')    #his checks the alert message on the top of the page
 
 Agreement Confirmation
     [Documentation]    INFUND-5628
@@ -61,9 +71,3 @@ the user should see travel and subsistence rates
     the user should see the element    jQuery = h2:contains("Public transport")
     the user should see the element    jQuery = h2:contains("Mileage rates") ~ h3:contains("Up to 10,000 miles")
     the user should see the element    jQuery = p:contains("Please make sure your travel claims, receipts and tickets are all submitted.")
-
-the user opens assessor agreement in new window
-    the user clicks the button/link             jQuery = a:contains("your assessor agreement")
-    the user navigates to the page              ${server}/assessment/profile/agreement/print?noprint
-    the user should see the element             jQuery = h2:contains("1. Appointment")
-    the user navigates to the page              ${server}/assessment/profile/agreement
