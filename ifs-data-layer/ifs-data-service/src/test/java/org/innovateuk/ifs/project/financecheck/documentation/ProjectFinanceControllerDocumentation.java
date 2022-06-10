@@ -105,6 +105,14 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                                 withName("direct_staff", "direct_staff", "exceptions_staff").
                                 build(4)).
                         build(),
+                FinanceRowType.PERSONNEL, newLabourCostCategory().withCosts(
+                                newLabourCost().
+                                        withGrossEmployeeCost(new BigDecimal("10000.23"), new BigDecimal("5100.11"), new BigDecimal("600.11"), BigDecimal.ZERO).
+                                        withDescription("Developers", "Testers", "Something else", WORKING_DAYS_PER_YEAR).
+                                        withLabourDays(100, 120, 120, 250).
+                                        withName("direct_staff", "direct_staff", "exceptions_staff_hecp").
+                                        build(4)).
+                        build(),
                 FinanceRowType.OTHER_COSTS, newDefaultCostCategory().withCosts(
                         newOtherCost().
                                 withCost(new BigDecimal("33.33"), new BigDecimal("98.51")).

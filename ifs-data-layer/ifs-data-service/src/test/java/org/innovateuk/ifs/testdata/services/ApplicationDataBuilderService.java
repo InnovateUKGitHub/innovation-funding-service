@@ -880,6 +880,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         withGrantClaim(BigDecimal.valueOf(100)).
                         withOtherFunding("Lottery", LocalDate.of(2016, 4, 1), bd("2468")).
                         withDirectlyIncurredStaff(bd("22")).
+                        withDirectlyIncurredStaffHecp(bd("22")).
                         withDirectlyIncurredTravelAndSubsistence(bd("44")).
                         withDirectlyIncurredOtherCosts(bd("66")).
                         withDirectlyAllocatedInvestigators(bd("88")).
@@ -887,6 +888,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         withDirectlyAllocatedOtherCosts(bd("132")).
                         withIndirectCosts(bd("154")).
                         withExceptionsStaff(bd("176")).
+                        withExceptionsStaffHecp(bd("176")).
                         withExceptionsOtherCosts(bd("198")).
                         withUploadedJesForm().
                         withLocation());

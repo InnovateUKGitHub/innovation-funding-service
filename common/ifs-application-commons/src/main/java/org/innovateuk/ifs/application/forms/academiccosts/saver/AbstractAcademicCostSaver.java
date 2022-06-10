@@ -24,13 +24,16 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 public abstract class AbstractAcademicCostSaver extends AsyncAdaptor {
     protected static final Map<String, String> formFieldToCostName = asMap(
             "incurredStaff", "incurred_staff",
+            "incurredStaffHecp", "incurred_staff",
             "incurredTravel", "incurred_travel_subsistence",
             "incurredOtherCosts", "incurred_other_costs",
             "allocatedInvestigators", "allocated_investigators",
+            "allocatedInvestigatorsHecp", "allocated_investigators_hecp",
             "allocatedEstatesCosts", "allocated_estates_costs",
             "allocatedOtherCosts", "allocated_other_costs",
             "indirectCosts", "indirect_costs",
             "exceptionsStaff", "exceptions_staff",
+            "exceptionsStaffHecp", "exceptions_staff_hecp",
             "exceptionsOtherCosts", "exceptions_other_costs"
     );
 
@@ -49,6 +52,10 @@ public abstract class AbstractAcademicCostSaver extends AsyncAdaptor {
         incurredStaff.setCost(form.getIncurredStaff());
         futures.add(asyncUpdate(incurredStaff));
 
+        AcademicCost incurredStaffHecp = costMap.get("incurred_staff_hecp");
+        incurredStaffHecp.setCost(form.getIncurredStaff());
+        futures.add(asyncUpdate(incurredStaffHecp));
+
         AcademicCost incurredTravel = costMap.get("incurred_travel_subsistence");
         incurredTravel.setCost(form.getIncurredTravel());
         futures.add(asyncUpdate(incurredTravel));
@@ -60,6 +67,10 @@ public abstract class AbstractAcademicCostSaver extends AsyncAdaptor {
         AcademicCost allocatedInvestigators = costMap.get("allocated_investigators");
         allocatedInvestigators.setCost(form.getAllocatedInvestigators());
         futures.add(asyncUpdate(allocatedInvestigators));
+
+        AcademicCost allocatedInvestigatorsHecp = costMap.get("allocated_investigators_hecp");
+        allocatedInvestigatorsHecp.setCost(form.getAllocatedInvestigators());
+        futures.add(asyncUpdate(allocatedInvestigatorsHecp));
 
         AcademicCost allocatedEstatesCosts = costMap.get("allocated_estates_costs");
         allocatedEstatesCosts.setCost(form.getAllocatedEstateCosts());
@@ -76,6 +87,10 @@ public abstract class AbstractAcademicCostSaver extends AsyncAdaptor {
         AcademicCost exceptionsStaff = costMap.get("exceptions_staff");
         exceptionsStaff.setCost(form.getExceptionsStaff());
         futures.add(asyncUpdate(exceptionsStaff));
+
+        AcademicCost exceptionsStaffHecp = costMap.get("exceptions_staff_hecp");
+        exceptionsStaffHecp.setCost(form.getExceptionsStaff());
+        futures.add(asyncUpdate(exceptionsStaffHecp));
 
         AcademicCost exceptionsOtherCosts = costMap.get("exceptions_other_costs");
         exceptionsOtherCosts.setCost(form.getExceptionsOtherCosts());

@@ -156,6 +156,12 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
                                 withName(DIRECTLY_INCURRED_STAFF.getFinanceRowName(), INDIRECT_COSTS_STAFF.getFinanceRowName()).
                                 build(2)).
                         build(),
+                FinanceRowType.PERSONNEL, newDefaultCostCategory().withCosts(
+                                newAcademicCost().
+                                        withCost(new BigDecimal("6448"), new BigDecimal("288")).
+                                        withName(DIRECTLY_INCURRED_STAFF_HECP.getFinanceRowName(), INDIRECT_COSTS_STAFF_HECP.getFinanceRowName()).
+                                        build(2)).
+                        build(),
                 FinanceRowType.OTHER_COSTS, newDefaultCostCategory().withCosts(
                         newAcademicCost().
                                 withCost(new BigDecimal("33"), new BigDecimal("98")).
@@ -171,11 +177,15 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
 
         List<CostCategory> costCategories = newCostCategory().
                 withName(DIRECTLY_INCURRED_STAFF.getDisplayName(),
+                        DIRECTLY_INCURRED_STAFF_HECP.getDisplayName(),
                         INDIRECT_COSTS_STAFF.getDisplayName(),
+                        INDIRECT_COSTS_STAFF_HECP.getDisplayName(),
                         DIRECTLY_INCURRED_OTHER_COSTS.getDisplayName(),
                         INDIRECT_COSTS_OTHER_COSTS.getDisplayName()).
                 withLabel(DIRECTLY_INCURRED_STAFF.getLabel(),
+                        DIRECTLY_INCURRED_STAFF_HECP.getLabel(),
                         INDIRECT_COSTS_STAFF.getLabel(),
+                        INDIRECT_COSTS_STAFF_HECP.getLabel(),
                         DIRECTLY_INCURRED_OTHER_COSTS.getLabel(),
                         INDIRECT_COSTS_OTHER_COSTS.getLabel()).
                 build(4);

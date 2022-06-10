@@ -71,13 +71,16 @@ public class AcademicCostSaverTest extends BaseServiceUnitTest<AcademicCostSaver
 
         when(financeRowRestService.update(argThat(hasNameAndItem("tsb_reference", "NewRef")))).thenReturn(restSuccess(new ValidationMessages()));
         when(financeRowRestService.update(argThat(hasNameAndCost("incurred_staff", cost)))).thenReturn(restSuccess(new ValidationMessages()));
+        when(financeRowRestService.update(argThat(hasNameAndCost("incurred_staff_hecp", cost)))).thenReturn(restSuccess(new ValidationMessages()));
         when(financeRowRestService.update(argThat(hasNameAndCost("incurred_travel_subsistence", cost)))).thenReturn(restSuccess(new ValidationMessages()));
         when(financeRowRestService.update(argThat(hasNameAndCost("incurred_other_costs", cost)))).thenReturn(restSuccess(new ValidationMessages()));
         when(financeRowRestService.update(argThat(hasNameAndCost("allocated_investigators", cost)))).thenReturn(restSuccess(new ValidationMessages()));
+        when(financeRowRestService.update(argThat(hasNameAndCost("allocated_investigators_hecp", cost)))).thenReturn(restSuccess(new ValidationMessages()));
         when(financeRowRestService.update(argThat(hasNameAndCost("allocated_estates_costs", cost)))).thenReturn(restSuccess(new ValidationMessages()));
         when(financeRowRestService.update(argThat(hasNameAndCost("allocated_other_costs", cost)))).thenReturn(restSuccess(new ValidationMessages()));
         when(financeRowRestService.update(argThat(hasNameAndCost("indirect_costs", cost)))).thenReturn(restSuccess(new ValidationMessages()));
         when(financeRowRestService.update(argThat(hasNameAndCost("exceptions_staff", cost)))).thenReturn(restSuccess(new ValidationMessages()));
+        when(financeRowRestService.update(argThat(hasNameAndCost("exceptions_staff_hecp", cost)))).thenReturn(restSuccess(new ValidationMessages()));
         when(financeRowRestService.update(argThat(hasNameAndCost("exceptions_other_costs", cost)))).thenReturn(restSuccess(new ValidationMessages()));
 
         when(applicationFinanceRestService.getFinanceDetails(APPLICATION_ID, ORGANISATION_ID)).thenReturn(RestResult.restSuccess(finance));
@@ -88,13 +91,16 @@ public class AcademicCostSaverTest extends BaseServiceUnitTest<AcademicCostSaver
 
         verify(financeRowRestService).update(argThat(hasNameAndItem("tsb_reference", "NewRef")));
         verify(financeRowRestService).update(argThat(hasNameAndCost("incurred_staff", cost)));
+        verify(financeRowRestService).update(argThat(hasNameAndCost("incurred_staff_hecp", cost)));
         verify(financeRowRestService).update(argThat(hasNameAndCost("incurred_travel_subsistence", cost)));
         verify(financeRowRestService).update(argThat(hasNameAndCost("incurred_other_costs", cost)));
         verify(financeRowRestService).update(argThat(hasNameAndCost("allocated_investigators", cost)));
+        verify(financeRowRestService).update(argThat(hasNameAndCost("allocated_investigators_hecp", cost)));
         verify(financeRowRestService).update(argThat(hasNameAndCost("allocated_estates_costs", cost)));
         verify(financeRowRestService).update(argThat(hasNameAndCost("allocated_other_costs", cost)));
         verify(financeRowRestService).update(argThat(hasNameAndCost("indirect_costs", cost)));
         verify(financeRowRestService).update(argThat(hasNameAndCost("exceptions_staff", cost)));
+        verify(financeRowRestService).update(argThat(hasNameAndCost("exceptions_staff_hecp", cost)));
         verify(financeRowRestService).update(argThat(hasNameAndCost("exceptions_other_costs", cost)));
         verifyNoMoreInteractions(financeRowRestService);
 
