@@ -14,3 +14,4 @@ components:
   - ../../../components/data-layer/
   - ../../../components/web-layer
   - ../../../components/file-storage-service
+  - ../../../components/rabbitmq-cluster
