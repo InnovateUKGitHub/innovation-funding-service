@@ -639,7 +639,10 @@ the user should see valid application submission log message stored in db
 the user marks b&fi question as complete or incomplete
     [Arguments]  ${username}  ${applicatioID}  ${questionStatus}  ${questionDate}
     get auth token of user  ${username}
-    ${questionStatus} =   Run Process    ${shellScriptFolder}/${loansCurl}   ${userId}  ${applicatioID}  ${questionStatus}  ${questionDate}
+    ${qStatus} =   Run Process    ${shellScriptFolder}/${loansCurl}   ${userId}  ${applicatioID}  ${questionStatus}  ${questionDate}
+    log  ${qStatus.rc}
+    log  ${qStatus.stderr}
+    log  ${qStatus.stdout}
 
 the user checks valid question status received form SIL
     [Arguments]  ${applicationID}  ${completionStatus}  ${completionDate}

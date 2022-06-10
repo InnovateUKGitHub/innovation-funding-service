@@ -245,3 +245,6 @@ the user changed EDI survey status
     [Arguments]   ${username}  ${ediStatus}  ${ediReviewDate}
     get auth token of user          ${username}
     ${ediStatus} =   Run Process    ${shellScriptFolder}/${ediCurl}  ${userId}  ${ediStatus}  ${ediReviewDate}
+    log  ${ediStatus.rc}
+    log  ${ediStatus.stderr}
+    log  ${ediStatus.stdout}
