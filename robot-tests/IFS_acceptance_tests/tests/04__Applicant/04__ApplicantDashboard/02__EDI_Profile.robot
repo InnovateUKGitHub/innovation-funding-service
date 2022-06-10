@@ -173,6 +173,11 @@ get application Id of assessor
     ${assessorApplicationIdEDI} =  get application id by name    ${AssessorapplicationNameEDI}
     Set suite variable    ${assessorApplicationIdEDI}
 
+get auth token of user
+    [Arguments]  ${username}
+    ${userId} =  get user uuid   ${username}
+    Set global variable  ${userId}
+
 the user fills in the EDI application details
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the user clicks the button/link       link = Application details
