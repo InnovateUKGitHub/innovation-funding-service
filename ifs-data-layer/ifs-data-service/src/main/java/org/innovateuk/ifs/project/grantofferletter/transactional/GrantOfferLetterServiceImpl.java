@@ -11,10 +11,10 @@ import org.innovateuk.ifs.docusign.resource.DocusignType;
 import org.innovateuk.ifs.docusign.transactional.DocusignService;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
+import org.innovateuk.ifs.file.resource.BasicFileAndContents;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.BasicFileAndContents;
-import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.file.resource.FileAndContents;
+import org.innovateuk.ifs.file.service.FileService;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -204,9 +204,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                         andOnSuccessReturn(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, false)));
     }
 
-    private FileEntryResource linkGrantOfferLetterFileToProject(Project project, Pair<File, FileEntry> fileDetails, boolean signed) {
-        FileEntry fileEntry = fileDetails.getValue();
-
+    private FileEntryResource linkGrantOfferLetterFileToProject(Project project, FileEntry fileEntry, boolean signed) {
         if (signed) {
             project.setSignedGrantOfferLetter(fileEntry);
         } else {
@@ -344,8 +342,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     }
 
-    private FileEntryResource linkAdditionalContractFileToProject(Project project, Pair<File, FileEntry> fileDetails) {
-        FileEntry fileEntry = fileDetails.getValue();
+    private FileEntryResource linkAdditionalContractFileToProject(Project project, FileEntry fileEntry) {
         project.setAdditionalContractFile(fileEntry);
         return fileEntryMapper.mapToResource(fileEntry);
     }
@@ -358,8 +355,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                         andOnSuccessReturn(fileDetails -> linkSignedAdditionalContractFileToProject(project, fileDetails)));
     }
 
-    private FileEntryResource linkSignedAdditionalContractFileToProject(Project project, Pair<File, FileEntry> fileDetails) {
-        FileEntry fileEntry = fileDetails.getValue();
+    private FileEntryResource linkSignedAdditionalContractFileToProject(Project project, FileEntry fileEntry) {
         project.setSignedAdditionalContractFile(fileEntry);
         return fileEntryMapper.mapToResource(fileEntry);
     }

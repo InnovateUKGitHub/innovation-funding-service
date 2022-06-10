@@ -2,11 +2,12 @@ package org.innovateuk.ifs;
 
 import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.config.repository.RefreshableCrudRepositoryImpl;
+import org.innovateuk.ifs.starter.feign.filestorage.v1.feign.FileDownloadFeign;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -21,6 +22,7 @@ import javax.servlet.ServletException;
 @SpringBootApplication
 @EnableScheduling
 @EnableSpringDataWebSupport
+@EnableFeignClients(basePackageClasses = {FileDownloadFeign.class})
 @EnableJpaRepositories(repositoryBaseClass = RefreshableCrudRepositoryImpl.class)
 public class Application extends SpringBootServletInitializer {
 

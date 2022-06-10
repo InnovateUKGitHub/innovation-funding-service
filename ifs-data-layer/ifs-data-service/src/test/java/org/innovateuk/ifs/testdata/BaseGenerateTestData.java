@@ -2,6 +2,10 @@ package org.innovateuk.ifs.testdata;
 
 import com.google.common.collect.ImmutableMap;
 import org.flywaydb.core.Flyway;
+import org.innovateuk.ifs.api.filestorage.v1.delete.FileDeletion;
+import org.innovateuk.ifs.api.filestorage.v1.download.FileDownload;
+import org.innovateuk.ifs.api.filestorage.v1.upload.FileUpload;
+import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadResponse;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
@@ -39,6 +43,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -170,6 +177,15 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     @Qualifier("generateTestDataExecutor")
     private Executor taskExecutor;
 
+    @MockBean
+    private FileDeletion fileDeletion;
+
+    @MockBean
+    private FileUpload fileUpload;
+
+    @MockBean
+    private FileDownload fileDownload;
+
     @Autowired
     private CompetitionDataBuilderService competitionDataBuilderService;
 
@@ -222,6 +238,14 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         if (cleanDbFirst()) {
             freshDb();
         }
+        FileUploadResponse fileUploadResponse = FileUploadResponse.builder()
+                .fileId(UUID.randomUUID().toString())
+                .mimeType(MediaType.APPLICATION_PDF_VALUE)
+                .fileName("test.pdf")
+                .fileSizeBytes(1L)
+                .md5Checksum("md5")
+                .build();
+        when(fileUpload.fileUpload(any())).thenReturn(ResponseEntity.ok(fileUploadResponse));
     }
 
     @Before

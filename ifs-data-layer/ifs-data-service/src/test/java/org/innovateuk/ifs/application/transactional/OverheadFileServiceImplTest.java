@@ -6,8 +6,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.BasicFileAndContents;
-import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.file.resource.BasicFileAndContents;
+import org.innovateuk.ifs.file.resource.FileAndContents;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaValue;
@@ -80,7 +80,7 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
         when(financeRowMetaValueRepositoryMock.financeRowIdAndFinanceRowMetaFieldId(overhead.getId(), financeRowMetaField.getId())).thenReturn(null);
 
         FileEntry createdFileEntry = newFileEntry().build();
-        ServiceResult<Pair<File, FileEntry>> successfulFileCreationResult = serviceSuccess(Pair.of(new File("createdfile"), createdFileEntry));
+        ServiceResult<FileEntry> successfulFileCreationResult = serviceSuccess(createdFileEntry);
         when(fileServiceMock.createFile(fileEntryToCreate, inputStreamSupplier)).thenReturn(successfulFileCreationResult);
 
         FileEntryResource createdFileEntryResource = newFileEntryResource().build();
@@ -93,7 +93,7 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
 
         verify(fileServiceMock).createFile(fileEntryToCreate, inputStreamSupplier);
 
-        FinanceRowMetaValue expectedFinanceRowMetaValue = new FinanceRowMetaValue(overhead, financeRowMetaField, successfulFileCreationResult.getSuccess().getValue().getId().toString());
+        FinanceRowMetaValue expectedFinanceRowMetaValue = new FinanceRowMetaValue(overhead, financeRowMetaField, successfulFileCreationResult.getSuccess().getId().toString());
 
         ArgumentCaptor<FinanceRowMetaValue> metaValueArgumentCaptor = ArgumentCaptor.forClass(FinanceRowMetaValue.class);
         verify(financeRowMetaValueRepositoryMock).save(metaValueArgumentCaptor.capture());
@@ -254,7 +254,7 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
         when(financeRowMetaValueRepositoryMock.financeRowIdAndFinanceRowMetaFieldId(overhead.getId(), financeRowMetaField.getId())).thenReturn(financeRowMetaValue);
 
         FileEntry createdFileEntry = newFileEntry().build();
-        ServiceResult<Pair<File, FileEntry>> successfulFileCreationResult = serviceSuccess(Pair.of(new File("createdfile"), createdFileEntry));
+        ServiceResult<FileEntry> successfulFileCreationResult = serviceSuccess(createdFileEntry);
         when(fileServiceMock.updateFile(fileEntryToCreate, inputStreamSupplier)).thenReturn(successfulFileCreationResult);
 
         FileEntryResource createdFileEntryResource = newFileEntryResource().build();

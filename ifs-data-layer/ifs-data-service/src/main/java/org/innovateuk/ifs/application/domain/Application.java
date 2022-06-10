@@ -120,6 +120,9 @@ public class Application implements ProcessActivity {
     @JoinColumn(name = "applicationExternalConfigId", referencedColumnName = "id")
     private ApplicationExternalConfig applicationExternalConfig;
 
+    @Column(name = "pre_registration", nullable = false)
+    private boolean enableForEOI = false;
+
     public Application() {
     }
 
@@ -156,6 +159,7 @@ public class Application implements ProcessActivity {
         this.competitionReferralSource = application.getCompetitionReferralSource();
         this.companyAge = application.getCompanyAge();
         this.companyPrimaryFocus = application.getCompanyPrimaryFocus();
+        this.enableForEOI = application.isEnableForEOI();
     }
 
     protected boolean canEqual(Object other) {
@@ -554,4 +558,13 @@ public class Application implements ProcessActivity {
     public void setApplicationExternalConfig(ApplicationExternalConfig applicationExternalConfig) {
         this.applicationExternalConfig = applicationExternalConfig;
     }
+
+    public boolean isEnableForEOI() {
+        return enableForEOI;
+    }
+
+    public void setEnableForEOI(boolean enableForEOI) {
+        this.enableForEOI = enableForEOI;
+    }
+
 }

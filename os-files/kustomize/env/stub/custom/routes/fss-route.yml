@@ -1,0 +1,22 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: fss
+spec:
+  host: fss-openshiftEnvKey.apps.org-env-0.org.innovateuk.ukri.org
+  port:
+    targetPort: 8080-tcp
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: Service
+    name: file-storage-service
+    weight: 100
+status:
+  ingress:
+    - conditions:
+        - status: 'True'
+          type: Admitted
+      host: fss-openshiftEnvKey.apps.org-env-0.org.innovateuk.ukri.org
+      routerName: router
