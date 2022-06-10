@@ -492,7 +492,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             ApplicationLine line,
             List<InviteLine> inviteLines,
             List<ExternalUserLine> externalUsers) {
-        boolean eoiEnabled = false;
+
         UserResource leadApplicant = retrieveUserByEmail(line.leadApplicant);
 
         Map<String, String> usersOrganisations = simpleToMap(externalUsers, user -> user.emailAddress, user -> user.organisationName);

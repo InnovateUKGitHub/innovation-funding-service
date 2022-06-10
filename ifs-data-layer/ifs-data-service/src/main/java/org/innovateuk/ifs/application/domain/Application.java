@@ -120,7 +120,7 @@ public class Application implements ProcessActivity {
     @JoinColumn(name = "applicationExternalConfigId", referencedColumnName = "id")
     private ApplicationExternalConfig applicationExternalConfig;
 
-    @OneToOne(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "application", fetch = FetchType.LAZY)
     private ApplicationPreRegConfig applicationPreRegConfig;
 
     public Application() {

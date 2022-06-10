@@ -111,10 +111,6 @@ public class CsvUtils {
         return simpleMap(readCsvLines("application-questions"), ApplicationQuestionResponseLine::new);
     }
 
-    public static List<EnableForEOILine> readEnableForEOILines() {
-        return simpleMap(readCsvLines("eoi-applications"), EnableForEOILine::new);
-    }
-
     public static List<ProjectLine> readProjects() {
         return simpleMap(readCsvLines("projects"), ProjectLine::new);
     }
@@ -779,17 +775,6 @@ public class CsvUtils {
             assessorBriefing = nullableDateTime(line.get(i++));
             assessorAccepts  = nullableDateTime(line.get(i++));
             assessorDeadline = nullableDateTime(line.get(i++));
-        }
-    }
-
-    public static class EnableForEOILine {
-        public String applicationName;
-        public boolean enableForEOI;
-
-        private EnableForEOILine(List<String> line) {
-            int i = 0;
-            applicationName = nullable(line.get(i++));
-            enableForEOI = nullableBoolean(line.get(i++));
         }
     }
 
