@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: rabbitmq
+  annotations:
+    rabbitMQ: rabbitMQ
 spec:
   replicas: 1
   selector:
@@ -33,3 +35,8 @@ spec:
               command: ["rabbitmq-diagnostics", "ping"]
             initialDelaySeconds: 5
           imagePullPolicy: IfNotPresent
+          env:
+            - name: RABBITMQ_DEFAULT_USER
+              value: "campervan"
+            - name: RABBITMQ_DEFAULT_PASS
+              value: "disco"

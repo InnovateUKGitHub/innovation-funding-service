@@ -35,7 +35,7 @@ public class StorageService {
     @Autowired
     private Audit audit;
 
-    @Scheduled(initialDelay = 2000, fixedDelay = 1000)
+    @Scheduled(initialDelay = 2000, fixedDelay = 2000)
     public void testAudit() {
         audit.audit(AuditMessageBuilder.builder(AuditType.MISC).build());
     }

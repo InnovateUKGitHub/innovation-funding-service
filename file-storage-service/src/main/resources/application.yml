@@ -55,8 +55,3 @@ management:
   endpoint:
     restart:
       enabled: false
-
-logging:
-  level:
-    org:
-      springframework: DEBUG

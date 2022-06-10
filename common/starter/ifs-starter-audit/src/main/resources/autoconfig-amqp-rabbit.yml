@@ -1,0 +1,5 @@
+ifs:
+  starter:
+    audit:
+      auditQueueName: audit
+      auditExchangeName: amqp.fanout
