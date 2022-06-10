@@ -227,12 +227,10 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
     private List<CsvUtils.InviteLine> inviteLines;
     private List<CsvUtils.QuestionnaireResponseLine> questionnaireResponseLines;
-  //  private List<CsvUtils.EnableForEOILine> enableForEOILines;
 
     @Value("${ifs.generate.test.data.competition.filter.name:Subsidy control comp in assessment}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
-      // BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
-        BaseGenerateTestData.competitionNameForFilter = "Horizon Europe Guarantee Competition For Pre Registration";
+       BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
     }
 
     @Before
