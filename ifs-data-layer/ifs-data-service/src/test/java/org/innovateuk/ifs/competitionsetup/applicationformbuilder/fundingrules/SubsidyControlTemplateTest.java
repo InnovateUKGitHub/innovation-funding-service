@@ -82,9 +82,9 @@ public class SubsidyControlTemplateTest {
         assertThat(projectDetails.getQuestions().get(0).getQuestionnaire()).isEqualTo(questionnaireEntity);
 
         verify(questionnaireService).create(any());
-        verify(questionnaireQuestionService, times(2)).create(any());
-        verify(questionnaireOptionService, times(4)).create(any());
-        verify(textOutcomeService, times(3)).create(any());
+        verify(questionnaireQuestionService, times(7)).create(any());
+        verify(questionnaireOptionService, times(14)).create(any());
+        verify(textOutcomeService, times(1)).create(any());
     }
 
     @Test
