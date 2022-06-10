@@ -7,7 +7,7 @@ import org.springframework.core.io.ClassPathResource;
 import static org.innovateuk.ifs.starter.common.util.YamlPropertyLoader.registerPropertySource;
 
 /**
- * Adds startup settings fro rabbit
+ * Adds startup settings for rabbit
  */
 public class IfsRabbitContextInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
