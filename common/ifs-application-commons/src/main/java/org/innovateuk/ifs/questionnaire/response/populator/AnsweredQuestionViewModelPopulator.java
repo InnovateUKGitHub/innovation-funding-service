@@ -42,7 +42,7 @@ public class AnsweredQuestionViewModelPopulator {
         List<AnsweredQuestionViewModel> answers = getAnswers(response, (q) -> true, o -> selectedOption[0] = o);
         if (selectedOption[0] != null && selectedOption[0].getDecisionType() == DecisionType.QUESTION) {
             QuestionnaireQuestionResource unansweredQuestion = questionnaireQuestionRestService.get(selectedOption[0].getDecision()).getSuccess();
-            answers.add(new AnsweredQuestionViewModel(unansweredQuestion.getId(), unansweredQuestion.getQuestion(), null));
+            answers.add(new AnsweredQuestionViewModel(unansweredQuestion.getId(), unansweredQuestion.getQuestion(), unansweredQuestion.getQuestionName(), null));
         }
         return new AnswerTableViewModel(questionnaireResponseId, heading, answers, readonly);
     }
@@ -62,7 +62,7 @@ public class AnsweredQuestionViewModelPopulator {
             if (filter.test(q)) {
                 QuestionnaireQuestionResponseResource questionResponse = responses.stream().filter(r -> r.getQuestion().equals(q.getId())).findAny().orElseThrow(ObjectNotFoundException::new);
                 selectedOption = respondedOptions.stream().filter(r -> r.getId().equals(questionResponse.getOption())).findAny().orElseThrow(ObjectNotFoundException::new);
-                answeredQuestions.add(new AnsweredQuestionViewModel(q.getId(), q.getQuestion(), selectedOption.getText()));
+                answeredQuestions.add(new AnsweredQuestionViewModel(q.getId(), q.getQuestion(), q.getQuestionName(), selectedOption.getText()));
             }
         }
         finalOptionConsumer.accept(selectedOption);

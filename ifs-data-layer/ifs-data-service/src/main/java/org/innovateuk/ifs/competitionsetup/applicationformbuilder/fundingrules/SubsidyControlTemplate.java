@@ -151,6 +151,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         tradeQuestion.setTitle("Subsidy basis");
         tradeQuestion.setQuestion("Are you intending to trade any goods arising from the activities funded by Innovate UK with the European Union through Northern Ireland?");
         tradeQuestion.setQuestionnaire(questionnaire.getId());
+        tradeQuestion.setQuestionName("tradeQuestion");
         tradeQuestion = questionnaireQuestionService.create(tradeQuestion).getSuccess();
 
         // question 2
@@ -158,6 +159,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         enterprisedBasedQuestion.setTitle("Subsidy basis");
         enterprisedBasedQuestion.setQuestion("Is your enterprise based in or active in Northern Ireland?");
         enterprisedBasedQuestion.setQuestionnaire(questionnaire.getId());
+        enterprisedBasedQuestion.setQuestionName("enterprisedBasedQuestion");
         enterprisedBasedQuestion = questionnaireQuestionService.create(enterprisedBasedQuestion).getSuccess();
 
         // question 3
@@ -165,6 +167,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         enterpriseTradeQuestion.setTitle("Subsidy basis");
         enterpriseTradeQuestion.setQuestion("Does your enterprise trade directly with customers in Northern Ireland?");
         enterpriseTradeQuestion.setQuestionnaire(questionnaire.getId());
+        enterpriseTradeQuestion.setQuestionName("enterpriseTradeQuestion");
         enterpriseTradeQuestion = questionnaireQuestionService.create(enterpriseTradeQuestion).getSuccess();
 
         // question 4
@@ -173,6 +176,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         goodsAndServicesQuestion.setQuestion("Does your enterprise make goods or provide services to third parties with a view to:");
         // TODO: Add the full question content.
         goodsAndServicesQuestion.setQuestionnaire(questionnaire.getId());
+        goodsAndServicesQuestion.setQuestionName("goodsAndServicesQuestion");
         goodsAndServicesQuestion = questionnaireQuestionService.create(goodsAndServicesQuestion).getSuccess();
 
         // question 5
@@ -182,6 +186,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
                 "Is your enterprise engaged in the production, processing or marketing " +
                         "of agricultural products; or active in the fisheries and aquaculture sector and involved in trade in such products with Northern Ireland?");
         enterpriseEngagedQuestion.setQuestionnaire(questionnaire.getId());
+        enterpriseEngagedQuestion.setQuestionName("enterpriseEngagedQuestion");
         enterpriseEngagedQuestion = questionnaireQuestionService.create(enterpriseEngagedQuestion).getSuccess();
 
         // question 6
@@ -191,6 +196,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
                 "Can you confirm that the Innovate UK funding will be directed towards " +
                         "activities other than the production, processing or marketing of agricultural products or the fisheries and aquaculture sector?");
         fundingDirectedQuestion.setQuestionnaire(questionnaire.getId());
+        fundingDirectedQuestion.setQuestionName("fundingDirectedQuestion");
         fundingDirectedQuestion = questionnaireQuestionService.create(fundingDirectedQuestion).getSuccess();
 
         // question 1 - options
