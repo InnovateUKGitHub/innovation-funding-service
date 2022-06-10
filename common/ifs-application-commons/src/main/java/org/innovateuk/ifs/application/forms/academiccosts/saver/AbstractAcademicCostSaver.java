@@ -39,7 +39,7 @@ public abstract class AbstractAcademicCostSaver extends AsyncAdaptor {
 
     protected abstract FinanceRowRestService financeRowRestService();
 
-    protected ServiceResult<Void> save(AcademicCostForm form, BaseFinanceResource finance) {
+    protected ServiceResult<Void> save(AcademicCostForm form, BaseFinanceResource finance, boolean horizonEuropeCompetition) {
         Map<String, AcademicCost> costMap = mapCostsByName(finance);
 
         List<CompletableFuture<ValidationMessages>> futures = new ArrayList<>();
@@ -48,13 +48,15 @@ public abstract class AbstractAcademicCostSaver extends AsyncAdaptor {
         tsbReference.setItem(form.getTsbReference());
         futures.add(asyncUpdate(tsbReference));
 
-        AcademicCost incurredStaff = costMap.get("incurred_staff");
-        incurredStaff.setCost(form.getIncurredStaff());
-        futures.add(asyncUpdate(incurredStaff));
-
-        AcademicCost incurredStaffHecp = costMap.get("incurred_staff_hecp");
-        incurredStaffHecp.setCost(form.getIncurredStaff());
-        futures.add(asyncUpdate(incurredStaffHecp));
+        if (horizonEuropeCompetition) {
+            AcademicCost incurredStaffHecp = costMap.get("incurred_staff_hecp");
+            incurredStaffHecp.setCost(form.getIncurredStaff());
+            futures.add(asyncUpdate(incurredStaffHecp));
+        } else {
+            AcademicCost incurredStaff = costMap.get("incurred_staff");
+            incurredStaff.setCost(form.getIncurredStaff());
+            futures.add(asyncUpdate(incurredStaff));
+        }
 
         AcademicCost incurredTravel = costMap.get("incurred_travel_subsistence");
         incurredTravel.setCost(form.getIncurredTravel());
@@ -64,13 +66,15 @@ public abstract class AbstractAcademicCostSaver extends AsyncAdaptor {
         incurredOtherCosts.setCost(form.getIncurredOtherCosts());
         futures.add(asyncUpdate(incurredOtherCosts));
 
-        AcademicCost allocatedInvestigators = costMap.get("allocated_investigators");
-        allocatedInvestigators.setCost(form.getAllocatedInvestigators());
-        futures.add(asyncUpdate(allocatedInvestigators));
-
-        AcademicCost allocatedInvestigatorsHecp = costMap.get("allocated_investigators_hecp");
-        allocatedInvestigatorsHecp.setCost(form.getAllocatedInvestigators());
-        futures.add(asyncUpdate(allocatedInvestigatorsHecp));
+        if (horizonEuropeCompetition) {
+            AcademicCost allocatedInvestigatorsHecp = costMap.get("allocated_investigators_hecp");
+            allocatedInvestigatorsHecp.setCost(form.getAllocatedInvestigators());
+            futures.add(asyncUpdate(allocatedInvestigatorsHecp));
+        } else {
+            AcademicCost allocatedInvestigators = costMap.get("allocated_investigators");
+            allocatedInvestigators.setCost(form.getAllocatedInvestigators());
+            futures.add(asyncUpdate(allocatedInvestigators));
+        }
 
         AcademicCost allocatedEstatesCosts = costMap.get("allocated_estates_costs");
         allocatedEstatesCosts.setCost(form.getAllocatedEstateCosts());
@@ -84,13 +88,15 @@ public abstract class AbstractAcademicCostSaver extends AsyncAdaptor {
         indirectCosts.setCost(form.getIndirectCosts());
         futures.add(asyncUpdate(indirectCosts));
 
-        AcademicCost exceptionsStaff = costMap.get("exceptions_staff");
-        exceptionsStaff.setCost(form.getExceptionsStaff());
-        futures.add(asyncUpdate(exceptionsStaff));
-
-        AcademicCost exceptionsStaffHecp = costMap.get("exceptions_staff_hecp");
-        exceptionsStaffHecp.setCost(form.getExceptionsStaff());
-        futures.add(asyncUpdate(exceptionsStaffHecp));
+        if (horizonEuropeCompetition) {
+            AcademicCost exceptionsStaffHecp = costMap.get("exceptions_staff_hecp");
+            exceptionsStaffHecp.setCost(form.getExceptionsStaff());
+            futures.add(asyncUpdate(exceptionsStaffHecp));
+        } else {
+            AcademicCost exceptionsStaff = costMap.get("exceptions_staff");
+            exceptionsStaff.setCost(form.getExceptionsStaff());
+            futures.add(asyncUpdate(exceptionsStaff));
+        }
 
         AcademicCost exceptionsOtherCosts = costMap.get("exceptions_other_costs");
         exceptionsOtherCosts.setCost(form.getExceptionsOtherCosts());
