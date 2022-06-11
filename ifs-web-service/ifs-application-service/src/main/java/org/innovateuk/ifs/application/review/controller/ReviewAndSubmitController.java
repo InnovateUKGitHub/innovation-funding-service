@@ -18,7 +18,6 @@ import org.innovateuk.ifs.competition.resource.CovidType;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.horizon.resource.ApplicationHorizonWorkProgrammeResource;
 import org.innovateuk.ifs.horizon.service.HorizonWorkProgrammeRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -231,6 +230,10 @@ public class ReviewAndSubmitController {
     }
 
     private boolean canReopenApplication(ApplicationResource application, UserResource user, CompetitionResource competitionResource) {
+        // TODO: This will need to be updated when IFS-12171 has been merged.
+        if (application.isEnableForEOI()) {
+            return false;
+        }
 
         return !competitionResource.isAlwaysOpen()
                 && CompetitionStatus.OPEN.equals(application.getCompetitionStatus())
@@ -277,13 +280,17 @@ public class ReviewAndSubmitController {
                 application.getCompletion(),
                 canReopenApplication(application, user, competition)
         ));
-        return getTrackingPage(competition);
+        return getTrackingPage(competition, application);
     }
 
-    private String getTrackingPage(CompetitionResource competition) {
+    private String getTrackingPage(CompetitionResource competition, ApplicationResource application) {
         if (CovidType.ADDITIONAL_FUNDING.equals(competition.getCovidType())) {
             return "covid-additional-funding-application-track";
         } else if (competition.isHorizonEuropeGuarantee()) {
+            // TODO: This will need to be updated when IFS-12171 has been merged.
+            if (isEoiApplication(application)) {
+                return "horizon-europe-guarantee-eoi-application-track";
+            }
             return "horizon-europe-guarantee-application-track";
         } else if (competition.isAlwaysOpen()) {
             return "always-open-track";
@@ -300,6 +307,10 @@ public class ReviewAndSubmitController {
 
     private boolean ableToSubmitApplication(UserResource user, ApplicationResource application) {
         return userService.isLeadApplicant(user.getId(), application) && application.isSubmittable();
+    }
+
+    private boolean isEoiApplication(ApplicationResource application) {
+        return application.isEnableForEOI();
     }
 
     private String handleMarkAsCompleteFailure(long applicationId, long questionId, ProcessRoleResource processRole) {

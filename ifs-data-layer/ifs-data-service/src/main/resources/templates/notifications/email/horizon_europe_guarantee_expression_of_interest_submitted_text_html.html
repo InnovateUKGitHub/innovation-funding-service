@@ -1,0 +1,17 @@
+<#ftl output_format="HTML" auto_esc=true>
+<#import "layout/default.html" as layout>
+<@layout.default>
+
+<p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
+
+<p>${competitionName}</p>
+<p><strong>Your application number:</strong> ${applicationId}</p>
+
+
+
+<p>You have successfully submitted an expression of interest for funding to Innovate UK’s ${competitionName} competition.</p>
+<p>Please <a href="${webBaseUrl}">sign into your IFS account</a> to find out what happens next.</p>
+<p>If you have any queries with your submission please contact our customer support services at <a href="mailto:support@iuk.ukri.org">support@iuk.ukri.org</a> or 0300 321 4357.</p>
+<p>Yours sincerely,</p>
+<@layout.hestaSenderHTML />
+</@layout.default>

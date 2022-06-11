@@ -315,6 +315,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("competitionThirdPartyConfigResource", competitionThirdPartyConfigResource);
     }
 
+    public CompetitionResourceBuilder withEnabledForPreRegistration(boolean... enabledForPreRegistration) {
+        return withArraySetFieldByReflection("enabledForPreRegistration", enabledForPreRegistration);
+    }
+
     @Override
     protected CompetitionResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionResource>> actions) {
         return new CompetitionResourceBuilder(actions);
