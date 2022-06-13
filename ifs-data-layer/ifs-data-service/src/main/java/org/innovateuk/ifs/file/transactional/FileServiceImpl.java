@@ -98,7 +98,7 @@ public class FileServiceImpl implements FileService {
         } catch (ResponseStatusException responseStatusException) {
             log.error("Failed to save file", responseStatusException);
             // Map these back to the existing client contract
-            if (responseStatusException.getStatus().equals(HttpStatus.BAD_REQUEST)) {
+            if (responseStatusException.getStatus().equals(HttpStatus.BAD_REQUEST) && responseStatusException.getReason() != null) {
                 if (responseStatusException.getReason().contains("InvalidUploadException")) {
                     return ServiceResult.serviceFailure(new Error(FILES_INCORRECTLY_REPORTED_FILESIZE));
                 }
