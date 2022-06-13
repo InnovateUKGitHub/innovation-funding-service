@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bastion-client
+  annotations:
+    pullSecrets: pullSecrets
+spec:
+  selector:
+    matchLabels:
+      app: bastion-client
+  template:
+    metadata:
+      labels:
+        app: bastion-client
+    spec:
+      containers:
+        - name: bastion-client
+          image: docker-ifs.devops.innovateuk.org/snapshots/bastion-client:testv1
