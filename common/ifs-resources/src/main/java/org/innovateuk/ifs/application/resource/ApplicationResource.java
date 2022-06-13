@@ -363,8 +363,6 @@ public class ApplicationResource {
         this.applicationPreRegConfigResource = applicationPreRegConfigResource;
     }
 
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

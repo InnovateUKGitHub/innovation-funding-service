@@ -160,7 +160,6 @@ public class Application implements ProcessActivity {
         this.companyAge = application.getCompanyAge();
         this.companyPrimaryFocus = application.getCompanyPrimaryFocus();
         this.applicationPreRegConfig = application.getApplicationPreRegConfig();
-   //     this.enableForEOI = application.isEnableForEOI();
     }
 
     protected boolean canEqual(Object other) {
