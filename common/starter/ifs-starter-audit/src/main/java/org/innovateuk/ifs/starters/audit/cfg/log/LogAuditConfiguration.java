@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Profile;
 
 
 @Configuration
-@Profile(IfsProfileConstants.NOT_AMQP_PROFILE)
+@Profile(IfsProfileConstants.AMQP_ENABLED)
 public class LogAuditConfiguration {
 
     @Bean
