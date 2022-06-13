@@ -4,7 +4,6 @@ commonAnnotations:
 
 components:
   - ../../../../components/auth
-  - ../../../../components/bastion-client
   - ../../../../components/ifs-database
   - ../../../../components/mail
   - ../../../../patches/new-relic-env-vars-patch
