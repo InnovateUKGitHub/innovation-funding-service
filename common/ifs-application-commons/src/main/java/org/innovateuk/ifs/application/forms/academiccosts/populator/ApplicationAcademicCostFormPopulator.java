@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.application.forms.academiccosts.populator;
 
 import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
@@ -16,6 +18,12 @@ public class ApplicationAcademicCostFormPopulator extends AbstractAcademicCostFo
 
     @Autowired
     private ApplicationFinanceRowRestService applicationFinanceRowRestService;
+
+    @Autowired
+    private CompetitionRestService competitionRestService;
+
+    @Autowired
+    private ApplicationRestService applicationRestService;
 
     public void populate(AcademicCostForm form, long applicationId, long organisationId) {
         ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();

@@ -37,19 +37,19 @@ public abstract class AbstractAcademicCostFormPopulator<F extends BaseFinanceRes
         form.setTsbReference(getCostByName(costMap, "tsb_reference", finance).getItem());
 
         form.setIncurredStaff(getCostByName(costMap, "incurred_staff", finance).getCost());
-        form.setIncurredStaff(getCostByName(costMap, "incurred_staff_hecp", finance).getCost());
+        form.setIncurredStaffHecp(getCostByName(costMap, "incurred_staff_hecp", finance).getCost());
         form.setIncurredTravel(getCostByName(costMap, "incurred_travel_subsistence", finance).getCost());
         form.setIncurredOtherCosts(getCostByName(costMap, "incurred_other_costs", finance).getCost());
 
         form.setAllocatedInvestigators(getCostByName(costMap, "allocated_investigators", finance).getCost());
-        form.setAllocatedInvestigators(getCostByName(costMap, "allocated_investigators_hecp", finance).getCost());
+        form.setAllocatedInvestigatorsHecp(getCostByName(costMap, "allocated_investigators_hecp", finance).getCost());
         form.setAllocatedEstateCosts(getCostByName(costMap, "allocated_estates_costs", finance).getCost());
         form.setAllocatedOtherCosts(getCostByName(costMap, "allocated_other_costs", finance).getCost());
 
         form.setIndirectCosts(getCostByName(costMap, "indirect_costs", finance).getCost());
 
         form.setExceptionsStaff(getCostByName(costMap, "exceptions_staff", finance).getCost());
-        form.setExceptionsStaff(getCostByName(costMap, "exceptions_staff_hecp", finance).getCost());
+        form.setExceptionsStaffHecp(getCostByName(costMap, "exceptions_staff_hecp", finance).getCost());
         form.setExceptionsOtherCosts(getCostByName(costMap, "exceptions_other_costs", finance).getCost());
 
         form.setFilename(ofNullable(getFileEntryId(finance))
