@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Profile;
 @Import({BackingStoreConfiguration.class, VirusScanConfiguration.class})
 public class StorageServiceConfiguration {
 
-    @Profile(IfsProfileConstants.AMQP_PROFILE)
+    @Profile(IfsProfileConstants.AMQP_ENABLED)
     @Configuration
     public static class StorageServiceAmqpConfiguration {
 

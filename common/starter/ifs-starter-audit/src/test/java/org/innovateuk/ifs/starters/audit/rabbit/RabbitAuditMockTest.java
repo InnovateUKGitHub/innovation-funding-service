@@ -20,10 +20,9 @@ import org.springframework.test.context.ActiveProfiles;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@ActiveProfiles({IfsProfileConstants.AMQP_PROFILE})
 @SpringBootTest(classes = {RabbitAuditTestConfiguration.class})
 @EnableConfigurationProperties(AuditConfigurationProperties.class)
-public class RabbitAuditMockTest {
+class RabbitAuditMockTest {
 
     @MockBean
     private ObjectMapper objectMapper;
@@ -32,7 +31,7 @@ public class RabbitAuditMockTest {
     private Audit audit;
 
     @Test
-    public void audit() throws JsonProcessingException {
+    void audit() throws JsonProcessingException {
         when(objectMapper.writeValueAsString(any())).thenThrow(JsonProcessingException.class);
         RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> {
             audit.audit(AuditMessageBuilder.builder(AuditType.MISC).payload("{json: 'ddd'}").build());

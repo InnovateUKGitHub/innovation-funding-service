@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 
 @EnableRabbit
-@Profile(IfsProfileConstants.AMQP_PROFILE)
+@Profile(IfsProfileConstants.AMQP_ENABLED)
 @EnableConfigurationProperties(AuditConfigurationProperties.class)
 public class RabbitAuditConfiguration {
 

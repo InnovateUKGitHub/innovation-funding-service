@@ -16,14 +16,13 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.innovateuk.ifs.IfsProfileConstants.AMQP_PROFILE;
 
 class MessagingAutoConfigurationTest {
 
     @Test
     void messageContextConfiguration() {
         ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-            .withSystemProperties(ProfileUtils.activeProfilesString(AMQP_PROFILE), "IFS_RABBIT_PASSWORD=setAsEnvVar")
+            .withSystemProperties("IFS_RABBIT_PASSWORD=setAsEnvVar")
             .withConfiguration(UserConfigurations.of(MessagingAutoConfiguration.class))
             .withConfiguration(AutoConfigurations.of(RabbitAutoConfiguration.class))
             .withInitializer(new MessagingContextInitializer());
