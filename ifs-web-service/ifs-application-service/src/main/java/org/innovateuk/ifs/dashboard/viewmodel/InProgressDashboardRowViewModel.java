@@ -31,6 +31,7 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
     private final boolean showReopenLink;
     private final boolean hasAssessmentStage;
     private final boolean alwaysOpen;
+    private final boolean eoi;
 
     public InProgressDashboardRowViewModel(String title,
                                            long applicationId,
@@ -45,7 +46,8 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
                                            LocalDate startDate,
                                            boolean showReopenLink,
                                            boolean hasAssessmentStage,
-                                           boolean alwaysOpen) {
+                                           boolean alwaysOpen,
+                                           boolean eoi) {
         super(title, applicationId, competitionTitle);
         this.assignedToMe = assignedToMe;
         this.applicationState = applicationState;
@@ -58,6 +60,7 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
         this.showReopenLink = showReopenLink;
         this.hasAssessmentStage = hasAssessmentStage;
         this.alwaysOpen = alwaysOpen;
+        this.eoi = eoi;
     }
 
     public InProgressDashboardRowViewModel (DashboardInProgressRowResource resource){
@@ -73,6 +76,7 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
         this.showReopenLink = resource.isShowReopenLink();
         this.hasAssessmentStage = resource.isHasAssessmentStage();
         this.alwaysOpen = resource.isAlwaysOpen();
+        this.eoi = resource.isEoi();
     }
 
     public boolean isAssignedToMe() {

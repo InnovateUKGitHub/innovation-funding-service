@@ -139,6 +139,9 @@
                                             <div class="always-open-status"></div>
                                         </div>
                                     </th:block>
+                                    <th:block th:if="${inProgressView.eoi}">
+                                        <span class="status-msg msg-deadline-waiting">Expression of interest</span>
+                                    </th:block>
                                     <span class="status-msg msg-progress"
                                           th:classappend="${inProgressView.isApplicationComplete()} ? 'msg-positive'"
                                           th:text="${inProgressView.getProgressMessage()}">PERCENTAGE COMPLETE
@@ -155,6 +158,9 @@
                                                 class="status-msg msg-deadline-waiting">Awaiting assessment</span>
                                             <span th:if="${inProgressView.alwaysOpen} and ${!inProgressView.showReopenLink}"
                                                 class="status-msg msg-deadline-waiting">Decision pending</span>
+                                        </th:block>
+                                        <th:block th:if="${inProgressView.eoi}">
+                                            <span class="status-msg msg-deadline-waiting">Expression of interest</span>
                                         </th:block>
                                         <span class="status-msg msg-progress">
                                             Submitted
