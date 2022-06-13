@@ -119,6 +119,10 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
         return alwaysOpen;
     }
 
+    public boolean isEoi() {
+        return eoi;
+    }
+
     /* view logic */
 
     public boolean isShouldDisplayEndDate() {
