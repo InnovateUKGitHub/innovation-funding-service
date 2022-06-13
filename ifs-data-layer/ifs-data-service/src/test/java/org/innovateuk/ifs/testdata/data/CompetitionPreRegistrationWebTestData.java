@@ -21,6 +21,13 @@ public class CompetitionPreRegistrationWebTestData {
         return asList(
                 aPreRegistrationSectionLine()
                         .withCompetitionName("Horizon Europe Guarantee Competition For Pre Registration")
+                        .withSectionName("Terms and conditions"),
+                aPreRegistrationSectionLine()
+                        .withCompetitionName("Horizon Europe Guarantee Competition For Pre Registration")
+                        .withSectionName("Your project finances")
+                        .withSubSectionName("Your project location"),
+                aPreRegistrationSectionLine()
+                        .withCompetitionName("Horizon Europe Guarantee Competition For Pre Registration")
                         .withSectionName("Application questions")
                         .withQuestionName("Participating Organisation project region"),
                 aPreRegistrationSectionLine()
