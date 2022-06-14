@@ -10,7 +10,6 @@ public class QuestionnaireQuestionResource {
     private String question;
     private String guidance;
     private Long questionnaire;
-    private String questionName;
     private List<Long> options = new ArrayList<>();
     private List<Long> previousQuestions = new ArrayList<>();
 
@@ -60,14 +59,6 @@ public class QuestionnaireQuestionResource {
 
     public void setQuestionnaire(Long questionnaire) {
         this.questionnaire = questionnaire;
-    }
-
-    public String getQuestionName() {
-        return questionName;
-    }
-
-    public void setQuestionName(String questionName) {
-        this.questionName = questionName;
     }
 
     public List<Long> getOptions() {
