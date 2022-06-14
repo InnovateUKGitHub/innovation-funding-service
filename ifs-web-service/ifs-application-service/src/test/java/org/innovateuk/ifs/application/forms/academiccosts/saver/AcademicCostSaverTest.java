@@ -10,7 +10,6 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
@@ -27,7 +26,6 @@ import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.HECP;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -102,8 +100,6 @@ public class AcademicCostSaverTest extends BaseServiceUnitTest<AcademicCostSaver
         when(financeRowRestService.update(argThat(hasNameAndCost("exceptions_other_costs", cost)))).thenReturn(restSuccess(new ValidationMessages()));
 
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), ORGANISATION_ID)).thenReturn(RestResult.restSuccess(finance));
-        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
-        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
 
         ServiceResult<Void> result = service.save(form, application.getId(), ORGANISATION_ID);
 
@@ -118,67 +114,6 @@ public class AcademicCostSaverTest extends BaseServiceUnitTest<AcademicCostSaver
         verify(financeRowRestService).update(argThat(hasNameAndCost("allocated_other_costs", cost)));
         verify(financeRowRestService).update(argThat(hasNameAndCost("indirect_costs", cost)));
         verify(financeRowRestService).update(argThat(hasNameAndCost("exceptions_staff", cost)));
-        verify(financeRowRestService).update(argThat(hasNameAndCost("exceptions_other_costs", cost)));
-        verifyNoMoreInteractions(financeRowRestService);
-    }
-
-    @Test
-    public void saveHorizonEuropeCompetition() {
-        ApplicationFinanceResource finance = newApplicationFinanceResource()
-                .withAcademicCosts()
-                .build();
-
-        CompetitionResource competition = newCompetitionResource()
-                .withFundingType(HECP)
-                .withCompetitionTypeEnum(CompetitionTypeEnum.HORIZON_EUROPE_GUARANTEE)
-                .build();
-
-        ApplicationResource application = newApplicationResource()
-                .withId(APPLICATION_ID)
-                .withCompetition(competition.getId())
-                .build();
-
-        AcademicCostForm form = new AcademicCostForm();
-        BigDecimal cost = new BigDecimal("50");
-        form.setExceptionsOtherCosts(cost);
-        form.setExceptionsStaff(cost);
-        form.setIndirectCosts(cost);
-        form.setAllocatedOtherCosts(cost);
-        form.setAllocatedEstateCosts(cost);
-        form.setAllocatedInvestigators(cost);
-        form.setIncurredOtherCosts(cost);
-        form.setIncurredTravel(cost);
-        form.setIncurredStaff(cost);
-        form.setTsbReference("NewRef");
-
-        when(financeRowRestService.update(argThat(hasNameAndItem("tsb_reference", "NewRef")))).thenReturn(restSuccess(new ValidationMessages()));
-        when(financeRowRestService.update(argThat(hasNameAndCost("incurred_staff_hecp", cost)))).thenReturn(restSuccess(new ValidationMessages()));
-        when(financeRowRestService.update(argThat(hasNameAndCost("incurred_travel_subsistence", cost)))).thenReturn(restSuccess(new ValidationMessages()));
-        when(financeRowRestService.update(argThat(hasNameAndCost("incurred_other_costs", cost)))).thenReturn(restSuccess(new ValidationMessages()));
-        when(financeRowRestService.update(argThat(hasNameAndCost("allocated_investigators_hecp", cost)))).thenReturn(restSuccess(new ValidationMessages()));
-        when(financeRowRestService.update(argThat(hasNameAndCost("allocated_estates_costs", cost)))).thenReturn(restSuccess(new ValidationMessages()));
-        when(financeRowRestService.update(argThat(hasNameAndCost("allocated_other_costs", cost)))).thenReturn(restSuccess(new ValidationMessages()));
-        when(financeRowRestService.update(argThat(hasNameAndCost("indirect_costs", cost)))).thenReturn(restSuccess(new ValidationMessages()));
-        when(financeRowRestService.update(argThat(hasNameAndCost("exceptions_staff_hecp", cost)))).thenReturn(restSuccess(new ValidationMessages()));
-        when(financeRowRestService.update(argThat(hasNameAndCost("exceptions_other_costs", cost)))).thenReturn(restSuccess(new ValidationMessages()));
-
-        when(applicationFinanceRestService.getFinanceDetails(application.getId(), ORGANISATION_ID)).thenReturn(RestResult.restSuccess(finance));
-        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
-        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-
-        ServiceResult<Void> result = service.save(form, application.getId(), ORGANISATION_ID);
-
-        assertTrue(result.isSuccess());
-
-        verify(financeRowRestService).update(argThat(hasNameAndItem("tsb_reference", "NewRef")));
-        verify(financeRowRestService).update(argThat(hasNameAndCost("incurred_staff_hecp", cost)));
-        verify(financeRowRestService).update(argThat(hasNameAndCost("incurred_travel_subsistence", cost)));
-        verify(financeRowRestService).update(argThat(hasNameAndCost("incurred_other_costs", cost)));
-        verify(financeRowRestService).update(argThat(hasNameAndCost("allocated_investigators_hecp", cost)));
-        verify(financeRowRestService).update(argThat(hasNameAndCost("allocated_estates_costs", cost)));
-        verify(financeRowRestService).update(argThat(hasNameAndCost("allocated_other_costs", cost)));
-        verify(financeRowRestService).update(argThat(hasNameAndCost("indirect_costs", cost)));
-        verify(financeRowRestService).update(argThat(hasNameAndCost("exceptions_staff_hecp", cost)));
         verify(financeRowRestService).update(argThat(hasNameAndCost("exceptions_other_costs", cost)));
         verifyNoMoreInteractions(financeRowRestService);
     }

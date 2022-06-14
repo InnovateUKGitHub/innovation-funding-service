@@ -458,7 +458,7 @@
                         <td style="text-align:right;"
                             th:each="(organisation : ${model.academicFinanceTable.organisations})"
                             th:with="organisationFinance=${model.academicFinanceTable.finances.get(organisation)}">
-                            &pound;<th:block th:with="categoryTotal = ${model.academicFinanceTable.getByOrgAndName(organisation, 'incurred_staff_hecp')}"
+                            &pound;<th:block th:with="categoryTotal = ${model.academicFinanceTable.getByOrgAndName(organisation, 'incurred_staff')}"
                                       th:text="${#numbers.formatInteger(categoryTotal, 0, 'DEFAULT')}">£0</th:block>
                         </td>
                         <td style="text-align:right;"
@@ -516,12 +516,12 @@
                         <td style="text-align:right;"
                             th:each="(organisation : ${model.academicFinanceTable.organisations})"
                             th:with="organisationFinance=${model.academicFinanceTable.finances.get(organisation)}">
-                            &pound;<th:block th:with="categoryTotal = ${model.academicFinanceTable.getByOrgAndName(organisation, 'allocated_investigators_hecp')}"
+                            &pound;<th:block th:with="categoryTotal = ${model.academicFinanceTable.getByOrgAndName(organisation, 'allocated_investigators')}"
                                              th:text="${#numbers.formatInteger(categoryTotal, 0, 'DEFAULT')}">£0</th:block>
                         </td>
                         <td style="text-align:right;"
                             th:if="${model.academicFinanceTable.showTotalsColumn}"
-                            th:with="total=${model.academicFinanceTable.getTotalByName('allocated_investigators_hecp')}">
+                            th:with="total=${model.academicFinanceTable.getTotalByName('allocated_investigators')}">
                             &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
                         </td>
                     </tr>
@@ -576,12 +576,12 @@
                         <td style="text-align:right;"
                             th:each="(organisation : ${model.academicFinanceTable.organisations})"
                             th:with="organisationFinance=${model.academicFinanceTable.finances.get(organisation)}">
-                            &pound;<th:block th:with="categoryTotal = ${model.academicFinanceTable.getByOrgAndName(organisation, 'exceptions_staff_hecp')}"
+                            &pound;<th:block th:with="categoryTotal = ${model.academicFinanceTable.getByOrgAndName(organisation, 'exceptions_staff')}"
                                              th:text="${#numbers.formatInteger(categoryTotal, 0, 'DEFAULT')}">£0</th:block>
                         </td>
                         <td style="text-align:right;"
                             th:if="${model.academicFinanceTable.showTotalsColumn}"
-                            th:with="total=${model.academicFinanceTable.getTotalByName('exceptions_staff_hecp')}">
+                            th:with="total=${model.academicFinanceTable.getTotalByName('exceptions_staff')}">
                             &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
                         </td>
                     </tr>

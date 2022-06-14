@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.application.forms.academiccosts.saver;
 
 import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
@@ -38,11 +36,7 @@ public class AcademicCostSaver extends AbstractAcademicCostSaver {
 
     public ServiceResult<Void> save(AcademicCostForm form, long applicationId, long organisationId) {
         ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
-        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        boolean horizonEuropeCompetition = competition.isHorizonEuropeGuarantee();
-
-        return save(form, finance, horizonEuropeCompetition);
+        return save(form, finance);
     }
 
 

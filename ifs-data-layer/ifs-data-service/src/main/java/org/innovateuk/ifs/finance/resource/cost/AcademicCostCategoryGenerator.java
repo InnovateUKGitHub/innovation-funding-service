@@ -19,17 +19,14 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  */
 public enum AcademicCostCategoryGenerator implements CostCategoryGenerator<AcademicCostCategoryGenerator> {
     DIRECTLY_INCURRED_STAFF("Directly incurred", "Staff", "incurred_staff"),
-    DIRECTLY_INCURRED_STAFF_HECP("Directly incurred", "Staff", "incurred_staff_hecp"),
     DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE("Directly incurred", "Travel and subsistence", "incurred_travel_subsistence"),
     DIRECTLY_INCURRED_EQUIPMENT("Directly incurred", "Equipment", "incurred_equipment"),
     DIRECTLY_INCURRED_OTHER_COSTS("Directly incurred", "Other costs", "incurred_other_costs"),
     DIRECTLY_ALLOCATED_INVESTIGATORS("Directly allocated", "Investigations", "allocated_investigators"),
-    DIRECTLY_ALLOCATED_INVESTIGATORS_HECP("Directly allocated", "Investigations", "allocated_investigators_hecp"),
     DIRECTLY_ALLOCATED_ESTATES_COSTS("Directly allocated", "Estates costs", "allocated_estates_costs"),
     DIRECTLY_ALLOCATED_OTHER_COSTS("Directly allocated", "Other costs", "allocated_other_costs"),
     INDIRECT_COSTS("Indirect costs", "Investigations", "indirect_costs"),
     INDIRECT_COSTS_STAFF("Exceptions", "Staff", "exceptions_staff"),
-    INDIRECT_COSTS_STAFF_HECP("Exceptions", "Staff", "exceptions_staff_hecp"),
     INDIRECT_COSTS_TRAVEL_AND_SUBSISTENCE("Exceptions", "Travel and subsistence", "exceptions_travel_subsistence"),
     INDIRECT_COSTS_EQUIPMENT("Exceptions", "Equipment", "exceptions_equipment"),
     INDIRECT_COSTS_OTHER_COSTS("Exceptions", "Other costs", "exceptions_other_costs");
@@ -51,16 +48,13 @@ public enum AcademicCostCategoryGenerator implements CostCategoryGenerator<Acade
 
     public static final ImmutableSet<AcademicCostCategoryGenerator> includedInSpendProfileCategories = Sets.immutableEnumSet(
             DIRECTLY_INCURRED_STAFF,
-            DIRECTLY_INCURRED_STAFF_HECP,
             DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE,
             DIRECTLY_INCURRED_OTHER_COSTS,
             DIRECTLY_ALLOCATED_INVESTIGATORS,
-            DIRECTLY_ALLOCATED_INVESTIGATORS_HECP,
             DIRECTLY_ALLOCATED_ESTATES_COSTS,
             DIRECTLY_ALLOCATED_OTHER_COSTS,
             INDIRECT_COSTS,
             INDIRECT_COSTS_STAFF,
-            INDIRECT_COSTS_STAFF_HECP,
             INDIRECT_COSTS_OTHER_COSTS);
 
 

@@ -47,10 +47,6 @@ public class AcademicCostDataBuilder extends BaseDataBuilder<AcademicCostData, A
         return addCostItem("Labour", (finance) -> new AcademicCost(null, "incurred_staff", value, null, FinanceRowType.LABOUR, finance.getId()));
     }
 
-    public AcademicCostDataBuilder withDirectlyIncurredStaffHecp(BigDecimal value) {
-        return addCostItem("Personnel", (finance) -> new AcademicCost(null, "incurred_staff_hecp", value, null, FinanceRowType.PERSONNEL, finance.getId()));
-    }
-
     public AcademicCostDataBuilder withDirectlyIncurredTravelAndSubsistence(BigDecimal value) {
         return addCostItem("Travel and subsistence", (finance) -> new AcademicCost(null, "incurred_travel_subsistence", value, null, FinanceRowType.TRAVEL, finance.getId()));
     }
@@ -61,10 +57,6 @@ public class AcademicCostDataBuilder extends BaseDataBuilder<AcademicCostData, A
 
     public AcademicCostDataBuilder withDirectlyAllocatedInvestigators(BigDecimal value) {
         return addCostItem("Labour", (finance) -> new AcademicCost(null, "allocated_investigators", value, null, FinanceRowType.LABOUR, finance.getId()));
-    }
-
-    public AcademicCostDataBuilder withDirectlyAllocatedInvestigatorsHecp(BigDecimal value) {
-        return addCostItem("Personnel", (finance) -> new AcademicCost(null, "allocated_investigators_hecp", value, null, FinanceRowType.PERSONNEL, finance.getId()));
     }
 
     public AcademicCostDataBuilder withDirectlyAllocatedEstateCosts(BigDecimal value) {
@@ -81,10 +73,6 @@ public class AcademicCostDataBuilder extends BaseDataBuilder<AcademicCostData, A
 
     public AcademicCostDataBuilder withExceptionsStaff(BigDecimal value) {
         return addCostItem("Labour", (finance) -> new AcademicCost(null, "exceptions_staff", value, null, FinanceRowType.LABOUR, finance.getId()));
-    }
-
-    public AcademicCostDataBuilder withExceptionsStaffHecp(BigDecimal value) {
-        return addCostItem("Personnel", (finance) -> new AcademicCost(null, "exceptions_staff_hecp", value, null, FinanceRowType.PERSONNEL, finance.getId()));
     }
 
     public AcademicCostDataBuilder withExceptionsOtherCosts(BigDecimal value) {

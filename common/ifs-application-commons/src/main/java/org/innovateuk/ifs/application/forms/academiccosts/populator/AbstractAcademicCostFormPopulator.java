@@ -37,19 +37,16 @@ public abstract class AbstractAcademicCostFormPopulator<F extends BaseFinanceRes
         form.setTsbReference(getCostByName(costMap, "tsb_reference", finance).getItem());
 
         form.setIncurredStaff(getCostByName(costMap, "incurred_staff", finance).getCost());
-        form.setIncurredStaffHecp(getCostByName(costMap, "incurred_staff_hecp", finance).getCost());
         form.setIncurredTravel(getCostByName(costMap, "incurred_travel_subsistence", finance).getCost());
         form.setIncurredOtherCosts(getCostByName(costMap, "incurred_other_costs", finance).getCost());
 
         form.setAllocatedInvestigators(getCostByName(costMap, "allocated_investigators", finance).getCost());
-        form.setAllocatedInvestigatorsHecp(getCostByName(costMap, "allocated_investigators_hecp", finance).getCost());
         form.setAllocatedEstateCosts(getCostByName(costMap, "allocated_estates_costs", finance).getCost());
         form.setAllocatedOtherCosts(getCostByName(costMap, "allocated_other_costs", finance).getCost());
 
         form.setIndirectCosts(getCostByName(costMap, "indirect_costs", finance).getCost());
 
         form.setExceptionsStaff(getCostByName(costMap, "exceptions_staff", finance).getCost());
-        form.setExceptionsStaffHecp(getCostByName(costMap, "exceptions_staff_hecp", finance).getCost());
         form.setExceptionsOtherCosts(getCostByName(costMap, "exceptions_other_costs", finance).getCost());
 
         form.setFilename(ofNullable(getFileEntryId(finance))
@@ -85,16 +82,12 @@ public abstract class AbstractAcademicCostFormPopulator<F extends BaseFinanceRes
                 return YOUR_FINANCE;
             case "incurred_staff":
                 return LABOUR;
-            case "incurred_staff_hecp":
-                return PERSONNEL;
             case "incurred_travel_subsistence":
                 return TRAVEL;
             case "incurred_other_costs":
                 return MATERIALS;
             case "allocated_investigators":
                 return LABOUR;
-            case "allocated_investigators_hecp":
-                return PERSONNEL;
             case "allocated_estates_costs":
                 return OTHER_COSTS;
             case "allocated_other_costs":
@@ -103,8 +96,6 @@ public abstract class AbstractAcademicCostFormPopulator<F extends BaseFinanceRes
                 return OVERHEADS;
             case "exceptions_staff":
                 return LABOUR;
-            case "exceptions_staff_hecp":
-                return PERSONNEL;
             case "exceptions_other_costs":
                 return OTHER_COSTS;
             default:

@@ -115,16 +115,13 @@ public class ProjectAcademicCostFormPopulatorTest extends BaseServiceUnitTest<Pr
 
         verify(defaultFinanceRowRestService).create(argThat(hasName("tsb_reference")));
         verify(defaultFinanceRowRestService).create(argThat(hasName("incurred_staff")));
-        verify(defaultFinanceRowRestService).create(argThat(hasName("incurred_staff_hecp")));
         verify(defaultFinanceRowRestService).create(argThat(hasName("incurred_travel_subsistence")));
         verify(defaultFinanceRowRestService).create(argThat(hasName("incurred_other_costs")));
         verify(defaultFinanceRowRestService).create(argThat(hasName("allocated_investigators")));
-        verify(defaultFinanceRowRestService).create(argThat(hasName("allocated_investigators_hecp")));
         verify(defaultFinanceRowRestService).create(argThat(hasName("allocated_estates_costs")));
         verify(defaultFinanceRowRestService).create(argThat(hasName("allocated_other_costs")));
         verify(defaultFinanceRowRestService).create(argThat(hasName("indirect_costs")));
         verify(defaultFinanceRowRestService).create(argThat(hasName("exceptions_staff")));
-        verify(defaultFinanceRowRestService).create(argThat(hasName("exceptions_staff_hecp")));
         verify(defaultFinanceRowRestService).create(argThat(hasName("exceptions_other_costs")));
 
         assertNull(form.getFilename());

@@ -11,54 +11,32 @@ public class AcademicCostForm {
 
     @NotBlank(message = NOT_BLANK_MESSAGE)
     private String tsbReference;
-
     private BigDecimal incurredStaff;
-    private BigDecimal incurredStaffHecp;
     private BigDecimal incurredTravel;
     private BigDecimal incurredOtherCosts;
-
     private BigDecimal allocatedInvestigators;
-    private BigDecimal allocatedInvestigatorsHecp;
     private BigDecimal allocatedEstateCosts;
     private BigDecimal allocatedOtherCosts;
-
     private BigDecimal indirectCosts;
-
     private BigDecimal exceptionsStaff;
-    private BigDecimal exceptionsStaffHecp;
     private BigDecimal exceptionsOtherCosts;
-
     private MultipartFile jesFile;
     private String filename;
-
     public String getTsbReference() {
         return tsbReference;
     }
-
     public void setTsbReference(String tsbReference) {
         this.tsbReference = tsbReference;
     }
-
     public BigDecimal getIncurredStaff() {
         return incurredStaff;
     }
-
     public void setIncurredStaff(BigDecimal incurredStaff) {
         this.incurredStaff = incurredStaff;
     }
-
-    public BigDecimal getIncurredStaffHecp() {
-        return incurredStaffHecp;
-    }
-
-    public void setIncurredStaffHecp(BigDecimal incurredStaffHecp) {
-        this.incurredStaffHecp = incurredStaffHecp;
-    }
-
     public BigDecimal getIncurredTravel() {
         return incurredTravel;
     }
-
     public void setIncurredTravel(BigDecimal incurredTravel) {
         this.incurredTravel = incurredTravel;
     }
@@ -77,14 +55,6 @@ public class AcademicCostForm {
 
     public void setAllocatedInvestigators(BigDecimal allocatedInvestigators) {
         this.allocatedInvestigators = allocatedInvestigators;
-    }
-
-    public BigDecimal getAllocatedInvestigatorsHecp() {
-        return allocatedInvestigatorsHecp;
-    }
-
-    public void setAllocatedInvestigatorsHecp(BigDecimal allocatedInvestigatorsHecp) {
-        this.allocatedInvestigatorsHecp = allocatedInvestigatorsHecp;
     }
 
     public BigDecimal getAllocatedEstateCosts() {
@@ -119,14 +89,6 @@ public class AcademicCostForm {
         this.exceptionsStaff = exceptionsStaff;
     }
 
-    public BigDecimal getExceptionsStaffHecp() {
-        return exceptionsStaffHecp;
-    }
-
-    public void setExceptionsStaffHecp(BigDecimal exceptionsStaffHecp) {
-        this.exceptionsStaffHecp = exceptionsStaffHecp;
-    }
-
     public BigDecimal getExceptionsOtherCosts() {
         return exceptionsOtherCosts;
     }
@@ -156,31 +118,14 @@ public class AcademicCostForm {
         return incurredStaff.add(incurredTravel).add(incurredOtherCosts);
     }
 
-    public BigDecimal getTotalIncurredHecp() {
-        return incurredStaffHecp.add(incurredStaffHecp).add(incurredOtherCosts);
-    }
-
     public BigDecimal getTotalAllocated() {
         return allocatedInvestigators.add(allocatedEstateCosts).add(allocatedOtherCosts);
-    }
-
-    public BigDecimal getTotalAllocatedHecp() {
-        return allocatedInvestigatorsHecp.add(allocatedEstateCosts).add(allocatedOtherCosts);
     }
 
     public BigDecimal getTotalExceptions() {
         return exceptionsStaff.add(exceptionsOtherCosts);
     }
-
-    public BigDecimal getTotalExceptionsHecp() {
-        return exceptionsStaffHecp.add(exceptionsOtherCosts);
-    }
-
     public BigDecimal getTotal() {
         return getTotalIncurred().add(getTotalAllocated()).add(indirectCosts).add(getTotalExceptions());
-    }
-
-    public BigDecimal getTotalHecp() {
-        return getTotalIncurredHecp().add(getTotalAllocatedHecp()).add(indirectCosts).add(getTotalExceptionsHecp());
     }
 }
