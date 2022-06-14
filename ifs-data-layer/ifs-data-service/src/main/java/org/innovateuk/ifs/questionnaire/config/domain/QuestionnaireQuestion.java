@@ -14,6 +14,7 @@ public class QuestionnaireQuestion extends QuestionnaireDecision {
 
     private String title;
     private String question;
+    @Column(columnDefinition = "TEXT")
     private String guidance;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
