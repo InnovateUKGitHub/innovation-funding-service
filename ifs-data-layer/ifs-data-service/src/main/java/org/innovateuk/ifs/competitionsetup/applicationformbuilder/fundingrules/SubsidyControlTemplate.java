@@ -133,177 +133,348 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         questionnaire = questionnaireService.create(questionnaire).getSuccess();
 
         // final
-        QuestionnaireTextOutcomeResource activitiesStateAidOutcome = new QuestionnaireTextOutcomeResource();
-        activitiesStateAidOutcome.setText(null);
-        activitiesStateAidOutcome.setImplementation(QuestionnaireDecisionImplementation.SET_NORTHERN_IRELAND_DECLARATION_TRUE);
-        activitiesStateAidOutcome = textOutcomeService.create(activitiesStateAidOutcome).getSuccess();
+        QuestionnaireTextOutcomeResource northernIrelandProtocolOutcome = new QuestionnaireTextOutcomeResource();
+        northernIrelandProtocolOutcome.setText(null);
+        northernIrelandProtocolOutcome.setImplementation(QuestionnaireDecisionImplementation.SET_NORTHERN_IRELAND_DECLARATION_TRUE);
+        northernIrelandProtocolOutcome = textOutcomeService.create(northernIrelandProtocolOutcome).getSuccess();
 
-        // question 1
-        QuestionnaireQuestionResource activitiesQuestion = new QuestionnaireQuestionResource();
-        activitiesQuestion.setTitle("Subsidy basis");
-        activitiesQuestion.setQuestion("Will the Innovate UK funding directly or indirectly have an effect upon either:");
-        // TODO: Add the full question content.
-        activitiesQuestion.setQuestionnaire(questionnaire.getId());
-        activitiesQuestion.setQuestionName("activities");
-        activitiesQuestion = questionnaireQuestionService.create(activitiesQuestion).getSuccess();
+        QuestionnaireTextOutcomeResource subsidyControlActOutcome = new QuestionnaireTextOutcomeResource();
+        subsidyControlActOutcome.setText(null);
+        subsidyControlActOutcome.setImplementation(QuestionnaireDecisionImplementation.SET_NORTHERN_IRELAND_DECLARATION_FALSE);
+        subsidyControlActOutcome = textOutcomeService.create(subsidyControlActOutcome).getSuccess();
 
-        // question 1.5 - no to first question
-        QuestionnaireQuestionResource tradeQuestion = new QuestionnaireQuestionResource();
-        tradeQuestion.setTitle("Subsidy basis");
-        tradeQuestion.setQuestion("Are you intending to trade any goods arising from the activities funded by Innovate UK with the European Union through Northern Ireland?");
-        tradeQuestion.setQuestionnaire(questionnaire.getId());
-        tradeQuestion.setQuestionName("tradeQuestion");
-        tradeQuestion = questionnaireQuestionService.create(tradeQuestion).getSuccess();
 
-        // question 2
-        QuestionnaireQuestionResource enterprisedBasedQuestion = new QuestionnaireQuestionResource();
-        enterprisedBasedQuestion.setTitle("Subsidy basis");
-        enterprisedBasedQuestion.setQuestion("Is your enterprise based in or active in Northern Ireland?");
-        enterprisedBasedQuestion.setQuestionnaire(questionnaire.getId());
-        enterprisedBasedQuestion.setQuestionName("enterprisedBasedQuestion");
-        enterprisedBasedQuestion = questionnaireQuestionService.create(enterprisedBasedQuestion).getSuccess();
 
-        // question 3
-        QuestionnaireQuestionResource enterpriseTradeQuestion = new QuestionnaireQuestionResource();
-        enterpriseTradeQuestion.setTitle("Subsidy basis");
-        enterpriseTradeQuestion.setQuestion("Does your enterprise trade directly with customers in Northern Ireland?");
-        enterpriseTradeQuestion.setQuestionnaire(questionnaire.getId());
-        enterpriseTradeQuestion.setQuestionName("enterpriseTradeQuestion");
-        enterpriseTradeQuestion = questionnaireQuestionService.create(enterpriseTradeQuestion).getSuccess();
 
-        // question 4
-        QuestionnaireQuestionResource goodsAndServicesQuestion = new QuestionnaireQuestionResource();
-        goodsAndServicesQuestion.setTitle("Subsidy basis");
-        goodsAndServicesQuestion.setQuestion("Does your enterprise make goods or provide services to third parties with a view to:");
-        // TODO: Add the full question content.
-        goodsAndServicesQuestion.setQuestionnaire(questionnaire.getId());
-        goodsAndServicesQuestion.setQuestionName("goodsAndServicesQuestion");
-        goodsAndServicesQuestion = questionnaireQuestionService.create(goodsAndServicesQuestion).getSuccess();
 
-        // question 5
-        QuestionnaireQuestionResource enterpriseEngagedQuestion = new QuestionnaireQuestionResource();
-        enterpriseEngagedQuestion.setTitle("Subsidy basis");
-        enterpriseEngagedQuestion.setQuestion(
-                "Is your enterprise engaged in the production, processing or marketing " +
+        // ----------------------------------------------------------------------------------------------------------------------------------
+
+        QuestionnaireQuestionResource question1 = new QuestionnaireQuestionResource();
+        question1.setTitle("Subsidy basis");
+        question1.setQuestion("1 - Will the Innovate UK funding directly or indirectly have an effect upon either:");
+        question1.setQuestionnaire(questionnaire.getId());
+        question1.setQuestionName("activities");
+        question1 = questionnaireQuestionService.create(question1).getSuccess();
+
+        // ----------------------------------------------------------------------------------------------------------------------------------
+
+        QuestionnaireQuestionResource question1_5 = new QuestionnaireQuestionResource();
+        question1_5.setTitle("Subsidy basis");
+        question1_5.setQuestion("1.5 - Are you intending to trade any goods arising from the activities funded by Innovate UK with the European Union through Northern Ireland?");
+        question1_5.setQuestionnaire(questionnaire.getId());
+        question1_5.setQuestionName("tradeQuestion");
+        question1_5 = questionnaireQuestionService.create(question1_5).getSuccess();
+
+        // ----------------------------------------------------------------------------------------------------------------------------------
+
+        QuestionnaireQuestionResource question2 = new QuestionnaireQuestionResource();
+        question2.setTitle("Subsidy basis");
+        question2.setQuestion("2 - Is your enterprise based in or active in Northern Ireland?");
+        question2.setQuestionnaire(questionnaire.getId());
+        question2.setQuestionName("enterprisedBasedQuestion");
+        question2 = questionnaireQuestionService.create(question2).getSuccess();
+
+        // ----------------------------------------------------------------------------------------------------------------------------------
+
+        QuestionnaireQuestionResource question3_J1 = new QuestionnaireQuestionResource();
+        question3_J1.setTitle("Subsidy basis");
+        question3_J1.setQuestion("3 J1 - Does your enterprise trade directly with customers in Northern Ireland?");
+        question3_J1.setQuestionnaire(questionnaire.getId());
+        question3_J1.setQuestionName("enterpriseTradeQuestion");
+        question3_J1 = questionnaireQuestionService.create(question3_J1).getSuccess();
+
+        QuestionnaireQuestionResource question3_J3 = new QuestionnaireQuestionResource();
+        question3_J3.setTitle("Subsidy basis");
+        question3_J3.setQuestion("3 J3 - Does your enterprise trade directly with customers in Northern Ireland?");
+        question3_J3.setQuestionnaire(questionnaire.getId());
+        question3_J3.setQuestionName("enterpriseTradeQuestion");
+        question3_J3 = questionnaireQuestionService.create(question3_J3).getSuccess();
+
+        // ----------------------------------------------------------------------------------------------------------------------------------
+
+        QuestionnaireQuestionResource question4_J1 = new QuestionnaireQuestionResource();
+        question4_J1.setTitle("Subsidy basis");
+        question4_J1.setQuestion("4 J1 - Does your enterprise make goods or provide services to third parties with a view to:");
+        question4_J1.setQuestionnaire(questionnaire.getId());
+        question4_J1.setQuestionName("goodsAndServicesQuestion");
+        question4_J1 = questionnaireQuestionService.create(question4_J1).getSuccess();
+
+        QuestionnaireQuestionResource question4_J2 = new QuestionnaireQuestionResource();
+        question4_J2.setTitle("Subsidy basis");
+        question4_J2.setQuestion("4 J2 - Does your enterprise make goods or provide services to third parties with a view to:");
+        question4_J2.setQuestionnaire(questionnaire.getId());
+        question4_J2.setQuestionName("goodsAndServicesQuestion");
+        question4_J2 = questionnaireQuestionService.create(question4_J2).getSuccess();
+
+        QuestionnaireQuestionResource question4_J3 = new QuestionnaireQuestionResource();
+        question4_J3.setTitle("Subsidy basis");
+        question4_J3.setQuestion("4 J3 - Does your enterprise make goods or provide services to third parties with a view to:");
+        question4_J3.setQuestionnaire(questionnaire.getId());
+        question4_J3.setQuestionName("goodsAndServicesQuestion");
+        question4_J3 = questionnaireQuestionService.create(question4_J3).getSuccess();
+
+        // ----------------------------------------------------------------------------------------------------------------------------------
+
+        QuestionnaireQuestionResource question5_J1 = new QuestionnaireQuestionResource();
+        question5_J1.setTitle("Subsidy basis");
+        question5_J1.setQuestion(
+                " 5 J1 - Is your enterprise engaged in the production, processing or marketing " +
                         "of agricultural products; or active in the fisheries and aquaculture sector and involved in trade in such products with Northern Ireland?");
-        enterpriseEngagedQuestion.setQuestionnaire(questionnaire.getId());
-        enterpriseEngagedQuestion.setQuestionName("enterpriseEngagedQuestion");
-        enterpriseEngagedQuestion = questionnaireQuestionService.create(enterpriseEngagedQuestion).getSuccess();
+        question5_J1.setQuestionnaire(questionnaire.getId());
+        question5_J1.setQuestionName("enterpriseEngagedQuestion");
+        question5_J1 = questionnaireQuestionService.create(question5_J1).getSuccess();
 
-        // question 6
-        QuestionnaireQuestionResource fundingDirectedQuestion = new QuestionnaireQuestionResource();
-        fundingDirectedQuestion.setTitle("Subsidy basis");
-        fundingDirectedQuestion.setQuestion(
-                "Can you confirm that the Innovate UK funding will be directed towards " +
+        QuestionnaireQuestionResource question5_J2 = new QuestionnaireQuestionResource();
+        question5_J2.setTitle("Subsidy basis");
+        question5_J2.setQuestion(
+                "5 J2 - Is your enterprise engaged in the production, processing or marketing " +
+                        "of agricultural products; or active in the fisheries and aquaculture sector and involved in trade in such products with Northern Ireland?");
+        question5_J2.setQuestionnaire(questionnaire.getId());
+        question5_J2.setQuestionName("enterpriseEngagedQuestion");
+        question5_J2 = questionnaireQuestionService.create(question5_J2).getSuccess();
+
+        QuestionnaireQuestionResource question5_J3 = new QuestionnaireQuestionResource();
+        question5_J3.setTitle("Subsidy basis");
+        question5_J3.setQuestion(
+                "5 J3 - Is your enterprise engaged in the production, processing or marketing " +
+                        "of agricultural products; or active in the fisheries and aquaculture sector and involved in trade in such products with Northern Ireland?");
+        question5_J3.setQuestionnaire(questionnaire.getId());
+        question5_J3.setQuestionName("enterpriseEngagedQuestion");
+        question5_J3 = questionnaireQuestionService.create(question5_J3).getSuccess();
+
+        // ----------------------------------------------------------------------------------------------------------------------------------
+
+        QuestionnaireQuestionResource question6_J1 = new QuestionnaireQuestionResource();
+        question6_J1.setTitle("Subsidy basis");
+        question6_J1.setQuestion(
+                "6 J1 - Can you confirm that the Innovate UK funding will be directed towards " +
                         "activities other than the production, processing or marketing of agricultural products or the fisheries and aquaculture sector?");
-        fundingDirectedQuestion.setQuestionnaire(questionnaire.getId());
-        fundingDirectedQuestion.setQuestionName("fundingDirectedQuestion");
-        fundingDirectedQuestion = questionnaireQuestionService.create(fundingDirectedQuestion).getSuccess();
+        question6_J1.setQuestionnaire(questionnaire.getId());
+        question6_J1.setQuestionName("fundingDirectedQuestion");
+        question6_J1 = questionnaireQuestionService.create(question6_J1).getSuccess();
 
-        // question 1 - options
-        QuestionnaireOptionResource activitiesYes = new QuestionnaireOptionResource();
-        activitiesYes.setQuestion(activitiesQuestion.getId());
-        activitiesYes.setDecisionType(DecisionType.QUESTION);
-        activitiesYes.setDecision(enterprisedBasedQuestion.getId());
-        activitiesYes.setText("Yes");
-        questionnaireOptionService.create(activitiesYes).getSuccess();
+        // No question 6 journey 3
 
-        QuestionnaireOptionResource activitiesNo = new QuestionnaireOptionResource();
-        activitiesNo.setQuestion(activitiesQuestion.getId());
-        activitiesNo.setDecisionType(DecisionType.QUESTION);
-        activitiesNo.setDecision(tradeQuestion.getId());
-        activitiesNo.setText("No");
-        questionnaireOptionService.create(activitiesNo).getSuccess();
+        QuestionnaireQuestionResource question6_J2 = new QuestionnaireQuestionResource();
+        question6_J2.setTitle("Subsidy basis");
+        question6_J2.setQuestion(
+                "6 J2 - Can you confirm that the Innovate UK funding will be directed towards " +
+                        "activities other than the production, processing or marketing of agricultural products or the fisheries and aquaculture sector?");
+        question6_J2.setQuestionnaire(questionnaire.getId());
+        question6_J2.setQuestionName("fundingDirectedQuestion");
+        question6_J2 = questionnaireQuestionService.create(question6_J2).getSuccess();
 
-        // question 1.5 - options
-        QuestionnaireOptionResource tradeYes = new QuestionnaireOptionResource();
-        tradeYes.setQuestion(tradeQuestion.getId());
-        tradeYes.setDecisionType(DecisionType.QUESTION);
-        tradeYes.setDecision(enterprisedBasedQuestion.getId());
-        tradeYes.setText("Yes");
-        questionnaireOptionService.create(tradeYes).getSuccess();
+        // ----------------------------------------------------------------------------------------------------------------------------------
 
-        QuestionnaireOptionResource tradeNo = new QuestionnaireOptionResource();
-        tradeNo.setQuestion(tradeQuestion.getId());
-        tradeNo.setDecisionType(DecisionType.TEXT_OUTCOME);
-        tradeNo.setDecision(activitiesStateAidOutcome.getId());
-        tradeNo.setText("No");
-        questionnaireOptionService.create(tradeNo).getSuccess();
+        // OPTIONS
 
-        // question 2 - options
-        QuestionnaireOptionResource enterprisedBasedYes = new QuestionnaireOptionResource();
-        enterprisedBasedYes.setQuestion(enterprisedBasedQuestion.getId());
-        enterprisedBasedYes.setDecisionType(DecisionType.QUESTION);
-        enterprisedBasedYes.setDecision(enterpriseTradeQuestion.getId());
-        enterprisedBasedYes.setText("Yes");
-        questionnaireOptionService.create(enterprisedBasedYes).getSuccess();
+        // QUESTION 1
 
-        QuestionnaireOptionResource enterprisedBasedNo = new QuestionnaireOptionResource();
-        enterprisedBasedNo.setQuestion(enterprisedBasedQuestion.getId());
-        enterprisedBasedNo.setDecisionType(DecisionType.QUESTION);
-        enterprisedBasedNo.setDecision(enterpriseTradeQuestion.getId());
-        enterprisedBasedNo.setText("No");
-        questionnaireOptionService.create(enterprisedBasedNo).getSuccess();
+        QuestionnaireOptionResource question1Yes = new QuestionnaireOptionResource();
+        question1Yes.setQuestion(question1.getId());
+        question1Yes.setDecisionType(DecisionType.QUESTION);
+        question1Yes.setDecision(question2.getId());
+        question1Yes.setText("Yes");
+        questionnaireOptionService.create(question1Yes).getSuccess();
 
-        // question 3 - options
-        QuestionnaireOptionResource enterpriseTradeYes = new QuestionnaireOptionResource();
-        enterpriseTradeYes.setQuestion(enterpriseTradeQuestion.getId());
-        enterpriseTradeYes.setDecisionType(DecisionType.QUESTION);
-        enterpriseTradeYes.setDecision(goodsAndServicesQuestion.getId());
-        enterpriseTradeYes.setText("Yes");
-        questionnaireOptionService.create(enterpriseTradeYes).getSuccess();
+        QuestionnaireOptionResource question2No = new QuestionnaireOptionResource();
+        question2No.setQuestion(question1.getId());
+        question2No.setDecisionType(DecisionType.QUESTION);
+        question2No.setDecision(question1_5.getId());
+        question2No.setText("No");
+        questionnaireOptionService.create(question2No).getSuccess();
 
-        QuestionnaireOptionResource enterpriseTradeNo = new QuestionnaireOptionResource();
-        enterpriseTradeNo.setQuestion(enterpriseTradeQuestion.getId());
-        enterpriseTradeNo.setDecisionType(DecisionType.QUESTION);
-        enterpriseTradeNo.setDecision(goodsAndServicesQuestion.getId());
-        enterpriseTradeNo.setText("No");
-        questionnaireOptionService.create(enterpriseTradeNo).getSuccess();
+        // QUESTION 1.5
 
-        // question 4 - options
-        QuestionnaireOptionResource goodsAndServicesYes = new QuestionnaireOptionResource();
-        goodsAndServicesYes.setQuestion(goodsAndServicesQuestion.getId());
-        goodsAndServicesYes.setDecisionType(DecisionType.QUESTION);
-        goodsAndServicesYes.setDecision(enterpriseEngagedQuestion.getId());
-        goodsAndServicesYes.setText("Yes");
-        questionnaireOptionService.create(goodsAndServicesYes).getSuccess();
+        QuestionnaireOptionResource question1_5Yes = new QuestionnaireOptionResource();
+        question1_5Yes.setQuestion(question1_5.getId());
+        question1_5Yes.setDecisionType(DecisionType.QUESTION);
+        question1_5Yes.setDecision(question2.getId());
+        question1_5Yes.setText("Yes");
+        questionnaireOptionService.create(question1_5Yes).getSuccess();
 
-        QuestionnaireOptionResource goodsAndServicesNo = new QuestionnaireOptionResource();
-        goodsAndServicesNo.setQuestion(goodsAndServicesQuestion.getId());
-        goodsAndServicesNo.setDecisionType(DecisionType.QUESTION);
-        goodsAndServicesNo.setDecision(enterpriseEngagedQuestion.getId());
-        goodsAndServicesNo.setText("No");
-        questionnaireOptionService.create(goodsAndServicesNo).getSuccess();
+        QuestionnaireOptionResource question1_5No = new QuestionnaireOptionResource();
+        question1_5No.setQuestion(question1_5.getId());
+        question1_5No.setDecisionType(DecisionType.TEXT_OUTCOME);
+        question1_5No.setDecision(subsidyControlActOutcome.getId());
+        question1_5No.setText("No");
+        questionnaireOptionService.create(question1_5No).getSuccess();
 
-        // question 5 - options
-        QuestionnaireOptionResource enterpriseEngagedYes = new QuestionnaireOptionResource();
-        enterpriseEngagedYes.setQuestion(enterpriseEngagedQuestion.getId());
-        enterpriseEngagedYes.setDecisionType(DecisionType.QUESTION);
-        enterpriseEngagedYes.setDecision(fundingDirectedQuestion.getId());
-        enterpriseEngagedYes.setText("Yes");
-        questionnaireOptionService.create(enterpriseEngagedYes).getSuccess();
+        // ----------------------------------------------------------------------------------------------------------------------------------
 
-        QuestionnaireOptionResource enterpriseEngagedNo = new QuestionnaireOptionResource();
-        enterpriseEngagedNo.setQuestion(enterpriseEngagedQuestion.getId());
-        enterpriseEngagedNo.setDecisionType(DecisionType.TEXT_OUTCOME);
-        enterpriseEngagedNo.setDecision(activitiesStateAidOutcome.getId());
-        enterpriseEngagedNo.setText("No");
-        questionnaireOptionService.create(enterpriseEngagedNo).getSuccess();
+        // QUESTION 2
 
-        // question 6 - options
-        QuestionnaireOptionResource fundingDirectedYes = new QuestionnaireOptionResource();
-        fundingDirectedYes.setQuestion(fundingDirectedQuestion.getId());
-        fundingDirectedYes.setDecisionType(DecisionType.TEXT_OUTCOME);
-        fundingDirectedYes.setDecision(activitiesStateAidOutcome.getId());
-        fundingDirectedYes.setText("Yes");
-        questionnaireOptionService.create(fundingDirectedYes).getSuccess();
+        QuestionnaireOptionResource question2_J1_Yes = new QuestionnaireOptionResource();
+        question2_J1_Yes.setQuestion(question2.getId());
+        question2_J1_Yes.setDecisionType(DecisionType.QUESTION);
+        question2_J1_Yes.setDecision(question3_J1.getId());
+        question2_J1_Yes.setText("Yes");
+        questionnaireOptionService.create(question2_J1_Yes).getSuccess();
 
-        QuestionnaireOptionResource fundingDirectedNo = new QuestionnaireOptionResource();
-        fundingDirectedNo.setQuestion(fundingDirectedQuestion.getId());
-        fundingDirectedNo.setDecisionType(DecisionType.TEXT_OUTCOME);
-        fundingDirectedNo.setDecision(activitiesStateAidOutcome.getId());
-        fundingDirectedNo.setText("No");
-        questionnaireOptionService.create(fundingDirectedNo).getSuccess();
+        QuestionnaireOptionResource question2_J1_No = new QuestionnaireOptionResource();
+        question2_J1_No.setQuestion(question2.getId());
+        question2_J1_No.setDecisionType(DecisionType.QUESTION);
+        question2_J1_No.setDecision(question3_J3.getId());
+        question2_J1_No.setText("No");
+        questionnaireOptionService.create(question2_J1_No).getSuccess();
+
+        // ----------------------------------------------------------------------------------------------------------------------------------
+
+        // QUESTION 3
+
+        QuestionnaireOptionResource question3_J1_Yes = new QuestionnaireOptionResource();
+        question3_J1_Yes.setQuestion(question3_J1.getId());
+        question3_J1_Yes.setDecisionType(DecisionType.QUESTION);
+        question3_J1_Yes.setDecision(question4_J1.getId());
+        question3_J1_Yes.setText("Yes");
+        questionnaireOptionService.create(question3_J1_Yes).getSuccess();
+
+        QuestionnaireOptionResource question3_J1_No = new QuestionnaireOptionResource();
+        question3_J1_No.setQuestion(question3_J1.getId());
+        question3_J1_No.setDecisionType(DecisionType.QUESTION);
+        question3_J1_No.setDecision(question4_J2.getId());
+        question3_J1_No.setText("No");
+        questionnaireOptionService.create(question3_J1_No).getSuccess();
+
+        QuestionnaireOptionResource question3_J3_Yes = new QuestionnaireOptionResource();
+        question3_J3_Yes.setQuestion(question3_J3.getId());
+        question3_J3_Yes.setDecisionType(DecisionType.QUESTION);
+        question3_J3_Yes.setDecision(question4_J2.getId());
+        question3_J3_Yes.setText("Yes");
+        questionnaireOptionService.create(question3_J3_Yes).getSuccess();
+
+        QuestionnaireOptionResource question3_J3_No = new QuestionnaireOptionResource();
+        question3_J3_No.setQuestion(question3_J3.getId());
+        question3_J3_No.setDecisionType(DecisionType.QUESTION);
+        question3_J3_No.setDecision(question4_J3.getId());
+        question3_J3_No.setText("No");
+        questionnaireOptionService.create(question3_J3_No).getSuccess();
+
+        // ----------------------------------------------------------------------------------------------------------------------------------
+
+        // QUESTION 4
+
+        QuestionnaireOptionResource question4_J1_Yes = new QuestionnaireOptionResource();
+        question4_J1_Yes.setQuestion(question4_J1.getId());
+        question4_J1_Yes.setDecisionType(DecisionType.QUESTION);
+        question4_J1_Yes.setDecision(question5_J1.getId());
+        question4_J1_Yes.setText("Yes");
+        questionnaireOptionService.create(question4_J1_Yes).getSuccess();
+
+        QuestionnaireOptionResource question4_J1_No = new QuestionnaireOptionResource();
+        question4_J1_No.setQuestion(question4_J1.getId());
+        question4_J1_No.setDecisionType(DecisionType.QUESTION);
+        question4_J1_No.setDecision(question5_J2.getId());
+        question4_J1_No.setText("No");
+        questionnaireOptionService.create(question4_J1_No).getSuccess();
+
+
+        QuestionnaireOptionResource question4_J2_Yes = new QuestionnaireOptionResource();
+        question4_J2_Yes.setQuestion(question4_J2.getId());
+        question4_J2_Yes.setDecisionType(DecisionType.QUESTION);
+        question4_J2_Yes.setDecision(question5_J2.getId());
+        question4_J2_Yes.setText("Yes");
+        questionnaireOptionService.create(question4_J2_Yes).getSuccess();
+
+        QuestionnaireOptionResource question4_J2_No = new QuestionnaireOptionResource();
+        question4_J2_No.setQuestion(question4_J2.getId());
+        question4_J2_No.setDecisionType(DecisionType.QUESTION);
+        question4_J2_No.setDecision(question5_J2.getId());
+        question4_J2_No.setText("No");
+        questionnaireOptionService.create(question4_J2_No).getSuccess();
+
+        QuestionnaireOptionResource question4_J3_Yes = new QuestionnaireOptionResource();
+        question4_J3_Yes.setQuestion(question4_J3.getId());
+        question4_J3_Yes.setDecisionType(DecisionType.QUESTION);
+        question4_J3_Yes.setDecision(question5_J2.getId());
+        question4_J3_Yes.setText("Yes");
+        questionnaireOptionService.create(question4_J3_Yes).getSuccess();
+
+        QuestionnaireOptionResource question4_J3_No = new QuestionnaireOptionResource();
+        question4_J3_No.setQuestion(question4_J3.getId());
+        question4_J3_No.setDecisionType(DecisionType.QUESTION);
+        question4_J3_No.setDecision(question5_J3.getId());
+        question4_J3_No.setText("No");
+        questionnaireOptionService.create(question4_J3_No).getSuccess();
+
+        // ----------------------------------------------------------------------------------------------------------------------------------
+
+        // QUESTION 5
+
+        QuestionnaireOptionResource question5_J1_Yes = new QuestionnaireOptionResource();
+        question5_J1_Yes.setQuestion(question5_J1.getId());
+        question5_J1_Yes.setDecisionType(DecisionType.QUESTION);
+        question5_J1_Yes.setDecision(question6_J1.getId());
+        question5_J1_Yes.setText("Yes");
+        questionnaireOptionService.create(question5_J1_Yes).getSuccess();
+
+        QuestionnaireOptionResource question5_J1_No = new QuestionnaireOptionResource();
+        question5_J1_No.setQuestion(question5_J1.getId());
+        question5_J1_No.setDecisionType(DecisionType.TEXT_OUTCOME);
+        question5_J1_No.setDecision(northernIrelandProtocolOutcome.getId());
+        question5_J1_No.setText("No");
+        questionnaireOptionService.create(question5_J1_No).getSuccess();
+
+
+        QuestionnaireOptionResource question5_J2_Yes = new QuestionnaireOptionResource();
+        question5_J2_Yes.setQuestion(question5_J2.getId());
+        question5_J2_Yes.setDecisionType(DecisionType.QUESTION);
+        question5_J2_Yes.setDecision(question6_J2.getId());
+        question5_J2_Yes.setText("Yes");
+        questionnaireOptionService.create(question5_J2_Yes).getSuccess();
+
+        QuestionnaireOptionResource question5_J2_No = new QuestionnaireOptionResource();
+        question5_J2_No.setQuestion(question5_J2.getId());
+        question5_J2_No.setDecisionType(DecisionType.TEXT_OUTCOME);
+        question5_J2_No.setDecision(northernIrelandProtocolOutcome.getId());
+        question5_J2_No.setText("No");
+        questionnaireOptionService.create(question5_J2_No).getSuccess();
+
+        QuestionnaireOptionResource question5_J3_Yes = new QuestionnaireOptionResource();
+        question5_J3_Yes.setQuestion(question5_J3.getId());
+        question5_J3_Yes.setDecisionType(DecisionType.QUESTION);
+        question5_J3_Yes.setDecision(question6_J2.getId());
+        question5_J3_Yes.setText("Yes");
+        questionnaireOptionService.create(question5_J3_Yes).getSuccess();
+
+        QuestionnaireOptionResource question5_J3_No = new QuestionnaireOptionResource();
+        question5_J3_No.setQuestion(question5_J3.getId());
+        question5_J3_No.setDecisionType(DecisionType.TEXT_OUTCOME);
+        question5_J3_No.setDecision(subsidyControlActOutcome.getId());
+        question5_J3_No.setText("No");
+        questionnaireOptionService.create(question5_J3_No).getSuccess();
+
+        // ----------------------------------------------------------------------------------------------------------------------------------
+
+        // QUESTION 6
+
+        QuestionnaireOptionResource question6_J1_Yes = new QuestionnaireOptionResource();
+        question6_J1_Yes.setQuestion(question6_J1.getId());
+        question6_J1_Yes.setDecisionType(DecisionType.TEXT_OUTCOME);
+        question6_J1_Yes.setDecision(northernIrelandProtocolOutcome.getId());
+        question6_J1_Yes.setText("Yes");
+        questionnaireOptionService.create(question6_J1_Yes).getSuccess();
+
+        QuestionnaireOptionResource question6_J1_No = new QuestionnaireOptionResource();
+        question6_J1_No.setQuestion(question6_J1.getId());
+        question6_J1_No.setDecisionType(DecisionType.TEXT_OUTCOME);
+        question6_J1_No.setDecision(northernIrelandProtocolOutcome.getId());
+        question6_J1_No.setText("No");
+        questionnaireOptionService.create(question6_J1_No).getSuccess();
+
+        QuestionnaireOptionResource question6_J2_Yes = new QuestionnaireOptionResource();
+        question6_J2_Yes.setQuestion(question6_J2.getId());
+        question6_J2_Yes.setDecisionType(DecisionType.TEXT_OUTCOME);
+        question6_J2_Yes.setDecision(northernIrelandProtocolOutcome.getId());
+        question6_J2_Yes.setText("Yes");
+        questionnaireOptionService.create(question6_J2_Yes).getSuccess();
+
+        QuestionnaireOptionResource question6_J2_No = new QuestionnaireOptionResource();
+        question6_J2_No.setQuestion(question6_J2.getId());
+        question6_J2_No.setDecisionType(DecisionType.TEXT_OUTCOME);
+        question6_J2_No.setDecision(northernIrelandProtocolOutcome.getId());
+        question6_J2_No.setText("No");
+        questionnaireOptionService.create(question6_J2_No).getSuccess();
 
         return questionnaireRepository.findById(questionnaire.getId()).get();
     }
