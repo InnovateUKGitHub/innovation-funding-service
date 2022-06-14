@@ -161,4 +161,8 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
     public ApplicationBuilder withAssessmentPeriod(AssessmentPeriod... assessmentPeriods) {
         return withArray((assessmentPeriod, application) -> application.setAssessmentPeriod(assessmentPeriod), assessmentPeriods);
     }
+
+    public ApplicationBuilder withEnableForEOI(boolean... enableForEOIs) {
+        return withArray((enableForEOI, application) -> application.setEnableForEOI(enableForEOI), enableForEOIs);
+    }
 }

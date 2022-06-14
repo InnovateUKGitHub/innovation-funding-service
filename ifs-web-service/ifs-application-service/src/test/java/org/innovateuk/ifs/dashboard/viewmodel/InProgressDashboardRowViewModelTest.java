@@ -82,4 +82,15 @@ public class InProgressDashboardRowViewModelTest {
         assertEquals("Ready to review and submit", viewModel.getProgressMessage());
         assertFalse(viewModel.isAlwaysOpen());
     }
+
+    @Test
+    public void constructEoi(){
+        ZonedDateTime end = ZonedDateTime.now().plusHours(2).minusMinutes(1);
+        InProgressDashboardRowViewModel viewModel = new InProgressDashboardRowViewModel(null, 1L,
+                "Always open competition", true, OPENED, true,
+                end, 0L, 50 , false, YESTERDAY, true, true, true, true);
+
+        assertTrue(viewModel.isAlwaysOpen());
+        assertTrue(viewModel.isEoi());
+    }
 }

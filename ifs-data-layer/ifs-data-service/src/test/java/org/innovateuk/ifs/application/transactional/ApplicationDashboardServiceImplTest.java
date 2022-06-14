@@ -71,6 +71,7 @@ public class ApplicationDashboardServiceImplTest {
             .withStartDate(ZonedDateTime.now().minusDays(2))
             .withEndDate(ZonedDateTime.now().plusDays(1))
             .withAlwaysOpen(true)
+            .witheEnabledForPreRegistration(true)
             .build();
     private static final long USER_ID = 1L;
     private final User user = newUser().withId(USER_ID).build();
@@ -126,6 +127,10 @@ public class ApplicationDashboardServiceImplTest {
         assertTrue(pendingResource.isPendingPartner());
         assertFalse(notPendingResource.isPendingPartner());
 
+        assertTrue(dashboardResource.getInProgress().stream()
+                .filter(DashboardInProgressRowResource::isAlwaysOpen)
+                .findFirst().get()
+                .isEoi());
     }
 
     private Application inProgressAlwaysOpenCompApplication() {
@@ -134,6 +139,7 @@ public class ApplicationDashboardServiceImplTest {
                 .withCompetition(alwaysOpenCompetition)
                 .withApplicationState(ApplicationState.SUBMITTED)
                 .withFundingDecision((FundingDecisionStatus) null)
+                .withEnableForEOI(true)
                 .build();
     }
 
