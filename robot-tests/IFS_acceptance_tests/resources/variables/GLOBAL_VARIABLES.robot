@@ -182,6 +182,7 @@ ${LARGE_ORGANISATION_SIZE}      LARGE
 ${UPLOAD_FOLDER}              uploaded_files
 ${DOWNLOAD_FOLDER}            download_files
 ${valid_pdf}                  testing.pdf
+${webtest_pdf}                test.pdf
 ${gol_pdf}                    GOL_template.pdf
 ${contract_pdf}               Contract.pdf
 ${valid_xls}                  testing.xls
