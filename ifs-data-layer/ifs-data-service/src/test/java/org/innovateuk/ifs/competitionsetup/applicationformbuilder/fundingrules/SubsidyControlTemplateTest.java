@@ -83,7 +83,7 @@ public class SubsidyControlTemplateTest {
 
         verify(questionnaireService).create(any());
         verify(questionnaireQuestionService, times(13)).create(any());
-        verify(questionnaireOptionService, times(14)).create(any());
+        verify(questionnaireOptionService, times(26)).create(any());
         verify(textOutcomeService, times(1)).create(any());
     }
 
