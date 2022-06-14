@@ -45,7 +45,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         return with(data -> data.setCompetition(competition));
     }
 
-    public ApplicationDataBuilder withBasicDetails(UserResource leadApplicant, String applicationName, String researchCategory, boolean resubmission, long organisationId) {
+    public ApplicationDataBuilder withBasicDetails(UserResource leadApplicant, String applicationName, String researchCategory, boolean resubmission, long organisationId, boolean enableForEOI) {
 
         return with(data -> doAs(leadApplicant, () -> {
 
@@ -54,6 +54,11 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                     getSuccess();
 
             created.setResubmission(resubmission);
+
+           ApplicationPreRegistrationConfigResource applicationPreRegistrationConfigResource =  created.getApplicationPreRegistrationConfigResource();
+           applicationPreRegistrationConfigResource.setEnableForEOI(enableForEOI);
+           created.setApplicationPreRegistrationConfigResource(applicationPreRegistrationConfigResource);
+
             ValidationMessages validationMessages = applicationService.saveApplicationDetails(created.getId(), created)
                     .getSuccess();
 
