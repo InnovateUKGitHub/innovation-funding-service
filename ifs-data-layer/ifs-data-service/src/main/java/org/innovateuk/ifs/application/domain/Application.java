@@ -121,7 +121,7 @@ public class Application implements ProcessActivity {
     private ApplicationExternalConfig applicationExternalConfig;
 
     @OneToOne(mappedBy = "application", fetch = FetchType.LAZY)
-    private ApplicationPreRegConfig applicationPreRegConfig;
+    private ApplicationPreRegistrationConfig applicationPreRegistrationConfig;
 
     public Application() {
     }
@@ -159,7 +159,7 @@ public class Application implements ProcessActivity {
         this.competitionReferralSource = application.getCompetitionReferralSource();
         this.companyAge = application.getCompanyAge();
         this.companyPrimaryFocus = application.getCompanyPrimaryFocus();
-        this.applicationPreRegConfig = application.getApplicationPreRegConfig();
+        this.applicationPreRegistrationConfig = application.getApplicationPreRegistrationConfig();
     }
 
     protected boolean canEqual(Object other) {
@@ -559,16 +559,16 @@ public class Application implements ProcessActivity {
         this.applicationExternalConfig = applicationExternalConfig;
     }
 
-    public ApplicationPreRegConfig getApplicationPreRegConfig() {
-        return applicationPreRegConfig;
+    public ApplicationPreRegistrationConfig getApplicationPreRegistrationConfig() {
+        return applicationPreRegistrationConfig;
     }
 
-    public void setApplicationPreRegConfig(ApplicationPreRegConfig applicationPreRegConfig) {
-        this.applicationPreRegConfig = applicationPreRegConfig;
+    public void setApplicationPreRegistrationConfig(ApplicationPreRegistrationConfig applicationPreRegistrationConfig) {
+        this.applicationPreRegistrationConfig = applicationPreRegistrationConfig;
     }
 
     @Transient
     public boolean isEnableForEOI() {
-        return applicationPreRegConfig != null ? applicationPreRegConfig.isEnableForEOI() : false;
+        return applicationPreRegistrationConfig != null ? applicationPreRegistrationConfig.isEnableForEOI() : false;
     }
 }

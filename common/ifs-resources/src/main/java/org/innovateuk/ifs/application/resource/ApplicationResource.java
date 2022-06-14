@@ -53,7 +53,7 @@ public class ApplicationResource {
     private FundingDecision fundingDecision;
     private Long assessmentPeriodId;
     private ZonedDateTime feedbackReleased;
-    private ApplicationPreRegConfigResource applicationPreRegConfigResource;
+    private ApplicationPreRegistrationConfigResource applicationPreRegistrationConfigResource;
 
     public Long getId() {
         return id;
@@ -351,16 +351,16 @@ public class ApplicationResource {
         return feedbackReleased != null && ZonedDateTime.now().isAfter(feedbackReleased);
     }
 
+    public ApplicationPreRegistrationConfigResource getApplicationPreRegistrationConfigResource() {
+        return applicationPreRegistrationConfigResource;
+    }
+
+    public void setApplicationPreRegistrationConfigResource(ApplicationPreRegistrationConfigResource applicationPreRegistrationConfigResource) {
+        this.applicationPreRegistrationConfigResource = applicationPreRegistrationConfigResource;
+    }
+
     public boolean isEnableForEOI() {
-        return applicationPreRegConfigResource != null ? applicationPreRegConfigResource.isEnableForEOI() : false;
-    }
-
-    public ApplicationPreRegConfigResource getApplicationPreRegConfigResource() {
-        return applicationPreRegConfigResource;
-    }
-
-    public void setApplicationPreRegConfigResource(ApplicationPreRegConfigResource applicationPreRegConfigResource) {
-        this.applicationPreRegConfigResource = applicationPreRegConfigResource;
+        return applicationPreRegistrationConfigResource != null ? applicationPreRegistrationConfigResource.isEnableForEOI() : false;
     }
 
     @Override
@@ -399,7 +399,7 @@ public class ApplicationResource {
                 .append(event, that.event)
                 .append(lastStateChangeDate, that.lastStateChangeDate)
                 .append(assessmentPeriodId, that.assessmentPeriodId)
-                .append(applicationPreRegConfigResource, that.applicationPreRegConfigResource)
+                .append(applicationPreRegistrationConfigResource, that.applicationPreRegistrationConfigResource)
                 .isEquals();
     }
 
@@ -433,7 +433,7 @@ public class ApplicationResource {
                 .append(event)
                 .append(lastStateChangeDate)
                 .append(assessmentPeriodId)
-                .append(applicationPreRegConfigResource)
+                .append(applicationPreRegistrationConfigResource)
                 .toHashCode();
     }
 }

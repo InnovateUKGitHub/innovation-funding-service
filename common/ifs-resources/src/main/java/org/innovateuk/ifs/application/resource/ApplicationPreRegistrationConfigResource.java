@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.resource;
 
-public class ApplicationPreRegConfigResource {
+public class ApplicationPreRegistrationConfigResource {
 
     private Long id;
 
@@ -8,10 +8,10 @@ public class ApplicationPreRegConfigResource {
 
     private boolean enableForEOI;
 
-    public ApplicationPreRegConfigResource() {
+    public ApplicationPreRegistrationConfigResource() {
     }
 
-    public ApplicationPreRegConfigResource(Long id, Long applicationId, boolean enableForEOI) {
+    public ApplicationPreRegistrationConfigResource(Long id, Long applicationId, boolean enableForEOI) {
         this.id = id;
         this.applicationId = applicationId;
         this.enableForEOI = enableForEOI;

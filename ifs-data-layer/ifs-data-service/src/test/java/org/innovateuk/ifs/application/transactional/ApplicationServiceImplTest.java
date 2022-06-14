@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.builder.ApplicationBuilder;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
-import org.innovateuk.ifs.application.domain.ApplicationPreRegConfig;
+import org.innovateuk.ifs.application.domain.ApplicationPreRegistrationConfig;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.repository.ApplicationOrganisationAddressRepository;
@@ -60,7 +60,6 @@ import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.INTERNATIONAL;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationOrganisationAddressBuilder.newApplicationOrganisationAddress;
-import static org.innovateuk.ifs.application.builder.ApplicationPreRegConfigBuilder.newApplicationPreRegConfig;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.newIneligibleOutcome;
 import static org.innovateuk.ifs.application.resource.ApplicationState.CREATED;
@@ -253,12 +252,11 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
                 .withId(applicationId)
                 .build();
 
-        ApplicationPreRegConfig preRegConfig = newApplicationPreRegConfig().
-                withApplication(application).
-                withEnableForEOI(true).
-                build();
+        ApplicationPreRegistrationConfig applicationPreRegistrationConfig =
+                ApplicationPreRegistrationConfig.builder().
+                application(application).enableForEOI(true).build();
 
-        application.setApplicationPreRegConfig(preRegConfig);
+        application.setApplicationPreRegistrationConfig(applicationPreRegistrationConfig);
 
         ApplicationResource applicationResource = newApplicationResource()
                 .build();

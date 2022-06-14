@@ -3,11 +3,11 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
-import org.innovateuk.ifs.application.domain.ApplicationPreRegConfig;
+import org.innovateuk.ifs.application.domain.ApplicationPreRegistrationConfig;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.repository.ApplicationOrganisationAddressRepository;
-import org.innovateuk.ifs.application.repository.ApplicationPreRegConfigRepository;
+import org.innovateuk.ifs.application.repository.ApplicationPreRegistrationConfigRepository;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -78,7 +78,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private OrganisationAddressRepository organisationAddressRepository;
 
     @Autowired
-    private ApplicationPreRegConfigRepository applicationPreRegConfigRepository;
+    private ApplicationPreRegistrationConfigRepository applicationPreRegistrationConfigRepository;
 
     private static final Map<String, Sort> APPLICATION_SORT_FIELD_MAP;
 
@@ -132,11 +132,11 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     private void setEOIApplication(Competition competition, Application application) {
         if (competition.isEnabledForPreRegistration()) {
-            ApplicationPreRegConfig applicationPreRegConfig = new ApplicationPreRegConfig();
-            applicationPreRegConfig.setApplication(application);
-            applicationPreRegConfig.setEnableForEOI(true);
-            applicationPreRegConfigRepository.save(applicationPreRegConfig);
-            application.setApplicationPreRegConfig(applicationPreRegConfig);
+            ApplicationPreRegistrationConfig applicationPreRegistrationConfig = new ApplicationPreRegistrationConfig();
+            applicationPreRegistrationConfig.setApplication(application);
+            applicationPreRegistrationConfig.setEnableForEOI(true);
+            applicationPreRegistrationConfigRepository.save(applicationPreRegistrationConfig);
+            application.setApplicationPreRegistrationConfig(applicationPreRegistrationConfig);
         }
     }
 
