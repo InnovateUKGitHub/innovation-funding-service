@@ -64,11 +64,23 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
     private static final String NO = "No";
     private static final String QUESTION2_TITLE = "Is your enterprise based in or active in Northern Ireland?";
     private static final String QUESTION3_TITLE = "Does your enterprise trade directly with customers in Northern Ireland?";
+    private static final String QUESTION3_GUIDANCE =
+            "Note: if you have not made any sales or you do not intend to sell to Northern Ireland " +
+                    "or you consider it possible to say that any effect of the Innovate UK funding upon: " + "\n" +
+                    "(a) goods that will be traded between Northern Ireland and the EU " + "\n" +
+                    "or \n" +
+                    "(b) the single electricity market of Ireland, " + "\n" +
+                    "will be merely \"hypothetical, presumed, or without a genuine and direct link to Northern Ireland\", " +
+                    "then answer No to this question.";
     private static final String QUESTION4_TITLE =
             "Does your enterprise make goods or provide services to third parties with a view to:" + "\n" +
                     "(a) enabling them to manufacture goods that will be traded between Northern Ireland and the EU" + "\n" +
                     "or" + "\n" +
                     "(b) effect the single electricity market of Ireland";
+    private static final String QUESTION4_GUIDANCE =
+            "Note: this question seeks to understand if you are carrying out activities that may indirectly lead " +
+                    "to effects on trade in goods to Northern Ireland or the single electricity market of Ireland. " +
+                    "If you are not aware of any such impact answer No to this question.";
     private static final String QUESTION5_TITLE =
             "Is your enterprise engaged in the production, processing or marketing " +
                     "of agricultural products; or active in the fisheries and aquaculture sector and " +
@@ -77,6 +89,13 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
             "Can you confirm that the Innovate UK funding will be directed towards " +
                     "activities other than the production, processing or marketing of agricultural products or " +
                     "the fisheries and aquaculture sector?";
+    private static final String QUESTION6_GUIDANCE =
+            "If your activities do come under these sectors, prior to receipt of the Innovate UK funding you must " +
+                    "establish accounting segregations to ensure that the funding does not cross-subsidise " +
+                    "any of those activities." +
+                    "\n" +
+                    "Note: You may be required to supply evidence of such accounting segregation for up to 10 years " +
+                    "from the date the award is granted.";
 
     @Override
     public List<SectionBuilder> sections(Competition competition, List<SectionBuilder> competitionTypeSections) {
@@ -205,12 +224,14 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         enterpriseTradeDirectlyQuestion1.setTitle(SUBSIDYBASIS);
         enterpriseTradeDirectlyQuestion1.setQuestion("3 J1 - " + QUESTION3_TITLE);
         enterpriseTradeDirectlyQuestion1.setQuestionnaire(questionnaire.getId());
+        enterpriseTradeDirectlyQuestion1.setGuidance(QUESTION3_GUIDANCE);
         enterpriseTradeDirectlyQuestion1 = questionnaireQuestionService.create(enterpriseTradeDirectlyQuestion1).getSuccess();
 
         QuestionnaireQuestionResource enterpriseTradeDirectlyQuestion2 = new QuestionnaireQuestionResource();
         enterpriseTradeDirectlyQuestion2.setTitle(SUBSIDYBASIS);
         enterpriseTradeDirectlyQuestion2.setQuestion("3 J3 - " + QUESTION3_TITLE);
         enterpriseTradeDirectlyQuestion2.setQuestionnaire(questionnaire.getId());
+        enterpriseTradeDirectlyQuestion2.setGuidance(QUESTION3_GUIDANCE);
         enterpriseTradeDirectlyQuestion2 = questionnaireQuestionService.create(enterpriseTradeDirectlyQuestion2).getSuccess();
 
         /* ---------------------- QUESTION 4 --------------------------------------------------- */
@@ -220,6 +241,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         enterpriseMakeGoodsQuestion1.setQuestion(
                 "4 J1 - " + QUESTION4_TITLE);
         enterpriseMakeGoodsQuestion1.setQuestionnaire(questionnaire.getId());
+        enterpriseMakeGoodsQuestion1.setGuidance(QUESTION4_GUIDANCE);
         enterpriseMakeGoodsQuestion1 = questionnaireQuestionService.create(enterpriseMakeGoodsQuestion1).getSuccess();
 
         QuestionnaireQuestionResource enterpriseMakeGoodsQuestion2 = new QuestionnaireQuestionResource();
@@ -227,6 +249,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         enterpriseMakeGoodsQuestion2.setQuestion(
                 "4 J2 - " + QUESTION4_TITLE);
         enterpriseMakeGoodsQuestion2.setQuestionnaire(questionnaire.getId());
+        enterpriseMakeGoodsQuestion2.setGuidance(QUESTION4_GUIDANCE);
         enterpriseMakeGoodsQuestion2 = questionnaireQuestionService.create(enterpriseMakeGoodsQuestion2).getSuccess();
 
         QuestionnaireQuestionResource enterpriseMakeGoodsQuestion3 = new QuestionnaireQuestionResource();
@@ -234,6 +257,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         enterpriseMakeGoodsQuestion3.setQuestion(
                 "4 J3 - " + QUESTION4_TITLE);
         enterpriseMakeGoodsQuestion3.setQuestionnaire(questionnaire.getId());
+        enterpriseMakeGoodsQuestion3.setGuidance(QUESTION4_GUIDANCE);
         enterpriseMakeGoodsQuestion3 = questionnaireQuestionService.create(enterpriseMakeGoodsQuestion3).getSuccess();
 
         /* ---------------------- QUESTION 5 --------------------------------------------------- */
@@ -266,6 +290,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         confirmInnovateFundingQuestion1.setQuestion(
                 "6 J1 - " + QUESTION6_TITLE);
         confirmInnovateFundingQuestion1.setQuestionnaire(questionnaire.getId());
+        confirmInnovateFundingQuestion1.setGuidance(QUESTION6_GUIDANCE);
         confirmInnovateFundingQuestion1 = questionnaireQuestionService.create(confirmInnovateFundingQuestion1).getSuccess();
 
         // No question 6 journey 3
@@ -275,6 +300,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         confirmInnovateFundingQuestion2.setQuestion(
                 "6 J2 - " + QUESTION6_TITLE);
         confirmInnovateFundingQuestion2.setQuestionnaire(questionnaire.getId());
+        confirmInnovateFundingQuestion2.setGuidance(QUESTION6_GUIDANCE);
         confirmInnovateFundingQuestion2 = questionnaireQuestionService.create(confirmInnovateFundingQuestion2).getSuccess();
 
         /* ------------------------------------------------------------------------------------ */
