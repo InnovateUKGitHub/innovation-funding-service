@@ -2,6 +2,7 @@ package org.innovateuk.ifs.api.filestorage.v1.upload;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
@@ -15,7 +16,7 @@ class FileUploadRequestTest {
 
     @Test
     void testEquals() {
-        EqualsVerifier.forClass(FileUploadRequest.class).verify();
+        EqualsVerifier.forClass(FileUploadRequest.class).suppress(Warning.NONFINAL_FIELDS).verify();
     }
 
     @Test
@@ -31,5 +32,7 @@ class FileUploadRequestTest {
                 .build();
         String json = objectMapper.writeValueAsString(fileUploadRequest);
         assertThat(json.contains("foo"), equalTo(true));
+        FileUploadRequest readBack = objectMapper.readValue(json, FileUploadRequest.class);
+        assertThat(readBack.getUserId(), equalTo("foo"));
     }
 }
