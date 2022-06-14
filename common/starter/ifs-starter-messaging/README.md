@@ -26,10 +26,11 @@ When importing classes into code default to the spring amqp classes over the imp
 
 Profile
 =
+ 
+Enabled by default
 
-    SPRING_PROFILES_ACTIVE will need to contain an AMQP entry
+    SPRING_PROFILES_ACTIVE will need to contain an DISABLE_AMQP to stop the AMQP subsystem standing up
 
-**I'm planning to switch the default to AMQP being on at a later date and disabling it will require a profile to be set.**
 
 Spring IDE mode
 =
