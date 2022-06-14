@@ -13,6 +13,7 @@ Resource          ../../../resources/common/Competition_Commons.robot
 
 *** Variables ***
 ${hecpPreregCompName}       Horizon Europe Guarantee Competition For Pre Registration
+${hecpPreregAppName}        preRegApplication
 
 *** Test Cases ***
 Applicants should view EOI related content on competition
@@ -21,6 +22,26 @@ Applicants should view EOI related content on competition
     When the user enters text to a text field   id = keywords   Pre Registration
     And the user clicks the button/link         id = update-competition-results-button
     Then the user should see the element        jQuery = li:contains("Horizon Europe Guarantee Competition For Pre Registration") div:contains("Refer to competition date for competition submission deadlines.")
+
+Applicants views expression of interest labels in application overview page for pre reg applications
+    [Arguments]  IFS-12077
+    Given the user starts a new pre reg application
+    When the user clicks the button/link                         id = save-organisation-button
+    And the user completes the application details section       ${hecpPreregAppName}  ${tomorrowday}  ${month}  ${nextyear}   23
+    And Requesting application ID of prereg application
+    Then the user should see EOI labels for prereg application
+    And the user should see the element                          jQuery = dt:contains("Application number:")+dd:contains("${preregApplicationID}")
+
+Lead applicant completes the application sections
+    [Arguments]  IFS-12077
+    When the applicant completes Application Team                        COMPLETE  ${email}
+    And the user completes the application research category             Feasibility studies
+    And the user complete the work programme
+    And The user is able to complete horizon grant agreement section
+    And the lead applicant fills all the questions and marks as complete(prereg)
+    And the user completes prereg project finances                      ${hecpPreregAppName}   no
+    Then the progress indicator should show 100%
+
 
 
 *** Keywords ***
@@ -37,3 +58,50 @@ Custom Suite Setup
 Custom Suite Teardown
     the user closes the browser
     Disconnect from database
+
+Requesting application ID of prereg application
+    ${preregApplicationID} =  get application id by name  ${hecpPreregAppName}
+    Set suite variable    ${preregApplicationID}
+
+the user starts a new pre reg application
+    the user clicks the button/link     link = ${hecpPreregCompName}
+    the user clicks the button/link     link = Start new application
+    the user clicks the button/link     jQuery = a:contains("Sign in")
+    Logging in and Error Checking       &{lead_applicant_credentials}
+    the user selects the radio button   createNewApplication  true      #Yes, I want to create a new application.
+    the user clicks the button/link     jQuery = .govuk-button:contains("Continue")
+
+the user should see EOI labels for prereg application
+    the user should see the element      jQuery = h1:contains("Expression of interest overview")
+    the user should see the element      jQuery = h2:contains("Expression of interest progress")
+    the user should see the element      jQuery = h2:contains("Expression of interest questions")
+    the user should see the element      jQuery = h2:contains("Expression of interest progress")
+
+the user completes prereg project finances
+    [Arguments]  ${Application}   ${Project_growth_table}
+    The user is able to complete hecp project costs
+    Run Keyword if  '${Project_growth_table}' == 'no'   the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
+    Run Keyword if  '${Project_growth_table}' == 'yes'  the user fills the organisation details with Project growth table  ${Application}  ${SMALL_ORGANISATION_SIZE}
+    the user completes prereg funding section           ${Application}
+    the user clicks the button/link                     link = Back to application overview
+
+The user is able to complete hecp project costs
+    the user clicks the button/link           link = Your project costs
+    the user should see the element           jQuery = h1:contains("Your project costs")
+    the user enters text to a text field      id = labour  50000
+    the user enters text to a text field      id = subcontracting  50000
+    the user enters text to a text field      id = travel  10000
+    the user enters text to a text field      id = material  30000
+    the user enters text to a text field      id = capital  20000
+    the user enters text to a text field      id = other  40000
+    the user enters text to a text field      id = overhead  0
+    the user clicks the button/link           jQuery = button:contains("Mark")
+    the user should see the element           jQuery = li:contains("Your project costs") > .task-status-complete
+
+the user completes prereg funding section
+    [Arguments]  ${Application}
+    the user clicks the button/link             link = Your funding
+    the user fills in the funding information   ${Application}   no
+
+the progress indicator should show 100%
+    element should contain      css = .progress-totals--max  100%
