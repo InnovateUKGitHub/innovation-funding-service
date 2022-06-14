@@ -134,15 +134,15 @@
                                             <th:block th:text="${inProgressView.closingToday ? 'today' : 'tomorrow'}"/>
                                         </div>
                                     </th:block>
-                                    <th:block th:if="${!inProgressView.shouldDisplayEndDate && inProgressView.alwaysOpen}">
-                                        <div class="status-msg msg-deadline">
-                                            <div class="always-open-status"></div>
-                                        </div>
+                                    <th:block th:unless="${inProgressView.eoi}">
+                                        <th:block th:if="${!inProgressView.shouldDisplayEndDate && inProgressView.alwaysOpen}">
+                                            <div class="status-msg msg-deadline">
+                                                <div class="always-open-status"></div>
+                                            </div>
+                                        </th:block>
                                     </th:block>
                                     <th:block th:if="${inProgressView.eoi}">
-                                        <div>
-                                            <span class="status-msg msg-deadline-waiting">Expression of interest</span>
-                                        </div>
+                                        <span class="status-msg msg-deadline-waiting">Expression of interest</span>
                                     </th:block>
                                     <span class="status-msg msg-progress"
                                           th:classappend="${inProgressView.isApplicationComplete()} ? 'msg-positive'"
