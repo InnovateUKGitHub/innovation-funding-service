@@ -96,10 +96,14 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
     private boolean isFinanceOverviewComplete(Application application, Map<Long, List<Long>> completedQuestionsByOrganisations, Set<Long> applicationOrganisations) {
         List<Section> sections = application.getCompetition().getSections();
 
-        Section financeSection = sections.stream()
+        List<Section> financeSectionList = sections.stream()
                 .filter(section -> section.getType() == FINANCE)
                 .filter(section -> !application.isEnableForEOI() || section.isEnabledForPreRegistration())
-                .collect(toList()).get(0);
+                .collect(toList());
+
+        if (financeSectionList.isEmpty())
+            return false;
+        Section financeSection = financeSectionList.get(0);
 
         for (long organisationId : applicationOrganisations) {
             if (!completedQuestionsByOrganisations.containsKey(organisationId)) {
@@ -156,7 +160,7 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
         sectionService.getQuestionsForSectionAndSubsections(section.getId())
                 .andOnSuccessReturnVoid(questions -> questions
                         .forEach(q -> {
-                            QuestionResource questionResource =  questionService.getQuestionById(q).getSuccess();
+                            QuestionResource questionResource = questionService.getQuestionById(q).getSuccess();
                             if (!application.isEnableForEOI()
                                     || (application.isEnableForEOI() && questionResource.isEnabledForPreRegistration())) {
                                 questionStatusService.markAsCompleteNoValidate(new QuestionApplicationCompositeId(q, application.getId()), markedAsCompleteById);
@@ -177,7 +181,8 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
                         if (!applicationProcurementMilestoneService.arePaymentMilestonesEqualToFunding(application.getId(), processRole.getOrganisationId()).getSuccess()
                                 && !questionStatus.isEmpty() && Boolean.TRUE.equals(questionStatus.get(0).getMarkedAsComplete())) {
                             questionStatusService.markAsInComplete(new QuestionApplicationCompositeId(section.getQuestions().get(0).getId(), application.getId()), markedAsCompleteById);
-                        };
+                        }
+                        ;
                     });
                 });
     }

@@ -132,7 +132,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
             rows = section.getQuestions()
                     .stream()
                     .map(data.getQuestions()::get)
-                    .filter(QuestionResource::isEnabledForPreRegistration)
+                    .filter(question -> !data.getApplication().isEnableForEOI() || question.isEnabledForPreRegistration())
                     .map(question -> getApplicationOverviewRowViewModel(data, question, section))
                     .collect(toCollection(LinkedHashSet::new));
         }
@@ -144,7 +144,10 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
 
         String subtitle = subtitle(data.getCompetition(), section);
 
-        return new ApplicationOverviewSectionViewModel(section.getId(), section.getName(), subtitle, rows, section.isTermsAndConditions());
+        return new ApplicationOverviewSectionViewModel(section.getId(),
+                data.getApplication().isEnableForEOI() && section.isEnabledForPreRegistration() &&
+                        SectionType.APPLICATION_QUESTIONS.equals(section.getType()) ? "Expression of interest questions" : section.getName(),
+                subtitle, rows, section.isTermsAndConditions());
     }
 
     private String subtitle(CompetitionResource competition, SectionResource section) {

@@ -51,9 +51,16 @@ public class PublicContent {
     private List<ContentEvent> contentEvents;
 
     public void generateHashIfNecessary() {
-        if (this.hash == null) {
+        if (publicContentHasNotBeenPublished() && hashHasNotBeenGenerated()) {
             this.hash = UUID.randomUUID().toString();
         }
     }
 
+    private boolean publicContentHasNotBeenPublished() {
+        return this.publishDate == null;
+    }
+
+    private boolean hashHasNotBeenGenerated() {
+        return this.hash == null;
+    }
 }
