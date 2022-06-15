@@ -17,8 +17,8 @@ import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
-import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.file.controller.FilesizeAndTypeFileValidator;
+import org.innovateuk.ifs.file.service.FileService;
 import org.innovateuk.ifs.grant.repository.GrantProcessConfigurationRepository;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
@@ -396,8 +396,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                 .andOnSuccess(competition -> fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypes, maxFileSize, request,
                         (fileAttributes, inputStreamSupplier) -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
                                 .andOnSuccessReturn(created -> {
-                                    competition.setCompetitionTerms(created.getValue());
-                                    return fileEntryMapper.mapToResource(created.getValue());
+                                    competition.setCompetitionTerms(created);
+                                    return fileEntryMapper.mapToResource(created);
                                 })
                         )
                                 .toServiceResult()

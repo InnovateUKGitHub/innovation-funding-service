@@ -11,9 +11,9 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.file.mapper.FileEntryResourceAssembler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.resource.FileEntryResourceAssembler;
-import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.file.service.FileService;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
@@ -110,14 +110,12 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
                         }));
     }
 
-    private ServiceResult<FormInputResponseFileEntryResource> createFormInputResponseFileUpload(Pair<File, FileEntry> successfulFile,
+    private ServiceResult<FormInputResponseFileEntryResource> createFormInputResponseFileUpload(FileEntry fileEntry,
                                                                                                 FormInputResponse existingResponse,
                                                                                                 long processRoleId,
                                                                                                 long applicationId,
                                                                                                 long formInputId,
                                                                                                 FormInputResponseFileEntryResource formInputResponseFile) {
-        FileEntry fileEntry = successfulFile.getValue();
-
         if (existingResponse != null) {
             return find(() -> findProcessRoleById(processRoleId)).andOnSuccessReturn(role -> {
                 existingResponse.addFileEntry(fileEntry);

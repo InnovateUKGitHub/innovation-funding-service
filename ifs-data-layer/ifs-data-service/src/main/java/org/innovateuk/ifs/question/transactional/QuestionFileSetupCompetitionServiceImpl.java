@@ -2,8 +2,8 @@ package org.innovateuk.ifs.question.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
-import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
-import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.file.controller.FilesizeAndTypeFileValidator;
+import org.innovateuk.ifs.file.service.FileService;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputScope;
@@ -53,7 +53,7 @@ public class QuestionFileSetupCompetitionServiceImpl implements QuestionFileSetu
         fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypes, maxFileSize, request,
                 (fileAttributes, inputStreamSupplier) -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
                         .andOnSuccessReturnVoid(created -> {
-                            formInput.setFile(created.getValue());
+                            formInput.setFile(created);
                         })).toServiceResult());
     }
 

@@ -136,4 +136,8 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
     public ApplicationResourceBuilder withFeedbackReleased(ZonedDateTime... feedbackReleaseds) {
         return withArray((feedbackReleased, application) -> application.setFeedbackReleased(feedbackReleased), feedbackReleaseds);
     }
+
+    public ApplicationResourceBuilder withEnableForEOI(boolean... enableForEOIs) {
+        return withArray((enableForEOI, application) -> application.setEnableForEOI(enableForEOI), enableForEOIs);
+    }
 }

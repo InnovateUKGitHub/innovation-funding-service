@@ -256,12 +256,16 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
     public void testByCompetitionId() {
         Long competitionId = 4L;
 
-        Competition competition = newCompetition().withNonIfs(false).withId(competitionId).withSetupComplete(true)
+        Competition competition = newCompetition()
+                .withNonIfs(false)
+                .withId(competitionId)
+                .withSetupComplete(true)
                 .withMilestones(newMilestone()
                         .withDate(LocalDateTime.of(2017,1,2,3,4).atZone(ZoneId.systemDefault()), LocalDateTime.of(2017,3,2,1,4).atZone(ZoneId.systemDefault()))
                         .withType(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE)
                         .build(2)
-        ).build();
+                ).witheEnabledForPreRegistration(true)
+                .build();
         PublicContent publicContent = newPublicContent().withCompetitionId(competitionId).build();
         PublicContentResource publicContentResource = newPublicContentResource().withCompetitionId(competitionId).build();
         when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
@@ -278,6 +282,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
         assertEquals(competition.getName(), resultObject.getCompetitionTitle());
         assertEquals(publicContentResource, resultObject.getPublicContentResource());
         assertEquals(competition.getSetupComplete(), resultObject.getSetupComplete());
+        assertTrue(resultObject.isEoiEnabled());
 
         verify(publicContentRepository, only()).findByCompetitionId(competitionId);
         verify(competitionRepository, only()).findById(competitionId);
@@ -361,5 +366,6 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
 
         assertEquals(40, result.getSuccess().getContent().size());
         assertThat(NON_IFS_URL, equalTo(result.getSuccess().getContent().get(0).getNonIfsUrl()));
+        assertFalse(result.getSuccess().getContent().get(0).isEoiEnabled());
     }
 }

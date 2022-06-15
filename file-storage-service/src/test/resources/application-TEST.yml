@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:test
+    driverClassName: org.h2.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+    generate-ddl: false
+    hibernate:
+      ddl-auto: create
+  flyway:
+    enabled: false
+server:
+  port: 8888
+ifs:
+  filestorage:
+    storage:
+      s3:
+        fileStoreS3Bucket: test-bucket

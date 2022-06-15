@@ -39,6 +39,8 @@ data:
     #!/bin/sh
     mysql -u root -ppassword \
       --execute=" CREATE DATABASE IF NOT EXISTS ifs ; \
+        CREATE DATABASE IF NOT EXISTS ifs_file_storage; \
+        CREATE DATABASE IF NOT EXISTS ifs_file_storage_test; \
         CREATE DATABASE IF NOT EXISTS ifs_test; \
         CREATE DATABASE IF NOT EXISTS ifs_finance; \
         CREATE DATABASE IF NOT EXISTS ifs_finance_test; \
