@@ -1081,14 +1081,16 @@ the user confirms economic activity for research organiations
     the user clicks the button/link     name = research-eligibility-submit
 
 the user complete the work programme
-    the user clicks the button/link                jQuery = a:contains("Work programme")
-    the user clicks the button/link                jQuery = button:contains("Save and continue")
-    the user clicks the button twice               jQuery = label:contains("Culture, Creativity and Inclusive Society (CL2)")
-    the user clicks the button/link                jQuery = button:contains("Save and continue")
-    the user clicks the button/link                jQuery = button:contains("Save and continue")
-    the user clicks the button twice               jQuery = label:contains("HORIZON-CL2-2021-DEMOCRACY-01")
-    the user clicks the button/link                jQuery = button:contains("Save and continue")
-    the user should see the element                jQuery = li:contains("Work programme") > .task-status-complete
+    the user clicks the button/link     jQuery = a:contains("Work programme")
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
+    the user clicks the button twice    jQuery = label:contains("Culture, Creativity and Inclusive Society (CL2)")
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
+    the user clicks the button twice    jQuery = label:contains("HORIZON-CL2-2021-DEMOCRACY-01")
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
+    the user clicks the button/link     id = application-question-complete
+    the user clicks the button/link     link = Back to application overview
+    the user should see the element     jQuery = li:contains("Work programme") > .task-status-complete
 
 The user is able to complete horizon grant agreement section
     the user clicks the button/link           jQuery = a:contains("Horizon Europe Guarantee grant agreement")
