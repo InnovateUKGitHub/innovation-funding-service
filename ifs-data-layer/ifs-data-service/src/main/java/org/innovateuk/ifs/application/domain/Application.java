@@ -121,7 +121,7 @@ public class Application implements ProcessActivity {
     private ApplicationExternalConfig applicationExternalConfig;
 
     @OneToOne(mappedBy = "application", fetch = FetchType.LAZY)
-    private ApplicationPreRegistrationConfig applicationPreRegistrationConfig;
+    private ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig;
 
     public Application() {
     }
@@ -159,7 +159,7 @@ public class Application implements ProcessActivity {
         this.competitionReferralSource = application.getCompetitionReferralSource();
         this.companyAge = application.getCompanyAge();
         this.companyPrimaryFocus = application.getCompanyPrimaryFocus();
-        this.applicationPreRegistrationConfig = application.getApplicationPreRegistrationConfig();
+        this.applicationExpressionOfInterestConfig = application.getApplicationExpressionOfInterestConfig();
     }
 
     protected boolean canEqual(Object other) {
@@ -559,16 +559,16 @@ public class Application implements ProcessActivity {
         this.applicationExternalConfig = applicationExternalConfig;
     }
 
-    public ApplicationPreRegistrationConfig getApplicationPreRegistrationConfig() {
-        return applicationPreRegistrationConfig;
+    public ApplicationExpressionOfInterestConfig getApplicationExpressionOfInterestConfig() {
+        return applicationExpressionOfInterestConfig;
     }
 
-    public void setApplicationPreRegistrationConfig(ApplicationPreRegistrationConfig applicationPreRegistrationConfig) {
-        this.applicationPreRegistrationConfig = applicationPreRegistrationConfig;
+    public void setApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig) {
+        this.applicationExpressionOfInterestConfig = applicationExpressionOfInterestConfig;
     }
 
     @Transient
-    public boolean isEnableForEOI() {
-        return applicationPreRegistrationConfig != null ? applicationPreRegistrationConfig.isEnableForEOI() : false;
+    public boolean isEnabledForExpressionOfInterest() {
+        return applicationExpressionOfInterestConfig != null ? applicationExpressionOfInterestConfig.isEnabledForExpressionOfInterest() : false;
     }
 }

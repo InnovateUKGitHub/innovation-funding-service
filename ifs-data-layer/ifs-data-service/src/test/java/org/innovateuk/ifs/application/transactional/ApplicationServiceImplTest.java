@@ -4,8 +4,8 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.builder.ApplicationBuilder;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationExpressionOfInterestConfig;
 import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
-import org.innovateuk.ifs.application.domain.ApplicationPreRegistrationConfig;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.repository.ApplicationOrganisationAddressRepository;
@@ -252,11 +252,11 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
                 .withId(applicationId)
                 .build();
 
-        ApplicationPreRegistrationConfig applicationPreRegistrationConfig =
-                ApplicationPreRegistrationConfig.builder().
-                application(application).enableForEOI(true).build();
+        ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig =
+                ApplicationExpressionOfInterestConfig.builder().
+                application(application).enabledForExpressionOfInterest(true).build();
 
-        application.setApplicationPreRegistrationConfig(applicationPreRegistrationConfig);
+        application.setApplicationExpressionOfInterestConfig(applicationExpressionOfInterestConfig);
 
         ApplicationResource applicationResource = newApplicationResource()
                 .build();
@@ -271,7 +271,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         verify(applicationValidationUtil).isApplicationDetailsValid(applicationArgumentCaptor.capture());
         Application updated = applicationArgumentCaptor.getValue();
-        assertTrue(updated.isEnableForEOI());
+        assertTrue(updated.isEnabledForExpressionOfInterest());
     }
 
     @Test

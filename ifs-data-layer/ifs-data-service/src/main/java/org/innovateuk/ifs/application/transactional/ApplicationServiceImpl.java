@@ -2,12 +2,12 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationExpressionOfInterestConfig;
 import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
-import org.innovateuk.ifs.application.domain.ApplicationPreRegistrationConfig;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
+import org.innovateuk.ifs.application.repository.ApplicationExpressionOfInterestConfigRepository;
 import org.innovateuk.ifs.application.repository.ApplicationOrganisationAddressRepository;
-import org.innovateuk.ifs.application.repository.ApplicationPreRegistrationConfigRepository;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -78,7 +78,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private OrganisationAddressRepository organisationAddressRepository;
 
     @Autowired
-    private ApplicationPreRegistrationConfigRepository applicationPreRegistrationConfigRepository;
+    private ApplicationExpressionOfInterestConfigRepository applicationExpressionOfInterestConfigRepository;
 
     private static final Map<String, Sort> APPLICATION_SORT_FIELD_MAP;
 
@@ -122,22 +122,15 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         setInnovationArea(application, competition);
 
         application = applicationRepository.save(application);
-        setEOIApplication(competition, application);
+
+        if (competition.isEnabledForPreRegistration()) {
+            saveExpressionInterestApplications(application);
+        }
 
         generateProcessRolesForApplication(user, ProcessRoleType.LEADAPPLICANT, application, organisationId);
         linkAddressesToOrganisation(organisationId, application.getId());
 
         return serviceSuccess(applicationMapper.mapToResource(application));
-    }
-
-    private void setEOIApplication(Competition competition, Application application) {
-        if (competition.isEnabledForPreRegistration()) {
-            ApplicationPreRegistrationConfig applicationPreRegistrationConfig = new ApplicationPreRegistrationConfig();
-            applicationPreRegistrationConfig.setApplication(application);
-            applicationPreRegistrationConfig.setEnableForEOI(true);
-            applicationPreRegistrationConfigRepository.save(applicationPreRegistrationConfig);
-            application.setApplicationPreRegistrationConfig(applicationPreRegistrationConfig);
-        }
     }
 
     // Default to the competition's innovation area if only one set.
@@ -183,6 +176,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         application.setCompetitionReferralSource(resource.getCompetitionReferralSource());
         application.setCompanyAge(resource.getCompanyAge());
         application.setCompanyPrimaryFocus(resource.getCompanyPrimaryFocus());
+        updateExpressionInterestApplications(application);
     }
 
     @Override
@@ -404,6 +398,28 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ServiceResult<ApplicationPageResource> handleApplicationSearchResultPage(Page<Application> pagedResult) {
         List<ApplicationResource> applicationResource = simpleMap(pagedResult.getContent(), application -> applicationMapper.mapToResource(application));
         return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), applicationResource, pagedResult.getNumber(), pagedResult.getSize()));
+    }
+
+    private void saveExpressionInterestApplications(Application application) {
+            ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig = new ApplicationExpressionOfInterestConfig();
+            setExpressionOfInterest(application, applicationExpressionOfInterestConfig);
+    }
+
+    private void updateExpressionInterestApplications(Application application) {
+            Optional<ApplicationExpressionOfInterestConfig> savedApplicationExpressionOfInterestConfig = applicationExpressionOfInterestConfigRepository.findOneByApplicationId(application.getId());
+             boolean enabledForExpressionOfInterest = application.isEnabledForExpressionOfInterest();
+            if (savedApplicationExpressionOfInterestConfig.isPresent() && savedApplicationExpressionOfInterestConfig.get().isEnabledForExpressionOfInterest() != enabledForExpressionOfInterest) {
+                setExpressionOfInterest(application, savedApplicationExpressionOfInterestConfig.get());
+            }
+            else {
+                saveExpressionInterestApplications(application);
+            }
+    }
+    private void setExpressionOfInterest(Application application, ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig) {
+        applicationExpressionOfInterestConfig.setApplication(application);
+        applicationExpressionOfInterestConfig.setEnabledForExpressionOfInterest(true);
+        applicationExpressionOfInterestConfigRepository.save(applicationExpressionOfInterestConfig);
+        application.setApplicationExpressionOfInterestConfig(applicationExpressionOfInterestConfig);
     }
 
 }

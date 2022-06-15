@@ -53,7 +53,7 @@ public class ApplicationResource {
     private FundingDecision fundingDecision;
     private Long assessmentPeriodId;
     private ZonedDateTime feedbackReleased;
-    private ApplicationPreRegistrationConfigResource applicationPreRegistrationConfigResource;
+    private ApplicationExpressionOfInterestConfigResource applicationExpressionOfInterestConfigResource;
 
     public Long getId() {
         return id;
@@ -351,16 +351,16 @@ public class ApplicationResource {
         return feedbackReleased != null && ZonedDateTime.now().isAfter(feedbackReleased);
     }
 
-    public ApplicationPreRegistrationConfigResource getApplicationPreRegistrationConfigResource() {
-        return applicationPreRegistrationConfigResource;
+    public ApplicationExpressionOfInterestConfigResource getApplicationExpressionOfInterestConfigResource() {
+        return applicationExpressionOfInterestConfigResource;
     }
 
-    public void setApplicationPreRegistrationConfigResource(ApplicationPreRegistrationConfigResource applicationPreRegistrationConfigResource) {
-        this.applicationPreRegistrationConfigResource = applicationPreRegistrationConfigResource;
+    public void setApplicationExpressionOfInterestConfigResource(ApplicationExpressionOfInterestConfigResource applicationExpressionOfInterestConfigResource) {
+        this.applicationExpressionOfInterestConfigResource = applicationExpressionOfInterestConfigResource;
     }
 
-    public boolean isEnableForEOI() {
-        return applicationPreRegistrationConfigResource != null ? applicationPreRegistrationConfigResource.isEnableForEOI() : false;
+    public boolean isEnablieForEOI() {
+        return applicationExpressionOfInterestConfigResource != null ? applicationExpressionOfInterestConfigResource.isEnabledForExpressionOfInterest() : false;
     }
 
     @Override
@@ -399,7 +399,7 @@ public class ApplicationResource {
                 .append(event, that.event)
                 .append(lastStateChangeDate, that.lastStateChangeDate)
                 .append(assessmentPeriodId, that.assessmentPeriodId)
-                .append(applicationPreRegistrationConfigResource, that.applicationPreRegistrationConfigResource)
+                .append(applicationExpressionOfInterestConfigResource, that.applicationExpressionOfInterestConfigResource)
                 .isEquals();
     }
 
@@ -433,7 +433,7 @@ public class ApplicationResource {
                 .append(event)
                 .append(lastStateChangeDate)
                 .append(assessmentPeriodId)
-                .append(applicationPreRegistrationConfigResource)
+                .append(applicationExpressionOfInterestConfigResource)
                 .toHashCode();
     }
 }

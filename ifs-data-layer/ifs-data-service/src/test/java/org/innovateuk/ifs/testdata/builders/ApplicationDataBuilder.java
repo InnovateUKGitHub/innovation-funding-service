@@ -1,9 +1,13 @@
 package org.innovateuk.ifs.testdata.builders;
 
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationPreRegistrationConfig;
+import org.innovateuk.ifs.application.repository.ApplicationPreRegistrationConfigRepository;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder;
@@ -17,6 +21,7 @@ import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -41,6 +46,9 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationDataBuilder.class);
 
+    @Autowired
+    private ApplicationPreRegistrationConfigRepository applicationPreRegistrationConfigRepository;
+
     public ApplicationDataBuilder withCompetition(CompetitionResource competition) {
         return with(data -> data.setCompetition(competition));
     }
@@ -55,10 +63,6 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
 
             created.setResubmission(resubmission);
 
-           ApplicationPreRegistrationConfigResource applicationPreRegistrationConfigResource =  created.getApplicationPreRegistrationConfigResource();
-           applicationPreRegistrationConfigResource.setEnableForEOI(enableForEOI);
-           created.setApplicationPreRegistrationConfigResource(applicationPreRegistrationConfigResource);
-
             ValidationMessages validationMessages = applicationService.saveApplicationDetails(created.getId(), created)
                     .getSuccess();
 
@@ -68,6 +72,11 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
             data.setLeadApplicant(leadApplicant);
             data.setApplication(created);
         }));
+    }
+
+    private void setEOIApplication(ApplicationResource application, boolean enabledForEOI) {
+            application.getApplicationPreRegistrationConfigResource().setEnableForEOI(enabledForEOI);
+        //    applicationPreRegistrationConfigRepository.save(applicationPreRegistrationConfig);
     }
 
     public ApplicationDataBuilder withInnovationArea(String innovationAreaName) {

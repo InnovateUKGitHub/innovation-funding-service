@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "application_pre_registration_config")
-public class ApplicationPreRegistrationConfig {
+public class ApplicationExpressionOfInterestConfig {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,6 +23,6 @@ public class ApplicationPreRegistrationConfig {
     private Application application;
 
     @Column(name = "pre_registration", nullable = false)
-    private boolean enableForEOI;
+    private boolean enabledForExpressionOfInterest;
 
 }
