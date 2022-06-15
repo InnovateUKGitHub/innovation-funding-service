@@ -214,6 +214,10 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         enterpriseBasedInNorthernIrelandQuestion.setTitle(SUBSIDYBASIS);
         enterpriseBasedInNorthernIrelandQuestion.setQuestion(QUESTION2_TITLE);
         enterpriseBasedInNorthernIrelandQuestion.setQuestionnaire(questionnaire.getId());
+        enterpriseBasedInNorthernIrelandQuestion.setMessage(
+                "The funding you are applying for is potentially \"in score\" of Article 10 " +
+                        "of the Northern Ireland Protocol. Your answers to the following questions will confirm " +
+                        "if your project is in scope of the protocol.");
         enterpriseBasedInNorthernIrelandQuestion = questionnaireQuestionService.create(enterpriseBasedInNorthernIrelandQuestion).getSuccess();
 
         /* ---------------------- QUESTION 3 --------------------------------------------------- */

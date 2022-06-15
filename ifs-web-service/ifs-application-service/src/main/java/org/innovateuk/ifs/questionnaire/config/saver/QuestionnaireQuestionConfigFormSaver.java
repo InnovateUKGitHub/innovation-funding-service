@@ -30,6 +30,7 @@ public class QuestionnaireQuestionConfigFormSaver {
         question.setTitle(form.getTitle());
         question.setQuestion(form.getQuestion());
         question.setGuidance(form.getGuidance());
+        question.setMessage(form.getMessage());
         questionnaireQuestionRestService.create(question).getSuccess();
     }
 
