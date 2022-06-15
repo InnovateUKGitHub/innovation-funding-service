@@ -26,7 +26,7 @@ import org.mapstruct.Mappings;
                 InnovationAreaMapper.class,
                 IneligibleOutcomeMapper.class,
                 AssessmentPeriodMapper.class,
-                ApplicationPreRegistrationConfigMapper.class
+                ApplicationExpressionOfInterestConfigMapper.class
         }
 )
 public abstract class ApplicationMapper extends BaseMapper<Application, ApplicationResource, Long> {
@@ -49,7 +49,7 @@ public abstract class ApplicationMapper extends BaseMapper<Application, Applicat
             @Mapping(source = "applicationProcess.lastModified", target = "lastStateChangeDate"),
             @Mapping(source = "assessmentPeriod.id", target = "assessmentPeriodId"),
             @Mapping(target = "stateAidAgreed", ignore = true),
-            @Mapping(source = "applicationPreRegistrationConfig", target = "applicationPreRegistrationConfigResource")
+            @Mapping(source = "applicationExpressionOfInterestConfig", target = "applicationExpressionOfInterestConfigResource")
     })
     @Override
     public abstract ApplicationResource mapToResource(Application domain);
@@ -67,7 +67,7 @@ public abstract class ApplicationMapper extends BaseMapper<Application, Applicat
             @Mapping(target = "projectToBeCreated", ignore = true),
             @Mapping(target = "applicantProcessRoles", ignore = true),
             @Mapping(target = "applicationExternalConfig", ignore = true),
-            @Mapping(source = "applicationPreRegistrationConfigResource", target = "applicationPreRegistrationConfig")
+            @Mapping(source = "applicationExpressionOfInterestConfigResource", target = "applicationExpressionOfInterestConfig")
     })
     @Override
     public abstract Application mapToDomain(ApplicationResource resource);

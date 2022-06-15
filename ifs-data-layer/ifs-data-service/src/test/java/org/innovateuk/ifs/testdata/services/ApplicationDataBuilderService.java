@@ -4,13 +4,9 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.ApplicationPreRegistrationConfig;
-import org.innovateuk.ifs.application.repository.ApplicationPreRegistrationConfigRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
@@ -505,7 +501,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         Organisation org = organisationRepository.findOneByName(usersOrganisations.get(line.leadApplicant));
 
         ApplicationDataBuilder baseBuilder = applicationDataBuilder.withCompetition(competition.getCompetition()).
-                withBasicDetails(leadApplicant, line.title, line.researchCategory, line.resubmission, org.getId(), line.enableForEOI).
+                withBasicDetails(leadApplicant, line.title, line.researchCategory, line.resubmission, org.getId(), line.enabledForExpressionOfInterest).
                 withInnovationArea(line.innovationArea).
                 withStartDate(line.startDate).
                 withDurationInMonths(line.durationInMonths);

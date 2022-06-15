@@ -359,7 +359,7 @@ public class ApplicationResource {
         this.applicationExpressionOfInterestConfigResource = applicationExpressionOfInterestConfigResource;
     }
 
-    public boolean isEnablieForEOI() {
+    public boolean isEnabledForExpressionOfInterest() {
         return applicationExpressionOfInterestConfigResource != null ? applicationExpressionOfInterestConfigResource.isEnabledForExpressionOfInterest() : false;
     }
 
