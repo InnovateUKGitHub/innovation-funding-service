@@ -73,7 +73,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
                     "will be merely \"hypothetical, presumed, or without a genuine and direct link to Northern Ireland\", " +
                     "then answer No to this question.";
     private static final String QUESTION4_TITLE =
-            "Does your enterprise make goods or provide services to third parties with a view to:" + "\n" +
+            "Does your enterprise make goods or provide services to third parties with a view to: " + "\n" +
                     "(a) enabling them to manufacture goods that will be traded between Northern Ireland and the EU" + "\n" +
                     "or" + "\n" +
                     "(b) effect the single electricity market of Ireland";
@@ -216,7 +216,8 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         enterpriseBasedInNorthernIrelandQuestion.setQuestionnaire(questionnaire.getId());
         enterpriseBasedInNorthernIrelandQuestion.setMessage(
                 "The funding you are applying for is potentially \"in score\" of Article 10 " +
-                        "of the Northern Ireland Protocol. Your answers to the following questions will confirm " +
+                        "of the Northern Ireland Protocol. " + "\n" +
+                        "Your answers to the following questions will confirm " +
                         "if your project is in scope of the protocol.");
         enterpriseBasedInNorthernIrelandQuestion = questionnaireQuestionService.create(enterpriseBasedInNorthernIrelandQuestion).getSuccess();
 
