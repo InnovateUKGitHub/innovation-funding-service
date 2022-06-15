@@ -192,10 +192,9 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         QuestionnaireQuestionResource fundingDirectlyOrIndirectlyQuestion = new QuestionnaireQuestionResource();
         fundingDirectlyOrIndirectlyQuestion.setTitle(SUBSIDYBASIS);
         fundingDirectlyOrIndirectlyQuestion.setQuestion(
-                "1 - " +
                 "Will the Innovate UK funding directly or indirectly have an effect upon either:" + "\n" +
-                        "(a) goods that will be traded between Northern Ireland and the EU" + "\n" +
-                        "(b) the single electricity market (of Ireland)?");
+                        "goods that will be traded between Northern Ireland and the EU" + "\n" +
+                        "the single electricity market (of Ireland)?");
         fundingDirectlyOrIndirectlyQuestion.setQuestionnaire(questionnaire.getId());
         fundingDirectlyOrIndirectlyQuestion = questionnaireQuestionService.create(fundingDirectlyOrIndirectlyQuestion).getSuccess();
 
@@ -204,7 +203,6 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         QuestionnaireQuestionResource intendingToTradeAnyGoodsQuestion = new QuestionnaireQuestionResource();
         intendingToTradeAnyGoodsQuestion.setTitle(SUBSIDYBASIS);
         intendingToTradeAnyGoodsQuestion.setQuestion(
-                "1.5 - " +
                 "Are you intending to trade any goods arising from the activities " +
                 "funded by Innovate UK with the European Union through Northern Ireland?");
         intendingToTradeAnyGoodsQuestion.setQuestionnaire(questionnaire.getId());
@@ -214,7 +212,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
 
         QuestionnaireQuestionResource enterpriseBasedInNorthernIrelandQuestion = new QuestionnaireQuestionResource();
         enterpriseBasedInNorthernIrelandQuestion.setTitle(SUBSIDYBASIS);
-        enterpriseBasedInNorthernIrelandQuestion.setQuestion("2 - " + QUESTION2_TITLE);
+        enterpriseBasedInNorthernIrelandQuestion.setQuestion(QUESTION2_TITLE);
         enterpriseBasedInNorthernIrelandQuestion.setQuestionnaire(questionnaire.getId());
         enterpriseBasedInNorthernIrelandQuestion = questionnaireQuestionService.create(enterpriseBasedInNorthernIrelandQuestion).getSuccess();
 
@@ -222,14 +220,14 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
 
         QuestionnaireQuestionResource enterpriseTradeDirectlyQuestion1 = new QuestionnaireQuestionResource();
         enterpriseTradeDirectlyQuestion1.setTitle(SUBSIDYBASIS);
-        enterpriseTradeDirectlyQuestion1.setQuestion("3 J1 - " + QUESTION3_TITLE);
+        enterpriseTradeDirectlyQuestion1.setQuestion(QUESTION3_TITLE);
         enterpriseTradeDirectlyQuestion1.setQuestionnaire(questionnaire.getId());
         enterpriseTradeDirectlyQuestion1.setGuidance(QUESTION3_GUIDANCE);
         enterpriseTradeDirectlyQuestion1 = questionnaireQuestionService.create(enterpriseTradeDirectlyQuestion1).getSuccess();
 
         QuestionnaireQuestionResource enterpriseTradeDirectlyQuestion2 = new QuestionnaireQuestionResource();
         enterpriseTradeDirectlyQuestion2.setTitle(SUBSIDYBASIS);
-        enterpriseTradeDirectlyQuestion2.setQuestion("3 J3 - " + QUESTION3_TITLE);
+        enterpriseTradeDirectlyQuestion2.setQuestion(QUESTION3_TITLE);
         enterpriseTradeDirectlyQuestion2.setQuestionnaire(questionnaire.getId());
         enterpriseTradeDirectlyQuestion2.setGuidance(QUESTION3_GUIDANCE);
         enterpriseTradeDirectlyQuestion2 = questionnaireQuestionService.create(enterpriseTradeDirectlyQuestion2).getSuccess();
@@ -238,24 +236,21 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
 
         QuestionnaireQuestionResource enterpriseMakeGoodsQuestion1 = new QuestionnaireQuestionResource();
         enterpriseMakeGoodsQuestion1.setTitle(SUBSIDYBASIS);
-        enterpriseMakeGoodsQuestion1.setQuestion(
-                "4 J1 - " + QUESTION4_TITLE);
+        enterpriseMakeGoodsQuestion1.setQuestion(QUESTION4_TITLE);
         enterpriseMakeGoodsQuestion1.setQuestionnaire(questionnaire.getId());
         enterpriseMakeGoodsQuestion1.setGuidance(QUESTION4_GUIDANCE);
         enterpriseMakeGoodsQuestion1 = questionnaireQuestionService.create(enterpriseMakeGoodsQuestion1).getSuccess();
 
         QuestionnaireQuestionResource enterpriseMakeGoodsQuestion2 = new QuestionnaireQuestionResource();
         enterpriseMakeGoodsQuestion2.setTitle(SUBSIDYBASIS);
-        enterpriseMakeGoodsQuestion2.setQuestion(
-                "4 J2 - " + QUESTION4_TITLE);
+        enterpriseMakeGoodsQuestion2.setQuestion(QUESTION4_TITLE);
         enterpriseMakeGoodsQuestion2.setQuestionnaire(questionnaire.getId());
         enterpriseMakeGoodsQuestion2.setGuidance(QUESTION4_GUIDANCE);
         enterpriseMakeGoodsQuestion2 = questionnaireQuestionService.create(enterpriseMakeGoodsQuestion2).getSuccess();
 
         QuestionnaireQuestionResource enterpriseMakeGoodsQuestion3 = new QuestionnaireQuestionResource();
         enterpriseMakeGoodsQuestion3.setTitle(SUBSIDYBASIS);
-        enterpriseMakeGoodsQuestion3.setQuestion(
-                "4 J3 - " + QUESTION4_TITLE);
+        enterpriseMakeGoodsQuestion3.setQuestion(QUESTION4_TITLE);
         enterpriseMakeGoodsQuestion3.setQuestionnaire(questionnaire.getId());
         enterpriseMakeGoodsQuestion3.setGuidance(QUESTION4_GUIDANCE);
         enterpriseMakeGoodsQuestion3 = questionnaireQuestionService.create(enterpriseMakeGoodsQuestion3).getSuccess();
@@ -264,22 +259,19 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
 
         QuestionnaireQuestionResource enterpriseEngagedQuestion1 = new QuestionnaireQuestionResource();
         enterpriseEngagedQuestion1.setTitle(SUBSIDYBASIS);
-        enterpriseEngagedQuestion1.setQuestion(
-                "5 J1 - " + QUESTION5_TITLE);
+        enterpriseEngagedQuestion1.setQuestion(QUESTION5_TITLE);
         enterpriseEngagedQuestion1.setQuestionnaire(questionnaire.getId());
         enterpriseEngagedQuestion1 = questionnaireQuestionService.create(enterpriseEngagedQuestion1).getSuccess();
 
         QuestionnaireQuestionResource enterpriseEngagedQuestion2 = new QuestionnaireQuestionResource();
         enterpriseEngagedQuestion2.setTitle(SUBSIDYBASIS);
-        enterpriseEngagedQuestion2.setQuestion(
-                "5 J2 - " + QUESTION5_TITLE);
+        enterpriseEngagedQuestion2.setQuestion(QUESTION5_TITLE);
         enterpriseEngagedQuestion2.setQuestionnaire(questionnaire.getId());
         enterpriseEngagedQuestion2 = questionnaireQuestionService.create(enterpriseEngagedQuestion2).getSuccess();
 
         QuestionnaireQuestionResource enterpriseEngagedQuestion3 = new QuestionnaireQuestionResource();
         enterpriseEngagedQuestion3.setTitle(SUBSIDYBASIS);
-        enterpriseEngagedQuestion3.setQuestion(
-                "5 J3 - " + QUESTION5_TITLE);
+        enterpriseEngagedQuestion3.setQuestion(QUESTION5_TITLE);
         enterpriseEngagedQuestion3.setQuestionnaire(questionnaire.getId());
         enterpriseEngagedQuestion3 = questionnaireQuestionService.create(enterpriseEngagedQuestion3).getSuccess();
 
@@ -287,18 +279,14 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
 
         QuestionnaireQuestionResource confirmInnovateFundingQuestion1 = new QuestionnaireQuestionResource();
         confirmInnovateFundingQuestion1.setTitle(SUBSIDYBASIS);
-        confirmInnovateFundingQuestion1.setQuestion(
-                "6 J1 - " + QUESTION6_TITLE);
+        confirmInnovateFundingQuestion1.setQuestion(QUESTION6_TITLE);
         confirmInnovateFundingQuestion1.setQuestionnaire(questionnaire.getId());
         confirmInnovateFundingQuestion1.setGuidance(QUESTION6_GUIDANCE);
         confirmInnovateFundingQuestion1 = questionnaireQuestionService.create(confirmInnovateFundingQuestion1).getSuccess();
 
-        // No question 6 journey 3
-
         QuestionnaireQuestionResource confirmInnovateFundingQuestion2 = new QuestionnaireQuestionResource();
         confirmInnovateFundingQuestion2.setTitle(SUBSIDYBASIS);
-        confirmInnovateFundingQuestion2.setQuestion(
-                "6 J2 - " + QUESTION6_TITLE);
+        confirmInnovateFundingQuestion2.setQuestion(QUESTION6_TITLE);
         confirmInnovateFundingQuestion2.setQuestionnaire(questionnaire.getId());
         confirmInnovateFundingQuestion2.setGuidance(QUESTION6_GUIDANCE);
         confirmInnovateFundingQuestion2 = questionnaireQuestionService.create(confirmInnovateFundingQuestion2).getSuccess();
