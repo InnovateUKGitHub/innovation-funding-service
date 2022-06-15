@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.domain.ApplicationExpressionOfInterestConf
 import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
+import org.innovateuk.ifs.application.repository.ApplicationExpressionOfInterestConfigRepository;
 import org.innovateuk.ifs.application.repository.ApplicationOrganisationAddressRepository;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.*;
@@ -141,6 +142,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
     private ArgumentCaptor<Application> applicationArgumentCaptor;
 
+
+    @Mock
+    private ApplicationExpressionOfInterestConfigRepository applicationExpressionOfInterestConfigRepository;
+
     @Before
     public void setUp() throws Exception {
         Question question = QuestionBuilder.newQuestion().build();
@@ -243,7 +248,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void saveApplicationDetails_enableForEOI() {
+    public void saveApplicationDetails_enabledForExpressionOfInterest() {
 
         Long applicationId = 1L;
         applicationArgumentCaptor = ArgumentCaptor.forClass(Application.class);
@@ -261,6 +266,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         ApplicationResource applicationResource = newApplicationResource()
                 .build();
 
+        when(applicationExpressionOfInterestConfigRepository.findOneByApplicationId(applicationId)).thenReturn(of(applicationExpressionOfInterestConfig));
         when(applicationRepository.findById(applicationId)).thenReturn(of(application));
         when(applicationValidationUtil.isApplicationDetailsValid(any(Application.class))).thenReturn(Collections.emptyList());
 

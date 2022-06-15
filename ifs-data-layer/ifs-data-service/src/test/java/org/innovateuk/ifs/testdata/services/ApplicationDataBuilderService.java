@@ -81,8 +81,6 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
     private QuestionnaireResponseDataBuilder questionnaireResponseDataBuilder;
     private SubsidyBasisDataBuilder subsidyBasisDataBuilder;
 
-
-
     @PostConstruct
     public void readCsvs() {
 
@@ -527,7 +525,6 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         }
         return baseBuilder.build();
     }
-
 
     private boolean isUniqueOrFirstDuplicateOrganisation(
             Triple<String, String, OrganisationTypeEnum> currentOrganisation,
