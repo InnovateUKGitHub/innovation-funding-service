@@ -71,7 +71,7 @@ public class ApplicationDashboardServiceImplTest {
             .withStartDate(ZonedDateTime.now().minusDays(2))
             .withEndDate(ZonedDateTime.now().plusDays(1))
             .withAlwaysOpen(true)
-            .witheEnabledForPreRegistration(true)
+            .withEnabledForExpressionOfInterest(true)
             .build();
     private static final long USER_ID = 1L;
     private final User user = newUser().withId(USER_ID).build();
@@ -130,7 +130,7 @@ public class ApplicationDashboardServiceImplTest {
         assertTrue(dashboardResource.getInProgress().stream()
                 .filter(DashboardInProgressRowResource::isAlwaysOpen)
                 .findFirst().get()
-                .isEoi());
+                .isExpressionOfInterest());
     }
 
     private Application inProgressAlwaysOpenCompApplication() {

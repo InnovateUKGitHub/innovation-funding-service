@@ -185,7 +185,7 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
                 .withStartDate(application.getStartDate())
                 .withShowReopenLink(showReopenLinkVisible(application, userId))
                 .withAlwaysOpen(application.getCompetition().isAlwaysOpen())
-                .withEoi(application.isEnableForEOI())
+                .withExpressionOfInterest(application.isEnableForEOI())
                 .build();
     }
 

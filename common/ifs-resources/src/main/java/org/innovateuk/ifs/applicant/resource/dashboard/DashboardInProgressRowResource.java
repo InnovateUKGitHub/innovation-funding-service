@@ -25,7 +25,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
     private boolean showReopenLink;
     private boolean hasAssessmentStage;
     private boolean alwaysOpen;
-    private boolean eoi;
+    private boolean expressionOfInterest;
 
     // Private constructor to enforce immutability
     private DashboardInProgressRowResource() {
@@ -76,8 +76,8 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
         return alwaysOpen;
     }
 
-    public boolean isEoi() {
-        return eoi;
+    public boolean isExpressionOfInterest() {
+        return expressionOfInterest;
     }
 
     @Override
@@ -101,7 +101,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
                 .append(hasAssessmentStage, that.hasAssessmentStage)
                 .append(showReopenLink, that.showReopenLink)
                 .append(alwaysOpen, that.alwaysOpen)
-                .append(eoi, that.eoi)
+                .append(expressionOfInterest, that.expressionOfInterest)
                 .isEquals();
     }
 
@@ -123,7 +123,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
                 .append(hasAssessmentStage)
                 .append(showReopenLink)
                 .append(alwaysOpen)
-                .append(eoi)
+                .append(expressionOfInterest)
                 .toHashCode();
     }
 
@@ -144,7 +144,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
         private boolean hasAssessmentStage;
         private boolean showReopenLink;
         private boolean alwaysOpen;
-        private boolean eoi;
+        private boolean expressionOfInterest;
 
         public DashboardApplicationInProgressResourceBuilder withTitle(String title) {
             this.title = title;
@@ -216,8 +216,8 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
             return this;
         }
 
-        public DashboardApplicationInProgressResourceBuilder withEoi(boolean eoi) {
-            this.eoi = eoi;
+        public DashboardApplicationInProgressResourceBuilder withExpressionOfInterest(boolean expressionOfInterest) {
+            this.expressionOfInterest = expressionOfInterest;
             return this;
         }
 
@@ -237,7 +237,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
             result.showReopenLink = this.showReopenLink;
             result.alwaysOpen = this.alwaysOpen;
             result.hasAssessmentStage = this.hasAssessmentStage;
-            result.eoi = this.eoi;
+            result.expressionOfInterest = this.expressionOfInterest;
 
             return result;
         }

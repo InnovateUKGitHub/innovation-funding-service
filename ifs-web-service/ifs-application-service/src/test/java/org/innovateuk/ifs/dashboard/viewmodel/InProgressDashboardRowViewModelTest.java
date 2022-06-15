@@ -84,13 +84,13 @@ public class InProgressDashboardRowViewModelTest {
     }
 
     @Test
-    public void constructEoi(){
+    public void constructExpressionOfInterest(){
         ZonedDateTime end = ZonedDateTime.now().plusHours(2).minusMinutes(1);
         InProgressDashboardRowViewModel viewModel = new InProgressDashboardRowViewModel(null, 1L,
                 "Always open competition", true, OPENED, true,
                 end, 0L, 50 , false, YESTERDAY, true, true, true, true);
 
         assertTrue(viewModel.isAlwaysOpen());
-        assertTrue(viewModel.isEoi());
+        assertTrue(viewModel.isExpressionOfInterest());
     }
 }

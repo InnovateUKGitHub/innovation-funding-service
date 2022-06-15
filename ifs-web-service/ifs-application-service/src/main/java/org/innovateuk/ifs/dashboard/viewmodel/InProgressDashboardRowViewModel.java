@@ -31,7 +31,7 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
     private final boolean showReopenLink;
     private final boolean hasAssessmentStage;
     private final boolean alwaysOpen;
-    private final boolean eoi;
+    private final boolean expressionOfInterest;
 
     public InProgressDashboardRowViewModel(String title,
                                            long applicationId,
@@ -47,7 +47,7 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
                                            boolean showReopenLink,
                                            boolean hasAssessmentStage,
                                            boolean alwaysOpen,
-                                           boolean eoi) {
+                                           boolean expressionOfInterest) {
         super(title, applicationId, competitionTitle);
         this.assignedToMe = assignedToMe;
         this.applicationState = applicationState;
@@ -60,7 +60,7 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
         this.showReopenLink = showReopenLink;
         this.hasAssessmentStage = hasAssessmentStage;
         this.alwaysOpen = alwaysOpen;
-        this.eoi = eoi;
+        this.expressionOfInterest = expressionOfInterest;
     }
 
     public InProgressDashboardRowViewModel (DashboardInProgressRowResource resource){
@@ -76,7 +76,7 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
         this.showReopenLink = resource.isShowReopenLink();
         this.hasAssessmentStage = resource.isHasAssessmentStage();
         this.alwaysOpen = resource.isAlwaysOpen();
-        this.eoi = resource.isEoi();
+        this.expressionOfInterest = resource.isExpressionOfInterest();
     }
 
     public boolean isAssignedToMe() {
@@ -119,8 +119,8 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
         return alwaysOpen;
     }
 
-    public boolean isEoi() {
-        return eoi;
+    public boolean isExpressionOfInterest() {
+        return expressionOfInterest;
     }
 
     /* view logic */
