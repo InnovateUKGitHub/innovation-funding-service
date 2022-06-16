@@ -1,16 +1,15 @@
 package org.innovateuk.ifs.horizon.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
-import static java.util.stream.Collectors.toList;
-
-public enum HorizonWorkProgramme {
-
+@Getter
+@Setter
+public class HorizonWorkProgrammeResource implements Comparable<HorizonWorkProgrammeResource> {
+/*
     CL2(1, "Culture, Creativity and Inclusive Society (CL2)"),
     CL3(2, "Civil Security for Society (CL3)"),
     CL4(3, "Digital, Industry and Space (CL4 & EUSPA)"),
@@ -176,22 +175,30 @@ public enum HorizonWorkProgramme {
     HORIZON_KDT_JU_2021_3_CSA(150, "HORIZON-KDT-JU-2021-3-CSA", JOINT_UNDERTAKING),
 
     HORIZON_EUROPEAN_METROLOGY_PARTNERSHIP_2021_CALL(151, "HORIZON-European Metrology Partnership 2021 Call", EUROPEAN_METROLOGY_PARTNERSHIP);
+*/
+    private long id;
+    private String name;
+    private HorizonWorkProgrammeResource parentWorkProgramme;
+    private boolean enabled;
 
-    private final long id;
-    private final String display;
-    private HorizonWorkProgramme workProgramme;
+    // private String rootProgrammeName;
 
-    HorizonWorkProgramme(long  id, String display) {
+    public HorizonWorkProgrammeResource() {}
+
+    public HorizonWorkProgrammeResource(long  id, String name, boolean enabled) {
         this.id = id;
-        this.display = display;
+        this.name = name;
+        this.enabled = enabled;
     }
 
-    HorizonWorkProgramme(long id, String display, HorizonWorkProgramme workProgramme) {
+    public HorizonWorkProgrammeResource(long id, String name, HorizonWorkProgrammeResource parentWorkProgramme, boolean enabled) {
         this.id = id;
-        this.display = display;
-        this.workProgramme = workProgramme;
+        this.name = name;
+        this.parentWorkProgramme = parentWorkProgramme;
+        this.enabled = enabled;
     }
 
+/*
     public static final Set<HorizonWorkProgramme> workProgrammes =
             EnumSet.of(CL2, CL3, CL4, CL5, CL6, EIC, EIE, HLTH, INFRA, MISS, WIDERA, EURATOM, JOINT_UNDERTAKING, EUROPEAN_METROLOGY_PARTNERSHIP);
 
@@ -200,21 +207,32 @@ public enum HorizonWorkProgramme {
                 .filter(programme -> programme.workProgramme == workProgramme)
                 .collect(toList());
     }
+*/
 
-    public long getId() {
-        return id;
-    }
-
-    public String getDisplay() {
-        return display;
-    }
-
-    public HorizonWorkProgramme getWorkProgramme() {
-        return workProgramme;
+    /*
+    public void setRootProgrammeName(String rootProgrammeName) {
+        this.rootProgrammeName = rootProgrammeName;
     }
 
     @JsonIgnore
-    public String getProgrammeDisplayName() {
-       return this.getWorkProgramme().getDisplay();
+    public String getRootProgrammeName() {
+        return rootProgrammeName;
     }
+    */
+
+    @JsonIgnore
+    public String getRootProgrammeName() {
+       return Optional.ofNullable(this.getParentWorkProgramme()).map(HorizonWorkProgrammeResource::getName).orElse(null);
+    }
+
+    @Override
+    public int compareTo(HorizonWorkProgrammeResource that) {
+        return that == null ? -1 : Long.compare(this.getId(), that.getId());
+    }
+
+    @Override
+    public boolean equals(Object that) {
+        return that instanceof HorizonWorkProgrammeResource && ((HorizonWorkProgrammeResource) that).getId() == this.getId();
+    }
+
 }

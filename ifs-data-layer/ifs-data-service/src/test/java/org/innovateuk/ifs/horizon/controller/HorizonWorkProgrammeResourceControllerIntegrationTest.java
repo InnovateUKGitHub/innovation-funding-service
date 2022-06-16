@@ -3,10 +3,10 @@ package org.innovateuk.ifs.horizon.controller;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.horizon.mapper.HorizonWorkProgrammeMapper;
-import org.innovateuk.ifs.horizon.repository.HorizonWorkProgrammeRepository;
+import org.innovateuk.ifs.horizon.mapper.ApplicationHorizonWorkProgrammeMapper;
+import org.innovateuk.ifs.horizon.repository.ApplicationHorizonWorkProgrammeRepository;
 import org.innovateuk.ifs.horizon.resource.ApplicationHorizonWorkProgrammeResource;
-import org.innovateuk.ifs.horizon.resource.HorizonWorkProgramme;
+import org.innovateuk.ifs.horizon.resource.HorizonWorkProgrammeResource;
 import org.innovateuk.ifs.horizon.transactional.HorizonWorkProgrammeService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class HorizonWorkProgrammeControllerIntegrationTest extends BaseControllerIntegrationTest<HorizonWorkProgrammeController> {
+public class HorizonWorkProgrammeResourceControllerIntegrationTest extends BaseControllerIntegrationTest<HorizonWorkProgrammeController> {
 
     @Autowired
     private CompetitionRepository competitionRepository;
@@ -26,10 +26,10 @@ public class HorizonWorkProgrammeControllerIntegrationTest extends BaseControlle
     private HorizonWorkProgrammeService horizonWorkProgrammeService;
 
     @Autowired
-    private HorizonWorkProgrammeRepository horizonWorkProgrammeRepository;
+    private ApplicationHorizonWorkProgrammeRepository applicationHorizonWorkProgrammeRepository;
 
     @Autowired
-    private HorizonWorkProgrammeMapper horizonWorkProgrammeMapper;
+    private ApplicationHorizonWorkProgrammeMapper applicationHorizonWorkProgrammeMapper;
 
     @Autowired
     @Override
@@ -44,9 +44,11 @@ public class HorizonWorkProgrammeControllerIntegrationTest extends BaseControlle
 
         long applicationId = 1L;
 
-        List<HorizonWorkProgramme> programmes = new ArrayList<>();
-        programmes.add(HorizonWorkProgramme.CL2);
-        programmes.add(HorizonWorkProgramme.HORIZON_CL2_2021_DEMOCRACY_01);
+        List<HorizonWorkProgrammeResource> programmes = new ArrayList<>();
+        HorizonWorkProgrammeResource r1 = new HorizonWorkProgrammeResource(1, "CL2", true);
+        HorizonWorkProgrammeResource r2 = new HorizonWorkProgrammeResource(15, "HORIZON-CL2-2021-DEMOCRACY-01", r1,true);
+        programmes.add(r1);
+        programmes.add(r2);
 
         ServiceResult<Void> result = horizonWorkProgrammeService.updateWorkProgrammesForApplication(programmes, applicationId);
 
@@ -60,9 +62,11 @@ public class HorizonWorkProgrammeControllerIntegrationTest extends BaseControlle
 
         long applicationId = 1L;
 
-        List<HorizonWorkProgramme> programmes = new ArrayList<>();
-        programmes.add(HorizonWorkProgramme.CL2);
-        programmes.add(HorizonWorkProgramme.HORIZON_CL2_2021_DEMOCRACY_01);
+        List<HorizonWorkProgrammeResource> programmes = new ArrayList<>();
+        HorizonWorkProgrammeResource r1 = new HorizonWorkProgrammeResource(1, "CL2", true);
+        HorizonWorkProgrammeResource r2 = new HorizonWorkProgrammeResource(15, "HORIZON-CL2-2021-DEMOCRACY-01", r1,true);
+        programmes.add(r1);
+        programmes.add(r2);
 
         horizonWorkProgrammeService.updateWorkProgrammesForApplication(programmes, applicationId);
 

@@ -2,28 +2,31 @@ package org.innovateuk.ifs.horizon.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.horizon.mapper.HorizonWorkProgrammeMapper;
+import org.innovateuk.ifs.horizon.mapper.ApplicationHorizonWorkProgrammeMapper;
+import org.innovateuk.ifs.horizon.repository.ApplicationHorizonWorkProgrammeRepository;
 import org.innovateuk.ifs.horizon.repository.HorizonWorkProgrammeRepository;
 import org.innovateuk.ifs.horizon.resource.ApplicationHorizonWorkProgrammeResource;
-import org.innovateuk.ifs.horizon.resource.HorizonWorkProgramme;
+import org.innovateuk.ifs.horizon.resource.HorizonWorkProgrammeResource;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.innovateuk.ifs.horizon.resource.HorizonWorkProgramme.workProgrammes;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.verify;
 
-public class HorizonWorkProgrammeServiceImplTest extends BaseServiceUnitTest<HorizonWorkProgrammeService> {
+public class HorizonWorkProgrammeResourceServiceImplTest extends BaseServiceUnitTest<HorizonWorkProgrammeService> {
 
     @Mock
-    private HorizonWorkProgrammeRepository repository;
+    private ApplicationHorizonWorkProgrammeRepository applicationHorizonWorkProgrammeRepository;
 
     @Mock
-    private HorizonWorkProgrammeMapper horizonWorkProgrammeMapper;
+    private HorizonWorkProgrammeRepository horizonWorkProgrammeRepository;
+
+    @Mock
+    private ApplicationHorizonWorkProgrammeMapper applicationHorizonWorkProgrammeMapper;
 
     @Override
     protected HorizonWorkProgrammeService supplyServiceUnderTest() {
@@ -34,13 +37,13 @@ public class HorizonWorkProgrammeServiceImplTest extends BaseServiceUnitTest<Hor
     public void updateLocationsForApplication() {
         long applicationId = 1L;
 
-        List<HorizonWorkProgramme> programmes = new ArrayList<>();
-        programmes.addAll(workProgrammes);
+        List<HorizonWorkProgrammeResource> programmes = new ArrayList<>();
+        programmes.addAll(service.findRootWorkProgrammes().getSuccess());
 
         service.updateWorkProgrammesForApplication(programmes, applicationId);
 
-        verify(repository).deleteAllByApplicationId(applicationId);
-        verify(repository).saveAll(anyList());
+        verify(applicationHorizonWorkProgrammeRepository).deleteAllByApplicationId(applicationId);
+        verify(applicationHorizonWorkProgrammeRepository).saveAll(anyList());
     }
 
     @Test
@@ -51,7 +54,7 @@ public class HorizonWorkProgrammeServiceImplTest extends BaseServiceUnitTest<Hor
         ServiceResult<List<ApplicationHorizonWorkProgrammeResource>> result = service.findSelectedForApplication(applicationId);
 
         assertTrue(result.isSuccess());
-        verify(repository).findByApplicationId(applicationId);
+        verify(applicationHorizonWorkProgrammeRepository).findByApplicationId(applicationId);
     }
 
 }

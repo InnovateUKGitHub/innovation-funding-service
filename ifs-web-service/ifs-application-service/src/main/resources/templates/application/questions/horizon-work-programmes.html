@@ -76,16 +76,18 @@
                                     </th:block>
                                     <div class="govuk-radios">
                                         <div class="govuk-radios__item" th:each="workProgramme : *{allOptions}">
-                                            <input th:field="*{selected}"
-                                                   th:id="|work-programme-radio-${workProgramme.id}|"
-                                                   th:value="${workProgramme}"
-                                                   type="radio"
-                                                   class="govuk-radios__input"
-                                                   required="required"
-                                                   th:attr="data-required-errormessage=#{validation.horizon.programme.required}" />
-                                            <label th:for="|work-programme-radio-${workProgramme.id}|"
-                                                    th:text="${workProgramme.display}"
-                                                   class="govuk-label govuk-radios__label">Label</label>
+                                            <th:block th:if="${workProgramme.enabled}">
+                                                <input th:field="*{selected}"
+                                                       th:id="|work-programme-radio-${workProgramme.id}|"
+                                                       th:value="${workProgramme.id}"
+                                                       type="radio"
+                                                       class="govuk-radios__input"
+                                                       required="required"
+                                                       th:attr="data-required-errormessage=#{validation.horizon.programme.required}" />
+                                                <label th:for="|work-programme-radio-${workProgramme.id}|"
+                                                        th:text="${workProgramme.name}"
+                                                       class="govuk-label govuk-radios__label">Label</label>
+                                            </th:block>
                                         </div>
                                     </div>
                                 </fieldset>
@@ -101,11 +103,11 @@
                     <div class="govuk-!-margin-bottom-3">
                         <td class="cell-align-top govuk-form-group">
                             <th:block th:each="programme : ${entry.value}">
-                                <th:block th:unless="${programme.getWorkProgramme() == null}">
+                                <th:block th:unless="${programme.parentWorkProgramme == null}">
                                     <p><strong>Select the Horizon Europe Work programme Part you applied to, e.g. CL2.</strong></p>
-                                    <p class="govuk-body govuk-!-margin-bottom-0" th:text="${programme.getProgrammeDisplayName()}"></p>
+                                    <p class="govuk-body govuk-!-margin-bottom-0" th:text="${programme.rootProgrammeName}"></p>
                                     <p><strong>Select the call you applied to.</strong></p>
-                                    <p class="govuk-body govuk-!-margin-bottom-0" th:text="${programme.getDisplay()}"></p>
+                                    <p class="govuk-body govuk-!-margin-bottom-0" th:text="${programme.name}"></p>
                                 </th:block>
                             </th:block>
                         </td>

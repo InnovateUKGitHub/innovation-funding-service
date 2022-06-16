@@ -2,13 +2,19 @@ package org.innovateuk.ifs.horizon.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.horizon.resource.ApplicationHorizonWorkProgrammeResource;
-import org.innovateuk.ifs.horizon.resource.HorizonWorkProgramme;
+import org.innovateuk.ifs.horizon.resource.HorizonWorkProgrammeResource;
 
 import java.util.List;
 
 public interface HorizonWorkProgrammeRestService {
 
-    RestResult<Void> updateWorkProgrammeForApplication(List<HorizonWorkProgramme> selectedProgrammes, long applicationId);
+    RestResult<HorizonWorkProgrammeResource> findWorkProgramme(Long workProgrammeId);
 
-    RestResult<List<ApplicationHorizonWorkProgrammeResource>> findSelected(long applicationId);
+    RestResult<List<HorizonWorkProgrammeResource>> findRootWorkProgrammes();
+
+    RestResult<List<HorizonWorkProgrammeResource>> findChildrenWorkProgrammes(Long workProgrammeId);
+
+    RestResult<Void> updateWorkProgrammeForApplication(List<HorizonWorkProgrammeResource> selectedProgrammes, Long applicationId);
+
+    RestResult<List<ApplicationHorizonWorkProgrammeResource>> findSelected(Long applicationId);
 }

@@ -14,7 +14,6 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.horizon.resource.ApplicationHorizonWorkProgrammeResource;
-import org.innovateuk.ifs.horizon.resource.HorizonWorkProgramme;
 import org.innovateuk.ifs.horizon.service.HorizonWorkProgrammeRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
