@@ -8,6 +8,9 @@ Documentation     INFUND-1481 As an assessor I need to review and accept the Inn
 ...               INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so that I can ensure that it is complete.
 ...
 ...               INFUND-7061 As an assessor I can view the travel and subsistence rates so that I know how much I can claim
+...
+...               IFS-12130 As an assessor I can view the Download Assessor agreement link
+...
 Suite Setup       The user logs-in in new browser  &{existing_assessor1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        Assessor
@@ -33,12 +36,22 @@ Back button takes you to the previous page
     Given the user clicks the button/link                     link = Back to assessments
     Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
 
-Assessor agreement
+the user can view download an assessor agreement link
+    [Documentation]    IFS-12130
+    When the user clicks the button/link     jQuery = a:contains("your assessor agreement")
+    Then the user should see the element     link = Download assessor agreement
+
+the user can download an assessor agreement
+    [Documentation]    IFS-12130
+    When the user navigates to the page   ${server}/assessment/profile/agreement/print?noprint
+    Then the user should see the element  jQuery = h2:contains("1. Appointment")
+
+Assessor agreement link should not display in the banner
     [Documentation]    INFUND-1481
-    Given the user opens assessor agreement in new window
+    Given the user navigates to the page                      ${server}/assessment/profile/agreement
     When the user clicks the button/link                      jQuery = button:contains("Save and return to assessments")
     Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
-    And the user should not see the element                   jQuery = .message-alert a:contains('your assessor agreement')    #his checks the alert message on the top od the page
+    And the user should not see the element                   jQuery = .message-alert a:contains('your assessor agreement')    #his checks the alert message on the top of the page
 
 Agreement Confirmation
     [Documentation]    INFUND-5628
@@ -61,7 +74,3 @@ the user should see travel and subsistence rates
     the user should see the element    jQuery = h2:contains("Public transport")
     the user should see the element    jQuery = h2:contains("Mileage rates") ~ h3:contains("Up to 10,000 miles")
     the user should see the element    jQuery = p:contains("Please make sure your travel claims, receipts and tickets are all submitted.")
-
-the user opens assessor agreement in new window
-    the user clicks the button/link             jQuery = a:contains("your assessor agreement")
-    open pdf link                               link = Download assessor agreement (opens in a new window)
