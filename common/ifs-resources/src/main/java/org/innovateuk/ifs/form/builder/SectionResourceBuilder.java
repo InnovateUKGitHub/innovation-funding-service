@@ -58,6 +58,10 @@ public class SectionResourceBuilder extends BaseBuilder<SectionResource, Section
         return withArray((name, object) -> setField("name", name, object), names);
     }
 
+    public SectionResourceBuilder withEnabledForPreRegistration(Boolean... enabledForPreRegistrations) {
+        return withArray((enabledForPreRegistration, object) -> setField("enabledForPreRegistration", enabledForPreRegistration, object), enabledForPreRegistrations);
+    }
+
     public SectionResourceBuilder withAssessorGuidanceDescription(String... assessorGuidanceDescriptions) {
         return withArray((assessorGuidanceDescription, object) -> setField("assessorGuidanceDescription", assessorGuidanceDescription, object), assessorGuidanceDescriptions);
     }
