@@ -104,6 +104,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                 .sorted(comparing(SectionResource::getPriority))
                 .filter(section -> section.getParentSection() == null)
                 .filter(section -> section.getType() != SectionType.KTP_ASSESSMENT)
+                .filter(section -> !application.isEnableForEOI() || section.isEnabledForPreRegistration())
                 .map(section -> sectionViewModel(section, data))
                 .collect(toCollection(LinkedHashSet::new));
 
@@ -117,6 +118,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                     .stream()
                     .map(data.getSections()::get)
                     .filter(childSection -> !(data.getCompetition().isFullyFunded() && childSection.getType().equals(OVERVIEW_FINANCES)))
+                    .filter(childSection -> !data.getApplication().isEnableForEOI() || section.isEnabledForPreRegistration())
                     .map(childSection ->
                             new ApplicationOverviewRowViewModel(
                                     childSection.getName(),
@@ -130,6 +132,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
             rows = section.getQuestions()
                     .stream()
                     .map(data.getQuestions()::get)
+                    .filter(question -> !data.getApplication().isEnableForEOI() || question.isEnabledForPreRegistration())
                     .map(question -> getApplicationOverviewRowViewModel(data, question, section))
                     .collect(toCollection(LinkedHashSet::new));
         }
@@ -141,7 +144,10 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
 
         String subtitle = subtitle(data.getCompetition(), section);
 
-        return new ApplicationOverviewSectionViewModel(section.getId(), section.getName(), subtitle, rows, section.isTermsAndConditions());
+        return new ApplicationOverviewSectionViewModel(section.getId(),
+                data.getApplication().isEnableForEOI() && section.isEnabledForPreRegistration() &&
+                        SectionType.APPLICATION_QUESTIONS.equals(section.getType()) ? "Expression of interest questions" : section.getName(),
+                subtitle, rows, section.isTermsAndConditions());
     }
 
     private String subtitle(CompetitionResource competition, SectionResource section) {
@@ -183,12 +189,12 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
 
     private ApplicationOverviewRowViewModel getApplicationOverviewRowViewModel(ApplicationOverviewData data, QuestionResource question, SectionResource section) {
         boolean complete = (question.getQuestionSetupType() == QuestionSetupType.NORTHERN_IRELAND_DECLARATION) ? isSubsidyBasisComplete(data, question) :
-                    (section.isTermsAndConditions() ? isTermsAndConditionsComplete(data, question, section) :
-                                (data.getStatuses().get(question.getId())
-                                            .stream()
-                                            .anyMatch(status -> TRUE.equals(status.getMarkedAsComplete()))
-                                )
-                    );
+                (section.isTermsAndConditions() ? isTermsAndConditionsComplete(data, question, section) :
+                        (data.getStatuses().get(question.getId())
+                                .stream()
+                                .anyMatch(status -> TRUE.equals(status.getMarkedAsComplete()))
+                        )
+                );
 
         boolean showStatus = !(section.isTermsAndConditions() && data.getCompetition().isExpressionOfInterest());
 
@@ -265,8 +271,11 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
     }
 
     private static String getQuestionTitle(QuestionResource question, CompetitionResource competition) {
+        boolean preRegistration = competition.isEnabledForPreRegistration();
+        String questionTitle = preRegistration ? format("%s", question.getShortName()) : format("%s. %s", question.getQuestionNumber(), question.getShortName());
+
         return (question.getQuestionSetupType() == ASSESSED_QUESTION) ?
-                format("%s. %s", question.getQuestionNumber(), question.getShortName()) : thirdPartyTermsAndConditionsQuestion(question, competition) ?
+                questionTitle : thirdPartyTermsAndConditionsQuestion(question, competition) ?
                 getThirdPartyTermsAndConditionsQuestionTitle(competition) : question.getShortName();
     }
 
