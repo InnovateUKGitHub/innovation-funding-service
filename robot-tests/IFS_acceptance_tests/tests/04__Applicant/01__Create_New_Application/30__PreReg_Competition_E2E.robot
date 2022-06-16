@@ -27,12 +27,12 @@ Applicants should view prereg related content on competition
     When the user navigates to the page         ${frontDoor}
     And the user enters text to a text field    id = keywords   Pre Registration
     And the user clicks the button/link         id = update-competition-results-button
-    Then the user should see the element        jQuery = li:contains("Horizon Europe Guarantee Competition For Pre Registration") div:contains("Refer to competition date for competition submission deadlines.")
+    Then the user should see the element        jQuery = li:contains("${hecpPreregCompName}") div:contains("Refer to competition date for competition submission deadlines.")
 
 Applicant can not view hidden question, section and subsection
     [Documentation]  IFS-12077
     Given log in as a different user                &{lead_applicant_credentials}
-    When existing user creates a new application    ${hecpPreregCompName}
+    When logged in user applies to competition      ${hecpPreregCompName}  1
     Then the user should not see the element        link = Participating Organisation project region
     And the user should not see the element         link = Award terms and conditions
     And the user should not see the element         jQuery = h2:contains("Terms and conditions")
