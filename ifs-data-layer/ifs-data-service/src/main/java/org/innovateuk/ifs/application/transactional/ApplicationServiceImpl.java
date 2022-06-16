@@ -406,17 +406,19 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     private void updateExpressionInterestApplications(Application application) {
+        CompetitionResource competition = getCompetitionByApplicationId(application.getId()).getSuccess();
+        if (competition.isEnabledForPreRegistration()) {
             Optional<ApplicationExpressionOfInterestConfig> savedApplicationExpressionOfInterestConfig = applicationExpressionOfInterestConfigRepository.findOneByApplicationId(application.getId());
-             boolean enabledForExpressionOfInterest = application.isEnabledForExpressionOfInterest();
+            boolean enabledForExpressionOfInterest = application.isEnabledForExpressionOfInterest();
             if (savedApplicationExpressionOfInterestConfig.isPresent()) {
-                ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig =   savedApplicationExpressionOfInterestConfig.get();
+                ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig = savedApplicationExpressionOfInterestConfig.get();
                 if (applicationExpressionOfInterestConfig.isEnabledForExpressionOfInterest() != enabledForExpressionOfInterest) {
                     setExpressionOfInterest(application, savedApplicationExpressionOfInterestConfig.get());
                 }
-            }
-            else {
+            } else {
                 saveExpressionInterestApplications(application);
             }
+        }
     }
     private void setExpressionOfInterest(Application application, ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig) {
         applicationExpressionOfInterestConfig.setApplication(application);
