@@ -494,14 +494,6 @@ The user is able to complete hecp public description section
     the user clicks the button/link           jQuery = a:contains("Return to application overview")
     the user should see the element           jQuery = li:contains("Public description") > .task-status-complete
 
-The user is able to complete horizon grant agreement section
-    the user clicks the button/link           jQuery = a:contains("Horizon Europe Guarantee grant agreement")
-    the user should see the element           jQuery = h1:contains("Horizon Europe Guarantee grant agreement")
-    the user uploads the file                 id = grantAgreement  ${valid_pdf}
-    the user clicks the button/link           id = mark-as-complete
-    the user clicks the button/link           link = Return to application overview
-    the user should see the element           jQuery = li:contains("Horizon Europe Guarantee grant agreement") > .task-status-complete
-
 the user fills in the CS Application section hecp question
     [Arguments]  ${question_link}
     the user clicks the button/link         jQuery = h4 a:contains("${question_link}")
