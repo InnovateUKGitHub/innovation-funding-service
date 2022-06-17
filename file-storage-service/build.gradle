@@ -9,7 +9,6 @@ dependencies {
 
     if (isStubDevMode()) {
         developmentOnly "org.springframework.boot:spring-boot-devtools"
-        developmentOnly project(":common:starter:ifs-starter-stubdev")
         developmentOnly project(":common:starter:ifs-starter-swagger-ui")
     }
 
