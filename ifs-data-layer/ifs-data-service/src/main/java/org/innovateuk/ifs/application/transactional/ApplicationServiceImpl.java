@@ -115,6 +115,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
         application.setCompetition(competition);
         setInnovationArea(application, competition);
+        if (competition.isEnabledForPreRegistration()) {
+            application.setEnableForEOI(true);
+        }
 
         application = applicationRepository.save(application);
         generateProcessRolesForApplication(user, ProcessRoleType.LEADAPPLICANT, application, organisationId);
