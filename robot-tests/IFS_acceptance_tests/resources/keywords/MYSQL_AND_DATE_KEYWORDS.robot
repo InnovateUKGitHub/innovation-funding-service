@@ -364,3 +364,51 @@ get the EDI contact payload delivered to SIL
     ${result} =  query  SELECT `payload` FROM `${database_name}`.`sil_message` where `key_value`='${userId}';
     log  ${result}
     [Return]  ${result}
+
+set competition as pre reg
+    [Arguments]  ${competitionId}
+    execute sql string  UPDATE `${database_name}`.`competition` SET `pre_registration` = true WHERE `id` = ${competitionId};
+
+get the question id
+    [Arguments]  ${competitionId}
+    ${result}=  query  SELECT q.id FROM question q JOIN section s ON q.section_id = s.id WHERE s.competition_id = '${competitionId}' AND s.name = 'Application questions' AND q.name = 'Participating Organisation project region';
+    ${result} =  get from list  ${result}  0
+    ${id} =      get from list  ${result}  0
+    log  ${id}
+    [Return]  ${id}
+
+set question as hidden in pre reg application
+    [Arguments]    ${competitionId}
+    ${questionId} =     get the question id  ${competitionId}
+    Set global variable  ${questionId}
+    execute sql string  UPDATE question SET pre_registration = false WHERE id = ${questionId};
+
+get the subsection id
+    [Arguments]  ${competitionId}
+    ${result}=  query  SELECT ss.id FROM section ss JOIN section s ON ss.parent_section_id = s.id WHERE s.competition_id = '${competitionId}' AND s.name = 'Your project finances' AND ss.name = 'Your project location';
+    ${result} =  get from list  ${result}  0
+    ${id} =      get from list  ${result}  0
+    log  ${id}
+    [Return]  ${id}
+
+set subsection as hidden in pre reg application
+   [Arguments]   ${competitionId}
+   ${subSectionId} =     get the subsection id  ${competitionId}
+   Set global variable  ${subSectionId}
+   execute sql string  UPDATE section SET pre_registration = false WHERE id = ${subSectionId};
+   execute sql string  UPDATE question q JOIN section s ON q.section_id = s.id SET q.pre_registration = false WHERE s.id = ${subSectionId};
+
+get the section id
+   [Arguments]  ${competitionId}
+    ${result}=  query  SELECT id FROM section WHERE competition_id = ${competitionId} AND name = 'Terms and conditions';
+    ${result} =  get from list  ${result}  0
+    ${id} =      get from list  ${result}  0
+    log  ${id}
+    [Return]  ${id}
+
+set section as hidden in pre reg application
+   [Arguments]  ${competitionId}
+   ${sectionId} =     get the section id  ${competitionId}
+   Set global variable  ${sectionId}
+   execute sql string  UPDATE section SET pre_registration = false WHERE id = ${sectionId};
+   execute sql string  UPDATE question q JOIN section s ON q.section_id = s.id SET q.pre_registration = false WHERE s.id = ${sectionId};
