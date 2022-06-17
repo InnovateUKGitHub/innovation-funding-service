@@ -27,11 +27,12 @@ Applicants should view prereg related content on competition
     When the user navigates to the page         ${frontDoor}
     And the user enters text to a text field    id = keywords   Pre Registration
     And the user clicks the button/link         id = update-competition-results-button
-    Then the user should see the element        jQuery = li:contains("Horizon Europe Guarantee Competition For Pre Registration") div:contains("Refer to competition date for competition submission deadlines.")
+    Then the user should see the element        jQuery = li:contains("${hecpPreregCompName}") div:contains("Refer to competition date for competition submission deadlines.")
 
 Applicant can not view hidden question, section and subsection
     [Documentation]  IFS-12077
-    When existing user creates a new application    ${hecpPreregCompName}
+    Given log in as a different user                &{lead_applicant_credentials}
+    When logged in user applies to competition      ${hecpPreregCompName}  1
     Then the user should not see the element        link = Participating Organisation project region
     And the user should not see the element         link = Award terms and conditions
     And the user should not see the element         jQuery = h2:contains("Terms and conditions")
@@ -40,7 +41,7 @@ Applicant can not view hidden question, section and subsection
 Applicants views expression of interest labels in application overview page for pre reg applications
     [Arguments]  IFS-12077
     Given the user clicks the button/link                         link = Back to expression of interest overview
-    When the user completes the prereg application details        ${hecpPreregAppName}  ${tomorrowday}  ${month}  ${nextyear}   23
+    When the user completes the application details section       ${hecpPreregAppName}  ${tomorrowday}  ${month}  ${nextyear}   23
     And Requesting application ID of prereg application
     Then the user should see EOI labels for prereg application
     And the user should see the element                           jQuery = dt:contains("Application number:")+dd:contains("${preregApplicationID}")
@@ -48,11 +49,10 @@ Applicants views expression of interest labels in application overview page for 
 Lead applicant completes the application sections
     [Arguments]  IFS-12077
     When the applicant completes Application Team                        COMPLETE  steve.smith@empire.com
-    And the user completes the application research category             Feasibility studies
     And the user complete the work programme
     And The user is able to complete horizon grant agreement section
     And the lead applicant fills all the questions and marks as complete(prereg)
-    And the user completes prereg project finances                      ${hecpPreregAppName}   yes
+    And the user completes prereg project finances                      ${hecpPreregAppName}   no
     Then the user should see the element                                jQuery = .progress:contains("100%")
 
 
@@ -75,14 +75,6 @@ Custom Suite Teardown
 Requesting application ID of prereg application
     ${preregApplicationID} =  get application id by name  ${hecpPreregAppName}
     Set suite variable    ${preregApplicationID}
-
-#the user starts a new pre reg application
-##    Log in as a different user                                  &{lead_applicant_credentials}
-##    the user select the competition and starts application      ${hecpPreregCompName}
-##    the user selects the radio button                           createNewApplication  true      #Yes, I want to create a new application.
-##    the user clicks the button/link                             jQuery = .govuk-button:contains("Continue")
-##    the user clicks the button/link                             css = .govuk-button[type="submit"]    #Save and continue
-#
 
 the user should see EOI labels for prereg application
     the user should see the element      jQuery = h1:contains("Expression of interest overview")
@@ -116,28 +108,11 @@ the user completes prereg funding section
     the user clicks the button/link             link = Your funding
     the user fills in the funding information   ${Application}   no
 
-the progress indicator should show 100%
-    element should contain      css = .progress-totals--max  100%
-
-the user completes the prereg application details
-    [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}  ${projectDuration}
-    the user clicks the button/link             link = Application details
-    the user should see the element             jQuery = h1:contains("Application details")
-    the user enters text to a text field        id = name  ${appTitle}
-    the user enters text to a text field        id = startDate  ${tomorrowday}
-    the user enters text to a text field        css = #application_details-startdate_month  ${month}
-    the user enters text to a text field        css = #application_details-startdate_year  ${nextyear}
-    the user should see the element             jQuery = label:contains("Project duration in months")
-    the user enters text to a text field        css = [id="durationInMonths"]  ${projectDuration}
-    the user clicks the button/link             id = application-question-complete
-    the user clicks the button/link             link = Back to application overview
-    the user should see the element             jQuery = li:contains("Application details") > .task-status-complete
-
 the competition admin creates prereg competition
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingRule}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user navigates to the page                              ${CA_UpcomingComp}
     the user clicks the button/link                             jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details                    ${competition}  ${month}  ${nextyear}  ${compType_HESTA}  STATE_AID  HECP
+    the user fills in the CS Initial details                    ${competition}  ${month}  ${nextyear}  ${compType_HESTA}  ${fundingRule}  HECP
     the user selects the Terms and Conditions                   ${compType}  ${fundingRule}
     the user fills in the CS Funding Information
     the user fills in the CS Project eligibility                ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}

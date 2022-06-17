@@ -70,9 +70,10 @@ the lead user submit the application and check the status of application
 
 the lead user can see award in project setup
     [Documentation]  IFS-11994
-    Given log in as a different user         &{lead_applicant_credentials}
-    When the user clicks the button/link     link = ${DirectAwardComp}
-    Then the user should see the element     jQuery = dt:contains("Award:")
+    Given log in as a different user                        &{lead_applicant_credentials}
+    And the user clicks the application tile if displayed
+    When the user clicks the button/link                    link = ${DirectAwardComp}
+    Then the user should see the element                    jQuery = dt:contains("Award:")
 
 
 *** Keywords ***
