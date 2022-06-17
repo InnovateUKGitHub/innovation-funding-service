@@ -3,7 +3,8 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...
 ...               IFS-12077 Pre-Registration (Applicant Journey) Application overview - content changes
 ...
-
+...               IFS-12079 Pre-Registration (Applicant Journey) Complete an expression of interest application
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -55,7 +56,21 @@ Lead applicant completes the application sections
     And the user completes prereg project finances                      ${hecpPreregAppName}   no
     Then the user should see the element                                jQuery = .progress:contains("100%")
 
+Applicant can not view hidden question, section and subsection in application summary
+    [Arguments]  IFS-12079
+    When the user clicks the button/link        id = application-overview-submit-cta
+    Then the user should not see the element    jQuery = button:contains("Participating Organisation project region")
+    And the user should not see the element     jQuery = h2:contains("Terms and conditions")
+    And the user should not see the element     jQuery = button:contains("Award terms and conditions")
+    And the user should see the element         jQuery = h1:contains("Expression of interest summary")
+    And the user should see the element         jQuery = h1:contains("Expression of interest questions")
 
+Applicant submits the expression of interest application
+    [Arguments]  IFS-12079
+    When the user clicks the button/link        id = submit-application-button
+    Then the user should see the element        jQuery = h2:contains("Application submitted")
+    And the user reads his email
+    And the user reads his email                steve.smith@empire.com  ${preregApplicationID}: Successful submission of application   You have successfully submitted an application for funding to ${hecpPreregCompName}.
 
 *** Keywords ***
 Requesting IDs of this hecp pre reg competition
