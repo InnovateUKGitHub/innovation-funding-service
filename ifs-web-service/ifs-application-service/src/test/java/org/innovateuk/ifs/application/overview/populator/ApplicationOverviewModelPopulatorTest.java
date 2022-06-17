@@ -214,7 +214,6 @@ public class ApplicationOverviewModelPopulatorTest {
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
-                .withEnableForEOI(true)
                 .build();
         List<QuestionResource> questions = newQuestionResource()
                 .withShortName("A question")
@@ -335,7 +334,6 @@ public class ApplicationOverviewModelPopulatorTest {
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
-                .withEnableForEOI(true)
                 .build();
         List<QuestionResource> questions = newQuestionResource()
                 .withShortName("A question")
@@ -418,9 +416,9 @@ public class ApplicationOverviewModelPopulatorTest {
                 .withTermsAndConditions(termsAndCondition)
                 .withCompetitionThirdPartyConfig(thirdPartyConfigResource)
                 .build();
+
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
-                .withEnableForEOI(true)
                 .build();
         List<QuestionResource> questions = newQuestionResource()
                 .withShortName("A question")

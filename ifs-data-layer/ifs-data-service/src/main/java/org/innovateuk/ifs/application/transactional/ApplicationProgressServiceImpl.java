@@ -81,7 +81,7 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
         long organisations = organisationRepository.countDistinctByProcessRolesApplicationId(application.getId());
 
 
-        if (application.isEnableForEOI()) {
+        if (application.isEnabledForExpressionOfInterest()) {
             questionsWithMultipleStatuses = questionRepository.countPreRegQuestionsWithMultipleStatuses(competitionId);
             questionsWithSingleStatus = questionRepository.countPreRegQuestionsWithSingleStatus(competitionId);
         } else {
