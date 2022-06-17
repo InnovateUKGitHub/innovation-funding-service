@@ -97,6 +97,11 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
         return withArray((multipleStatus, object) -> setField("multipleStatuses", multipleStatus, object), multipleStatuses);
     }
 
+
+    public QuestionBuilder withEnabledForPreRegistration(Boolean... enabledForPreRegistrations) {
+        return withArray((enabledForPreRegistration, object) -> setField("enabledForPreRegistration", enabledForPreRegistration, object), enabledForPreRegistrations);
+    }
+
     public QuestionBuilder withQuestionStatuses(List<QuestionStatus>... questionStatuses) {
         return withArray((questionStatus, object) -> setField("questionStatuses", questionStatus, object), questionStatuses);
     }

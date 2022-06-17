@@ -16,7 +16,6 @@ import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -58,6 +57,7 @@ public class YourProjectFinancesModelPopulator {
         List<YourFinancesRowViewModel> rows = sectionRestService.getChildSectionsByParentId(sectionId).getSuccess()
                 .stream()
                 .filter(subSection -> !subSection.getType().isSectionTypeNotRequiredForOrganisationAndCompetition(competition, organisation.getOrganisationTypeEnum(), organisation.getId().equals(application.getLeadOrganisationId())))
+                .filter(subSection -> !application.isEnableForEOI() || subSection.isEnabledForPreRegistration())
                 .map(subSection ->
                         new YourFinancesRowViewModel(sectionName(competition, application, organisation, subSection),
                                 applicationUrlHelper.getSectionUrl(subSection.getType(), subSection.getId(), applicationId, organisationId, application.getCompetition()).get(),

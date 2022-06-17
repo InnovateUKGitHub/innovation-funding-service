@@ -69,6 +69,10 @@ the lead applicant fills all the questions and marks as complete(Hecp)
     :FOR  ${ELEMENT}    IN    @{Hecp_questions}
      \     the lead applicant marks the questions as complete (hecp)    ${ELEMENT}
 
+the lead applicant fills all the questions and marks as complete(prereg)
+    :FOR  ${ELEMENT}    IN    @{prereg_questions}
+     \     the lead applicant marks the questions as complete (hecp)    ${ELEMENT}
+
 the lead completes the questions with multiple answer choice and multiple appendices
     :FOR  ${ELEMENT}    IN    @{other_questions_procurement_ati}
          \     the lead applicant marks the questions as complete (multiple appendices and multiple answer choice)    ${ELEMENT}

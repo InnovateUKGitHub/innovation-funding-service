@@ -320,12 +320,12 @@ Project fiance approves the grant offer letter
 
 the use can see the mandatory documents
     the user clicks the button/link        link = Collaboration agreement
-    the user clicks the button/link        link = ${valid_pdf} (opens in a new window)
+    the user clicks the button/link        link = ${webtest_pdf} (opens in a new window)
     Select Window                          NEW
     the user closes the last opened tab
     the user clicks the button/link        link = Return to documents
     the user clicks the button/link        link = Exploitation plan
-    the user clicks the button/link        link = ${valid_pdf} (opens in a new window)
+    the user clicks the button/link        link = ${webtest_pdf} (opens in a new window)
     Select Window                          NEW
     the user closes the last opened tab
     the user clicks the button/link        link = Return to documents
