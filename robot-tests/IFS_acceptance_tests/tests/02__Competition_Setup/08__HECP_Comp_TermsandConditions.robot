@@ -38,8 +38,8 @@ HECP EIT KICs terms and conditions are correct
     [Documentation]  IFS-10926
     Given the user clicks the button/link                link = Terms and conditions
     When the user clicks the button/link                 link = ${hecpKicsTermsAndConditionsLink}
-    And select window                                    NEW
-    Then the user should see the element                 jQuery = h1:contains("Terms and conditions for Horizon Europe Guarantee – EIT KICs 2021 grant")
+    And select window                                    title = Terms and conditions for Horizon Europe Guarantee – EIT KICs 2021 grant - Innovation Funding Service
+    Then the user should see the element                 jQuery = h1:contains("Terms and conditions for Horizon Europe Guarantee – EIT")
     [Teardown]   the user closes the last opened tab
 
 HECP terms and conditions not pre selected for any funding or competition type
