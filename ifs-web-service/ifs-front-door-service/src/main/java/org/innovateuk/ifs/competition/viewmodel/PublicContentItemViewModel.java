@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.competition.viewmodel;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.innovateuk.ifs.competition.status.PublicContentStatusText;
 
 import java.time.ZonedDateTime;
@@ -7,6 +9,8 @@ import java.time.ZonedDateTime;
 /**
  * View model for Competition Public Content Search items.
  */
+@Setter
+@Getter
 public class PublicContentItemViewModel {
 
     private String shortDescription;
@@ -18,80 +22,10 @@ public class PublicContentItemViewModel {
     private ZonedDateTime registrationCloseDate;
     private PublicContentStatusText publicContentStatusText;
     private boolean alwaysOpen;
-
-    public String getShortDescription() {
-        return shortDescription;
-    }
-
-    public void setShortDescription(String shortDescription) {
-        this.shortDescription = shortDescription;
-    }
-
-    public String getEligibilitySummary() {
-        return eligibilitySummary;
-    }
-
-    public void setEligibilitySummary(String eligibilitySummary) {
-        this.eligibilitySummary = eligibilitySummary;
-    }
-
-    public ZonedDateTime getCompetitionOpenDate() {
-        return competitionOpenDate;
-    }
-
-    public void setCompetitionOpenDate(ZonedDateTime competitionOpenDate) {
-        this.competitionOpenDate = competitionOpenDate;
-    }
-
-    public ZonedDateTime getCompetitionCloseDate() {
-        return competitionCloseDate;
-    }
-
-    public void setCompetitionCloseDate(ZonedDateTime competitionCloseDate) {
-        this.competitionCloseDate = competitionCloseDate;
-    }
-
-    public ZonedDateTime getRegistrationCloseDate() {
-        return registrationCloseDate;
-    }
-
-    public void setRegistrationCloseDate(ZonedDateTime registrationCloseDate) {
-        this.registrationCloseDate = registrationCloseDate;
-    }
-
-    public PublicContentStatusText getPublicContentStatusText() {
-        return publicContentStatusText;
-    }
-
-    public void setPublicContentStatusText(PublicContentStatusText publicContentStatusText) {
-        this.publicContentStatusText = publicContentStatusText;
-    }
-
-    public String getCompetitionTitle() {
-        return competitionTitle;
-    }
-
-    public void setCompetitionTitle(String competitionTitle) {
-        this.competitionTitle = competitionTitle;
-    }
-
-    public Long getCompetitionId() {
-        return competitionId;
-    }
-
-    public void setCompetitionId(Long competitionId) {
-        this.competitionId = competitionId;
-    }
-
-    public boolean isAlwaysOpen() {
-        return alwaysOpen;
-    }
+    private String hash;
+    private boolean eoiEnabled;
 
     public String getNullCloseDateText() {
         return alwaysOpen ? "No submission deadline" : "Unknown";
-    }
-    public PublicContentItemViewModel setAlwaysOpen(boolean alwaysOpen) {
-        this.alwaysOpen = alwaysOpen;
-        return this;
     }
 }

@@ -3,13 +3,13 @@ package org.innovateuk.ifs.granttransfer.transactional;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
+import org.innovateuk.ifs.file.controller.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.file.resource.BasicFileAndContents;
+import org.innovateuk.ifs.file.resource.FileAndContents;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.BasicFileAndContents;
-import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
-import org.innovateuk.ifs.file.transactional.FileEntryService;
-import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.file.service.FileEntryService;
+import org.innovateuk.ifs.file.service.FileService;
 import org.innovateuk.ifs.granttransfer.domain.EuActionType;
 import org.innovateuk.ifs.granttransfer.domain.EuGrantTransfer;
 import org.innovateuk.ifs.granttransfer.mapper.EuGrantTransferMapper;
@@ -72,7 +72,7 @@ public class EuGrantTransferServiceImpl implements EuGrantTransferService {
                 fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypes, maxFileSize, request,
                         (fileAttributes, inputStreamSupplier) -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
                                 .andOnSuccessReturnVoid(created ->
-                                        grantTransfer.setGrantAgreement(created.getRight())
+                                        grantTransfer.setGrantAgreement(created)
                                 )).toServiceResult());
     }
 

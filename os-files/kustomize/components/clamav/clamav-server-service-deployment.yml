@@ -1,0 +1,149 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: clamav
+data:
+  clamd.conf: |
+    Foreground yes
+    Debug no
+    LeaveTemporaryFiles no
+
+    LogFile /dev/stdout
+    LogFileMaxSize 0
+    LogTime yes
+    LogClean no
+
+    TCPSocket 3310
+    TCPAddr 0.0.0.0
+
+    ExcludePath ^/proc/
+    ExcludePath ^/sys/
+    ExcludePath ^/host/proc/
+    ExcludePath ^/host/sys/
+
+    MaxDirectoryRecursion 64
+    FollowDirectorySymlinks no
+    FollowFileSymlinks no
+    CrossFilesystems no
+
+    AllowAllMatchScan no
+    HeuristicAlerts no
+    HeuristicScanPrecedence no
+
+    ScanELF yes
+    ScanPDF yes
+    ScanSWF yes
+    ScanXMLDOCS yes
+    ScanArchive yes
+    
+    StreamMaxLength 36M
+    MaxThreads 20
+
+  freshclam.conf: |
+    Foreground yes
+    DatabaseDirectory /var/lib/clamav
+    UpdateLogFile /dev/stdout
+    Debug no
+
+    LogFileMaxSize 0
+    LogTime yes
+
+    DatabaseOwner root
+    DNSDatabaseInfo current.cvd.clamav.net
+    DatabaseMirror database.clamav.net
+    MaxAttempts 3
+
+    ScriptedUpdates yes
+    CompressLocalDatabase no
+    TestDatabases yes
+    SafeBrowsing no
+    Bytecode no
+
+    Checks 12
+    NotifyClamd /etc/clamav/clamd.conf
+
+    ConnectTimeout 30
+    ReceiveTimeout 60
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clamd
+spec:
+  selector:
+    matchLabels:
+      app: clamd
+  template:
+    metadata:
+      labels:
+        app: clamd
+    spec:
+      volumes:
+        - name: host
+          emptyDir: {}
+
+        - name: clamdb
+          emptyDir: {}
+
+        - name: etc
+          configMap:
+            defaultMode: 420
+            name: clamav
+
+      initContainers:
+        - name: init
+          image: filefrog/clamav:latest
+          imagePullPolicy: Always
+          command:
+            - /clamav
+            - seed
+
+          volumeMounts:
+            - name: etc
+              mountPath: /etc/clamav
+              readOnly: true
+
+            - name: clamdb
+              mountPath: /var/lib/clamav
+              readOnly: false
+
+      containers:
+        - name: clamd
+          ports:
+            - containerPort: 3310
+          image: filefrog/clamav:latest
+          imagePullPolicy: Always
+          command:
+            - /clamav
+            - clamd
+
+          volumeMounts:
+            - name: etc
+              mountPath: /etc/clamav
+              readOnly: true
+
+            - name: host
+              mountPath: /host
+              readOnly: true
+
+            - name: clamdb
+              mountPath: /var/lib/clamav
+              readOnly: true
+
+        - name: freshclam
+          image: filefrog/clamav:latest
+          imagePullPolicy: Always
+          command:
+            - /clamav
+            - freshclam
+
+          volumeMounts:
+            - name: etc
+              mountPath: /etc/clamav
+              readOnly: true
+
+            - name: clamdb
+              mountPath: /var/lib/clamav
+              readOnly: false

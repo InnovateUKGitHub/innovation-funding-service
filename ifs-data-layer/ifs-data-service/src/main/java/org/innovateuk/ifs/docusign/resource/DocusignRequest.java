@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.docusign.resource;
 
-import org.innovateuk.ifs.file.service.FileAndContents;
+
+import org.innovateuk.ifs.file.resource.FileAndContents;
 
 public class DocusignRequest {
 

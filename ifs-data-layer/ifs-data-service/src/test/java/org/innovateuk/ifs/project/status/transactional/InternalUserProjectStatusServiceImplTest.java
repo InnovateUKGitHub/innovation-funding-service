@@ -836,10 +836,16 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
     @Test
     public void getProjectStatusProjectDocumentsNotFullyApproved() {
         long projectId = 2345L;
+
+        CompetitionDocument documentConfig1 = newCompetitionDocument().withEnabled(true).build();
+        CompetitionDocument documentConfig2 = newCompetitionDocument().withEnabled(true).build();
+
         List<ProjectDocument> docs = newProjectDocument()
-                .withCompetitionDocument(newCompetitionDocument().build())
+                .withCompetitionDocument(documentConfig1, documentConfig2)
                 .withStatus(DocumentStatus.SUBMITTED, DocumentStatus.APPROVED)
                 .build(2);
+
+        competition.setCompetitionDocuments(asList(documentConfig1, documentConfig2));
 
         Project project = createProjectStatusResource(projectId,
                                                       ApprovalType.APPROVED,
@@ -889,7 +895,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
     @Test
     public void getProjectStatusProjectDocumentsRejected() {
         long projectId = 2345L;
-        competition.setCompetitionDocuments(newCompetitionDocument().withTitle("Exploitation plan").build(1));
+        competition.setCompetitionDocuments(newCompetitionDocument().withTitle("Exploitation plan").withEnabled(true).build(1));
         List<ProjectDocument> docs = newProjectDocument()
                 .withStatus(DocumentStatus.REJECTED)
                 .withCompetitionDocument(competition.getCompetitionDocuments().get(0))
@@ -921,7 +927,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                 .withStatus(DocumentStatus.APPROVED)
                 .build(1);
 
-        competition.setCompetitionDocuments(newCompetitionDocument().withTitle("Exploitation plan").build(2));
+        competition.setCompetitionDocuments(newCompetitionDocument().withTitle("Exploitation plan").withEnabled(true).build(2));
         Project project = createProjectStatusResource(projectId,
                                                       ApprovalType.APPROVED,
                                                       false,
@@ -943,10 +949,15 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
     @Test
     public void getProjectStatusProjectDocumentsApprovedWithMultipleOrganisations() {
         long projectId = 2345L;
+
+        CompetitionDocument documentConfig1 = newCompetitionDocument().withTitle(COLLABORATION_AGREEMENT_TITLE, "Exploitation plan").withEnabled(true).build();
+        CompetitionDocument documentConfig2 = newCompetitionDocument().withTitle(COLLABORATION_AGREEMENT_TITLE, "Exploitation plan").withEnabled(true).build();
+
         List<ProjectDocument> docs = newProjectDocument()
                 .withStatus(DocumentStatus.APPROVED, DocumentStatus.APPROVED)
+                .withCompetitionDocument(documentConfig1, documentConfig2)
                 .build(2);
-        competition.setCompetitionDocuments(newCompetitionDocument().withTitle(COLLABORATION_AGREEMENT_TITLE, "Exploitation plan").build(2));
+        competition.setCompetitionDocuments(asList(documentConfig1, documentConfig2));
         Project project = createProjectStatusResource(projectId,
                                                       ApprovalType.APPROVED,
                                                       false,
@@ -970,7 +981,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
     @Test
     public void getProjectStatusProjectDocumentsApprovedWithSingleOrganisations() {
         long projectId = 2345L;
-        competition.setCompetitionDocuments(newCompetitionDocument().withTitle(COLLABORATION_AGREEMENT_TITLE, "Exploitation plan").build(2));
+        competition.setCompetitionDocuments(newCompetitionDocument().withTitle(COLLABORATION_AGREEMENT_TITLE, "Exploitation plan").withEnabled(true).build(2));
         List<ProjectDocument> docs = newProjectDocument()
                 .withStatus(DocumentStatus.APPROVED)
                 .withCompetitionDocument(competition.getCompetitionDocuments().get(1))

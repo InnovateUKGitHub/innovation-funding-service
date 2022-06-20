@@ -23,6 +23,8 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -154,9 +156,15 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
 
     @Test
     public void testPublishWithCompleteSectionsAndDatesSuccess() {
-        PublicContent publicContent = newPublicContent().withCompetitionId(COMPETITION_ID).withContentSections(
-                newContentSection().withStatus(PublicContentStatus.COMPLETE).build(2)
-        ).build();
+
+        PublicContent publicContent =
+                newPublicContent()
+                        .withCompetitionId(COMPETITION_ID)
+                        .withContentSections(newContentSection()
+                                .withStatus(PublicContentStatus.COMPLETE)
+                                .build(2)
+                        ).build();
+
         when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(publicContent);
         when(competitionSetupService.markSectionComplete(COMPETITION_ID, CONTENT)).thenReturn(serviceSuccess(newSetupStatusResource().build()));
         mockPublicMilestonesValid(true);
@@ -167,6 +175,28 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
         verify(publicContentRepository).findByCompetitionId(COMPETITION_ID);
     }
 
+    @Test
+    public void privateCompetitionHashGenerated() {
+        PublicContent publicContent =
+                newPublicContent()
+                        .withCompetitionId(COMPETITION_ID)
+                        .withContentSections(newContentSection()
+                                .withStatus(PublicContentStatus.COMPLETE)
+                                .build(2))
+                        .build();
+
+        when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(publicContent);
+        when(competitionSetupService.markSectionComplete(COMPETITION_ID, CONTENT)).thenReturn(serviceSuccess(newSetupStatusResource().build()));
+        mockPublicMilestonesValid(true);
+
+        ServiceResult<Void> result = service.publishByCompetitionId(COMPETITION_ID);
+
+        assertTrue(result.isSuccess());
+
+        verify(publicContentRepository).findByCompetitionId(COMPETITION_ID);
+        verify(competitionSetupService).markSectionComplete(COMPETITION_ID, CONTENT);
+        assertThat(publicContent.getHash(), not(isEmptyOrNullString()));
+    }
 
     @Test
     public void testUpdateSectionPublished() {

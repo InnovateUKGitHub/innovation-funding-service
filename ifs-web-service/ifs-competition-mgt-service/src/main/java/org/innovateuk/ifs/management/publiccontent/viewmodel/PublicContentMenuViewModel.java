@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.management.publiccontent.viewmodel;
 
 
+import lombok.Getter;
+import lombok.Setter;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -11,9 +13,13 @@ import java.util.List;
 /**
  * View model for public content menu.
  */
+@Setter
+@Getter
 public class PublicContentMenuViewModel {
 
     private static String COMPETITION_OVERVIEW_URL = "%s/competition/%d/overview";
+
+    private static String PRIVATE_COMPETITION_OVERVIEW_URL = "%s/competition/%d/overview/%s";
 
     private ZonedDateTime publishDate;
 
@@ -25,41 +31,10 @@ public class PublicContentMenuViewModel {
 
     private String webBaseUrl;
 
-    public ZonedDateTime getPublishDate() {
-        return publishDate;
-    }
-
-    public void setPublishDate(ZonedDateTime publishDate) {
-        this.publishDate = publishDate;
-    }
-
-    public List<PublicContentSectionResource> getSections() {
-        return sections;
-    }
-
-    public void setSections(List<PublicContentSectionResource> sections) {
-        this.sections = sections;
-    }
-
-    public CompetitionResource getCompetition() {
-        return competition;
-    }
-
-    public void setCompetition(CompetitionResource competition) {
-        this.competition = competition;
-    }
+    private String hash;
 
     public Boolean isInviteOnly() {
         return inviteOnly;
-    }
-
-    public void setWebBaseUrl(String webBaseUrl) {
-        this.webBaseUrl = webBaseUrl;
-    }
-
-    public void setInviteOnly(Boolean inviteOnly)
-    {
-        this.inviteOnly = inviteOnly;
     }
 
     public boolean hasBeenPublished() {
@@ -68,9 +43,7 @@ public class PublicContentMenuViewModel {
 
     public boolean disablePublishButton() {
         return sections.stream()
-                .filter(section -> PublicContentStatus.IN_PROGRESS.equals(section.getStatus()))
-                .findAny()
-                .isPresent();
+                .anyMatch(section -> PublicContentStatus.IN_PROGRESS.equals(section.getStatus()));
     }
 
     public boolean isSectionComplete(PublicContentSectionResource contentSectionResource) {
@@ -78,7 +51,13 @@ public class PublicContentMenuViewModel {
     }
 
     public String getCompetitionURL() {
-        return String.format(COMPETITION_OVERVIEW_URL, webBaseUrl, competition.getId());
+        return hasHash() ?
+                String.format(PRIVATE_COMPETITION_OVERVIEW_URL, webBaseUrl, competition.getId(), this.hash) :
+                String.format(COMPETITION_OVERVIEW_URL, webBaseUrl, competition.getId());
+    }
+
+    private boolean hasHash() {
+        return this.hash != null;
     }
 
 }

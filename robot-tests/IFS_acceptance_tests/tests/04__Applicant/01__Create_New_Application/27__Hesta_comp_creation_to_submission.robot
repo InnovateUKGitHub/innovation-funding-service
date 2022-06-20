@@ -166,7 +166,7 @@ Lead applicant views hecp related cost categoires in project setup finances
     [Documentation]  IFS-11407
     Given the user is able to complete project details section
     And the user completes the project team details
-    And the user is able to complete the Documents section
+    And the user completes hecp documents section
     And the user fills in bank details
     When the user clicks the button/link                        link = Finance checks
     And the user clicks the button/link                         link = your project finances
@@ -270,7 +270,7 @@ The user fills in bank details
 Internal user reviews and approves documents
     log in as a different user        &{ifs_admin_user_credentials}
     the user navigates to the page    ${server}/project-setup-management/project/${hestaProjectID}/document/all
-    the user clicks the button/link   link = Exploitation plan
+    the user clicks the button/link   link = Test document type
     the user clicks the button/link   id = radio-review-approve
     the user clicks the button/link   id = submit-button
     the user clicks the button/link   id = accept-document
@@ -295,6 +295,7 @@ the competition admin creates Hesta competition
     the user selects the organisational eligibility to no       false
     the user completes milestones section
     the user marks the Hesta application question as done
+    the user fills in the CS Documents in other projects
     the user clicks the button/link                             link = Public content
     the user fills in the Public content and publishes          ${extraKeyword}
     the user clicks the button/link                             link = Return to setup overview
@@ -493,14 +494,6 @@ The user is able to complete hecp public description section
     the user clicks the button/link           jQuery = a:contains("Return to application overview")
     the user should see the element           jQuery = li:contains("Public description") > .task-status-complete
 
-The user is able to complete horizon grant agreement section
-    the user clicks the button/link           jQuery = a:contains("Horizon Europe Guarantee grant agreement")
-    the user should see the element           jQuery = h1:contains("Horizon Europe Guarantee grant agreement")
-    the user uploads the file                 id = grantAgreement  ${valid_pdf}
-    the user clicks the button/link           id = mark-as-complete
-    the user clicks the button/link           link = Return to application overview
-    the user should see the element           jQuery = li:contains("Horizon Europe Guarantee grant agreement") > .task-status-complete
-
 the user fills in the CS Application section hecp question
     [Arguments]  ${question_link}
     the user clicks the button/link         jQuery = h4 a:contains("${question_link}")
@@ -662,3 +655,13 @@ the user should see Participating Organisation project region
     the user should see the element  jQuery = div:contains("Please type the region your project is being carried out in.")
     the user clicks the button/link  jQuery = a:contains("Back to application overview")
 
+The user completes hecp documents section
+    [Documentation]  IFS-5700
+    the user clicks the button/link         link = Documents
+    the user clicks the button/link         link = Test document type
+    the user uploads the file               css = .inputfile  ${valid_pdf}
+    the user clicks the button/link         id = submit-document-button
+    the user clicks the button/link         id = submitDocumentButtonConfirm
+    the user clicks the button/link         link = Return to documents
+    the user clicks the button/link         link = Set up your project
+    the user should see the element         jQuery = .progress-list li:nth-child(3):contains("Awaiting review")

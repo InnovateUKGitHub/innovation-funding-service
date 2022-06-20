@@ -5,6 +5,7 @@ commonAnnotations:
 components:
   - ../../../../components/data-layer
   - ../../../../components/registration-service
+  - ../../../../components/file-storage-service
   - ../../../../components/web-layer
   - ../../../../components/sil-stub
   - ../../../../patches/
@@ -15,4 +16,4 @@ resources:
   - ../../../../secrets-mgmt/env/local
 
 patchesStrategicMerge:
-  - registration-service/registration-deployment.yml
+  - web-layer/registration-service/registration-service-deployment.yml

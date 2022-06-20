@@ -95,10 +95,11 @@ Guest user can see the public information of an unopened competition
 Registration is closed on Non-IFS competitition when the Registration date is in the past
     [Documentation]  IFS-38 IFS-1117
     [Tags]
-    Given Change the milestone in the database to tomorrow  ${NON_IFS_COMPETITION}  SUBMISSION_DATE
-    And update milestone to yesterday    ${NON_IFS_COMPETITION}  REGISTRATION_DATE
-    When the user navigates to the page     ${server}/competition/${NON_IFS_COMPETITION}/overview
-    Then the user should see the element    jQuery = .warning-alert:contains("Registration has now closed.")
+    Given Change the milestone in the database to tomorrow      ${NON_IFS_COMPETITION}  SUBMISSION_DATE
+    And update milestone to yesterday                           ${NON_IFS_COMPETITION}  REGISTRATION_DATE
+    When the user navigates to the page                         ${frontDoor}
+    And the user clicks the button/link in the paginated list   link = ${NON_IFS_COMPETITION_NAME}
+    Then the user should see the element                        jQuery = .warning-alert:contains("Registration has now closed.")
 
 Guest user can see the public information of a competition
     [Documentation]    INFUND-6923

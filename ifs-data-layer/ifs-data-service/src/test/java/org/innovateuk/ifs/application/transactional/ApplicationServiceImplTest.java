@@ -4,13 +4,17 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.builder.ApplicationBuilder;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationExpressionOfInterestConfig;
 import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
+import org.innovateuk.ifs.application.repository.ApplicationExpressionOfInterestConfigRepository;
 import org.innovateuk.ifs.application.repository.ApplicationOrganisationAddressRepository;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
@@ -37,6 +41,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -45,10 +50,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
 
 import static java.util.Collections.*;
@@ -133,7 +135,16 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     @Mock
     private ApplicationNotificationService applicationNotificationService;
 
+    @Mock
+    private ApplicationValidationUtil applicationValidationUtil;
+
     private Competition competition;
+
+    private ArgumentCaptor<Application> applicationArgumentCaptor;
+
+
+    @Mock
+    private ApplicationExpressionOfInterestConfigRepository applicationExpressionOfInterestConfigRepository;
 
     @Before
     public void setUp() throws Exception {
@@ -234,6 +245,40 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         verify(applicationRepository, times(1)).save(isA(Application.class));
         assertEquals(applicationResource, created);
+    }
+
+    @Test
+    public void saveApplicationDetails_enabledForExpressionOfInterest() {
+
+        Long applicationId = 1L;
+        applicationArgumentCaptor = ArgumentCaptor.forClass(Application.class);
+        CompetitionResource competitionResource = newCompetitionResource().withEnabledForExpressionOfInterest(true).build();
+        Competition competition = newCompetition().with(id(1L)).withCompetitionStatus(CompetitionStatus.OPEN).build();
+        Application application = newApplication()
+                .withId(applicationId)
+                .withCompetition(competition)
+                .build();
+        ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig =
+                ApplicationExpressionOfInterestConfig.builder().
+                application(application).enabledForExpressionOfInterest(true).build();
+
+        application.setApplicationExpressionOfInterestConfig(applicationExpressionOfInterestConfig);
+
+        ApplicationResource applicationResource = newApplicationResource()
+                .build();
+        when(competitionMapper.mapToResource(competition)).thenReturn(competitionResource);
+        when(applicationExpressionOfInterestConfigRepository.findOneByApplicationId(applicationId)).thenReturn(of(applicationExpressionOfInterestConfig));
+        when(applicationRepository.findById(applicationId)).thenReturn(of(application));
+        when(applicationValidationUtil.isApplicationDetailsValid(any(Application.class))).thenReturn(Collections.emptyList());
+
+        ValidationMessages validationMessages =
+                service.saveApplicationDetails(1l, applicationResource).getSuccess();
+
+        assertEquals(0, validationMessages.getErrors().size());
+
+        verify(applicationValidationUtil).isApplicationDetailsValid(applicationArgumentCaptor.capture());
+        Application updated = applicationArgumentCaptor.getValue();
+        assertTrue(updated.isEnabledForExpressionOfInterest());
     }
 
     @Test

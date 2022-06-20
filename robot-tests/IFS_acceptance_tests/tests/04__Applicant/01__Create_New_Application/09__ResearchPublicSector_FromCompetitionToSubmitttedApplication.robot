@@ -206,7 +206,6 @@ the internal user can see that the Generic competition has only one Application 
 
 the user should see ineligable to start application page
     the user should see the element     jQuery = h1:contains("You are not eligible to start an application")
-    the user should see the element     css = [href="/competition/${competitionId}/overview"]
     the user should see the element     jQuery = a:contains("competition brief")
     the user should see the element     jQuery = p:contains("The way you intend to exploit the outputs from your project does not match the eligibility criteria for research applicants")
 

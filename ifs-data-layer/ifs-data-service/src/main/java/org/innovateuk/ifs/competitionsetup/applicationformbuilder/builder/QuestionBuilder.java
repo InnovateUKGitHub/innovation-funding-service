@@ -23,6 +23,7 @@ public final class QuestionBuilder {
     private QuestionSetupType questionSetupType;
     private Integer assessorMaximumScore;
     private Questionnaire questionnaire;
+    private boolean preRegistration = true;
 
     private QuestionBuilder() {
     }
@@ -128,6 +129,10 @@ public final class QuestionBuilder {
         return this;
     }
 
+    public QuestionBuilder withPreRegistration(boolean preRegistration) {
+        this.preRegistration = preRegistration;
+        return this;
+    }
 
     public QuestionSetupType getQuestionSetupType() {
         return questionSetupType;
@@ -153,6 +158,7 @@ public final class QuestionBuilder {
         question.setQuestionSetupType(questionSetupType);
         question.setAssessorMaximumScore(assessorMaximumScore);
         question.setQuestionnaire(questionnaire);
+        question.setEnabledForPreRegistration(preRegistration);
         return question;
     }
 }

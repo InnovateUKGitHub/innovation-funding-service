@@ -9,10 +9,10 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectio
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
+import org.innovateuk.ifs.file.resource.BasicFileAndContents;
+import org.innovateuk.ifs.file.resource.FileAndContents;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.BasicFileAndContents;
-import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.file.service.FileService;
 import org.innovateuk.ifs.publiccontent.domain.ContentGroup;
 import org.innovateuk.ifs.publiccontent.domain.ContentSection;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
@@ -57,7 +57,7 @@ public class ContentGroupServiceImpl extends BaseTransactionalService implements
 
         return fileService.createFile(fileAndContents.getFileEntry(), fileAndContents.getContentsSupplier())
                 .andOnSuccess(fileEntry -> find(contentGroupRepository.findById(contentGroupId), notFoundError(ContentGroup.class, contentGroupId))
-                        .andOnSuccessReturnVoid(contentGroup -> contentGroup.setFileEntry(fileEntry.getRight())));
+                        .andOnSuccessReturnVoid(contentGroup -> contentGroup.setFileEntry(fileEntry)));
     }
 
     @Override

@@ -5,8 +5,6 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileUploadService;
-import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
-import org.innovateuk.ifs.file.transactional.FileHeaderAttributes;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;

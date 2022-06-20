@@ -8,4 +8,4 @@ data:
   IFS_EARLY_METRICS_URL: "http://go.innovateuk.ukri.org/ICL_Strand2"
   IFS_WEB_BASEURL: 'https://apply-for-innovation-funding.service.gov.uk'
   IFS_LOANS_SALESFORCE_PAGE_URL: 'https://innovateuk.force.com/LoansCommunity/s'
-  IFS_EDI_SALESFORCE_PAGE_URL: ""
+  IFS_EDI_SALESFORCE_PAGE_URL: 'https://innovateuk.force.com/EDI'

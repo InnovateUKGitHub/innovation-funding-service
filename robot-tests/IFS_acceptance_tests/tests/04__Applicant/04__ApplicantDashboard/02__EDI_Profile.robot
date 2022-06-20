@@ -5,6 +5,8 @@ Documentation    IFS-11252 EDI Section to Applicant Profile
 ...
 ...              IFS-11534 Applicant/Assessors for EDI
 ...
+...              IFS-11924 UAT Design update - application Team link to Profile page
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant
@@ -24,14 +26,16 @@ Applicant can view EDI section in profile page
     Given External user starts a new application
     When the user clicks the button/link            link = Profile
     Then the user should see EDI section details    Incomplete  Not Applicable  Start now
+    And the user should see valid EDI contact log message stored in db
 
 Applicant checks the status of EDI as Incomplete When user not started the edi survey
-    [Documentation]  IFS-11253  IFS-11341
+    [Documentation]  IFS-11253  IFS-11341  IFS-11924
     Given the user clicks the button/link               link = Back to applications
     And the user clicks the button/link                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     And the user fills in the EDI application details   ${applicationNameEDI}  ${tomorrowday}  ${month}  ${nextyear}
     When the user clicks the button/link                link = Application team
-    Then the user should see the element                jQuery = td:contains("ediFirstName SurName") ~ td:contains("Incomplete") ~ td:contains("Lead applicant")
+    Then the user should see the element                jQuery = td:contains("ediFirstName SurName") ~ td:contains("Start survey") ~ td:contains("Lead applicant")
+    And the user should see the element                 jQuery = p:contains("The lead applicant must complete the equality, diversity and inclusion (EDI) survey.")
 
 Applicant checks the status of EDI as Incomplete on application summary when edi survey is not started
     [Documentation]  IFS-11253  IFS-11341
@@ -48,8 +52,8 @@ Lead applicant can not mark the application team as complete when the edi survey
     Then the user should see a field and summary error     Complete our equality,diversity and inclusion survey.
 
 Applicant can view the EDI incomplete status
-    [Documentation]  IFS-11252  IFS-11490
-    Given the user clicks the button/link           jQuery = a:contains("here")
+    [Documentation]  IFS-11252  IFS-11490  IFS-11924
+    Given the user clicks the button/link           jQuery = a:contains("Start survey")
     When the user changed EDI survey status         INPROGRESS  2076-01-22 01:02:03
     Then the user should see EDI section details    Incomplete  22 January 2076  Continue
 
@@ -104,7 +108,7 @@ Assessor/Applicant checks the status of EDI as Incomplete When user not started 
     And the assessor creates a new application
     And the user fills in the EDI application details   ${AssessorapplicationNameEDI}  ${tomorrowday}  ${month}  ${nextyear}
     When the user clicks the button/link                link = Application team
-    Then the user should see the element                jQuery = td:contains("Aaron Jennings") ~ td:contains("Incomplete") ~ td:contains("Lead applicant")
+    Then the user should see the element                jQuery = td:contains("Aaron Jennings") ~ td:contains("Start survey") ~ td:contains("Lead applicant")
 
 Assessor can view EDI section as a incomplete in profile page
     [Documentation]  IFS-11534
@@ -119,7 +123,7 @@ Assessor/applicant can not mark the application team as complete when the edi su
     And the user clicks the button/link                    link = ${AssessorapplicationNameEDI}
     And the user clicks the button/link                    link = Application team
     When the user clicks the button/link                   id = application-question-complete
-    And the user clicks the button/link                    jQuery = a:contains("here")
+    And the user clicks the button/link                    jQuery = a:contains("Start survey")
     And the assessor changed EDI survey status             INPROGRESS  2076-01-22 01:02:03
     And the user edit the profile of an assessor
     Then the user should see EDI section details           Incomplete  22 January 2076  Continue
@@ -186,7 +190,7 @@ the user fills in the EDI application details
 the user should see the read only view of EDI status
     [Arguments]  ${ediStatus}
     the user should see the element                 jQuery = h3:contains("Team members")
-    the user should see the element                 jQuery = th:contains("EDI status")
+    the user should see the element                 jQuery = th:contains("EDI survey")
     the user should see the element                 jQuery = td:contains("ediFirstName SurName") ~ td:contains("${ediStatus}")
 
 the assessor creates a new application
@@ -203,7 +207,7 @@ the assessor creates a new application
 the assessor should see the read only view of EDI status
     [Arguments]  ${ediStatus}
     the user should see the element                 jQuery = h3:contains("Team members")
-    the user should see the element                 jQuery = th:contains("EDI status")
+    the user should see the element                 jQuery = th:contains("EDI survey")
     the user should see the element                 jQuery = td:contains("Aaron Jennings") ~ td:contains("${ediStatus}")
 
 the assessor changed EDI survey status
@@ -229,3 +233,11 @@ External user starts a new application
     the user reads his email and clicks the link                    ediFirstName.SurName@gmail.com  Please verify your email address  Once verified you can sign into your account.
     the user clicks the button/link                                 link = Sign in
     Logging in and Error Checking                                   ediFirstName.SurName@gmail.com  ${short_password}
+
+the user should see valid EDI contact log message stored in db
+    ${userId} =  get user uuid   ediFirstName.SurName@gmail.com
+    Set global variable  ${userId}
+    ${contactPayload} =  get the EDI contact payload delivered to SIL  ${userId}
+    ${contactPayloadInString} =  Convert to string   ${contactPayload}
+    Should Contain  ${contactPayloadInString}    "ifsUuid" : "${userId}"
+    Should Contain  ${contactPayloadInString}    "email" : "ediFirstName.SurName@gmail.com"

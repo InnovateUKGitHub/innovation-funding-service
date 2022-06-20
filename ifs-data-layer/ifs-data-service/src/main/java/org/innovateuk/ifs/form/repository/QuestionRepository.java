@@ -38,5 +38,13 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
     }
     long countByCompetitionIdAndMultipleStatusesAndMarkAsCompletedEnabledTrue(long competitionId, boolean multipleStatuses);
 
+    default long countPreRegQuestionsWithMultipleStatuses(long competitionId) {
+        return countByCompetitionIdAndMultipleStatusesAndMarkAsCompletedEnabledTrueAndEnabledForPreRegistrationTrue(competitionId, true);
+    }
+    default long countPreRegQuestionsWithSingleStatus(long competitionId) {
+        return countByCompetitionIdAndMultipleStatusesAndMarkAsCompletedEnabledTrueAndEnabledForPreRegistrationTrue(competitionId, false);
+    }
+    long countByCompetitionIdAndMultipleStatusesAndMarkAsCompletedEnabledTrueAndEnabledForPreRegistrationTrue(long competitionId, boolean multipleStatuses);
+
     Question findByQuestionnaireId(long id);
 }

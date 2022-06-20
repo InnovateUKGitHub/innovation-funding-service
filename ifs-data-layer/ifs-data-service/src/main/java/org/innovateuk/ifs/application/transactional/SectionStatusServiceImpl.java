@@ -14,7 +14,9 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.form.transactional.SectionService;
 import org.innovateuk.ifs.procurement.milestone.transactional.ApplicationProcurementMilestoneService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -58,6 +60,9 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
     @Autowired
     private ApplicationValidatorService applicationValidatorService;
 
+    @Autowired
+    private QuestionService questionService;
+
     @Override
     public ServiceResult<Map<Long, Set<Long>>> getCompletedSections(final long applicationId) {
         return getApplication(applicationId).andOnSuccessReturn(this::completedSections);
@@ -70,8 +75,8 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
 
                     List<Section> sections = application.getCompetition().getSections();
                     List<ProcessRole> applicantTypeProcessRoles = application.getProcessRoles().stream()
-                        .filter(ProcessRole::isLeadApplicantOrCollaborator)
-                        .collect(toList());
+                            .filter(ProcessRole::isLeadApplicantOrCollaborator)
+                            .collect(toList());
                     Set<Long> organisations = applicantTypeProcessRoles.stream()
                             .map(ProcessRole::getOrganisationId)
                             .collect(toSet());
@@ -91,7 +96,14 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
     private boolean isFinanceOverviewComplete(Application application, Map<Long, List<Long>> completedQuestionsByOrganisations, Set<Long> applicationOrganisations) {
         List<Section> sections = application.getCompetition().getSections();
 
-        Section financeSection = sections.stream().filter(section -> section.getType() == FINANCE).collect(toList()).get(0);
+        List<Section> financeSectionList = sections.stream()
+                .filter(section -> section.getType() == FINANCE)
+                .filter(section -> !application.isEnabledForExpressionOfInterest() || section.isEnabledForPreRegistration())
+                .collect(toList());
+
+        if (financeSectionList.isEmpty())
+            return false;
+        Section financeSection = financeSectionList.get(0);
 
         for (long organisationId : applicationOrganisations) {
             if (!completedQuestionsByOrganisations.containsKey(organisationId)) {
@@ -116,8 +128,8 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
     @Override
     @Transactional
     public ServiceResult<ValidationMessages> markSectionAsComplete(final long sectionId,
-                                                                         final long applicationId,
-                                                                         final long markedAsCompleteById) {
+                                                                   final long applicationId,
+                                                                   final long markedAsCompleteById) {
 
         return find(section(sectionId), application(applicationId)).andOnSuccess((section, application) -> {
 
@@ -142,15 +154,22 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
 
     private void markSectionAsCompleteNoValidate(Section section, Application application, long markedAsCompleteById) {
         if (section.getType() == PROJECT_COST_FINANCES
-            && section.getCompetition().isProcurementMilestones()) {
+                && section.getCompetition().isProcurementMilestones()) {
             resetProcurementMilestoneIfProjectCostsAreNotEqualToPaymentTotal(application, markedAsCompleteById);
         }
-        sectionService.getQuestionsForSectionAndSubsections(section.getId()).andOnSuccessReturnVoid(questions -> questions.forEach(q -> {
-            questionStatusService.markAsCompleteNoValidate(new QuestionApplicationCompositeId(q, application.getId()), markedAsCompleteById);
-            // Assign back to lead applicant.
-            //TODO seems weird? Remove??
-//            questionStatusService.assign(new QuestionApplicationCompositeId(q, application.getId()), application.getLeadApplicantProcessRole().getId(), markedAsCompleteById);
-        }));
+        sectionService.getQuestionsForSectionAndSubsections(section.getId())
+                .andOnSuccessReturnVoid(questions -> questions
+                        .forEach(q -> {
+                            QuestionResource questionResource = questionService.getQuestionById(q).getSuccess();
+                            if (!application.isEnabledForExpressionOfInterest()
+                                    || (application.isEnabledForExpressionOfInterest() && questionResource.isEnabledForPreRegistration())) {
+                                questionStatusService.markAsCompleteNoValidate(new QuestionApplicationCompositeId(q, application.getId()), markedAsCompleteById);
+                                // Assign back to lead applicant.
+                                // TODO seems weird? Remove??
+                                // questionStatusService.assign(new QuestionApplicationCompositeId(q, application.getId()), application.getLeadApplicantProcessRole().getId(), markedAsCompleteById);
+                            }
+                        })
+                );
     }
 
     private void resetProcurementMilestoneIfProjectCostsAreNotEqualToPaymentTotal(Application application, long markedAsCompleteById) {
@@ -159,10 +178,11 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
                 () -> find(sectionRepository.findByTypeAndCompetitionId(PAYMENT_MILESTONES, application.getCompetition().getId()), CommonErrors.notFoundError(Section.class, PAYMENT_MILESTONES, application.getCompetition().getId())))
                 .andOnSuccessReturnVoid((processRole, section) -> {
                     questionStatusService.getQuestionStatusForOrganisationOnApplication(section.getQuestions().get(0).getId(), application.getId(), processRole.getOrganisationId()).andOnSuccessReturnVoid(questionStatus -> {
-                       if (!applicationProcurementMilestoneService.arePaymentMilestonesEqualToFunding(application.getId(), processRole.getOrganisationId()).getSuccess()
-                           && !questionStatus.isEmpty() && Boolean.TRUE.equals(questionStatus.get(0).getMarkedAsComplete())) {
+                        if (!applicationProcurementMilestoneService.arePaymentMilestonesEqualToFunding(application.getId(), processRole.getOrganisationId()).getSuccess()
+                                && !questionStatus.isEmpty() && Boolean.TRUE.equals(questionStatus.get(0).getMarkedAsComplete())) {
                             questionStatusService.markAsInComplete(new QuestionApplicationCompositeId(section.getQuestions().get(0).getId(), application.getId()), markedAsCompleteById);
-                       };
+                        }
+                        ;
                     });
                 });
     }
@@ -232,17 +252,23 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
 
         if (section.hasChildSections()) {
             for (Section childSection : section.getChildSections()) {
-                boolean complete = isSectionComplete(childSection, completedQuestionsByOrganisations, application, organisationId, applicationOrganisations);
-                if (!complete) {
-                    return false;
+                if (!application.isEnabledForExpressionOfInterest()
+                        || (application.isEnabledForExpressionOfInterest() && childSection.isEnabledForPreRegistration())) {
+                    boolean complete = isSectionComplete(childSection, completedQuestionsByOrganisations, application, organisationId, applicationOrganisations);
+                    if (!complete) {
+                        return false;
+                    }
                 }
             }
         }
 
         for (Question question : section.getQuestions()) {
-            if (!completedQuestionsByOrganisations.containsKey(organisationId)
-                    || !completedQuestionsByOrganisations.get(organisationId).contains((question.getId()))) {
-                return false;
+            if (!application.isEnabledForExpressionOfInterest()
+                    || (application.isEnabledForExpressionOfInterest() && question.isEnabledForPreRegistration())) {
+                if (!completedQuestionsByOrganisations.containsKey(organisationId)
+                        || !completedQuestionsByOrganisations.get(organisationId).contains((question.getId()))) {
+                    return false;
+                }
             }
         }
 

@@ -120,6 +120,9 @@ public class Application implements ProcessActivity {
     @JoinColumn(name = "applicationExternalConfigId", referencedColumnName = "id")
     private ApplicationExternalConfig applicationExternalConfig;
 
+    @OneToOne(mappedBy = "application", fetch = FetchType.LAZY)
+    private ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig;
+
     public Application() {
     }
 
@@ -156,6 +159,7 @@ public class Application implements ProcessActivity {
         this.competitionReferralSource = application.getCompetitionReferralSource();
         this.companyAge = application.getCompanyAge();
         this.companyPrimaryFocus = application.getCompanyPrimaryFocus();
+        this.applicationExpressionOfInterestConfig = application.getApplicationExpressionOfInterestConfig();
     }
 
     protected boolean canEqual(Object other) {
@@ -553,5 +557,18 @@ public class Application implements ProcessActivity {
 
     public void setApplicationExternalConfig(ApplicationExternalConfig applicationExternalConfig) {
         this.applicationExternalConfig = applicationExternalConfig;
+    }
+
+    public ApplicationExpressionOfInterestConfig getApplicationExpressionOfInterestConfig() {
+        return applicationExpressionOfInterestConfig;
+    }
+
+    public void setApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig) {
+        this.applicationExpressionOfInterestConfig = applicationExpressionOfInterestConfig;
+    }
+
+    @Transient
+    public boolean isEnabledForExpressionOfInterest() {
+        return applicationExpressionOfInterestConfig != null ? applicationExpressionOfInterestConfig.isEnabledForExpressionOfInterest() : false;
     }
 }

@@ -1,35 +1,24 @@
 package org.innovateuk.ifs.assessment.invite.viewmodel;
 
+import lombok.Getter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+@Getter
 public abstract class BaseInviteViewModel {
     private String inviteHash;
     private Long competitionId;
     private String competitionName;
     private boolean userLoggedIn;
+    private String hash;
 
-    protected BaseInviteViewModel(String inviteHash, Long competitionId, String competitionName, boolean userLoggedIn) {
+
+    protected BaseInviteViewModel(String inviteHash, Long competitionId, String competitionName, boolean userLoggedIn, String hash) {
         this.inviteHash = inviteHash;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.userLoggedIn = userLoggedIn;
-    }
-
-    public String getInviteHash() {
-        return inviteHash;
-    }
-
-    public Long getCompetitionId() {
-        return competitionId;
-    }
-
-    public String getCompetitionName() {
-        return competitionName;
-    }
-
-    public boolean isUserLoggedIn() {
-        return userLoggedIn;
+        this.hash = hash;
     }
 
     @Override

@@ -32,6 +32,7 @@ public class ApplicationDetailsViewModel implements BaseAnalyticsViewModel {
 
     private boolean ktpCompetition;
     private boolean canResubmit;
+    private boolean isDirectAward;
 
     public ApplicationDetailsViewModel(ApplicationResource application, CompetitionResource competition, boolean open, boolean complete, int maxMilestoneMonth) {
         this.application = application;
@@ -46,6 +47,7 @@ public class ApplicationDetailsViewModel implements BaseAnalyticsViewModel {
         this.complete = complete;
         this.ktpCompetition = competition.isKtp();
         this.canResubmit = competition.getResubmission();
+        this.isDirectAward = competition.isDirectAward();
     }
 
     @Override
@@ -125,6 +127,10 @@ public class ApplicationDetailsViewModel implements BaseAnalyticsViewModel {
 
     public boolean isCanResubmit() {
         return canResubmit;
+    }
+
+    public boolean isDirectAward() {
+        return isDirectAward;
     }
 
     @JsonIgnore

@@ -2,8 +2,8 @@ package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
-import org.innovateuk.ifs.file.service.BasicFileAndContents;
-import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.file.resource.BasicFileAndContents;
+import org.innovateuk.ifs.file.resource.FileAndContents;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.mock.web.MockMultipartFile;

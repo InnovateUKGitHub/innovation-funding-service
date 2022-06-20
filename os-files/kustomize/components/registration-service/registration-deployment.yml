@@ -43,6 +43,7 @@ spec:
             timeoutSeconds: 5
             successThreshold: 1
             failureThreshold: 1
+          envFrom: []
           env:
             - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
               valueFrom:
@@ -108,6 +109,8 @@ spec:
               value: -Xms256m -Xmx650m -javaagent:/newrelic.jar
             - name: NEW_RELIC_APP_NAME
               value: 'ifs-$(NEW_RELIC_ENV)-registration-service'
+            - name: SHIBBOLETH_LDAP_REQUIREVALIDPPOLICY
+              value: "false"
           ports:
             - containerPort: 8080
           resources:
@@ -116,10 +119,6 @@ spec:
             requests:
               cpu: 100m
               memory: 1G
-          lifecycle:
-            postStart:
-              exec:
-                command: ["/bin/sh", "-c", "$JAVA_HOME/bin/keytool -import -trustcacerts -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit -noprompt -alias iuk-auth-localdev -file /var/certs/ldap-encryption.crt"]
           volumeMounts:
             - mountPath: /var/certs
               name: registration-keys-volume

@@ -113,7 +113,8 @@ the user creates a new open ended competiton
 the user check for valid content on front end for open ended competitions
     [Documentation]  IFS-8848
     [Setup]  get competition id and set open date to yesterday      ${openEndedCompName}
-    When the user navigates to the page                             ${server}/competition/${competitionId}/overview
+    Given the user navigates to the page                            ${frontDoor}
+    When the user clicks the button/link in the paginated list      link = ${openEndedCompName}
     Then the user check for valid content on front end
 
 the user should see the disabled send notification and release feedback button

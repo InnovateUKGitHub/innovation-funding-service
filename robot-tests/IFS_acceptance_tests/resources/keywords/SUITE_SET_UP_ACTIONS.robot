@@ -45,6 +45,11 @@ the lead applicant fills all the questions and marks as complete(programme)
     :FOR  ${ELEMENT}    IN    @{programme_questions}
      \     the lead applicant marks every question as complete     ${ELEMENT}
 
+the lead applicant fills all the questions and marks as complete(Direct Award)
+    the user marks the project details as complete
+    :FOR  ${ELEMENT}    IN    @{Directaward_questions}
+     \     the lead applicant marks every question as complete     ${ELEMENT}
+
 the lead applicant fills all the questions and marks as complete(programme ATI)
     the user marks the project details as complete
     :FOR  ${ELEMENT}    IN    @{programme_questions_procurement_ati}
@@ -62,6 +67,10 @@ the lead applicant fills all the questions and marks as complete(thirdparty)
 
 the lead applicant fills all the questions and marks as complete(Hecp)
     :FOR  ${ELEMENT}    IN    @{Hecp_questions}
+     \     the lead applicant marks the questions as complete (hecp)    ${ELEMENT}
+
+the lead applicant fills all the questions and marks as complete(prereg)
+    :FOR  ${ELEMENT}    IN    @{prereg_questions}
      \     the lead applicant marks the questions as complete (hecp)    ${ELEMENT}
 
 the lead completes the questions with multiple answer choice and multiple appendices
@@ -139,8 +148,7 @@ the user marks the section as complete procurement
 
 Create new application with the same user
     [Arguments]  ${Application_title}   ${orgType}
-    the user navigates to the page                              ${openCompetitionBusinessRTO_overview}
-    the user clicks the button/link                             jQuery=a:contains("Start new application")
+    the user select the competition and starts application     ${openCompetitionBusinessRTO_name}
     check if there is an existing application in progress for this competition
     the user clicks the button/link                             link=Apply with a different organisation
     the user selects the radio button                           organisationTypeId  ${orgType}
@@ -227,7 +235,8 @@ The user navigates to the finance overview of the academic
 
 invite a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
-    the user navigates to the page                             ${openCompetitionBusinessRTO_overview}
+    the user navigates to the page                             ${frontDoor}
+    the user clicks the button/link in the paginated list      link = ${openCompetitionBusinessRTO_name}
     the user follows the flow to register their organisation   ${BUSINESS_TYPE_ID}
     the user verifies email                                    Stuart   Anderson    ${EMAIL_LEAD}
     the user clicks the button/link                            link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
@@ -243,8 +252,9 @@ invite a registered user
     the guest user opens the browser
 
 we create a new user
-    [Arguments]    ${COMPETITION_ID}  ${first_name}  ${last_name}  ${EMAIL_INVITED}  ${org_type_id}
-    the user navigates to the page                             ${SERVER}/competition/${COMPETITION_ID}/overview/
+    [Arguments]    ${COMPETITION_NAME}  ${first_name}  ${last_name}  ${EMAIL_INVITED}  ${org_type_id}
+    the user navigates to the page                            ${frontDoor}
+    the user clicks the button/link in the paginated list     link = ${COMPETITION_NAME}
     the user follows the flow to register their organisation    ${org_type_id}
     the user verifies email    ${first_name}   ${last_name}    ${EMAIL_INVITED}
 

@@ -7,7 +7,7 @@ import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResourc
 import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategies;
 import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategy;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.resource.FileEntryResourceAssembler;
+import org.innovateuk.ifs.file.mapper.FileEntryResourceAssembler;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;

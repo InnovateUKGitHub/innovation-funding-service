@@ -1037,16 +1037,16 @@ the user check for correspondence address titles and info text
 
 the user fills correspondence address data
     [Arguments]     ${addresLine1}  ${addresLine2}  ${town}  ${country}  ${zipCode}
-    Wait Until Keyword Succeeds Without Screenshots    10    200ms    input text        id = addressLine1       ${addresLine1}
-    Wait Until Keyword Succeeds Without Screenshots    10    200ms    input text        id = addressLine2       ${addresLine2}
-    Wait Until Keyword Succeeds Without Screenshots    10    200ms    input text        id = town               ${town}
+    Wait Until Keyword Succeeds Without Screenshots    10s    200ms    input text        id = addressLine1       ${addresLine1}
+    Wait Until Keyword Succeeds Without Screenshots    10s    200ms    input text        id = addressLine2       ${addresLine2}
+    Wait Until Keyword Succeeds Without Screenshots    10s    200ms    input text        id = town               ${town}
     enter the country in the autocomplete field        Argentina      ${country}
-    Wait Until Keyword Succeeds Without Screenshots    10    200ms    input text        id = zipCode            ${zipCode}
+    Wait Until Keyword Succeeds Without Screenshots    10s    200ms    input text        id = zipCode            ${zipCode}
 
 the user should see read only view of completed correspondence address details
-    wait until keyword succeeds without screenshots  5 s   100 ms     the user should see the element     jQuery = td:contains("Calle 11, San Sebastian,")
-    wait until keyword succeeds without screenshots  5 s   100 ms     the user should see the element     jQuery = td:contains("Argentina, X5187XAB")
-    wait until keyword succeeds without screenshots  5 s   100 ms     the user should see the element     id = project-address-status
+    the user should see the element     jQuery = td:contains("Calle 11, San Sebastian,")
+    the user should see the element     jQuery = td:contains("Argentina, X5187XAB")
+    the user should see the element     id = project-address-status
 
 the user should see field and summary validation messages
     the user should see a field and summary error   ${countryValidationMessage}

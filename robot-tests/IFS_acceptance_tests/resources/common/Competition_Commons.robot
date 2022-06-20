@@ -154,6 +154,7 @@ the user fills in the CS Project eligibility
     ...   AND    the user enters Research Participation if required   ${researchParticipation}
     the user selects the radio button     resubmission  yes
     the user clicks the button/link       jQuery = button:contains("Done")
+    the user should see the element       jQuery = button:contains("Edit")
     the user clicks the button/link       link = Back to competition details
     the user should see the element       jQuery = div:contains("Project eligibility") ~ .task-status-complete
 
@@ -171,7 +172,7 @@ the user fills in the CS funding eligibility
     ...  ELSE IF   "${fundingRule}" == "STATE_AID" and '${researchCategory}' == 'false'          run keywords                        the user fills in maximum funding level percentage
     ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
     ...                                     AND              the user should see the element     jQuery = p:contains("Click edit to change the maximum funding level percentage.")
-    ...  ELSE IF   "${fundingRule}" == "NOT_AID" and '${researchCategory}' == 'false'            run keywords        the user fills in maximum funding level percentage
+    ...  ELSE IF   "${fundingRule}" == "NOT_AID" and '${researchCategory}' == 'false'            run keywords        the user fills in non aid maximum funding level percentage
     ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
     ...  ELSE IF    '${researchCategory}' == 'false'         run keywords                        the user fills in maximum funding level percentage
     ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
@@ -217,6 +218,11 @@ the user fills funding level percentages
 
 the user fills in maximum funding level percentage
     the user enters text to a text field     id = maximums[0][0].maximum   10
+    the user should see the element          jQuery = p:contains("Set the maximum funding level percentage that applicants can apply for.")
+    the user should see the element          jQuery = p:contains("You can only use whole numbers from 0 to 100.")
+
+the user fills in non aid maximum funding level percentage
+    the user enters text to a text field     id = maximums[0][0].maximum   100
     the user should see the element          jQuery = p:contains("Set the maximum funding level percentage that applicants can apply for.")
     the user should see the element          jQuery = p:contains("You can only use whole numbers from 0 to 100.")
 

@@ -600,18 +600,20 @@ the applicant submits the application
     the user should be redirected to the correct page  track
 
 the user applies to competition and enters organisation type
-    [Arguments]  ${compId}  ${organisationType}
-    the user navigates to the page     ${server}/competition/${compId}/overview
+    [Arguments]  ${compName}  ${organisationType}
+    the user navigates to the page                              ${frontDoor}
+    the user clicks the button/link in the paginated list       link = ${compName}
     the user fills in the address info   2
 
 the user applies to competition and enters organisation type link
-    [Arguments]  ${compId}  ${organisationType}  ${organisationName}
-    the user navigates to the page                      ${server}/competition/${compId}/overview
-    the user clicks the button/link                     link = Start new application
-    The user clicks the button/link                     link = Continue and create an account
-    the user selects the radio button                   organisationTypeId  ${organisationType}
-    the user clicks the button/link                     jQuery = button:contains("Save and continue")
-    the user search for organisation name on Companies house   ITV  ${organisationName}
+    [Arguments]  ${compName}  ${organisationType}  ${organisationName}
+    the user navigates to the page                              ${frontDoor}
+    the user clicks the button/link in the paginated list       link = ${compName}
+    the user clicks the button/link                             link = Start new application
+    The user clicks the button/link                             link = Continue and create an account
+    the user selects the radio button                           organisationTypeId  ${organisationType}
+    the user clicks the button/link                             jQuery = button:contains("Save and continue")
+    the user search for organisation name on Companies house    ITV  ${organisationName}
 
 the user selects his organisation in Companies House
     [Arguments]  ${search}  ${link}
@@ -1077,3 +1079,23 @@ the user confirms economic activity for research organiations
     [Arguments]  ${confirmEligibility}
     the user clicks the button twice    jQuery = label:contains("${confirmEligibility}")
     the user clicks the button/link     name = research-eligibility-submit
+
+the user complete the work programme
+    the user clicks the button/link     jQuery = a:contains("Work programme")
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
+    the user clicks the button twice    jQuery = label:contains("Culture, Creativity and Inclusive Society (CL2)")
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
+    the user clicks the button twice    jQuery = label:contains("HORIZON-CL2-2021-DEMOCRACY-01")
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
+    the user clicks the button/link     id = application-question-complete
+    the user clicks the button/link     link = Back to application overview
+    the user should see the element     jQuery = li:contains("Work programme") > .task-status-complete
+
+The user is able to complete horizon grant agreement section
+    the user clicks the button/link           jQuery = a:contains("Horizon Europe Guarantee grant agreement")
+    the user should see the element           jQuery = h1:contains("Horizon Europe Guarantee grant agreement")
+    the user uploads the file                 id = grantAgreement  ${valid_pdf}
+    the user clicks the button/link           id = mark-as-complete
+    the user clicks the button/link           link = Return to application overview
+    the user should see the element           jQuery = li:contains("Horizon Europe Guarantee grant agreement") > .task-status-complete

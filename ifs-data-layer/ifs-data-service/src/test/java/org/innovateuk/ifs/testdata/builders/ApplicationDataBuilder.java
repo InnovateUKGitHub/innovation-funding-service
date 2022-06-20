@@ -45,7 +45,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         return with(data -> data.setCompetition(competition));
     }
 
-    public ApplicationDataBuilder withBasicDetails(UserResource leadApplicant, String applicationName, String researchCategory, boolean resubmission, long organisationId) {
+    public ApplicationDataBuilder withBasicDetails(UserResource leadApplicant, String applicationName, String researchCategory, boolean resubmission, long organisationId, boolean enabledForExpressionOfInterest) {
 
         return with(data -> doAs(leadApplicant, () -> {
 
@@ -54,6 +54,8 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                     getSuccess();
 
             created.setResubmission(resubmission);
+            created.getApplicationExpressionOfInterestConfigResource().setEnabledForExpressionOfInterest(enabledForExpressionOfInterest);
+
             ValidationMessages validationMessages = applicationService.saveApplicationDetails(created.getId(), created)
                     .getSuccess();
 
