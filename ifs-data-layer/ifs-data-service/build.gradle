@@ -44,7 +44,11 @@ dependencies {
         developmentOnly project(":common:starter:ifs-starter-swagger-ui")
     }
 
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.6.5'
+    implementation ('org.springframework.boot:spring-boot-starter-data-jpa') {
+        exclude group: 'org.springframework.data', module: 'spring-data-jpa-parent'
+    }
+    implementation ('org.springframework.data:spring-data-jpa-parent:2.7.1')
+
     implementation "org.springframework.boot:spring-boot-starter-validation"
     implementation "org.springframework.security:spring-security-crypto"
     implementation "org.springframework.boot:spring-boot-starter-security"
