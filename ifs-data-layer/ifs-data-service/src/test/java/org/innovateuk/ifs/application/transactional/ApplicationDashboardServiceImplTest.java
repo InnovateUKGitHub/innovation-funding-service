@@ -5,6 +5,7 @@ import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInProgressRowRes
 import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInSetupRowResource;
 import org.innovateuk.ifs.applicant.resource.dashboard.DashboardRowResource;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationExpressionOfInterestConfig;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
@@ -139,7 +140,8 @@ public class ApplicationDashboardServiceImplTest {
                 .withCompetition(alwaysOpenCompetition)
                 .withApplicationState(ApplicationState.SUBMITTED)
                 .withFundingDecision((FundingDecisionStatus) null)
-                .withEnableForEOI(true)
+                .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig
+                        .builder().enabledForExpressionOfInterest(true).build())
                 .build();
     }
 

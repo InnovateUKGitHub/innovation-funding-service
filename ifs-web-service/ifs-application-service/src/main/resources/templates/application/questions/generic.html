@@ -180,7 +180,7 @@
                                    class="govuk-label govuk-radios__label" th:text="${multipleChoiceOption.text}" />
                         </div>
                     </div>
-                    <th:block th:if="${#lists.size(model.multipleChoiceOptions) > 9 and #lists.size(model.multipleChoiceOptions) <= 15}">
+                    <th:block th:if="${#lists.size(model.multipleChoiceOptions) > 9 and #lists.size(model.multipleChoiceOptions) <= 30}">
                         <label class="govuk-label govuk-visually-hidden" for="multipleChoiceOptionId">Please select an answer.</label>
                         <select class="govuk-select"
                                 id="multipleChoiceOptionId"
