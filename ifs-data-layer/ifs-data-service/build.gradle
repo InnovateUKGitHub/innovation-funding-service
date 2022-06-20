@@ -45,9 +45,9 @@ dependencies {
     }
 
     implementation ('org.springframework.boot:spring-boot-starter-data-jpa') {
-        exclude group: 'org.springframework.data', module: 'spring-data-jpa-parent'
+        exclude group: 'org.springframework.data', module: 'spring-data-jpa'
     }
-    implementation ('org.springframework.data:spring-data-jpa-parent:2.7.1')
+    implementation ('org.springframework.data:spring-data-jpa:2.7.1')
 
     implementation "org.springframework.boot:spring-boot-starter-validation"
     implementation "org.springframework.security:spring-security-crypto"
