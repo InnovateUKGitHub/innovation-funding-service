@@ -176,7 +176,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 .filter(question -> data.getApplication().isEnableForEOI() ? question.isEnabledForPreRegistration() : true)
                 .map(question -> populateQuestionViewModel(question, data, settings))
                 .collect(toCollection(LinkedHashSet::new));
-        return new ApplicationSectionReadOnlyViewModel(sectionName(section, data), false, section.isTermsAndConditions(), questionViews);
+        return new ApplicationSectionReadOnlyViewModel(sectionName(section, data), false, section.isTermsAndConditions(), data.getApplication().isEnableForEOI() ? section.isEnabledForPreRegistration() : true, questionViews);
     }
 
     private String sectionName(SectionResource section, ApplicationReadOnlyData data) {
@@ -186,7 +186,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
     //Currently only theA finance section has child sections.
     private ApplicationSectionReadOnlyViewModel sectionWithChildren(SectionResource section, ApplicationReadOnlySettings settings, ApplicationReadOnlyData data) {
         ApplicationQuestionReadOnlyViewModel finance = financeSummaryViewModelPopulator.populate(data);
-        return new ApplicationSectionReadOnlyViewModel(section.getName(), true, section.isTermsAndConditions(), ImmutableSet.of(finance));
+        return new ApplicationSectionReadOnlyViewModel(section.getName(), true, section.isTermsAndConditions(),  data.getApplication().isEnableForEOI() ? section.isEnabledForPreRegistration() : true, ImmutableSet.of(finance));
     }
 
     private ApplicationQuestionReadOnlyViewModel populateQuestionViewModel(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
