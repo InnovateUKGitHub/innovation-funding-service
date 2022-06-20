@@ -98,7 +98,7 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
 
         List<Section> financeSectionList = sections.stream()
                 .filter(section -> section.getType() == FINANCE)
-                .filter(section -> !application.isEnableForEOI() || section.isEnabledForPreRegistration())
+                .filter(section -> !application.isEnabledForExpressionOfInterest() || section.isEnabledForPreRegistration())
                 .collect(toList());
 
         if (financeSectionList.isEmpty())
@@ -161,8 +161,8 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
                 .andOnSuccessReturnVoid(questions -> questions
                         .forEach(q -> {
                             QuestionResource questionResource = questionService.getQuestionById(q).getSuccess();
-                            if (!application.isEnableForEOI()
-                                    || (application.isEnableForEOI() && questionResource.isEnabledForPreRegistration())) {
+                            if (!application.isEnabledForExpressionOfInterest()
+                                    || (application.isEnabledForExpressionOfInterest() && questionResource.isEnabledForPreRegistration())) {
                                 questionStatusService.markAsCompleteNoValidate(new QuestionApplicationCompositeId(q, application.getId()), markedAsCompleteById);
                                 // Assign back to lead applicant.
                                 // TODO seems weird? Remove??
@@ -252,8 +252,8 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
 
         if (section.hasChildSections()) {
             for (Section childSection : section.getChildSections()) {
-                if (!application.isEnableForEOI()
-                        || (application.isEnableForEOI() && childSection.isEnabledForPreRegistration())) {
+                if (!application.isEnabledForExpressionOfInterest()
+                        || (application.isEnabledForExpressionOfInterest() && childSection.isEnabledForPreRegistration())) {
                     boolean complete = isSectionComplete(childSection, completedQuestionsByOrganisations, application, organisationId, applicationOrganisations);
                     if (!complete) {
                         return false;
@@ -263,8 +263,8 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
         }
 
         for (Question question : section.getQuestions()) {
-            if (!application.isEnableForEOI()
-                    || (application.isEnableForEOI() && question.isEnabledForPreRegistration())) {
+            if (!application.isEnabledForExpressionOfInterest()
+                    || (application.isEnabledForExpressionOfInterest() && question.isEnabledForPreRegistration())) {
                 if (!completedQuestionsByOrganisations.containsKey(organisationId)
                         || !completedQuestionsByOrganisations.get(organisationId).contains((question.getId()))) {
                     return false;

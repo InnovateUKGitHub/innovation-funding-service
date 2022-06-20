@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.application.resource.ApplicationExpressionOfInterestConfigResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
@@ -135,9 +136,5 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
 
     public ApplicationResourceBuilder withFeedbackReleased(ZonedDateTime... feedbackReleaseds) {
         return withArray((feedbackReleased, application) -> application.setFeedbackReleased(feedbackReleased), feedbackReleaseds);
-    }
-
-    public ApplicationResourceBuilder withEnableForEOI(boolean... enableForEOIs) {
-        return withArray((enableForEOI, application) -> application.setEnableForEOI(enableForEOI), enableForEOIs);
     }
 }
