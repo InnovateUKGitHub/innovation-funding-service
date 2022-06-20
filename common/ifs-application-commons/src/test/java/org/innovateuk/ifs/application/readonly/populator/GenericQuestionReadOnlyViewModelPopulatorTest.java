@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.readonly.populator;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
 import org.innovateuk.ifs.application.readonly.viewmodel.GenericQuestionReadOnlyViewModel;
+import org.innovateuk.ifs.application.resource.ApplicationExpressionOfInterestConfigResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.assessment.builder.ApplicationAssessmentsResourceBuilder;
@@ -33,6 +34,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentResourceBuilder.newApplicationAssessmentResource;
+import static org.innovateuk.ifs.application.builder.ApplicationExpressionOfInterestConfigResourceBuilder.newApplicationExpressionOfInterestConfigResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
@@ -290,9 +292,15 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
     public void populateEOI() {
         Long questionId = 1L;
 
+        ApplicationExpressionOfInterestConfigResource applicationExpressionOfInterestConfig = newApplicationExpressionOfInterestConfigResource()
+                .withEnabledForExpressionOfInterest(true)
+                .build();
+
         ApplicationResource application = newApplicationResource()
-                .withResearchCategory(newResearchCategoryResource().withName("Research category").build())
-                .withEnableForEOI(true)
+                .withResearchCategory(newResearchCategoryResource()
+                        .withName("Research category")
+                        .build())
+                .withApplicationExpressionOfInterestConfigResource(applicationExpressionOfInterestConfig)
                 .build();
         CompetitionResource competition = newCompetitionResource()
                 .build();

@@ -1,3 +1,0 @@
-FROM docker-ifs.devops.innovateuk.org/releases/ifs-mysql-client
-RUN apt-get install -yq curl
-COPY send-all-cost-totals.sh /

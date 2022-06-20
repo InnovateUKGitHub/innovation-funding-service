@@ -173,20 +173,20 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         Set<ApplicationQuestionReadOnlyViewModel> questionViews = section.getQuestions()
                 .stream()
                 .map(questionId -> data.getQuestionIdToQuestion().get(questionId))
-                .filter(question -> data.getApplication().isEnableForEOI() ? question.isEnabledForPreRegistration() : true)
+                .filter(question -> !data.getApplication().isEnabledForExpressionOfInterest() || question.isEnabledForPreRegistration())
                 .map(question -> populateQuestionViewModel(question, data, settings))
                 .collect(toCollection(LinkedHashSet::new));
-        return new ApplicationSectionReadOnlyViewModel(sectionName(section, data), false, section.isTermsAndConditions(), data.getApplication().isEnableForEOI() ? section.isEnabledForPreRegistration() : true, questionViews);
+        return new ApplicationSectionReadOnlyViewModel(sectionName(section, data), false, section.isTermsAndConditions(), data.getApplication().isEnabledForExpressionOfInterest() ? section.isEnabledForPreRegistration() : true, questionViews);
     }
 
     private String sectionName(SectionResource section, ApplicationReadOnlyData data) {
-        return data.getApplication().isEnableForEOI() ? (section.getName().equals("Application questions") ? "Expression of interest questions" : section.getName()) : section.getName();
+        return data.getApplication().isEnabledForExpressionOfInterest() ? (section.getName().equals("Application questions") ? "Expression of interest questions" : section.getName()) : section.getName();
     }
 
     //Currently only theA finance section has child sections.
     private ApplicationSectionReadOnlyViewModel sectionWithChildren(SectionResource section, ApplicationReadOnlySettings settings, ApplicationReadOnlyData data) {
         ApplicationQuestionReadOnlyViewModel finance = financeSummaryViewModelPopulator.populate(data);
-        return new ApplicationSectionReadOnlyViewModel(section.getName(), true, section.isTermsAndConditions(),  data.getApplication().isEnableForEOI() ? section.isEnabledForPreRegistration() : true, ImmutableSet.of(finance));
+        return new ApplicationSectionReadOnlyViewModel(section.getName(), true, section.isTermsAndConditions(),  data.getApplication().isEnabledForExpressionOfInterest() ? section.isEnabledForPreRegistration() : true, ImmutableSet.of(finance));
     }
 
     private ApplicationQuestionReadOnlyViewModel populateQuestionViewModel(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {

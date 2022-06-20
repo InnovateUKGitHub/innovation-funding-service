@@ -49,7 +49,7 @@ public class ApplicationPrintPopulator {
                 .setIncludeAllAssessorFeedback(userCanViewFeedback(user, competition, application))
                 .setIncludeAllSupporterFeedback(userCanViewSupporterFeedback(user, competition, application))
                 .setIncludeTeamMember(includeTeamMember)
-                .setIncludeQuestionNumber(!application.isEnableForEOI());
+                .setIncludeQuestionNumber(!application.isEnabledForExpressionOfInterest());
 
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationReadOnlyViewModelPopulator.populate(applicationId, user, settings);
         model.addAttribute("model", applicationReadOnlyViewModel);

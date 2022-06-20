@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationQuestionRead
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationSectionReadOnlyViewModel;
 import org.innovateuk.ifs.application.readonly.viewmodel.FinanceReadOnlyViewModel;
+import org.innovateuk.ifs.application.resource.ApplicationExpressionOfInterestConfigResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
@@ -28,7 +29,6 @@ import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.horizon.resource.ApplicationHorizonWorkProgrammeResource;
-import org.innovateuk.ifs.horizon.resource.HorizonWorkProgramme;
 import org.innovateuk.ifs.horizon.service.HorizonWorkProgrammeRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
@@ -58,6 +58,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectations;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentResourceBuilder.newApplicationAssessmentResource;
+import static org.innovateuk.ifs.application.builder.ApplicationExpressionOfInterestConfigResourceBuilder.newApplicationExpressionOfInterestConfigResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
@@ -471,6 +472,11 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         UserResource user = newUserResource()
                 .withRoleGlobal(Role.APPLICANT)
                 .build();
+
+        ApplicationExpressionOfInterestConfigResource applicationExpressionOfInterestConfig = newApplicationExpressionOfInterestConfigResource()
+                .withEnabledForExpressionOfInterest(true)
+                .build();
+
         ApplicationReadOnlySettings settings = ApplicationReadOnlySettings.defaultSettings()
                 .setIncludeQuestionLinks(true)
                 .setIncludeStatuses(true)
@@ -489,7 +495,8 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withId(applicationId)
-                .withCompetition(competition.getId()).withEnableForEOI(true)
+                .withCompetition(competition.getId())
+                .withApplicationExpressionOfInterestConfigResource(applicationExpressionOfInterestConfig)
                 .build();
         List<QuestionResource> questions = newQuestionResource()
                 .withQuestionSetupType(QuestionSetupType.APPLICATION_TEAM)

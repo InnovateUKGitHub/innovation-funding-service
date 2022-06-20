@@ -3,10 +3,7 @@ package org.innovateuk.ifs.application.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationProcess;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.CompanyAge;
-import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
-import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.category.domain.InnovationArea;
@@ -160,8 +157,5 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
 
     public ApplicationBuilder withAssessmentPeriod(AssessmentPeriod... assessmentPeriods) {
         return withArray((assessmentPeriod, application) -> application.setAssessmentPeriod(assessmentPeriod), assessmentPeriods);
-    }
-    public ApplicationBuilder withEnableForEOI(Boolean... enableForEOIs) {
-        return withArray((enableForEOI, object) -> setField("enableForEOI", enableForEOI, object), enableForEOIs);
     }
 }
