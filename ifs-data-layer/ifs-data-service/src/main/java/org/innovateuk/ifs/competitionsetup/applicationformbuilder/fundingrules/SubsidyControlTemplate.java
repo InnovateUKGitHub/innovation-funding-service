@@ -67,16 +67,16 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
     private static final String QUESTION3_GUIDANCE =
             "Note: if you have not made any sales or you do not intend to sell to Northern Ireland " +
                     "or you consider it possible to say that any effect of the Innovate UK funding upon: " + "\n" +
-                    "(a) goods that will be traded between Northern Ireland and the EU " + "\n" +
+                    "goods that will be traded between Northern Ireland and the EU " + "\n" +
                     "or \n" +
-                    "(b) the single electricity market of Ireland, " + "\n" +
+                    "the single electricity market of Ireland, " + "\n" +
                     "will be merely \"hypothetical, presumed, or without a genuine and direct link to Northern Ireland\", " +
                     "then answer No to this question.";
     private static final String QUESTION4_TITLE =
             "Does your enterprise make goods or provide services to third parties with a view to: " + "\n" +
-                    "(a) enabling them to manufacture goods that will be traded between Northern Ireland and the EU" + "\n" +
+                    "enabling them to manufacture goods that will be traded between Northern Ireland and the EU" + "\n" +
                     "or" + "\n" +
-                    "(b) effect the single electricity market of Ireland";
+                    "effect the single electricity market of Ireland?";
     private static final String QUESTION4_GUIDANCE =
             "Note: this question seeks to understand if you are carrying out activities that may indirectly lead " +
                     "to effects on trade in goods to Northern Ireland or the single electricity market of Ireland. " +
@@ -194,7 +194,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         fundingDirectlyOrIndirectlyQuestion.setQuestion(
                 "Will the Innovate UK funding directly or indirectly have an effect upon either:" + "\n" +
                         "goods that will be traded between Northern Ireland and the EU" + "\n" +
-                        "the single electricity market (of Ireland)?");
+                        "and/or the single electricity market (of Ireland)?");
         fundingDirectlyOrIndirectlyQuestion.setQuestionnaire(questionnaire.getId());
         fundingDirectlyOrIndirectlyQuestion = questionnaireQuestionService.create(fundingDirectlyOrIndirectlyQuestion).getSuccess();
 
