@@ -63,13 +63,12 @@ Applicant can not view hidden question, section and subsection in application su
     And the user should not see the element     jQuery = h2:contains("Terms and conditions")
     And the user should not see the element     jQuery = button:contains("Award terms and conditions")
     And the user should see the element         jQuery = h1:contains("Expression of interest summary")
-    And the user should see the element         jQuery = h1:contains("Expression of interest questions")
+    And the user should see the element         jQuery = h2:contains("Expression of interest questions")
 
 Applicant submits the expression of interest application
     [Arguments]  IFS-12079
     When the user clicks the button/link        id = submit-application-button
     Then the user should see the element        jQuery = h2:contains("Application submitted")
-    And the user reads his email
     And the user reads his email                steve.smith@empire.com  ${preregApplicationID}: Successful submission of application   You have successfully submitted an application for funding to ${hecpPreregCompName}.
 
 *** Keywords ***
