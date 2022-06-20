@@ -69,7 +69,6 @@ Applicant submits the expression of interest application
     [Arguments]  IFS-12079
     When the user clicks the button/link        id = submit-application-button
     Then the user should see the element        jQuery = h2:contains("Application submitted")
-    And the user reads his email
     And the user reads his email                steve.smith@empire.com  ${preregApplicationID}: Successful submission of application   You have successfully submitted an application for funding to ${hecpPreregCompName}.
 
 *** Keywords ***
