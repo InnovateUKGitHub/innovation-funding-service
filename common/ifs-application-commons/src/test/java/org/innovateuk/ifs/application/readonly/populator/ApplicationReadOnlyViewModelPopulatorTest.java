@@ -465,4 +465,101 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
 
         verify(mockPopulator).populate(questions.get(0), expectedData, settings);
     }
+
+    @Test
+    public void populateEOI() {
+        UserResource user = newUserResource()
+                .withRoleGlobal(Role.APPLICANT)
+                .build();
+        ApplicationReadOnlySettings settings = ApplicationReadOnlySettings.defaultSettings()
+                .setIncludeQuestionLinks(true)
+                .setIncludeStatuses(true)
+                .setAssessmentId(assessmentId)
+                .setIncludeQuestionNumber(false);
+
+        setField(populator, "populatorMap", asMap(QuestionSetupType.APPLICATION_TEAM, mockPopulator));
+        setField(populator, "asyncFuturesGenerator", futuresGeneratorMock);
+
+        GrantTermsAndConditionsResource grantTermsAndConditionsResource = newGrantTermsAndConditionsResource()
+                .withName("Innovate UK")
+                .build();
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.GRANT)
+                .withTermsAndConditions(grantTermsAndConditionsResource)
+                .build();
+        ApplicationResource application = newApplicationResource()
+                .withId(applicationId)
+                .withCompetition(competition.getId()).withEnableForEOI(true)
+                .build();
+        List<QuestionResource> questions = newQuestionResource()
+                .withQuestionSetupType(QuestionSetupType.APPLICATION_TEAM)
+                .withEnabledForPreRegistration(false)
+                .build(1);
+        List<QuestionStatusResource> questionStatuses = newQuestionStatusResource()
+                .withQuestion(questions.get(0).getId())
+                .build(1);
+        OrganisationResource organisation = newOrganisationResource().build();
+        List<SectionResource> sections = newSectionResource()
+                .withName("Section with questions", "Finance section", "Score assessment")
+                .withChildSections(Collections.emptyList(), Collections.singletonList(1L), Collections.emptyList())
+                .withQuestions(questions.stream().map(QuestionResource::getId).collect(Collectors.toList()), emptyList(), emptyList())
+                .withType(SectionType.GENERAL, SectionType.FINANCE, SectionType.KTP_ASSESSMENT)
+                .withEnabledForPreRegistration(false)
+                .build(3);
+
+        ProcessRoleResource processRole = newProcessRoleResource().withRole(ProcessRoleType.LEADAPPLICANT).withUser(user).build();
+
+        Map<Long, BigDecimal> scores = new HashMap<>();
+        scores.put(1L, new BigDecimal("9"));
+        Map<Long, String> feedback = new HashMap<>();
+        feedback.put(1L, "Hello world");
+
+        ApplicationAssessmentResource assessorResponseFuture = newApplicationAssessmentResource()
+                .withApplicationId(applicationId)
+                .withTestId(3L)
+                .withAveragePercentage(new BigDecimal("50.0"))
+                .withScores(scores)
+                .withFeedback(feedback)
+                .build();
+
+        ApplicationReadOnlyData expectedData = new ApplicationReadOnlyData(application, competition, user, newArrayList(processRole),
+                questions, formInputs, responses, questionStatuses, singletonList(assessorResponseFuture), emptyList(), Optional.of(workProgrammeFuture));
+        ApplicationQuestionReadOnlyViewModel expectedRowModel = mock(ApplicationQuestionReadOnlyViewModel.class);
+        FinanceReadOnlyViewModel expectedFinanceSummary = mock(FinanceReadOnlyViewModel.class);
+
+        when(financeSummaryViewModelPopulator.populate(expectedData)).thenReturn(expectedFinanceSummary);
+        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(questionRestService.findByCompetition(competition.getId())).thenReturn(restSuccess(questions));
+        when(formInputRestService.getByCompetitionId(competition.getId())).thenReturn(restSuccess(formInputs));
+        when(formInputResponseRestService.getResponsesByApplicationId(application.getId())).thenReturn(restSuccess(responses));
+        when(organisationRestService.getByUserAndApplicationId(user.getId(), applicationId)).thenReturn(restSuccess(organisation));
+        when(questionStatusRestService.findByApplicationAndOrganisation(applicationId, organisation.getId())).thenReturn(restSuccess(questionStatuses));
+        when(sectionRestService.getByCompetition(competition.getId())).thenReturn(restSuccess(sections));
+        when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(newArrayList(processRole)));
+        when(assessorFormInputResponseRestService.getApplicationAssessment(applicationId, assessmentId)).thenReturn(restSuccess(assessorResponseFuture));
+        when(horizonWorkProgrammeRestService.findSelected(applicationId)).thenReturn(restSuccess(workProgrammeFuture));
+
+        when(mockPopulator.populate(questions.get(0), expectedData, settings)).thenReturn(expectedRowModel);
+
+        ApplicationReadOnlyViewModel viewModel = populator.populate(applicationId, user, settings);
+
+        assertEquals(viewModel.getSettings(), settings);
+        assertEquals(viewModel.getSections().size(), 2);
+
+        Iterator<ApplicationSectionReadOnlyViewModel> iterator = viewModel.getSections().iterator();
+        ApplicationSectionReadOnlyViewModel sectionWithQuestion = iterator.next();
+
+        assertEquals(sectionWithQuestion.getName(), "Section with questions");
+        assertEquals(sectionWithQuestion.isVisible(), false);
+        assertEquals(sectionWithQuestion.getQuestions().size(), 0);
+
+
+        ApplicationSectionReadOnlyViewModel financeSection = iterator.next();
+        assertEquals(financeSection.getName(), "Finance section");
+        assertEquals(financeSection.isVisible(), false);
+        assertEquals(financeSection.getQuestions().iterator().next(), expectedFinanceSummary);
+
+    }
+
 }

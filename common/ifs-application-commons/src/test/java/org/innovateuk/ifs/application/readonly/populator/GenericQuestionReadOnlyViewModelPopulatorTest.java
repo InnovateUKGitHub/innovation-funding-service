@@ -285,4 +285,47 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
         assertEquals(asList(BigDecimal.ONE, BigDecimal.TEN), viewModel.getScores());
         assertEquals(BigDecimal.valueOf(5.5), viewModel.getAverageScore());
     }
+
+    @Test
+    public void populateEOI() {
+        Long questionId = 1L;
+
+        ApplicationResource application = newApplicationResource()
+                .withResearchCategory(newResearchCategoryResource().withName("Research category").build())
+                .withEnableForEOI(true)
+                .build();
+        CompetitionResource competition = newCompetitionResource()
+                .build();
+        QuestionResource question1 = newQuestionResource()
+                .withId(questionId)
+                .withShortName("Question short name 1")
+                .withQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION)
+                .withEnabledForPreRegistration(true)
+                .build();
+        QuestionResource question2 = newQuestionResource()
+                .withId(questionId)
+                .withShortName("Question short name 2")
+                .withQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION)
+                .withEnabledForPreRegistration(false)
+                .build();
+
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(),
+                emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), Optional.empty());
+
+        ApplicationReadOnlySettings settings1 = defaultSettings()
+                .setIncludeAllAssessorFeedback(true)
+                .setIncludeQuestionNumber(true);
+        ApplicationReadOnlySettings settings2 = defaultSettings()
+                .setIncludeAllAssessorFeedback(true)
+                .setIncludeQuestionNumber(false);
+
+        GenericQuestionReadOnlyViewModel viewModel1 = populator.populate(question1, data, settings1);
+        GenericQuestionReadOnlyViewModel viewModel2 = populator.populate(question2, data, settings2);
+
+        assertNotNull(viewModel1);
+        assertEquals("1. Question short name 1", viewModel1.getDisplayName());
+        assertNotNull(viewModel2);
+        assertEquals("Question short name 2", viewModel2.getDisplayName());
+
+    }
 }
