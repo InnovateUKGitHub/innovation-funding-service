@@ -63,7 +63,7 @@ Applicant can not view hidden question, section and subsection in application su
     And the user should not see the element     jQuery = h2:contains("Terms and conditions")
     And the user should not see the element     jQuery = button:contains("Award terms and conditions")
     And the user should see the element         jQuery = h1:contains("Expression of interest summary")
-    And the user should see the element         jQuery = h1:contains("Expression of interest questions")
+    And the user should see the element         jQuery = h2:contains("Expression of interest questions")
 
 Applicant submits the expression of interest application
     [Arguments]  IFS-12079
