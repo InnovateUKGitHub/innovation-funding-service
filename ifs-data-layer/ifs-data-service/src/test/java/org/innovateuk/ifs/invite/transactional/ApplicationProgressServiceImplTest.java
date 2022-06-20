@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.invite.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationExpressionOfInterestConfig;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
 import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
@@ -46,12 +47,14 @@ public class ApplicationProgressServiceImplTest {
     Competition competition = newCompetition().withName("Technology Inspired").build();
     Application application = newApplication()
             .withCompetition(competition)
-            .withEnableForEOI(true)
             .build();
+    ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig =
+            ApplicationExpressionOfInterestConfig.builder().
+                    application(application).enabledForExpressionOfInterest(true).build();
 
     @Before
     public void setup() {
-
+        application.setApplicationExpressionOfInterestConfig(applicationExpressionOfInterestConfig);
         when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application));
         when(organisationRepository.countDistinctByProcessRolesApplicationId(application.getId())).thenReturn(1L);
         when(questionRepository.countPreRegQuestionsWithMultipleStatuses(competition.getId())).thenReturn(10L);

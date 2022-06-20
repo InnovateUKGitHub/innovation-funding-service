@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.ApplicationUrlHelper;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewRowViewModel;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewSectionViewModel;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewViewModel;
+import org.innovateuk.ifs.application.resource.ApplicationExpressionOfInterestConfigResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.*;
@@ -38,6 +39,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Comparator.comparing;
 import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectations;
+import static org.innovateuk.ifs.application.builder.ApplicationExpressionOfInterestConfigResourceBuilder.newApplicationExpressionOfInterestConfigResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -214,8 +216,14 @@ public class ApplicationOverviewModelPopulatorTest {
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
-                .withEnableForEOI(true)
                 .build();
+
+        ApplicationExpressionOfInterestConfigResource applicationExpressionOfInterestConfigResource =
+                 newApplicationExpressionOfInterestConfigResource()
+                .withApplicationId(application.getId())
+                .withEnabledForExpressionOfInterest(true).build();
+
+        application.setApplicationExpressionOfInterestConfigResource(applicationExpressionOfInterestConfigResource);
         List<QuestionResource> questions = newQuestionResource()
                 .withShortName("A question")
                 .withQuestionSetupType(ASSESSED_QUESTION)
@@ -333,10 +341,18 @@ public class ApplicationOverviewModelPopulatorTest {
                 .withCollaborationLevel(SINGLE)
                 .withTermsAndConditions(termsAndCondition)
                 .build();
+
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
-                .withEnableForEOI(true)
                 .build();
+
+        ApplicationExpressionOfInterestConfigResource applicationExpressionOfInterestConfigResource =
+                newApplicationExpressionOfInterestConfigResource().
+                        withApplicationId(application.getId())
+                        .withEnabledForExpressionOfInterest(true).build();
+
+         application.setApplicationExpressionOfInterestConfigResource(applicationExpressionOfInterestConfigResource);
+
         List<QuestionResource> questions = newQuestionResource()
                 .withShortName("A question")
                 .withQuestionSetupType(ASSESSED_QUESTION)
@@ -418,9 +434,9 @@ public class ApplicationOverviewModelPopulatorTest {
                 .withTermsAndConditions(termsAndCondition)
                 .withCompetitionThirdPartyConfig(thirdPartyConfigResource)
                 .build();
+
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
-                .withEnableForEOI(true)
                 .build();
         List<QuestionResource> questions = newQuestionResource()
                 .withShortName("A question")
