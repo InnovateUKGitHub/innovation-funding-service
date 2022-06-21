@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationExpressionOfInterestConfigResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.competition.builder.StakeholderBuilder;
@@ -386,16 +387,23 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void markAsIneligibleAllowedBeforeAssessment() {
+    public void markAsIneligibleAllowedBeforeAssessmentWithEOI() {
         newArrayList(CompetitionStatus.values()).forEach(competitionStatus -> allGlobalRoleUsers.forEach(user -> {
             Competition competition = newCompetition()
                     .withAssessmentPeriods(newAssessmentPeriod().withMilestones(newMilestone().build(1)).build(1))
                     .withCompetitionStatus(competitionStatus)
                     .withCompetitionType(newCompetitionType().withName("Sector").build())
                     .build();
-            ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
+
+            ApplicationExpressionOfInterestConfigResource applicationExpressionOfInterestConfigResource = new ApplicationExpressionOfInterestConfigResource();
+            applicationExpressionOfInterestConfigResource.setApplicationId(1L);
+            applicationExpressionOfInterestConfigResource.setEnabledForExpressionOfInterest(true);
+
+            ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).withId(1L)
+                    .withApplicationExpressionOfInterestConfigResource(applicationExpressionOfInterestConfigResource).build();
             when(competitionRepository.findById(application.getCompetition())).thenReturn(Optional.of(competition));
-            if (!EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP, PREVIOUS).contains(competitionStatus) && user.hasAnyRoles(IFS_ADMINISTRATOR, SYSTEM_MAINTAINER, PROJECT_FINANCE, COMP_ADMIN, INNOVATION_LEAD, SUPER_ADMIN_USER)) {
+            if (!EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP, PREVIOUS).contains(competitionStatus) &&
+                    user.hasAnyRoles(IFS_ADMINISTRATOR, SYSTEM_MAINTAINER, PROJECT_FINANCE, COMP_ADMIN, INNOVATION_LEAD, SUPER_ADMIN_USER)) {
                 assertTrue(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
             } else {
                 assertFalse(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
