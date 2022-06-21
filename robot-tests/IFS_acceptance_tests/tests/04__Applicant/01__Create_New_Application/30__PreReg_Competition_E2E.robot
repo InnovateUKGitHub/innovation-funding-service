@@ -56,6 +56,13 @@ Lead applicant completes the application sections
     Then the user should see the element                                jQuery = .progress:contains("100%")
 
 
+Comp admin can not view mark as ineligable application link
+    [Documentation]  IFS-
+    Given log in as a different user                &{ifs_admin_user_credentials}
+    When the user navigates to the page             ${server}/management/competition/${hecpPreregCompId}/application/${preregApplicationID}
+    Then the user should not see subsection         jQuery = span:contains("Mark application as ineligible")
+
+
 
 *** Keywords ***
 Requesting IDs of this hecp pre reg competition
