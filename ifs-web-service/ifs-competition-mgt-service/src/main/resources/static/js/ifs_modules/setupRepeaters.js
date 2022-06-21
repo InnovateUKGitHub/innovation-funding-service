@@ -309,7 +309,7 @@ IFS.competitionManagement.repeater = (function () {
       })
       table.find('tbody').append(html)
 
-      if (count === 14) {
+      if (count === 29) {
         jQuery(button).hide()
       }
     },

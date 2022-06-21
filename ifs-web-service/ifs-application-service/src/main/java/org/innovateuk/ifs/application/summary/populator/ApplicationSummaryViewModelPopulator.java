@@ -48,6 +48,7 @@ public class ApplicationSummaryViewModelPopulator {
 
     public ApplicationSummaryViewModel populate(ApplicationResource application, CompetitionResource competition, UserResource user) {
         ApplicationReadOnlySettings settings = defaultSettings()
+                .setIncludeQuestionNumber(!application.isEnabledForExpressionOfInterest())
                 .setIncludeAllAssessorFeedback(shouldDisplayFeedback(competition, application, user))
                 .setIncludeAllSupporterFeedback(shouldDisplaySupporterFeedback(competition, application, user));
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationReadOnlyViewModelPopulator.populate(application, competition, user, settings);
@@ -63,7 +64,7 @@ public class ApplicationSummaryViewModelPopulator {
         List<ProcessRoleResource> processRoleResources = processRoleRestService.findProcessRole(application.getId()).getSuccess();
         List<OrganisationResource> collaboratorOrganisations = processRoleResources.stream()
                 .filter(pr -> ProcessRoleType.COLLABORATOR == pr.getRole())
-                .map(pr -> pr.getOrganisationId())
+                .map(ProcessRoleResource::getOrganisationId)
                 .distinct()
                 .map(orgId -> organisationRestService.getOrganisationById(orgId).getSuccess())
                 .collect(Collectors.toList());

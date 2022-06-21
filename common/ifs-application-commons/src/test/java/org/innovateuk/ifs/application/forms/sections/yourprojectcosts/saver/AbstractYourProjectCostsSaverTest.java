@@ -7,6 +7,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
+import org.innovateuk.ifs.finance.resource.category.PersonnelCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -27,6 +28,8 @@ import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.for
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.builder.AssociateSalaryCostBuilder.newAssociateSalaryCost;
+import static org.innovateuk.ifs.finance.resource.cost.OverheadRateType.HORIZON_EUROPE_GUARANTEE_TOTAL;
+import static org.innovateuk.ifs.finance.resource.cost.OverheadRateType.TOTAL;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
@@ -35,9 +38,9 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class AbstractYourProjectCostsSaverTest {
-    private static ApplicationFinanceResource APPLICATION_FINANCE_RESOURCE = newApplicationFinanceResource().withIndustrialCosts().build();
-    private static ApplicationFinanceResource APPLICATION_FINANCE_RESOURCE_WITH_EMPTY_INDIRECT_COST = newApplicationFinanceResource().withEmptyIndirectCosts().build();
-    private static ApplicationFinanceResource APPLICATION_FINANCE_RESOURCE_FOR_THIRDPARTYOFGEM = newApplicationFinanceResource().withIndustrialCostsForThirdPartyOfgem().build();
+    private static final ApplicationFinanceResource APPLICATION_FINANCE_RESOURCE = newApplicationFinanceResource().withIndustrialCosts().build();
+    private static final ApplicationFinanceResource APPLICATION_FINANCE_RESOURCE_WITH_EMPTY_INDIRECT_COST = newApplicationFinanceResource().withEmptyIndirectCosts().build();
+    private static final ApplicationFinanceResource APPLICATION_FINANCE_RESOURCE_FOR_THIRDPARTYOFGEM = newApplicationFinanceResource().withIndustrialCostsForThirdPartyOfgem().build();
 
     @Mock
     private FinanceRowRestService financeRowRestService;
@@ -76,7 +79,7 @@ public class AbstractYourProjectCostsSaverTest {
         }
     };
 
-    private ArgumentCaptor<IndirectCost> indirectCostArgumentCaptor = ArgumentCaptor.forClass(IndirectCost.class);
+    private final ArgumentCaptor<IndirectCost> indirectCostArgumentCaptor = ArgumentCaptor.forClass(IndirectCost.class);
 
     @InjectMocks
     private AbstractYourProjectCostsSaver targetForThirdPartyOfgem = new AbstractYourProjectCostsSaver() {
@@ -91,7 +94,7 @@ public class AbstractYourProjectCostsSaverTest {
         }
     };
 
-    private ArgumentCaptor<LabourCost> labourCostArgumentCaptor = ArgumentCaptor.forClass(LabourCost.class);
+    private final ArgumentCaptor<LabourCost> labourCostArgumentCaptor = ArgumentCaptor.forClass(LabourCost.class);
 
     @Test
     public void save() {
@@ -122,18 +125,38 @@ public class AbstractYourProjectCostsSaverTest {
         labourForm.setRows(asMap(UNSAVED_ROW_PREFIX, labourRow));
         form.setLabour(labourForm);
 
+        PersonnelForm personnelForm = new PersonnelForm();
+        personnelForm.setWorkingDaysPerYear(365);
+        PersonnelRowForm personnelRow = new PersonnelRowForm();
+        personnelRow.setGross(new BigDecimal(123));
+        personnelForm.setRows(asMap(UNSAVED_ROW_PREFIX, personnelRow));
+        form.setPersonnel(personnelForm);
+
         OverheadForm overheadForm = new OverheadForm();
-        overheadForm.setRateType(OverheadRateType.TOTAL);
+        overheadForm.setRateType(TOTAL);
         overheadForm.setTotalSpreadsheet(100);
         form.setOverhead(overheadForm);
+
+        HecpIndirectCostsForm hecpIndirectCostsForm = new HecpIndirectCostsForm();
+        hecpIndirectCostsForm.setRateType(HORIZON_EUROPE_GUARANTEE_TOTAL);
+        hecpIndirectCostsForm.setTotalSpreadsheet(100);
+        form.setHecpIndirectCosts(hecpIndirectCostsForm);
 
         MaterialRowForm materialRow = new MaterialRowForm();
         materialRow.setCost(new BigDecimal(123));
         form.setMaterialRows(asMap(UNSAVED_ROW_PREFIX, materialRow));
 
+        EquipmentRowForm equipmentRow = new EquipmentRowForm();
+        equipmentRow.setCost(new BigDecimal(123));
+        form.setEquipmentRows(asMap(UNSAVED_ROW_PREFIX, equipmentRow));
+
         CapitalUsageRowForm capitalUsageRow = new CapitalUsageRowForm();
         capitalUsageRow.setNetValue(new BigDecimal(123));
         form.setCapitalUsageRows(asMap(UNSAVED_ROW_PREFIX, capitalUsageRow));
+
+        OtherGoodsRowForm otherGoodsRowForm = new OtherGoodsRowForm();
+        otherGoodsRowForm.setNetValue(new BigDecimal(123));
+        form.setOtherGoodsRows(asMap(UNSAVED_ROW_PREFIX, otherGoodsRowForm));
 
         SubcontractingRowForm subcontractingRow = new SubcontractingRowForm();
         subcontractingRow.setCost(new BigDecimal(123));
@@ -174,14 +197,26 @@ public class AbstractYourProjectCostsSaverTest {
         assertEquals(workingDaysCost.getLabourDays(), (Integer) 365);
         verify(financeRowRestService).update(workingDaysCost);
 
+        PersonnelCost workingDaysCostHecp = ((PersonnelCostCategory) APPLICATION_FINANCE_RESOURCE.getFinanceOrganisationDetails().get(FinanceRowType.PERSONNEL)).getWorkingDaysPerYearCostItem();
+        assertEquals(workingDaysCost.getLabourDays(), (Integer) 365);
+        verify(financeRowRestService).update(workingDaysCostHecp);
+
         Overhead overhead = (Overhead) APPLICATION_FINANCE_RESOURCE.getFinanceOrganisationDetails().get(FinanceRowType.OVERHEADS).getCosts().get(0);
-        assertEquals(overhead.getRateType(), OverheadRateType.TOTAL);
+        assertEquals(TOTAL, overhead.getRateType());
         assertEquals(overhead.getRate(), (Integer) 100);
         verify(financeRowRestService).update(overhead);
 
+        HecpIndirectCosts hecpIndirectCosts = (HecpIndirectCosts) APPLICATION_FINANCE_RESOURCE.getFinanceOrganisationDetails().get(FinanceRowType.HECP_INDIRECT_COSTS).getCosts().get(0);
+        assertEquals(HORIZON_EUROPE_GUARANTEE_TOTAL, hecpIndirectCosts.getRateType());
+        assertEquals(hecpIndirectCosts.getRate(), (Integer) 100);
+        verify(financeRowRestService).update(hecpIndirectCosts);
+
         verify(financeRowRestService).create(isA(LabourCost.class));
+        verify(financeRowRestService).create(isA(PersonnelCost.class));
         verify(financeRowRestService).create(isA(Materials.class));
+        verify(financeRowRestService).create(isA(Equipment.class));
         verify(financeRowRestService).create(isA(CapitalUsage.class));
+        verify(financeRowRestService).create(isA(OtherGoods.class));
         verify(financeRowRestService).create(isA(SubContractingCost.class));
         verify(financeRowRestService).create(isA(TravelCost.class));
         verify(financeRowRestService).create(isA(OtherCost.class));
@@ -189,14 +224,14 @@ public class AbstractYourProjectCostsSaverTest {
 
         verify(financeRowRestService).update(isA(IndirectCost.class));
         IndirectCost indirectCost = (IndirectCost) APPLICATION_FINANCE_RESOURCE.getFinanceOrganisationDetails().get(FinanceRowType.INDIRECT_COSTS).getCosts().get(0);
-        assertEquals(indirectCost.getCostType(), FinanceRowType.INDIRECT_COSTS);
+        assertEquals(FinanceRowType.INDIRECT_COSTS, indirectCost.getCostType());
         assertEquals(expected, indirectCost.getCost());
         assertEquals(expected, indirectCost.getTotal().toBigInteger());
 
         verify(financeRowRestService, times(6)).update(isA(AdditionalCompanyCost.class));
         verify(financeRowRestService, times(2)).update(isA(AssociateSalaryCost.class));
         verify(financeRowRestService, times(1)).update(isA(IndirectCost.class));
-        verify(financeRowRestService, times(6)).update(mockResponse);
+        verify(financeRowRestService, times(9)).update(mockResponse);
 
         verifyNoMoreInteractions(financeRowRestService);
     }

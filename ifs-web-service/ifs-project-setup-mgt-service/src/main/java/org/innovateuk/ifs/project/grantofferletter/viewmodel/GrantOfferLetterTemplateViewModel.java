@@ -147,6 +147,12 @@ public class GrantOfferLetterTemplateViewModel {
     public FinanceRowType getLabourFinanceRowType() {
         return FinanceRowType.LABOUR;
     }
+
+    @JsonIgnore
+    public FinanceRowType getPersonnelFinanceRowType() {
+        return FinanceRowType.PERSONNEL;
+    }
+
     @JsonIgnore
     public FinanceRowType getProcurementOverheadsFinanceRowType() {
         return FinanceRowType.PROCUREMENT_OVERHEADS;
@@ -158,13 +164,29 @@ public class GrantOfferLetterTemplateViewModel {
     }
 
     @JsonIgnore
+    public FinanceRowType getHecpIndirectCostsFinanceRowType() {
+        return FinanceRowType.HECP_INDIRECT_COSTS;
+    }
+
+
+    @JsonIgnore
     public FinanceRowType getMaterialsFinanceRowType() {
         return FinanceRowType.MATERIALS;
     }
 
     @JsonIgnore
+    public FinanceRowType getEquipmentFinanceRowType() {
+        return FinanceRowType.EQUIPMENT;
+    }
+
+    @JsonIgnore
     public FinanceRowType getCapitalUsageFinanceRowType() {
         return FinanceRowType.CAPITAL_USAGE;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getOtherGoodsFinanceRowType() {
+        return FinanceRowType.OTHER_GOODS;
     }
 
     @JsonIgnore

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.transactional;
 import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationExpressionOfInterestConfig;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
@@ -222,8 +223,13 @@ public class SectionStatusServiceImplTest extends BaseUnitTestMocksTest {
                 .withId(applicationId)
                 .withCompetition(competition)
                 .withProcessRoles(processRole)
-                .withEnableForEOI(true)
                 .build();
+
+        ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig =
+                ApplicationExpressionOfInterestConfig.builder().
+                        application(application).enabledForExpressionOfInterest(true).build();
+
+        application.setApplicationExpressionOfInterestConfig(applicationExpressionOfInterestConfig);
 
         Map<Long, List<QuestionStatusResource>> completedQuestionStatuses = new HashMap<>();
         completedQuestionStatuses.put(organisationId, questionStatusResources);
@@ -282,8 +288,13 @@ public class SectionStatusServiceImplTest extends BaseUnitTestMocksTest {
                 .withId(applicationId)
                 .withCompetition(competition)
                 .withProcessRoles(processRole)
-                .withEnableForEOI(true)
                 .build();
+
+        ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig =
+                ApplicationExpressionOfInterestConfig.builder().
+                        application(application).enabledForExpressionOfInterest(true).build();
+
+        application.setApplicationExpressionOfInterestConfig(applicationExpressionOfInterestConfig);
 
         Map<Long, List<QuestionStatusResource>> completedQuestionStatuses = new HashMap<>();
         completedQuestionStatuses.put(organisationId, questionStatusResources);
