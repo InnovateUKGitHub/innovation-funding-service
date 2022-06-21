@@ -20,7 +20,7 @@
                 <p class="govuk-hint">
                     You can access this assessor agreement at any time from your profile.
                     <a class="govuk-link" target="_blank"
-                       href="/assessment/documents/New simple assessor agreement.pdf">Download assessor agreement (opens in a new window)</a>.
+                       th:href="@{/profile/agreement/print}">Download assessor agreement</a> (opens in a new window).
                 </p>
 
                 <form class="govuk-!-margin-top-6" th:action="@{/profile/agreement}" method="post" th:unless="${model.currentAgreement}">

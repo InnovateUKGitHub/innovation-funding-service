@@ -324,6 +324,11 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return new CompetitionResourceBuilder(actions);
     }
 
+    public CompetitionResourceBuilder withEnabledForExpressionOfInterest(boolean... enabledForExpressionOfInterests) {
+        return withArray((enabledForExpressionOfInterest, competitionResource) ->
+                competitionResource.setEnabledForPreRegistration(enabledForExpressionOfInterest), enabledForExpressionOfInterests);
+    }
+
     @Override
     protected CompetitionResource createInitial() {
         return new CompetitionResource();

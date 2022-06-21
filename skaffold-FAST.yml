@@ -83,10 +83,6 @@ profiles:
           context: ifs-data-layer/ifs-data-service/src/main/resources
           docker:
             dockerfile: Dockerfile-dbreset
-        - image: anonymised-db-data
-          context: ifs-data-layer/ifs-data-service/src/main/docker/proxysql
-          docker:
-            dockerfile: Dockerfile-proxysql
         - image: sba
           context: .
           jib:

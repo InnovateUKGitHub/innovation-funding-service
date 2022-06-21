@@ -2,7 +2,7 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:with="applicationName=${#strings.isEmpty(model.application.name)} ? #{ifs.application.no_title} : ${model.application.name}">
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.application.enableForEOI ? 'Expression of interest summary' : 'Application summary'} - ${applicationName}|" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.application.isEnabledForExpressionOfInterest() ? 'Expression of interest summary' : 'Application summary'} - ${applicationName}|" />
     </th:block>
 </head>
 
@@ -20,7 +20,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle=${model.application.enableForEOI ? 'Expression of interest overview' : 'Application overview'},linkUrl=@{/application/{applicationId}(applicationId=${model.application.id})}"/>
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle=${model.application.isEnabledForExpressionOfInterest() ? 'Expression of interest overview' : 'Application overview'},linkUrl=@{/application/{applicationId}(applicationId=${model.application.id})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -36,7 +36,7 @@
         <th:block th:if="${model.competition.isClosingSoon()}" th:insert="fragments/elements :: competition-closing-warning" />
 
         <th:block th:with="applicationName=${#strings.isEmpty(model.application.name)} ? #{ifs.application.no_title} : ${model.application.name}">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.application.enableForEOI ? 'Expression of interest summary' : 'Application summary'} ,subTitle=${model.application.name},size='govuk-heading-xl'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.application.isEnabledForExpressionOfInterest() ? 'Expression of interest summary' : 'Application summary'} ,subTitle=${model.application.name},size='govuk-heading-xl'" />
         </th:block>
 
         <th:block th:if="${model.competition.isH2020()}"
@@ -45,7 +45,7 @@
         <th:block th:insert="fragments/elements :: competition-status-message (applicationState=${model.application.applicationState}, competition=${model.competition}, projectWithdrawn=${false}, displayFeedback=${false})" />
 
         <p class="hint govuk-body-l govuk-!-margin-top-6">
-            Please review your <th:block th:text="${model.application.enableForEOI ? 'expression of interest' : 'application'}"/> before final submission. Any highlighted sections are incomplete and need further information from you.
+            Please review your <th:block th:text="${model.application.isEnabledForExpressionOfInterest() ? 'expression of interest' : 'application'}"/> before final submission. Any highlighted sections are incomplete and need further information from you.
         </p>
 
         <th:block th:insert="application/readonly/application-read-only :: accordion (${model.applicationReadOnlyViewModel})" />

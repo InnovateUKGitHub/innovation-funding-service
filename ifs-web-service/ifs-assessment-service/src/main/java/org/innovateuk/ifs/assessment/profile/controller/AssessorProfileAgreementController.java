@@ -31,7 +31,7 @@ public class AssessorProfileAgreementController {
     @GetMapping
     public String getAgreement(Model model,
                                UserResource loggedInUser) {
-        ProfileAgreementResource profileAgreementResource = profileRestService.getProfileAgreement(loggedInUser.getId()).getSuccess();
+        ProfileAgreementResource profileAgreementResource = getProfileAgreementResource(loggedInUser);
         return doViewAgreement(model, profileAgreementResource);
     }
 
@@ -42,8 +42,24 @@ public class AssessorProfileAgreementController {
         return "redirect:/assessor/dashboard";
     }
 
+    @GetMapping("/print")
+    public String printAgreement(Model model,
+                                 UserResource loggedInUser) {
+        ProfileAgreementResource profileAgreementResource = getProfileAgreementResource(loggedInUser);
+        return doViewPrintAgreement(model, profileAgreementResource);
+    }
+
+    private ProfileAgreementResource getProfileAgreementResource(UserResource loggedInUser) {
+        return profileRestService.getProfileAgreement(loggedInUser.getId()).getSuccess();
+    }
+
     private String doViewAgreement(Model model, ProfileAgreementResource profileAgreementResource) {
         model.addAttribute("model", assessorProfileAgreementModelPopulator.populateModel(profileAgreementResource));
         return "profile/agreement";
+    }
+
+    private String doViewPrintAgreement(Model model, ProfileAgreementResource profileAgreementResource) {
+        model.addAttribute("model", assessorProfileAgreementModelPopulator.populateModel(profileAgreementResource));
+        return "profile/agreement-print";
     }
 }
