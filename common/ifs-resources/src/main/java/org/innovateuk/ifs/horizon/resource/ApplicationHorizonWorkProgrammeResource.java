@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.horizon.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class ApplicationHorizonWorkProgrammeResource {
 
     private Long applicationId;
@@ -27,5 +29,10 @@ public class ApplicationHorizonWorkProgrammeResource {
 
     public void setWorkProgramme(HorizonWorkProgrammeResource workProgramme) {
         this.workProgramme = workProgramme;
+    }
+
+    @JsonIgnore
+    public boolean isCallerId() {
+        return getWorkProgramme() != null && getWorkProgramme().isCallerId();
     }
 }

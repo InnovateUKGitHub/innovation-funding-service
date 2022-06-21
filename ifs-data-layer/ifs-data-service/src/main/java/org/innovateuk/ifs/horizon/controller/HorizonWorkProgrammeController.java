@@ -33,8 +33,8 @@ public class HorizonWorkProgrammeController {
 
     @PostMapping("/update-work-programmes/{applicationId}")
     public RestResult<Void> updateWorkProgrammeForApplication(@PathVariable final Long applicationId,
-                                                              @RequestParam List<HorizonWorkProgrammeResource> workProgrammes) {
-        return horizonWorkProgrammeService.updateWorkProgrammesForApplication(workProgrammes, applicationId).toPostResponse();
+                                                              @RequestParam List<Long> workProgrammeIds) {
+        return horizonWorkProgrammeService.updateWorkProgrammesForApplication(workProgrammeIds, applicationId).toPostResponse();
     }
 
     @GetMapping("/find-selected/{applicationId}")

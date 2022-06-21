@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -43,12 +44,7 @@ public class HorizonWorkProgrammeResourceControllerIntegrationTest extends BaseC
         loginSteveSmith();
 
         long applicationId = 1L;
-
-        List<HorizonWorkProgrammeResource> programmes = new ArrayList<>();
-        HorizonWorkProgrammeResource r1 = new HorizonWorkProgrammeResource(1, "CL2", true);
-        HorizonWorkProgrammeResource r2 = new HorizonWorkProgrammeResource(15, "HORIZON-CL2-2021-DEMOCRACY-01", r1,true);
-        programmes.add(r1);
-        programmes.add(r2);
+        List<Long> programmes = Arrays.asList(new Long[] {1L, 15L});
 
         ServiceResult<Void> result = horizonWorkProgrammeService.updateWorkProgrammesForApplication(programmes, applicationId);
 
@@ -61,16 +57,11 @@ public class HorizonWorkProgrammeResourceControllerIntegrationTest extends BaseC
         loginSteveSmith();
 
         long applicationId = 1L;
-
-        List<HorizonWorkProgrammeResource> programmes = new ArrayList<>();
-        HorizonWorkProgrammeResource r1 = new HorizonWorkProgrammeResource(1, "CL2", true);
-        HorizonWorkProgrammeResource r2 = new HorizonWorkProgrammeResource(15, "HORIZON-CL2-2021-DEMOCRACY-01", r1,true);
-        programmes.add(r1);
-        programmes.add(r2);
+        List<Long> programmes = Arrays.asList(new Long[] {1L, 15L});
 
         horizonWorkProgrammeService.updateWorkProgrammesForApplication(programmes, applicationId);
-
         List<ApplicationHorizonWorkProgrammeResource> updated = controller.findSelectedForApplication(applicationId).getSuccess();
+
         assertEquals(2, updated.size());
         assertEquals(programmes.get(0), updated.get(0).getWorkProgramme());
         assertEquals(programmes.get(1), updated.get(1).getWorkProgramme());

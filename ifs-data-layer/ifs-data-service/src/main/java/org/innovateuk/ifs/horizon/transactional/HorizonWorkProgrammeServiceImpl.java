@@ -55,11 +55,12 @@ public class HorizonWorkProgrammeServiceImpl implements HorizonWorkProgrammeServ
 
     @Override
     @Transactional
-    public ServiceResult<Void> updateWorkProgrammesForApplication(List<HorizonWorkProgrammeResource> programmes, Long applicationId) {
+    public ServiceResult<Void> updateWorkProgrammesForApplication(List<Long> programmeIds, Long applicationId) {
         applicationHorizonWorkProgrammeRepository.deleteAllByApplicationId(applicationId);
         List<ApplicationHorizonWorkProgramme> toAdd = new ArrayList<>();
-        for (HorizonWorkProgrammeResource programme : programmes) {
-            toAdd.add(applicationHorizonWorkProgrammeMapper.mapIdAndWorkProgrammeToDomain(applicationId, horizonWorkProgrammeMapper.mapToDomain(programme)));
+        for (Long programmeId : programmeIds) {
+            HorizonWorkProgramme programme = horizonWorkProgrammeRepository.findById(programmeId).get();
+            toAdd.add(applicationHorizonWorkProgrammeMapper.mapIdAndWorkProgrammeToDomain(applicationId, programme));
         }
         applicationHorizonWorkProgrammeRepository.saveAll(toAdd);
         return serviceSuccess();

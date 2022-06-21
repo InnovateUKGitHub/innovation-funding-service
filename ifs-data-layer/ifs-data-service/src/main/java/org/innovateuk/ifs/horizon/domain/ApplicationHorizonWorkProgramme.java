@@ -12,7 +12,7 @@ public class ApplicationHorizonWorkProgramme {
 
     private Long applicationId;
 
-    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @ManyToOne(optional = true, fetch = FetchType.EAGER)
     @JoinColumn(name="work_programme_id", referencedColumnName="id")
     private HorizonWorkProgramme workProgramme;
 

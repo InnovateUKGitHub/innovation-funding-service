@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.lang.String.join;
@@ -43,7 +44,7 @@ public class HorizonWorkProgrammeRestServiceImpl extends BaseRestService impleme
     public RestResult<Void> updateWorkProgrammeForApplication(List<HorizonWorkProgrammeResource> selectedProgrammes, Long applicationId) {
         String baseUrl = format("%s/%s/%s", REST_URL, "update-work-programmes", applicationId);
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
-                .queryParam("workProgrammes", simpleJoiner(selectedProgrammes, ","));
+                .queryParam("workProgrammeIds", selectedProgrammes.stream().map(prgramme -> Long.toString(prgramme.getId())).collect(Collectors.joining(",")));
         return postWithRestResult(builder.toUriString(), Void.class);
     }
 

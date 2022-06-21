@@ -82,6 +82,7 @@ public class HorizonWorkProgrammeController {
         if (cookieSelectionData.isPresent()) {
             if (cookieSelectionData.get().getApplicationId() != applicationId) {
                 cookieService.deleteWorkProgrammeSelectionData(response);
+                cookieSelectionData = Optional.empty();
             }
         }
 
@@ -188,10 +189,7 @@ public class HorizonWorkProgrammeController {
     private void getReadOnlyMapIfApplicable(long applicationId, HttpServletRequest request, boolean readOnly, HorizonWorkProgrammeViewModel viewModel) {
         if (viewModel.isComplete() || readOnly) {
             viewModel.setReadOnlyMap(getReadOnlyMapIfApplicable(applicationId, request));
-
-            if (!viewModel.getReadOnlyMap().isEmpty()) {
-                viewModel.setReadOnly(true);
-            }
+            viewModel.setReadOnly(!viewModel.getReadOnlyMap().isEmpty());
         }
     }
 

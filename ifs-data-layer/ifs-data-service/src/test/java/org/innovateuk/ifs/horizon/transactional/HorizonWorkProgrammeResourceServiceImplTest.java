@@ -12,6 +12,7 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -37,8 +38,8 @@ public class HorizonWorkProgrammeResourceServiceImplTest extends BaseServiceUnit
     public void updateLocationsForApplication() {
         long applicationId = 1L;
 
-        List<HorizonWorkProgrammeResource> programmes = new ArrayList<>();
-        programmes.addAll(service.findRootWorkProgrammes().getSuccess());
+        List<Long> programmes = new ArrayList<>();
+        programmes.addAll(service.findRootWorkProgrammes().getSuccess().stream().map(HorizonWorkProgrammeResource::getId).collect(Collectors.toList()));
 
         service.updateWorkProgrammesForApplication(programmes, applicationId);
 
