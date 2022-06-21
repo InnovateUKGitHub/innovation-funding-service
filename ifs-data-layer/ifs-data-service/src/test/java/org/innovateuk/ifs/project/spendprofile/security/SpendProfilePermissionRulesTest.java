@@ -103,7 +103,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     @Test
     public void internalAdminTeamCanViewCompetitionStatus() {
         allGlobalRoleUsers.forEach(user -> {
-            if (isInternalAdmin(user)) {
+            if (hasCompetitionAdministratorAuthority(user)) {
                 assertTrue(rules.internalAdminTeamCanViewCompetitionStatus(newProjectResource().build(), user));
             } else {
                 assertFalse(rules.internalAdminTeamCanViewCompetitionStatus(newProjectResource().build(), user));
@@ -305,7 +305,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
                 new ProjectOrganisationCompositeId(1L, newOrganisation().build().getId());
 
         allGlobalRoleUsers.forEach(user -> {
-            if (isInternalAdmin(user)) {
+            if (hasCompetitionAdministratorAuthority(user)) {
                 assertTrue(rules.internalAdminUsersCanSeeSpendProfileCsv(projectOrganisationCompositeId, user));
             } else {
                 assertFalse(rules.internalAdminUsersCanSeeSpendProfileCsv(projectOrganisationCompositeId, user));

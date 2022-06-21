@@ -153,7 +153,7 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "MARK_AS_INELIGIBLE", description = "Application can be marked as ineligible by internal admin user and innovation lead only until ", particularBusinessState = "competition is in assessment state")
     public boolean markAsInelgibileAllowedBeforeAssesment(ApplicationResource application, UserResource user){
         Competition competition = competitionRepository.findById(application.getCompetition()).orElse(null);
-        return (isInternalAdmin(user) || isInnovationLead(user)) && !isCompetitionBeyondAssessment(competition);
+        return (!application.isEnabledForExpressionOfInterest() || hasCompetitionAdministratorAuthority(user) || isInnovationLead(user)) && !isCompetitionBeyondAssessment(competition);
     }
 
     @PermissionRule(value = "CHECK_COLLABORATIVE_FUNDING_CRITERIA_MET", description = "The consortium can check collaborative funding criteria is met")

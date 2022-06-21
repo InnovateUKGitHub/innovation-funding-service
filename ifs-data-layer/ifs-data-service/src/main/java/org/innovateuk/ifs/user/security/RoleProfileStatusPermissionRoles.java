@@ -16,7 +16,7 @@ public class RoleProfileStatusPermissionRoles {
 
     @PermissionRule(value = "RETRIEVE_USER_ROLE_PROFILE", description = "Comp admin, project finance or support can retrieve a users status")
     public boolean adminsAndSupportCanRetrieveUserRoleProfile(UserResource userToCheck, UserResource user) {
-        return isInternalAdmin(user) || isSupport(user);
+        return hasCompetitionAdministratorAuthority(user) || isSupport(user);
     }
 
     @PermissionRule(value = "RETRIEVE_USER_ROLE_PROFILE", description = "Assessors can retrieve their own status")

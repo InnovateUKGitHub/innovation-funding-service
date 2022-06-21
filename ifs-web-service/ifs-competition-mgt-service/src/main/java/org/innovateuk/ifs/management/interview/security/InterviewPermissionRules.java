@@ -12,7 +12,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.hasCompetitionAdministratorAuthority;
 
 @PermissionRules
 @Component
@@ -28,7 +28,7 @@ public class InterviewPermissionRules {
             "if the competition is in the correct state.")
     public boolean interviewPanel(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
-        return isInternalAdmin(loggedInUser) &&
+        return hasCompetitionAdministratorAuthority(loggedInUser) &&
                 competitionHasInterviewPanel(competition) &&
                 !competitionIsInInformOrLater(competition);
     }
@@ -37,7 +37,7 @@ public class InterviewPermissionRules {
             "see interview panel applications if the competition is in the correct state.")
     public boolean interviewPanelApplications(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
-        return isInternalAdmin(loggedInUser) &&
+        return hasCompetitionAdministratorAuthority(loggedInUser) &&
                 competitionHasInterviewPanel(competition) &&
                 competitionIsInFundersPanel(competition);
     }
