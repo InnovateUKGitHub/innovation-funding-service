@@ -31,9 +31,19 @@ public class HorizonWorkProgrammeController {
         return horizonWorkProgrammeService.findChildrenWorkProgrammes(workProgrammeId).toGetResponse();
     }
 
+    @GetMapping("/competition/{competitionId}")
+    public RestResult<List<HorizonWorkProgrammeResource>> findWorkProgrammesByCompetition(@PathVariable final Long competitionId) {
+        return horizonWorkProgrammeService.findWorkProgrammesByCompetition(competitionId).toGetResponse();
+    }
+
+    @PostMapping("/competition/{competitionId}")
+    public RestResult<Void> initWorkProgrammeForCompetition(@PathVariable final Long competitionId) {
+        return horizonWorkProgrammeService.initWorkProgrammesForCompetition(competitionId).toPostResponse();
+    }
+
     @PostMapping("/update-work-programmes/{applicationId}")
-    public RestResult<Void> updateWorkProgrammeForApplication(@PathVariable final Long applicationId,
-                                                              @RequestParam List<Long> workProgrammeIds) {
+    public RestResult<Void> initWorkProgrammeForCompetition(@PathVariable final Long applicationId,
+                                                            @RequestParam List<Long> workProgrammeIds) {
         return horizonWorkProgrammeService.updateWorkProgrammesForApplication(workProgrammeIds, applicationId).toPostResponse();
     }
 

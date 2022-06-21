@@ -41,6 +41,13 @@ public class HorizonWorkProgrammeRestServiceImpl extends BaseRestService impleme
     }
 
     @Override
+    public RestResult<List<HorizonWorkProgrammeResource>> findWorkProgrammesByCompetition(Long competitionId) {
+        String baseUrl = format("%s/%s/%s", REST_URL, "competition", competitionId);
+        return getWithRestResult(baseUrl,
+                horizonWorkProgrammeResourceListType());
+    }
+
+    @Override
     public RestResult<Void> updateWorkProgrammeForApplication(List<HorizonWorkProgrammeResource> selectedProgrammes, Long applicationId) {
         String baseUrl = format("%s/%s/%s", REST_URL, "update-work-programmes", applicationId);
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
