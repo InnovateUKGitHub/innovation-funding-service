@@ -25,6 +25,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
     private boolean showReopenLink;
     private boolean hasAssessmentStage;
     private boolean alwaysOpen;
+    private boolean expressionOfInterest;
 
     // Private constructor to enforce immutability
     private DashboardInProgressRowResource() {
@@ -75,6 +76,10 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
         return alwaysOpen;
     }
 
+    public boolean isExpressionOfInterest() {
+        return expressionOfInterest;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -96,6 +101,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
                 .append(hasAssessmentStage, that.hasAssessmentStage)
                 .append(showReopenLink, that.showReopenLink)
                 .append(alwaysOpen, that.alwaysOpen)
+                .append(expressionOfInterest, that.expressionOfInterest)
                 .isEquals();
     }
 
@@ -117,6 +123,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
                 .append(hasAssessmentStage)
                 .append(showReopenLink)
                 .append(alwaysOpen)
+                .append(expressionOfInterest)
                 .toHashCode();
     }
 
@@ -137,6 +144,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
         private boolean hasAssessmentStage;
         private boolean showReopenLink;
         private boolean alwaysOpen;
+        private boolean expressionOfInterest;
 
         public DashboardApplicationInProgressResourceBuilder withTitle(String title) {
             this.title = title;
@@ -208,6 +216,11 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
             return this;
         }
 
+        public DashboardApplicationInProgressResourceBuilder withExpressionOfInterest(boolean expressionOfInterest) {
+            this.expressionOfInterest = expressionOfInterest;
+            return this;
+        }
+
         public DashboardInProgressRowResource build() {
             DashboardInProgressRowResource result = new DashboardInProgressRowResource();
             result.title = this.title;
@@ -223,8 +236,9 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
             result.startDate = this.startDate;
             result.showReopenLink = this.showReopenLink;
             result.alwaysOpen = this.alwaysOpen;
-
             result.hasAssessmentStage = this.hasAssessmentStage;
+            result.expressionOfInterest = this.expressionOfInterest;
+
             return result;
         }
     }

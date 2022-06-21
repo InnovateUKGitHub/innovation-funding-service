@@ -48,7 +48,8 @@ public class ApplicationPrintPopulator {
         ApplicationReadOnlySettings settings = defaultSettings()
                 .setIncludeAllAssessorFeedback(userCanViewFeedback(user, competition, application))
                 .setIncludeAllSupporterFeedback(userCanViewSupporterFeedback(user, competition, application))
-                .setIncludeTeamMember(includeTeamMember);
+                .setIncludeTeamMember(includeTeamMember)
+                .setIncludeQuestionNumber(!application.isEnabledForExpressionOfInterest());
 
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationReadOnlyViewModelPopulator.populate(applicationId, user, settings);
         model.addAttribute("model", applicationReadOnlyViewModel);

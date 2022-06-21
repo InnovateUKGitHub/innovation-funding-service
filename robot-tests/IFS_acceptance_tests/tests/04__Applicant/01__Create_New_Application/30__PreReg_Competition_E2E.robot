@@ -3,6 +3,10 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...
 ...               IFS-12077 Pre-Registration (Applicant Journey) Application overview - content changes
 ...
+...               IFS-12079 Pre-Registration (Applicant Journey) Complete an expression of interest application
+...
+...               IFS-12080 Pre-Registration (Applicant Journey) Dashboard - Open / Submitted EOI applications
+...
 
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -46,8 +50,14 @@ Applicants views expression of interest labels in application overview page for 
     Then the user should see EOI labels for prereg application
     And the user should see the element                           jQuery = dt:contains("Application number:")+dd:contains("${preregApplicationID}")
 
+Applicant should view EOI label on dashboard for expression of interest applications
+    [Arguments]  IFS-12080
+    When the user clicks the button/link    link = Back to applications
+    Then the user should see the element    jQuery = li:contains("${hecpPreregAppName}") .status-msg:contains("Expression of interest")
+
 Lead applicant completes the application sections
     [Arguments]  IFS-12077
+    Given the user clicks the button/link                                link = ${hecpPreregAppName}
     When the applicant completes Application Team                        COMPLETE  steve.smith@empire.com
     And the user complete the work programme
     And The user is able to complete horizon grant agreement section
@@ -55,7 +65,29 @@ Lead applicant completes the application sections
     And the user completes prereg project finances                      ${hecpPreregAppName}   no
     Then the user should see the element                                jQuery = .progress:contains("100%")
 
+Applicant can not view hidden question, section and subsection in application summary
+    [Arguments]  IFS-12079
+    When the user clicks the button/link        id = application-overview-submit-cta
+    Then the user should not see the element    jQuery = button:contains("Participating Organisation project region")
+    And the user should not see the element     jQuery = h2:contains("Terms and conditions")
+    And the user should not see the element     jQuery = button:contains("Award terms and conditions")
+    And the user should see the element         jQuery = h1:contains("Expression of interest summary")
+    And the user should see the element         jQuery = h2:contains("Expression of interest questions")
+    And the user should see the element         link = Expression of interest overview
 
+Applicant submits the expression of interest application
+    [Arguments]  IFS-12079
+    When the user clicks the button/link        id = submit-application-button
+    Then the user should see the element        jQuery = h2:contains("Application submitted")
+    And the user reads his email                steve.smith@empire.com  ${preregApplicationID}: Successful submission of application   You have successfully submitted an application for funding to ${hecpPreregCompName}.
+
+Applicant can not view hidden question, section and subsection in print application
+    [Arguments]  IFS-12079
+    When the user navigates to the page without the usual headers      ${SERVER}/application/${preregApplicationID}/print?noprint
+    Then the user should see the element                               xpath = //*[contains(text(),'Expression of interest questions')]
+    And the user should not see the element                            xpath = //h2[contains(text(),'Terms and conditions')]
+    And the user should not see the element                            xpath = //span[contains(text(),'Award terms and conditions')]
+    [Teardown]  the user navigates to the page                         ${SERVER}/application/${preregApplicationID}/track
 
 *** Keywords ***
 Requesting IDs of this hecp pre reg competition
@@ -93,13 +125,13 @@ the user completes prereg project finances
 The user is able to complete hecp project costs
     the user clicks the button/link           link = Your project costs
     the user should see the element           jQuery = h1:contains("Your project costs")
-    the user enters text to a text field      id = labour  50000
+    the user enters text to a text field      id = personnel  50000
     the user enters text to a text field      id = subcontracting  50000
     the user enters text to a text field      id = travel  10000
-    the user enters text to a text field      id = material  30000
-    the user enters text to a text field      id = capital  20000
+    the user enters text to a text field      id = equipment  30000
+    the user enters text to a text field      id = otherGoods  20000
     the user enters text to a text field      id = other  40000
-    the user enters text to a text field      id = overhead  0
+    the user enters text to a text field      id = hecpIndirectCosts  0
     the user clicks the button/link           jQuery = button:contains("Mark")
     the user should see the element           jQuery = li:contains("Your project costs") > .task-status-complete
 

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInProgressRowRes
 import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInSetupRowResource;
 import org.innovateuk.ifs.applicant.resource.dashboard.DashboardRowResource;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationExpressionOfInterestConfig;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
@@ -71,6 +72,7 @@ public class ApplicationDashboardServiceImplTest {
             .withStartDate(ZonedDateTime.now().minusDays(2))
             .withEndDate(ZonedDateTime.now().plusDays(1))
             .withAlwaysOpen(true)
+            .withEnabledForExpressionOfInterest(true)
             .build();
     private static final long USER_ID = 1L;
     private final User user = newUser().withId(USER_ID).build();
@@ -126,6 +128,10 @@ public class ApplicationDashboardServiceImplTest {
         assertTrue(pendingResource.isPendingPartner());
         assertFalse(notPendingResource.isPendingPartner());
 
+        assertTrue(dashboardResource.getInProgress().stream()
+                .filter(DashboardInProgressRowResource::isAlwaysOpen)
+                .findFirst().get()
+                .isExpressionOfInterest());
     }
 
     private Application inProgressAlwaysOpenCompApplication() {
@@ -134,6 +140,8 @@ public class ApplicationDashboardServiceImplTest {
                 .withCompetition(alwaysOpenCompetition)
                 .withApplicationState(ApplicationState.SUBMITTED)
                 .withFundingDecision((FundingDecisionStatus) null)
+                .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig
+                        .builder().enabledForExpressionOfInterest(true).build())
                 .build();
     }
 
