@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.competition.inflight.controller.applicatio
 
 import org.innovateuk.ifs.application.readonly.populator.ApplicationReadOnlyViewModelPopulator;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
+import org.innovateuk.ifs.application.resource.ApplicationExpressionOfInterestConfigResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
@@ -182,8 +183,7 @@ public class ManagementApplicationPopulatorTest {
                 .withApplicationState(ApplicationState.SUBMITTED)
                 .withInnovationArea(newInnovationAreaResource().build())
                 .withCompetitionStatus(ASSESSOR_FEEDBACK)
-                .withEnableForEOI(false)
-                .build();
+                                .build();
         UserResource user = newUserResource()
                 .withRoleGlobal(Role.COMP_ADMIN)
                 .build();
@@ -223,14 +223,22 @@ public class ManagementApplicationPopulatorTest {
         CompetitionResource competition = newCompetitionResource()
                 .withInnovationAreas(singleton(1L))
                 .build();
+
+        ApplicationExpressionOfInterestConfigResource applicationExpressionOfInterestConfigResource = new ApplicationExpressionOfInterestConfigResource();
+        applicationExpressionOfInterestConfigResource.setApplicationId(1L);
+
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
+                .withId(1L)
                 .withApplicationState(ApplicationState.SUBMITTED)
                 .withInnovationArea(newInnovationAreaResource().build())
                 .withCompetitionStatus(ASSESSOR_FEEDBACK)
-                .withEnableForEOI(true)
+                .withApplicationExpressionOfInterestConfigResource(applicationExpressionOfInterestConfigResource)
                 .build();
+
+        applicationExpressionOfInterestConfigResource.setEnabledForExpressionOfInterest(true);
         UserResource user = newUserResource()
+
                 .withRoleGlobal(Role.COMP_ADMIN)
                 .build();
 
