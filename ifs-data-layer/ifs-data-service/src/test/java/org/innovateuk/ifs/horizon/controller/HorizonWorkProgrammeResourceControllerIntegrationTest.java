@@ -63,7 +63,7 @@ public class HorizonWorkProgrammeResourceControllerIntegrationTest extends BaseC
         List<ApplicationHorizonWorkProgrammeResource> updated = controller.findSelectedForApplication(applicationId).getSuccess();
 
         assertEquals(2, updated.size());
-        assertEquals(programmes.get(0), updated.get(0).getWorkProgramme());
-        assertEquals(programmes.get(1), updated.get(1).getWorkProgramme());
+        assertEquals((Long) programmes.get(0), (Long) updated.get(0).getWorkProgramme().getId());
+        assertEquals((Long) programmes.get(1), (Long) updated.get(1).getWorkProgramme().getId());
     }
 }

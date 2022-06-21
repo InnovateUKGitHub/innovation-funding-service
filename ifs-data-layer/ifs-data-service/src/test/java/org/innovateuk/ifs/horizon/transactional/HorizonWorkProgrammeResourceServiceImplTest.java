@@ -11,12 +11,16 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.innovateuk.ifs.horizon.builder.HorizonWorkProgrammeBuilder.newHorizonWorkProgramme;
 
 public class HorizonWorkProgrammeResourceServiceImplTest extends BaseServiceUnitTest<HorizonWorkProgrammeService> {
 
@@ -35,11 +39,12 @@ public class HorizonWorkProgrammeResourceServiceImplTest extends BaseServiceUnit
     }
 
     @Test
-    public void updateLocationsForApplication() {
+    public void updateWorkProgrammeForApplication() {
         long applicationId = 1L;
 
-        List<Long> programmes = new ArrayList<>();
-        programmes.addAll(service.findRootWorkProgrammes().getSuccess().stream().map(HorizonWorkProgrammeResource::getId).collect(Collectors.toList()));
+        when(horizonWorkProgrammeRepository.findById(1L)).thenReturn(Optional.of(newHorizonWorkProgramme().withId(1L).build()));
+        when(horizonWorkProgrammeRepository.findById(15L)).thenReturn(Optional.of(newHorizonWorkProgramme().withId(15L).build()));
+        List<Long> programmes = Arrays.asList(new Long[] {1L, 15L});
 
         service.updateWorkProgrammesForApplication(programmes, applicationId);
 
