@@ -7,6 +7,9 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...
 ...               IFS-12080 Pre-Registration (Applicant Journey) Dashboard - Open / Submitted EOI applications
 ...
+...               IFS-12257 Pre-registration No option to mark as ineligible for internal users
+...
+
 
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -88,6 +91,12 @@ Applicant can not view hidden question, section and subsection in print applicat
     And the user should not see the element                            xpath = //h2[contains(text(),'Terms and conditions')]
     And the user should not see the element                            xpath = //span[contains(text(),'Award terms and conditions')]
     [Teardown]  the user navigates to the page                         ${SERVER}/application/${preregApplicationID}/track
+
+Comp admin can not view mark as ineligable application link
+    [Documentation]  IFS-12257
+    Given log in as a different user                &{ifs_admin_user_credentials}
+    When the user navigates to the page             ${server}/management/competition/${hecpPreregCompId}/application/${preregApplicationID}
+    Then the user should not see subsection         jQuery = span:contains("Mark application as ineligible")
 
 *** Keywords ***
 Requesting IDs of this hecp pre reg competition
