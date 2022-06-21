@@ -177,7 +177,7 @@ public class ManagementApplicationPopulator {
     }
 
     private boolean canMarkAsIneligible(ApplicationResource application, UserResource user) {
-        return !application.isEnableForEOI() && application.getApplicationState() == SUBMITTED
+        return !application.isEnabledForExpressionOfInterest() && application.getApplicationState() == SUBMITTED
                 && user.hasAnyRoles(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, Role.INNOVATION_LEAD);
     }
 }
