@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.review.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.resource.ApplicationExpressionOfInterestConfigResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.review.viewmodel.TrackViewModel;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.servlet.http.HttpServletResponse;
 
+import static org.innovateuk.ifs.application.builder.ApplicationExpressionOfInterestConfigResourceBuilder.newApplicationExpressionOfInterestConfigResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -170,13 +172,17 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
     @Test
     public void horizonEuropeExpressionOfInterestTrackReopen() throws Exception {
         CompetitionResource competition = newCompetitionResource()
-                .withEnabledForPreRegistration(true)
+                .withEnabledForExpressionOfInterest(true)
                 .withCompetitionTypeEnum(HORIZON_EUROPE_GUARANTEE)
                 .withAlwaysOpen(true)
                 .build();
 
+        ApplicationExpressionOfInterestConfigResource applicationExpressionOfInterestConfig = newApplicationExpressionOfInterestConfigResource()
+                .withEnabledForExpressionOfInterest(true)
+                .build();
+
         ApplicationResource application = newApplicationResource()
-                .withEnableForEOI(true)
+                .withApplicationExpressionOfInterestConfigResource(applicationExpressionOfInterestConfig)
                 .withApplicationState(SUBMITTED)
                 .withCompetitionStatus(CompetitionStatus.OPEN)
                 .withCompetition(competition.getId())

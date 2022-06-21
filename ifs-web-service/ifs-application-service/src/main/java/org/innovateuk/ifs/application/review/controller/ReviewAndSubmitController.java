@@ -230,8 +230,7 @@ public class ReviewAndSubmitController {
     }
 
     private boolean canReopenApplication(ApplicationResource application, UserResource user, CompetitionResource competitionResource) {
-        // TODO: This will need to be updated when IFS-12171 has been merged.
-        if (application.isEnableForEOI()) {
+        if (application.isEnabledForExpressionOfInterest()) {
             return false;
         }
 
@@ -287,8 +286,7 @@ public class ReviewAndSubmitController {
         if (CovidType.ADDITIONAL_FUNDING.equals(competition.getCovidType())) {
             return "covid-additional-funding-application-track";
         } else if (competition.isHorizonEuropeGuarantee()) {
-            // TODO: This will need to be updated when IFS-12171 has been merged.
-            if (isEoiApplication(application)) {
+            if (isExpressionOfInterestApplication(application)) {
                 return "horizon-europe-guarantee-eoi-application-track";
             }
             return "horizon-europe-guarantee-application-track";
@@ -309,8 +307,8 @@ public class ReviewAndSubmitController {
         return userService.isLeadApplicant(user.getId(), application) && application.isSubmittable();
     }
 
-    private boolean isEoiApplication(ApplicationResource application) {
-        return application.isEnableForEOI();
+    private boolean isExpressionOfInterestApplication(ApplicationResource application) {
+        return application.isEnabledForExpressionOfInterest();
     }
 
     private String handleMarkAsCompleteFailure(long applicationId, long questionId, ProcessRoleResource processRole) {

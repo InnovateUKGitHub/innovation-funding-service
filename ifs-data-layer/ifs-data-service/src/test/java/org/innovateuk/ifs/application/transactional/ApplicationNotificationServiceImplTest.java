@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationExpressionOfInterestConfig;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -32,6 +33,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.builder.ApplicationExpressionOfInterestConfigBuilder.newApplicationExpressionOfInterestConfig;
 import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
 import static org.innovateuk.ifs.application.transactional.ApplicationNotificationServiceImpl.Notifications.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
@@ -251,9 +253,13 @@ public class ApplicationNotificationServiceImplTest {
                         .build())
                 .build();
 
+        ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig = newApplicationExpressionOfInterestConfig()
+                .withEnabledForExpressionOfInterest(true)
+                .build();
+
         Application application = newApplication()
-                .withEnableForEOI(true)
                 .withProcessRoles(leadProcessRole)
+                .withApplicationExpressionOfInterestConfig(applicationExpressionOfInterestConfig)
                 .withCompetition(competition)
                 .build();
 

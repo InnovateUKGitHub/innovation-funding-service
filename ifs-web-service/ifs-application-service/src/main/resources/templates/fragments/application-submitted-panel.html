@@ -4,7 +4,7 @@
 <th:block th:fragment="application-submitted-panel">
     <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-9">
         <h2 class="govuk-panel__title"
-            th:text="${model.currentApplication.enableForEOI ? 'Expression of interest submitted' : 'Application submitted'}">
+            th:text="${model.currentApplication.isEnabledForExpressionOfInterest() ? 'Expression of interest submitted' : 'Application submitted'}">
         </h2>
         <div class="govuk-panel__body govuk-!-font-size-19">
             Application number: <span th:text="${model.currentApplication.id}" /><br/>
@@ -18,7 +18,7 @@
             <div class="govuk-!-margin-top-6">
                 <a th:href="@{/application/{id}/summary(id=${model.currentApplication.getId()})}"
                    class="govuk-link govuk-!-margin-right-6"
-                   th:text="${model.currentApplication.enableForEOI ? 'View expression of interest' : 'View application'}"></a>
+                   th:text="${model.currentApplication.isEnabledForExpressionOfInterest() ? 'View expression of interest' : 'View application'}"></a>
                 <a th:if=${model.reopenLinkVisible} th:href="@{/application/{id}/confirm-reopen(id=${model.currentApplication.getId()})}"
                    class="govuk-link govuk-!-margin-right-6">Reopen application</a>
                 <a th:href="@{/application/{id}/print(id=${model.currentApplication.getId()})}"

@@ -189,7 +189,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
     private boolean isHorizonEuropeExpressionOfInterest(Competition competition, Application application) {
         return competition.isHorizonEuropeGuarantee()
                 && competition.isEnabledForPreRegistration()
-                && application.isEnableForEOI();
+                && application.isEnabledForExpressionOfInterest();
     }
 
     @Override
