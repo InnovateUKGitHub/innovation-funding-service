@@ -25,7 +25,6 @@ import org.mockito.Mock;
 
 import java.util.*;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -39,11 +38,10 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Authority.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.Authority.INNOVATION_LEAD;
 import static org.innovateuk.ifs.user.resource.ProcessRoleType.*;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.hasCompetitionAdministratorAuthority;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -407,7 +405,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                     .withApplicationExpressionOfInterestConfigResource(applicationExpressionOfInterestConfigResource).build();
             when(competitionRepository.findById(application.getCompetition())).thenReturn(Optional.of(competition));
             if (!EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP, PREVIOUS).contains(competitionStatus) &&
-                    user.hasAnyAuthority(asList( COMP_ADMIN, INNOVATION_LEAD))) {
+                    hasCompetitionAdministratorAuthority(user)) {
                 assertTrue(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
             } else {
                 assertFalse(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
@@ -432,7 +430,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                     .withApplicationExpressionOfInterestConfigResource(applicationExpressionOfInterestConfigResource).build();
             when(competitionRepository.findById(application.getCompetition())).thenReturn(Optional.of(competition));
             if (!EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP, PREVIOUS).contains(competitionStatus) &&
-                    (user.hasAnyAuthority(asList( COMP_ADMIN, INNOVATION_LEAD)) || !application.isEnabledForExpressionOfInterest())) {
+                    (hasCompetitionAdministratorAuthority(user) || !application.isEnabledForExpressionOfInterest())) {
                 assertTrue(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
             } else {
                 assertFalse(rules.markAsInelgibileAllowedBeforeAssesment(application, user));

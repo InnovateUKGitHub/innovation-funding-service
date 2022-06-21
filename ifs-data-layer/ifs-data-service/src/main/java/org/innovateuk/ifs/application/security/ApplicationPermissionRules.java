@@ -13,10 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.EnumSet;
 
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
-import static org.innovateuk.ifs.user.resource.Authority.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.Authority.INNOVATION_LEAD;
 import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 import static org.innovateuk.ifs.user.resource.Role.SYSTEM_REGISTRATION_USER;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
@@ -157,7 +154,7 @@ public class ApplicationPermissionRules extends BasePermissionRules {
             particularBusinessState = "competition is in assessment state and application is not enabled for Expression of interest")
     public boolean markAsInelgibileAllowedBeforeAssesment(ApplicationResource application, UserResource user){
         Competition competition = competitionRepository.findById(application.getCompetition()).orElse(null);
-        return ((!application.isEnabledForExpressionOfInterest() || user.hasAnyAuthority(asList( COMP_ADMIN, INNOVATION_LEAD)))
+        return ((!application.isEnabledForExpressionOfInterest() || hasCompetitionAdministratorAuthority(user))
                 && !isCompetitionBeyondAssessment(competition));
     }
 
