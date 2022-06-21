@@ -394,7 +394,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
             Competition competition = newCompetition()
                     .withAssessmentPeriods(newAssessmentPeriod().withMilestones(newMilestone().build(1)).build(1))
                     .withCompetitionStatus(competitionStatus)
-                    .witheEnabledForPreRegistration(true)
+                    .withEnabledForExpressionOfInterest(true)
                     .withCompetitionType(newCompetitionType().withName("Sector").build())
                     .build();
 
@@ -419,7 +419,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
             Competition competition = newCompetition()
                     .withAssessmentPeriods(newAssessmentPeriod().withMilestones(newMilestone().build(1)).build(1))
                     .withCompetitionStatus(competitionStatus)
-                    .witheEnabledForPreRegistration(false)
+                    .withEnabledForExpressionOfInterest(false)
                     .withCompetitionType(newCompetitionType().withName("Sector").build())
                     .build();
 
