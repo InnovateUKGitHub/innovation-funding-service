@@ -6,6 +6,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.KtpTravelCost;
 import org.innovateuk.ifs.finance.resource.cost.KtpTravelCost.KtpTravelCostType;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
+import org.innovateuk.ifs.finance.resource.cost.PersonnelCost;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -22,13 +23,21 @@ public class YourProjectCostsForm {
 
     private LabourForm labour = new LabourForm();
 
+    private PersonnelForm personnel = new PersonnelForm();
+
     private OverheadForm overhead = new OverheadForm();
+
+    private HecpIndirectCostsForm hecpIndirectCosts = new HecpIndirectCostsForm();
 
     private Map<String, ProcurementOverheadRowForm> procurementOverheadRows = new LinkedHashMap<>();
 
     private Map<String, MaterialRowForm> materialRows = new LinkedHashMap<>();
 
+    private Map<String, EquipmentRowForm> equipmentRows = new LinkedHashMap<>();
+
     private Map<String, CapitalUsageRowForm> capitalUsageRows = new LinkedHashMap<>();
+
+    private Map<String, OtherGoodsRowForm> otherGoodsRows = new LinkedHashMap<>();
 
     private Map<String, SubcontractingRowForm> subcontractingRows = new LinkedHashMap<>();
 
@@ -78,8 +87,16 @@ public class YourProjectCostsForm {
         return overhead;
     }
 
+    public HecpIndirectCostsForm getHecpIndirectCosts() {
+        return hecpIndirectCosts;
+    }
+
     public void setOverhead(OverheadForm overhead) {
         this.overhead = overhead;
+    }
+
+    public void setHecpIndirectCosts(HecpIndirectCostsForm hecpIndirectCosts) {
+        this.hecpIndirectCosts = hecpIndirectCosts;
     }
 
     public Map<String, ProcurementOverheadRowForm> getProcurementOverheadRows() {
@@ -94,6 +111,14 @@ public class YourProjectCostsForm {
         return materialRows;
     }
 
+    public Map<String, EquipmentRowForm> getEquipmentRows() {
+        return equipmentRows;
+    }
+
+    public void setEquipmentRows(Map<String, EquipmentRowForm> equipmentRows) {
+        this.equipmentRows = equipmentRows;
+    }
+
     public void setMaterialRows(Map<String, MaterialRowForm> materialRows) {
         this.materialRows = materialRows;
     }
@@ -104,6 +129,14 @@ public class YourProjectCostsForm {
 
     public void setCapitalUsageRows(Map<String, CapitalUsageRowForm> capitalUsageRows) {
         this.capitalUsageRows = capitalUsageRows;
+    }
+
+    public Map<String, OtherGoodsRowForm> getOtherGoodsRows() {
+        return otherGoodsRows;
+    }
+
+    public void setOtherGoodsRows(Map<String, OtherGoodsRowForm> otherGoodsRows) {
+        this.otherGoodsRows = otherGoodsRows;
     }
 
     public Map<String, SubcontractingRowForm> getSubcontractingRows() {
@@ -144,6 +177,14 @@ public class YourProjectCostsForm {
 
     public void setLabour(LabourForm labour) {
         this.labour = labour;
+    }
+
+    public PersonnelForm getPersonnel() {
+        return personnel;
+    }
+
+    public void setPersonnel(PersonnelForm personnel) {
+        this.personnel = personnel;
     }
 
     public Map<String, AssociateSalaryCostRowForm> getAssociateSalaryCostRows() {
@@ -255,6 +296,10 @@ public class YourProjectCostsForm {
         return labour == null ? BigDecimal.ZERO : calculateTotal(labour.getRows());
     }
 
+    public BigDecimal getTotalPersonnelCosts() {
+        return personnel == null ? BigDecimal.ZERO : calculateTotal(personnel.getRows());
+    }
+
     public BigDecimal getTotalAssociateSalaryCosts() {
         return calculateTotal(associateSalaryCostRows);
     }
@@ -281,8 +326,28 @@ public class YourProjectCostsForm {
         return BigDecimal.ZERO;
     }
 
+    public BigDecimal getTotalHecpIndirectCosts() {
+        if (hecpIndirectCosts != null && hecpIndirectCosts.getRateType() != null) {
+            switch (hecpIndirectCosts.getRateType()) {
+                case NONE:
+                    return BigDecimal.ZERO;
+                case DEFAULT_PERCENTAGE:
+                    return getTotalPersonnelCosts().multiply(new BigDecimal("0.2"));
+                case HORIZON_EUROPE_GUARANTEE_TOTAL:
+                    return Optional.ofNullable(getHecpIndirectCosts().getTotalSpreadsheet()).map(BigDecimal::valueOf).orElse(BigDecimal.ZERO);
+                default:
+                    return BigDecimal.ZERO;
+            }
+        }
+        return BigDecimal.ZERO;
+    }
+
     public BigDecimal getTotalMaterialCosts() {
         return calculateTotal(materialRows);
+    }
+
+    public BigDecimal getTotalEquipmentCosts() {
+        return calculateTotal(equipmentRows);
     }
 
     public BigDecimal getTotalProcurementOverheadCosts() {
@@ -291,6 +356,10 @@ public class YourProjectCostsForm {
 
     public BigDecimal getTotalCapitalUsageCosts() {
         return calculateTotal(capitalUsageRows);
+    }
+
+    public BigDecimal getTotalOtherGoodsCosts() {
+        return calculateTotal(otherGoodsRows);
     }
 
     public BigDecimal getTotalSubcontractingCosts() {
@@ -360,10 +429,14 @@ public class YourProjectCostsForm {
 
     public BigDecimal getOrganisationFinanceTotal() {
         BigDecimal total = getTotalLabourCosts()
+                .add(getTotalPersonnelCosts())
                 .add(getTotalOverheadCosts())
+                .add(getTotalHecpIndirectCosts())
                 .add(getTotalMaterialCosts())
+                .add(getTotalEquipmentCosts())
                 .add(getTotalProcurementOverheadCosts())
                 .add(getTotalCapitalUsageCosts())
+                .add(getTotalOtherGoodsCosts())
                 .add(getTotalSubcontractingCosts())
                 .add(getTotalTravelCosts())
                 .add(getTotalOtherCosts())
@@ -410,9 +483,21 @@ public class YourProjectCostsForm {
                 row.setRate(cost.getRate(getLabour().getWorkingDaysPerYear()));
            }
         });
+        getPersonnel().getRows().forEach((id, row) -> {
+            PersonnelCost cost = row.toCost(null);
+            row.setTotal(cost.getTotal(getPersonnel().getWorkingDaysPerYear()));
+            if (isThirdPartyOfgem()) {
+                row.setRate(cost.getRate());
+            } else {
+                row.setRate(cost.getRate(getPersonnel().getWorkingDaysPerYear()));
+            }
+        });
         getOverhead().setTotal(getOverhead().getTotal());
+        getHecpIndirectCosts().setTotal(getHecpIndirectCosts().getTotal());
         recalculateTotal(getMaterialRows());
+        recalculateTotal(getEquipmentRows());
         recalculateTotal(getCapitalUsageRows());
+        recalculateTotal(getOtherGoodsRows());
         recalculateTotal(getSubcontractingRows());
         recalculateTotal(getTravelRows());
         recalculateTotal(getOtherRows());

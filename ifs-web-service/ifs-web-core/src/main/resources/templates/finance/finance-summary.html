@@ -147,21 +147,9 @@
                             <td class="govuk-table__cell"></td>
                             <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total</th>
                             <th scope="col"
-                                th:unless="${breakdown.hecpCompetition}"
                                 th:each="type : ${breakdown.financeRowTypes}"
                                 class="govuk-table__header govuk-table__header--numeric"
                                 th:text="|${type.displayName} (£)|">Labour (&pound;)</th>
-                            <th scope="col"
-                                th:if="${breakdown.hecpCompetition}"
-                                th:each="type : ${breakdown.financeRowTypes}"
-                                class="govuk-table__header govuk-table__header--numeric"
-                                th:text="${type.displayName.equals('Labour')} ? 'Personnel costs (£)' :
-                                (${type.displayName.equals('Subcontracting')} ? 'Subcontracting costs (£)' :
-                                (${type.displayName.equals('Materials')} ? 'Equipment (£)' :
-                                (${type.displayName.equals('Capital usage')} ? 'Other goods, works and services (£)' :
-                                (${type.displayName.equals('Travel and subsistence')} ? 'Travel and subsistence (£)' :
-                                (${type.displayName.equals('Other costs')} ? 'Other costs (£)' :
-                                'Indirect costs (£)')))))">Labour (&pound;)</th>
                         </tr>
                         </thead>
                         <tbody class="govuk-table__body">

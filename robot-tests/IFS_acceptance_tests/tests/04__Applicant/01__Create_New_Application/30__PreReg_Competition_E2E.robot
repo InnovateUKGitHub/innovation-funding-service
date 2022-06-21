@@ -101,13 +101,13 @@ the user completes prereg project finances
 The user is able to complete hecp project costs
     the user clicks the button/link           link = Your project costs
     the user should see the element           jQuery = h1:contains("Your project costs")
-    the user enters text to a text field      id = labour  50000
+    the user enters text to a text field      id = personnel  50000
     the user enters text to a text field      id = subcontracting  50000
     the user enters text to a text field      id = travel  10000
-    the user enters text to a text field      id = material  30000
-    the user enters text to a text field      id = capital  20000
+    the user enters text to a text field      id = equipment  30000
+    the user enters text to a text field      id = otherGoods  20000
     the user enters text to a text field      id = other  40000
-    the user enters text to a text field      id = overhead  0
+    the user enters text to a text field      id = hecpIndirectCosts  0
     the user clicks the button/link           jQuery = button:contains("Mark")
     the user should see the element           jQuery = li:contains("Your project costs") > .task-status-complete
 
