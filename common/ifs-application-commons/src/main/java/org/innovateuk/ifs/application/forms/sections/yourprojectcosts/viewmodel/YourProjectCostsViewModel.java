@@ -369,6 +369,11 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
     }
 
     @JsonIgnore
+    public FinanceRowType getPersonnelFinanceRowType() {
+        return FinanceRowType.PERSONNEL;
+    }
+
+    @JsonIgnore
     public FinanceRowType getOverheadsFinanceRowType() {
         return FinanceRowType.OVERHEADS;
     }

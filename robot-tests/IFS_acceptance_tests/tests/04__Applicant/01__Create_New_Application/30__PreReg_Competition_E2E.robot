@@ -5,6 +5,9 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...
 ...               IFS-12079 Pre-Registration (Applicant Journey) Complete an expression of interest application
 ...
+...               IFS-12080 Pre-Registration (Applicant Journey) Dashboard - Open / Submitted EOI applications
+...
+
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -47,8 +50,14 @@ Applicants views expression of interest labels in application overview page for 
     Then the user should see EOI labels for prereg application
     And the user should see the element                           jQuery = dt:contains("Application number:")+dd:contains("${preregApplicationID}")
 
+Applicant should view EOI label on dashboard for expression of interest applications
+    [Arguments]  IFS-12080
+    When the user clicks the button/link    link = Back to applications
+    Then the user should see the element    jQuery = li:contains("${hecpPreregAppName}") .status-msg:contains("Expression of interest")
+
 Lead applicant completes the application sections
     [Arguments]  IFS-12077
+    Given the user clicks the button/link                                link = ${hecpPreregAppName}
     When the applicant completes Application Team                        COMPLETE  steve.smith@empire.com
     And the user complete the work programme
     And The user is able to complete horizon grant agreement section
@@ -116,13 +125,13 @@ the user completes prereg project finances
 The user is able to complete hecp project costs
     the user clicks the button/link           link = Your project costs
     the user should see the element           jQuery = h1:contains("Your project costs")
-    the user enters text to a text field      id = labour  50000
+    the user enters text to a text field      id = personnel  50000
     the user enters text to a text field      id = subcontracting  50000
     the user enters text to a text field      id = travel  10000
-    the user enters text to a text field      id = material  30000
-    the user enters text to a text field      id = capital  20000
+    the user enters text to a text field      id = equipment  30000
+    the user enters text to a text field      id = otherGoods  20000
     the user enters text to a text field      id = other  40000
-    the user enters text to a text field      id = overhead  0
+    the user enters text to a text field      id = hecpIndirectCosts  0
     the user clicks the button/link           jQuery = button:contains("Mark")
     the user should see the element           jQuery = li:contains("Your project costs") > .task-status-complete
 

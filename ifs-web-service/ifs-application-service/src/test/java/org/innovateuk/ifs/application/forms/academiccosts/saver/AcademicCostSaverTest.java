@@ -22,9 +22,7 @@ import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 
 public class AcademicCostSaverTest extends BaseServiceUnitTest<AcademicCostSaver> {
@@ -56,6 +54,7 @@ public class AcademicCostSaverTest extends BaseServiceUnitTest<AcademicCostSaver
         ApplicationFinanceResource finance = newApplicationFinanceResource()
                 .withAcademicCosts()
                 .build();
+
         AcademicCostForm form = new AcademicCostForm();
         BigDecimal cost = new BigDecimal("50");
         form.setExceptionsOtherCosts(cost);
@@ -97,7 +96,6 @@ public class AcademicCostSaverTest extends BaseServiceUnitTest<AcademicCostSaver
         verify(financeRowRestService).update(argThat(hasNameAndCost("exceptions_staff", cost)));
         verify(financeRowRestService).update(argThat(hasNameAndCost("exceptions_other_costs", cost)));
         verifyNoMoreInteractions(financeRowRestService);
-
     }
 
     private Matcher<AcademicCost> hasNameAndCost(String name, BigDecimal value) {

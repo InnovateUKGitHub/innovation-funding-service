@@ -80,7 +80,6 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.resource.ApprovalType.APPROVED;
 import static org.innovateuk.ifs.project.resource.ApprovalType.REJECTED;
@@ -691,14 +690,15 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
             BigDecimal expectedTotalCost = eligibleCostPerCategoryMap.get(category);
 
             if (actualTotalCost.compareTo(expectedTotalCost) > 0) {
-                String categoryName = competition.isHorizonEuropeGuarantee() ? categories.get(category).getHecpDisplayName() : categories.get(category).getName();
+                String categoryName = categories.get(category).getName();
+
                 //TODO INFUND-7502 could come up with a better way to send the name to the frontend
                 categoriesWithIncorrectTotal.add(fieldError(String.valueOf(category), actualTotalCost, SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY.getErrorKey(), categoryName));
             }
         }
 
         if(competition.isHorizonEuropeGuarantee()) {
-            List<String> hecpFinanceRowOrder = FinanceRowType.getHecpSpecificFinanceRowTypes().stream().map(FinanceRowType::getHecpDisplayName).collect(Collectors.toList());
+            List<String> hecpFinanceRowOrder = FinanceRowType.getHecpSpecificFinanceRowTypes().stream().map(FinanceRowType::getDisplayName).collect(Collectors.toList());
             categoriesWithIncorrectTotal = categoriesWithIncorrectTotal.stream().sorted((e1, e2) -> hecpFinanceRowOrder.indexOf(e1.getArguments().get(0)) - hecpFinanceRowOrder.indexOf(e2.getArguments().get(0))).collect(Collectors.toList());
         }
 
@@ -757,8 +757,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
             CostCategory cc = costCategoryRepository.findById(category).get();
             if (isResearch) {
                 byCategory.add(cc.getLabel());
-            } else if (hecpCompetition) {
-                byCategory.add(FinanceRowType.getByName(cc.getName()).get().getHecpDisplayName());
             } else {
                 byCategory.add(String.valueOf(cc.getName()));
             }
@@ -805,22 +803,11 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values) -> {
             CostCategory cc = costCategoryRepository.findById(category).get();
 
-            if (hecpCompetition) {
-                String hecpName = FinanceRowType.getByName(cc.getName()).get().getHecpDisplayName();
-                if (isResearch) {
-                    rows.add(calculateQuarterly(cc.getLabel(), hecpName, values).toArray(new String[0]));
-                } else {
-                    rows.add(calculateQuarterly(hecpName, values).toArray(new String[0]));
-                }
+            if (isResearch) {
+                rows.add(calculateQuarterly(cc.getLabel(), cc.getName(), values).toArray(new String[0]));
             } else {
-                if (isResearch) {
-                    rows.add(calculateQuarterly(cc.getLabel(), cc.getName(), values).toArray(new String[0]));
-                } else {
-                    rows.add(calculateQuarterly(cc.getName(), values).toArray(new String[0]));
-                }
+                rows.add(calculateQuarterly(cc.getName(), values).toArray(new String[0]));
             }
-
-
         });
 
         if (isResearch) {

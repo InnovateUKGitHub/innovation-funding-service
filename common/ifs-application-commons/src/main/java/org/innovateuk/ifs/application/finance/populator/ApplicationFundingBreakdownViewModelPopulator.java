@@ -118,9 +118,6 @@ public class ApplicationFundingBreakdownViewModelPopulator {
         if (competition.isKtp()) {
             financeRowTypes = competition.getFinanceRowTypesByFinance(finance);
         }
-        if(competition.isHorizonEuropeGuarantee()) {
-            financeRowTypes = FinanceRowType.getHecpSpecificFinanceRowTypes();
-        }
 
         return financeRowTypes.stream().filter(FinanceRowType::isCost).collect(toList());
     }
@@ -130,7 +127,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 .filter(ApplicationInviteResource::isInviteNameConfirmed)
                 .map(ApplicationInviteResource::getInviteOrganisationNameConfirmedSafe)
                 .distinct()
-                .map((name) -> BreakdownTableRow.pendingOrganisation(name, types))
+                .map(name -> BreakdownTableRow.pendingOrganisation(name, types))
                 .collect(toList());
     }
 
