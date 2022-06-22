@@ -66,7 +66,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
     private CompetitionService competitionServiceMock;
 
     @Test
-    public void testGenerateSpendProfileForIndustrialOrganisation() {
+    public void generateSpendProfileForIndustrialOrganisation() {
         ProjectResource project = newProjectResource().
                 withDuration(10L).
                 withCompetition(2L).

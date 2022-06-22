@@ -247,7 +247,7 @@ public class ApplicationNotificationServiceImplTest {
                 .build();
 
         Competition competition = newCompetition()
-                .withEnabledForPreRegistration(true)
+                .withEnabledForExpressionOfInterest(true)
                 .withCompetitionType(newCompetitionType()
                         .withName("Horizon Europe Guarantee")
                         .build())

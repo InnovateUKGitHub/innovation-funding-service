@@ -2,7 +2,9 @@ package org.innovateuk.ifs.project.eligibility.saver;
 
 import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
 import org.innovateuk.ifs.application.forms.academiccosts.saver.AbstractAcademicCostSaver;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
@@ -19,6 +21,12 @@ public class ProjectAcademicCostsSaver extends AbstractAcademicCostSaver {
     @Autowired
     private ProjectFinanceRowRestService projectFinanceRowRestService;
 
+    @Autowired
+    private CompetitionRestService competitionRestService;
+
+    @Autowired
+    private ApplicationRestService applicationRestService;
+
     @Override
     protected FinanceRowRestService financeRowRestService() {
         return projectFinanceRowRestService;
@@ -26,6 +34,7 @@ public class ProjectAcademicCostsSaver extends AbstractAcademicCostSaver {
 
     public ServiceResult<Void> save(AcademicCostForm form, long projectId, long organisationId) {
         ProjectFinanceResource finance = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
+
         return save(form, finance);
     }
 }
