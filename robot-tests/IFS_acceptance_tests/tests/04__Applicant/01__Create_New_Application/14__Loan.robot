@@ -639,8 +639,9 @@ the user should see valid application submission log message stored in db
 the user marks b&fi question as complete or incomplete
     [Arguments]  ${username}  ${applicatioID}  ${questionStatus}  ${questionDate}
     get auth token of user  ${username}
-    Run Keyword If  '${SERVER_BASE}' == 'ifs.local.dev'   run loans curl command  ${localLoanCurl}  ${userId}  ${applicatioID}  ${questionStatus}  ${questionDate}
-    ...               ELSE                                run loans curl command  ${cloudLoanCurl}  ${userId}  ${applicatioID}  ${questionStatus}  ${questionDate}
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   Location Should Contain   host.docker.internal
+    Run Keyword If  '${status}' == 'PASS'  run loans curl command  ${localLoanCurl}  ${userId}  ${applicatioID}  ${questionStatus}  ${questionDate}
+    Run Keyword If  '${status}' == 'FAIL'  run loans curl command  ${cloudLoanCurl}  ${userId}  ${applicatioID}  ${questionStatus}  ${questionDate}
 
 run loans curl command
     [Arguments]  ${curlVersion}  ${userId}  ${applicatioID}  ${questionStatus}  ${questionDate}

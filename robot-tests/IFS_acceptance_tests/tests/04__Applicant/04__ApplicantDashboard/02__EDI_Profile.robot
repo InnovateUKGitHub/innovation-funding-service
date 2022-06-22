@@ -244,8 +244,9 @@ the user should see valid EDI status log message stored in db
 the user changed EDI survey status
     [Arguments]   ${username}  ${ediStatus}  ${ediReviewDate}
     get auth token of user          ${username}
-    Run Keyword If  '${SERVER_BASE}' == 'ifs.local.dev'   run edi curl command  ${localEDICurl}  ${userId}  ${ediStatus}  ${ediReviewDate}
-    ...               ELSE                                run edi curl command  ${cloudEDICurl}  ${userId}  ${ediStatus}  ${ediReviewDate}
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   Location Should Contain   host.docker.internal
+    Run Keyword If  '${status}' == 'PASS'   run edi curl command  ${localEDICurl}  ${userId}  ${ediStatus}  ${ediReviewDate}
+    Run Keyword If  '${status}' == 'FAIL'   run edi curl command  ${cloudEDICurl}  ${userId}  ${ediStatus}  ${ediReviewDate}
 
 run edi curl command
     [Arguments]  ${curlVersion}  ${userId}  ${ediStatus}  ${ediReviewDate}
