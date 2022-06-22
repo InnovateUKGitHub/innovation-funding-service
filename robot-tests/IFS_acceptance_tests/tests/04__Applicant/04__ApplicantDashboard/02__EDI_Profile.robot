@@ -244,7 +244,12 @@ the user should see valid EDI status log message stored in db
 the user changed EDI survey status
     [Arguments]   ${username}  ${ediStatus}  ${ediReviewDate}
     get auth token of user          ${username}
-    ${ediStatus} =   Run Process    ${shellScriptFolder}/${ediCurl}  ${userId}  ${ediStatus}  ${ediReviewDate}
+    Run Keyword If  '${SERVER_BASE}' == 'ifs.local.dev'   run edi curl command  ${localEDICurl}  ${userId}  ${ediStatus}  ${ediReviewDate}
+    ...               ELSE                                run edi curl command  ${cloudEDICurl}  ${userId}  ${ediStatus}  ${ediReviewDate}
+
+run edi curl command
+    [Arguments]  ${curlVersion}  ${userId}  ${ediStatus}  ${ediReviewDate}
+    ${ediStatus} =   Run Process    ${shellScriptFolder}/${curlVersion}  ${userId}  ${ediStatus}  ${ediReviewDate}
     log  ${ediStatus.rc}
     log  ${ediStatus.stderr}
     log  ${ediStatus.stdout}

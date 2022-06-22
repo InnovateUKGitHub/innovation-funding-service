@@ -201,8 +201,11 @@ ${32MB_large_pdf}             32mb_file.pdf
 
 #shell scripts folder
 ${shellScriptFolder}          shell_scripts
-${ediCurl}                    ediCurl.sh
-${loansCurl}                  loansCurl.sh
+${cloudEDICurl}               cloudEDICurl.sh
+${localEDICurl}               localEDICurl.sh
+${cloudLoanCurl}              cloudLoanCurl.sh
+${localLoanCurl}              localLoanCurl.sh
+
 # Assessor variables
 ${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}     ${assessment_ids["${IN_ASSESSMENT_APPLICATION_4_TITLE}"]["${assessor_credentials["email"]}"]}
 ${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}     ${assessment_ids["${IN_ASSESSMENT_APPLICATION_4_TITLE}"]["${assessor2_credentials["email"]}"]}
