@@ -92,17 +92,13 @@ Applicant can not view hidden question, section and subsection in print applicat
     And the user should not see the element                            xpath = //span[contains(text(),'Award terms and conditions')]
     [Teardown]  the user navigates to the page                         ${SERVER}/application/${preregApplicationID}/track
 
-Comp admin can not view mark as ineligable application link
+Comp admin can not view mark as ineligible application link
     [Documentation]  IFS-12257
     Given log in as a different user                &{ifs_admin_user_credentials}
-    When the user navigates to the page             ${server}/management/competition/${hecpPreregCompId}/application/${preregApplicationID}
-    Then the user should not see subsection         jQuery = span:contains("Mark application as ineligible")
+    When the user navigates to the page             ${server}/management/competition/${preregCompetitionId}/application/${preregApplicationID}
+    Then the user should not see the element         jQuery = span:contains("Mark application as ineligible")
 
 *** Keywords ***
-Requesting IDs of this hecp pre reg competition
-    [Arguments]  ${competitionName}
-    ${hecpPreregCompId} =  get comp id from comp title  ${hecpPreregCompName}
-    Set suite variable  ${hecpPreregCompId}
 
 Custom Suite Setup
     Set predefined date variables
