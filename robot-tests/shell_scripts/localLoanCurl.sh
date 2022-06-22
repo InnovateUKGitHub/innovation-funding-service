@@ -12,4 +12,4 @@ questionStatus=$3
 questionDate=$4
 
 # Define some functions for later use
-curl -v -X PATCH --header 'Content-Type:application/json' --header "IFS_AUTH_TOKEN:${IFS_AUTH_TOKEN}" --url http://$DATA_SERVICE_PORT_8080_TCP_ADDR:8080/application-update/${application_id} --data "{\"questionSetupType\":\"LOAN_BUSINESS_AND_FINANCIAL_INFORMATION\",\"completionStatus\":\"${questionStatus}\",\"completionDate\":\"${questionDate}\"}"
+curl -v -X PATCH --header 'Content-Type:application/json' --header "IFS_AUTH_TOKEN:${IFS_AUTH_TOKEN}" --url http://localhost:8080/application-update/${application_id} --data "{\"questionSetupType\":\"LOAN_BUSINESS_AND_FINANCIAL_INFORMATION\",\"completionStatus\":\"${questionStatus}\",\"completionDate\":\"${questionDate}\"}"

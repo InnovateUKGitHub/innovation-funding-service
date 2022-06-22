@@ -16,4 +16,4 @@ ediReviewDate=$3
 # Define some functions for later use
 DATASERVICE_POD=$(kubectl get pod -l app=data-service -o jsonpath="{.items[0].metadata.name}")
 
-kubectl exec -it  $DATASERVICE_POD -- curl -v -X PATCH --header 'Content-Type:application/json' --header "IFS_AUTH_TOKEN:${IFS_AUTH_TOKEN}" --url http://$DATA_SERVICE_PORT_8080_TCP_ADDR:8080/user/v1/edi  --data "{\"ediStatus\":\"${ediStatus}\",\"ediReviewDate\":\"${ediReviewDate}\"}"
+kubectl exec -it  $DATASERVICE_POD -- curl -v -X PATCH --header 'Content-Type:application/json' --header "IFS_AUTH_TOKEN:${IFS_AUTH_TOKEN}" --url http://localhost:8080/user/v1/edi  --data "{\"ediStatus\":\"${ediStatus}\",\"ediReviewDate\":\"${ediReviewDate}\"}"
