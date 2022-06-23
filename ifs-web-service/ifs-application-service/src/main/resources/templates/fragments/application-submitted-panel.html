@@ -22,7 +22,7 @@
                 <a th:if=${model.reopenLinkVisible} th:href="@{/application/{id}/confirm-reopen(id=${model.currentApplication.getId()})}"
                    class="govuk-link govuk-!-margin-right-6">Reopen application</a>
                 <a th:href="@{/application/{id}/print(id=${model.currentApplication.getId()})}"
-                   class="govuk-link">Print <span th:text="${model.currentApplication.isEnabledForExpressionOfInterest()} ? |expression of interest | : |application |" /></a>
+                   class="govuk-link">Print <span th:text="${model.currentApplication.isEnabledForExpressionOfInterest()} ? |expression of interest| : |application|"/></a>
             </div>
         </div>
     </div>
