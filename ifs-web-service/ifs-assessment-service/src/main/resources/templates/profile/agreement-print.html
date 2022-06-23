@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org" xmlns:ifs="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Print assessor agreement'" />
+</head>
+<body class="govuk-template__body print-doc">
+<th:block th:insert="fragments/layout :: body-start" />
+
+<div class="print-bar">
+    <button class="govuk-button" onclick="window.print()">Print your assessor agreement</button>
+    <div class="hidden">You can print your assessor agreement by pressing CTRL+P (Windows) or CMD+P (mac)</div>
+</div>
+
+<section class="portrait">
+    <div class="govuk-body" ifs:utext="${model.text}"></div>
+</section>
+
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:unless="${param.noprint}">
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            //setTimeout to load late, because of safari font loading bug
+            setTimeout(function () {window.print()}, 0)
+        })
+    </script>
+</th:block>
+</body>
+</html>

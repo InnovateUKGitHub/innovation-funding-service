@@ -144,6 +144,14 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
                             withName("direct_staff", "direct_staff", "exceptions_staff").
                             build(4)).
                     build(),
+            FinanceRowType.PERSONNEL, newLabourCostCategory().withCosts(
+                            newLabourCost().
+                                    withGrossEmployeeCost(new BigDecimal("10000.23"), new BigDecimal("5100.11"), new BigDecimal("600.11"), BigDecimal.ZERO).
+                                    withDescription("Developers", "Testers", "Something else", WORKING_DAYS_PER_YEAR).
+                                    withLabourDays(100, 120, 120, 250).
+                                    withName("direct_staff", "direct_staff", "exceptions_staff_hecp").
+                                    build(4)).
+                    build(),
             FinanceRowType.OTHER_COSTS, newDefaultCostCategory().withCosts(
                     newOtherCost().
                             withCost(new BigDecimal("33.33"), new BigDecimal("98.51")).
@@ -260,9 +268,9 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
 
         assertOrganisationDetails(academicOrganisation, viewModel);
 
-        assertEquals(Integer.valueOf(6868), viewModel.getTotalCosts());
+        assertEquals(Integer.valueOf(13604), viewModel.getTotalCosts());
         assertEquals(BigDecimal.valueOf(100), viewModel.getPercentageGrant());
-        assertEquals(Integer.valueOf(5868), viewModel.getFundingSought());
+        assertEquals(Integer.valueOf(12604), viewModel.getFundingSought());
         assertEquals(Integer.valueOf(1000), viewModel.getOtherPublicSectorFunding());
         assertEquals(Integer.valueOf(0), viewModel.getContributionToProject());
         assertFalse(viewModel.isReadOnly());

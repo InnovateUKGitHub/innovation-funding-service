@@ -1,15 +1,23 @@
 package org.innovateuk.ifs.application.transactional;
 
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationExpressionOfInterestConfig;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.application.validation.ApplicationValidatorService;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.form.repository.SectionRepository;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.innovateuk.ifs.form.transactional.SectionService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Test;
@@ -24,8 +32,10 @@ import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuild
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -36,6 +46,8 @@ public class SectionStatusServiceImplTest extends BaseUnitTestMocksTest {
 
     @Mock
     private ApplicationRepository applicationRepositoryMock;
+    @Mock
+    private SectionRepository sectionRepositoryMock;
 
     @Mock
     private QuestionStatusService questionStatusServiceMock;
@@ -45,6 +57,12 @@ public class SectionStatusServiceImplTest extends BaseUnitTestMocksTest {
 
     @Mock
     private ApplicationValidatorService applicationValidatorService;
+    @Mock
+    private ApplicationValidationUtil applicationValidationUtil;
+    @Mock
+    private SectionService sectionServiceMock;
+    @Mock
+    private QuestionService questionService;
 
     @Test
     public void getCompletedSectionsMap() {
@@ -123,6 +141,7 @@ public class SectionStatusServiceImplTest extends BaseUnitTestMocksTest {
                 .withId(financeSectionId)
                 .withSectionType(SectionType.FINANCE)
                 .withQuestions(questions)
+                .withEnabledForPreRegistration(true)
                 .build();
 
         Section financeOverviewSection = newSection()
@@ -150,10 +169,147 @@ public class SectionStatusServiceImplTest extends BaseUnitTestMocksTest {
         when(financeServiceMock.collaborativeFundingCriteriaMet(application.getId())).thenReturn(serviceSuccess(true));
         when(financeServiceMock.fundingSoughtValid(application.getId())).thenReturn(serviceSuccess(true));
         when(applicationValidatorService.isFinanceOverviewComplete(application)).thenReturn(true);
+        Set<Long> result = sectionStatusService.getCompletedSections(applicationId, organisationId).getSuccess();
+
+        assertTrue(result.contains(financeSectionId));
+        assertTrue(result.contains(financeOverviewSectionId));
+    }
+
+    @Test
+    public void completeSectionWithoutPreRegistration() {
+
+        long applicationId = 1L;
+        long organisationId = 2L;
+        long financeSectionId = 3L;
+        long financeOverviewSectionId = 4L;
+
+        ProcessRole processRole = newProcessRole()
+                .withOrganisationId(organisationId)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
+                .build();
+
+        List<Question> questions = newQuestion()
+                .withMultipleStatuses(true)
+                .withMarksAsCompleteEnabled(true)
+                .withEnabledForPreRegistration(true, false)
+                .build(2);
+
+        List<QuestionStatusResource> questionStatusResources = newQuestionStatusResource()
+                .withMarkedAsComplete(true)
+                .withMarkedAsCompleteByOrganisationId(organisationId)
+                .withQuestion(questions.get(0).getId())
+                .build(1);
+
+        Section financeSection = newSection()
+                .withId(financeSectionId)
+                .withSectionType(SectionType.FINANCE)
+                .withQuestions(questions)
+                .withEnabledForPreRegistration(true)
+                .build();
+
+        Section financeOverviewSection = newSection()
+                .withId(financeOverviewSectionId)
+                .withSectionType(SectionType.OVERVIEW_FINANCES)
+                .withQuestions(questions)
+                .withEnabledForPreRegistration(false)
+                .build();
+
+        Competition competition = newCompetition()
+                .withSections(asList(financeSection, financeOverviewSection))
+                .withQuestions(questions)
+                .build();
+
+        Application application = newApplication()
+                .withId(applicationId)
+                .withCompetition(competition)
+                .withProcessRoles(processRole)
+                .build();
+
+        ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig =
+                ApplicationExpressionOfInterestConfig.builder().
+                        application(application).enabledForExpressionOfInterest(true).build();
+
+        application.setApplicationExpressionOfInterestConfig(applicationExpressionOfInterestConfig);
+
+        Map<Long, List<QuestionStatusResource>> completedQuestionStatuses = new HashMap<>();
+        completedQuestionStatuses.put(organisationId, questionStatusResources);
+
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
+        when(questionStatusServiceMock.findCompletedQuestionsByApplicationId(applicationId)).thenReturn(serviceSuccess(questionStatusResources));
+        when(financeServiceMock.collaborativeFundingCriteriaMet(application.getId())).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.fundingSoughtValid(application.getId())).thenReturn(serviceSuccess(true));
+        when(applicationValidatorService.isFinanceOverviewComplete(application)).thenReturn(true);
 
         Set<Long> result = sectionStatusService.getCompletedSections(applicationId, organisationId).getSuccess();
 
         assertTrue(result.contains(financeSectionId));
         assertTrue(result.contains(financeOverviewSectionId));
+    }
+
+    @Test
+    public void markSectionCompletePreRegistration() {
+
+        long applicationId = 1L;
+        long organisationId = 2L;
+        long financeSectionId = 3L;
+        long financeOverviewSectionId = 4L;
+
+        ProcessRole processRole = newProcessRole()
+                .withOrganisationId(organisationId)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
+                .build();
+
+        List<Question> questions = newQuestion()
+                .withMultipleStatuses(true)
+                .withMarksAsCompleteEnabled(true)
+                .withEnabledForPreRegistration(true, false)
+                .build(2);
+
+        List<QuestionStatusResource> questionStatusResources = newQuestionStatusResource()
+                .withMarkedAsComplete(true)
+                .withMarkedAsCompleteByOrganisationId(organisationId)
+                .withQuestion(questions.get(0).getId())
+                .build(1);
+
+        Section financeSection = newSection()
+                .withId(financeSectionId)
+                .withSectionType(SectionType.FINANCE)
+                .withQuestions(questions)
+                .withEnabledForPreRegistration(true)
+                .build();
+
+
+        Competition competition = newCompetition()
+                .withSections(asList(financeSection))
+                .withQuestions(questions)
+                .build();
+
+        Application application = newApplication()
+                .withId(applicationId)
+                .withCompetition(competition)
+                .withProcessRoles(processRole)
+                .build();
+
+        ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig =
+                ApplicationExpressionOfInterestConfig.builder().
+                        application(application).enabledForExpressionOfInterest(true).build();
+
+        application.setApplicationExpressionOfInterestConfig(applicationExpressionOfInterestConfig);
+
+        Map<Long, List<QuestionStatusResource>> completedQuestionStatuses = new HashMap<>();
+        completedQuestionStatuses.put(organisationId, questionStatusResources);
+        QuestionResource questionResource = newQuestionResource().build();
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
+        when(questionStatusServiceMock.findCompletedQuestionsByApplicationId(applicationId)).thenReturn(serviceSuccess(questionStatusResources));
+        when(financeServiceMock.collaborativeFundingCriteriaMet(application.getId())).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.fundingSoughtValid(application.getId())).thenReturn(serviceSuccess(true));
+        when(applicationValidatorService.isFinanceOverviewComplete(application)).thenReturn(true);
+        when(sectionRepositoryMock.findById(financeSection.getId())).thenReturn(Optional.ofNullable(financeSection));
+        when(applicationValidationUtil.isSectionValid(1L, financeSection, application)).thenReturn(ValidationMessages.noErrors());
+        when(sectionServiceMock.getQuestionsForSectionAndSubsections(financeSection.getId())).thenReturn(serviceSuccess(ImmutableSet.of(1L)));
+        when(questionService.getQuestionById(1L)).thenReturn(serviceSuccess(questionResource));
+
+        ValidationMessages result = sectionStatusService.markSectionAsComplete(financeSection.getId(), application.getId(), 1L).getSuccess();
+        assertFalse(result.hasErrors());
     }
 }
