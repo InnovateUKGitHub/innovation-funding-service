@@ -53,7 +53,7 @@ public class ApplicationResource {
     private FundingDecision fundingDecision;
     private Long assessmentPeriodId;
     private ZonedDateTime feedbackReleased;
-    private boolean enableForEOI;
+    private ApplicationExpressionOfInterestConfigResource applicationExpressionOfInterestConfigResource;
 
     public Long getId() {
         return id;
@@ -351,12 +351,16 @@ public class ApplicationResource {
         return feedbackReleased != null && ZonedDateTime.now().isAfter(feedbackReleased);
     }
 
-    public boolean isEnableForEOI() {
-        return enableForEOI;
+    public ApplicationExpressionOfInterestConfigResource getApplicationExpressionOfInterestConfigResource() {
+        return applicationExpressionOfInterestConfigResource;
     }
 
-    public void setEnableForEOI(boolean enableForEOI) {
-        this.enableForEOI = enableForEOI;
+    public void setApplicationExpressionOfInterestConfigResource(ApplicationExpressionOfInterestConfigResource applicationExpressionOfInterestConfigResource) {
+        this.applicationExpressionOfInterestConfigResource = applicationExpressionOfInterestConfigResource;
+    }
+
+    public boolean isEnabledForExpressionOfInterest() {
+        return applicationExpressionOfInterestConfigResource != null ? applicationExpressionOfInterestConfigResource.isEnabledForExpressionOfInterest() : false;
     }
 
     @Override
@@ -395,7 +399,7 @@ public class ApplicationResource {
                 .append(event, that.event)
                 .append(lastStateChangeDate, that.lastStateChangeDate)
                 .append(assessmentPeriodId, that.assessmentPeriodId)
-                .append(enableForEOI, that.enableForEOI)
+                .append(applicationExpressionOfInterestConfigResource, that.applicationExpressionOfInterestConfigResource)
                 .isEquals();
     }
 
@@ -429,7 +433,7 @@ public class ApplicationResource {
                 .append(event)
                 .append(lastStateChangeDate)
                 .append(assessmentPeriodId)
-                .append(enableForEOI)
+                .append(applicationExpressionOfInterestConfigResource)
                 .toHashCode();
     }
 }

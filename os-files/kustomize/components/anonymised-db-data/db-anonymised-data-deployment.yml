@@ -7,7 +7,7 @@ spec:
     - name: regcred
   containers:
     - name: anonymised-db-data
-      image: anonymised-db-data
+      image: docker-ifs.devops.innovateuk.org/releases/ifs-proxysql:1.0
       imagePullPolicy: Always
       envFrom:
         - secretRef:

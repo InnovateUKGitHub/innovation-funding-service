@@ -1,6 +1,0 @@
-email|EMAIL_WITH_ID_EXCEPT_SYSTEM('x')
-first_name|MASK(2, 'x')
-last_name|MASK(2, 'y')
-invite_name|MASK(2, 'x')
-phone_number|MASK(2, 'x')
-uid|UUID_REPLACEMENT

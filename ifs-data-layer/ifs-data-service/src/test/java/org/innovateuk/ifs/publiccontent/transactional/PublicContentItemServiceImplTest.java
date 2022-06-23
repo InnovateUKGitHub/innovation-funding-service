@@ -264,7 +264,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
                         .withDate(LocalDateTime.of(2017,1,2,3,4).atZone(ZoneId.systemDefault()), LocalDateTime.of(2017,3,2,1,4).atZone(ZoneId.systemDefault()))
                         .withType(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE)
                         .build(2)
-                ).witheEnabledForPreRegistration(true)
+                ).withEnabledForExpressionOfInterest(true)
                 .build();
         PublicContent publicContent = newPublicContent().withCompetitionId(competitionId).build();
         PublicContentResource publicContentResource = newPublicContentResource().withCompetitionId(competitionId).build();

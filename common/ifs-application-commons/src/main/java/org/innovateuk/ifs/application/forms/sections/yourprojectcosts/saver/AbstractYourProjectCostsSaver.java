@@ -43,14 +43,26 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                 case LABOUR:
                     messages.addAll(saveLabourCosts(form.getLabour(), finance, form.isThirdPartyOfgem()).get());
                     break;
+                case PERSONNEL:
+                    messages.addAll(savePersonnelCosts(form.getPersonnel(), finance, form.isThirdPartyOfgem()).get());
+                    break;
                 case OVERHEADS:
                     messages.addAll(saveOverheads(form.getOverhead(), finance).get());
+                    break;
+                case HECP_INDIRECT_COSTS:
+                    messages.addAll(saveHecpIndirectCosts(form.getHecpIndirectCosts(), finance).get());
                     break;
                 case CAPITAL_USAGE:
                     messages.addAll(saveRows(form.getCapitalUsageRows(), finance).get());
                     break;
+                case OTHER_GOODS:
+                    messages.addAll(saveRows(form.getOtherGoodsRows(), finance).get());
+                    break;
                 case MATERIALS:
                     messages.addAll(saveRows(form.getMaterialRows(), finance).get());
+                    break;
+                case EQUIPMENT:
+                    messages.addAll(saveRows(form.getEquipmentRows(), finance).get());
                     break;
                 case OTHER_COSTS:
                     messages.addAll(saveRows(form.getOtherRows(), finance).get());
@@ -120,14 +132,26 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.LABOUR)) {
             futures.add(saveLabourCosts(form.getLabour(), finance, form.isThirdPartyOfgem()));
         }
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.PERSONNEL)) {
+            futures.add(savePersonnelCosts(form.getPersonnel(), finance, form.isThirdPartyOfgem()));
+        }
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.OVERHEADS)) {
             futures.add(saveOverheads(form.getOverhead(), finance));
+        }
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.HECP_INDIRECT_COSTS)) {
+            futures.add(saveHecpIndirectCosts(form.getHecpIndirectCosts(), finance));
         }
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.MATERIALS)) {
             futures.add(saveRows(form.getMaterialRows(), finance));
         }
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.EQUIPMENT)) {
+            futures.add(saveRows(form.getEquipmentRows(), finance));
+        }
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.CAPITAL_USAGE)) {
             futures.add(saveRows(form.getCapitalUsageRows(), finance));
+        }
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.OTHER_GOODS)) {
+            futures.add(saveRows(form.getOtherGoodsRows(), finance));
         }
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.SUBCONTRACTING_COSTS)) {
             futures.add(saveRows(form.getSubcontractingRows(), finance));
@@ -258,6 +282,20 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         });
     }
 
+    private CompletableFuture<ValidationMessages> savePersonnelCosts(PersonnelForm personnelForm, BaseFinanceResource finance, boolean thirdPartyOfgem) {
+        return async(() -> {
+            ValidationMessages messages = new ValidationMessages();
+
+            PersonnelCostCategory personnelCostCategory = (PersonnelCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.PERSONNEL);
+            if (!thirdPartyOfgem) {
+                personnelCostCategory.getWorkingDaysPerYearCostItem().setLabourDays(personnelForm.getWorkingDaysPerYear());
+                messages.addAll(getFinanceRowService().update(personnelCostCategory.getWorkingDaysPerYearCostItem()).getSuccess());
+            }
+            messages.addAll(saveRows(personnelForm.getRows(), finance).get());
+            return messages;
+        });
+    }
+
     private CompletableFuture<ValidationMessages> saveOverheads(OverheadForm overhead, BaseFinanceResource finance) {
         return async(() -> {
             OverheadCostCategory overheadCostCategory = (OverheadCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.OVERHEADS);
@@ -272,6 +310,23 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
             }
 
             return getFinanceRowService().update(overheadCost).getSuccess();
+        });
+    }
+
+    private CompletableFuture<ValidationMessages> saveHecpIndirectCosts(HecpIndirectCostsForm hecpIndirectCosts, BaseFinanceResource finance) {
+        return async(() -> {
+            HecpIndirectCostsCostCategory hecpIndirectCostsCostCategory = (HecpIndirectCostsCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.HECP_INDIRECT_COSTS);
+            HecpIndirectCosts hecpIndirectCost = (HecpIndirectCosts) hecpIndirectCostsCostCategory.getCosts().stream().findFirst().get();
+
+            hecpIndirectCost.setRateType(hecpIndirectCosts.getRateType());
+
+            if (hecpIndirectCosts.getRateType().equals(OverheadRateType.HORIZON_EUROPE_GUARANTEE_TOTAL)) {
+                hecpIndirectCost.setRate(ofNullable(hecpIndirectCosts.getTotalSpreadsheet()).orElse(0));
+            } else {
+                hecpIndirectCost.setRate(hecpIndirectCosts.getRateType().getRate());
+            }
+
+            return getFinanceRowService().update(hecpIndirectCost).getSuccess();
         });
     }
 
@@ -404,8 +459,11 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
     public void removeRowFromForm(YourProjectCostsForm form, String id) {
         //Try to remove key from all the maps. Will have a random uuid attached.
         form.getLabour().getRows().remove(id);
+        form.getPersonnel().getRows().remove(id);
         form.getMaterialRows().remove(id);
+        form.getEquipmentRows().remove(id);
         form.getCapitalUsageRows().remove(id);
+        form.getOtherGoodsRows().remove(id);
         form.getSubcontractingRows().remove(id);
         form.getTravelRows().remove(id);
         form.getOtherRows().remove(id);
@@ -436,8 +494,14 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
             case CAPITAL_USAGE:
                 map = form.getCapitalUsageRows();
                 break;
+            case OTHER_GOODS:
+                map = form.getOtherGoodsRows();
+                break;
             case MATERIALS:
                 map = form.getMaterialRows();
+                break;
+            case EQUIPMENT:
+                map = form.getEquipmentRows();
                 break;
             case OTHER_COSTS:
                 map = form.getOtherRows();
@@ -481,8 +545,14 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
             case CAPITAL_USAGE:
                 clazz = CapitalUsageRowForm.class;
                 break;
+            case OTHER_GOODS:
+                clazz = OtherGoodsRowForm.class;
+                break;
             case MATERIALS:
                 clazz = MaterialRowForm.class;
+                break;
+            case EQUIPMENT:
+                clazz = EquipmentRowForm.class;
                 break;
             case OTHER_COSTS:
                 clazz = OtherCostRowForm.class;
