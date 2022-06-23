@@ -21,7 +21,7 @@ public class InProgressDashboardRowViewModelTest {
         ZonedDateTime end = ZonedDateTime.now().plusHours(2).minusMinutes(1);
         InProgressDashboardRowViewModel viewModel = new InProgressDashboardRowViewModel("Application", 1L,
                 "Always open competition", true, OPENED, true,
-                end, 0L, 50 , false, YESTERDAY, true, true, true);
+                end, 0L, 50 , false, YESTERDAY, true, true, true, false);
 
         assertEquals("/application/1", viewModel.getLinkUrl());
         assertEquals("Application", viewModel.getTitle());
@@ -42,7 +42,7 @@ public class InProgressDashboardRowViewModelTest {
         ZonedDateTime end = ZonedDateTime.now().plusHours(2).minusMinutes(1);
         InProgressDashboardRowViewModel viewModel = new InProgressDashboardRowViewModel("Application", 1L,
                 "Competition", true, OPENED, true,
-                end, 0L, 50 , false, YESTERDAY, true, true, false);
+                end, 0L, 50 , false, YESTERDAY, true, true, false, false);
 
         assertEquals("/application/1", viewModel.getLinkUrl());
         assertEquals("Application", viewModel.getTitle());
@@ -62,7 +62,7 @@ public class InProgressDashboardRowViewModelTest {
     public void constructSubmitted() {
         InProgressDashboardRowViewModel viewModel = new InProgressDashboardRowViewModel(null, 1L,
                 "Competition", true, SUBMITTED, true,
-                ZonedDateTime.now().plusDays(12), 12L, 100 , false, YESTERDAY, true, true, false);
+                ZonedDateTime.now().plusDays(12), 12L, 100 , false, YESTERDAY, true, true, false, false);
 
         assertEquals("/application/1/track", viewModel.getLinkUrl());
         assertEquals("Untitled application", viewModel.getTitle());
@@ -75,11 +75,22 @@ public class InProgressDashboardRowViewModelTest {
     public void constructInterview() {
         InProgressDashboardRowViewModel viewModel = new InProgressDashboardRowViewModel(null, 1L,
                 "Competition", true, SUBMITTED, true,
-                ZonedDateTime.now().plusDays(12), 12L, 100 , true, YESTERDAY, true, true, false);
+                ZonedDateTime.now().plusDays(12), 12L, 100 , true, YESTERDAY, true, true, false, false);
 
         assertEquals("/application/1/summary", viewModel.getLinkUrl());
         assertTrue(viewModel.isApplicationComplete());
         assertEquals("Ready to review and submit", viewModel.getProgressMessage());
         assertFalse(viewModel.isAlwaysOpen());
+    }
+
+    @Test
+    public void constructExpressionOfInterest(){
+        ZonedDateTime end = ZonedDateTime.now().plusHours(2).minusMinutes(1);
+        InProgressDashboardRowViewModel viewModel = new InProgressDashboardRowViewModel(null, 1L,
+                "Always open competition", true, OPENED, true,
+                end, 0L, 50 , false, YESTERDAY, true, true, true, true);
+
+        assertTrue(viewModel.isAlwaysOpen());
+        assertTrue(viewModel.isExpressionOfInterest());
     }
 }

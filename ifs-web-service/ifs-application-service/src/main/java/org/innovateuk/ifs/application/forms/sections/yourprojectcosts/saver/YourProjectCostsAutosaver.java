@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver;
 
 import org.apache.commons.lang3.BooleanUtils;
-import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.*;
@@ -19,14 +18,12 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.RoundingMode;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_PREFIX;
-import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.IndirectCostsUtil.INDIRECT_COST_PERCENTAGE;
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.IndirectCostsUtil.calculateIndirectCost;
 
 @Component
@@ -55,14 +52,28 @@ public class YourProjectCostsAutosaver {
                 LabourCost workingDaysCost = category.getWorkingDaysPerYearCostItem();
                 workingDaysCost.setLabourDays(Integer.parseInt(value));
                 financeRowRestService.update(workingDaysCost).getSuccess();
+            } else if (field.equals("personnel.workingDaysPerYear")) {
+                finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisation.getId()).getSuccess();
+                PersonnelCostCategory category = (PersonnelCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.PERSONNEL);
+                PersonnelCost workingDaysCost = category.getWorkingDaysPerYearCostItem();
+                workingDaysCost.setLabourDays(Integer.parseInt(value));
+                financeRowRestService.update(workingDaysCost).getSuccess();
             } else if (field.startsWith("labour.rows")) {
+                return autosaveLabourCost(field, value, finance);
+            } else if (field.startsWith("personnel.rows")) {
                 return autosaveLabourCost(field, value, finance);
             } else if (field.startsWith("overhead")) {
                 return autosaveOverheadCost(field, value, finance, applicationId, organisation.getId());
+            } else if (field.startsWith("hecpIndirectCosts")) {
+                return autosaveHecpIndirectCosts(field, value, finance, applicationId, organisation.getId());
             } else if (field.startsWith("materialRows")) {
                 return autosaveMaterialCost(field, value, finance);
+            } else if (field.startsWith("equipmentRows")) {
+                return autosaveEquipmentCost(field, value, finance);
             } else if (field.startsWith("capitalUsageRows")) {
                 return autosaveCapitalUsageCost(field, value, finance);
+            } else if (field.startsWith("otherGoods")) {
+                return autosaveOtherGoodsCost(field, value, finance);
             } else if (field.startsWith("subcontractingRows")) {
                 return autosaveSubcontractingCost(field, value, finance);
             } else if (field.startsWith("travelRows")) {
@@ -266,6 +277,31 @@ public class YourProjectCostsAutosaver {
         return Optional.of(cost.getId());
     }
 
+    private Optional<Long> autosavePersonnelCost(String field, String value, ApplicationFinanceResource finance) {
+        String id = idFromRowPath(field);
+        String rowField = fieldFromRowPath(field);
+        PersonnelCost cost = getCost(id, () -> new PersonnelCost(finance.getId()));
+
+        switch (rowField) {
+            case "role":
+                cost.setRole(value);
+                break;
+            case "gross":
+                cost.setGrossEmployeeCost(new BigDecimal(value));
+                break;
+            case "days":
+                cost.setLabourDays(Integer.parseInt(value));
+                break;
+            case "rate":
+                cost.setRate(new BigDecimal(value));
+                break;
+            default:
+                throw new IFSRuntimeException(format("Auto save personnel field not handled %s", rowField), emptyList());
+        }
+        financeRowRestService.update(cost);
+        return Optional.of(cost.getId());
+    }
+
     private Optional<Long> autosaveAssociateSalaryCost(String field, String value, ApplicationFinanceResource finance, long applicationId, Long organisationId) {
         String id = idFromRowPath(field);
         String rowField = fieldFromRowPath(field);
@@ -395,6 +431,17 @@ public class YourProjectCostsAutosaver {
         return Optional.empty();
     }
 
+    private Optional<Long> autosaveHecpIndirectCosts(String field, String value, ApplicationFinanceResource finance, long applicationId, Long organisationId) {
+        if (field.equals("hecpIndirectCosts.totalSpreadsheet")) {
+            finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
+            HecpIndirectCostsCostCategory category = (HecpIndirectCostsCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.HECP_INDIRECT_COSTS);
+            HecpIndirectCosts hecpIndirectCosts = (HecpIndirectCosts) category.getCosts().get(0);
+            hecpIndirectCosts.setRate(Integer.valueOf(value));
+            financeRowRestService.update(hecpIndirectCosts);
+        }
+        return Optional.empty();
+    }
+
     private Optional<Long> autosaveVAT(String value, ApplicationFinanceResource finance, long applicationId, Long organisationId) {
         finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
         VatCostCategory category = (VatCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.VAT);
@@ -425,6 +472,27 @@ public class YourProjectCostsAutosaver {
         return Optional.of(cost.getId());
     }
 
+    private Optional<Long> autosaveEquipmentCost(String field, String value, ApplicationFinanceResource finance) {
+        String id = idFromRowPath(field);
+        String rowField = fieldFromRowPath(field);
+        Equipment cost = getCost(id, () -> new Equipment(finance.getId()));
+        switch (rowField) {
+            case "item":
+                cost.setItem(value);
+                break;
+            case "quantity":
+                cost.setQuantity(Integer.parseInt(value));
+                break;
+            case "cost":
+                cost.setCost(new BigDecimal(value));
+                break;
+            default:
+                throw new IFSRuntimeException(format("Auto save equipment field not handled %s", rowField), emptyList());
+        }
+        financeRowRestService.update(cost);
+        return Optional.of(cost.getId());
+    }
+
     private Optional<Long> autosaveProcurementOverheadCost(String field, String value, ApplicationFinanceResource finance) {
         String id = idFromRowPath(field);
         String rowField = fieldFromRowPath(field);
@@ -450,6 +518,36 @@ public class YourProjectCostsAutosaver {
         String id = idFromRowPath(field);
         String rowField = fieldFromRowPath(field);
         CapitalUsage cost = getCost(id, () -> new CapitalUsage(finance.getId()));
+        switch (rowField) {
+            case "item":
+                cost.setDescription(value);
+                break;
+            case "newItem":
+                cost.setExisting(Boolean.parseBoolean(value) ? "New" : "Existing");
+                break;
+            case "deprecation":
+                cost.setDeprecation(Integer.valueOf(value));
+                break;
+            case "netValue":
+                cost.setNpv(new BigDecimal(value));
+                break;
+            case "residualValue":
+                cost.setResidualValue(new BigDecimal(value));
+                break;
+            case "utilisation":
+                cost.setUtilisation(Integer.valueOf(value));
+                break;
+            default:
+                throw new IFSRuntimeException(format("Auto save capital usage field not handled %s", rowField), emptyList());
+        }
+        financeRowRestService.update(cost);
+        return Optional.of(cost.getId());
+    }
+
+    private Optional<Long> autosaveOtherGoodsCost(String field, String value, ApplicationFinanceResource finance) {
+        String id = idFromRowPath(field);
+        String rowField = fieldFromRowPath(field);
+        OtherGoods cost = getCost(id, () -> new OtherGoods(finance.getId()));
         switch (rowField) {
             case "item":
                 cost.setDescription(value);

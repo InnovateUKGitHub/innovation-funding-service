@@ -57,6 +57,10 @@ public class KtpFinanceModelPopulatorTest {
         leadFinances.getFinanceOrganisationDetails().remove(FinanceRowType.TRAVEL);
         leadFinances.getFinanceOrganisationDetails().remove(FinanceRowType.VAT);
         leadFinances.getFinanceOrganisationDetails().remove(FinanceRowType.PROCUREMENT_OVERHEADS);
+        leadFinances.getFinanceOrganisationDetails().remove(FinanceRowType.EQUIPMENT);
+        leadFinances.getFinanceOrganisationDetails().remove(FinanceRowType.OTHER_GOODS);
+        leadFinances.getFinanceOrganisationDetails().remove(FinanceRowType.PERSONNEL);
+        leadFinances.getFinanceOrganisationDetails().remove(FinanceRowType.HECP_INDIRECT_COSTS);
     }
 
     @Test

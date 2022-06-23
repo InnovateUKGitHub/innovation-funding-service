@@ -184,7 +184,7 @@ Internal users can edit the project costs
     [Documentation]  IFS-11407
     When the user navigates to the page         ${server}/project-setup-management/project/${hestaProjectID}/finance-check/organisation/${asosId}/eligibility
     And the user clicks the button/link         name = edit-project-costs
-    And the user enters text to a text field    id = overhead  10000
+    And the user enters text to a text field    id = hecpIndirectCosts  10000
     And the user enters text to a text field    id = travel  20000
     And the user clicks the button/link         id = save-eligibility
     Then the user should see the element        jQuery = label:contains("Travel and subsistence") ~ span:contains("20,000")
@@ -464,7 +464,7 @@ the user completes hecp project finances
     the user should see the element  jQuery = li:contains("Your project finances") > .task-status-complete
     the user clicks the button/link  link = Finances overview
     the user should see the element  jQuery = th:contains("Personnel costs (£)")
-    the user should see the element  jQuery = th:contains("Subcontracting costs (£)")
+    the user should see the element  jQuery = th:contains("Subcontracting (£)")
     the user should see the element  jQuery = th:contains("Travel and subsistence (£)")
     the user should see the element  jQuery = th:contains("Equipment (£)")
     the user should see the element  jQuery = th:contains("Other goods, works and services (£)")
@@ -476,13 +476,13 @@ The user is able to complete hecp project costs
     the user clicks the button/link           link = Your project costs
     the user should see the element           jQuery = h1:contains("Your project costs")
     the user should see hecp project cost categories
-    the user enters text to a text field      id = labour  50000
+    the user enters text to a text field      id = personnel  50000
     the user enters text to a text field      id = subcontracting  50000
     the user enters text to a text field      id = travel  10000
-    the user enters text to a text field      id = material  30000
-    the user enters text to a text field      id = capital  20000
+    the user enters text to a text field      id = equipment  30000
+    the user enters text to a text field      id = otherGoods  20000
     the user enters text to a text field      id = other  40000
-    the user enters text to a text field      id = overhead  0
+    the user enters text to a text field      id = hecpIndirectCosts  0
     the user clicks the button/link           jQuery = button:contains("Mark")
     the user should see the element           jQuery = li:contains("Your project costs") > .task-status-complete
 
@@ -576,7 +576,7 @@ the user see the print view of the application
     Requesting IDs of this Hesta application
     the user navigates to the page without the usual headers      ${SERVER}/application/${hestaApplicationID}/print?noprint
     the user should see the element                               xpath = //*[contains(text(),'Personnel costs (£)')]
-    the user should see the element                               xpath = //*[contains(text(),'Subcontracting costs (£)')]
+    the user should see the element                               xpath = //*[contains(text(),'Subcontracting (£)')]
     the user should see the element                               xpath = //*[contains(text(),'Travel and subsistence (£)')]
     the user should see the element                               xpath = //*[contains(text(),'Equipment (£)')]
     the user should see the element                               xpath = //*[contains(text(),'Other goods, works and services (£)')]
@@ -610,7 +610,7 @@ the user should see read only view of call ID
 
 the user should see hecp project cost categories
     the user should see the element     jQuery = span:contains("Personnel costs")
-    the user should see the element     jQuery = span:contains("Subcontracting costs")
+    the user should see the element     jQuery = span:contains("Subcontracting")
     the user should see the element     jQuery = span:contains("Travel and subsistence")
     the user should see the element     jQuery = span:contains("Equipment")
     the user should see the element     jQuery = span:contains("Other goods, works and services")
@@ -623,12 +623,12 @@ the user should see hecp project cost categories in summary box
     the user should see the element     jQuery = li:contains("Other costs")
     the user should see the element     jQuery = li:contains("Other goods, works and services")
     the user should see the element     jQuery = li:contains("Personnel costs")
-    the user should see the element     jQuery = li:contains("Subcontracting costs")
+    the user should see the element     jQuery = li:contains("Subcontracting")
     the user should see the element     jQuery = li:contains("Travel and subsistence")
 
 the user should see readonly detailed hecp finances
     the user should see the element    jQuery = label:contains("Personnel costs") ~ span:contains("50,000")
-    the user should see the element    jQuery = label:contains("Subcontracting costs") ~ span:contains("50,000")
+    the user should see the element    jQuery = label:contains("Subcontracting") ~ span:contains("50,000")
     the user should see the element    jQuery = label:contains("Travel and subsistence") ~ span:contains("10,000")
     the user should see the element    jQuery = label:contains("Equipment") ~ span:contains("30,000")
     the user should see the element    jQuery = label:contains("Other goods, works and services") ~ span:contains("20,000")

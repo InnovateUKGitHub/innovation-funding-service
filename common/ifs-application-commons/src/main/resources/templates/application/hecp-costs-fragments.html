@@ -11,21 +11,21 @@
 <!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="hecp-costs">
     <div class="govuk-form-group"
-         th:classappend="${#fields.hasErrors('labour')} ? 'govuk-form-group--error'">
-        <label class="govuk-label govuk-label--s" th:for="labour">
+         th:classappend="${#fields.hasErrors('personnel')} ? 'govuk-form-group--error'">
+        <label class="govuk-label govuk-label--s" th:for="personnel">
             <span>Personnel costs</span>
         </label>
         <th:block
-                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=labour)"/>
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=personnel)"/>
         <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
         <th:block th:if="${model.readOnly}">
-            <span class="govuk-body" th:text="${#numbers.formatInteger(form.labour, 0, 'DEFAULT')}"></span>
+            <span class="govuk-body" th:text="${#numbers.formatInteger(form.personnel, 0, 'DEFAULT')}"></span>
         </th:block>
         <th:block th:unless="${model.readOnly}">
             <input type="number"
                    data-prevent-input-non-number
                    class="govuk-input govuk-input--width-10 cost-total"
-                   th:field="*{labour}"
+                   th:field="*{personnel}"
                    min="0"
                    th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                    placeholder="0"
@@ -87,21 +87,21 @@
     </div>
 
     <div class="govuk-form-group"
-         th:classappend="${#fields.hasErrors('material')} ? 'govuk-form-group--error'">
-        <label class="govuk-label govuk-label--s" th:for="material">
+         th:classappend="${#fields.hasErrors('equipment')} ? 'govuk-form-group--error'">
+        <label class="govuk-label govuk-label--s" th:for="equipment">
             <span>Equipment</span>
         </label>
         <th:block
-                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=material)"/>
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=equipment)"/>
         <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
         <th:block th:if="${model.readOnly}">
-            <span class="govuk-body" th:text="${#numbers.formatInteger(form.material, 0, 'DEFAULT')}"></span>
+            <span class="govuk-body" th:text="${#numbers.formatInteger(form.equipment, 0, 'DEFAULT')}"></span>
         </th:block>
         <th:block th:unless="${model.readOnly}">
             <input type="number"
                    data-prevent-input-non-number
                    class="govuk-input govuk-input--width-10 cost-total"
-                   th:field="*{material}"
+                   th:field="*{equipment}"
                    min="0"
                    th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                    placeholder="0"
@@ -112,21 +112,21 @@
     </div>
 
     <div class="govuk-form-group"
-         th:classappend="${#fields.hasErrors('capital')} ? 'govuk-form-group--error'">
-        <label class="govuk-label govuk-label--s" th:for="capital">
+         th:classappend="${#fields.hasErrors('otherGoods')} ? 'govuk-form-group--error'">
+        <label class="govuk-label govuk-label--s" th:for="otherGoods">
             <span>Other goods, works and services</span>
         </label>
         <th:block
-                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=capital)"/>
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=otherGoods)"/>
         <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
         <th:block th:if="${model.readOnly}">
-            <span class="govuk-body" th:text="${#numbers.formatInteger(form.capital, 0, 'DEFAULT')}"></span>
+            <span class="govuk-body" th:text="${#numbers.formatInteger(form.otherGoods, 0, 'DEFAULT')}"></span>
         </th:block>
         <th:block th:unless="${model.readOnly}">
             <input type="number"
                    data-prevent-input-non-number
                    class="govuk-input govuk-input--width-10 cost-total"
-                   th:field="*{capital}"
+                   th:field="*{otherGoods}"
                    min="0"
                    th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                    placeholder="0"
@@ -162,21 +162,21 @@
     </div>
 
     <div class="govuk-form-group"
-         th:classappend="${#fields.hasErrors('overhead')} ? 'govuk-form-group--error'">
-        <label class="govuk-label govuk-label--s" th:for="overhead">
+         th:classappend="${#fields.hasErrors('hecpIndirectCosts')} ? 'govuk-form-group--error'">
+        <label class="govuk-label govuk-label--s" th:for="hecpIndirectCosts">
             <span>Indirect costs</span>
         </label>
         <th:block
-                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=overhead)"/>
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=hecpIndirectCosts)"/>
         <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
         <th:block th:if="${model.readOnly}">
-            <span class="govuk-body" th:text="${#numbers.formatInteger(form.overhead, 0, 'DEFAULT')}"></span>
+            <span class="govuk-body" th:text="${#numbers.formatInteger(form.hecpIndirectCosts, 0, 'DEFAULT')}"></span>
         </th:block>
         <th:block th:unless="${model.readOnly}">
             <input type="number"
                    data-prevent-input-non-number
                    class="govuk-input govuk-input--width-10 cost-total"
-                   th:field="*{overhead}"
+                   th:field="*{hecpIndirectCosts}"
                    min="0"
                    th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                    placeholder="0"

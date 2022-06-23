@@ -62,6 +62,7 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
         return costCategories;
     }
 
+    // This is not being used in hecp so equivalent of this for HecpIndirectCostsCategory may not be needed
     @Override
     protected Map<FinanceRowType, FinanceRowCostCategory> afterTotalCalculation(Map<FinanceRowType, FinanceRowCostCategory> costCategories) {
         FinanceRowCostCategory labourFinanceRowCostCategory = costCategories.get(FinanceRowType.LABOUR);
@@ -101,10 +102,14 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
         switch (costType) {
             case LABOUR:
                 return new LabourCostCategory();
+            case PERSONNEL:
+                return new PersonnelCostCategory();
             case OTHER_FUNDING:
                 return new OtherFundingCostCategory();
             case OVERHEADS:
                 return new OverheadCostCategory();
+            case HECP_INDIRECT_COSTS:
+                return new HecpIndirectCostsCostCategory();
             case FINANCE:
             case GRANT_CLAIM_AMOUNT:
                 return new ExcludedCostCategory();

@@ -55,8 +55,14 @@ public class YourProjectCostsFormValidator {
             case LABOUR:
                 validateLabour(form.getLabour(), validationHandler);
                 break;
+            case PERSONNEL:
+                validatePersonnel(form.getPersonnel(), validationHandler);
+                break;
             case OVERHEADS:
                 validateOverhead(form.getOverhead(), validationHandler);
+                break;
+            case HECP_INDIRECT_COSTS:
+                validateHecpIndirectCosts(form.getHecpIndirectCosts(), validationHandler);
                 break;
             case PROCUREMENT_OVERHEADS:
                 validateRows(form.getProcurementOverheadRows(),"procurementOverheadRows[%s].", validationHandler);
@@ -64,8 +70,14 @@ public class YourProjectCostsFormValidator {
             case CAPITAL_USAGE:
                 validateRows(form.getCapitalUsageRows(), "capitalUsageRows[%s].", validationHandler);
                 break;
+            case OTHER_GOODS:
+                validateRows(form.getOtherGoodsRows(), "otherGoodsRows[%s].", validationHandler);
+                break;
             case MATERIALS:
                 validateRows(form.getMaterialRows(), "materialRows[%s].", validationHandler);
+                break;
+            case EQUIPMENT:
+                validateRows(form.getEquipmentRows(), "equipmentRows[%s].", validationHandler);
                 break;
             case OTHER_COSTS:
                 validateRows(form.getOtherRows(), "otherRows[%s].", validationHandler);
@@ -189,9 +201,29 @@ public class YourProjectCostsFormValidator {
         }
     }
 
+    private void validateHecpIndirectCosts(HecpIndirectCostsForm hecpIndirectCosts, ValidationHandler validationHandler) {
+        if (OverheadRateType.TOTAL.equals(hecpIndirectCosts.getRateType())) {
+            validateForm(hecpIndirectCosts, validationHandler, "hecpIndirectCosts");
+            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
+                    .getRequestAttributes()).getRequest();
+            UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+            if (!user.isInternalUser()) {
+                boolean hasOverheadFile = overheadFileRestService.getOverheadFileDetails(hecpIndirectCosts.getCostId()).isSuccess();
+                if (!hasOverheadFile) {
+                    validationHandler.addAnyErrors(new ValidationMessages(fieldError("hecpIndirectCosts.file", null, "validation.finance.hecpIndirectCosts.file.required")));
+                }
+            }
+        }
+    }
+
     private void validateLabour(LabourForm labour, ValidationHandler validationHandler) {
         validateForm(labour, validationHandler, "labour.");
         validateRows(labour.getRows(), "labour.rows[%s].", validationHandler);
+    }
+
+    private void validatePersonnel(PersonnelForm personnel, ValidationHandler validationHandler) {
+        validateForm(personnel, validationHandler, "personnel.");
+        validateRows(personnel.getRows(), "personnel.rows[%s].", validationHandler);
     }
 
     private void validateVat(VatForm vatForm, ValidationHandler validationHandler) {
