@@ -1,0 +1,1 @@
+ALTER TABLE grant_claim_maximum ADD COLUMN fixed_funding_level BIT(1) NOT NULL DEFAULT FALSE;
