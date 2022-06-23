@@ -5,6 +5,8 @@ import org.innovateuk.ifs.application.forms.questions.horizon.form.HorizonWorkPr
 import org.innovateuk.ifs.application.forms.questions.horizon.model.HorizonWorkProgrammeSelectionData;
 import org.innovateuk.ifs.application.forms.questions.horizon.model.HorizonWorkProgrammeViewModel;
 import org.innovateuk.ifs.application.forms.questions.horizon.populator.HorizonWorkProgrammePopulator;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -57,12 +59,13 @@ public class HorizonWorkProgrammeController {
     private HorizonWorkProgrammeCookieService cookieService;
 
     @Autowired
+    private ApplicationRestService applicationRestService;
+
+    @Autowired
     private ProcessRoleRestService processRoleRestService;
 
     @Autowired
     private QuestionStatusRestService questionStatusRestService;
-
-    private List<HorizonWorkProgrammeResource> workflow = new ArrayList<>();
 
     @GetMapping
     public String viewWorkProgramme(@ModelAttribute(value = "form") HorizonWorkProgrammeForm form,
@@ -75,27 +78,16 @@ public class HorizonWorkProgrammeController {
                                     HttpServletResponse response,
                                     @RequestParam(defaultValue = "false") boolean readOnly) {
 
-        resetWorkflow();
-
-        Optional<HorizonWorkProgrammeSelectionData> cookieSelectionData = getHorizonWorkProgrammeSelectionData(request);
-
-        if (cookieSelectionData.isPresent()) {
-            if (cookieSelectionData.get().getApplicationId() != applicationId) {
-                cookieService.deleteWorkProgrammeSelectionData(response);
-                cookieSelectionData = Optional.empty();
+        List<HorizonWorkProgrammeResource> competitionWorkProgrammes = getWorkProgrammesByApplication(applicationId);
+        form.setAllOptions(competitionWorkProgrammes.stream().filter(p -> p.isWorkProgramme()).collect(toList()));
+        Optional<HorizonWorkProgrammeSelectionData> cookieSelectionData = getCookieSelectionData(request, response, applicationId);
+        cookieSelectionData.ifPresent(data -> {
+            if(data.getWorkProgramme() != null) {
+                form.setSelected(data.getWorkProgramme().getId());
             }
-        }
-
-        HorizonWorkProgrammeResource existingSelection = cookieSelectionData
-                .map(HorizonWorkProgrammeSelectionData::getWorkProgramme)
-                .orElse(null);
-
-        form.setAllOptions(newArrayList(horizonWorkProgrammeRestService.findRootWorkProgrammes().getSuccess()));
-        form.setSelected(Optional.ofNullable(existingSelection).map(HorizonWorkProgrammeResource::getId).orElse(null));
-        model.addAttribute("form", form);
+        });
 
         HorizonWorkProgrammeViewModel viewModel = getPopulate(applicationId, questionId, user, false, emptyMap());
-
         getReadOnlyMapIfApplicable(applicationId, request, readOnly, viewModel);
 
         model.addAttribute("form", form);
@@ -115,20 +107,13 @@ public class HorizonWorkProgrammeController {
                                       HttpServletRequest request,
                                       HttpServletResponse response) {
 
-        HorizonWorkProgrammeResource selected = Optional.ofNullable(form.getSelected()).map(workProgramme ->
-             horizonWorkProgrammeRestService.findWorkProgramme(workProgramme).getSuccess()
-        ).orElse(null);
-        List<HorizonWorkProgrammeResource> selectWorkProgramme = selected == null ? Collections.emptyList() : Collections.singletonList(selected);
+        HorizonWorkProgrammeResource selected = Optional.ofNullable(form.getSelected()).map(workProgramme -> horizonWorkProgrammeRestService.findWorkProgramme(workProgramme).getSuccess()).orElse(null);
         Supplier<String> failureView = () -> viewWorkProgramme(form, bindingResult, model, applicationId, questionId, user, request, response, false);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             HorizonWorkProgrammeSelectionData horizonWorkProgrammeSelectionData = new HorizonWorkProgrammeSelectionData(applicationId);
             horizonWorkProgrammeSelectionData.setWorkProgramme(selected);
             saveSelectionToCookie(horizonWorkProgrammeSelectionData, response);
-
-            if (this.workflow.isEmpty() && !selectWorkProgramme.isEmpty()) {
-                setWorkflow(selectWorkProgramme);
-            }
 
             return redirectToCallId(applicationId, questionId);
         });
@@ -144,18 +129,16 @@ public class HorizonWorkProgrammeController {
                               HttpServletRequest request,
                               HttpServletResponse response) {
 
-        Optional<HorizonWorkProgrammeSelectionData> cookieSelectionData = getHorizonWorkProgrammeSelectionData(request);
-
-        HorizonWorkProgrammeResource existingSelection = cookieSelectionData
-                .map(HorizonWorkProgrammeSelectionData::getCallId)
-                .orElse(null);
-
-        form.setAllOptions(getChildrenOf(cookieSelectionData));
-        form.setSelected(Optional.ofNullable(existingSelection).map(HorizonWorkProgrammeResource::getId).orElse(null));
+        Optional<HorizonWorkProgrammeSelectionData> cookieSelectionData = getCookieSelectionData(request, response, applicationId);
+        cookieSelectionData.ifPresent(data -> {
+            form.setAllOptions(getChildrenOf(applicationId, data.getWorkProgramme()));
+            if(data.getCallId() != null) {
+                form.setSelected(data.getCallId().getId());
+            }
+        });
 
         model.addAttribute("form", form);
-        model.addAttribute("model",
-                getPopulate(applicationId, questionId, user, true, emptyMap()));
+        model.addAttribute("model", getPopulate(applicationId, questionId, user, true, emptyMap()));
 
         return TEMPLATE_PATH;
     }
@@ -175,12 +158,13 @@ public class HorizonWorkProgrammeController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-            HorizonWorkProgrammeSelectionData horizonWorkProgrammeSelectionData = cookieService.getHorizonWorkProgrammeSelectionData(request).get();
+            Optional<HorizonWorkProgrammeSelectionData> horizonWorkProgrammeSelectionData = getCookieSelectionData(request, response, applicationId);
             HorizonWorkProgrammeResource selected = Optional.ofNullable(form.getSelected()).map(workProgramme ->
-                    horizonWorkProgrammeRestService.findWorkProgramme(workProgramme).getSuccess()
-            ).orElse(null);
-            horizonWorkProgrammeSelectionData.setCallId(selected);
-            saveSelectionToCookie(horizonWorkProgrammeSelectionData, response);
+                    horizonWorkProgrammeRestService.findWorkProgramme(workProgramme).getSuccess()).orElse(null);
+            horizonWorkProgrammeSelectionData.ifPresent(data -> {
+                data.setCallId(selected);
+                saveSelectionToCookie(data, response);
+            });
 
             return completeWorkflow(applicationId, questionId);
         });
@@ -197,11 +181,9 @@ public class HorizonWorkProgrammeController {
         cookieService.saveWorkProgrammeSelectionData(horizonWorkProgrammeSelectionData, response);
     }
 
-    private void setWorkflow(List<HorizonWorkProgrammeResource> selectedWorkProgramme) {
-        this.workflow = selectedWorkProgramme
-                .stream()
-                .filter(programme -> !horizonWorkProgrammeRestService.findChildrenWorkProgrammes(programme.getId()).getSuccess().isEmpty())
-                .collect(Collectors.toList());
+    private List<HorizonWorkProgrammeResource> getWorkProgrammesByApplication(Long applicationId) {
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+        return horizonWorkProgrammeRestService.findWorkProgrammesByCompetition(application.getCompetition()).getSuccess();
     }
 
     private long processRoleId(long userId, long applicationId) {
@@ -210,11 +192,7 @@ public class HorizonWorkProgrammeController {
 
     private String redirectToWorkProgramme(long applicationId, long questionId, boolean readOnly) {
         String baseUrl = String.format("redirect:/application/%d/form/question/%d/horizon-work-programme", applicationId, questionId);
-
-        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
-                .queryParam("readOnly", readOnly);
-
-        return builder.toUriString();
+        return UriComponentsBuilder.fromPath(baseUrl).queryParam("readOnly", readOnly).toUriString();
     }
 
     private Map<String, List<HorizonWorkProgrammeResource>> getReadOnlyMapIfApplicable(long applicationId, HttpServletRequest request) {
@@ -282,12 +260,19 @@ public class HorizonWorkProgrammeController {
         return horizonWorkProgrammePopulator.populate(applicationId, questionId, user, isCallId, readOnlyMap);
     }
 
-    private List<HorizonWorkProgrammeResource> getChildrenOf(Optional<HorizonWorkProgrammeSelectionData> cookieSelectionData) {
-        return horizonWorkProgrammeRestService.findChildrenWorkProgrammes(cookieSelectionData.get().getWorkProgramme().getId()).getSuccess();
+    private List<HorizonWorkProgrammeResource> getChildrenOf(Long applicationId, HorizonWorkProgrammeResource selectedWorkProgramme) {
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+        return horizonWorkProgrammeRestService.findWorkProgrammesByCompetition(application.getCompetition()).getSuccess()
+                .stream().filter(p -> p.isCallerId() && p.getParentWorkProgramme().equals(selectedWorkProgramme)).collect(toList());
     }
 
-    private Optional<HorizonWorkProgrammeSelectionData> getHorizonWorkProgrammeSelectionData(HttpServletRequest request) {
-        return cookieService.getHorizonWorkProgrammeSelectionData(request);
+    private Optional<HorizonWorkProgrammeSelectionData> getCookieSelectionData(HttpServletRequest request, HttpServletResponse response, Long applicationId) {
+        Optional<HorizonWorkProgrammeSelectionData> cookieSelectionData = cookieService.getHorizonWorkProgrammeSelectionData(request);
+        if (cookieSelectionData.isPresent() && cookieSelectionData.get().getApplicationId() != applicationId) {
+            cookieService.deleteWorkProgrammeSelectionData(response);
+            cookieSelectionData = Optional.empty();
+        }
+        return cookieSelectionData;
     }
 
     private String redirectToCallId(long applicationId, long questionId) {
@@ -307,7 +292,4 @@ public class HorizonWorkProgrammeController {
         };
     }
 
-    private void resetWorkflow() {
-        workflow = new ArrayList<>();
-    }
 }
