@@ -8,7 +8,7 @@
         </h2>
         <div class="govuk-panel__body govuk-!-font-size-19">
             Application number: <span th:text="${model.currentApplication.id}" /><br/>
-            Your application for the <span th:text="${model.currentCompetition.isDirectAward()} ? |award '${model.currentCompetition.name}'| : |competition '${model.currentCompetition.name}'|" /> was submitted
+            Your <span th:text="${model.currentApplication.isEnabledForExpressionOfInterest()} ? |expression of interest | : |application |" /> for the <span th:text="${model.currentCompetition.isDirectAward()} ? |award '${model.currentCompetition.name}'| : |competition '${model.currentCompetition.name}'|" /> was submitted
             <th:block th:if="${model.currentApplication.submittedDate}">
                 on
                 <th:block th:text="${#temporals.format(model.currentApplication.submittedDate, 'd MMM yyyy')}"></th:block>
@@ -22,10 +22,12 @@
                 <a th:if=${model.reopenLinkVisible} th:href="@{/application/{id}/confirm-reopen(id=${model.currentApplication.getId()})}"
                    class="govuk-link govuk-!-margin-right-6">Reopen application</a>
                 <a th:href="@{/application/{id}/print(id=${model.currentApplication.getId()})}"
-                   class="govuk-link">Print application</a>
+                   class="govuk-link">Print <span th:text="${model.currentApplication.isEnabledForExpressionOfInterest()} ? |expression of interest | : |application |" /></a>
             </div>
         </div>
     </div>
 </th:block>
 
 </html>
+
+<span th:text="${model.currentCompetition.isDirectAward()} ? |award | : |competition |" />
