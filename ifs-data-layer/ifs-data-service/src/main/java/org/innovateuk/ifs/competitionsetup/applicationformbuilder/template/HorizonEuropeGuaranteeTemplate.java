@@ -32,9 +32,6 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
     @Autowired
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
 
-    @Autowired
-    private HorizonWorkProgrammeService horizonWorkProgrammeService;
-
     @Override
     public CompetitionTypeEnum type() {
         return CompetitionTypeEnum.HORIZON_EUROPE_GUARANTEE;
@@ -52,7 +49,6 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
         competition.setIncludeProjectGrowthTable(false);
         competition.setIncludeJesForm(false);
         competition.setIncludeYourOrganisationSection(false);
-        copyWorkProgrammeOptions(competition);
         return competition;
     }
 
@@ -73,10 +69,6 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                 finances(),
                 termsAndConditions()
         );
-    }
-
-    private ServiceResult<Void> copyWorkProgrammeOptions(Competition competition) {
-        return horizonWorkProgrammeService.initWorkProgrammesForCompetition(competition.getId());
     }
 
     public static List<QuestionBuilder> horizonEuropeDefaultQuestions() {

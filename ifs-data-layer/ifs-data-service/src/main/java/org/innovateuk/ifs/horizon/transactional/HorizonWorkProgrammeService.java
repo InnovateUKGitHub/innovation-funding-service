@@ -23,6 +23,9 @@ public interface HorizonWorkProgrammeService {
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'UPDATE')")
     ServiceResult<Void> initWorkProgrammesForCompetition(Long competitionId);
 
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'UPDATE')")
+    ServiceResult<Void> deleteWorkProgrammesForCompetition(Long competitionId);
+
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'READ')")
     ServiceResult<List<HorizonWorkProgrammeResource>> findWorkProgrammesByCompetition(Long competitionId);
 

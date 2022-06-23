@@ -80,7 +80,16 @@ public class HorizonWorkProgrammeServiceImpl implements HorizonWorkProgrammeServ
             }
         });
 
-        competitionHorizonWorkProgrammeRepository.saveAll(toAdd);
+        if(toAdd.size() > 0) {
+            competitionHorizonWorkProgrammeRepository.saveAll(toAdd);
+        }
+        return serviceSuccess();
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> deleteWorkProgrammesForCompetition(Long competitionId) {
+        competitionHorizonWorkProgrammeRepository.deleteAllByCompetitionId(competitionId);
         return serviceSuccess();
     }
 
