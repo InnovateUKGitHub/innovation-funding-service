@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder.template;
 
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
@@ -9,6 +10,8 @@ import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionType;
+import org.innovateuk.ifs.horizon.repository.CompetitionHorizonWorkProgrammeRepository;
+import org.innovateuk.ifs.horizon.transactional.HorizonWorkProgrammeService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,9 +29,11 @@ import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder
 @Component
 public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
 
-
     @Autowired
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
+
+    @Autowired
+    private HorizonWorkProgrammeService horizonWorkProgrammeService;
 
     @Override
     public CompetitionTypeEnum type() {
@@ -47,6 +52,7 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
         competition.setIncludeProjectGrowthTable(false);
         competition.setIncludeJesForm(false);
         competition.setIncludeYourOrganisationSection(false);
+        copyWorkProgrammeOptions(competition);
         return competition;
     }
 
@@ -67,6 +73,10 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                 finances(),
                 termsAndConditions()
         );
+    }
+
+    private ServiceResult<Void> copyWorkProgrammeOptions(Competition competition) {
+        return horizonWorkProgrammeService.initWorkProgrammesForCompetition(competition.getId());
     }
 
     public static List<QuestionBuilder> horizonEuropeDefaultQuestions() {
