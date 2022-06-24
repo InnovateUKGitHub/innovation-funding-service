@@ -83,11 +83,6 @@ profiles:
           context: ifs-data-layer/ifs-data-service/src/main/resources
           docker:
             dockerfile: Dockerfile-dbreset
-        - image: sba
-          context: .
-          jib:
-            type: gradle
-            project: ifs-tools:sba
         - image: file-storage-service
           context: .
           jib:
