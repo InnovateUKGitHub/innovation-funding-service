@@ -17,7 +17,6 @@ resources:
   - ldap-secrets.yml
   - new-relic-secrets.yml
   - registration-keys-secrets.yml
-  - sba-secret.yml
   - shibboleth-secrets.yml
   - sp-keys-secrets.yml
   - sp-secrets.yml
