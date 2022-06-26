@@ -365,6 +365,18 @@ get the EDI contact payload delivered to SIL
     log  ${result}
     [Return]  ${result}
 
+get the EDI contact payload received from SIL
+    [Arguments]  ${userId}  ${ediStatus}
+    ${result} =  query  SELECT `payload` FROM `${database_name}`.`sil_message` where `key_value`='${userId}' AND payload like '%ediStatus%' AND payload like '%${ediStatus}%';
+    log  ${result}
+    [Return]  ${result}
+
+get the loans question status payload received from SIL
+    [Arguments]   ${appID}  ${completionStatus}
+    ${result} =  query  SELECT `payload` FROM `${database_name}`.`sil_message` where `key_value`='${appID}' AND payload like '%completionStatus%' AND payload like '%${completionStatus}%';
+    log  ${result}
+    [Return]  ${result}
+
 set competition as pre reg
     [Arguments]  ${competitionId}
     execute sql string  UPDATE `${database_name}`.`competition` SET `pre_registration` = true WHERE `id` = ${competitionId};

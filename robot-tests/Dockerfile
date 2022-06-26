@@ -66,6 +66,11 @@ ENV IS_CONTAINERIZED true
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
+ARG KUBECTL_VERSION=v1.22.4
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl && \
+  mv kubectl /usr/bin/kubectl && \
+  chmod +x /usr/bin/kubectl
+
 RUN chown -R gluster:gluster . && \
   find . \( -type d -o -type f \) -exec chmod 775 {} + && \
   chown -R gluster:gluster /tmp && \
