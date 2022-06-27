@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.competition.setup.fundingamountsought.populator;
 
+import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupFormPopulator;
@@ -14,6 +15,7 @@ public class ApplicationFundingAmountSoughtFormPopulator implements CompetitionS
 
     @Override
     public ApplicationFundingAmountSoughtForm populateForm(CompetitionResource competitionResource) {
-        return new ApplicationFundingAmountSoughtForm(competitionResource.isHasAssessmentStage());
+        CompetitionApplicationConfigResource competitionApplicationConfig = competitionResource.getCompetitionApplicationConfigResource();
+        return new ApplicationFundingAmountSoughtForm(competitionApplicationConfig.isMaximumFundingSoughtEnabled());
     }
 }

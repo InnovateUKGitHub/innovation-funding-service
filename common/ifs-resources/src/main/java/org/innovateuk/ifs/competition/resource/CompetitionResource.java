@@ -115,6 +115,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean subsidyControl;
     private boolean hasBusinessAndFinancialInformationQuestion;
     private CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource;
+    private CompetitionApplicationConfigResource competitionApplicationConfigResource;
     private boolean enabledForPreRegistration;
 
     public CompetitionResource() {
@@ -878,6 +879,14 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     public void setCompetitionThirdPartyConfigResource(CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource) {
         this.competitionThirdPartyConfigResource = competitionThirdPartyConfigResource;
+    }
+
+    public CompetitionApplicationConfigResource getCompetitionApplicationConfigResource() {
+        return competitionApplicationConfigResource;
+    }
+
+    public void setCompetitionApplicationConfigResource(CompetitionApplicationConfigResource competitionApplicationConfigResource) {
+        this.competitionApplicationConfigResource = competitionApplicationConfigResource;
     }
 
     @JsonIgnore

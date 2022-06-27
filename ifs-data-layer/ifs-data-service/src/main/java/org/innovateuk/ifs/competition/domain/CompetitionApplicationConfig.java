@@ -17,13 +17,18 @@ public class CompetitionApplicationConfig {
     @Column(columnDefinition = "double")
     private BigDecimal maximumFundingSought;
 
+    @Column(name = "maximum_funding_sought_enabled", nullable = false)
+    private boolean maximumFundingSoughtEnabled = false;
+
     public CompetitionApplicationConfig() {
     }
 
     public CompetitionApplicationConfig(Competition competition,
-                                        BigDecimal maximumFundingSought) {
+                                        BigDecimal maximumFundingSought,
+                                        boolean maximumFundingSoughtEnabled) {
         this.competition = competition;
         this.maximumFundingSought = maximumFundingSought;
+        this.maximumFundingSoughtEnabled = maximumFundingSoughtEnabled;
     }
 
     public Long getId() {
@@ -48,5 +53,13 @@ public class CompetitionApplicationConfig {
 
     public void setMaximumFundingSought(BigDecimal maximumFundingSought) {
         this.maximumFundingSought = maximumFundingSought;
+    }
+
+    public boolean isMaximumFundingSoughtEnabled() {
+        return maximumFundingSoughtEnabled;
+    }
+
+    public void setMaximumFundingSoughtEnabled(boolean maximumFundingSoughtEnabled) {
+        this.maximumFundingSoughtEnabled = maximumFundingSoughtEnabled;
     }
 }
