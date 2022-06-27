@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.competition.inflight.controller.applicatio
 
 import org.innovateuk.ifs.application.readonly.populator.ApplicationReadOnlyViewModelPopulator;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
+import org.innovateuk.ifs.application.resource.ApplicationExpressionOfInterestConfigResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
@@ -167,6 +168,107 @@ public class ManagementApplicationPopulatorTest {
         assertEquals("Appendix2.pdf", actual.getAppendices().get(1).getName());
 
         assertFalse(actual.isCanMarkAsIneligible());
+        assertTrue(actual.isCanReinstate());
+    }
+
+
+
+    @Test
+    public void populate_withEOIDisabledForApplication() {
+        CompetitionResource competition = newCompetitionResource()
+                .withInnovationAreas(singleton(1L))
+                .build();
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competition.getId())
+                .withApplicationState(ApplicationState.SUBMITTED)
+                .withInnovationArea(newInnovationAreaResource().build())
+                .withCompetitionStatus(ASSESSOR_FEEDBACK)
+                                .build();
+        UserResource user = newUserResource()
+                .withRoleGlobal(Role.COMP_ADMIN)
+                .build();
+
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(applicationReadOnlyViewModelPopulator.populate(application, competition, user, defaultSettings().setIncludeAllAssessorFeedback(true))).thenReturn(mock(ApplicationReadOnlyViewModel.class));
+        when(applicationOverviewIneligibilityModelPopulator.populateModel(application)).thenReturn(mock(ApplicationOverviewIneligibilityViewModel.class));
+        when(projectService.getByApplicationId(application.getId())).thenReturn(null);
+        when(interviewAssignmentRestService.isAssignedToInterview(application.getId())).thenReturn(restSuccess(true));
+        when(interviewFeedbackViewModelPopulator.populate(application.getId(), application.getCompetitionName(), user, application.getCompetitionStatus().isFeedbackReleased())).thenReturn(mock(InterviewFeedbackViewModel.class));
+
+        FormInputResource appendix = newFormInputResource().build();
+        FormInputResponseResource response = newFormInputResponseResource()
+                .withFormInputs(singletonList(appendix.getId()))
+                .withFileEntries(newFileEntryResource()
+                        .withName("Appendix1.pdf", "Appendix2.pdf")
+                        .withFilesizeBytes(1024L)
+                        .build(2))
+                .build();
+        when(formInputResponseRestService.getResponsesByApplicationId(application.getId())).thenReturn(restSuccess(singletonList(response)));
+        when(formInputRestService.getById(appendix.getId())).thenReturn(restSuccess(appendix));
+
+        ManagementApplicationViewModel actual = target.populate(application.getId(), user);
+
+        assertEquals(application, actual.getApplication());
+        assertEquals(competition, actual.getCompetition());
+        assertEquals(2, actual.getAppendices().size());
+        assertEquals("Appendix1.pdf", actual.getAppendices().get(0).getName());
+        assertEquals("Appendix2.pdf", actual.getAppendices().get(1).getName());
+        assertTrue("MarkAsIneligible flag can't be false for EOI Application ",actual.isCanMarkAsIneligible());
+        assertTrue(actual.isCanReinstate());
+    }
+
+    @Test
+    public void populate_withEOIEnabledForApplication() {
+        CompetitionResource competition = newCompetitionResource()
+                .withInnovationAreas(singleton(1L))
+                .build();
+
+        ApplicationExpressionOfInterestConfigResource applicationExpressionOfInterestConfigResource = new ApplicationExpressionOfInterestConfigResource();
+        applicationExpressionOfInterestConfigResource.setApplicationId(1L);
+
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competition.getId())
+                .withId(1L)
+                .withApplicationState(ApplicationState.SUBMITTED)
+                .withInnovationArea(newInnovationAreaResource().build())
+                .withCompetitionStatus(ASSESSOR_FEEDBACK)
+                .withApplicationExpressionOfInterestConfigResource(applicationExpressionOfInterestConfigResource)
+                .build();
+
+        applicationExpressionOfInterestConfigResource.setEnabledForExpressionOfInterest(true);
+        UserResource user = newUserResource()
+
+                .withRoleGlobal(Role.COMP_ADMIN)
+                .build();
+
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(applicationReadOnlyViewModelPopulator.populate(application, competition, user, defaultSettings().setIncludeAllAssessorFeedback(true))).thenReturn(mock(ApplicationReadOnlyViewModel.class));
+        when(applicationOverviewIneligibilityModelPopulator.populateModel(application)).thenReturn(mock(ApplicationOverviewIneligibilityViewModel.class));
+        when(projectService.getByApplicationId(application.getId())).thenReturn(null);
+        when(interviewAssignmentRestService.isAssignedToInterview(application.getId())).thenReturn(restSuccess(true));
+        when(interviewFeedbackViewModelPopulator.populate(application.getId(), application.getCompetitionName(), user, application.getCompetitionStatus().isFeedbackReleased())).thenReturn(mock(InterviewFeedbackViewModel.class));
+
+        FormInputResource appendix = newFormInputResource().build();
+        FormInputResponseResource response = newFormInputResponseResource()
+                .withFormInputs(singletonList(appendix.getId()))
+                .withFileEntries(newFileEntryResource()
+                        .withName("Appendix1.pdf", "Appendix2.pdf")
+                        .withFilesizeBytes(1024L)
+                        .build(2))
+                .build();
+        when(formInputResponseRestService.getResponsesByApplicationId(application.getId())).thenReturn(restSuccess(singletonList(response)));
+        when(formInputRestService.getById(appendix.getId())).thenReturn(restSuccess(appendix));
+
+        ManagementApplicationViewModel actual = target.populate(application.getId(), user);
+
+        assertEquals(application, actual.getApplication());
+        assertEquals(competition, actual.getCompetition());
+        assertEquals(2, actual.getAppendices().size());
+        assertEquals("Appendix1.pdf", actual.getAppendices().get(0).getName());
+        assertEquals("Appendix2.pdf", actual.getAppendices().get(1).getName());
+        assertFalse("MarkAsIneligible flag can't be true for EOI Application",actual.isCanMarkAsIneligible());
         assertTrue(actual.isCanReinstate());
     }
 }

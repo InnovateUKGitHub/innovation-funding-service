@@ -24,7 +24,7 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "VIEW_SPEND_PROFILE_STATUS", description = "Internal admin team (comp admin and project finance) users can get the approved status of a Spend Profile for any Project")
     public boolean internalAdminTeamCanViewCompetitionStatus(ProjectResource project, UserResource user){
-        return isInternalAdmin(user);
+        return hasCompetitionAdministratorAuthority(user);
     }
 
     @PermissionRule(value = "VIEW_SPEND_PROFILE_STATUS", description = "Support users can get the approved status of a Spend Profile for any Project")
@@ -72,7 +72,7 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
             value = "VIEW_SPEND_PROFILE",
             description = "Competition Administrator Users can view the Spend Profile data")
     public boolean compAdminUserCanViewAnySpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-        return isInternalAdmin(user);
+        return hasCompetitionAdministratorAuthority(user);
     }
 
     @PermissionRule(
@@ -107,7 +107,7 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
             value = "VIEW_SPEND_PROFILE_CSV",
             description = "All internal admin users can view Spend Profile data of any applicant")
     public boolean internalAdminUsersCanSeeSpendProfileCsv(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-        return isInternalAdmin(user);
+        return hasCompetitionAdministratorAuthority(user);
     }
 
     @PermissionRule(
