@@ -8,4 +8,4 @@ data:
   IFS_EARLY_METRICS_URL: "http://go.innovateuk.ukri.org/ICL_Strand2"
   IFS_WEB_BASEURL: 'https://ifs-uat.apps.org-env-0.org.innovateuk.ukri.org'
   IFS_LOANS_SALESFORCE_PAGE_URL: 'https://innovateuk--uat.sandbox.my.site.com/LoansCommunity/s'
-  IFS_EDI_SALESFORCE_PAGE_URL: "https://innovateuk--uat.sandbox.my.site.com/LoansCommunity/EDI"
+  IFS_EDI_SALESFORCE_PAGE_URL: 'https://innovateuk--uat.sandbox.my.site.com/EDI'
