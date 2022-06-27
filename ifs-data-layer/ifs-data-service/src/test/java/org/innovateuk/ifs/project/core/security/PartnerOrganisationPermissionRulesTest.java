@@ -23,7 +23,7 @@ import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.hasCompetitionAdministratorAuthority;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -209,7 +209,7 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
                 .build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (isInternalAdmin(user)) {
+            if (hasCompetitionAdministratorAuthority(user)) {
                 assertTrue(rules.internalUsersCanRemovePartnerOrganisations(partnerOrg, user));
             } else {
                 assertFalse(rules.internalUsersCanRemovePartnerOrganisations(partnerOrg, user));
