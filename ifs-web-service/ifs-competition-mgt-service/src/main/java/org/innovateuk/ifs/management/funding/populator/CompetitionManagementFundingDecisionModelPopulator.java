@@ -18,6 +18,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController.SELECTION_LIMIT;
@@ -62,7 +63,8 @@ public class CompetitionManagementFundingDecisionModelPopulator  {
                 fundingDecisionFilterForm,
                 competitionSummary,
                 selectAllDisabled,
-                selectionLimitWarning
+                selectionLimitWarning,
+                fundingDecisionFilterForm.isEoi()
         );
     }
 
@@ -93,7 +95,8 @@ public class CompetitionManagementFundingDecisionModelPopulator  {
                         paginationForm.getPage(),
                         PAGE_SIZE,
                         fundingDecisionFilterForm.getStringFilter(),
-                        fundingDecisionFilterForm.getFundingFilter())
+                        fundingDecisionFilterForm.getFundingFilter(),
+                        Optional.of(fundingDecisionFilterForm.isEoi()))
                 .getSuccess();
     }
 
@@ -116,7 +119,7 @@ public class CompetitionManagementFundingDecisionModelPopulator  {
                 return applicationSummaryRestService.getAllAssessedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter()).getOrElse(emptyList());
             }
         }
-        return applicationSummaryRestService.getAllSubmittedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter()).getOrElse(emptyList());
+        return applicationSummaryRestService.getAllSubmittedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter(), Optional.of(filterForm.isEoi())).getOrElse(emptyList());
     }
 
     protected boolean limitIsExceeded(long amountOfIds) {

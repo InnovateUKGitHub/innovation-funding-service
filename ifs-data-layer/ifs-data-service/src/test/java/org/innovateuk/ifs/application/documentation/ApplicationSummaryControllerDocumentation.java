@@ -88,7 +88,7 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
         FundingDecisionStatus fundingFilter = FundingDecisionStatus.FUNDED;
         List<Long> applicationIds = asList(1L, 2L, 3L);
 
-        when(applicationSummaryService.getAllSubmittedApplicationIdsByCompetitionId(competitionId, Optional.of(filter), Optional.of(fundingFilter))).thenReturn(serviceSuccess(applicationIds));
+        when(applicationSummaryService.getAllSubmittedApplicationIdsByCompetitionId(competitionId, Optional.of(filter), Optional.of(fundingFilter), Optional.empty())).thenReturn(serviceSuccess(applicationIds));
 
         mockMvc.perform(
                 get(baseUrl + "/find-by-competition/{competitionId}/all-submitted", competitionId)

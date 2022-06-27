@@ -16,6 +16,7 @@ public class ManageFundingApplicationsViewModel {
     private CompetitionSummaryResource competitionSummary;
     private boolean selectAllDisabled;
     private boolean selectionLimitWarning;
+    private boolean eoi;
 
     public ManageFundingApplicationsViewModel(Pagination pagination,
                                               ApplicationSummaryPageResource results,
@@ -23,7 +24,8 @@ public class ManageFundingApplicationsViewModel {
                                               FundingDecisionFilterForm fundingDecisionFilterForm,
                                               CompetitionSummaryResource competitionSummary,
                                               boolean selectAllDisabled,
-                                              boolean selectionLimitWarning) {
+                                              boolean selectionLimitWarning,
+                                              boolean eoi) {
         this.pagination = pagination;
         this.results = results;
         this.selectionForm = selectionForm;
@@ -31,6 +33,7 @@ public class ManageFundingApplicationsViewModel {
         this.competitionSummary = competitionSummary;
         this.selectAllDisabled = selectAllDisabled;
         this.selectionLimitWarning = selectionLimitWarning;
+        this.eoi = eoi;
     }
 
     public Pagination getPagination() {
@@ -69,4 +72,7 @@ public class ManageFundingApplicationsViewModel {
         }
     }
 
+    public boolean isEoi() {
+        return eoi;
+    }
 }

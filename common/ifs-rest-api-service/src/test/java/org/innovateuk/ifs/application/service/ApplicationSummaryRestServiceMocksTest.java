@@ -223,7 +223,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
                 appIds
         );
 
-        RestResult<List<Long>> result = service.getAllSubmittedApplicationIds(123L, of("filter"), Optional.of(UNFUNDED));
+        RestResult<List<Long>> result = service.getAllSubmittedApplicationIds(123L, of("filter"), Optional.of(UNFUNDED), Optional.of(false));
 
         assertTrue(result.isSuccess());
         assertEquals(appIds, result.getSuccess());

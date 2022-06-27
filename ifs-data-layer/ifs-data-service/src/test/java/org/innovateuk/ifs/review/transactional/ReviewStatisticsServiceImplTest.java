@@ -90,7 +90,7 @@ public class ReviewStatisticsServiceImplTest extends BaseUnitTestMocksTest {
                 .build(2);
 
         when(applicationRepositoryMock.findByApplicationStateAndFundingDecision(
-                competitionId, SUBMITTED_STATES, "",  null,true)).thenReturn(applications);
+                competitionId, SUBMITTED_STATES, "",  null,true, false)).thenReturn(applications);
         when(reviewInviteRepositoryMock.getByCompetitionId(competitionId)).thenReturn(panelInvites);
         when(reviewParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(
                 competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.ACCEPTED, panelInviteIds))
@@ -106,7 +106,7 @@ public class ReviewStatisticsServiceImplTest extends BaseUnitTestMocksTest {
         InOrder inOrder = inOrder(applicationRepositoryMock, reviewInviteRepositoryMock, reviewParticipantRepositoryMock);
         inOrder.verify(reviewInviteRepositoryMock).getByCompetitionId(competitionId);
         inOrder.verify(applicationRepositoryMock).findByApplicationStateAndFundingDecision(
-                competitionId, SUBMITTED_STATES, "",  null,true);
+                competitionId, SUBMITTED_STATES, "",  null,true, false);
 
         inOrder.verify(reviewParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.ACCEPTED, panelInviteIds);
         inOrder.verify(reviewInviteRepositoryMock).countByCompetitionIdAndStatusIn(competitionId, singleton(InviteStatus.SENT));

@@ -37,7 +37,7 @@ public class AlwaysOpenCloseCompetitionViewModelPopulator {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         ZonedDateTime submissionDate = milestoneRestService.getMilestoneByTypeAndCompetitionId(SUBMISSION_DATE, competitionId).getSuccess().getDate();
 
-        List<Long> applicationIds = applicationSummaryRestService.getAllSubmittedApplicationIds(competitionId, empty(), empty()).getSuccess();
+        List<Long> applicationIds = applicationSummaryRestService.getAllSubmittedApplicationIds(competitionId, empty(), empty(), empty()).getSuccess();
         List<ApplicationResource> applications = new ArrayList<>();
         applicationIds.forEach(applicationId -> applications.add(applicationRestService.getApplicationById(applicationId).getSuccess()));
         List<ApplicationResource> submittedApplications = applications.stream().filter(ApplicationResource::isSubmitted).collect(Collectors.toList());

@@ -36,12 +36,14 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
     @Override
     public RestResult<List<Long>> getAllSubmittedApplicationIds(long competitionId,
                                                                 Optional<String> filter,
-                                                                Optional<FundingDecision> fundingFilter) {
+                                                                Optional<FundingDecision> fundingFilter,
+                                                                Optional<Boolean> eoiFilter) {
         String baseUrl = applicationSummaryRestUrl + "/find-by-competition/" + competitionId + "/all-submitted";
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
         filter.ifPresent(f -> params.set("filter", f));
         fundingFilter.ifPresent(f -> params.set("fundingFilter", f.toString()));
+        eoiFilter.ifPresent(f -> params.set("eoiFilter", f.toString()));
 
         String uri = UriComponentsBuilder.fromPath(baseUrl).queryParams(params).build().encode().toUriString();
 
@@ -54,8 +56,9 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
                                                                                int pageNumber,
                                                                                int pageSize,
                                                                                Optional<String> filter,
-                                                                               Optional<FundingDecision> fundingFilter) {
-        return getSubmittedApplicationsWithPanelStatus(competitionId, sortField, pageNumber, pageSize, filter, fundingFilter, Optional.empty());
+                                                                               Optional<FundingDecision> fundingFilter,
+                                                                               Optional<Boolean> eoiFilter) {
+        return getApplicationsByFilters(competitionId, sortField, pageNumber, pageSize, filter, fundingFilter, Optional.empty(), eoiFilter);
     }
 
     @Override
@@ -66,12 +69,24 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
                                                                                               Optional<String> filter,
                                                                                               Optional<FundingDecision> fundingFilter,
                                                                                               Optional<Boolean> inAssessmentReviewPanel) {
+        return getApplicationsByFilters(competitionId, sortField, pageNumber, pageSize, filter, fundingFilter, inAssessmentReviewPanel, Optional.empty());
+    }
+
+    private RestResult<ApplicationSummaryPageResource> getApplicationsByFilters(long competitionId,
+                                                                                String sortField,
+                                                                                int pageNumber,
+                                                                                int pageSize,
+                                                                                Optional<String> filter,
+                                                                                Optional<FundingDecision> fundingFilter,
+                                                                                Optional<Boolean> inAssessmentReviewPanel,
+                                                                                Optional<Boolean> eoiFilter) {
         String baseUrl = applicationSummaryRestUrl + "/find-by-competition/" + competitionId + "/submitted";
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
         filter.ifPresent(f -> params.set("filter", f));
         fundingFilter.ifPresent(f -> params.set("fundingFilter", f.toString()));
         inAssessmentReviewPanel.ifPresent(f -> params.set("inAssessmentReviewPanel", f.toString()));
+        eoiFilter.ifPresent(f -> params.set("eoiFilter", f.toString()));
 
         String uriWithParams = buildPaginationUri(baseUrl, pageNumber, pageSize, sortField, params);
         return getWithRestResult(uriWithParams, ApplicationSummaryPageResource.class);

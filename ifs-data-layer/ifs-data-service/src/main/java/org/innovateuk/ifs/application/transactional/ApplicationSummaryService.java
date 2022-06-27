@@ -27,13 +27,15 @@ public interface ApplicationSummaryService {
                                                                                                   int pageSize,
                                                                                                   Optional<String> filter,
                                                                                                   Optional<FundingDecisionStatus> fundingFilter,
-                                                                                                  Optional<Boolean> inAssessmentReviewPanel);
+                                                                                                  Optional<Boolean> inAssessmentReviewPanel,
+                                                                                                  Optional<Boolean> eoiFilter);
 
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @SecuredBySpring(value = "READ", description = "Internal users can see all submitted Application ids across the whole system", securedType = ApplicationSummaryPageResource.class)
     ServiceResult<List<Long>> getAllSubmittedApplicationIdsByCompetitionId(long competitionId,
                                                                            Optional<String> filter,
-                                                                           Optional<FundingDecisionStatus> fundingFilter);
+                                                                           Optional<FundingDecisionStatus> fundingFilter,
+                                                                           Optional<Boolean> eoiFilter);
 
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @SecuredBySpring(value = "READ", description = "Internal users can see all not-yet submitted Application Summaries across the whole system", securedType = ApplicationSummaryPageResource.class)

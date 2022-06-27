@@ -31,9 +31,9 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             "AND (a.applicationProcess.activityState NOT IN :states) " +
             "AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
 
-    String APPLICATION_SELECT = "SELECT a FROM Application a ";
+    String APPLICATION_SELECT = "SELECT a FROM Application a LEFT JOIN ApplicationExpressionOfInterestConfig eoi ON a.id = eoi.application.id ";
 
-    String APPLICATION_ID_SELECT = "SELECT a.id FROM Application a ";
+    String APPLICATION_ID_SELECT = "SELECT a.id FROM Application a LEFT JOIN ApplicationExpressionOfInterestConfig eoi ON a.id = eoi.application.id ";
 
     String COMP_STATUS_FILTER_WHERE = "WHERE " +
             "a.competition.id = :compId " +
@@ -44,8 +44,8 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             "OR a.fundingDecision = :funding " +
             "   OR ( str(:funding) = 'FUNDED' AND a.applicationProcess.activityState = org.innovateuk.ifs.application.resource.ApplicationState.APPROVED ) " +
             ") " +
-            "AND (:inAssessmentReviewPanel IS NULL OR a.inAssessmentReviewPanel = :inAssessmentReviewPanel)";
-
+            "AND (:inAssessmentReviewPanel IS NULL OR a.inAssessmentReviewPanel = :inAssessmentReviewPanel)" +
+            "AND (:isEoi IS NULL OR (eoi.enabledForExpressionOfInterest IS NOT NULL AND eoi.enabledForExpressionOfInterest = :isEoi) OR eoi.enabledForExpressionOfInterest IS NULL)";
 
     String ASSESSED_APPLICATION_FILTER_WHERE = "WHERE " +
             "a.competition.id = :compId " +
@@ -140,6 +140,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
                                                                @Param("filter") String filter,
                                                                @Param("funding") FundingDecisionStatus funding,
                                                                @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel,
+                                                               @Param("isEoi") Boolean isEoi,
                                                                Pageable pageable);
 
     @Query(APPLICATION_SELECT + COMP_STATUS_FILTER_WHERE)
@@ -147,14 +148,16 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
                                                                @Param("states") Collection<ApplicationState> applicationStates,
                                                                @Param("filter") String filter,
                                                                @Param("funding") FundingDecisionStatus funding,
-                                                               @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel);
+                                                               @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel,
+                                                               @Param("isEoi") Boolean isEoi);
 
     @Query(APPLICATION_ID_SELECT + COMP_STATUS_FILTER_WHERE)
     List<Long> findApplicationIdsByApplicationStateAndFundingDecision(@Param("compId") long competitionId,
                                                                @Param("states") Collection<ApplicationState> applicationStates,
                                                                @Param("filter") String filter,
                                                                @Param("funding") FundingDecisionStatus funding,
-                                                               @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel);
+                                                               @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel,
+                                                               @Param("isEoi") Boolean isEoi);
 
     @Query(COMP_NOT_STATUS_FILTER)
     Page<Application> findByCompetitionIdAndApplicationProcessActivityStateNotIn(@Param("compId") long competitionId,

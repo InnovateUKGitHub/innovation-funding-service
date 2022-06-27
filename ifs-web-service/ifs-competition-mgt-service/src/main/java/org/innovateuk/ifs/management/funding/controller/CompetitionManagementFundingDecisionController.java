@@ -74,6 +74,20 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         return FundingDecisionSelectionCookie.class;
     }
 
+    @GetMapping("/eoi")
+    public String eoiApplications(Model model,
+                                  @PathVariable("competitionId") long competitionId,
+                                  @RequestParam(name = "filterChanged", required = false) boolean filterChanged,
+                                  @ModelAttribute @Valid FundingDecisionPaginationForm paginationForm,
+                                  @ModelAttribute FundingDecisionFilterForm filterForm,
+                                  @ModelAttribute FundingDecisionSelectionForm selectionForm,
+                                  BindingResult bindingResult,
+                                  HttpServletRequest request,
+                                  HttpServletResponse response) {
+        filterForm.setEoi(true);
+        return viewApplications(model, competitionId, filterChanged, paginationForm, filterForm, selectionForm, bindingResult, request, response);
+    }
+
     @GetMapping
     public String applications(Model model,
                                @PathVariable("competitionId") long competitionId,
@@ -84,7 +98,18 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                                BindingResult bindingResult,
                                HttpServletRequest request,
                                HttpServletResponse response) {
+        return viewApplications(model, competitionId, filterChanged, paginationForm, filterForm, selectionForm, bindingResult, request, response);
+    }
 
+    private String viewApplications(Model model,
+                                    long competitionId,
+                                    boolean filterChanged,
+                                    FundingDecisionPaginationForm paginationForm,
+                                    FundingDecisionFilterForm filterForm,
+                                    FundingDecisionSelectionForm selectionForm,
+                                    BindingResult bindingResult,
+                                    HttpServletRequest request,
+                                    HttpServletResponse response) {
         redirectIfErrorsOrCompNotInCorrectState(competitionId, bindingResult);
 
         FundingDecisionSelectionCookie selectionCookieForm = getSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
@@ -214,7 +239,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                 return applicationSummaryRestService.getAllAssessedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter()).getOrElse(emptyList());
             }
         }
-        return applicationSummaryRestService.getAllSubmittedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter()).getOrElse(emptyList());
+        return applicationSummaryRestService.getAllSubmittedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter(), Optional.of(filterForm.isEoi())).getOrElse(emptyList());
     }
 
     private FundingDecisionSelectionForm trimSelectionByFilteredResult(FundingDecisionSelectionForm selectionForm,

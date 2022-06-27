@@ -616,7 +616,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         applicationRepository.saveAll(applications);
 
-        List<Application> foundApplications = repository.findByApplicationStateAndFundingDecision(competition.getId(), SUBMITTED_STATES, null, FUNDED, false);
+        List<Application> foundApplications = repository.findByApplicationStateAndFundingDecision(competition.getId(), SUBMITTED_STATES, null, FUNDED, false, false);
 
         assertEquals(1, foundApplications.size());
     }
@@ -635,7 +635,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         applicationRepository.saveAll(applications);
 
-        List<Application> foundApplications = repository.findByApplicationStateAndFundingDecision(competition.getId(), SUBMITTED_STATES, null, UNDECIDED, false);
+        List<Application> foundApplications = repository.findByApplicationStateAndFundingDecision(competition.getId(), SUBMITTED_STATES, null, UNDECIDED, false, false);
 
         assertEquals(2, foundApplications.size());
     }
@@ -656,7 +656,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         flushAndClearSession();
 
-        List<Application> foundApplications = repository.findByApplicationStateAndFundingDecision(competition.getId(), SUBMITTED_STATES, null, FUNDED, false);
+        List<Application> foundApplications = repository.findByApplicationStateAndFundingDecision(competition.getId(), SUBMITTED_STATES, null, FUNDED, false, false);
 
         assertEquals(2, foundApplications.size());
     }

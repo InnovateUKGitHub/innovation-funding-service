@@ -47,8 +47,9 @@ public class ApplicationSummaryController {
     public RestResult<List<Long>> getAllSubmittedApplicationIdsByCompetitionId(
             @PathVariable("competitionId") long competitionId,
             @RequestParam(value = "filter", required = false) Optional<String> filter,
-            @RequestParam(value = "fundingFilter", required = false) Optional<FundingDecisionStatus> fundingFilter) {
-        return applicationSummaryService.getAllSubmittedApplicationIdsByCompetitionId(competitionId, filter, fundingFilter).toGetResponse();
+            @RequestParam(value = "fundingFilter", required = false) Optional<FundingDecisionStatus> fundingFilter,
+            @RequestParam(value = "eoiFilter", required = false) Optional<Boolean> eoiFilter) {
+        return applicationSummaryService.getAllSubmittedApplicationIdsByCompetitionId(competitionId, filter, fundingFilter, eoiFilter).toGetResponse();
     }
 
     @GetMapping("/find-by-competition/{competitionId}/submitted")
@@ -59,8 +60,9 @@ public class ApplicationSummaryController {
             @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
             @RequestParam(value = "filter", required = false) Optional<String> filter,
             @RequestParam(value = "fundingFilter", required = false) Optional<FundingDecisionStatus> fundingFilter,
-            @RequestParam(value = "inAssessmentReviewPanel", required = false) Optional<Boolean> inAssessmentReviewPanel) {
-        return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter, fundingFilter, inAssessmentReviewPanel).toGetResponse();
+            @RequestParam(value = "inAssessmentReviewPanel", required = false) Optional<Boolean> inAssessmentReviewPanel,
+            @RequestParam(value = "eoiFilter", required = false) Optional<Boolean> eoiFilter) {
+        return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter, fundingFilter, inAssessmentReviewPanel, eoiFilter).toGetResponse();
     }
 
     @GetMapping("/find-by-competition/{competitionId}/not-submitted")
