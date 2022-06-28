@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registration-svc
+  annotations:
+    monitor: monitor
+    pullSecrets: pullSecrets
+spec:
+  selector:
+    matchLabels:
+      app: registration-svc
+  template:
+    metadata:
+      labels:
+        app: registration-svc
+    spec:
+      containers:
+        - name: spring-boot-service-container
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/sh", "-c", "$JAVA_HOME/bin/keytool -import -trustcacerts -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit -noprompt -alias iuk-auth-localdev -file /var/certs/ldap-encryption.crt"]
+
