@@ -25,7 +25,8 @@ public class PreviousDashboardRowViewModelTest {
                                                                                     YESTERDAY,
                                                                         false,
                                                                 false,
-                CompetitionCompletionStage.PROJECT_SETUP);
+                CompetitionCompletionStage.PROJECT_SETUP,
+                false);
         assertEquals("/application/1/summary", viewModel.getLinkUrl());
         assertEquals("Untitled application", viewModel.getTitle());
         assertTrue(viewModel.isApproved());
