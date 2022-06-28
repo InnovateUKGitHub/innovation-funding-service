@@ -9,6 +9,7 @@ public class QuestionnaireQuestionResource {
     private String title;
     private String question;
     private String guidance;
+    private String message;
     private Long questionnaire;
     private List<Long> options = new ArrayList<>();
     private List<Long> previousQuestions = new ArrayList<>();
@@ -51,6 +52,14 @@ public class QuestionnaireQuestionResource {
 
     public void setGuidance(String guidance) {
         this.guidance = guidance;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public Long getQuestionnaire() {

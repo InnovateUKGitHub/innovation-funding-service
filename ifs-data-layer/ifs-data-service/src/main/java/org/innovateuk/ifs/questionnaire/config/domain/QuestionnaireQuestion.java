@@ -14,6 +14,10 @@ public class QuestionnaireQuestion extends QuestionnaireDecision {
 
     private String title;
     private String question;
+
+    @Column(columnDefinition = "TEXT")
+    private String message;
+    @Column(columnDefinition = "TEXT")
     private String guidance;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -45,6 +49,14 @@ public class QuestionnaireQuestion extends QuestionnaireDecision {
 
     public void setQuestion(String question) {
         this.question = question;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public String getGuidance() {
