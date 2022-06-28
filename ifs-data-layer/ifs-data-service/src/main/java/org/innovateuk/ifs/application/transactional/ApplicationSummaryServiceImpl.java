@@ -129,26 +129,53 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             int pageSize,
             Optional<String> filter,
             Optional<FundingDecisionStatus> fundingFilter,
-            Optional<Boolean> inAssessmentReviewPanel,
-            Optional<Boolean> eoiFilter) {
+            Optional<Boolean> inAssessmentReviewPanel) {
 
         String filterString = trimFilterString(filter);
 
         return applicationSummaries(sortBy, pageIndex, pageSize,
                 pageable -> applicationRepository.findByApplicationStateAndFundingDecision(
-                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), inAssessmentReviewPanel.orElse(null), eoiFilter.orElse(null), pageable),
+                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), inAssessmentReviewPanel.orElse(null), pageable),
                 () -> applicationRepository.findByApplicationStateAndFundingDecision(
-                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), inAssessmentReviewPanel.orElse(null), eoiFilter.orElse(null)));
+                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), inAssessmentReviewPanel.orElse(null)));
+    }
+
+    @Override
+    public ServiceResult<ApplicationSummaryPageResource> getSubmittedEoiApplicationSummariesByCompetitionId(
+            long competitionId,
+            String sortBy,
+            int pageIndex,
+            int pageSize,
+            Optional<String> filter,
+            Optional<FundingDecisionStatus> fundingFilter,
+            Optional<Boolean> sendFilter) {
+
+        String filterString = trimFilterString(filter);
+
+        return applicationSummaries(sortBy, pageIndex, pageSize,
+                pageable -> applicationRepository.findEoiByApplicationStateAndFundingDecision(
+                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), sendFilter.orElse(null), pageable),
+                () -> applicationRepository.findEoiByApplicationStateAndFundingDecision(
+                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), sendFilter.orElse(null)));
     }
 
     @Override
     public ServiceResult<List<Long>> getAllSubmittedApplicationIdsByCompetitionId(
             long competitionId,
             Optional<String> filter,
-            Optional<FundingDecisionStatus> fundingFilter,
-            Optional<Boolean> eoiFilter) {
+            Optional<FundingDecisionStatus> fundingFilter) {
         String filterString = trimFilterString(filter);
-        return serviceSuccess(applicationRepository.findApplicationIdsByApplicationStateAndFundingDecision(competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), null, eoiFilter.orElse(null)));
+        return serviceSuccess(applicationRepository.findApplicationIdsByApplicationStateAndFundingDecision(competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), null));
+    }
+
+    @Override
+    public ServiceResult<List<Long>> getAllSubmittedEoiApplicationIdsByCompetitionId(
+            long competitionId,
+            Optional<String> filter,
+            Optional<FundingDecisionStatus> fundingFilter,
+            Optional<Boolean> sendFilter) {
+        String filterString = trimFilterString(filter);
+        return serviceSuccess(applicationRepository.findEoiApplicationIdsByApplicationStateAndFundingDecision(competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), sendFilter.orElse(null)));
     }
 
     @Override
@@ -160,9 +187,9 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
         return applicationSummaries(sortBy, pageIndex, pageSize,
                 pageable -> applicationRepository.findByApplicationStateAndFundingDecision(
-                        competitionId, NOT_SUBMITTED_STATES, "", null, null, null, pageable),
+                        competitionId, NOT_SUBMITTED_STATES, "", null, null, pageable),
                 () -> applicationRepository.findByApplicationStateAndFundingDecision(
-                        competitionId, NOT_SUBMITTED_STATES, "", null, null, null));
+                        competitionId, NOT_SUBMITTED_STATES, "", null, null));
     }
 
     @Override
@@ -215,9 +242,9 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
         Set<ApplicationState> states = informFilter.map(i -> i ? singleton(INELIGIBLE_INFORMED) : singleton(INELIGIBLE)).orElse(INELIGIBLE_STATES);
         return applicationSummaries(sortBy, pageIndex, pageSize,
                 pageable -> applicationRepository.findByApplicationStateAndFundingDecision(
-                        competitionId, states, filterStr, null, null, null, pageable),
+                        competitionId, states, filterStr, null, null, pageable),
                 () -> applicationRepository.findByApplicationStateAndFundingDecision(
-                        competitionId, states, filterStr, null, null, null));
+                        competitionId, states, filterStr, null, null));
     }
 
     @Override

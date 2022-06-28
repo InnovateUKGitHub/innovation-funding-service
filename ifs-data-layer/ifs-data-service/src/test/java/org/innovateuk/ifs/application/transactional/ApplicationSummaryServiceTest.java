@@ -414,7 +414,6 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
                 eq(""),
                 eq(UNFUNDED),
                 eq(null),
-                eq(null),
                 argThat(new PageableMatcher(0, 20, srt("id", ASC)))))
                 .thenReturn(page);
 
@@ -426,7 +425,6 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
                         20,
                         of(""),
                         of(UNFUNDED),
-                        empty(),
                         empty());
 
         assertTrue(result.isSuccess());
@@ -446,7 +444,6 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
                 eq(COMP_ID),
                 eq(asLinkedSet(ApplicationState.INELIGIBLE, ApplicationState.INELIGIBLE_INFORMED)),
                 eq(""),
-                eq(null),
                 eq(null),
                 eq(null),
                 argThat(new PageableMatcher(0, 20, srt("id", ASC)))))
@@ -478,7 +475,6 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
                 eq(COMP_ID),
                 eq(singleton(ApplicationState.INELIGIBLE_INFORMED)),
                 eq(""),
-                eq(null),
                 eq(null),
                 eq(null),
                 argThat(new PageableMatcher(0, 20, srt("id", ASC)))))
@@ -553,9 +549,9 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         List<Long> ids = applications.stream().map(Application::getId).collect(Collectors.toList());
 
         when(applicationRepositoryMock.findApplicationIdsByApplicationStateAndFundingDecision(
-                eq(COMP_ID), eq(SUBMITTED_STATES),  eq("filter"), eq(UNFUNDED), eq(null), eq(null))).thenReturn(ids);
+                eq(COMP_ID), eq(SUBMITTED_STATES),  eq("filter"), eq(UNFUNDED), eq(null))).thenReturn(ids);
 
-        ServiceResult<List<Long>> result = applicationSummaryService.getAllSubmittedApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(UNFUNDED), empty());
+        ServiceResult<List<Long>> result = applicationSummaryService.getAllSubmittedApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(UNFUNDED));
         assertTrue(result.isSuccess());
         assertEquals(2, result.getSuccess().size());
         assertEquals(applications.get(0).getId(), result.getSuccess().get(0));

@@ -239,7 +239,8 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                 return applicationSummaryRestService.getAllAssessedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter()).getOrElse(emptyList());
             }
         }
-        return applicationSummaryRestService.getAllSubmittedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter(), Optional.of(filterForm.isEoi())).getOrElse(emptyList());
+
+        return  competitionManagementFundingDecisionModelPopulator.getAllSubmittedApplicationIds(competitionId, filterForm);
     }
 
     private FundingDecisionSelectionForm trimSelectionByFilteredResult(FundingDecisionSelectionForm selectionForm,

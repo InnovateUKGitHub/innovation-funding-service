@@ -29,7 +29,7 @@ public class SubmittedApplicationsModelPopulator {
                 .getSuccess();
 
         ApplicationSummaryPageResource summaryPageResource = applicationSummaryRestService
-                .getSubmittedApplications(competitionId, sorting, page, 20, filter, Optional.empty(), Optional.empty())
+                .getSubmittedApplications(competitionId, sorting, page, 20, filter, Optional.empty())
                 .getSuccess();
 
         return new SubmittedApplicationsViewModel(

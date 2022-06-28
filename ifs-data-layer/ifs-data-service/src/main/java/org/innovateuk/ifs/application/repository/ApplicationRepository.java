@@ -31,11 +31,11 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             "AND (a.applicationProcess.activityState NOT IN :states) " +
             "AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
 
-    String APPLICATION_SELECT = "SELECT a FROM Application a LEFT JOIN ApplicationExpressionOfInterestConfig eoi ON a.id = eoi.application.id ";
+    String APPLICATION_SELECT = "SELECT a FROM Application a ";
 
-    String APPLICATION_ID_SELECT = "SELECT a.id FROM Application a LEFT JOIN ApplicationExpressionOfInterestConfig eoi ON a.id = eoi.application.id ";
+    String APPLICATION_ID_SELECT = "SELECT a.id FROM Application a ";
 
-    String COMP_STATUS_FILTER_WHERE = "WHERE " +
+    String COMP_STATUS_COMMON_FILTER_WHERE = "WHERE " +
             "a.competition.id = :compId " +
             "AND (a.applicationProcess.activityState IN :states) " +
             "AND (:filter IS NULL OR str(a.id) LIKE CONCAT('%', :filter, '%') ) " +
@@ -43,9 +43,14 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             "OR ( str(:funding) = 'UNDECIDED' AND a.fundingDecision IS NULL AND a.applicationProcess.activityState <> org.innovateuk.ifs.application.resource.ApplicationState.APPROVED ) " +
             "OR a.fundingDecision = :funding " +
             "   OR ( str(:funding) = 'FUNDED' AND a.applicationProcess.activityState = org.innovateuk.ifs.application.resource.ApplicationState.APPROVED ) " +
-            ") " +
-            "AND (:inAssessmentReviewPanel IS NULL OR a.inAssessmentReviewPanel = :inAssessmentReviewPanel)" +
-            "AND (:isEoi IS NULL OR (eoi.enabledForExpressionOfInterest IS NOT NULL AND eoi.enabledForExpressionOfInterest = :isEoi) OR eoi.enabledForExpressionOfInterest IS NULL)";
+            ")";
+
+    String COMP_STATUS_FILTER_WHERE =  COMP_STATUS_COMMON_FILTER_WHERE +
+            " AND (:inAssessmentReviewPanel IS NULL OR a.inAssessmentReviewPanel = :inAssessmentReviewPanel)";
+
+    String EOI_FILTER_WHERE = COMP_STATUS_COMMON_FILTER_WHERE +
+            " AND a.applicationExpressionOfInterestConfig.enabledForExpressionOfInterest = true" +
+            " AND (:sent IS NULL OR (:sent = true AND a.manageFundingEmailDate IS NOT NULL) OR (:sent = false AND a.manageFundingEmailDate IS NULL))";
 
     String ASSESSED_APPLICATION_FILTER_WHERE = "WHERE " +
             "a.competition.id = :compId " +
@@ -140,24 +145,43 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
                                                                @Param("filter") String filter,
                                                                @Param("funding") FundingDecisionStatus funding,
                                                                @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel,
-                                                               @Param("isEoi") Boolean isEoi,
                                                                Pageable pageable);
+
+    @Query(APPLICATION_SELECT + EOI_FILTER_WHERE)
+    Page<Application> findEoiByApplicationStateAndFundingDecision(@Param("compId") long competitionId,
+                                                                  @Param("states") Collection<ApplicationState> applicationStates,
+                                                                  @Param("filter") String filter,
+                                                                  @Param("funding") FundingDecisionStatus funding,
+                                                                  @Param("sent") Boolean sent,
+                                                                  Pageable pageable);
 
     @Query(APPLICATION_SELECT + COMP_STATUS_FILTER_WHERE)
     List<Application> findByApplicationStateAndFundingDecision(@Param("compId") long competitionId,
                                                                @Param("states") Collection<ApplicationState> applicationStates,
                                                                @Param("filter") String filter,
                                                                @Param("funding") FundingDecisionStatus funding,
-                                                               @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel,
-                                                               @Param("isEoi") Boolean isEoi);
+                                                               @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel);
+
+    @Query(APPLICATION_SELECT + EOI_FILTER_WHERE)
+    List<Application> findEoiByApplicationStateAndFundingDecision(@Param("compId") long competitionId,
+                                                                  @Param("states") Collection<ApplicationState> applicationStates,
+                                                                  @Param("filter") String filter,
+                                                                  @Param("funding") FundingDecisionStatus funding,
+                                                                  @Param("sent") Boolean sent);
 
     @Query(APPLICATION_ID_SELECT + COMP_STATUS_FILTER_WHERE)
     List<Long> findApplicationIdsByApplicationStateAndFundingDecision(@Param("compId") long competitionId,
                                                                @Param("states") Collection<ApplicationState> applicationStates,
                                                                @Param("filter") String filter,
                                                                @Param("funding") FundingDecisionStatus funding,
-                                                               @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel,
-                                                               @Param("isEoi") Boolean isEoi);
+                                                               @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel);
+
+    @Query(APPLICATION_ID_SELECT + EOI_FILTER_WHERE)
+    List<Long> findEoiApplicationIdsByApplicationStateAndFundingDecision(@Param("compId") long competitionId,
+                                                                         @Param("states") Collection<ApplicationState> applicationStates,
+                                                                         @Param("filter") String filter,
+                                                                         @Param("funding") FundingDecisionStatus funding,
+                                                                         @Param("sent") Boolean sent);
 
     @Query(COMP_NOT_STATUS_FILTER)
     Page<Application> findByCompetitionIdAndApplicationProcessActivityStateNotIn(@Param("compId") long competitionId,

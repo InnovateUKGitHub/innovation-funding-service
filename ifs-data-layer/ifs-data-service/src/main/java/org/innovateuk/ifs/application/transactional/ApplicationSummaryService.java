@@ -27,15 +27,30 @@ public interface ApplicationSummaryService {
                                                                                                   int pageSize,
                                                                                                   Optional<String> filter,
                                                                                                   Optional<FundingDecisionStatus> fundingFilter,
-                                                                                                  Optional<Boolean> inAssessmentReviewPanel,
-                                                                                                  Optional<Boolean> eoiFilter);
+                                                                                                  Optional<Boolean> inAssessmentReviewPanel);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
+    @SecuredBySpring(value = "READ", description = "Internal users can see all submitted eoi Application Summaries across the whole system", securedType = ApplicationSummaryPageResource.class)
+    ServiceResult<ApplicationSummaryPageResource> getSubmittedEoiApplicationSummariesByCompetitionId(long competitionId,
+                                                                                                  String sortBy,
+                                                                                                  int pageIndex,
+                                                                                                  int pageSize,
+                                                                                                  Optional<String> filter,
+                                                                                                  Optional<FundingDecisionStatus> fundingFilter,
+                                                                                                  Optional<Boolean> sendFilter);
 
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @SecuredBySpring(value = "READ", description = "Internal users can see all submitted Application ids across the whole system", securedType = ApplicationSummaryPageResource.class)
     ServiceResult<List<Long>> getAllSubmittedApplicationIdsByCompetitionId(long competitionId,
                                                                            Optional<String> filter,
+                                                                           Optional<FundingDecisionStatus> fundingFilter);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
+    @SecuredBySpring(value = "READ", description = "Internal users can see all submitted eoi Application ids across the whole system", securedType = ApplicationSummaryPageResource.class)
+    ServiceResult<List<Long>> getAllSubmittedEoiApplicationIdsByCompetitionId(long competitionId,
+                                                                           Optional<String> filter,
                                                                            Optional<FundingDecisionStatus> fundingFilter,
-                                                                           Optional<Boolean> eoiFilter);
+                                                                           Optional<Boolean> sendFilter);
 
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @SecuredBySpring(value = "READ", description = "Internal users can see all not-yet submitted Application Summaries across the whole system", securedType = ApplicationSummaryPageResource.class)

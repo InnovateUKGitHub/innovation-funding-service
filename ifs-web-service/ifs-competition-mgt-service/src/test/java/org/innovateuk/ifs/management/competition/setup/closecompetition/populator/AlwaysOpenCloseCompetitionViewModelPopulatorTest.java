@@ -69,7 +69,7 @@ public class AlwaysOpenCloseCompetitionViewModelPopulatorTest {
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(milestoneRestService.getMilestoneByTypeAndCompetitionId(SUBMISSION_DATE, competitionId)).thenReturn(restSuccess(submissionDate));
-        when(applicationSummaryRestService.getAllSubmittedApplicationIds(competitionId, empty(), empty(), empty()))
+        when(applicationSummaryRestService.getAllSubmittedApplicationIds(competitionId, empty(), empty()))
                 .thenReturn(restSuccess(asList(applications.get(0).getId(),applications.get(1).getId())));
         when(applicationRestService.getApplicationById(23L)).thenReturn(restSuccess(applications.get(0)));
         when(applicationRestService.getApplicationById(24L)).thenReturn(restSuccess(applications.get(1)));
