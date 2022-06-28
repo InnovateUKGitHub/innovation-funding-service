@@ -135,7 +135,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         return "comp-mgt-funders-panel";
     }
 
-    @PostMapping
+    @PostMapping(value = {"", "/eoi"})
     public String makeDecision(Model model,
                                @PathVariable("competitionId") long competitionId,
                                @ModelAttribute FundingDecisionPaginationForm paginationForm,
@@ -153,7 +153,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         return fundersPanelCompetition(model, competitionId, selectionForm, paginationForm, fundingDecisionChoiceForm, filterForm, bindingResult, response);
     }
 
-    @PostMapping(params = {"addAll"})
+    @PostMapping(value = {"", "/eoi"}, params = {"addAll"})
     public @ResponseBody JsonNode addAllApplicationsToFundingDecisionSelectionList(@PathVariable("competitionId") long competitionId,
                                                                                    @RequestParam("addAll") boolean addAll,
                                                                                    HttpServletRequest request,
@@ -190,7 +190,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         selectionForm.setAllSelected(false);
     }
 
-    @PostMapping(params = {"selectionId", "isSelected"})
+    @PostMapping(value = {"", "/eoi"}, params = {"selectionId", "isSelected"})
     public @ResponseBody JsonNode addSelectedApplicationsToFundingDecisionList(@PathVariable("competitionId") long competitionId,
                                                                                @RequestParam("selectionId") long applicationId,
                                                                                @RequestParam("isSelected") boolean isSelected,
