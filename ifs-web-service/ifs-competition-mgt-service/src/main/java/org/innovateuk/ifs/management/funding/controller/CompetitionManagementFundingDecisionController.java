@@ -110,7 +110,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                                     BindingResult bindingResult,
                                     HttpServletRequest request,
                                     HttpServletResponse response) {
-        redirectIfErrorsOrCompNotInCorrectState(competitionId, bindingResult);
+        redirectIfErrorsOrCompNotInCorrectState(competitionId, filterForm, bindingResult);
 
         FundingDecisionSelectionCookie selectionCookieForm = getSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
 
@@ -146,7 +146,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                                HttpServletRequest request,
                                HttpServletResponse response) {
 
-        redirectIfErrorsOrCompNotInCorrectState(competitionId, bindingResult);
+        redirectIfErrorsOrCompNotInCorrectState(competitionId, filterForm, bindingResult);
 
         FundingDecisionSelectionCookie selectionForm = getSelectionFormFromCookie(request, competitionId)
                 .orElse(new FundingDecisionSelectionCookie(fundingDecisionSelectionForm));
@@ -291,7 +291,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         return competitionRestService.getCompetitionById(competitionId).getSuccess();
     }
 
-    private String redirectIfErrorsOrCompNotInCorrectState(long competitionId, BindingResult bindingResult) {
+    private String redirectIfErrorsOrCompNotInCorrectState(long competitionId, FundingDecisionFilterForm filterForm, BindingResult bindingResult) {
 
         CompetitionResource competition = getCompetitionIfExist(competitionId);
         List<CompetitionStatus> acceptedCompStates = Arrays.asList(CompetitionStatus.ASSESSOR_FEEDBACK, CompetitionStatus.FUNDERS_PANEL);
@@ -301,7 +301,9 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         }
 
         if (bindingResult.hasErrors()) {
-            return "redirect:/competition/" + competition.getId() + "/funding";
+            return filterForm.isEoi()
+                    ? "redirect:/competition/" + competition.getId() + "/funding/eoi"
+                    : "redirect:/competition/" + competition.getId() + "/funding";
         }
 
         return null;

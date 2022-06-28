@@ -77,7 +77,6 @@
                 </div>
             </div>
             <input type="hidden" name="filterChanged" value="1"/>
-            <input type="hidden" id="eoi" th:value="${model.eoi}"/>
         </form>
 
         <div class="warning-alert govuk-!-margin-bottom-6" th:if="${model.selectionLimitWarning}">
@@ -226,6 +225,7 @@
                     </tbody>
                 </table>
             </div>
+            <input type="hidden" name="eoi" th:value="${model.eoi}"/>
         </form>
         <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
 

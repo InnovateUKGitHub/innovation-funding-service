@@ -48,7 +48,7 @@ public class FundingDecisionFilterForm {
     }
 
     public boolean anyFilterIsActive() {
-        return this.fundingFilter.isPresent() || this.stringFilter.isPresent();
+        return this.fundingFilter.isPresent() || this.sendFilter.isPresent() || this.stringFilter.isPresent();
     }
 
     public void updateAllFilters(FundingDecisionFilterForm updatedFilterForm) {
