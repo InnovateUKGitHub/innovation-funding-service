@@ -7,7 +7,7 @@ spec:
     - name: regcred
   containers:
     - name: bastion-client
-      image: docker-ifs.devops.innovateuk.org/snapshots/bastion-client:ARCHIVE-BUILDBASEIMAGES11-BUILDANDPUSHIMAGEJOB-7_9c55384a36fadf397556f7340fbe9dad96b4876c
+      image: docker-ifs.devops.innovateuk.org/releases/bastion-client:ARCHIVE-BUILDBASEIMAGES-BUILDANDPUSHIMAGEJOB-131_11dfd21ee517ecce00c93e88107a0ff45b9e4430@sha256:8f86151b4490513038b09586febc186612caaec64c4e7b7d1eebe9ad40622f3e
       imagePullPolicy: IfNotPresent
       command:
         - /bin/sh
