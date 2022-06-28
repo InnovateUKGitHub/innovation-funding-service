@@ -76,18 +76,16 @@
                                     </th:block>
                                     <div class="govuk-radios">
                                         <div class="govuk-radios__item" th:each="workProgramme : *{allOptions}">
-                                            <th:block th:if="${workProgramme.enabled}">
-                                                <input th:field="*{selected}"
-                                                       th:id="|work-programme-radio-${workProgramme.id}|"
-                                                       th:value="${workProgramme.id}"
-                                                       type="radio"
-                                                       class="govuk-radios__input"
-                                                       required="required"
-                                                       th:attr="data-required-errormessage=#{validation.horizon.programme.required}" />
-                                                <label th:for="|work-programme-radio-${workProgramme.id}|"
-                                                        th:text="${workProgramme.name}"
-                                                       class="govuk-label govuk-radios__label">Label</label>
-                                            </th:block>
+                                            <input th:field="*{selected}"
+                                                   th:id="|work-programme-radio-${workProgramme.id}|"
+                                                   th:value="${workProgramme.id}"
+                                                   type="radio"
+                                                   class="govuk-radios__input"
+                                                   required="required"
+                                                   th:attr="data-required-errormessage=#{validation.horizon.programme.required}" />
+                                            <label th:for="|work-programme-radio-${workProgramme.id}|"
+                                                    th:text="${workProgramme.name}"
+                                                   class="govuk-label govuk-radios__label">Label</label>
                                         </div>
                                     </div>
                                 </fieldset>
