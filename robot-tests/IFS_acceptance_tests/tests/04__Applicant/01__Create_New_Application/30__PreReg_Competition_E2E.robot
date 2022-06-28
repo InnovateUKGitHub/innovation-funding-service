@@ -65,6 +65,7 @@ Lead applicant completes the application sections
     And the lead applicant fills all the questions and marks as complete(prereg)
     And the user completes prereg project finances                      ${hecpPreregAppName}   no
     Then the user should see the element                                jQuery = .progress:contains("100%")
+    Then the user should see the element                                link = Print your expression of interest
 
 Applicant can not view hidden question, section and subsection in application summary
     [Documentation]  IFS-12079
@@ -80,7 +81,7 @@ Applicant submits the expression of interest application
     [Documentation]  IFS-12079  IFS-12081
     When the user clicks the button/link        id = submit-application-button
     Then the user should see the element        jQuery = h2:contains("Expression of interest submitted")
-    And the user should see the element         jQuery = h1:contains("Expression of interest Status")
+    And the user should see the element         jQuery = h1:contains("Expression of interest status")
     And the user should see the element         link = View expression of interest
     And the user should see the element         link = Print expression of interest
     And the user reads his email                steve.smith@empire.com  ${preregApplicationID}: Successful submission of expression of interest   You have successfully submitted an expression of interest for funding to Innovate UK’s ${hecpPreregCompName}.
