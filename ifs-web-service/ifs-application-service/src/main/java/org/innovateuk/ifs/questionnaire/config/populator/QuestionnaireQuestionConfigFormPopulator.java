@@ -32,6 +32,7 @@ public class QuestionnaireQuestionConfigFormPopulator {
         form.setTitle(question.getTitle());
         form.setQuestion(question.getQuestion());
         form.setGuidance(question.getGuidance());
+        form.setMessage(question.getMessage());
 
         List<QuestionnaireOptionResource> options = questionnaireOptionRestService.get(question.getOptions()).getSuccess();
 
@@ -49,7 +50,7 @@ public class QuestionnaireQuestionConfigFormPopulator {
                         QuestionnaireTextOutcomeResource textOutcome = questionnaireTextOutcomeRestService.get(option.getDecision()).getSuccess();
                         optionForm.setTextOutcome(textOutcome.getText());
                     } else {
-                        throw new IFSRuntimeException("Unknown deciion type " + option.getDecisionType());
+                        throw new IFSRuntimeException("Unknown decision type " + option.getDecisionType());
                     }
                     return optionForm;
                 })
