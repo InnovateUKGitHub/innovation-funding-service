@@ -27,7 +27,7 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
     private final boolean leadApplicant;
     private final boolean collaborationLevelSingle;
     private final CompetitionCompletionStage competitionCompletionStage;
-
+    private final boolean expressionOfInterest;
     public PreviousDashboardRowViewModel(String title,
                                          long applicationId,
                                          Long projectId,
@@ -37,7 +37,8 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
                                          LocalDate startDate,
                                          boolean leadApplicant,
                                          boolean collaborationLevelSingle,
-                                         CompetitionCompletionStage competitionCompletionStage) {
+                                         CompetitionCompletionStage competitionCompletionStage,
+                                         boolean expressionOfInterest) {
         super(title, applicationId, competitionTitle);
         this.applicationState = applicationState;
         this.projectState = projectState;
@@ -46,6 +47,7 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
         this.leadApplicant = leadApplicant;
         this.collaborationLevelSingle = collaborationLevelSingle;
         this.competitionCompletionStage = competitionCompletionStage;
+        this.expressionOfInterest = expressionOfInterest;
     }
 
     public PreviousDashboardRowViewModel(DashboardPreviousRowResource resource){
@@ -57,6 +59,7 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
         this.leadApplicant = resource.isLeadApplicant();
         this.collaborationLevelSingle = resource.isCollaborationLevelSingle();
         this.competitionCompletionStage = resource.getCompetitionCompletionStage();
+        this.expressionOfInterest = resource.isExpressionOfInterest();
     }
 
     public CompetitionCompletionStage getCompetitionCompletionStage() {
@@ -141,5 +144,7 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
     public String getTitle() {
         return !isNullOrEmpty(title) ? title : "Untitled application";
     }
-
+    public boolean isExpressionOfInterest() {
+        return expressionOfInterest;
+    }
 }

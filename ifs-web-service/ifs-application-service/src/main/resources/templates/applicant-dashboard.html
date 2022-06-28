@@ -185,7 +185,7 @@
                     <h2 class="govuk-heading-m">Previous</h2>
                     <ul>
                         <li th:each="previousView : ${model.previous}"
-                            th:class="${previousView.approved} ? 'positive'">
+                            th:classappend="${previousView.expressionOfInterest} ? 'status-2-col'" >
                             <div class="task">
                                 <h3 class="govuk-heading-s">
                                     <a th:href="${previousView.linkUrl}" th:text="${previousView.title}" class="govuk-link" />
@@ -195,15 +195,23 @@
                                     <li>Competition: <span th:text="${previousView.competitionTitle}">COMPETITION NAME</span></li>
                                 </ul>
                             </div>
-                            <div class="status-and-action">
-                                <p th:if="${previousView.rejected}" class="govuk-body status-msg msg-progress">Unsuccessful</p>
-                                <p th:if="${previousView.approved}" class="govuk-body status-msg msg-progress">Successful</p>
-                                <p th:if="${previousView.createdOrOpen}" class="govuk-body status-msg msg-progress not-submitted">Not submitted</p>
-                                <p th:if="${previousView.informedIneligible}" class="govuk-body status-msg msg-progress">Ineligible</p>
-                                <p th:if="${previousView.liveOrCompletedOffline}" class="govuk-body status-msg msg-progress">Live project</p>
-                                <p th:if="${previousView.unsuccessful}" class="govuk-body status-msg msg-progress msg-negative">Unsuccessful</p>
-                                <p th:if="${previousView.withdrawn}" class="govuk-body status-msg msg-progress">Withdrawn</p>
-                                <p th:if="${previousView.submitted}" class="govuk-body status-msg msg-progress">Application submitted</p>
+
+                                <th:block th:if="${previousView.expressionOfInterest}">
+                                    <div class="status">
+                                    <span class="status-msg msg-deadline-waiting">Expression of interest</span>
+                                </th:block>
+                            <th:block th:unless="${previousView.expressionOfInterest}">
+                                <div>
+                            </th:block>
+                                <span class="status-msg msg-progress">
+                                <p th:if="${previousView.rejected}">Unsuccessful</p>
+                                <p th:if="${previousView.approved}" Successful</p>
+                                <p th:if="${previousView.createdOrOpen}" >Not submitted</p>
+                                <p th:if="${previousView.informedIneligible}" >Ineligible</p>
+                                <p th:if="${previousView.liveOrCompletedOffline}" >Live project</p>
+                                <p th:if="${previousView.unsuccessful}" >Unsuccessful</p>
+                                <p th:if="${previousView.withdrawn}" >Withdrawn</p>
+                                <p th:if="${previousView.submitted}" >Application submitted</p>
                                 <div class="action">
                                     <th:block th:if="${previousView.canHideApplication()}">
                                         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
@@ -230,6 +238,7 @@
                                         </form>
                                     </th:block>
                                 </div>
+                                </span>
                             </div>
                         </li>
                     </ul>
