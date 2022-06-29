@@ -33,5 +33,28 @@ public class PreviousDashboardRowViewModelTest {
         assertFalse(viewModel.isCreatedOrOpen());
         assertFalse(viewModel.isInformedIneligible());
         assertFalse(viewModel.isRejected());
+        assertFalse(viewModel.isExpressionOfInterest());
+    }
+
+    @Test
+    public void testConstructEOIEnabled() {
+        PreviousDashboardRowViewModel viewModel = new PreviousDashboardRowViewModel(null,
+                1L,
+                1L,
+                "Competition",
+                APPROVED,
+                null,
+                YESTERDAY,
+                false,
+                false,
+                CompetitionCompletionStage.PROJECT_SETUP,
+                true);
+        assertEquals("/application/1/summary", viewModel.getLinkUrl());
+        assertEquals("Untitled application", viewModel.getTitle());
+        assertTrue(viewModel.isApproved());
+        assertFalse(viewModel.isCreatedOrOpen());
+        assertFalse(viewModel.isInformedIneligible());
+        assertFalse(viewModel.isRejected());
+        assertTrue(viewModel.isExpressionOfInterest());
     }
 }
