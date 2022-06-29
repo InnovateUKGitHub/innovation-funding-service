@@ -74,7 +74,7 @@ public class CompetitionPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "MANAGE_INNOVATION_LEADS", description = "Competition Admin and Project Finance can add, remove and view innovation leads for a competition")
     public boolean internalAdminCanManageInnovationLeadsForCompetition(CompetitionResource competition, UserResource user) {
-        return isInternalAdmin(user);
+        return hasCompetitionAdministratorAuthority(user);
     }
 
     @PermissionRule(value = "VIEW_PREVIOUS_APPLICATIONS", description = "Internal users (barring innovation leads and stakeholders), and IFS Admin can view previous applications")
@@ -95,18 +95,18 @@ public class CompetitionPermissionRules extends BasePermissionRules {
             description = "Comp admins are able to delete competitions in preparation prior to them being in the Open state",
             particularBusinessState = "Competition is in preparation")
     public boolean internalAdminAndIFSAdminCanDeleteCompetitionInPreparation(CompetitionResource competition, UserResource user) {
-        return (isInternalAdmin(user) || hasIFSAdminAuthority(user)) &&
+        return (hasCompetitionAdministratorAuthority(user) || hasIFSAdminAuthority(user)) &&
                 EnumSet.of(COMPETITION_SETUP, READY_TO_OPEN).contains(competition.getCompetitionStatus());
     }
 
     @PermissionRule(value = "CHOOSE_POST_AWARD_SERVICE", description = "Competition Admin can set post award service on a competition")
     public boolean internalAdminCanSetPostAwardServiceForCompetition(CompetitionResource competition, UserResource user) {
-        return isInternalAdmin(user);
+        return hasCompetitionAdministratorAuthority(user);
     }
 
     @PermissionRule(value = "READ_POST_AWARD_SERVICE", description = "Competition Admin can read post award service on a competition")
     public boolean internalAdminCanReadPostAwardServiceForCompetition(CompetitionResource competition, UserResource user) {
-        return isInternalAdmin(user);
+        return hasCompetitionAdministratorAuthority(user);
     }
 
     @PermissionRule(value = "READ_POST_AWARD_SERVICE", description = "Allowed for users part of project on competition to read post award service during project setup")

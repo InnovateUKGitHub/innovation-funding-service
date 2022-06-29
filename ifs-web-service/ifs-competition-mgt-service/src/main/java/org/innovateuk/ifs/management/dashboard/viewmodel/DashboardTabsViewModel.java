@@ -17,11 +17,11 @@ public class DashboardTabsViewModel {
     }
 
     public boolean upcoming() {
-        return isInternalAdmin(userResource);
+        return hasCompetitionAdministratorAuthority(userResource);
     }
 
     public boolean nonIFS() {
-        return isInternalAdmin(userResource);
+        return hasCompetitionAdministratorAuthority(userResource);
     }
 
     public boolean projectSetup() {
