@@ -141,12 +141,41 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
     }
 
     @Override
+    public ServiceResult<ApplicationSummaryPageResource> getSubmittedEoiApplicationSummariesByCompetitionId(
+            long competitionId,
+            String sortBy,
+            int pageIndex,
+            int pageSize,
+            Optional<String> filter,
+            Optional<FundingDecisionStatus> fundingFilter,
+            Optional<Boolean> sendFilter) {
+
+        String filterString = trimFilterString(filter);
+
+        return applicationSummaries(sortBy, pageIndex, pageSize,
+                pageable -> applicationRepository.findEoiByApplicationStateAndFundingDecision(
+                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), sendFilter.orElse(null), pageable),
+                () -> applicationRepository.findEoiByApplicationStateAndFundingDecision(
+                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), sendFilter.orElse(null)));
+    }
+
+    @Override
     public ServiceResult<List<Long>> getAllSubmittedApplicationIdsByCompetitionId(
             long competitionId,
             Optional<String> filter,
             Optional<FundingDecisionStatus> fundingFilter) {
         String filterString = trimFilterString(filter);
         return serviceSuccess(applicationRepository.findApplicationIdsByApplicationStateAndFundingDecision(competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), null));
+    }
+
+    @Override
+    public ServiceResult<List<Long>> getAllSubmittedEoiApplicationIdsByCompetitionId(
+            long competitionId,
+            Optional<String> filter,
+            Optional<FundingDecisionStatus> fundingFilter,
+            Optional<Boolean> sendFilter) {
+        String filterString = trimFilterString(filter);
+        return serviceSuccess(applicationRepository.findEoiApplicationIdsByApplicationStateAndFundingDecision(competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), sendFilter.orElse(null)));
     }
 
     @Override

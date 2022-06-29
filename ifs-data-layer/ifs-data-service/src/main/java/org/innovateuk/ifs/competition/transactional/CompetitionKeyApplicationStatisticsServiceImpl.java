@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.repository.CompetitionAssessmentConfigRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyApplicationStatisticsResource;
+import org.innovateuk.ifs.competition.resource.CompetitionEoiKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
@@ -90,6 +91,16 @@ public class CompetitionKeyApplicationStatisticsServiceImpl extends BaseTransact
                 .countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNull(competitionId));
 
         return serviceSuccess(competitionFundedKeyApplicationStatisticsResource);
+    }
+
+    @Override
+    public ServiceResult<CompetitionEoiKeyApplicationStatisticsResource> getEoiKeyStatisticsByCompetition(long competitionId) {
+        CompetitionEoiKeyApplicationStatisticsResource competitionEoiKeyApplicationStatisticsResource = new CompetitionEoiKeyApplicationStatisticsResource();
+
+        int eoiApplicationsSubmitted = applicationRepository.countByCompetitionIdAndApplicationExpressionOfInterestConfigEnabledForExpressionOfInterestTrueAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATES);
+        competitionEoiKeyApplicationStatisticsResource.setApplicationsSubmitted(eoiApplicationsSubmitted);
+
+        return serviceSuccess(competitionEoiKeyApplicationStatisticsResource);
     }
 
     private int getFundingDecisionCount(List<Application> applications, FundingDecisionStatus fundingDecisionStatus) {

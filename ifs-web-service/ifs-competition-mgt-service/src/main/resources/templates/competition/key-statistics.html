@@ -87,4 +87,15 @@
             </li>
         </ul>
     </th:block>
+
+    <th:block th:fragment="eoi-key-statistics(keyStatistics)">
+        <ul class="govuk-list govuk-grid-row govuk-!-margin-top-6">
+            <li th:if="${keyStatistics.statOne != null}" class="govuk-grid-column-one-third">
+                <div class="highlight-panel highlight-panel-padded">
+                    <span class="govuk-heading-l govuk-!-margin-bottom-0" th:text="${keyStatistics.statOne}">4</span>
+                    <small>Expression of interest</small>
+                </div>
+            </li>
+        </ul>
+    </th:block>
 </html>

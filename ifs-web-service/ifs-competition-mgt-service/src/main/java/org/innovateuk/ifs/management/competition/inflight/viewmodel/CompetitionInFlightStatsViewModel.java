@@ -121,6 +121,10 @@ public class CompetitionInFlightStatsViewModel {
         this.displayAssessorStats = CompetitionCompletionStage.COMPETITION_CLOSE.equals(completionStage);
     }
 
+    public CompetitionInFlightStatsViewModel(CompetitionEoiKeyApplicationStatisticsResource keyStatisticsResource) {
+        this.statOne = keyStatisticsResource.getApplicationsSubmitted();
+    }
+
     public CompetitionStatus getStatus() {
         return status;
     }

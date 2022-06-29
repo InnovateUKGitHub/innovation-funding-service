@@ -16,6 +16,7 @@ public class ApplicationsMenuViewModel {
     private long applicationsSubmitted;
     private long ineligibleApplications;
     private boolean innovationLeadView;
+    private boolean eoiEnabled;
 
     public ApplicationsMenuViewModel(CompetitionResource competitionResource,
                                      long assessorsInvited,
@@ -31,6 +32,7 @@ public class ApplicationsMenuViewModel {
         this.applicationsSubmitted = applicationsSubmitted;
         this.ineligibleApplications = ineligibleApplications;
         this.innovationLeadView = innovationLeadView;
+        this.eoiEnabled = competitionResource.isEnabledForPreRegistration();
     }
 
     public boolean isDisplayAssessorStats() {
@@ -67,5 +69,9 @@ public class ApplicationsMenuViewModel {
 
     private boolean isDisplayAssessorStats(CompetitionResource competitionResource) {
         return !CompetitionCompletionStage.COMPETITION_CLOSE.equals(competitionResource.getCompletionStage()) && competitionResource.isHasAssessmentStage();
+    }
+
+    public boolean isEoiEnabled() {
+        return eoiEnabled;
     }
 }

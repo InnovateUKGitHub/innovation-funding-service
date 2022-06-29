@@ -90,4 +90,14 @@ public class CompetitionInFlightStatsModelPopulator {
                 return new CompetitionInFlightStatsViewModel();
         }
     }
+
+    public CompetitionInFlightStatsViewModel populateEoiStatsViewModel(CompetitionResource competitionResource) {
+        if (competitionResource.isEnabledForPreRegistration()) {
+            return new CompetitionInFlightStatsViewModel(
+                    competitionKeyApplicationStatisticsRestService.getEoiKeyStatisticsByCompetition(
+                            competitionResource.getId()).getSuccess());
+        } else {
+            return new CompetitionInFlightStatsViewModel();
+        }
+    }
 }
