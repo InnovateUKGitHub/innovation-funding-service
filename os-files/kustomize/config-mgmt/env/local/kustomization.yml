@@ -5,6 +5,7 @@ commonAnnotations:
 resources:
   - ../../base
   - idp-metadata.yml
+  - rabbitmq-config.yml
 
 patchesStrategicMerge:
   - spring-profile-env.yml

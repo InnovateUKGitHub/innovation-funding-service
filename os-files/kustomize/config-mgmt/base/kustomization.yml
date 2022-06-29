@@ -18,4 +18,3 @@ resources:
   - spring-profile-env.yml
   - web-config.yml
   - file-storage-service-config.yml
-  - rabbitmq-config.yml
