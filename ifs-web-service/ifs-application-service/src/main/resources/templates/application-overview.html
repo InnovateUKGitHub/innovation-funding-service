@@ -130,7 +130,7 @@
     <a id="application-overview-print"
        class="button-clear"
        th:href="@{/application/{id}/print(id=${model.application.id})}" rel="nofollow" target="_blank">
-        <span class="icon icon-print"></span> Print your application</a>
+        <span class="icon icon-print"></span> Print your <span th:text="${model.application.isEnabledForExpressionOfInterest()} ? |expression of interest| : |application|" /></a>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
