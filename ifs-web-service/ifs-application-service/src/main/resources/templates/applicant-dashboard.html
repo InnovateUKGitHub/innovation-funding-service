@@ -196,14 +196,11 @@
                                 </ul>
                             </div>
 
-                                <th:block th:if="${previousView.expressionOfInterest}">
-                                    <div class="status">
-                                    <span class="status-msg msg-deadline-waiting">Expression of interest</span>
-                                </th:block>
-                            <th:block th:unless="${previousView.expressionOfInterest}">
-                                <div>
-                            </th:block>
-                                <span class="status-msg msg-progress">
+                             <div  th:classappend="${previousView.expressionOfInterest} ? 'status':''" >
+                                 <th:block th:if="${previousView.expressionOfInterest}">
+                                     <span class="status-msg msg-deadline-waiting">Expression of interest</span>
+                                 </th:block>
+                                 <span class="status-msg msg-progress">
                                 <p th:if="${previousView.rejected}">Unsuccessful</p>
                                 <p th:if="${previousView.approved}" Successful</p>
                                 <p th:if="${previousView.createdOrOpen}" >Not submitted</p>
