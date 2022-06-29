@@ -10,6 +10,8 @@ import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.management.competition.inflight.populator.CompetitionInFlightStatsModelPopulator;
+import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightStatsViewModel;
 import org.innovateuk.ifs.management.funding.controller.CompetitionManagementFundingDecisionController;
 import org.innovateuk.ifs.management.funding.form.FundingDecisionFilterForm;
 import org.innovateuk.ifs.management.funding.form.FundingDecisionSelectionCookie;
@@ -81,6 +83,9 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
     @Mock
     private ApplicationFundingDecisionService applicationFundingDecisionService;
 
+    @Mock
+    private CompetitionInFlightStatsModelPopulator competitionInFlightStatsModelPopulator;
+
     private MockMvc mockMvc;
 
     private final FundingDecisionSelectionCookie cookieWithFilterAndSelectionParameters = createCookieWithFilterAndSelectionParameters();
@@ -98,6 +103,8 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         validator.afterPropertiesSet();
         ReflectionTestUtils.setField(controller, "validator", validator);
 
+        when(competitionInFlightStatsModelPopulator.populateEoiStatsViewModel(any(CompetitionResource.class)))
+                .thenReturn(new CompetitionInFlightStatsViewModel());
     }
 
     private FundingDecisionSelectionCookie createCookieWithFilterAndSelectionParameters() {
