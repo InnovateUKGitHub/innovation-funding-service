@@ -8,6 +8,7 @@ public class QuestionnaireQuestionConfigForm {
     private String title;
     private String question;
     private String guidance;
+    private String message;
 
     private List<QuestionnaireQuestionOptionForm> options = new ArrayList<>();
 
@@ -33,6 +34,14 @@ public class QuestionnaireQuestionConfigForm {
 
     public void setGuidance(String guidance) {
         this.guidance = guidance;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public List<QuestionnaireQuestionOptionForm> getOptions() {
