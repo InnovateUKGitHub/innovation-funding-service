@@ -134,6 +134,12 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                     q.getMarkAsCompletedEnabled() &&
                     q.getQuestionSetupType().hasFormInputResponses());
 
+            if (applicationData.getCompetition().isEnabledForPreRegistration()) {
+                questionsToAnswer = questionsToAnswer.stream()
+                        .filter(questionResource -> questionResource.isEnabledForPreRegistration())
+                        .collect(toList());
+            }
+
             List<QuestionResponseDataBuilder> responseBuilders = simpleMap(questionsToAnswer, question -> {
 
                 String answerValue = "This is the applicant response for " + question.getName().toLowerCase() + ".";
