@@ -30,8 +30,10 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.finance.builder.EquipmentCostBuilder.newEquipment;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
+import static org.innovateuk.ifs.finance.resource.cost.OverheadRateType.HORIZON_EUROPE_GUARANTEE_TOTAL;
 
 /**
  * Generates Indisutrial Finances for an Organisation on an Application
@@ -111,11 +113,29 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
                         .build());
     }
 
+    public IndustrialCostDataBuilder withEquipment(String item, BigDecimal cost, Integer quantity) {
+        return addCostItem("Equipment", (finance) ->
+                newEquipment()
+                        .withId()
+                        .withItem(item)
+                        .withCost(cost)
+                        .withQuantity(quantity)
+                        .withTargetId(finance.getId())
+                        .build());
+    }
+
     public IndustrialCostDataBuilder withCapitalUsage(Integer depreciation, String description, boolean existing,
                                                       BigDecimal presentValue, BigDecimal residualValue,
                                                       Integer utilisation) {
         return addCostItem("Capital Usage", (finance) ->
                 new CapitalUsage(null, depreciation, description, existing ? "Existing" : "New", presentValue, residualValue, utilisation, finance.getId()));
+    }
+
+    public IndustrialCostDataBuilder withOtherGoods(Integer depreciation, String description, boolean existing,
+                                                      BigDecimal presentValue, BigDecimal residualValue,
+                                                      Integer utilisation) {
+        return addCostItem("Other Goods", (finance) ->
+                new OtherGoods(null, depreciation, description, existing ? "Existing" : "New", presentValue, residualValue, utilisation, finance.getId()));
     }
 
     public IndustrialCostDataBuilder withSubcontractingCost(String name, String country, String role, BigDecimal cost) {
@@ -231,12 +251,24 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
         return doSetAdministrativeSupportCosts(OverheadRateType.NONE, OverheadRateType.NONE.getRate());
     }
 
+    public IndustrialCostDataBuilder withHecpAdministrationSupportCostsNone() {
+        return doSetAdministrativeSupportCostsHecp(HORIZON_EUROPE_GUARANTEE_TOTAL, HORIZON_EUROPE_GUARANTEE_TOTAL.getRate());
+    }
+
     public IndustrialCostDataBuilder withAdministrationSupportCostsDefaultRate() {
         return doSetAdministrativeSupportCosts(OverheadRateType.DEFAULT_PERCENTAGE, OverheadRateType.DEFAULT_PERCENTAGE.getRate());
     }
 
+    public IndustrialCostDataBuilder withHecpAdministrationSupportCostsDefaultRate() {
+        return doSetAdministrativeSupportCostsHecp(HORIZON_EUROPE_GUARANTEE_TOTAL, HORIZON_EUROPE_GUARANTEE_TOTAL.getRate());
+    }
+
     public IndustrialCostDataBuilder withAdministrationSupportCostsTotalRate(Integer customRate) {
         return doSetAdministrativeSupportCosts(OverheadRateType.TOTAL, customRate);
+    }
+
+    public IndustrialCostDataBuilder withHecpAdministrationSupportCostsTotalRate(Integer customRate) {
+        return doSetAdministrativeSupportCostsHecp(HORIZON_EUROPE_GUARANTEE_TOTAL, customRate);
     }
 
     public IndustrialCostDataBuilder withProcurementOverheads(String item, int project, int company) {
@@ -306,6 +338,13 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     private IndustrialCostDataBuilder doSetAdministrativeSupportCosts(OverheadRateType rateType, Integer rate) {
         return updateCostItem(Overhead.class, FinanceRowType.OVERHEADS, existingCost -> {
             Overhead updated = new Overhead(existingCost.getId(), rateType, rate, existingCost.getTargetId());
+            financeRowCostsService.update(existingCost.getId(), updated);
+        });
+    }
+
+    private IndustrialCostDataBuilder doSetAdministrativeSupportCostsHecp(OverheadRateType rateType, Integer rate) {
+        return updateCostItem(HecpIndirectCosts.class, FinanceRowType.HECP_INDIRECT_COSTS, existingCost -> {
+            HecpIndirectCosts updated = new HecpIndirectCosts(existingCost.getId(), rateType, rate, existingCost.getTargetId());
             financeRowCostsService.update(existingCost.getId(), updated);
         });
     }

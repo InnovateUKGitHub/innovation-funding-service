@@ -30,7 +30,7 @@ import java.util.Optional;
 import static java.util.stream.Collectors.joining;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.hasCompetitionAdministratorAuthority;
 
 /**
  * This controller will handle the management of the Monitoring Officer on projects
@@ -76,7 +76,7 @@ public class LegacyMonitoringOfficerController {
     }
 
     private MonitoringOfficerViewModel populateMonitoringOfficerViewModel(ProjectResource project, UserResource user) {
-        boolean editable = isInternalAdmin(user) && project.getProjectState().isActive();
+        boolean editable = hasCompetitionAdministratorAuthority(user) && project.getProjectState().isActive();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(project.getCompetition()).getSuccess();
         String projectManagerName = getProjectManagerName(project);

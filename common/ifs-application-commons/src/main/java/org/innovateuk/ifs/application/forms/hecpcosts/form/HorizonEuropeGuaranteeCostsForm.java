@@ -5,26 +5,28 @@ import lombok.Setter;
 
 import java.math.BigInteger;
 
-@Getter
+
 @Setter
+@Getter
 public class HorizonEuropeGuaranteeCostsForm {
 
-    private BigInteger labour;
-    private BigInteger overhead;
-    private BigInteger material;
-    private BigInteger capital;
+    private BigInteger personnel;
+    private BigInteger hecpIndirectCosts;
+    private BigInteger equipment;
+    private BigInteger otherGoods;
     private BigInteger subcontracting;
     private BigInteger travel;
     private BigInteger other;
 
     /* view logic. */
     public BigInteger getOrganisationFinanceTotal() {
-        return labour
-                .add(overhead)
-                .add(material)
-                .add(capital)
+        return personnel
+                .add(hecpIndirectCosts)
+                .add(equipment)
+                .add(otherGoods)
                 .add(subcontracting)
                 .add(travel)
                 .add(other);
     }
+
 }

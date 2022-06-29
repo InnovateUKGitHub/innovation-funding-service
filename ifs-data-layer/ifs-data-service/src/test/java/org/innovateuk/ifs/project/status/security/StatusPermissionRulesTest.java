@@ -151,7 +151,7 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
     @Test
     public void internalAdminTeamCanViewCompetitionStatus() {
         allGlobalRoleUsers.forEach(user -> {
-            if (isInternalAdmin(user)) {
+            if (hasCompetitionAdministratorAuthority(user)) {
                 assertTrue(rules.internalAdminTeamCanViewCompetitionStatus(newCompetitionResource().build(), user));
             } else {
                 assertFalse(rules.internalAdminTeamCanViewCompetitionStatus(newCompetitionResource().build(), user));
@@ -195,7 +195,7 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
     @Test
     public void internalAdminTeamCanViewProjectStatus() {
         allGlobalRoleUsers.forEach(user -> {
-            if (isInternalAdmin(user)) {
+            if (hasCompetitionAdministratorAuthority(user)) {
                 assertTrue(rules.internalAdminTeamCanViewProjectStatus(newProjectResource().build(), user));
             } else {
                 assertFalse(rules.internalAdminTeamCanViewProjectStatus(newProjectResource().build(), user));

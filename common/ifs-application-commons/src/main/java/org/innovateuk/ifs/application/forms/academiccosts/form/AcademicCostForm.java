@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.forms.academiccosts.form;
 
-import javax.validation.constraints.NotBlank;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.NOT_BLANK_MESSAGE;
@@ -11,43 +11,32 @@ public class AcademicCostForm {
 
     @NotBlank(message = NOT_BLANK_MESSAGE)
     private String tsbReference;
-
     private BigDecimal incurredStaff;
     private BigDecimal incurredTravel;
     private BigDecimal incurredOtherCosts;
-
     private BigDecimal allocatedInvestigators;
     private BigDecimal allocatedEstateCosts;
     private BigDecimal allocatedOtherCosts;
-
     private BigDecimal indirectCosts;
-
     private BigDecimal exceptionsStaff;
     private BigDecimal exceptionsOtherCosts;
-
     private MultipartFile jesFile;
     private String filename;
-
     public String getTsbReference() {
         return tsbReference;
     }
-
     public void setTsbReference(String tsbReference) {
         this.tsbReference = tsbReference;
     }
-
     public BigDecimal getIncurredStaff() {
         return incurredStaff;
     }
-
     public void setIncurredStaff(BigDecimal incurredStaff) {
         this.incurredStaff = incurredStaff;
     }
-
     public BigDecimal getIncurredTravel() {
         return incurredTravel;
     }
-
     public void setIncurredTravel(BigDecimal incurredTravel) {
         this.incurredTravel = incurredTravel;
     }
@@ -136,9 +125,7 @@ public class AcademicCostForm {
     public BigDecimal getTotalExceptions() {
         return exceptionsStaff.add(exceptionsOtherCosts);
     }
-
     public BigDecimal getTotal() {
         return getTotalIncurred().add(getTotalAllocated()).add(indirectCosts).add(getTotalExceptions());
     }
-
 }

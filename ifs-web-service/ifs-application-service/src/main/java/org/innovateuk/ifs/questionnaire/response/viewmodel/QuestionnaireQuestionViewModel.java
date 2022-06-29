@@ -15,16 +15,22 @@ public class QuestionnaireQuestionViewModel {
     private String subtitle;
     private String question;
     private String guidance;
+    private String message;
     private List<Pair<Long, String>> options;
     private AnswerTableViewModel previousQuestions;
 
-    public QuestionnaireQuestionViewModel(String questionnaireResponseId, String subtitle, QuestionnaireQuestionResource question, List<QuestionnaireOptionResource> options, AnswerTableViewModel previousQuestions) {
+    public QuestionnaireQuestionViewModel(String questionnaireResponseId,
+                                          String subtitle,
+                                          QuestionnaireQuestionResource question,
+                                          List<QuestionnaireOptionResource> options,
+                                          AnswerTableViewModel previousQuestions) {
         this.questionnaireResponseId = questionnaireResponseId;
         this.subtitle = subtitle;
         this.questionnaireQuestionId = question.getId();
         this.title = question.getTitle();
         this.question = question.getQuestion();
         this.guidance = question.getGuidance();
+        this.message = question.getMessage();
         this.options = options.stream()
                 .map(option -> Pair.of(option.getId(), option.getText()))
                 .collect(Collectors.toList());
@@ -53,6 +59,10 @@ public class QuestionnaireQuestionViewModel {
 
     public String getGuidance() {
         return guidance;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     public List<Pair<Long, String>> getOptions() {

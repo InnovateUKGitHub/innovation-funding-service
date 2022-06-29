@@ -4,9 +4,11 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.builder.ApplicationBuilder;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationExpressionOfInterestConfig;
 import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
+import org.innovateuk.ifs.application.repository.ApplicationExpressionOfInterestConfigRepository;
 import org.innovateuk.ifs.application.repository.ApplicationOrganisationAddressRepository;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.*;
@@ -140,6 +142,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
     private ArgumentCaptor<Application> applicationArgumentCaptor;
 
+
+    @Mock
+    private ApplicationExpressionOfInterestConfigRepository applicationExpressionOfInterestConfigRepository;
+
     @Before
     public void setUp() throws Exception {
         Question question = QuestionBuilder.newQuestion().build();
@@ -242,19 +248,26 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void saveApplicationDetails_enableForEOI() {
+    public void saveApplicationDetails_enabledForExpressionOfInterest() {
 
         Long applicationId = 1L;
         applicationArgumentCaptor = ArgumentCaptor.forClass(Application.class);
-
+        CompetitionResource competitionResource = newCompetitionResource().withEnabledForExpressionOfInterest(true).build();
+        Competition competition = newCompetition().with(id(1L)).withCompetitionStatus(CompetitionStatus.OPEN).build();
         Application application = newApplication()
                 .withId(applicationId)
+                .withCompetition(competition)
                 .build();
+        ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig =
+                ApplicationExpressionOfInterestConfig.builder().
+                application(application).enabledForExpressionOfInterest(true).build();
+
+        application.setApplicationExpressionOfInterestConfig(applicationExpressionOfInterestConfig);
 
         ApplicationResource applicationResource = newApplicationResource()
-                .withEnableForEOI(true)
                 .build();
-
+        when(competitionMapper.mapToResource(competition)).thenReturn(competitionResource);
+        when(applicationExpressionOfInterestConfigRepository.findOneByApplicationId(applicationId)).thenReturn(of(applicationExpressionOfInterestConfig));
         when(applicationRepository.findById(applicationId)).thenReturn(of(application));
         when(applicationValidationUtil.isApplicationDetailsValid(any(Application.class))).thenReturn(Collections.emptyList());
 
@@ -265,7 +278,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         verify(applicationValidationUtil).isApplicationDetailsValid(applicationArgumentCaptor.capture());
         Application updated = applicationArgumentCaptor.getValue();
-        assertTrue(updated.isEnableForEOI());
+        assertTrue(updated.isEnabledForExpressionOfInterest());
     }
 
     @Test

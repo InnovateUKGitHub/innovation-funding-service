@@ -84,4 +84,36 @@ public class AssessorProfileAgreementControllerTest extends BaseControllerMockMV
 
         verify(profileRestService, only()).updateProfileAgreement(user.getId());
     }
+
+    @Test
+    public void printAgreement() throws Exception {
+        UserResource user = newUserResource().build();
+        setLoggedInUser(user);
+
+        ZonedDateTime expectedAgreementSignedDate = ZonedDateTime.now();
+        String expectedText = "Agreement text...";
+
+        ProfileAgreementResource profileAgreementResource = newProfileAgreementResource()
+                .withAgreementSignedDate(expectedAgreementSignedDate)
+                .withCurrentAgreement(true)
+                .withAgreement(newAgreementResource()
+                        .withText(expectedText)
+                        .build())
+                .build();
+
+        when(profileRestService.getProfileAgreement(user.getId())).thenReturn(restSuccess(profileAgreementResource));
+
+        AssessorProfileAgreementViewModel expectedViewModel = new AssessorProfileAgreementViewModel();
+        expectedViewModel.setCurrentAgreement(true);
+        expectedViewModel.setAgreementSignedDate(expectedAgreementSignedDate);
+        expectedViewModel.setText(expectedText);
+
+        mockMvc.perform(get("/profile/agreement/print"))
+                .andExpect(status().isOk())
+                .andExpect(model().hasNoErrors())
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(view().name("profile/agreement-print"));
+
+        verify(profileRestService, only()).getProfileAgreement(user.getId());
+    }
 }

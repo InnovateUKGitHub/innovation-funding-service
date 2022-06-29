@@ -32,9 +32,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
-
 @Component
 public class ProjectFinanceChangesViewModelPopulator {
 
@@ -163,6 +160,9 @@ public class ProjectFinanceChangesViewModelPopulator {
         if (FundingType.GRANT == competition.getFundingType() && FinanceRowType.OVERHEADS == rowType) {
             return "Overhead costs";
         }
+        if (FundingType.HECP == competition.getFundingType() && FinanceRowType.SUBCONTRACTING_COSTS == rowType) {
+            return "Subcontracting costs";
+        }
         if (FinanceRowType.PROCUREMENT_OVERHEADS == rowType) {
             return "Overhead costs";
         }
@@ -170,7 +170,7 @@ public class ProjectFinanceChangesViewModelPopulator {
             return "Your finance";
         }
 
-        return competition.isHorizonEuropeGuarantee() ? rowType.getHecpDisplayName() : rowType.getDisplayName();
+        return rowType.getDisplayName();
     }
 
     private ProjectFinanceChangesFinanceSummaryViewModel getFinanceSummaryViewModel(CompetitionResource competition, ApplicationFinanceResource appFinanceResource,

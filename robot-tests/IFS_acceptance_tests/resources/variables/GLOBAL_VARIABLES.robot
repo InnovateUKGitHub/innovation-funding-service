@@ -182,6 +182,7 @@ ${LARGE_ORGANISATION_SIZE}      LARGE
 ${UPLOAD_FOLDER}              uploaded_files
 ${DOWNLOAD_FOLDER}            download_files
 ${valid_pdf}                  testing.pdf
+${webtest_pdf}                test.pdf
 ${gol_pdf}                    GOL_template.pdf
 ${contract_pdf}               Contract.pdf
 ${valid_xls}                  testing.xls
@@ -197,6 +198,13 @@ ${valid_pdf excerpt}          Adobe PDF is an ideal format for electronic docume
 ${ods_file}                   file_example_ODS.ods
 ${assessment-as-service}      assessment-as-service.csv
 ${32MB_large_pdf}             32mb_file.pdf
+
+#shell scripts folder
+${shellScriptFolder}          shell_scripts
+${cloudEDICurl}               cloudEDICurl.sh
+${localEDICurl}               localEDICurl.sh
+${cloudLoanCurl}              cloudLoanCurl.sh
+${localLoanCurl}              localLoanCurl.sh
 
 # Assessor variables
 ${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}     ${assessment_ids["${IN_ASSESSMENT_APPLICATION_4_TITLE}"]["${assessor_credentials["email"]}"]}
@@ -315,6 +323,7 @@ ${compType_DirectAward}  Direct award
 @{Hecp_questions}                         Tell us where your organisation is based   Participating Organisation project region  What EIC call have you been successfully evaluated for?  Application reference number  UK Funding contribution applied for (GBP)  Have the tasks assigned to your institution changed significantly since the original application?   If this amount has changed please tell us how?  Will you, as a UK institution, be employing PhD students as part of this project?   If so, how many PhD students will be employed at your institution on this project?   How much budget is allocated for PhD students employed at your institution on this project?
 @{Thirdparty_questions}                   How innovative is your project?  Your approach regarding innovation.  Your technical approach.
 @{Directaward_questions}                  Direct award placeholder question
+@{prereg_questions}                       Tell us where your organisation is based  What EIC call have you been successfully evaluated for?  Application reference number  UK Funding contribution applied for (GBP)  Have the tasks assigned to your institution changed significantly since the original application?   If this amount has changed please tell us how?  Will you, as a UK institution, be employing PhD students as part of this project?   If so, how many PhD students will be employed at your institution on this project?   How much budget is allocated for PhD students employed at your institution on this project?
 
 #SBRI Type 1 competition milestones
 @{sbriType1Milestones}     Open date  Briefing event  Submission date
