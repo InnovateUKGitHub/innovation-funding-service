@@ -32,11 +32,11 @@ spec:
           livenessProbe:
             exec:
               command: ["rabbitmq-diagnostics", "status"]
-            initialDelaySeconds: 10
+            initialDelaySeconds: 90
           readinessProbe:
             exec:
               command: ["rabbitmq-diagnostics", "ping"]
-            initialDelaySeconds: 10
+            initialDelaySeconds: 90
           imagePullPolicy: IfNotPresent
           env:
             - name: RABBITMQ_DEFAULT_USER
