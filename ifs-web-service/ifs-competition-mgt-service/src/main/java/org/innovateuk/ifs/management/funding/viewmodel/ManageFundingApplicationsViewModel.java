@@ -3,6 +3,7 @@ package org.innovateuk.ifs.management.funding.viewmodel;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
+import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightStatsViewModel;
 import org.innovateuk.ifs.management.funding.form.FundingDecisionFilterForm;
 import org.innovateuk.ifs.management.funding.form.FundingDecisionSelectionForm;
 import org.innovateuk.ifs.management.navigation.Pagination;
@@ -17,6 +18,7 @@ public class ManageFundingApplicationsViewModel {
     private boolean selectAllDisabled;
     private boolean selectionLimitWarning;
     private boolean eoi;
+    private CompetitionInFlightStatsViewModel keyStatistics;
 
     public ManageFundingApplicationsViewModel(Pagination pagination,
                                               ApplicationSummaryPageResource results,
@@ -25,7 +27,8 @@ public class ManageFundingApplicationsViewModel {
                                               CompetitionSummaryResource competitionSummary,
                                               boolean selectAllDisabled,
                                               boolean selectionLimitWarning,
-                                              boolean eoi) {
+                                              boolean eoi,
+                                              CompetitionInFlightStatsViewModel keyStatistics) {
         this.pagination = pagination;
         this.results = results;
         this.selectionForm = selectionForm;
@@ -34,6 +37,7 @@ public class ManageFundingApplicationsViewModel {
         this.selectAllDisabled = selectAllDisabled;
         this.selectionLimitWarning = selectionLimitWarning;
         this.eoi = eoi;
+        this.keyStatistics = keyStatistics;
     }
 
     public Pagination getPagination() {
@@ -74,5 +78,13 @@ public class ManageFundingApplicationsViewModel {
 
     public boolean isEoi() {
         return eoi;
+    }
+
+    public CompetitionInFlightStatsViewModel getKeyStatistics() {
+        return keyStatistics;
+    }
+
+    public void setKeyStatistics(CompetitionInFlightStatsViewModel keyStatistics) {
+        this.keyStatistics = keyStatistics;
     }
 }

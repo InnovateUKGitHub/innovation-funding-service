@@ -6,6 +6,8 @@ import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.management.competition.inflight.populator.CompetitionInFlightStatsModelPopulator;
+import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightStatsViewModel;
 import org.innovateuk.ifs.management.funding.form.FundingDecisionFilterForm;
 import org.innovateuk.ifs.management.funding.form.FundingDecisionPaginationForm;
 import org.innovateuk.ifs.management.funding.form.FundingDecisionSelectionForm;
@@ -30,16 +32,18 @@ import static org.innovateuk.ifs.management.cookie.CompetitionManagementCookieCo
 public class CompetitionManagementFundingDecisionModelPopulator  {
 
     private static final int PAGE_SIZE = 20;
+
+    @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
+
     @Value("${ifs.always.open.competition.enabled}")
     private boolean alwaysOpenCompetitionEnabled;
+
     @Autowired
     private CompetitionRestService competitionRestService;
 
     @Autowired
-    public CompetitionManagementFundingDecisionModelPopulator(ApplicationSummaryRestService applicationSummaryRestService) {
-        this.applicationSummaryRestService = applicationSummaryRestService;
-    }
+    private CompetitionInFlightStatsModelPopulator competitionInFlightStatsModelPopulator;
 
     public ManageFundingApplicationsViewModel populate(long competitionId,
                                                        FundingDecisionPaginationForm paginationForm,
@@ -51,6 +55,9 @@ public class CompetitionManagementFundingDecisionModelPopulator  {
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService
                 .getCompetitionSummary(competitionId)
                 .getSuccess();
+
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        CompetitionInFlightStatsViewModel keyStatistics = competitionInFlightStatsModelPopulator.populateEoiStatsViewModel(competitionResource);
 
         List<Long> submittableApplicationIds = getAllApplicationIdsByFilters(competitionId, fundingDecisionFilterForm);
         boolean selectionLimitWarning = limitIsExceeded(submittableApplicationIds.size());
@@ -64,7 +71,8 @@ public class CompetitionManagementFundingDecisionModelPopulator  {
                 competitionSummary,
                 selectAllDisabled,
                 selectionLimitWarning,
-                fundingDecisionFilterForm.isEoi()
+                fundingDecisionFilterForm.isEoi(),
+                keyStatistics
         );
     }
 
