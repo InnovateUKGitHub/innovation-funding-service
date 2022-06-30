@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sba
+  annotations:
+    pullSecrets: pullSecrets
+spec:
+  selector:
+    matchLabels:
+      app: sba
+  template:
+    metadata:
+      labels:
+        app: sba
+    spec:
+      containers:
+        - name: sba
+          image: docker-ifs.devops.innovateuk.org/snapshots/sba:ARCHIVE-BTS-SKAFFOLDBUILD-11_75f1c6a81ee4c0d19d1272f4885215f3e2b0f448@sha256:4054e468ce31840c21fd817d0d7881c5d67570e058381640f14dfa005a5168ae
+          ports:
+            - containerPort: 7443
+          envFrom:
+            - secretRef:
+                name: sba-secret
+
