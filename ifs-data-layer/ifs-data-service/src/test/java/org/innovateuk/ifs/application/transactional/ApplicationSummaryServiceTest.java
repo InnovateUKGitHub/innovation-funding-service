@@ -433,6 +433,38 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
+    public void findByCompetitionSubmittedEoiApplications() {
+
+        Page<Application> page = mock(Page.class);
+
+        ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+        when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
+
+        when(applicationRepositoryMock.findEoiByApplicationStateAndFundingDecision(
+                eq(COMP_ID),
+                eq(asLinkedSet(APPROVED, REJECTED, SUBMITTED)),
+                eq(""),
+                eq(UNFUNDED),
+                eq(false),
+                argThat(new PageableMatcher(0, 20, srt("id", ASC)))))
+                .thenReturn(page);
+
+        ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService
+                .getSubmittedEoiApplicationSummariesByCompetitionId(
+                        COMP_ID,
+                        "id",
+                        0,
+                        20,
+                        of(""),
+                        of(UNFUNDED),
+                        of(false));
+
+        assertTrue(result.isSuccess());
+        assertEquals(0, result.getSuccess().getNumber());
+        assertEquals(resource, result.getSuccess());
+    }
+
+    @Test
     public void findByCompetitionIneligibleApplications() {
 
         Page<Application> page = mock(Page.class);
@@ -552,6 +584,24 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
                 eq(COMP_ID), eq(SUBMITTED_STATES),  eq("filter"), eq(UNFUNDED), eq(null))).thenReturn(ids);
 
         ServiceResult<List<Long>> result = applicationSummaryService.getAllSubmittedApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(UNFUNDED));
+        assertTrue(result.isSuccess());
+        assertEquals(2, result.getSuccess().size());
+        assertEquals(applications.get(0).getId(), result.getSuccess().get(0));
+        assertEquals(applications.get(1).getId(), result.getSuccess().get(1));
+    }
+
+    @Test
+    public void getAllSubmittedEoiApplicationIdsByCompetitionId() {
+        List<Application> applications = newApplication()
+                .withFundingDecision(UNFUNDED)
+                .build(2);
+
+        List<Long> ids = applications.stream().map(Application::getId).collect(Collectors.toList());
+
+        when(applicationRepositoryMock.findEoiApplicationIdsByApplicationStateAndFundingDecision(
+                eq(COMP_ID), eq(SUBMITTED_STATES),  eq("filter"), eq(UNFUNDED), eq(false))).thenReturn(ids);
+
+        ServiceResult<List<Long>> result = applicationSummaryService.getAllSubmittedEoiApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(UNFUNDED), of(false));
         assertTrue(result.isSuccess());
         assertEquals(2, result.getSuccess().size());
         assertEquals(applications.get(0).getId(), result.getSuccess().get(0));
