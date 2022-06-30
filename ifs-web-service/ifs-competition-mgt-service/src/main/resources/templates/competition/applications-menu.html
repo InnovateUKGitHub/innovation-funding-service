@@ -16,28 +16,38 @@
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'" />
 
                 <h2 class="govuk-heading-m">Key statistics</h2>
-                <ul class="govuk-list govuk-grid-row">
-                    <li th:if="${model.displayAssessorStats}" class="govuk-grid-column-one-quarter">
+                <ul class="govuk-list govuk-grid-row" th:with="rowClass=|${(model.eoiEnabled && model.displayAssessorStats) ? 'grid-column-one-fifth' : ((model.eoiEnabled || model.displayAssessorStats) ? 'govuk-grid-column-one-quarter' : 'govuk-grid-column-one-third')}|">
+                    <li th:if="${model.eoiEnabled}" th:classappend="${rowClass}">
+                        <div class="highlight-panel highlight-panel-padded">
+                            <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.expressionsOfInterestSubmitted}">0</span>
+                            <small>Expressions of interest</small>
+                        </div>
+                    </li>
+
+                    <li th:if="${model.displayAssessorStats}" th:classappend="${rowClass}">
                         <div class="highlight-panel highlight-panel-padded">
                             <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.assessorsInvited}">10</span>
                             <small>Assessors invited</small>
                         </div>
                     </li>
 
-                    <li th:classappend="${model.displayAssessorStats ? 'govuk-grid-column-one-quarter' : 'govuk-grid-column-one-third'}">
+                    <li th:classappend="${rowClass}">
                         <div class="highlight-panel highlight-panel-padded">
                             <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.applicationsInProgress}">6</span>
                             <small>Applications beyond 50%</small>
                         </div>
                     </li>
 
-                    <li th:classappend="${model.displayAssessorStats ? 'govuk-grid-column-one-quarter' : 'govuk-grid-column-one-third'}">
+                    <li th:classappend="${rowClass}">
                         <div class="highlight-panel highlight-panel-padded">
                             <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.applicationsSubmitted}">4</span>
-                            <small>Applications submitted</small>
+                            <small>
+                                <th:block th:text="${model.eoiEnabled ? 'Full applications' : 'Applications submitted'}">Applications submitted</th:block>
+                            </small>
                         </div>
                     </li>
-                    <li th:classappend="${model.displayAssessorStats ? 'govuk-grid-column-one-quarter' : 'govuk-grid-column-one-third'}">
+
+                    <li th:classappend="${rowClass}">
                         <div class="highlight-panel highlight-panel-padded">
                             <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.ineligibleApplications}">0</span>
                             <small>Ineligible applications</small>
