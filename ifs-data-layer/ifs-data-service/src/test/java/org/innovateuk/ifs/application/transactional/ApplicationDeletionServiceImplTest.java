@@ -46,6 +46,9 @@ public class ApplicationDeletionServiceImplTest extends BaseServiceUnitTest<Appl
     private ApplicationFinanceRepository applicationFinanceRepository;
 
     @Mock
+    private ApplicationExpressionOfInterestConfigRepository applicationExpressionOfInterestConfigRepository;
+
+    @Mock
     private ApplicationRepository applicationRepository;
 
     @Mock
@@ -132,6 +135,7 @@ public class ApplicationDeletionServiceImplTest extends BaseServiceUnitTest<Appl
         verify(questionStatusRepository).deleteByApplicationId(applicationId);
         verify(applicationHiddenFromDashboardRepository).deleteByApplicationId(applicationId);
         verify(processHistoryRepository).deleteByProcessId(application.getApplicationProcess().getId());
+        verify(applicationExpressionOfInterestConfigRepository).delete(application.getApplicationExpressionOfInterestConfig());
         verify(applicationRepository).delete(application);
         verify(notificationService, only()).sendNotificationWithFlush(notification, EMAIL);
         verify(applicationInviteRepository).deleteAll(application.getInvites());
