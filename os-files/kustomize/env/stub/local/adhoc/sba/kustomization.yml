@@ -1,0 +1,15 @@
+commonAnnotations:
+  deployedWith: kustomize
+  environment: local-dev
+
+resources:
+  - ../../../../../secrets-mgmt/env/local
+  - rbac/sba-rbac.yml
+
+components:
+  - ../../../../../components/sba
+  - ../../../../../patches/
+  - ../../patches/
+
+patchesStrategicMerge:
+  - sba.yml
