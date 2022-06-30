@@ -294,7 +294,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     public CompetitionDataBuilder moveCompetitionIntoFundersPanelStatus() {
-        return asCompAdmin(data -> shiftMilestoneToTomorrow(data, MilestoneType.NOTIFICATIONS));
+        return asCompAdmin(data -> {
+            if (!data.getCompetition().isAlwaysOpen()) {
+                shiftMilestoneToTomorrow(data, MilestoneType.NOTIFICATIONS);
+            }
+        });
     }
 
     public CompetitionDataBuilder sendFundingDecisions(List<Pair<String, FundingDecision>> fundingDecisions) {

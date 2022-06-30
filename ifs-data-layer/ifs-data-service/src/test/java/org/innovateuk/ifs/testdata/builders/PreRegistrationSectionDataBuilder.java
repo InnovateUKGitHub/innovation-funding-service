@@ -41,11 +41,15 @@ public class PreRegistrationSectionDataBuilder extends BaseDataBuilder<Void, Pre
 
     private void  markSectionForPreRegistration(SectionResource section, String subSectionName, String questionName) {
         section.setEnabledForPreRegistration(false);
-        section = sectionMapper.mapToResource(sectionRepository.save(sectionMapper.mapToDomain(section)));
+        section = saveSection(section);
 
         markQuestionForPreRegistration(section, questionName);
 
         markSubsectionForPreRegistration(section, subSectionName, questionName);
+    }
+
+    private SectionResource saveSection(SectionResource section) {
+        return sectionMapper.mapToResource(sectionRepository.save(sectionMapper.mapToDomain(section)));
     }
 
     private void markSubsectionForPreRegistration(SectionResource section, String subSectionName, String questionName) {

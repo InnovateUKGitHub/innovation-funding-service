@@ -56,7 +56,15 @@ public class CompetitionPreRegistrationWebTestData {
                 aPreRegistrationSectionLine()
                         .withCompetitionName("Horizon Europe Guarantee Pre Registration Competition with EOI Decision")
                         .withSectionName("Application questions")
+                        .withQuestionName("Tell us where your organisation is based"),
+                aPreRegistrationSectionLine()
+                        .withCompetitionName("Horizon Europe Guarantee Pre Registration Competition with EOI Decision")
+                        .withSectionName("Application questions")
                         .withQuestionName("Participating Organisation project region"),
+                aPreRegistrationSectionLine()
+                        .withCompetitionName("Horizon Europe Guarantee Pre Registration Competition with EOI Decision")
+                        .withSectionName("Application questions")
+                        .withQuestionName("What EIC call have you been successfully evaluated for?"),
                 aPreRegistrationSectionLine()
                         .withCompetitionName("Horizon Europe Guarantee Pre Registration Competition with EOI Decision")
                         .withSectionName("Application questions")
@@ -64,7 +72,15 @@ public class CompetitionPreRegistrationWebTestData {
                 aPreRegistrationSectionLine()
                         .withCompetitionName("Horizon Europe Guarantee Pre Registration Competition with EOI Decision")
                         .withSectionName("Application questions")
+                        .withQuestionName("If this amount has changed please tell us how?"),
+                aPreRegistrationSectionLine()
+                        .withCompetitionName("Horizon Europe Guarantee Pre Registration Competition with EOI Decision")
+                        .withSectionName("Application questions")
                         .withQuestionName("Have the tasks assigned to your institution changed significantly since the original application?"),
+                aPreRegistrationSectionLine()
+                        .withCompetitionName("Horizon Europe Guarantee Pre Registration Competition with EOI Decision")
+                        .withSectionName("Application questions")
+                        .withQuestionName("If so, how many PhD students will be employed at your institution on this project?"),
                 aPreRegistrationSectionLine()
                         .withCompetitionName("Horizon Europe Guarantee Pre Registration Competition with EOI Decision")
                         .withSectionName("Application questions")
