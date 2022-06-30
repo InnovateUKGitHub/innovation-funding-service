@@ -185,6 +185,7 @@
                     <h2 class="govuk-heading-m">Previous</h2>
                     <ul>
                         <li th:each="previousView : ${model.previous}"
+                            th:class="${previousView.approved} ? 'positive'"
                             th:classappend="${previousView.expressionOfInterest} ? 'status-2-col'" >
                             <div class="task">
                                 <h3 class="govuk-heading-s">
