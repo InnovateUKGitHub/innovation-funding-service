@@ -591,7 +591,7 @@ the user should see live project on dashboard
     the user clicks the application tile if displayed
     the user should not see the element    jQuery = .projects-in-setup ul li a:contains("${Elbow_Grease_Title}")
     the user should see the element        jQuery = .previous ul li a:contains("${Elbow_Grease_Title}")
-    the user should see the element        jQUery = .task:contains("${Elbow_Grease_Title}") ~ .status-and-action:contains("Live project")
+    the user should see the element        jQUery = .task:contains("${Elbow_Grease_Title}") ~ .status-msg:contains("Live project")
 
 Custom suite setup
     Connect to database  @{database}
