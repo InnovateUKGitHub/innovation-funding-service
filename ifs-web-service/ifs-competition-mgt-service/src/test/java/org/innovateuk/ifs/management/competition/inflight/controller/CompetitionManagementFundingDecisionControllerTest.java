@@ -10,6 +10,8 @@ import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.management.competition.inflight.populator.CompetitionInFlightStatsModelPopulator;
+import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightStatsViewModel;
 import org.innovateuk.ifs.management.funding.controller.CompetitionManagementFundingDecisionController;
 import org.innovateuk.ifs.management.funding.form.FundingDecisionFilterForm;
 import org.innovateuk.ifs.management.funding.form.FundingDecisionSelectionCookie;
@@ -26,6 +28,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
@@ -81,6 +84,9 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
     @Mock
     private ApplicationFundingDecisionService applicationFundingDecisionService;
 
+    @Mock
+    private CompetitionInFlightStatsModelPopulator competitionInFlightStatsModelPopulator;
+
     private MockMvc mockMvc;
 
     private final FundingDecisionSelectionCookie cookieWithFilterAndSelectionParameters = createCookieWithFilterAndSelectionParameters();
@@ -123,6 +129,8 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
         when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID)).thenReturn(restSuccess(competitionSummaryResource));
         when(applicationSummaryRestService.getAllSubmittedApplicationIds(COMPETITION_ID, empty(), empty())).thenReturn(restSuccess(asList(1L, 2L)));
+
+        when(competitionInFlightStatsModelPopulator.populateEoiStatsViewModel(competitionResource)).thenReturn(new CompetitionInFlightStatsViewModel());
 
         List<ApplicationSummaryResource> expectedSummaries = newApplicationSummaryResource()
                 .build(3);
