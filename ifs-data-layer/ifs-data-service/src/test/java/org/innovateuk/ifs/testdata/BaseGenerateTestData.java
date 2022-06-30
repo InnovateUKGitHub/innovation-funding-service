@@ -361,14 +361,14 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         CompletableFuture<Void> disableSectionForPreRegistrationFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(() ->
                 disableSectionForPreRegistrationForCompetitions(createCompetitionFutures), taskExecutor);
 
-        CompletableFuture.allOf(competitionFundersFutures,
+        CompletableFuture.allOf(disableSectionForPreRegistrationFutures,
+                                competitionFundersFutures,
                                 publicContentFutures,
                                 assessorFutures,
                                 competitionsFinalisedFuture,
                                 competitionOrganisationConfigFutures,
                                 supporterFutures,
-                                competitionAssessmentPeriodsFutures,
-                                disableSectionForPreRegistrationFutures
+                                competitionAssessmentPeriodsFutures
         ).join();
 
         UserResource user = userService.findByEmail("ifs_system_maintenance_user@innovateuk.org").getSuccess();
