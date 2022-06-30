@@ -172,6 +172,12 @@ profiles:
       kustomize:
         paths:
           - os-files/kustomize/env/stub/local/adhoc/application-service
+  - name: sba
+    deploy:
+      statusCheckDeadlineSeconds: 600
+      kustomize:
+        paths:
+          - os-files/kustomize/env/stub/local/adhoc/sba
   - name: ifs-database
     deploy:
       statusCheckDeadlineSeconds: 600
