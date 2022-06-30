@@ -203,13 +203,13 @@
                                  </th:block>
                                  <span class="status-msg msg-progress">
                                 <p th:if="${previousView.rejected}">Unsuccessful</p>
-                                <p th:if="${previousView.approved}" Successful</p>
-                                <p th:if="${previousView.createdOrOpen}" >Not submitted</p>
-                                <p th:if="${previousView.informedIneligible}" >Ineligible</p>
-                                <p th:if="${previousView.liveOrCompletedOffline}" >Live project</p>
+                                <p th:if="${previousView.approved}">Successful</p>
+                                <p th:if="${previousView.createdOrOpen}">Not submitted</p>
+                                <p th:if="${previousView.informedIneligible}">Ineligible</p>
+                                <p th:if="${previousView.liveOrCompletedOffline}">Live project</p>
                                 <p th:if="${previousView.unsuccessful}" >Unsuccessful</p>
-                                <p th:if="${previousView.withdrawn}" >Withdrawn</p>
-                                <p th:if="${previousView.submitted}" >Application submitted</p>
+                                <p th:if="${previousView.withdrawn}">Withdrawn</p>
+                                <p th:if="${previousView.submitted}">Application submitted</p>
                                 <div class="action">
                                     <th:block th:if="${previousView.canHideApplication()}">
                                         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
