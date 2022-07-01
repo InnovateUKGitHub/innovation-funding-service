@@ -279,7 +279,7 @@ Lead applicant deletes the unsubmitted EOI application
     the user should see the element                     jQuery = li:contains("${unSubmittedPreregAppName}") .status-msg:contains("Expression of interest")
     Requesting application ID of prereg application     ${unSubmittedPreregAppName}
     the user clicks the button/link                     name = delete-application-${preregApplicationID}
-    the user clicks the button/link                     name = delete-application
+    the user clicks the button/link                     jQuery = li:contains("${unSubmittedPreregAppName}") button:contains("Delete application")
 
 the user complete pre reg work programme
     the user clicks the button/link     jQuery = a:contains("Work programme")
