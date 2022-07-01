@@ -26,7 +26,7 @@ ${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_2000}    92,000
 ${manageExternalUsers}                                   ${server}/management/admin/external/users
 
 # Competitions and Applications Variables
-${openCompetitionRTO_name}                                  Predicting market trends programme
+${openCompetitionRTO_name}                                  Horizon Europe Guarantee Pre Registration Competition with EOI Decision
 ${openCompetitionRTO}                                       ${competition_ids['${openCompetitionRTO_name}']}
 ${openCompetitionRTOCloseDate}                              ${getSimpleMilestoneDate(${openCompetitionRTO}, "SUBMISSION_DATE")}
 ${openCompetitionRTOApplication1Name}                       Hydrology the dynamics of Earth\'s surface water
