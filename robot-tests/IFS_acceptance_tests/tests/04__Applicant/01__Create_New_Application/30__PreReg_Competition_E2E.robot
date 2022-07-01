@@ -25,7 +25,9 @@ Comp Admin creates a prereg competition
     Given The user logs-in in new browser                    &{Comp_admin1_credentials}
     Then the competition admin creates prereg competition    ${BUSINESS_TYPE_ID}  ${hecpPreregCompName}  Pre Registration  ${compType_HESTA}  NOT_AID  HECP  PROJECT_SETUP  no  50  false  single-or-collaborative
 
-Applicants should view prereg related content on competition
+
+
+Applicants should view prereg related content when competition is opened
     [Arguments]  IFS-12065
     Given Comp admin set the competion as prereg comp and hide the question, section and subsection
     When the user navigates to the page         ${frontDoor}
@@ -35,8 +37,8 @@ Applicants should view prereg related content on competition
 
 Application Dashboard with admin
     [Documentation]    IFS-12177
-    Given Comp admin set the competion as prereg comp and hide the question, section and subsection
-    when the user navigates to the page              ${SERVER}/management/competition/${hecpPreregCompId}
+    Given Comp admin goes to the competition
+    when the user navigates to the page              ${SERVER}/management/competition/${preregCompetitionId}
     Then the user clicks the button/link             jQuery = a:contains("Applications: All, submitted, ineligible")
     And The user should see the element              link = All applications
     And The user should see the element              link = Submitted applications
