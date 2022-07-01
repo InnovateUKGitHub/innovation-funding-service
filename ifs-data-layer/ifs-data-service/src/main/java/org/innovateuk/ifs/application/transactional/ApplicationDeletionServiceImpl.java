@@ -100,7 +100,9 @@ public class ApplicationDeletionServiceImpl extends RootTransactionalService imp
         questionStatusRepository.deleteByApplicationId(application.getId());
         applicationHiddenFromDashboardRepository.deleteByApplicationId(application.getId());
         processHistoryRepository.deleteByProcessId(application.getApplicationProcess().getId());
-        applicationExpressionOfInterestConfigRepository.delete(application.getApplicationExpressionOfInterestConfig());
+        if(application.getApplicationExpressionOfInterestConfig()!=null) {
+            applicationExpressionOfInterestConfigRepository.delete(application.getApplicationExpressionOfInterestConfig());
+        }
         applicationRepository.delete(application);
         applicationInviteRepository.deleteAll(application.getInvites());
 
