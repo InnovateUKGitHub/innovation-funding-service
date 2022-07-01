@@ -39,28 +39,32 @@ public class PreRegistrationSectionDataBuilder extends BaseDataBuilder<Void, Pre
         });
     }
 
-    private void markSectionForPreRegistration(SectionResource section, String subSectionName, String questionName) {
+    private void  markSectionForPreRegistration(SectionResource section, String subSectionName, String questionName) {
         section.setEnabledForPreRegistration(false);
-        sectionService.save(section);
+        section = saveSection(section);
 
         markQuestionForPreRegistration(section, questionName);
 
         markSubsectionForPreRegistration(section, subSectionName, questionName);
     }
 
+    private SectionResource saveSection(SectionResource section) {
+        return sectionMapper.mapToResource(sectionRepository.save(sectionMapper.mapToDomain(section)));
+    }
+
     private void markSubsectionForPreRegistration(SectionResource section, String subSectionName, String questionName) {
-        sectionService.getChildSectionsByParentId(section.getId()).getSuccess().stream()
-                .filter(subSectionResource -> subSectionName == null ? true : subSectionResource.getName().equals(subSectionName))
-                .forEach(sectionResource -> markSectionForPreRegistration(sectionResource, subSectionName, questionName));
+        sectionRepository.findById(section.getId()).get().getChildSections().stream()
+                .filter(subSection -> subSectionName == null ? true : subSection.getName().equals(subSectionName))
+                .forEach(subSection -> markSectionForPreRegistration(sectionMapper.mapToResource(subSection), subSectionName, questionName));
     }
 
     private void markQuestionForPreRegistration(SectionResource section, String questionName) {
         section.getQuestions().stream()
-                .map(questionId -> questionService.getQuestionById(questionId).getSuccess())
-                .filter(questionResource -> questionName == null ? true : questionResource.getName().equals(questionName))
-                .forEach(questionResource -> {
-                    questionResource.setEnabledForPreRegistration(false);
-                    questionService.save(questionResource);
+                .map(questionId -> questionRepository.findById(questionId).get())
+                .filter(question -> questionName == null ? true : question.getName().equals(questionName))
+                .forEach(question -> {
+                    question.setEnabledForPreRegistration(false);
+                    questionService.save(questionMapper.mapToResource(question));
                 });
     }
 

@@ -13,6 +13,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -39,6 +40,7 @@ import java.util.*;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.INTERNATIONAL;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.*;
@@ -209,7 +211,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<ApplicationResource> updateApplicationState(long applicationId,
                                                                      ApplicationState state) {
         if (ApplicationState.SUBMITTED.equals(state) && !applicationProgressService.applicationReadyForSubmit(applicationId)) {
-            return serviceFailure(APPLICATION_NOT_READY_TO_BE_SUBMITTED);
+            boolean readyForSubmit = applicationProgressService.applicationReadyForSubmit(applicationId);
+            List<Error> errors = new ArrayList<>();
+            errors.add(fieldError("applicationId", new Long(applicationId).toString(), state.getStateName(), new Boolean(readyForSubmit).toString()));
+            return serviceFailure(errors);
         }
 
         return find(application(applicationId)).andOnSuccess((application) -> {
