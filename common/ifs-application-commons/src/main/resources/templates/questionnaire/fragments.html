@@ -32,7 +32,7 @@
 <!--/*@thymesVar id="model" type="org.innovateuk.ifs.application.forms.questions.questionnaire.viewmodel.AbstractQuestionQuestionnaireViewModel"*/-->
 <th:block th:fragment="subsidy-basis(model)">
     <p th:if="${model.getNorthernIrelandDeclaration() != null}" class="govuk-body">
-        Based on the answers, the subsidy basis has been determined as falling under the <span class="govuk-!-font-weight-bold"><th:block th:if="${model.getNorthernIrelandDeclaration()}">Northern Ireland Protocol</th:block><th:block th:unless="${model.getNorthernIrelandDeclaration()}">EU-UK Trade and Cooperation Agreement</th:block></span>.</p>
+        Based on the answers, the subsidy basis has been determined as falling under the <span class="govuk-!-font-weight-bold"><th:block th:if="${model.getNorthernIrelandDeclaration()}">Northern Ireland Protocol</th:block><th:block th:unless="${model.getNorthernIrelandDeclaration()}">Subsidy control Act</th:block></span>.</p>
     <th:block th:unless="${model.readOnly}">
         <h2 class="govuk-heading-m">Declaration</h2>
         <div class="govuk-form-group" th:classappend="${#fields.hasErrors('agreement')} ? 'govuk-form-group--error'">
