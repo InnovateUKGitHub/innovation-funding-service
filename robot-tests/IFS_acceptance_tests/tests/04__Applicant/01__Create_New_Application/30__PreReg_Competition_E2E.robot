@@ -25,7 +25,8 @@ ${hecpPreregAppName}                            preRegApplication
 ${unSuccessPreregAppName}                       unSuccessfulPreRegApplication
 ${unSubmittedPreregAppName}                     unSubmittedPreRegApplication
 ${preRegApplicationUnsuccessfulEmail}           Thank you for submitting your application to Innovate UK for the competition
-
+${preRegApplicationSuccessfulEmail}             We are pleased to inform you that your application for the Horizon Europe collaborative competition has been successful and passed the technical assessment phase.
+${preregApplicationSubmissionEmail}             You have successfully submitted an application for funding to
 
 *** Test Cases ***
 Comp Admin creates a prereg competition
@@ -107,12 +108,18 @@ Comp admin can not view mark as ineligible application link
     When the user navigates to the page             ${server}/management/competition/${preregCompetitionId}/application/${preregApplicationID}
     Then the user should not see the element        jQuery = span:contains("Mark application as ineligible")
 
+Internal user submit the EOI applications funding decision
+    [Documentation]  IFS-12265
+    Given Existing user creates and submits new application for unsuccessful EOI journey
+    When Internal user marks the application as successful/unsuccessful                     ${unSuccessPreregAppName}   UNFUNDED
+    And Internal user marks the application as successful/unsuccessful                      ${hecpPreregAppName}   FUNDED
+    Then the user reads his email                                                           steve.smith@empire.com  Important message about your application '${hecpPreregAppName}' for the competition '${hecpPreregCompName}'  ${preRegApplicationSuccessfulEmail}
+    And the user reads his email                                                            steve.smith@empire.com  Important message about your application '${unSuccessPreregAppName}' for the competition '${hecpPreregCompName}'  ${preRegApplicationUnsuccessfulEmail}
+
 Lead applicant views unsuccessful applications in previous dashboard
     [Documentation]  IFS-12265
-    Given Existing user creates and submits new application
-    When Internal user marks the application as successful/unsuccessful         ${unSuccessPreregAppName}   UNFUNDED
-    And log in as a different user                                              &{lead_applicant_credentials}
-    And the user clicks the application tile if displayed
+    Given log in as a different user                                              &{lead_applicant_credentials}
+    When the user clicks the application tile if displayed
     Then the user should see the element                                        jQuery = li:contains("${unSuccessPreregAppName}") .status-msg:contains("Unsuccessful")
     And the user should see the element                                         jQuery = li:contains("${unSuccessPreregAppName}") .status-msg:contains("Expression of interest")
 
@@ -236,7 +243,7 @@ Comp admin set the competion as prereg comp and hide the question, section and s
     set section as hidden in pre reg application         ${preregCompetitionId}
     update milestone to yesterday                        ${preregCompetitionId}  OPEN_DATE
 
-Existing user creates and submits new application
+Existing user creates and submits new application for unsuccessful EOI journey
     log in as a different user                                                &{lead_applicant_credentials}
     Existing applicant creates a new application with same organisation       ${hecpPreregCompName}
     the user completes the application details section                        ${unSuccessPreregAppName}  ${tomorrowday}  ${month}  ${nextyear}   23
@@ -258,7 +265,6 @@ Internal user marks the application as successful/unsuccessful
     the user clicks the button/link                     link = Competition
     Requesting application ID of prereg application     ${applicationName}
     the internal team notifies all applicants           ${preregApplicationID}
-    the user reads his email                            steve.smith@empire.com  Important message about your application '${applicationName}' for the competition '${hecpPreregCompName}'  ${preRegApplicationUnsuccessfulEmail}
 
 Internal user closes the competition
     log in as a different user          &{ifs_admin_user_credentials}
