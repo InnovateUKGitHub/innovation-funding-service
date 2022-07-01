@@ -33,6 +33,27 @@ Applicants should view prereg related content on competition
     And the user clicks the button/link         id = update-competition-results-button
     Then the user should see the element        jQuery = li:contains("${hecpPreregCompName}") div:contains("Refer to competition date for competition submission deadlines.")
 
+Application Dashboard with admin
+    [Documentation]    IFS-12177
+    Given Comp admin set the competion as prereg comp and hide the question, section and subsection
+    when the user navigates to the page              ${SERVER}/management/competition/${hecpPreregCompId}
+    Then the user clicks the button/link             jQuery = a:contains("Applications: All, submitted, ineligible")
+    And The user should see the element              link = All applications
+    And The user should see the element              link = Submitted applications
+    And The user should see the element              link = Ineligible applications
+    And The user should see the element              link = Expression of interest
+
+Expression of interest Dashboard
+    [Documentation]    IFS-12177
+    When the user clicks the button/link             link = Expression of interest
+    Then the user should see the element             jQuery = h1:contains("Select applications")
+    And the user should see the element              jQuery = th:contains("Application number")
+    And the user should see the element              jQuery = th:contains("Project title")
+    And the user should see the element              jQuery = th:contains("Lead organisation")
+    And the user should see the element              jQuery = th:contains("Expression of interest decision")
+    And the user should see the element              jQuery = th:contains("Email status")
+    And the user should see the element              jQuery = th:contains("Date sent")
+
 Applicant can not view hidden question, section and subsection
     [Documentation]  IFS-12077
     Given log in as a different user                &{lead_applicant_credentials}
@@ -88,6 +109,7 @@ Applicant can not view hidden question, section and subsection in print applicat
     And the user should not see the element                            xpath = //h2[contains(text(),'Terms and conditions')]
     And the user should not see the element                            xpath = //span[contains(text(),'Award terms and conditions')]
     [Teardown]  the user navigates to the page                         ${SERVER}/application/${preregApplicationID}/track
+
 
 *** Keywords ***
 Requesting IDs of this hecp pre reg competition
