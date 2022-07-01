@@ -35,7 +35,7 @@ Applicants should view prereg related content when competition is opened
     And the user clicks the button/link         id = update-competition-results-button
     Then the user should see the element        jQuery = li:contains("${hecpPreregCompName}") div:contains("Refer to competition date for competition submission deadlines.")
 
-Application Dashboard with admin
+Application Dashboard with admin ashna
     [Documentation]    IFS-12177
     Given Comp admin goes to the competition
     when the user navigates to the page              ${SERVER}/management/competition/${preregCompetitionId}
@@ -45,7 +45,7 @@ Application Dashboard with admin
     And The user should see the element              link = Ineligible applications
     And The user should see the element              link = Expression of interest
 
-Expression of interest Dashboard
+Expression of interest Dashboard ashna
     [Documentation]    IFS-12177
     When the user clicks the button/link             link = Expression of interest
     Then the user should see the element             jQuery = h1:contains("Select applications")
