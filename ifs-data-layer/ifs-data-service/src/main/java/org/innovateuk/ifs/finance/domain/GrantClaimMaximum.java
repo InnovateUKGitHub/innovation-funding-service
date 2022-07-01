@@ -37,6 +37,9 @@ public class GrantClaimMaximum {
     @Column(columnDefinition = "tinyint(4)")
     private Integer maximum;
 
+    @Column(name = "fixed_funding_level", nullable = false)
+    private boolean isFixedFundingLevel = false;
+
     public GrantClaimMaximum() {}
 
     public GrantClaimMaximum(ResearchCategory researchCategory, OrganisationSize organisationSize, FundingRules fundingRules, Integer maximum) {
@@ -103,4 +106,11 @@ public class GrantClaimMaximum {
         this.maximum = maximum;
     }
 
+    public boolean isFixedFundingLevel() {
+        return isFixedFundingLevel;
+    }
+
+    public void setFixedFundingLevel(boolean fixedFundingLevel) {
+        isFixedFundingLevel = fixedFundingLevel;
+    }
 }
