@@ -56,6 +56,7 @@ Expression of interest Dashboard ashna
     And the user should see the element              jQuery = th:contains("Email status")
     And the user should see the element              jQuery = th:contains("Date sent")
 
+
 Applicant can not view hidden question, section and subsection
     [Documentation]  IFS-12077
     Given log in as a different user                &{lead_applicant_credentials}
