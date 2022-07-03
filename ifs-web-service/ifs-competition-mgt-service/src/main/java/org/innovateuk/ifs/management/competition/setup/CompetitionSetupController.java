@@ -281,6 +281,17 @@ public class CompetitionSetupController {
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.FUNDING_ELIGIBILITY, loggedInUser, model);
     }
 
+    @PostMapping("/{competitionId}/section/funding-eligibility")
+    public String submitFundingAmountSoughtSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) FundingEligibilityResearchCategoryForm competitionSetupForm,
+                                                         BindingResult bindingResult,
+                                                         ValidationHandler validationHandler,
+                                                         @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                         UserResource loggedInUser,
+                                                         Model model) {
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.FUNDING_AMOUNT_SOUGHT, loggedInUser, model);
+    }
+
     @PostMapping("/{competitionId}/section/completion-stage")
     public String submitCompletionStageSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) CompletionStageForm competitionSetupForm,
                                                       BindingResult bindingResult,

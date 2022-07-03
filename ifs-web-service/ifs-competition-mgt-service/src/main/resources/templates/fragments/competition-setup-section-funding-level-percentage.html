@@ -187,11 +187,18 @@
         </li>
         <li class="next">
             <a rel="next" title="Navigate to next part"
-               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='organisational-eligibility')}">
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='funding-amount-sought')}">
                 <span class="pagination-label">Next</span>
-                <span class="pagination-part-title">Organisational eligibility</span>
+                <span class="pagination-part-title">Funding amount sought</span>
             </a>
         </li>
+<!--        <li class="next">-->
+<!--            <a rel="next" title="Navigate to next part"-->
+<!--               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='organisational-eligibility')}">-->
+<!--                <span class="pagination-label">Next</span>-->
+<!--                <span class="pagination-part-title">Organisational eligibility</span>-->
+<!--            </a>-->
+<!--        </li>-->
     </ul>
 </th:block>
 
