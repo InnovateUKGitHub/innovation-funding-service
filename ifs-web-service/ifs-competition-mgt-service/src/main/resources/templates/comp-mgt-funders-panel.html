@@ -10,7 +10,8 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionSummary.competitionId})}" />
+    <th:block th:if="${model.eoi}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Applications',linkUrl=@{/competition/{competitionId}/applications(competitionId=${model.competitionSummary.competitionId})}"></th:block>
+    <th:block th:unless="${model.eoi}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionSummary.competitionId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.eoi ? 'Expression of interest' : 'Funding decision'},subTitle=|${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|,size='govuk-heading-xl'" />
