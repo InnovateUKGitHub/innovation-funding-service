@@ -47,14 +47,8 @@ Application Dashboard with admin ashna1
 Expression of interest Dashboard ashna1
     [Documentation]    IFS-12177
     When the user clicks the button/link             link = Expression of interest
-    Then the user should see the element             jQuery = h1:contains("Select applications")
-    And the user should see the element              jQuery = th:contains("Application number")
-    And the user should see the element              jQuery = th:contains("Project title")
-    And the user should see the element              jQuery = th:contains("Lead organisation")
-    And the user should see the element              jQuery = th:contains("Expression of interest decision")
-    And the user should see the element              jQuery = th:contains("Email status")
-    And the user should see the element              jQuery = th:contains("Date sent")
-
+    Then User should see EOI Related content
+    And the user should see the element              jQuery = td:contains("No applications found.")
 
 Applicant can not view hidden question, section and subsection
     [Documentation]  IFS-12077
@@ -222,3 +216,12 @@ Comp admin set the competion as prereg comp and hide the question, section and s
     set subsection as hidden in pre reg application      ${preregCompetitionId}
     set section as hidden in pre reg application         ${preregCompetitionId}
     update milestone to yesterday                        ${preregCompetitionId}  OPEN_DATE
+
+User should see EOI Related content
+    the user should see the element              jQuery = th:contains("Select applications")
+    the user should see the element              jQuery = th:contains("Application number")
+    the user should see the element              jQuery = th:contains("Project title")
+    the user should see the element              jQuery = th:contains("Lead organisation")
+    the user should see the element              jQuery = th:contains("Expression of interest decision")
+    the user should see the element              jQuery = th:contains("Email status")
+    the user should see the element              jQuery = th:contains("Date sent")
