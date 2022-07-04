@@ -19,7 +19,7 @@ Application Dashboard
     And The user should see the element      jQuery = a:contains("Expression of interest")
 
 Filter on application number
-    [Documentation]    INFUND-8010
+    [Documentation]    IFS-12177
     Given the user enters text to a text field          id = stringFilter    85
     When the user clicks the button/link                jQuery = button:contains("Filter")
     Then the user should see the element                jQuery = td:contains("Horizon Europe Guarantee Eoi Application3")
@@ -31,7 +31,7 @@ Filter on application number
     And the user should see the element                 jQuery = td:contains("83")
 
 Filter on Sent
-    [Documentation]    INFUND-8010
+    [Documentation]    IFS-12177
     Given the user enters text to a text field          id = sendFilter    Yes
     When the user clicks the button/link                jQuery = button:contains("Filter")
     Then the user should see the element                jQuery = td:contains("Horizon Europe Guarantee Eoi Application3")
