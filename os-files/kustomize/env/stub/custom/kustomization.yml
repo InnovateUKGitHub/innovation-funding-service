@@ -7,6 +7,7 @@ commonAnnotations:
 
 components:
   - ../../../components/sba
+  - ../../../components/bastion-client
   - ../../../components/clamav
   - ../../../components/mail
   - ../../../components/sil-stub

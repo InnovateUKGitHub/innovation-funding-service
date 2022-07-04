@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.review.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.resource.ApplicationExpressionOfInterestConfigResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.review.viewmodel.TrackViewModel;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.servlet.http.HttpServletResponse;
 
+import static org.innovateuk.ifs.application.builder.ApplicationExpressionOfInterestConfigResourceBuilder.newApplicationExpressionOfInterestConfigResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -144,7 +146,7 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
     }
 
     @Test
-    public void hecpApplicationTrackReopen() throws Exception {
+    public void horizonEuropeApplicationTrackReopen() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionTypeEnum(HORIZON_EUROPE_GUARANTEE)
                 .withAlwaysOpen(true)
@@ -162,6 +164,36 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
 
         MvcResult mvcResult = mockMvc.perform(get("/application/" + application.getId() + "/track"))
                 .andExpect(view().name("horizon-europe-guarantee-application-track"))
+                .andReturn();
+        TrackViewModel model = (TrackViewModel) mvcResult.getModelAndView().getModel().get("model");
+        assertFalse(model.isReopenLinkVisible());
+    }
+
+    @Test
+    public void horizonEuropeExpressionOfInterestTrackReopen() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withEnabledForExpressionOfInterest(true)
+                .withCompetitionTypeEnum(HORIZON_EUROPE_GUARANTEE)
+                .withAlwaysOpen(true)
+                .build();
+
+        ApplicationExpressionOfInterestConfigResource applicationExpressionOfInterestConfig = newApplicationExpressionOfInterestConfigResource()
+                .withEnabledForExpressionOfInterest(true)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withApplicationExpressionOfInterestConfigResource(applicationExpressionOfInterestConfig)
+                .withApplicationState(SUBMITTED)
+                .withCompetitionStatus(CompetitionStatus.OPEN)
+                .withCompetition(competition.getId())
+                .build();
+
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(userService.isLeadApplicant(loggedInUser.getId(), application)).thenReturn(true);
+
+        MvcResult mvcResult = mockMvc.perform(get("/application/" + application.getId() + "/track"))
+                .andExpect(view().name("horizon-europe-guarantee-eoi-application-track"))
                 .andReturn();
         TrackViewModel model = (TrackViewModel) mvcResult.getModelAndView().getModel().get("model");
         assertFalse(model.isReopenLinkVisible());

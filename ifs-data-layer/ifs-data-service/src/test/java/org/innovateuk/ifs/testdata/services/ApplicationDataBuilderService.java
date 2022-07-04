@@ -499,7 +499,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         Organisation org = organisationRepository.findOneByName(usersOrganisations.get(line.leadApplicant));
 
         ApplicationDataBuilder baseBuilder = applicationDataBuilder.withCompetition(competition.getCompetition()).
-                withBasicDetails(leadApplicant, line.title, line.researchCategory, line.resubmission, org.getId(), line.enableForEOI).
+                withBasicDetails(leadApplicant, line.title, line.researchCategory, line.resubmission, org.getId(), line.enabledForExpressionOfInterest).
                 withInnovationArea(line.innovationArea).
                 withStartDate(line.startDate).
                 withDurationInMonths(line.durationInMonths);
@@ -574,13 +574,38 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                     default:
                         throw new RuntimeException("Unknown rate type " + financeRow.metadata.get(0).toLowerCase());
                 }
+            case "Hecp indirect costs":
+                switch (financeRow.metadata.get(0).toLowerCase()) {
+                    case "total":
+                        return builder.withHecpAdministrationSupportCostsTotalRate(
+                                Integer.valueOf(financeRow.metadata.get(1)));
+                    case "default":
+                        return builder.withHecpAdministrationSupportCostsDefaultRate();
+                    case "none":
+                        return builder.withHecpAdministrationSupportCostsNone();
+                    default:
+                        throw new RuntimeException("Unknown rate type " + financeRow.metadata.get(0).toLowerCase());
+                }
             case "Materials":
                 return builder.withMaterials(
                         financeRow.metadata.get(0),
                         bd(financeRow.metadata.get(1)),
                         Integer.valueOf(financeRow.metadata.get(2)));
+            case "Equipment":
+                return builder.withEquipment(
+                        financeRow.metadata.get(0),
+                        bd(financeRow.metadata.get(1)),
+                        Integer.valueOf(financeRow.metadata.get(2)));
             case "Capital usage":
                 return builder.withCapitalUsage(
+                        Integer.valueOf(financeRow.metadata.get(4)),
+                        financeRow.metadata.get(0),
+                        Boolean.parseBoolean(financeRow.metadata.get(1)),
+                        bd(financeRow.metadata.get(2)),
+                        bd(financeRow.metadata.get(3)),
+                        Integer.valueOf(financeRow.metadata.get(5)));
+            case "Other goods":
+                return builder.withOtherGoods(
                         Integer.valueOf(financeRow.metadata.get(4)),
                         financeRow.metadata.get(0),
                         Boolean.parseBoolean(financeRow.metadata.get(1)),
@@ -701,11 +726,17 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                     case OVERHEADS:
                         builder[0] = builder[0].withAdministrationSupportCostsNone();
                         break;
+                    case HECP_INDIRECT_COSTS:
+                        builder[0] = builder[0].withHecpAdministrationSupportCostsNone();
+                        break;
                     case PROCUREMENT_OVERHEADS:
                         builder[0] = builder[0].withProcurementOverheads("procurement overhead" , 1000, 2000);
                         break;
                     case MATERIALS:
                         builder[0] = builder[0].withMaterials("Generator", bd("10020"), 10);
+                        break;
+                    case EQUIPMENT:
+                        builder[0] = builder[0].withEquipment("Generator", bd("10020"), 10);
                         break;
                     case CAPITAL_USAGE:
                         builder[0] = builder[0].withCapitalUsage(12, "Depreciating Stuff", true, bd("2120"), bd("1200"), 60);

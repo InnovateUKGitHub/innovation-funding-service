@@ -75,6 +75,9 @@ public class SectionBuilder extends BaseBuilder<Section, SectionBuilder> {
     public SectionBuilder withDisplayInAssessmentApplicationSummary(Boolean... displayInAssessmentApplicationSummaries) {
         return withArray((displayInAssessmentApplicationSummary, object) -> setField("displayInAssessmentApplicationSummary", displayInAssessmentApplicationSummary, object), displayInAssessmentApplicationSummaries);
     }
+    public SectionBuilder withEnabledForPreRegistration(Boolean... enabledForPreRegistrations) {
+        return withArray((enabledForPreRegistration, object) -> setField("enabledForPreRegistration", enabledForPreRegistration, object), enabledForPreRegistrations);
+    }
 
     public SectionBuilder withChildSections(List<Section> childSections) {
     	return with(section -> setField("childSections", childSections, section));

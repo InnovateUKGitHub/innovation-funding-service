@@ -102,6 +102,10 @@ public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, Quest
         });
     }
 
+    public QuestionResourceBuilder withEnabledForPreRegistration(Boolean... enabledForPreRegistrations) {
+        return withArray((enabledForPreRegistration, object) -> setField("enabledForPreRegistration", enabledForPreRegistration, object), enabledForPreRegistrations);
+    }
+
     @Override
     protected QuestionResource createInitial() {
         return new QuestionResource();

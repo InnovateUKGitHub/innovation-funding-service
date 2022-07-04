@@ -17,7 +17,7 @@ public final class SecurityRuleUtil {
         return user.isInternalUser();
     }
 
-    public static boolean isInternalAdmin(UserResource user) {
+    public static boolean hasCompetitionAdministratorAuthority(UserResource user) {
         return user.hasAuthority(Authority.COMP_ADMIN);
     }
 

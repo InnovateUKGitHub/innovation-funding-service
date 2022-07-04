@@ -4,8 +4,8 @@ import org.innovateuk.ifs.application.forms.hecpcosts.form.HorizonEuropeGuarante
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.DefaultCostCategory;
-import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
-import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
+import org.innovateuk.ifs.finance.resource.category.HecpIndirectCostsCostCategory;
+import org.innovateuk.ifs.finance.resource.category.PersonnelCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
@@ -29,10 +29,10 @@ public class HorizonEuropeGuaranteeCostsSaver {
     public ServiceResult<Void> save(HorizonEuropeGuaranteeCostsForm form, long applicationId, long organisationId) {
         ApplicationFinanceResource applicationFinance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
 
-        saveLabour(form, applicationFinance);
-        saveOverhead(form, applicationFinance);
-        saveMaterial(form, applicationFinance);
-        saveCapital(form, applicationFinance);
+        savePersonnel(form, applicationFinance);
+        saveHecpIndirectCosts(form, applicationFinance);
+        saveEquipment(form, applicationFinance);
+        saveOtherGoods(form, applicationFinance);
         saveSubcontracting(form, applicationFinance);
         saveTravel(form, applicationFinance);
         saveOther(form, applicationFinance);
@@ -40,71 +40,71 @@ public class HorizonEuropeGuaranteeCostsSaver {
         return ServiceResult.serviceSuccess();
     }
 
-    private void saveLabour(HorizonEuropeGuaranteeCostsForm form, ApplicationFinanceResource applicationFinance) {
-        LabourCostCategory category = (LabourCostCategory) applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.LABOUR);
-        Optional<LabourCost> cost = category.getCosts().stream().findAny().map(LabourCost.class::cast);
+    private void savePersonnel(HorizonEuropeGuaranteeCostsForm form, ApplicationFinanceResource applicationFinance) {
+        PersonnelCostCategory category = (PersonnelCostCategory) applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.PERSONNEL);
+        Optional<PersonnelCost> cost = category.getCosts().stream().findAny().map(PersonnelCost.class::cast);
 
-        LabourCost workingDays = category.getWorkingDaysPerYearCostItem();
+        PersonnelCost workingDays = category.getWorkingDaysPerYearCostItem();
         workingDays.setLabourDays(1);
         financeRowRestService.update(workingDays);
 
-        if (nullOrZero(form.getLabour())) {
-            cost.map(LabourCost::getId).ifPresent(financeRowRestService::delete);
+        if (nullOrZero(form.getPersonnel())) {
+            cost.map(PersonnelCost::getId).ifPresent(financeRowRestService::delete);
         } else {
-            LabourCost labour = cost.orElseGet(() -> newCost(new LabourCost(applicationFinance.getId())));
-            labour.setLabourDays(1);
-            labour.setGrossEmployeeCost(new BigDecimal(form.getLabour()));
-            labour.setRole("Total Labour costs");
-            financeRowRestService.update(labour);
+            PersonnelCost personnel = cost.orElseGet(() -> newCost(new PersonnelCost(applicationFinance.getId())));
+            personnel.setLabourDays(1);
+            personnel.setGrossEmployeeCost(new BigDecimal(form.getPersonnel()));
+            personnel.setRole("Total Personnel costs");
+            financeRowRestService.update(personnel);
         }
     }
 
-    private void saveOverhead(HorizonEuropeGuaranteeCostsForm form, ApplicationFinanceResource applicationFinance) {
-        OverheadCostCategory category = (OverheadCostCategory) applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.OVERHEADS);
-        Overhead cost = category.getCosts().stream().findAny().map(Overhead.class::cast).get();
+    private void saveHecpIndirectCosts(HorizonEuropeGuaranteeCostsForm form, ApplicationFinanceResource applicationFinance) {
+        HecpIndirectCostsCostCategory category = (HecpIndirectCostsCostCategory) applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.HECP_INDIRECT_COSTS);
+        HecpIndirectCosts cost = category.getCosts().stream().findAny().map(HecpIndirectCosts.class::cast).get();
 
-        if (nullOrZero(form.getOverhead())) {
+        if (nullOrZero(form.getHecpIndirectCosts())) {
             cost.setRateType(OverheadRateType.NONE);
             cost.setRate(0);
         } else {
             cost.setRateType(OverheadRateType.HORIZON_EUROPE_GUARANTEE_TOTAL);
-            cost.setRate(form.getOverhead().intValue());
+            cost.setRate(form.getHecpIndirectCosts().intValue());
         }
         financeRowRestService.update(cost);
     }
 
 
-    private void saveMaterial(HorizonEuropeGuaranteeCostsForm form, ApplicationFinanceResource applicationFinance) {
-        DefaultCostCategory category = (DefaultCostCategory) applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.MATERIALS);
-        Optional<Materials> cost = category.getCosts().stream().findAny().map(Materials.class::cast);
+    private void saveEquipment(HorizonEuropeGuaranteeCostsForm form, ApplicationFinanceResource applicationFinance) {
+        DefaultCostCategory category = (DefaultCostCategory) applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.EQUIPMENT);
+        Optional<Equipment> cost = category.getCosts().stream().findAny().map(Equipment.class::cast);
 
-        if (nullOrZero(form.getMaterial())) {
-            cost.map(Materials::getId).ifPresent(financeRowRestService::delete);
+        if (nullOrZero(form.getEquipment())) {
+            cost.map(Equipment::getId).ifPresent(financeRowRestService::delete);
         } else {
-            Materials materials = cost.orElseGet(() -> newCost(new Materials(applicationFinance.getId())));
-            materials.setCost(new BigDecimal(form.getMaterial()));
-            materials.setQuantity(1);
-            materials.setItem("Total material costs");
-            financeRowRestService.update(materials);
+            Equipment equipment = cost.orElseGet(() -> newCost(new Equipment(applicationFinance.getId())));
+            equipment.setCost(new BigDecimal(form.getEquipment()));
+            equipment.setQuantity(1);
+            equipment.setItem("Total equipment costs");
+            financeRowRestService.update(equipment);
         }
     }
 
-    private void saveCapital(HorizonEuropeGuaranteeCostsForm form, ApplicationFinanceResource applicationFinance) {
-        DefaultCostCategory category = (DefaultCostCategory) applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.CAPITAL_USAGE);
-        Optional<CapitalUsage> cost = category.getCosts().stream().findAny().map(CapitalUsage.class::cast);
+    private void saveOtherGoods(HorizonEuropeGuaranteeCostsForm form, ApplicationFinanceResource applicationFinance) {
+        DefaultCostCategory category = (DefaultCostCategory) applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.OTHER_GOODS);
+        Optional<OtherGoods> cost = category.getCosts().stream().findAny().map(OtherGoods.class::cast);
 
-        if (nullOrZero(form.getCapital())) {
-            cost.map(CapitalUsage::getId).ifPresent(financeRowRestService::delete);
+        if (nullOrZero(form.getOtherGoods())) {
+            cost.map(OtherGoods::getId).ifPresent(financeRowRestService::delete);
         } else {
-            CapitalUsage capitalUsage = cost.orElseGet(() -> newCost(new CapitalUsage(applicationFinance.getId())));
-            capitalUsage.setUtilisation(100);
+            OtherGoods otherGoods = cost.orElseGet(() -> newCost(new OtherGoods(applicationFinance.getId())));
+            otherGoods.setUtilisation(100);
             //Add one and leave residual value as 1.
-            capitalUsage.setNpv(new BigDecimal(form.getCapital()).add(BigDecimal.ONE));
-            capitalUsage.setResidualValue(BigDecimal.ONE);
-            capitalUsage.setDeprecation(1);
-            capitalUsage.setExisting("New");
-            capitalUsage.setDescription("Total capital usage costs");
-            financeRowRestService.update(capitalUsage);
+            otherGoods.setNpv(new BigDecimal(form.getOtherGoods()).add(BigDecimal.ONE));
+            otherGoods.setResidualValue(BigDecimal.ONE);
+            otherGoods.setDeprecation(1);
+            otherGoods.setExisting("New");
+            otherGoods.setDescription("Total other goods costs");
+            financeRowRestService.update(otherGoods);
         }
     }
 

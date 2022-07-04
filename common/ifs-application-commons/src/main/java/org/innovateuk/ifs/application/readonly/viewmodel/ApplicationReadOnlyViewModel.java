@@ -20,6 +20,7 @@ public class ApplicationReadOnlyViewModel {
     private final boolean thirdPartyProcurement;
     private final CompetitionThirdPartyConfigResource thirdPartyConfig;
     private final boolean isLoanPartBEnabled;
+    private final boolean isExpressionOfInterestApplication;
 
     public ApplicationReadOnlyViewModel(ApplicationReadOnlySettings settings,
                                         Set<ApplicationSectionReadOnlyViewModel> sections,
@@ -30,7 +31,8 @@ public class ApplicationReadOnlyViewModel {
                                         boolean ktpCompetition,
                                         boolean thirdPartyProcurement,
                                         CompetitionThirdPartyConfigResource thirdPartyConfig,
-                                        boolean isLoanPartBEnabled) {
+                                        boolean isLoanPartBEnabled,
+                                        boolean isExpressionOfInterestApplication) {
         this.settings = settings;
         this.sections = sections;
         this.applicationScore = applicationScore;
@@ -41,6 +43,7 @@ public class ApplicationReadOnlyViewModel {
         this.thirdPartyProcurement = thirdPartyProcurement;
         this.thirdPartyConfig = thirdPartyConfig;
         this.isLoanPartBEnabled = isLoanPartBEnabled;
+        this.isExpressionOfInterestApplication = isExpressionOfInterestApplication;
     }
 
     public List<String> getOverallFeedbacks() {
@@ -99,5 +102,9 @@ public class ApplicationReadOnlyViewModel {
 
     public boolean isLoanPartBEnabled() {
         return isLoanPartBEnabled;
+    }
+
+    public boolean isExpressionOfInterestApplication() {
+        return isExpressionOfInterestApplication;
     }
 }

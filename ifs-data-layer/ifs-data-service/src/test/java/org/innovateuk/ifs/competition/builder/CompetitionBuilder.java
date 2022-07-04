@@ -361,7 +361,7 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArraySetFieldByReflection("alwaysOpen", alwaysOpen);
     }
 
-    public CompetitionBuilder witheEnabledForPreRegistration(boolean... enabledForPreRegistration) {
+    public CompetitionBuilder withEnabledForExpressionOfInterest(boolean... enabledForPreRegistration) {
         return withArraySetFieldByReflection("enabledForPreRegistration", enabledForPreRegistration);
     }
 

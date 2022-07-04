@@ -63,5 +63,5 @@ open pdf link
     [Arguments]  ${selector}
     the user clicks the button/link        ${selector}
     Select Window  NEW
-    And the user should not see an error in the page
-    Then the user closes the last opened tab
+    the user should not see an error in the page
+    the user closes the last opened tab

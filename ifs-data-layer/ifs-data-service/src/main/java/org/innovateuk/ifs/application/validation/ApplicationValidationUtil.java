@@ -111,10 +111,18 @@ public class ApplicationValidationUtil {
         }
         List<FinanceRowType> competitionFinanceTypes = section.getCompetition().getFinanceRowTypes();
         if (SectionType.PROJECT_COST_FINANCES == section.getType()) {
-            ImmutableSet.of(LABOUR, OVERHEADS, MATERIALS, CAPITAL_USAGE, SUBCONTRACTING_COSTS, TRAVEL, OTHER_COSTS)
-                    .stream()
-                    .filter(competitionFinanceTypes::contains)
-                    .forEach(type -> validationMessages.addAll(applicationValidatorService.validateCostItem(application.getId(), type, markedAsCompleteById)));
+            boolean isHecpCompetition = application.getCompetition().isHorizonEuropeGuarantee();
+            if (isHecpCompetition) {
+                ImmutableSet.of(PERSONNEL, HECP_INDIRECT_COSTS, EQUIPMENT, OTHER_GOODS, SUBCONTRACTING_COSTS, TRAVEL, OTHER_COSTS)
+                        .stream()
+                        .filter(competitionFinanceTypes::contains)
+                        .forEach(type -> validationMessages.addAll(applicationValidatorService.validateCostItem(application.getId(), type, markedAsCompleteById)));
+            } else {
+                ImmutableSet.of(LABOUR, OVERHEADS, MATERIALS, CAPITAL_USAGE, SUBCONTRACTING_COSTS, TRAVEL, OTHER_COSTS)
+                        .stream()
+                        .filter(competitionFinanceTypes::contains)
+                        .forEach(type -> validationMessages.addAll(applicationValidatorService.validateCostItem(application.getId(), type, markedAsCompleteById)));
+            }
             validationMessages.addAll(applicationValidatorService.validateAcademicUpload(application, markedAsCompleteById));
         } else if (SectionType.FUNDING_FINANCES == section.getType()) {
             ImmutableSet.of(FINANCE, OTHER_FUNDING)
