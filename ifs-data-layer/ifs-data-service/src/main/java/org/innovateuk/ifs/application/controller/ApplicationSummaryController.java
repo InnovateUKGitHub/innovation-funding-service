@@ -51,6 +51,15 @@ public class ApplicationSummaryController {
         return applicationSummaryService.getAllSubmittedApplicationIdsByCompetitionId(competitionId, filter, fundingFilter).toGetResponse();
     }
 
+    @GetMapping("/find-by-competition/{competitionId}/all-submitted/eoi")
+    public RestResult<List<Long>> getAllSubmittedEoiApplicationIdsByCompetitionId(
+            @PathVariable("competitionId") long competitionId,
+            @RequestParam(value = "filter", required = false) Optional<String> filter,
+            @RequestParam(value = "fundingFilter", required = false) Optional<FundingDecisionStatus> fundingFilter,
+            @RequestParam(value = "sendFilter", required = false) Optional<Boolean> sendFilter) {
+        return applicationSummaryService.getAllSubmittedEoiApplicationIdsByCompetitionId(competitionId, filter, fundingFilter, sendFilter).toGetResponse();
+    }
+
     @GetMapping("/find-by-competition/{competitionId}/submitted")
     public RestResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(
             @PathVariable("competitionId") long competitionId,
@@ -61,6 +70,18 @@ public class ApplicationSummaryController {
             @RequestParam(value = "fundingFilter", required = false) Optional<FundingDecisionStatus> fundingFilter,
             @RequestParam(value = "inAssessmentReviewPanel", required = false) Optional<Boolean> inAssessmentReviewPanel) {
         return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter, fundingFilter, inAssessmentReviewPanel).toGetResponse();
+    }
+
+    @GetMapping("/find-by-competition/{competitionId}/submitted/eoi")
+    public RestResult<ApplicationSummaryPageResource> getSubmittedEoiApplicationSummariesByCompetitionId(
+            @PathVariable("competitionId") long competitionId,
+            @RequestParam(value = "sort", required = false) String sortBy,
+            @RequestParam(value = "page", defaultValue = "0") int pageIndex,
+            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+            @RequestParam(value = "filter", required = false) Optional<String> filter,
+            @RequestParam(value = "fundingFilter", required = false) Optional<FundingDecisionStatus> fundingFilter,
+            @RequestParam(value = "sendFilter", required = false) Optional<Boolean> sendFilter) {
+        return applicationSummaryService.getSubmittedEoiApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter, fundingFilter, sendFilter).toGetResponse();
     }
 
     @GetMapping("/find-by-competition/{competitionId}/not-submitted")

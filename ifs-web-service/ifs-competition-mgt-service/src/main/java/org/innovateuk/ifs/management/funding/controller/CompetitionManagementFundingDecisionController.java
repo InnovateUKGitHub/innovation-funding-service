@@ -74,6 +74,20 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         return FundingDecisionSelectionCookie.class;
     }
 
+    @GetMapping("/eoi")
+    public String eoiApplications(Model model,
+                                  @PathVariable("competitionId") long competitionId,
+                                  @RequestParam(name = "filterChanged", required = false) boolean filterChanged,
+                                  @ModelAttribute @Valid FundingDecisionPaginationForm paginationForm,
+                                  @ModelAttribute FundingDecisionFilterForm filterForm,
+                                  @ModelAttribute FundingDecisionSelectionForm selectionForm,
+                                  BindingResult bindingResult,
+                                  HttpServletRequest request,
+                                  HttpServletResponse response) {
+        filterForm.setEoi(true);
+        return viewApplications(model, competitionId, filterChanged, paginationForm, filterForm, selectionForm, bindingResult, request, response);
+    }
+
     @GetMapping
     public String applications(Model model,
                                @PathVariable("competitionId") long competitionId,
@@ -84,8 +98,19 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                                BindingResult bindingResult,
                                HttpServletRequest request,
                                HttpServletResponse response) {
+        return viewApplications(model, competitionId, filterChanged, paginationForm, filterForm, selectionForm, bindingResult, request, response);
+    }
 
-        redirectIfErrorsOrCompNotInCorrectState(competitionId, bindingResult);
+    private String viewApplications(Model model,
+                                    long competitionId,
+                                    boolean filterChanged,
+                                    FundingDecisionPaginationForm paginationForm,
+                                    FundingDecisionFilterForm filterForm,
+                                    FundingDecisionSelectionForm selectionForm,
+                                    BindingResult bindingResult,
+                                    HttpServletRequest request,
+                                    HttpServletResponse response) {
+        redirectIfErrorsOrCompNotInCorrectState(competitionId, filterForm, bindingResult);
 
         FundingDecisionSelectionCookie selectionCookieForm = getSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
 
@@ -110,7 +135,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         return "comp-mgt-funders-panel";
     }
 
-    @PostMapping
+    @PostMapping(value = {"", "/eoi"})
     public String makeDecision(Model model,
                                @PathVariable("competitionId") long competitionId,
                                @ModelAttribute FundingDecisionPaginationForm paginationForm,
@@ -121,14 +146,14 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                                HttpServletRequest request,
                                HttpServletResponse response) {
 
-        redirectIfErrorsOrCompNotInCorrectState(competitionId, bindingResult);
+        redirectIfErrorsOrCompNotInCorrectState(competitionId, filterForm, bindingResult);
 
         FundingDecisionSelectionCookie selectionForm = getSelectionFormFromCookie(request, competitionId)
                 .orElse(new FundingDecisionSelectionCookie(fundingDecisionSelectionForm));
         return fundersPanelCompetition(model, competitionId, selectionForm, paginationForm, fundingDecisionChoiceForm, filterForm, bindingResult, response);
     }
 
-    @PostMapping(params = {"addAll"})
+    @PostMapping(value = {"", "/eoi"}, params = {"addAll"})
     public @ResponseBody JsonNode addAllApplicationsToFundingDecisionSelectionList(@PathVariable("competitionId") long competitionId,
                                                                                    @RequestParam("addAll") boolean addAll,
                                                                                    HttpServletRequest request,
@@ -165,7 +190,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         selectionForm.setAllSelected(false);
     }
 
-    @PostMapping(params = {"selectionId", "isSelected"})
+    @PostMapping(value = {"", "/eoi"}, params = {"selectionId", "isSelected"})
     public @ResponseBody JsonNode addSelectedApplicationsToFundingDecisionList(@PathVariable("competitionId") long competitionId,
                                                                                @RequestParam("selectionId") long applicationId,
                                                                                @RequestParam("isSelected") boolean isSelected,
@@ -214,7 +239,8 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                 return applicationSummaryRestService.getAllAssessedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter()).getOrElse(emptyList());
             }
         }
-        return applicationSummaryRestService.getAllSubmittedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter()).getOrElse(emptyList());
+
+        return  competitionManagementFundingDecisionModelPopulator.getAllSubmittedApplicationIds(competitionId, filterForm);
     }
 
     private FundingDecisionSelectionForm trimSelectionByFilteredResult(FundingDecisionSelectionForm selectionForm,
@@ -265,7 +291,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         return competitionRestService.getCompetitionById(competitionId).getSuccess();
     }
 
-    private String redirectIfErrorsOrCompNotInCorrectState(long competitionId, BindingResult bindingResult) {
+    private String redirectIfErrorsOrCompNotInCorrectState(long competitionId, FundingDecisionFilterForm filterForm, BindingResult bindingResult) {
 
         CompetitionResource competition = getCompetitionIfExist(competitionId);
         List<CompetitionStatus> acceptedCompStates = Arrays.asList(CompetitionStatus.ASSESSOR_FEEDBACK, CompetitionStatus.FUNDERS_PANEL);
@@ -275,7 +301,9 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         }
 
         if (bindingResult.hasErrors()) {
-            return "redirect:/competition/" + competition.getId() + "/funding";
+            return filterForm.isEoi()
+                    ? "redirect:/competition/" + competition.getId() + "/funding/eoi"
+                    : "redirect:/competition/" + competition.getId() + "/funding";
         }
 
         return null;
