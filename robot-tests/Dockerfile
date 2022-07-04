@@ -47,11 +47,6 @@ ENV GID=993
 ENV UID=996
 ENV PW=default
 
-RUN groupadd -g ${GID} gluster && \
-  useradd -p ${PW} -u ${UID} -g ${GID} gluster
-
-VOLUME /mnt/ifs_storage
-
 COPY robotPythonLibs-requirements.txt /tmp/
 RUN pip3 install -r /tmp/robotPythonLibs-requirements.txt
 COPY . /tmp/
@@ -75,8 +70,6 @@ RUN chown -R gluster:gluster . && \
   find . \( -type d -o -type f \) -exec chmod 775 {} + && \
   chown -R gluster:gluster /tmp && \
   find /tmp \( -type d -o -type f \) -exec chmod 775 {} +
-
-USER gluster
 
 COPY IFS_acceptance_tests/resources/variables/EMAIL_VARIABLES_TEMPLATE.robot /robot-tests/IFS_acceptance_tests/resources/variables/EMAIL_VARIABLES_SENSITIVE.robot
 

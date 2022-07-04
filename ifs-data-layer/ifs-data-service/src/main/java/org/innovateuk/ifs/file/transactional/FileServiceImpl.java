@@ -17,7 +17,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileService;
-import org.innovateuk.ifs.file.transactional.gluster.GlusterFileServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,9 +49,6 @@ public class FileServiceImpl implements FileService {
 
     @Autowired
     private FileDeletion fileDeletionFeign;
-
-    @Autowired
-    private GlusterFileServiceImpl glusterFileService;
 
     @Autowired
     private FileServiceTransactionHelper fileServiceTransactionHelper;
@@ -120,10 +116,6 @@ public class FileServiceImpl implements FileService {
     public ServiceResult<Supplier<InputStream>> getFileByFileEntryId(Long fileEntryId) {
         try {
             FileEntry fileEntry = fileServiceTransactionHelper.find(fileEntryId);
-            if (!isS3Storage(fileEntry)) {
-                // no uuid means it must be a gluster file
-                return glusterPath(fileEntry);
-            }
             ResponseEntity<FileDownloadResponse> fileDownloadResponse = fileDownloadFeign.fileDownloadResponse(fileEntry.getFileUuid());
             return serviceSuccess(() -> new ByteArrayInputStream(fileDownloadResponse.getBody().getPayload()));
         } catch (NoSuchElementException ex) {
@@ -135,12 +127,6 @@ public class FileServiceImpl implements FileService {
 
     private boolean isS3Storage(FileEntry fileEntry) {
         return fileEntry.getFileUuid() != null && !fileEntry.getFileUuid().isEmpty();
-    }
-
-    // old path via gluster - see gluster package - delete after migration
-    private ServiceResult<Supplier<InputStream>> glusterPath(FileEntry fileEntry) {
-        return glusterFileService.findFileForGet(fileEntry).
-                andOnSuccess(fileAndStorageLocation -> glusterFileService.getInputStreamSupplier(fileAndStorageLocation.getKey()));
     }
 
     @Override
