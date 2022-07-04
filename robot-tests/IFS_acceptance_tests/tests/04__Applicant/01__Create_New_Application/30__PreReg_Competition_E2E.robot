@@ -96,10 +96,22 @@ Comp admin can not view mark as ineligible application link
     [Documentation]  IFS-12257
     Given log in as a different user                &{ifs_admin_user_credentials}
     When the user navigates to the page             ${server}/management/competition/${preregCompetitionId}/application/${preregApplicationID}
-    Then the user should not see the element         jQuery = span:contains("Mark application as ineligible")
+    Then the user should not see the element        jQuery = span:contains("Mark application as ineligible")
+
+Internal users can see expression of interest statistics
+    [Documentation]  IFS-12176
+    Given the user navigates to the page        ${server}/management/competition/${preregCompetitionId}
+    When the user clicks the button/link        link = Applications: All, submitted, expression of interest, ineligible
+    Then the user should see the element        jQuery = .highlight-panel:contains("Expressions of interest") span:contains("1")
+
+Internal users can see submitted expression of interest applications
+    [Documentation]  IFS-12176
+    When the user clicks the button/link        link = Expression of interest
+    Then the user should see the element        jQuery = td:contains("${preregApplicationID}") + td:contains("${hecpPreregAppName}")
+    And the user should see the element         jQuery = .highlight-panel:contains("Expression of interest") span:contains("1")
+
 
 *** Keywords ***
-
 Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
