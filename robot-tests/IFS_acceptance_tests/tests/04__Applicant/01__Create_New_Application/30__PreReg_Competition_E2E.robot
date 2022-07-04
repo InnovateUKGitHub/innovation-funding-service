@@ -110,10 +110,11 @@ Internal user marks the application as successful
     when the user navigates to the page             ${SERVER}/management/competition/${preregCompetitionId}
     And the user clicks the button/link             jQuery = a:contains("Applications: All, submitted, ineligible")
     And the user clicks the button/link             link = Expression of interest
+    And the user should see the element             jQuery = h1:contains("Expression of interest")
     And the user should see the element             link = ${preregApplicationID}
     And the user selects the checkbox               applicationIds
-    And the user clicks the button/link             css = [type="submit"][value="{FUNDED}"]
-    Then the user should see the element            jQuery = td:contains("Successful")
+    And the user clicks the button/link             css = [type="submit"][value="FUNDED"]
+    Then the user should see the element            jQuery = td:contains("${preregApplicationID}") + td:contains("Successful")
 
 *** Keywords ***
 Requesting IDs of this hecp pre reg competition
