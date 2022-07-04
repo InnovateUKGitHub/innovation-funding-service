@@ -456,8 +456,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     }
 
     protected List<QuestionResource> retrieveQuestionsByCompetitionId(Long competitionId) {
-        return fromCache(competitionId, questionsByCompetitionId, () -> doAs(compAdmin(), () ->
-                questionService.findByCompetition(competitionId).getSuccess()));
+        return doAs(compAdmin(), () -> questionService.findByCompetition(competitionId).getSuccess());
     }
 
     protected List<FormInputResource> retrieveFormInputsByQuestionId(QuestionResource question) {
