@@ -112,7 +112,7 @@ Internal user marks the application as successful
     And the user clicks the button/link             link = Expression of interest
     And the user should see the element             link = ${preregApplicationID}
     And the user selects the checkbox               applicationIds
-    And the user clicks the button/link             css = [type="submit"][value="${FUNDED}"]
+    And the user clicks the button/link             css = [type="submit"][value="{FUNDED}"]
     Then the user should see the element            jQuery = td:contains("Successful")
 
 *** Keywords ***
