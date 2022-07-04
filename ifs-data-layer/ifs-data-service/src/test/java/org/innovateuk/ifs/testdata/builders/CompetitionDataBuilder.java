@@ -305,16 +305,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     public CompetitionDataBuilder sendFundingDecisions(List<Pair<String, FundingDecision>> fundingDecisions) {
         return asCompAdmin(data -> {
             if (fundingDecisions.size() > 0) {
-                LOG.info("sendFundingDecisions fundingDecisions size ->" + new Integer(fundingDecisions.size()).toString());
-
                 List<Pair<Long, FundingDecision>> applicationIdAndDecisions = simpleMap(fundingDecisions, decisionInfo -> {
                     FundingDecision decision = decisionInfo.getRight();
                     Application application = applicationRepository.findByName(decisionInfo.getLeft()).get(0);
-                    LOG.info("sendFundingDecisions application name ->" + application.getName());
                     return Pair.of(application.getId(), decision);
                 });
-
-                LOG.info("sendFundingDecisions applicationIdAndDecisions size ->" + new Integer(applicationIdAndDecisions.size()).toString());
 
                 applicationFundingService.saveFundingDecisionData(data.getCompetition().getId(), pairsToMap(applicationIdAndDecisions)).
                         getSuccess();

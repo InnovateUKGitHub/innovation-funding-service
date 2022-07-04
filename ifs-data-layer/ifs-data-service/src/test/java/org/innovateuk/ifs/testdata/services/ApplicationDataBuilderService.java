@@ -437,8 +437,6 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
         CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competition);
 
-        LOG.info("createFundingDecisions basicCompetitionInformation name->" + competitionLine.getName());
-
         if (!competition.getCompetition().isKtp()
                 && (asList(CompetitionStatus.PROJECT_SETUP, CompetitionStatus.ASSESSOR_FEEDBACK).contains(competitionLine.getCompetitionStatus())
                         || (competition.getCompetition().isAlwaysOpen() && CompetitionStatus.OPEN == competitionLine.getCompetitionStatus()))) {
