@@ -37,7 +37,6 @@ Applicants should view prereg related content when competition is opened
 
 Application Dashboard with admin ashna1
     [Documentation]    IFS-12177
-    Given Comp admin goes to the competition
     when the user navigates to the page              ${SERVER}/management/competition/${preregCompetitionId}
     Then the user clicks the button/link             jQuery = a:contains("Applications: All, submitted, ineligible")
     And The user should see the element              link = All applications
