@@ -9,6 +9,13 @@ public class FundingAmountSoughtForm extends CompetitionSetupForm {
     @NotNull(message = "{validation.eligibilityform.researchCategoriesApplicable.required}")
     private Boolean fundingAmountSoughtApplicable;
 
+    public FundingAmountSoughtForm() {
+    }
+
+    public FundingAmountSoughtForm(Boolean fundingAmountSoughtApplicable) {
+        this.fundingAmountSoughtApplicable = fundingAmountSoughtApplicable;
+    }
+
     public Boolean getFundingAmountSoughtApplicable() {
         return fundingAmountSoughtApplicable;
     }

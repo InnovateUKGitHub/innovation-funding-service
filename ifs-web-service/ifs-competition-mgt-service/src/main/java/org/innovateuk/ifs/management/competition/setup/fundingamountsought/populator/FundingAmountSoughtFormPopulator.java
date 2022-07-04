@@ -2,13 +2,15 @@ package org.innovateuk.ifs.management.competition.setup.fundingamountsought.popu
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupFormPopulator;
 import org.innovateuk.ifs.management.competition.setup.fundingamountsought.form.FundingAmountSoughtForm;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service to populate the Application funding amount sought form in Competition Setup.
+ */
 @Service
-public class FundingAmountSoughtModelPopulator implements CompetitionSetupFormPopulator {
+public class FundingAmountSoughtFormPopulator implements CompetitionSetupFormPopulator {
 
     @Override
     public CompetitionSetupSection sectionToFill() {
@@ -16,11 +18,7 @@ public class FundingAmountSoughtModelPopulator implements CompetitionSetupFormPo
     }
 
     @Override
-    public CompetitionSetupForm populateForm(CompetitionResource competitionResource) {
-        FundingAmountSoughtForm amountSoughtForm = new FundingAmountSoughtForm();
-
-        amountSoughtForm.setFundingAmountSoughtApplicable(competitionResource.getCompetitionApplicationConfigResource().isMaximumFundingSoughtEnabled());
-
-        return amountSoughtForm;
+    public FundingAmountSoughtForm populateForm(CompetitionResource competitionResource) {
+        return new FundingAmountSoughtForm(competitionResource.getCompetitionApplicationConfigResource().isMaximumFundingSoughtEnabled());
     }
 }

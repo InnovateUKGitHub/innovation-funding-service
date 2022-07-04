@@ -43,7 +43,8 @@ import java.util.stream.Collectors;
                 FileTypeMapper.class,
                 FileEntryMapper.class,
                 GolTemplateMapper.class,
-                CompetitionThirdPartyConfigMapper.class
+                CompetitionThirdPartyConfigMapper.class,
+                CompetitionApplicationConfigMapper.class
         })
 public abstract class CompetitionMapper extends BaseMapper<Competition, CompetitionResource, Long> {
 
@@ -56,7 +57,8 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
             @Mapping(source = "createdBy.name", target = "createdBy"),
             @Mapping(source = "modifiedBy.name", target = "modifiedBy"),
             @Mapping(target = "assessorFinanceView", ignore = true),
-            @Mapping(source = "competitionThirdPartyConfig", target = "competitionThirdPartyConfigResource")
+            @Mapping(source = "competitionThirdPartyConfig", target = "competitionThirdPartyConfigResource"),
+            @Mapping(source = "competitionApplicationConfig", target = "competitionApplicationConfigResource")
     })
     @Override
     public abstract CompetitionResource mapToResource(Competition domain);
@@ -74,7 +76,7 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
             @Mapping(target = "useDocusignForGrantOfferLetter", ignore = true),
             @Mapping(target = "competitionFinanceRowTypes", ignore = true),
             @Mapping(target = "competitionExternalConfig", ignore = true),
-            @Mapping(source = "competitionThirdPartyConfigResource", target = "competitionThirdPartyConfig")
+            @Mapping(source = "competitionThirdPartyConfigResource", target = "competitionThirdPartyConfig"),
     })
     public abstract Competition mapToDomain(CompetitionResource domain);
 

@@ -25,6 +25,7 @@ import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetu
 import org.innovateuk.ifs.management.competition.setup.core.form.FunderRowForm;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
+import org.innovateuk.ifs.management.competition.setup.fundingamountsought.form.FundingAmountSoughtForm;
 import org.innovateuk.ifs.management.competition.setup.fundingeligibility.form.FundingEligibilityResearchCategoryForm;
 import org.innovateuk.ifs.management.competition.setup.fundinginformation.form.AdditionalInfoForm;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm;
@@ -281,8 +282,8 @@ public class CompetitionSetupController {
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.FUNDING_ELIGIBILITY, loggedInUser, model);
     }
 
-    @PostMapping("/{competitionId}/section/funding-eligibility")
-    public String submitFundingAmountSoughtSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) FundingEligibilityResearchCategoryForm competitionSetupForm,
+    @PostMapping("/{competitionId}/section/funding-amount-sought")
+    public String submitFundingAmountSoughtSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) FundingAmountSoughtForm competitionSetupForm,
                                                          BindingResult bindingResult,
                                                          ValidationHandler validationHandler,
                                                          @PathVariable(COMPETITION_ID_KEY) long competitionId,
