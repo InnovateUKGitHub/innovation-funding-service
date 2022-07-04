@@ -358,10 +358,11 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         CompletableFuture<Void> competitionAssessmentPeriodsFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(() ->
                 createAssessmentPeriodsForCompetitions(createCompetitionFutures), taskExecutor);
 
-        CompletableFuture<Void> disableSectionForPreRegistrationFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(() ->
-                disableSectionForPreRegistrationForCompetitions(createCompetitionFutures), taskExecutor);
+        /*CompletableFuture<Void> disableSectionForPreRegistrationFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(() ->
+                disableSectionForPreRegistrationForCompetitions(createCompetitionFutures), taskExecutor);*/
 
-        CompletableFuture.allOf(disableSectionForPreRegistrationFutures,
+        CompletableFuture.allOf(
+                                //disableSectionForPreRegistrationFutures,
                                 competitionFundersFutures,
                                 publicContentFutures,
                                 assessorFutures,
