@@ -25,8 +25,6 @@ Comp Admin creates a prereg competition
     Given The user logs-in in new browser                    &{Comp_admin1_credentials}
     Then the competition admin creates prereg competition    ${BUSINESS_TYPE_ID}  ${hecpPreregCompName}  Pre Registration  ${compType_HESTA}  NOT_AID  HECP  PROJECT_SETUP  no  50  false  single-or-collaborative
 
-
-
 Applicants should view prereg related content when competition is opened
     [Arguments]  IFS-12065
     Given Comp admin set the competion as prereg comp and hide the question, section and subsection
@@ -106,6 +104,16 @@ Applicant can not view hidden question, section and subsection in print applicat
     And the user should not see the element                            xpath = //span[contains(text(),'Award terms and conditions')]
     [Teardown]  the user navigates to the page                         ${SERVER}/application/${preregApplicationID}/track
 
+Internal user marks the application as successful
+    [Documentation]  IFS-12177
+    Given log in as a different user                &{Comp_admin1_credentials}
+    when the user navigates to the page             ${SERVER}/management/competition/${preregCompetitionId}
+    And the user clicks the button/link             jQuery = a:contains("Applications: All, submitted, ineligible")
+    And the user clicks the button/link             link = Expression of interest
+    And the user should see the element             link = ${preregApplicationID}
+    And the user selects the checkbox               applicationIds
+    And the user clicks the button/link             css = [type="submit"][value="${FUNDED}"]
+    Then the user should see the element            jQuery = td:contains("Successful")
 
 *** Keywords ***
 Requesting IDs of this hecp pre reg competition
