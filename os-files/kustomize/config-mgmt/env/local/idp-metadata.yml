@@ -77,7 +77,7 @@ data:
 
             <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
                 <Extensions>
-                    <init:RequestInitiator xmlns:init="urn:oasis:names:tc:SAML:profiles:SSO:request-init" Binding="urn:oasis:names:tc:SAML:profiles:SSO:request-init" Location="https://ifs-loans.apps.ocp4.staging.innovateuk.ukri.org/Shibboleth.sso/Login"/>
+                    <init:RequestInitiator xmlns:init="urn:oasis:names:tc:SAML:profiles:SSO:request-init" Binding="urn:oasis:names:tc:SAML:profiles:SSO:request-init" Location="https://ifs-loans.api.ocp4.innovateuk.ukri.org/Shibboleth.sso/Login"/>
                     <idpdisc:DiscoveryResponse xmlns:idpdisc="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Location="https://host.docker.internal:8443/Shibboleth.sso/Login" index="1"/>
                 </Extensions>
                 <KeyDescriptor>

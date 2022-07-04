@@ -3,9 +3,9 @@ apiVersion: v1
 metadata:
   name: web-config
 data:
-  SPRING_APPLICATION_JSON: '{"logout":{"url": "https://ifs-perf.apps.ocp4.staging.innovateuk.ukri.org/Logout/"}}'
-  IFS_LIVE_PROJECTS_LANDING_PAGE_URL: "https://www-acc-perf.apps.ocp4.staging.innovateuk.ukri.org/projects/dashboard"
-  IFS_EARLY_METRICS_URL: "https://ifs-perf.apps.ocp4.staging.innovateuk.ukri.org/early-metrics"
-  IFS_WEB_BASEURL: 'https://ifs-perf.apps.ocp4.staging.innovateuk.ukri.org'
+  SPRING_APPLICATION_JSON: '{"logout":{"url": "https://ifs-perf.api.ocp4.innovateuk.ukri.org/Logout/"}}'
+  IFS_LIVE_PROJECTS_LANDING_PAGE_URL: "https://www-acc-perf.api.ocp4.innovateuk.ukri.org/projects/dashboard"
+  IFS_EARLY_METRICS_URL: "https://ifs-perf.api.ocp4.innovateuk.ukri.org/early-metrics"
+  IFS_WEB_BASEURL: 'https://ifs-perf.api.ocp4.innovateuk.ukri.org'
   IFS_LOANS_SALESFORCE_PAGE_URL: ""
   IFS_EDI_SALESFORCE_PAGE_URL: ""

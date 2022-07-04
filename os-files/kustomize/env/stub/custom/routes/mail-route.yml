@@ -3,7 +3,7 @@ kind: Route
 metadata:
   name: mail
 spec:
-  host: mail-openshiftEnvKey.apps.ocp4.staging.innovateuk.ukri.org
+  host: mail-openshiftEnvKey.api.ocp4.innovateuk.ukri.org
   port:
     targetPort: 4443-tcp
   tls:
@@ -18,5 +18,5 @@ status:
     - conditions:
         - status: 'True'
           type: Admitted
-      host: mail-openshiftEnvKey.apps.ocp4.staging.innovateuk.ukri.org
+      host: mail-openshiftEnvKey.api.ocp4.innovateuk.ukri.org
       routerName: router
