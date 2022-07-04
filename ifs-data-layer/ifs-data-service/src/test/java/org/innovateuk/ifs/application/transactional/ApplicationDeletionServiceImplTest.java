@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationExpressionOfInterestConfig;
 import org.innovateuk.ifs.application.repository.*;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.ApplicationUserCompositeId;
@@ -91,6 +92,8 @@ public class ApplicationDeletionServiceImplTest extends BaseServiceUnitTest<Appl
         long applicationId = 1L;
         Application application = newApplication()
                 .withApplicationState(ApplicationState.OPENED)
+                .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig
+                        .builder().enabledForExpressionOfInterest(true).build())
                 .build();
         String email = "test@test.com";
         String firstName = "test";
