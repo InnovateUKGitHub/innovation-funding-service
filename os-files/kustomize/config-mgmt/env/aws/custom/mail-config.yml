@@ -3,4 +3,4 @@ apiVersion: v1
 metadata:
   name: mail-config
 data:
-  MAIL_FQDN: "mail-openshiftEnvKey.api.ocp4.innovateuk.ukri.org"
+  MAIL_FQDN: "mail-openshiftEnvKey.apps.ocp4.innovateuk.ukri.org"

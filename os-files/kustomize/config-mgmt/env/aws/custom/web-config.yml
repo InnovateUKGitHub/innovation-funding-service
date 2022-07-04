@@ -3,7 +3,7 @@ apiVersion: v1
 metadata:
   name: web-config
 data:
-  SPRING_APPLICATION_JSON: '{"logout":{"url": "https://openshiftEnvKey.api.ocp4.innovateuk.ukri.org/Logout/" }}'
-  IFS_WEB_BASEURL: "https://openshiftEnvKey.api.ocp4.innovateuk.ukri.org"
-  IFS_LIVE_PROJECTS_LANDING_PAGE_URL: "https://openshiftEnvKey.api.ocp4.innovateuk.ukri.org/live-projects-landing-page"
-  IFS_EARLY_METRICS_URL: "https://openshiftEnvKey.api.ocp4.innovateuk.ukri.org/early-metrics"
+  SPRING_APPLICATION_JSON: '{"logout":{"url": "https://openshiftEnvKey.apps.ocp4.innovateuk.ukri.org/Logout/" }}'
+  IFS_WEB_BASEURL: "https://openshiftEnvKey.apps.ocp4.innovateuk.ukri.org"
+  IFS_LIVE_PROJECTS_LANDING_PAGE_URL: "https://openshiftEnvKey.apps.ocp4.innovateuk.ukri.org/live-projects-landing-page"
+  IFS_EARLY_METRICS_URL: "https://openshiftEnvKey.apps.ocp4.innovateuk.ukri.org/early-metrics"

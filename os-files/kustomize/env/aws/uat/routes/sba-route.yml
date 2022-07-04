@@ -3,7 +3,7 @@ kind: Route
 metadata:
   name: sba
 spec:
-  host: sba-uat.api.ocp4.innovateuk.ukri.org
+  host: sba-uat.apps.ocp4.innovateuk.ukri.org
   port:
     targetPort: 7443-tcp
   tls:
@@ -18,5 +18,5 @@ status:
     - conditions:
         - status: 'True'
           type: Admitted
-      host: sba-uat.api.ocp4.innovateuk.ukri.org
+      host: sba-uat.apps.ocp4.innovateuk.ukri.org
       routerName: router
