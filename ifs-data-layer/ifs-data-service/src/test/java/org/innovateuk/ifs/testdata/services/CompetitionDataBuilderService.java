@@ -31,7 +31,6 @@ import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCom
 import static org.innovateuk.ifs.testdata.builders.CompetitionFunderDataBuilder.newCompetitionFunderData;
 import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.newPublicContentDateDataBuilder;
 import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder.newPublicContentGroupDataBuilder;
-import static org.innovateuk.ifs.testdata.builders.PreRegistrationSectionDataBuilder.newCompetitionPreRegistrationSections;
 import static org.innovateuk.ifs.testdata.data.CompetitionWebTestData.buildCompetitionLines;
 import static org.innovateuk.ifs.testdata.data.CompetitionPreRegistrationWebTestData.buildCompetitionPreRegistrationLines;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
@@ -56,7 +55,6 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
     private CompetitionFunderDataBuilder competitionFunderDataBuilder;
     private CompetitionOrganisationConfigDataBuilder competitionOrganisationConfigDataBuilder;
     private AssessmentPeriodDataBuilder assessmentPeriodDataBuilder;
-    private PreRegistrationSectionDataBuilder preRegistrationSectionDataBuilder;
 
     private List<CompetitionLine> competitionLines;
     private static List<CsvUtils.CompetitionFunderLine> competitionFunderLines;
@@ -73,7 +71,6 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         competitionFunderDataBuilder = newCompetitionFunderData(serviceLocator);
         competitionOrganisationConfigDataBuilder = newCompetitionConfigData(serviceLocator);
         assessmentPeriodDataBuilder = newCompetitionAssessmentPeriods(serviceLocator);
-        preRegistrationSectionDataBuilder = newCompetitionPreRegistrationSections(serviceLocator);
 
         competitionLines = buildCompetitionLines();
         competitionFunderLines = readCompetitionFunders();
@@ -152,16 +149,6 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         } else {
             return ifsCompetitionDataBuilder(line).build();
         }
-    }
-
-    public void disableSectionForPreRegistration(CompetitionData competition) {
-
-        List<PreRegistrationSectionLine> sectionLines = simpleFilter(preRegistrationSectionLines, l ->
-                competition.getCompetition().getName().equals(l.competitionName));
-
-        sectionLines.forEach(sectionLine ->
-                preRegistrationSectionDataBuilder.withPreRegistrationSections(sectionLine).build()
-        );
     }
 
     public void moveCompetitionIntoOpenStatus(CompetitionData competition) {
