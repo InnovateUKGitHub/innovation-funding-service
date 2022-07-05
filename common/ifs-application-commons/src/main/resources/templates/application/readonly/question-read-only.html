@@ -27,9 +27,9 @@
                     <th:block th:if="${model.isWorkProgrammeQuestionCompleted()}">
                         <dl class="govuk-list govuk-!-font-size-16">
                             <dt>Select the Horizon Europe Work programme Part you applied to, e.g. CL2.</dt>
-                            <dd class="govuk-!-margin-top-4" th:text="${model.workProgrammeAnswers.get(0).workProgramme.getDisplay()}"></dd>
+                            <dd class="govuk-!-margin-top-4" th:text="${model.workProgrammeAnswers.get(0).workProgramme.name}"></dd>
                             <dt class="govuk-!-margin-top-6">Select the call you applied to.</dt>
-                            <dd class="govuk-!-margin-top-4" th:text="${model.workProgrammeAnswers.get(1).workProgramme.getDisplay()}"></dd>
+                            <dd class="govuk-!-margin-top-4" th:text="${model.workProgrammeAnswers.get(1).workProgramme.name}"></dd>
                         </dl>
                     </th:block>
                     <th:block th:unless="${model.isWorkProgrammeQuestionCompleted()}">

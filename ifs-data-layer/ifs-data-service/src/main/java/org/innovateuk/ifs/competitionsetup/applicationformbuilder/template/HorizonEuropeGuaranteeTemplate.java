@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder.template;
 
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
@@ -9,6 +10,8 @@ import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionType;
+import org.innovateuk.ifs.horizon.repository.CompetitionHorizonWorkProgrammeRepository;
+import org.innovateuk.ifs.horizon.transactional.HorizonWorkProgrammeService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,7 +28,6 @@ import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder
 
 @Component
 public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
-
 
     @Autowired
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
