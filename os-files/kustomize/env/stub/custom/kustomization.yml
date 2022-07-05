@@ -27,7 +27,6 @@ resources:
   - routes/mail-route.yml
   - routes/sba-route.yml
   - routes/fss-route.yml
-  - storage/persistent-volume-claim.yml
   - rbac/sba-rbac.yml
 
 patchesStrategicMerge:
