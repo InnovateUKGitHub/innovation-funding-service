@@ -34,7 +34,7 @@ Filter on application number
 
 Filter on Sent
     [Documentation]    IFS-12177
-    the user selects the option from the drop-down menu  sendFilter    Yes
+    the user selects the option from the drop-down menu  Yes    id= sendFilter
     When the user clicks the button/link                 jQuery = button:contains("Filter")
     Then the user should see the element                 jQuery = td:contains("Horizon Europe Guarantee Eoi Application3")
     And the user should see the element                  jQuery = td:contains("Successful")
@@ -49,7 +49,7 @@ Filter on Sent
 
 Filter on Expression of interest decision
     [Documentation]    IFS-12177
-    the user selects the option from the drop-down menu  fundingFilter    FUNDED
+    the user selects the option from the drop-down menu  Successful    id= fundingFilter
     When the user clicks the button/link                 jQuery = button:contains("Filter")
     Then the user should see the element                 jQuery = td:contains("Horizon Europe Guarantee Eoi Application3")
     And the user should see the element                  jQuery = td:contains("Successful")
@@ -61,9 +61,9 @@ Filter on Expression of interest decision
     And the user should see the element                  jQuery = td:contains("Horizon Europe Guarantee Eoi Application2")
     And the user should see the element                  jQuery = td:contains("Unsuccessful")
     And the user should see the element                  jQuery = td:contains("84")
+
+
 *** Keywords ***
-
-
 submitted application calculations are correct
     the calculations should be correct    jQuery = td:contains("submitted")    css = .info-area p:nth-child(5) span
 
