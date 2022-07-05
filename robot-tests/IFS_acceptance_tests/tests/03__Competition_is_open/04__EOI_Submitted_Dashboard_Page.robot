@@ -15,8 +15,8 @@ ${quarantine_warning}    This file has been found to be unsafe
 Application Dashboard
     [Documentation]    IFS-12177
     Given The user logs-in in new browser           &{Comp_admin1_credentials}
-    Given the user clicks the button/link           ${SERVER}/management/competition/99
-    When the user clicks the button/link            jQuery = a:contains("Applications: All, submitted, ineligible")
+    when the user navigates to the page             ${SERVER}/management/competition/99
+    And the user clicks the button/link             jQuery = a:contains("Applications: All, submitted, ineligible")
     And the user clicks the button/link             link = Expression of interest
     And the user should see the element             jQuery = h1:contains("Expression of interest")
 

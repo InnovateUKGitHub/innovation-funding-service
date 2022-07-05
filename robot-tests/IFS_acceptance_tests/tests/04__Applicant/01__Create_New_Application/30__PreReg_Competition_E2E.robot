@@ -6,7 +6,8 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...               IFS-12079 Pre-Registration (Applicant Journey) Complete an expression of interest application
 ...
 ...               IFS-12080 Pre-Registration (Applicant Journey) Dashboard - Open / Submitted EOI applications
-...
+
+...               IFS-12177 Pre-reg/EOI next stage decision - input
 
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -26,7 +27,7 @@ Comp Admin creates a prereg competition
     Then the competition admin creates prereg competition    ${BUSINESS_TYPE_ID}  ${hecpPreregCompName}  Pre Registration  ${compType_HESTA}  NOT_AID  HECP  PROJECT_SETUP  no  50  false  single-or-collaborative
 
 Applicants should view prereg related content when competition is opened
-    [Arguments]  IFS-12065
+    [Documentation]  IFS-12065
     Given Comp admin set the competion as prereg comp and hide the question, section and subsection
     When the user navigates to the page         ${frontDoor}
     And the user enters text to a text field    id = keywords   Pre Registration
@@ -114,7 +115,7 @@ Internal user marks the application as successful
     And the user should see the element             link = ${preregApplicationID}
     And the user selects the checkbox               applicationIds
     And the user clicks the button/link             css = [type="submit"][value="FUNDED"]
-    Then the user should see the element            jQuery = td:contains("${preregApplicationID}") + td:contains("Successful")
+    Then the user should see the element            jQuery = td:contains("${preregApplicationID}") + td:contains("preRegApplication")+ td:contains("Empire Ltd")+ td:contains("Successful")
 
 *** Keywords ***
 Requesting IDs of this hecp pre reg competition
