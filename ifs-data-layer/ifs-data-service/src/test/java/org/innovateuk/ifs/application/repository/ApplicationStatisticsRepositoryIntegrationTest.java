@@ -383,6 +383,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withProfileRole(ProfileRole.ASSESSOR)
                 .withRoleProfileState(RoleProfileState.ACTIVE)
                 .withUser(users.get(0), users.get(1))
+                .withCreatedBy(users.get(0))
                 .buildSet(2);
         roleProfileStatusRepository.saveAll(roleProfileStates);
 
@@ -552,6 +553,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withProfileRole(ProfileRole.ASSESSOR)
                 .withRoleProfileState(RoleProfileState.ACTIVE)
                 .withUser(users.get(0), users.get(1))
+                .withCreatedBy(users.get(0), users.get(1))
                 .buildSet(2);
         roleProfileStatusRepository.saveAll(roleProfileStates);
 
