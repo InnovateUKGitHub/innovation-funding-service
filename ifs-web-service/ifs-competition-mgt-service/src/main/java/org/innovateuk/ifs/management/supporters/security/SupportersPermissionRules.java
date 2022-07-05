@@ -10,7 +10,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.hasCompetitionAdministratorAuthority;
 
 @PermissionRules
 @Component
@@ -21,14 +21,14 @@ public class SupportersPermissionRules {
 
     @PermissionRule(value = "SUPPORTERS", description = "Only project finance or competition admin can see supporters")
     public boolean cofunding(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
-        return isInternalAdmin(loggedInUser);
+        return hasCompetitionAdministratorAuthority(loggedInUser);
     }
 
     @PermissionRule(value = "ASSIGN_SUPPORTERS", description = "Only project finance or competition admin can assign supporters " +
             "if the competition is in the correct state.")
     public boolean assignment(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
-        return isInternalAdmin(loggedInUser) &&
+        return hasCompetitionAdministratorAuthority(loggedInUser) &&
                 competitionIsInOpenOrLater(competition) &&
                 competitionIsBeforeAssessmentClosed(competition);
     }
