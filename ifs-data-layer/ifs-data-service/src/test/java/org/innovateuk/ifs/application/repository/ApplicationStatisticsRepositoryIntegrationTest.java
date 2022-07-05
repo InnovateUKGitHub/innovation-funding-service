@@ -39,6 +39,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -383,7 +384,8 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withProfileRole(ProfileRole.ASSESSOR)
                 .withRoleProfileState(RoleProfileState.ACTIVE)
                 .withUser(users.get(0), users.get(1))
-                .withCreatedBy(users.get(0))
+                .withCreatedBy(users.get(0), users.get(1))
+                .withCreatedOn(ZonedDateTime.now())
                 .buildSet(2);
         roleProfileStatusRepository.saveAll(roleProfileStates);
 
@@ -554,6 +556,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withRoleProfileState(RoleProfileState.ACTIVE)
                 .withUser(users.get(0), users.get(1))
                 .withCreatedBy(users.get(0), users.get(1))
+                .withCreatedOn(ZonedDateTime.now())
                 .buildSet(2);
         roleProfileStatusRepository.saveAll(roleProfileStates);
 
