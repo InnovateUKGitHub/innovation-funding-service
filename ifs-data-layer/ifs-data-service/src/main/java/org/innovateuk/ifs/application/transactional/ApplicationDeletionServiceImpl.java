@@ -73,6 +73,8 @@ public class ApplicationDeletionServiceImpl extends RootTransactionalService imp
 
     @Autowired
     private InviteHistoryRepository inviteHistoryRepository;
+    @Autowired
+    private ApplicationExpressionOfInterestConfigRepository applicationExpressionOfInterestConfigRepository;
 
     @Override
     @Transactional
@@ -98,6 +100,9 @@ public class ApplicationDeletionServiceImpl extends RootTransactionalService imp
         questionStatusRepository.deleteByApplicationId(application.getId());
         applicationHiddenFromDashboardRepository.deleteByApplicationId(application.getId());
         processHistoryRepository.deleteByProcessId(application.getApplicationProcess().getId());
+        if(application.getApplicationExpressionOfInterestConfig()!=null) {
+            applicationExpressionOfInterestConfigRepository.delete(application.getApplicationExpressionOfInterestConfig());
+        }
         applicationRepository.delete(application);
         applicationInviteRepository.deleteAll(application.getInvites());
 

@@ -587,6 +587,13 @@ existing user creates a new application
     ...                                                        AND    And the user clicks the button/link    jQuery=.govuk-button:contains("Continue")
     the user clicks the button/link                             css = .govuk-button[type="submit"]
 
+Existing applicant creates a new application with same organisation
+    [Arguments]  ${competitionName}
+    existing user creates a new application     ${competitionName}
+    ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  jQuery = label:contains("Empire Ltd")
+    Run Keyword if  '${status}' == 'PASS'  runkeywords  the user clicks the button twice   jQuery = label:contains("Empire Ltd")
+    ...                             AND                 the user clicks the button/link    jQuery = button:contains("Save and continue")
+
 the user enters organisation details manually on companies house link
     [Arguments]  ${organisationName}
     the user clicks the button/link          jQuery = span:contains("Enter details manually")
