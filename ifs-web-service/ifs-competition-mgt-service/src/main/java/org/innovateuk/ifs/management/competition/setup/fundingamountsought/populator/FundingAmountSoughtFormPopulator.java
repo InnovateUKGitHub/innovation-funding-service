@@ -19,6 +19,8 @@ public class FundingAmountSoughtFormPopulator implements CompetitionSetupFormPop
 
     @Override
     public FundingAmountSoughtForm populateForm(CompetitionResource competitionResource) {
-        return new FundingAmountSoughtForm(competitionResource.getCompetitionApplicationConfigResource().isMaximumFundingSoughtEnabled());
+        return new FundingAmountSoughtForm(
+                competitionResource.getCompetitionApplicationConfigResource().isMaximumFundingSoughtEnabled(),
+                competitionResource.getCompetitionApplicationConfigResource().getMaximumFundingSought());
     }
 }

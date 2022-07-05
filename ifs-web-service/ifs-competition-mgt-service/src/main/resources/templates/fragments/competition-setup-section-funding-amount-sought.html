@@ -6,57 +6,92 @@
         <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
 
-    <th:block th:if="${model.general.editable}">
-        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
-              method="post"
-              th:object="${competitionSetupForm}"
-              novalidate="novalidate">
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('fundingAmountSoughtApplicable')} ? 'govuk-form-group--error'">
-                <fieldset class="govuk-fieldset" aria-describedby="funding-amount-sought">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
-                        <h1 class="govuk-fieldset__heading">
-                            Funding amount sought
-                        </h1>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding amount sought',size='govuk-heading-xl'" />
+
+    <form th:action="@{(${model.general.editable} ? '' : 'funding-amount-sought/edit')}" method="post"
+          th:object="${competitionSetupForm}" novalidate="novalidate"
+          th:attr="data-competition=${model.general.competition.id}"
+          data-section="funding-amount-sought">
+        <th:block th:if="${model.general.editable}">
+            <div class="govuk-form-group"
+                 th:with="unchecked=${model.general.firstTimeInForm && !#fields.hasErrors('${competitionSetupForm.*}')}"
+                 th:classappend="${#fields.hasErrors('fundingAmountSoughtApplicable')} ? 'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingAmountSoughtApplicable">
+                        <h2 class="govuk-fieldset__heading">Is a maximum funding sought required?</h2>
                     </legend>
-                    <span id="completion-stage-hint" class="govuk-hint">
-                        Is a maximum funding sought required?
-                    </span>
                     <span th:if="${#fields.hasErrors('fundingAmountSoughtApplicable')}" class="govuk-error-message"
                           th:each="err : ${#fields.errors('fundingAmountSoughtApplicable')}" th:text="${err}"/>
                     <div class="govuk-radios">
-                        <div class="govuk-radios__item" th:each="value, iteration : ${ {true, false} }">
+                        <div class="govuk-radios__item" data-target="funding-amount-sought"
+                             data-target-clear-validation="true" data-target-clear-form="true">
                             <input type="radio"
                                    class="govuk-radios__input"
-                                   required="required"
-                                   th:value="${value}"
+                                   id="comp-fundingAmountSoughtApplicable-yes"
                                    name="fundingAmountSoughtApplicable"
-                                   th:checked="${competitionSetupForm.fundingAmountSoughtApplicable == value}"
-                                   th:id="|funding-amount-sought-${iteration.count}|"/>
-                            <label class="govuk-label govuk-radios__label selection-button-radio"
-                                   th:for="|funding-amount-sought-${iteration.count}|"
-                                   th:text="${value} ? 'Yes' : 'No'"></label>
+                                   th:checked="${!unchecked && competitionSetupForm.fundingAmountSoughtApplicable == true}"
+                                   value="true"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.eligibilityform.researchCategoriesApplicable.required}"/>
+                            <label class="govuk-radios__label"
+                                   for="comp-fundingAmountSoughtApplicable-yes">
+                                Yes
+                            </label>
+                        </div>
+
+                        <div id="funding-amount-sought" class="panel">
+                            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('fundingAmountSought')} ? 'govuk-form-group--error'">
+                                <fieldset class="govuk-fieldset">
+                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingAmountSought">
+                                        <h2 class="govuk-fieldset__heading">Funding sought amount</h2>
+                                    </legend>
+                                    <span th:if="${#fields.hasErrors('fundingAmountSought')}" class="govuk-error-message"
+                                          th:each="err : ${#fields.errors('fundingAmountSought')}" th:text="${err}"/>
+
+                                    <input class="govuk-input govuk-input--width-4 govuk-!-margin-right-1"
+                                           id="fundingAmountSought"
+                                           th:field="*{__fundingAmountSought__}"
+                                           th:errorclass="govuk-input--error"
+                                           type="number"
+                                           required="required"
+                                           data-prevent-input-non-number
+                                           th:attr="data-required-errormessage=#{validation.projecteligibility.researchParticipationPercentage.required}" />
+                                </fieldset>
+                            </div>
+                        </div>
+
+                        <div class="govuk-radios__item"
+                             data-target-clear-validation="true" data-target-clear-form="true">
+                            <input type="radio"
+                                   class="govuk-radios__input"
+                                   id="comp-fundingAmountSoughtApplicable-no"
+                                   name="fundingAmountSoughtApplicable"
+                                   th:checked="${!unchecked && competitionSetupForm.fundingAmountSoughtApplicable == false}"
+                                   value="false"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.eligibilityform.fundingAmountSoughtApplicable.required}"/>
+                            <label class="govuk-radios__label"
+                                   for="comp-fundingAmountSoughtApplicable-no">
+                                No
+                            </label>
                         </div>
                     </div>
-
                 </fieldset>
             </div>
-            <div class="govuk-form-group">
-                <button type="submit" class="govuk-button">
-                    Save and continue
-                </button>
-            </div>
-        </form>
-    </th:block>
+            <button class="govuk-button">Done</button>
+        </th:block>
 
-    <th:block th:unless="${model.general.editable}">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding amount sough',size='govuk-heading-xl'" />
-        <p class="govuk-body">
-            <strong>Is a maximum funding sought required?</strong> &emsp; <th:block th:text="${competitionSetupForm.fundingAmountSoughtApplicable} ? 'Yes' : 'No'"></th:block>
-        </p>
-        <form th:action="@{('funding-amount-sought/edit')}" method="post">
+        <th:block th:if="${!model.general.editable}">
+
+            <dl class="standard-definition-list">
+                <dt>Is a maximum funding sought required?</dt>
+                <dd th:text="${competitionSetupForm.fundingAmountSoughtApplicable ? 'Yes' : 'No'}"></dd>
+            </dl>
+
             <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button">Edit</button>
-        </form>
-    </th:block>
+        </th:block>
+
+    </form>
 
     <ul class="govuk-list pagination">
         <li class="prev">
