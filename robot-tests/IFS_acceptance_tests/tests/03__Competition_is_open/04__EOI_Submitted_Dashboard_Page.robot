@@ -14,7 +14,7 @@ ${openCompetitionRTOApplication1Name}       Horizon Europe Guarantee Eoi Applica
 ${openCompetitionRTO_name}                  Horizon Europe Guarantee Pre Registration Competition with EOI Decision
 
 *** Test Cases ***
-Application Dashboard
+Admin can view Expression of Interest
     [Documentation]    IFS-12177
     Given The user logs-in in new browser           &{Comp_admin1_credentials}
     when the user navigates to the page             ${SERVER}/management/competition/${openCompetitionRTO}
@@ -23,7 +23,7 @@ Application Dashboard
     And the user should see the element             jQuery = h1:contains("Expression of interest")
 
 
-Filter on application number
+Filter on application number, sent and Expression of interest decision
     [Documentation]    IFS-12177
     Given the user enters text to a text field                       id = stringFilter    ${openCompetitionRTOApplication1Id}
     And the user selects the option from the drop-down menu          Yes    id= sendFilter
@@ -36,10 +36,11 @@ Filter on application number
     And The user should see the text in the element                  stringFilter      ${EMPTY}
     And the user should see the option in the drop-down menu         All   sendFilter
     And the user should see the option in the drop-down menu         Show all  fundingFilter
+    And the user should not see the text in the element              fundingFilter  On Hold
 
 Pagination on Expression of interest
     [Documentation]    IFS-12177
-    Given the user should see the element                            ${openCompetitionRTOApplication1Id}
+    Given the user should see the element                            jQuery = td:contains(${openCompetitionRTOApplication1Id}
     When the user clicks the button/link                             jQuery = a:contains("Navigate to next page")
     Then the user should see the element                             jQuery = td:contains("Horizon Europe Guarantee Eoi Application21")
     And the user clicks the button/link                              jQuery = a:contains("Navigate to previous page")
@@ -49,8 +50,6 @@ Comp admin can view link to the application page from Expression of interest
     [Documentation]  IFS-6060
     Given the user clicks the button/link                                  link = ${openCompetitionRTOApplication1Id}
     Then the user should be redirected to the correct page                 ${server}/management/competition/${openCompetitionRTO}/application/${openCompetitionRTOApplication1Id}
-
-
 
 *** Keywords ***
 submitted application calculations are correct
