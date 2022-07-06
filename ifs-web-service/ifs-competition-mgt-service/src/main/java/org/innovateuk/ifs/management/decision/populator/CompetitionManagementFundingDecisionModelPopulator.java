@@ -13,6 +13,9 @@ import org.innovateuk.ifs.management.decision.form.FundingDecisionPaginationForm
 import org.innovateuk.ifs.management.decision.form.FundingDecisionSelectionForm;
 import org.innovateuk.ifs.management.decision.viewmodel.ManageFundingApplicationsViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
+import org.innovateuk.ifs.user.resource.Authority;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -47,7 +50,8 @@ public class CompetitionManagementFundingDecisionModelPopulator  {
     public ManageFundingApplicationsViewModel populate(long competitionId,
                                                        FundingDecisionPaginationForm paginationForm,
                                                        FundingDecisionFilterForm fundingDecisionFilterForm,
-                                                       FundingDecisionSelectionForm selectionForm) {
+                                                       FundingDecisionSelectionForm selectionForm,
+                                                       UserResource user) {
 
         ApplicationSummaryPageResource results = getApplicationsByFilters(competitionId, paginationForm, fundingDecisionFilterForm);
 
@@ -70,6 +74,7 @@ public class CompetitionManagementFundingDecisionModelPopulator  {
                 competitionSummary,
                 selectAllDisabled,
                 selectionLimitWarning,
+                !user.hasAuthority(Authority.COMP_ADMIN),
                 fundingDecisionFilterForm.isEoi(),
                 keyStatistics
         );

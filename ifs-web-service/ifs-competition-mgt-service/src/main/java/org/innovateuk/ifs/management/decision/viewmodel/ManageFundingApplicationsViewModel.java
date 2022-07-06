@@ -17,6 +17,7 @@ public class ManageFundingApplicationsViewModel {
     private CompetitionSummaryResource competitionSummary;
     private boolean selectAllDisabled;
     private boolean selectionLimitWarning;
+    private boolean readOnly;
     private boolean eoi;
     private CompetitionInFlightStatsViewModel keyStatistics;
 
@@ -27,6 +28,7 @@ public class ManageFundingApplicationsViewModel {
                                               CompetitionSummaryResource competitionSummary,
                                               boolean selectAllDisabled,
                                               boolean selectionLimitWarning,
+                                              boolean readOnly,
                                               boolean eoi,
                                               CompetitionInFlightStatsViewModel keyStatistics) {
         this.pagination = pagination;
@@ -36,6 +38,7 @@ public class ManageFundingApplicationsViewModel {
         this.competitionSummary = competitionSummary;
         this.selectAllDisabled = selectAllDisabled;
         this.selectionLimitWarning = selectionLimitWarning;
+        this.readOnly = readOnly;
         this.eoi = eoi;
         this.keyStatistics = keyStatistics;
     }
@@ -67,6 +70,8 @@ public class ManageFundingApplicationsViewModel {
     public boolean isSelectionLimitWarning() {
         return selectionLimitWarning;
     }
+
+    public boolean isReadOnly() { return readOnly; }
 
     public boolean isAnythingChangeable() {
         if (results != null) {
