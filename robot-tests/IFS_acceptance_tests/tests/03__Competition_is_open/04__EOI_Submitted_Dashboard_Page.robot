@@ -22,19 +22,38 @@ Application Dashboard
     And the user clicks the button/link             link = Expression of interest
     And the user should see the element             jQuery = h1:contains("Expression of interest")
 
+Comp admin can view link to the application page from Expression of interest
+    [Documentation]  IFS-6060
+    Given the user clicks the button/link                                  link = ${openCompetitionRTOApplication1Id}
+    Then the user should be redirected to the correct page                 ${server}/management/competition/${openCompetitionRTO}/application/${openCompetitionRTOApplication1Id}
+
 Filter on application number
     [Documentation]    IFS-12177
-    Given the user enters text to a text field               id = stringFilter    ${openCompetitionRTOApplication1Id}
-    And the user selects the option from the drop-down menu  Yes    id= sendFilter
-    And the user selects the option from the drop-down menu  Successful    id= fundingFilter
-    When the user clicks the button/link                     jQuery = button:contains("Filter")
-    Then the user should see the element                     jQuery = td:contains("Horizon Europe Guarantee Eoi Application3")
-    And the user should see the element                      jQuery = td:contains("Successful")
-    And the user should see the element                      jQuery = td:contains("85")
-    And the user clicks the button/link                      jQuery = a:contains("Clear all filters")
-    And The user should see the text in the element          stringFilter      ${EMPTY}
-    And The user should see the text in the element          sendFilter        All
-    And The user should see the text in the element          fundingFilter     Show all
+    Given the user enters text to a text field                       id = stringFilter    ${openCompetitionRTOApplication1Id}
+    And the user selects the option from the drop-down menu          Yes    id= sendFilter
+    And the user selects the option from the drop-down menu          Successful    id= fundingFilter
+    When the user clicks the button/link                             jQuery = button:contains("Filter")
+    Then the user should see the element                             jQuery = td:contains("Horizon Europe Guarantee Eoi Application3")
+    And the user should see the element                              jQuery = td:contains("Successful")
+    And the user should see the element                              jQuery = td:contains("85")
+    And the user clicks the button/link                              jQuery = a:contains("Clear all filters")
+    And The user should see the text in the element                  stringFilter      ${EMPTY}
+    And the user should see the option in the drop-down menu         All   sendFilter
+    And the user should see the option in the drop-down menu         Show all  fundingFilter
+
+Pagination on Expression of interest
+    [Documentation]    IFS-12177
+    Given the user enters text to a text field                       id = stringFilter    ${openCompetitionRTOApplication1Id}
+    And the user selects the option from the drop-down menu          Yes    id= sendFilter
+    And the user selects the option from the drop-down menu          Successful    id= fundingFilter
+    When the user clicks the button/link                             jQuery = button:contains("Filter")
+    Then the user should see the element                             jQuery = td:contains("Horizon Europe Guarantee Eoi Application3")
+    And the user should see the element                              jQuery = td:contains("Successful")
+    And the user should see the element                              jQuery = td:contains("85")
+    And the user clicks the button/link                              jQuery = a:contains("Clear all filters")
+    And The user should see the text in the element                  stringFilter      ${EMPTY}
+    And the user should see the option in the drop-down menu         All   sendFilter
+    And the user should see the option in the drop-down menu         Show all  fundingFilter
 
 *** Keywords ***
 submitted application calculations are correct
