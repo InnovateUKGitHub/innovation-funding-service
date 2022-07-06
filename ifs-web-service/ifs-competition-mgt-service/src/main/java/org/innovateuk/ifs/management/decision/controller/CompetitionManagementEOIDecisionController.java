@@ -25,7 +25,7 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping(CompetitionManagementEOIDecisionController.DEFAULT_VIEW)
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementEOIDecisionController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin', 'support')")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'support', 'innovation_lead', 'stakeholder')")
 public class CompetitionManagementEOIDecisionController extends CompetitionManagementDecisionController {
 
     public static final String DEFAULT_VIEW = "/competition/{competitionId}/applications/eoi";
