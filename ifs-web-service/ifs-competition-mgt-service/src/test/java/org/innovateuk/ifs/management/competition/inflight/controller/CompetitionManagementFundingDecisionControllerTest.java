@@ -145,7 +145,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
 
         assertEquals(viewModel.getCompetitionSummary(), competitionSummaryResource);
         assertEquals(viewModel.getResults(), summary);
-        assertFalse(viewModel.isEoi());
+        assertFalse(viewModel.isExpressionOfInterestEnabled());
 
         verify(applicationSummaryRestService).getSubmittedApplications(COMPETITION_ID, "id", 0, 20, empty(), empty());
         verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
@@ -291,7 +291,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
 
         assertEquals(viewModel.getCompetitionSummary(), competitionSummaryResource);
         assertEquals(viewModel.getResults(), summary);
-        assertTrue(viewModel.isEoi());
+        assertTrue(viewModel.isExpressionOfInterestEnabled());
 
         verify(applicationSummaryRestService).getSubmittedEoiApplications(COMPETITION_ID, "id", 0, 20, empty(), empty(), empty());
         verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);

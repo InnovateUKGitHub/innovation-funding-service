@@ -24,7 +24,6 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.util.EncodingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -159,10 +158,6 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
         BigDecimal progressPercentage = applicationProgressService.getApplicationProgress(application.getId()).getSuccess();
         Boolean isFinanceOverviewComplete = isFinanceOverviewComplete(application);
         Boolean isApplicationProgressComplete = isApplicationProgressComplete(progressPercentage);
-
-        LOG.info("Application progressPercentage->" + progressPercentage.toString());
-        LOG.info("Application isFinanceOverviewComplete->" + isFinanceOverviewComplete.toString());
-        LOG.info("Application isApplicationProgressComplete->" + isApplicationProgressComplete.toString());
 
         return isFinanceOverviewComplete && isApplicationProgressComplete;
     }
