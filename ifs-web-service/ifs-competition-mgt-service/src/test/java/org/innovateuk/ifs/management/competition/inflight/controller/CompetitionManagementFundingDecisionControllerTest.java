@@ -62,7 +62,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CompetitionManagementFundingDecisionControllerTest extends BaseControllerMockMVCTest<CompetitionManagementFundingDecisionController> {
 
     public static final Long COMPETITION_ID = 123L;
-    public static final String FILTER_STRING = "an appliction id";
+    public static final String FILTER_STRING = "an application id";
 
     @InjectMocks
     private CompetitionManagementFundingDecisionController controller;
