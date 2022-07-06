@@ -40,7 +40,7 @@ Filter on application number, sent and Expression of interest decision
 
 Pagination on Expression of interest
     [Documentation]    IFS-12177
-    Given the user should see the element                            jQuery = td:contains(${openCompetitionRTOApplication1Id}
+    Given the user should see the element                            jQuery = td:contains(${openCompetitionRTOApplication1Id})
     When the user clicks the button/link                             jQuery = a:contains("Navigate to next page")
     Then the user should see the element                             jQuery = td:contains("Horizon Europe Guarantee Eoi Application21")
     And the user clicks the button/link                              jQuery = a:contains("Navigate to previous page")
