@@ -10,7 +10,7 @@ Resource          ../../resources/common/Applicant_Commons.robot
 
 *** Variables ***
 ${quarantine_warning}    This file has been found to be unsafe
-${openCompetitionRTOApplication1Name}       Horizon Europe Guarantee Eoi Application1
+${openCompetitionRTOApplication1Name}       Horizon Europe Guarantee Eoi Application3
 ${openCompetitionRTO_name}                  Horizon Europe Guarantee Pre Registration Competition with EOI Decision
 
 *** Test Cases ***
