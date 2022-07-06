@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.management.decision.form.*;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,6 +38,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                                @ModelAttribute @Valid FundingDecisionPaginationForm paginationForm,
                                @ModelAttribute FundingDecisionFilterForm filterForm,
                                @ModelAttribute FundingDecisionSelectionForm selectionForm,
+                               UserResource user,
                                BindingResult bindingResult,
                                HttpServletRequest request,
                                HttpServletResponse response) {
@@ -46,6 +48,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                 paginationForm,
                 filterForm,
                 selectionForm,
+                user,
                 bindingResult,
                 request,
                 response);
@@ -58,6 +61,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                                @ModelAttribute FundingDecisionSelectionForm fundingDecisionSelectionForm,
                                @ModelAttribute @Valid FundingDecisionChoiceForm fundingDecisionChoiceForm,
                                @ModelAttribute FundingDecisionFilterForm filterForm,
+                               UserResource user,
                                BindingResult bindingResult,
                                HttpServletRequest request,
                                HttpServletResponse response) {
@@ -68,6 +72,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                 fundingDecisionSelectionForm,
                 fundingDecisionChoiceForm,
                 filterForm,
+                user,
                 bindingResult,
                 request,
                 response);

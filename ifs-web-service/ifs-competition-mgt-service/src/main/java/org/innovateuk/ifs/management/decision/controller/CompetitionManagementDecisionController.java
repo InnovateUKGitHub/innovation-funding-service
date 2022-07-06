@@ -11,6 +11,7 @@ import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieControlle
 import org.innovateuk.ifs.management.decision.form.*;
 import org.innovateuk.ifs.management.decision.populator.CompetitionManagementFundingDecisionModelPopulator;
 import org.innovateuk.ifs.management.decision.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,10 +66,11 @@ public abstract class CompetitionManagementDecisionController extends Competitio
                                FundingDecisionPaginationForm paginationForm,
                                FundingDecisionFilterForm filterForm,
                                FundingDecisionSelectionForm selectionForm,
+                               UserResource user,
                                BindingResult bindingResult,
                                HttpServletRequest request,
                                HttpServletResponse response) {
-        return viewApplications(model, competitionId, filterChanged, paginationForm, filterForm, selectionForm, bindingResult, request, response);
+        return viewApplications(model, competitionId, filterChanged, paginationForm, filterForm, selectionForm, user, bindingResult, request, response);
     }
 
     protected String viewApplications(Model model,
@@ -77,6 +79,7 @@ public abstract class CompetitionManagementDecisionController extends Competitio
                                     FundingDecisionPaginationForm paginationForm,
                                     FundingDecisionFilterForm filterForm,
                                     FundingDecisionSelectionForm selectionForm,
+                                    UserResource user,
                                     BindingResult bindingResult,
                                     HttpServletRequest request,
                                     HttpServletResponse response) {
@@ -100,7 +103,7 @@ public abstract class CompetitionManagementDecisionController extends Competitio
         selectionCookieForm.setFundingDecisionFilterForm(filterForm);
 
         saveFormToCookie(response, competitionId, selectionCookieForm);
-        model.addAttribute("model", competitionManagementFundingDecisionModelPopulator.populate(competitionId, paginationForm, filterForm, selectionForm));
+        model.addAttribute("model", competitionManagementFundingDecisionModelPopulator.populate(competitionId, paginationForm, filterForm, selectionForm, user));
 
         return "comp-mgt-funders-panel";
     }
@@ -111,6 +114,7 @@ public abstract class CompetitionManagementDecisionController extends Competitio
                                FundingDecisionSelectionForm fundingDecisionSelectionForm,
                                FundingDecisionChoiceForm fundingDecisionChoiceForm,
                                FundingDecisionFilterForm filterForm,
+                               UserResource user,
                                BindingResult bindingResult,
                                HttpServletRequest request,
                                HttpServletResponse response) {
@@ -119,7 +123,7 @@ public abstract class CompetitionManagementDecisionController extends Competitio
 
         FundingDecisionSelectionCookie selectionForm = getSelectionFormFromCookie(request, competitionId)
                 .orElse(new FundingDecisionSelectionCookie(fundingDecisionSelectionForm));
-        return fundersPanelCompetition(model, competitionId, selectionForm, paginationForm, fundingDecisionChoiceForm, filterForm, bindingResult, response);
+        return fundersPanelCompetition(model, competitionId, selectionForm, paginationForm, fundingDecisionChoiceForm, filterForm, user, bindingResult, response);
     }
 
     public JsonNode addAllApplicationsToFundingDecisionSelectionList(
@@ -236,6 +240,7 @@ public abstract class CompetitionManagementDecisionController extends Competitio
                                            FundingDecisionPaginationForm fundingDecisionPaginationForm,
                                            FundingDecisionChoiceForm fundingDecisionChoiceForm,
                                            FundingDecisionFilterForm fundingDecisionFilterForm,
+                                           UserResource user,
                                            BindingResult bindingResult,
                                            HttpServletResponse response) {
         FundingDecisionSelectionForm selectionForm = selectionCookie.getFundingDecisionSelectionForm();
@@ -251,7 +256,7 @@ public abstract class CompetitionManagementDecisionController extends Competitio
             }
         }
 
-        model.addAttribute("model", competitionManagementFundingDecisionModelPopulator.populate(competitionId, fundingDecisionPaginationForm, fundingDecisionFilterForm, selectionForm));
+        model.addAttribute("model", competitionManagementFundingDecisionModelPopulator.populate(competitionId, fundingDecisionPaginationForm, fundingDecisionFilterForm, selectionForm, user));
 
         return "comp-mgt-funders-panel";
     }

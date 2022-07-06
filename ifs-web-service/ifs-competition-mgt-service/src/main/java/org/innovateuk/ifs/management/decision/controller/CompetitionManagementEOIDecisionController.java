@@ -7,6 +7,7 @@ import org.innovateuk.ifs.management.decision.form.FundingDecisionChoiceForm;
 import org.innovateuk.ifs.management.decision.form.FundingDecisionFilterForm;
 import org.innovateuk.ifs.management.decision.form.FundingDecisionPaginationForm;
 import org.innovateuk.ifs.management.decision.form.FundingDecisionSelectionForm;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,6 +41,7 @@ public class CompetitionManagementEOIDecisionController extends CompetitionManag
                                @ModelAttribute @Valid FundingDecisionPaginationForm paginationForm,
                                @ModelAttribute FundingDecisionFilterForm filterForm,
                                @ModelAttribute FundingDecisionSelectionForm selectionForm,
+                               UserResource user,
                                BindingResult bindingResult,
                                HttpServletRequest request,
                                HttpServletResponse response) {
@@ -50,6 +52,7 @@ public class CompetitionManagementEOIDecisionController extends CompetitionManag
                 paginationForm,
                 filterForm,
                 selectionForm,
+                user,
                 bindingResult,
                 request,
                 response);
@@ -62,6 +65,7 @@ public class CompetitionManagementEOIDecisionController extends CompetitionManag
                                @ModelAttribute FundingDecisionSelectionForm fundingDecisionSelectionForm,
                                @ModelAttribute @Valid FundingDecisionChoiceForm fundingDecisionChoiceForm,
                                @ModelAttribute FundingDecisionFilterForm filterForm,
+                               UserResource user,
                                BindingResult bindingResult,
                                HttpServletRequest request,
                                HttpServletResponse response) {
@@ -72,6 +76,7 @@ public class CompetitionManagementEOIDecisionController extends CompetitionManag
                 fundingDecisionSelectionForm,
                 fundingDecisionChoiceForm,
                 filterForm,
+                user,
                 bindingResult,
                 request,
                 response);
