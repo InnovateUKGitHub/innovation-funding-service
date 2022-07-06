@@ -10,58 +10,29 @@ Resource          ../../resources/common/Applicant_Commons.robot
 
 *** Variables ***
 ${quarantine_warning}    This file has been found to be unsafe
+${openCompetitionRTOApplication1Name}       Horizon Europe Guarantee Eoi Application1
+${openCompetitionRTO_name}                  Horizon Europe Guarantee Pre Registration Competition with EOI Decision
 
 *** Test Cases ***
 Application Dashboard
     [Documentation]    IFS-12177
     Given The user logs-in in new browser           &{Comp_admin1_credentials}
-    when the user navigates to the page             ${SERVER}/management/competition/99
+    when the user navigates to the page             ${SERVER}/management/competition/${openCompetitionRTO}
     And the user clicks the button/link             jQuery = a:contains("Applications: All, submitted, ineligible")
     And the user clicks the button/link             link = Expression of interest
     And the user should see the element             jQuery = h1:contains("Expression of interest")
 
 Filter on application number
     [Documentation]    IFS-12177
-    Given the user enters text to a text field          id = stringFilter    85
-    When the user clicks the button/link                jQuery = button:contains("Filter")
-    Then the user should see the element                jQuery = td:contains("Horizon Europe Guarantee Eoi Application3")
-    And the user should see the element                 jQuery = td:contains("Successful")
-    And the user should see the element                 jQuery = td:contains("85")
-    And the user clicks the button/link                 jQuery = a:contains("Clear all filters")
-    And the user should see the element                 jQuery = td:contains("Horizon Europe Guarantee Eoi Application1")
-    And the user should see the element                 jQuery = td:contains("Successful")
-    And the user should see the element                 jQuery = td:contains("83")
-
-Filter on Sent
-    [Documentation]    IFS-12177
-    the user selects the option from the drop-down menu  Yes    id= sendFilter
-    When the user clicks the button/link                 jQuery = button:contains("Filter")
-    Then the user should see the element                 jQuery = td:contains("Horizon Europe Guarantee Eoi Application3")
-    And the user should see the element                  jQuery = td:contains("Successful")
-    And the user should see the element                  jQuery = td:contains("85")
-    And the user should see the element                  jQuery = td:contains("Horizon Europe Guarantee Eoi Application1")
-    And the user should see the element                  jQuery = td:contains("Successful")
-    And the user should see the element                  jQuery = td:contains("83")
-    And the user clicks the button/link                  jQuery = a:contains("Clear all filters")
-    And the user should see the element                  jQuery = td:contains("Horizon Europe Guarantee Eoi Application2")
-    And the user should see the element                  jQuery = td:contains("Unsuccessful")
-    And the user should see the element                  jQuery = td:contains("84")
-
-Filter on Expression of interest decision
-    [Documentation]    IFS-12177
-    the user selects the option from the drop-down menu  Successful    id= fundingFilter
-    When the user clicks the button/link                 jQuery = button:contains("Filter")
-    Then the user should see the element                 jQuery = td:contains("Horizon Europe Guarantee Eoi Application3")
-    And the user should see the element                  jQuery = td:contains("Successful")
-    And the user should see the element                  jQuery = td:contains("85")
-    And the user should see the element                  jQuery = td:contains("Horizon Europe Guarantee Eoi Application1")
-    And the user should see the element                  jQuery = td:contains("Successful")
-    And the user should see the element                  jQuery = td:contains("83")
-    And the user clicks the button/link                  jQuery = a:contains("Clear all filters")
-    And the user should see the element                  jQuery = td:contains("Horizon Europe Guarantee Eoi Application2")
-    And the user should see the element                  jQuery = td:contains("Unsuccessful")
-    And the user should see the element                  jQuery = td:contains("84")
-
+    Given the user enters text to a text field               id = stringFilter    ${openCompetitionRTOApplication1Id}
+    And the user selects the option from the drop-down menu  Yes    id= sendFilter
+    And the user selects the option from the drop-down menu  Successful    id= fundingFilter
+    When the user clicks the button/link                     jQuery = button:contains("Filter")
+    Then the user should see the element                     jQuery = td:contains("Horizon Europe Guarantee Eoi Application3")
+    And the user should see the element                      jQuery = td:contains("Successful")
+    And the user should see the element                      jQuery = td:contains("85")
+    And the user clicks the button/link                      jQuery = a:contains("Clear all filters")
+    And The user should see the text in the element          stringFilter     ${EMPTY}
 
 *** Keywords ***
 submitted application calculations are correct
