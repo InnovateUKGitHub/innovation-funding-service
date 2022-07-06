@@ -10,12 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-
-import static java.math.RoundingMode.HALF_UP;
-import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DECIMAL_PLACES;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
@@ -48,7 +43,7 @@ public class CompetitionApplicationConfigServiceImpl extends RootTransactionalSe
     }
 
     private void updateMaximumFundingSought(CompetitionApplicationConfigResource competitionApplicationConfigResource, CompetitionApplicationConfig config) {
-        config.setMaximumFundingSought(ofNullable(competitionApplicationConfigResource.getMaximumFundingSought()).map(v -> v.setScale(MAX_DECIMAL_PLACES, HALF_UP)).orElse(BigDecimal.ZERO));
+        config.setMaximumFundingSought(competitionApplicationConfigResource.getMaximumFundingSought());
     }
 
     private void updateMaximumFundingSoughtEnabled(CompetitionApplicationConfigResource competitionApplicationConfigResource, CompetitionApplicationConfig config) {

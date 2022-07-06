@@ -1,6 +1,5 @@
-
 <!-- ================= Section: Funding amount sought (17) =========================== -->
-<th:block th:fragment="section-content"  xmlns:th="http://www.w3.org/1999/html">
+<th:block th:fragment="section-content">
     <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
         <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
         <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
@@ -32,7 +31,7 @@
                                    th:checked="${!unchecked && competitionSetupForm.fundingAmountSoughtApplicable == true}"
                                    value="true"
                                    required="required"
-                                   th:attr="data-required-errormessage=#{validation.eligibilityform.researchCategoriesApplicable.required}"/>
+                                   th:attr="data-required-errormessage=#{validation.applicationfundingamountsoughtform.application.funding.amount.sought.applicable.required}"/>
                             <label class="govuk-radios__label"
                                    for="comp-fundingAmountSoughtApplicable-yes">
                                 Yes
@@ -49,13 +48,12 @@
                                           th:each="err : ${#fields.errors('fundingAmountSought')}" th:text="${err}"/>
 
                                     <input class="govuk-input govuk-input--width-4 govuk-!-margin-right-1"
-                                           id="fundingAmountSought"
                                            th:field="*{__fundingAmountSought__}"
                                            th:errorclass="govuk-input--error"
                                            type="number"
                                            required="required"
                                            data-prevent-input-non-number
-                                           th:attr="data-required-errormessage=#{validation.projecteligibility.researchParticipationPercentage.required}" />
+                                           th:attr="data-required-errormessage=#{validation.applicationfundingamountsoughtform.application.funding.amount.sought.required}" />
                                 </fieldset>
                             </div>
                         </div>
@@ -69,7 +67,7 @@
                                    th:checked="${!unchecked && competitionSetupForm.fundingAmountSoughtApplicable == false}"
                                    value="false"
                                    required="required"
-                                   th:attr="data-required-errormessage=#{validation.eligibilityform.fundingAmountSoughtApplicable.required}"/>
+                                   th:attr="data-required-errormessage=#{validation.applicationfundingamountsoughtform.application.funding.amount.sought.applicable.required}"/>
                             <label class="govuk-radios__label"
                                    for="comp-fundingAmountSoughtApplicable-no">
                                 No

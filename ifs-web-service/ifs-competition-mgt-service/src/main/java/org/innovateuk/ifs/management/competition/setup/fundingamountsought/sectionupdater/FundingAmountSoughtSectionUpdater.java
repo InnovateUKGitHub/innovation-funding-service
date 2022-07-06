@@ -14,8 +14,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-
 import static java.math.RoundingMode.HALF_UP;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DECIMAL_PLACES;
@@ -51,7 +49,7 @@ public class FundingAmountSoughtSectionUpdater extends AbstractSectionUpdater im
     }
 
     private void setMaximumFundingSought(FundingAmountSoughtForm form, CompetitionApplicationConfigResource competitionApplicationConfigResource) {
-        competitionApplicationConfigResource.setMaximumFundingSought(ofNullable(form.getFundingAmountSought()).map(v -> v.setScale(MAX_DECIMAL_PLACES, HALF_UP)).orElse(BigDecimal.ZERO));
+        competitionApplicationConfigResource.setMaximumFundingSought(ofNullable(form.getFundingAmountSought()).map(v -> v.setScale(MAX_DECIMAL_PLACES, HALF_UP)).orElse(null));
     }
 
     private void setMaximumFundingSoughtEnabled(FundingAmountSoughtForm form, CompetitionApplicationConfigResource competitionApplicationConfigResource) {
