@@ -1,9 +1,9 @@
-package org.innovateuk.ifs.management.funding.populator;
+package org.innovateuk.ifs.management.decision.populator;
 
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.management.funding.form.FundingNotificationFilterForm;
+import org.innovateuk.ifs.management.decision.form.FundingNotificationFilterForm;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.application.view.viewmodel.ManageFundingApplicationViewModel;

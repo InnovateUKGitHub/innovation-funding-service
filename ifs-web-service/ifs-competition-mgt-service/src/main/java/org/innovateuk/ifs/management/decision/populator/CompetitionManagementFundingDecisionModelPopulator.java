@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.funding.populator;
+package org.innovateuk.ifs.management.decision.populator;
 
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
@@ -8,10 +8,10 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.competition.inflight.populator.CompetitionInFlightStatsModelPopulator;
 import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightStatsViewModel;
-import org.innovateuk.ifs.management.funding.form.FundingDecisionFilterForm;
-import org.innovateuk.ifs.management.funding.form.FundingDecisionPaginationForm;
-import org.innovateuk.ifs.management.funding.form.FundingDecisionSelectionForm;
-import org.innovateuk.ifs.management.funding.viewmodel.ManageFundingApplicationsViewModel;
+import org.innovateuk.ifs.management.decision.form.FundingDecisionFilterForm;
+import org.innovateuk.ifs.management.decision.form.FundingDecisionPaginationForm;
+import org.innovateuk.ifs.management.decision.form.FundingDecisionSelectionForm;
+import org.innovateuk.ifs.management.decision.viewmodel.ManageFundingApplicationsViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +20,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController.SELECTION_LIMIT;

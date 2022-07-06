@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.funding.form;
+package org.innovateuk.ifs.management.decision.form;
 
 import java.util.ArrayList;
 import java.util.List;
