@@ -54,6 +54,9 @@ RUN pip3 install -r /tmp/robotPythonLibs-requirements.txt
 COPY . /tmp/
 COPY set-umask0002.sh /robot-tests/set-umask0002.sh
 
+RUN chmod -R 777 .
+RUN mkdir -p /mnt/ifs_storage
+
 WORKDIR robot-tests
 COPY ./ ./
 
@@ -68,11 +71,7 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/${KUBECTL
   mv kubectl /usr/bin/kubectl && \
   chmod +x /usr/bin/kubectl
 
-RUN chmod -R 777 .
-
 COPY IFS_acceptance_tests/resources/variables/EMAIL_VARIABLES_TEMPLATE.robot /robot-tests/IFS_acceptance_tests/resources/variables/EMAIL_VARIABLES_SENSITIVE.robot
-
-RUN mkdir -p /mnt/ifs_storage
 
 ENTRYPOINT ["./set-umask0002.sh"]
 CMD ["sh", "-c", "./os_run_tests.sh -q"]
