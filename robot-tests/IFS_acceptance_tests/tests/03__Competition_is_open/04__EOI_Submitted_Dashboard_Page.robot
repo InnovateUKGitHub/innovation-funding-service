@@ -32,7 +32,9 @@ Filter on application number
     And the user should see the element                      jQuery = td:contains("Successful")
     And the user should see the element                      jQuery = td:contains("85")
     And the user clicks the button/link                      jQuery = a:contains("Clear all filters")
-    And The user should see the text in the element          stringFilter     ${EMPTY}
+    And The user should see the text in the element          stringFilter      ${EMPTY}
+    And The user should see the text in the element          sendFilter        All
+    And The user should see the text in the element          fundingFilter     Show all
 
 *** Keywords ***
 submitted application calculations are correct
