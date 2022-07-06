@@ -107,9 +107,9 @@ Internal users can see expression of interest statistics
 
 Internal users can see submitted expression of interest applications
     [Documentation]  IFS-12176
-    When the user clicks the button/link        link = Expression of interest
+    When the user clicks the button/link        link = Expressions of interest
     Then the user should see the element        jQuery = td:contains("${preregApplicationID}") + td:contains("${hecpPreregAppName}")
-    And the user should see the element         jQuery = .highlight-panel:contains("Expression of interest") span:contains("1")
+    And the user should see the element         jQuery = .highlight-panel:contains("Expressions of interest") span:contains("1")
 
 
 *** Keywords ***
