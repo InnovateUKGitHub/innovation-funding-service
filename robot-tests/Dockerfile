@@ -57,6 +57,7 @@ COPY set-umask0002.sh /robot-tests/set-umask0002.sh
 RUN mkdir -p /mnt/ifs_storage
 
 WORKDIR robot-tests
+RUN chmod -R 777 .
 COPY ./ ./
 
 ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64/
