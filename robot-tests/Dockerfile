@@ -1,5 +1,7 @@
 FROM docker-ifs.devops.innovateuk.org/releases/ubuntu:20.04
 
+USER root
+
 ARG DEBIAN_FRONTEND=noninteractive
 # ARG WEBSWING_TOKEN=""
 
