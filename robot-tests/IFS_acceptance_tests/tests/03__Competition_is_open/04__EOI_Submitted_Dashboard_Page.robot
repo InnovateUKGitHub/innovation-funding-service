@@ -47,10 +47,11 @@ Pagination on Expression of interest
     When the user clicks the button/link                             jQuery = span:contains("Next")
     Then the user should see the element                             jQuery = td:contains("Horizon Europe Guarantee Eoi Application21")
     And the user clicks the button/link                              jQuery = span:contains("Previous")
-    And the user should see the element                              ${openCompetitionPreRegApplicationId}
+    And the user should see the element                              jQuery = td:contains(${openCompetitionPreRegApplicationId})
 
 Comp admin can view read only view of Expression of interest
-    [Documentation]  IFS-6060
+    [Documentation]  IFS-12177
     Given the user clicks the button/link                                  link = ${openCompetitionPreRegApplicationId}
-    Then the user should see the element
+    Then the user should see the element                                   jQuery = h1:contains(${openCompetitionPreRegApplicationName})
+    Then the user should see the element                                   jQuery = h1:contains("Application overview")
 
