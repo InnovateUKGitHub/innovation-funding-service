@@ -116,6 +116,9 @@ public class FileServiceImpl implements FileService {
     public ServiceResult<Supplier<InputStream>> getFileByFileEntryId(Long fileEntryId) {
         try {
             FileEntry fileEntry = fileServiceTransactionHelper.find(fileEntryId);
+            if (!isFileExists(fileEntry)) {
+                return serviceFailure(new Error(GENERAL_NOT_FOUND));
+            }
             ResponseEntity<FileDownloadResponse> fileDownloadResponse = fileDownloadFeign.fileDownloadResponse(fileEntry.getFileUuid());
             return serviceSuccess(() -> new ByteArrayInputStream(fileDownloadResponse.getBody().getPayload()));
         } catch (NoSuchElementException ex) {
@@ -125,7 +128,7 @@ public class FileServiceImpl implements FileService {
         }
     }
 
-    private boolean isS3Storage(FileEntry fileEntry) {
+    private boolean isFileExists(FileEntry fileEntry) {
         return fileEntry.getFileUuid() != null && !fileEntry.getFileUuid().isEmpty();
     }
 
@@ -134,7 +137,7 @@ public class FileServiceImpl implements FileService {
         FileEntry fileEntry = fileServiceTransactionHelper.find(fileEntryId);
         String fileUuid = fileEntry.getFileUuid();
         fileServiceTransactionHelper.delete(fileEntryId);
-        if (isS3Storage(fileEntry)) {
+        if (isFileExists(fileEntry)) {
             fileDeletionFeign.deleteFile(new FileDeletionRequest(fileUuid));
         }
         // Why would you return the entity after delete? return new to fit existing interface
