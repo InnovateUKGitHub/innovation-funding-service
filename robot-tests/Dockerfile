@@ -54,10 +54,11 @@ RUN pip3 install -r /tmp/robotPythonLibs-requirements.txt
 COPY . /tmp/
 COPY set-umask0002.sh /robot-tests/set-umask0002.sh
 
-RUN mkdir -p /mnt/ifs_storage
+
 
 WORKDIR robot-tests
 RUN chmod -R 777 ./
+RUN mkdir -p /mnt/ifs_storage
 COPY ./ ./
 
 ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64/
