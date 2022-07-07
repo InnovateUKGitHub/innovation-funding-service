@@ -58,7 +58,7 @@ COPY set-umask0002.sh /robot-tests/set-umask0002.sh
 
 WORKDIR robot-tests
 RUN chmod -R 777 ./
-RUN mkdir -p /mnt/ifs_storage/ifs
+
 COPY ./ ./
 
 ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64/
@@ -71,11 +71,6 @@ ARG KUBECTL_VERSION=v1.22.4
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl && \
   mv kubectl /usr/bin/kubectl && \
   chmod +x /usr/bin/kubectl
-
-RUN chown -R root:root . && \
-  find . \( -type d -o -type f \) -exec chmod 775 {} + && \
-  chown -R root:root /tmp && \
-  find /tmp \( -type d -o -type f \) -exec chmod 775 {} +
 
 COPY IFS_acceptance_tests/resources/variables/EMAIL_VARIABLES_TEMPLATE.robot /robot-tests/IFS_acceptance_tests/resources/variables/EMAIL_VARIABLES_SENSITIVE.robot
 

@@ -1,7 +1,7 @@
 echo "***********Creating file entry for each db entry***********"
 max_file_entry_id=$(mysql ifs -uroot -ppassword -hifs-database -s -e 'select max(id) from file_entry;')
 
-TEST_FILES_DIR="/mnt/ifs_storage/ifs"
+TEST_FILES_DIR="/tmp"
 
 mkdir -p "${TEST_FILES_DIR}"
 
