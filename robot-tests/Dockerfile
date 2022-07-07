@@ -72,6 +72,11 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/${KUBECTL
   mv kubectl /usr/bin/kubectl && \
   chmod +x /usr/bin/kubectl
 
+RUN chown -R root:root . && \
+  find . \( -type d -o -type f \) -exec chmod 775 {} + && \
+  chown -R root:root /tmp && \
+  find /tmp \( -type d -o -type f \) -exec chmod 775 {} +
+
 COPY IFS_acceptance_tests/resources/variables/EMAIL_VARIABLES_TEMPLATE.robot /robot-tests/IFS_acceptance_tests/resources/variables/EMAIL_VARIABLES_SENSITIVE.robot
 
 ENTRYPOINT ["./set-umask0002.sh"]
