@@ -42,6 +42,10 @@ public class GrantClaimMaximumResourceBuilder extends BaseBuilder<GrantClaimMaxi
     public GrantClaimMaximumResourceBuilder withFundingRules(FundingRules... rules) {
         return withArray((value, max) -> max.setFundingRules(value), rules);
     }
+
+    public GrantClaimMaximumResourceBuilder withFixedFundingLevel(Boolean... fixedFundingLevels) {
+        return withArray((fixedFundingLevel, max) -> max.setFixedFundingLevel(fixedFundingLevel), fixedFundingLevels);
+    }
     @Override
     protected GrantClaimMaximumResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, GrantClaimMaximumResource>> actions) {
         return new GrantClaimMaximumResourceBuilder(actions);

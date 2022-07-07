@@ -21,6 +21,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.granttransfer.resource.EuActionTypeResource;
 import org.innovateuk.ifs.horizon.resource.ApplicationHorizonWorkProgrammeResource;
+import org.innovateuk.ifs.horizon.resource.HorizonWorkProgrammeResource;
 import org.innovateuk.ifs.interview.resource.InterviewApplicationResource;
 import org.innovateuk.ifs.interview.resource.InterviewResource;
 import org.innovateuk.ifs.invite.resource.*;
@@ -412,5 +413,9 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<ApplicationHorizonWorkProgrammeResource>> applicationHorizonWorkProgrammeResourceListType() {
         return new ParameterizedTypeReference<List<ApplicationHorizonWorkProgrammeResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<HorizonWorkProgrammeResource>> horizonWorkProgrammeResourceListType() {
+        return new ParameterizedTypeReference<List<HorizonWorkProgrammeResource>>() {};
     }
 }

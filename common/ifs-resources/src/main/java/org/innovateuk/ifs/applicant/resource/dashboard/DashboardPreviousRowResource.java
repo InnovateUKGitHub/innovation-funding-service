@@ -30,6 +30,8 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
     private boolean collaborationLevelSingle;
     private CompetitionCompletionStage competitionCompletionStage;
 
+
+    private boolean expressionOfInterest;
     // Private constructor to enforce immutability
     private DashboardPreviousRowResource() {
         this.dashboardSection = PREVIOUS;
@@ -87,7 +89,9 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
     public boolean activeProject() {
         return projectState != null && projectState.isActive();
     }
-
+    public boolean isExpressionOfInterest() {
+        return expressionOfInterest;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -110,6 +114,7 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
                 .append(startDate, that.startDate)
                 .append(collaborationLevelSingle, that.collaborationLevelSingle)
                 .append(competitionCompletionStage, that.competitionCompletionStage)
+                .append(expressionOfInterest, that.expressionOfInterest)
                 .isEquals();
     }
 
@@ -132,6 +137,7 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
                 .append(startDate)
                 .append(collaborationLevelSingle)
                 .append(competitionCompletionStage)
+                .append(expressionOfInterest)
                 .toHashCode();
     }
 
@@ -151,6 +157,9 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
         private boolean assignedToInterview;
         private LocalDate startDate;
         private boolean collaborationLevelSingle;
+
+        private boolean expressionOfInterest;
+
         private CompetitionCompletionStage competitionCompletionStage;
 
         public DashboardPreviousApplicationResourceBuilder withTitle(String title) {
@@ -227,6 +236,10 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
             this.competitionCompletionStage = competitionCompletionStage;
             return this;
         }
+        public DashboardPreviousApplicationResourceBuilder withExpressionOfInterest(boolean expressionOfInterest) {
+            this.expressionOfInterest = expressionOfInterest;
+            return this;
+        }
 
         public DashboardPreviousRowResource build(){
             DashboardPreviousRowResource result = new DashboardPreviousRowResource();
@@ -245,7 +258,7 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
             result.startDate = startDate;
             result.collaborationLevelSingle = this.collaborationLevelSingle;
             result.competitionCompletionStage = this.competitionCompletionStage;
-
+            result.expressionOfInterest = this.expressionOfInterest;
             return result;
         }
     }

@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
@@ -13,6 +14,7 @@ import org.innovateuk.ifs.competition.repository.*;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.transactional.CompetitionFunderService;
 import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
@@ -22,6 +24,7 @@ import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.grant.domain.GrantProcessConfiguration;
 import org.innovateuk.ifs.grant.repository.GrantProcessConfigurationRepository;
+import org.innovateuk.ifs.horizon.transactional.HorizonWorkProgrammeService;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
@@ -37,6 +40,7 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 import java.util.*;
@@ -59,6 +63,7 @@ import static org.innovateuk.ifs.grant.builder.GrantProcessConfigurationBuilder.
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.innovateuk.ifs.setup.builder.SetupStatusResourceBuilder.newSetupStatusResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.util.CollectionFunctions.zip;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -127,6 +132,9 @@ public class CompetitionSetupServiceImplTest {
 
     @Mock
     private AssessmentPeriodRepository assessmentPeriodRepository;
+
+    @Mock
+    private HorizonWorkProgrammeService horizonWorkProgrammeService;
 
     @Before
     public void setup() {
@@ -282,6 +290,19 @@ public class CompetitionSetupServiceImplTest {
 		Long competitionId = 1L;
 		Competition comp = new Competition();
 		when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(comp));
+
+        service.markAsSetup(competitionId);
+
+        assertTrue(comp.getSetupComplete());
+    }
+
+    @Test
+    public void testMarkAsSetup_HECP() {
+        Long competitionId = 1L;
+        Competition comp = new Competition();
+        comp.setCompetitionType(newCompetitionType().withName(CompetitionTypeEnum.HORIZON_EUROPE_GUARANTEE.getText()).build());
+        when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(comp));
+        when(horizonWorkProgrammeService.initWorkProgrammesForCompetition(competitionId)).thenReturn(ServiceResult.serviceSuccess());
 
         service.markAsSetup(competitionId);
 
@@ -579,12 +600,13 @@ public class CompetitionSetupServiceImplTest {
         when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(publicContentRepository.findByCompetitionId(competition.getId())).thenReturn(publicContent);
         when(grantProcessConfigurationRepository.findByCompetitionId(competition.getId())).thenReturn(Optional.of(grantProcessConfiguration));
+        when(horizonWorkProgrammeService.deleteWorkProgrammesForCompetition(competition.getId())).thenReturn(ServiceResult.serviceSuccess());
 
         ServiceResult<Void> result = service.deleteCompetition(competition.getId());
         assertTrue(result.isSuccess());
 
         InOrder inOrder = inOrder(competitionRepository, publicContentRepository, innovationLeadRepository, stakeholderRepository,
-                setupStatusRepository, milestoneRepository, competitionFinanceRowsTypesRepository, grantProcessConfigurationRepository, assessmentPeriodRepository );
+                setupStatusRepository, milestoneRepository, competitionFinanceRowsTypesRepository, grantProcessConfigurationRepository, assessmentPeriodRepository, horizonWorkProgrammeService);
         inOrder.verify(competitionRepository).findById(competition.getId());
         inOrder.verify(publicContentRepository).findByCompetitionId(competition.getId());
         inOrder.verify(publicContentRepository).delete(publicContent);
@@ -597,6 +619,7 @@ public class CompetitionSetupServiceImplTest {
         inOrder.verify(competitionFinanceRowsTypesRepository).deleteAllByCompetitionFinanceRowTypesIdCompetition(competition);
         inOrder.verify(grantProcessConfigurationRepository).deleteByCompetitionId(competition.getId());
         inOrder.verify(assessmentPeriodRepository).deleteByCompetitionId(competition.getId());
+        inOrder.verify(horizonWorkProgrammeService).deleteWorkProgrammesForCompetition(competition.getId());
         inOrder.verify(competitionRepository).delete(competition);
         inOrder.verifyNoMoreInteractions();
     }
