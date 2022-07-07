@@ -137,6 +137,7 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
 
         ApplicationFinanceResource finance = newApplicationFinanceResource()
                 .withMaximumFundingLevel(60)
+                .withFixedFundingLevel(false)
                 .build();
 
         QuestionResource researchCategoryQuestion = newQuestionResource().build();
@@ -182,6 +183,7 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         assertFalse(viewModel.isFundingSectionLocked());
         assertEquals(format("/application/%d/form/FINANCE/%d", APPLICATION_ID, organisation.getId()), viewModel.getFinancesUrl());
         assertTrue(viewModel.isOverridingFundingRules());
+        assertFalse(viewModel.isFixedFundingLevel());
     }
 
     @Test
