@@ -252,9 +252,6 @@ Comp admin set the competion as prereg comp and hide the question, section and s
     set question as hidden in pre reg application        ${preregCompetitionId}
     set subsection as hidden in pre reg application      ${preregCompetitionId}
     set section as hidden in pre reg application         ${preregCompetitionId}
-<<<<<<< HEAD
-    update milestone to yesterday                        ${preregCompetitionId}  OPEN_DATE
-=======
     update milestone to yesterday                        ${preregCompetitionId}  OPEN_DATE
 
 Existing user creates and submits new application for unsuccessful EOI journey
@@ -304,4 +301,3 @@ the user complete pre reg work programme
     the user clicks the button/link     id = application-question-complete
     the user clicks the button/link     link = Back to application overview
     the user should see the element     jQuery = li:contains("Work programme") > .task-status-complete
->>>>>>> development
