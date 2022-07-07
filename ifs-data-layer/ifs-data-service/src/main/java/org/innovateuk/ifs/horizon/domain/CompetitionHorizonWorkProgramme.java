@@ -3,25 +3,25 @@ package org.innovateuk.ifs.horizon.domain;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "application_horizon_work_programme")
-public class ApplicationHorizonWorkProgramme {
+@Table(name = "competition_horizon_work_programme")
+public class CompetitionHorizonWorkProgramme {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long applicationId;
+    private Long competitionId;
 
     @ManyToOne(optional = true, fetch = FetchType.EAGER)
     @JoinColumn(name="work_programme_id", referencedColumnName="id")
     private HorizonWorkProgramme workProgramme;
 
-    public ApplicationHorizonWorkProgramme() {
+    public CompetitionHorizonWorkProgramme() {
     }
 
-    public ApplicationHorizonWorkProgramme(Long id, Long applicationId, HorizonWorkProgramme workProgramme) {
+    public CompetitionHorizonWorkProgramme(Long id, Long competitionId, HorizonWorkProgramme workProgramme) {
         this.id = id;
-        this.applicationId = applicationId;
+        this.competitionId = competitionId;
         this.workProgramme = workProgramme;
     }
 
@@ -33,12 +33,12 @@ public class ApplicationHorizonWorkProgramme {
         this.id = id;
     }
 
-    public Long getApplicationId() {
-        return applicationId;
+    public Long getCompetitionId() {
+        return competitionId;
     }
 
-    public void setApplicationId(Long applicationId) {
-        this.applicationId = applicationId;
+    public void setCompetitionId(Long competitionId) {
+        this.competitionId = competitionId;
     }
 
     public HorizonWorkProgramme getWorkProgramme() {
