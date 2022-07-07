@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
-import org.innovateuk.ifs.horizon.resource.HorizonWorkProgramme;
+import org.innovateuk.ifs.horizon.resource.HorizonWorkProgrammeResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -52,7 +52,7 @@ public class HorizonWorkProgrammePopulator {
                                                   long questionId,
                                                   UserResource user,
                                                   boolean isCallId,
-                                                  Map<String, List<HorizonWorkProgramme>> readOnlyMap) {
+                                                  Map<String, List<HorizonWorkProgrammeResource>> readOnlyMap) {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), application.getId()).getSuccess();

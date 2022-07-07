@@ -43,6 +43,7 @@ the Applicant clicks on the Bold button in the "business opportunity" field
 the Applicant clicks on the Italic button in the "business opportunity" field
     Clear Element Text    css = .textarea-wrapped .editor
     Press Key             css = .textarea-wrapped .editor    \\8
+    wait for autosave
     click element         css = .italic_button
 
 all text entered should be Bold and stay the same after page refresh
