@@ -1,14 +1,15 @@
 package org.innovateuk.ifs.application.forms.sections.yourfunding.saver;
 
 import org.apache.commons.lang3.BooleanUtils;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.*;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.AbstractYourFundingAmountForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.AbstractYourFundingPercentageForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.BaseOtherFundingRowForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.IndirectCostsUtil;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.BaseOtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.category.DefaultCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
@@ -156,7 +157,11 @@ public class YourFundingSaver<R extends BaseOtherFunding, T extends BaseOtherFun
 
     private void updateGrantClaimPercentage(String value, ApplicationFinanceResource finance) {
         GrantClaimPercentage grantClaim = (GrantClaimPercentage) finance.getGrantClaim();
-        grantClaim.setPercentage(new BigDecimal(value).setScale(MAX_DECIMAL_PLACES, HALF_UP));
+        if (finance.isFixedFundingLevel()) {
+            grantClaim.setPercentage(new BigDecimal(finance.getMaximumFundingLevel()).setScale(MAX_DECIMAL_PLACES, HALF_UP));
+        } else {
+            grantClaim.setPercentage(new BigDecimal(value).setScale(MAX_DECIMAL_PLACES, HALF_UP));
+        }
         getFinanceRowService().update(grantClaim).andOnSuccess(() -> {
             if (BooleanUtils.isFalse(finance.getFecModelEnabled())) {
                 IndirectCost indirectCost = recalculateIndirectCostsFollowingGrantClaimUpdate(finance);

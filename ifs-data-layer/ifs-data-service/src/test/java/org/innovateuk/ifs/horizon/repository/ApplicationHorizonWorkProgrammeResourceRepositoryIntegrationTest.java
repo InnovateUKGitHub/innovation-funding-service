@@ -2,7 +2,8 @@ package org.innovateuk.ifs.horizon.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.horizon.domain.ApplicationHorizonWorkProgramme;
-import org.innovateuk.ifs.horizon.resource.HorizonWorkProgramme;
+import org.innovateuk.ifs.horizon.domain.HorizonWorkProgramme;
+import org.innovateuk.ifs.horizon.resource.HorizonWorkProgrammeResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,25 +12,27 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.innovateuk.ifs.horizon.resource.HorizonWorkProgramme.CL2;
-import static org.innovateuk.ifs.horizon.resource.HorizonWorkProgramme.HORIZON_CL2_2021_DEMOCRACY_01;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.innovateuk.ifs.horizon.builder.HorizonWorkProgrammeBuilder.newHorizonWorkProgramme;
 
-public class HorizonWorkProgrammeRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<HorizonWorkProgrammeRepository> {
+
+public class ApplicationHorizonWorkProgrammeResourceRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<ApplicationHorizonWorkProgrammeRepository> {
 
     long applicationId = 1L;
 
     @Autowired
     @Override
-    protected void setRepository(HorizonWorkProgrammeRepository repository) {
+    protected void setRepository(ApplicationHorizonWorkProgrammeRepository repository) {
         this.repository = repository;
     }
 
     @Before
     public void setup() {
-        repository.save(buildDomain(applicationId, CL2));
-        repository.save(buildDomain(applicationId, HORIZON_CL2_2021_DEMOCRACY_01));
+        HorizonWorkProgramme r1 = newHorizonWorkProgramme().withId(1L).withName("CL2").withEnabled(true).build();
+        HorizonWorkProgramme r2 = newHorizonWorkProgramme().withId(15L).withName("HORIZON-CL2-2021-DEMOCRACY-01").withParentWorkProgramme(r1).withEnabled(true).build();
+        repository.save(buildDomain(applicationId, r1));
+        repository.save(buildDomain(applicationId, r2));
     }
 
     @Test

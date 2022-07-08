@@ -29,6 +29,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_INELIGIBLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.HECP;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -169,9 +170,11 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                     Competition competition = application.getCompetition();
                     Notification notification;
 
-                    if (competition.isH2020()) {
+                    if (isHorizonEuropeExpressionOfInterest(competition, application)) {
+                        notification = horizonEuropeGuaranteeExpressionOfInterestSubmitNotification(from, to, application, competition);
+                    } else if (competition.isH2020()) {
                         notification = horizon2020GrantTransferNotification(from, to, application);
-                    } else if (competition.isHorizonEuropeGuarantee()) {
+                    } else if (HECP.equals(competition.getFundingType()) || competition.isHorizonEuropeGuarantee()) {
                         notification = horizonEuropeGuaranteeApplicationSubmitNotification(from, to, application, competition);
                     } else if (LOAN.equals(competition.getFundingType())) {
                         notification = loanApplicationSubmitNotification(from, to, application, competition);
@@ -181,6 +184,12 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
 
                     return notificationService.sendNotificationWithFlush(notification, EMAIL);
                 });
+    }
+
+    private boolean isHorizonEuropeExpressionOfInterest(Competition competition, Application application) {
+        return competition.isHorizonEuropeGuarantee()
+                && competition.isEnabledForPreRegistration()
+                && application.isEnabledForExpressionOfInterest();
     }
 
     @Override
@@ -290,11 +299,27 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
         );
     }
 
+    private Notification horizonEuropeGuaranteeExpressionOfInterestSubmitNotification(NotificationSource from, NotificationTarget to, Application application, Competition competition) {
+        Map<String, Object> notificationArguments = new HashMap<>();
+        notificationArguments.put("applicationId", application.getId());
+        notificationArguments.put("applicationName", application.getName());
+        notificationArguments.put("competitionName", competition.getName());
+        notificationArguments.put("webBaseUrl", webBaseUrl);
+
+        return new Notification(
+                from,
+                to,
+                Notifications.HORIZON_EUROPE_GUARANTEE_EXPRESSION_OF_INTEREST_SUBMITTED,
+                notificationArguments
+        );
+    }
+
     enum Notifications {
         APPLICATION_SUBMITTED,
         APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
         KTP_APPLICATION_ASSESSOR_FEEDBACK_PUBLISHED,
         HORIZON_EUROPE_GUARANTEE_APPLICATION_SUBMITTED,
+        HORIZON_EUROPE_GUARANTEE_EXPRESSION_OF_INTEREST_SUBMITTED,
         HORIZON_2020_APPLICATION_SUBMITTED,
         APPLICATION_INELIGIBLE,
         LOANS_APPLICATION_SUBMITTED,

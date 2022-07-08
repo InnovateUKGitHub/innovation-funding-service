@@ -611,4 +611,8 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
     public S withFecFileEntry(Long fecFileEntry) {
         return with(finance -> finance.setFecFileEntry(fecFileEntry));
     }
+
+    public S withFixedFundingLevel(boolean isFixedFundingLevel) {
+        return with(finance -> finance.setFixedFundingLevel(isFixedFundingLevel));
+    }
 }
