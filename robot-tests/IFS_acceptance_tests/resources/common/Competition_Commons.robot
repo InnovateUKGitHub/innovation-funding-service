@@ -791,4 +791,18 @@ the user inputs application assessment decision
     the user should see the element    jQuery = button:contains("Edit")
     the user clicks the button/link    jQuery = span:contains("Milestones")
 
+the internal team mark the application as successful / unsuccessful
+    [Arguments]   ${applicationName}   ${decision}
+    the user navigates to the page      ${server}/management/competition/${competitionId}
+    the user clicks the button/link     link = Input and review funding decision
+    the user clicks the button/link     jQuery = tr:contains("${applicationName}") label
+    the user clicks the button/link     css = [type="submit"][value="${decision}"]
 
+the internal team notifies all applicants
+    [Arguments]  ${ApplicationID}
+    the user clicks the button/link                      link = Send notification
+    the user clicks the button/link                      jQuery = tr:contains(${ApplicationID}) label
+    the user clicks the button/link                      id = write-and-send-email
+    the user clicks the button/link                      id = send-email-to-all-applicants
+    the user clicks the button/link                      id = send-email-to-all-applicants-button
+    the user refreshes until element appears on page     jQuery = td:contains("${ApplicationID}") ~ td:contains("Sent")

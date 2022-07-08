@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.forms.questions.horizon;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.forms.questions.horizon.model.HorizonWorkProgrammeSelectionData;
-import org.innovateuk.ifs.horizon.resource.HorizonWorkProgramme;
+import org.innovateuk.ifs.horizon.resource.HorizonWorkProgrammeResource;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
@@ -19,7 +19,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class HorizonWorkProgrammeCookieServiceTest extends BaseServiceUnitTest<HorizonWorkProgrammeCookieService> {
+public class HorizonWorkProgrammeResourceCookieServiceTest extends BaseServiceUnitTest<HorizonWorkProgrammeCookieService> {
 
     @Mock
     private EncryptedCookieService encryptedCookieService;
@@ -53,7 +53,7 @@ public class HorizonWorkProgrammeCookieServiceTest extends BaseServiceUnitTest<H
     public void getHorizonWorkProgrammeSelectionData() {
 
         HorizonWorkProgrammeSelectionData horizonWorkProgrammeSelectionData = new HorizonWorkProgrammeSelectionData();
-        horizonWorkProgrammeSelectionData.setWorkProgramme(HorizonWorkProgramme.CL2);
+        horizonWorkProgrammeSelectionData.setWorkProgramme(new HorizonWorkProgrammeResource(1, "CL2", true));
 
         when(encryptedCookieService.getCookieValue(request, HORIZON_SELECTION_DATA)).thenReturn(JsonUtil.getSerializedObject(horizonWorkProgrammeSelectionData));
 

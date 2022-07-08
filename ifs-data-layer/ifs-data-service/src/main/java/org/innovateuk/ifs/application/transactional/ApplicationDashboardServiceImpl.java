@@ -161,6 +161,7 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
                 .withProjectState(ofNullable(application.getProject()).map(project -> project.getProjectProcess().getProcessState()).orElse(null))
                 .withCollaborationLevelSingle(!application.isCollaborativeProject())
                 .withCompetitionCompletionStage(application.getCompetition().getCompletionStage())
+                .withExpressionOfInterest(application.isEnabledForExpressionOfInterest())
                 .build();
     }
 

@@ -87,6 +87,8 @@ public abstract class AbstractYourFundingSaver<R extends BaseOtherFunding, T ext
         GrantClaimPercentage claim = (GrantClaimPercentage) finance.getGrantClaim();
         if (form.getRequestingFunding()) {
             claim.setPercentage(ofNullable(form.getGrantClaimPercentage()).map(v -> v.setScale(MAX_DECIMAL_PLACES, HALF_UP)).orElse(BigDecimal.ZERO));
+        } else if (finance.isFixedFundingLevel()) {
+            claim.setPercentage(new BigDecimal(finance.getMaximumFundingLevel()).setScale(MAX_DECIMAL_PLACES, HALF_UP));
         } else {
             claim.setPercentage(BigDecimal.ZERO);
         }

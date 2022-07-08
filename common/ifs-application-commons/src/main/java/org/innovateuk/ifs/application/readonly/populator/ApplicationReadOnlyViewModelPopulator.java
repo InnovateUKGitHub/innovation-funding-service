@@ -156,7 +156,8 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 competition.isKtp(),
                 competition.getTermsAndConditions().isProcurementThirdParty(),
                 competition.getCompetitionThirdPartyConfigResource(),
-                isLoanPartBEnabled
+                isLoanPartBEnabled,
+                data.getApplication().isEnabledForExpressionOfInterest()
         );
     }
 

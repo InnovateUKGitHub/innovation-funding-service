@@ -17,6 +17,8 @@ Documentation     IFS-8994  Two new sets of terms & conditions required
 ...
 ...               IFS-10213 Replace T&C -‘Innovate UK - Subsidy control’ Aug 2021
 ...
+...               IFS-12116 Subsidy control - Content update for Subsidy basis questions
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -146,20 +148,20 @@ Subsidy basis validation messages should display on continuing without selecting
     When the user clicks the button/link                   jQuery = button:contains("Next")
     Then the user should see a field and summary error     You must select an answer.
 
-Lead applicant declares subsidy basis as Northern Ireland Protocol when activites have a direct link to Northern Ireland
-    [Documentation]  IFS-9116
-    Given the user selects the subsidy basis option       Yes
+Lead applicant declares subsidy basis as Northern Ireland Protocol when all questions answered as yes
+    [Documentation]  IFS-9116  IFS-12116
+    Given the user determines the subsidy basis                 Yes  Yes  Yes  Yes  Yes  Yes  n/a
     When the user completes subsidy basis declaration
-    Then the user should see the element                  jQuery = p:contains("Based on the answers, the subsidy basis has been determined as falling under the") span:contains("Northern Ireland Protocol")
-    And the user should see the element                   jQuery = td:contains("Will the activities that you want Innovate UK to support, have a direct link to Northern Ireland?")+ td:contains("Yes")
+    Then the user should see the element                        jQuery = p:contains("Based on the answers, the subsidy basis has been determined as falling under the") span:contains("Northern Ireland Protocol")
+    And the user should see provided answers for subsidy basis  Yes  Yes  Yes  Yes  Yes  Yes  n/a
 
 Lead applicant declares subsidy basis as Northern Ireland Protocol when trading goods through Northern Ireland
-    [Documentation]  IFS-9116
+    [Documentation]  IFS-9116  IFS-12116
     Given the user starts the subsidy section again
-    When the user selects the subsidy basis option       No
-    And the user selects the subsidy basis option        Yes
+    When the user determines the subsidy basis                  No  Yes  No  No  Yes  Yes  Yes
     And the user completes subsidy basis declaration
-    Then the user should see state aid answers
+    Then the user should see the element                        jQuery = p:contains("Based on the answers, the subsidy basis has been determined as falling under the") span:contains("Northern Ireland Protocol")
+    And the user should see provided answers for subsidy basis  No  Yes  No  No  Yes  Yes  Yes
 
 Partner applicant can not accept the terms and conditions without determining subsidy basis type
     [Documentation]  IFS-9116
@@ -178,14 +180,14 @@ Partner applicant can not complete funding details without determining subsidy b
     Then the user should see the element      link = subsidy basis
     And the user should see the element       link = your organisation
 
-Partner applicant declares subsidy basis as EU-UK Trade and Cooperation Agreement
-    [Documentation]  IFS-9116
-    Given the user clicks the button/link                link = subsidy basis
-    And the user clicks the button/link                  jQuery = button:contains("Next")
-    When the user selects the subsidy basis option       No
-    And the user selects the subsidy basis option        No
+Partner applicant declares subsidy basis as Subsidy control Act
+    [Documentation]  IFS-9116  IFS-12116
+    Given the user clicks the button/link                       link = subsidy basis
+    And the user clicks the button/link                         jQuery = button:contains("Next")
+    When the user determines the subsidy basis                  No  n/a  n/a  n/a  n/a  n/a  No
     And the user completes subsidy basis declaration
-    Then the user should see subsidy control answers
+    Then the user should see the element                        jQuery = p:contains("Based on the answers, the subsidy basis has been determined as falling under the") span:contains("Subsidy control Act")
+    And the user should see provided answers for subsidy basis  No  n/a  n/a  n/a  n/a  n/a  No
 
 Lead applicant completes state aid subsidy basis application
     [Documentation]  IFS-9116
@@ -224,38 +226,38 @@ Lead applicant submits state aid subsidy basis application
     Then the user should not see the element     jQuery = .task-status-incomplete
     And the user clicks the button/link          jQuery = .govuk-button:contains("Submit application")
 
-Lead applicant creates subsidy control subsidy basis application and declares subsidy basis as EU-UK Trade and Cooperation Agreement
-    [Documentation]  IFS-9116
-    Given existing user creates a new application        ${subsidyControlFundingComp}
-    And the user clicks the button/link                  link = Application details
-    And the user fills in the Application details        ${leadSubsidyControlApplication}  ${tomorrowday}  ${month}  ${nextyear}
-    And the user clicks the button/link                  link = Subsidy basis
-    And the user clicks the button/link                  jQuery = button:contains("Next")
-    When the user selects the subsidy basis option       No
-    And the user selects the subsidy basis option        No
+Lead applicant creates subsidy control subsidy basis application and declares subsidy basis as Subsidy control Act
+    [Documentation]  IFS-9116  IFS-12116
+    Given existing user creates a new application               ${subsidyControlFundingComp}
+    And the user clicks the button/link                         link = Application details
+    And the user fills in the Application details               ${leadSubsidyControlApplication}  ${tomorrowday}  ${month}  ${nextyear}
+    And the user clicks the button/link                         link = Subsidy basis
+    And the user clicks the button/link                         jQuery = button:contains("Next")
+    When the user determines the subsidy basis                  Yes  No  No  No  No  No  n/a
     And the user completes subsidy basis declaration
-    Then the user should see subsidy control answers
+    Then the user should see the element                        jQuery = p:contains("Based on the answers, the subsidy basis has been determined as falling under the") span:contains("Subsidy control Act")
+    And the user should see provided answers for subsidy basis  Yes  No  No  No  No  No  n/a
 
 Partner applicant declares subsidy basis as Northern Ireland Protocol when activites have a direct link to Northern Ireland
-    [Documentation]  IFS-9116
-    Given the user clicks the button/link                 link = Back to application overview
-    And the lead invites already registered user          ${collaborator1_credentials["email"]}  ${subsidyControlFundingComp}
-    When logging in and error checking                    jessica.doe@ludlow.co.uk  ${short_password}
-    And the user clicks the button/link                   id = save-organisation-button
-    And the user clicks the button/link                   link = Subsidy basis
-    And the user clicks the button/link                   jQuery = button:contains("Next")
-    And the user selects the subsidy basis option         Yes
+    [Documentation]  IFS-9116  IFS-12116
+    Given the user clicks the button/link                       link = Back to application overview
+    And the lead invites already registered user                ${collaborator1_credentials["email"]}  ${subsidyControlFundingComp}
+    When logging in and error checking                          jessica.doe@ludlow.co.uk  ${short_password}
+    And the user clicks the button/link                         id = save-organisation-button
+    And the user clicks the button/link                         link = Subsidy basis
+    And the user clicks the button/link                         jQuery = button:contains("Next")
+    When the user determines the subsidy basis                  Yes  Yes  Yes  Yes  No  Yes  Yes
     And the user completes subsidy basis declaration
-    Then the user should see the element                  jQuery = p:contains("Based on the answers, the subsidy basis has been determined as falling under the") span:contains("Northern Ireland Protocol")
-    And the user should see the element                   jQuery = td:contains("Will the activities that you want Innovate UK to support, have a direct link to Northern Ireland?")+ td:contains("Yes")
+    Then the user should see the element                        jQuery = p:contains("Based on the answers, the subsidy basis has been determined as falling under the") span:contains("Northern Ireland Protocol")
+    And the user should see provided answers for subsidy basis  Yes  Yes  Yes  Yes  No  Yes  Yes
 
 Partner applicant declares subsidy basis as Northern Ireland Protocol when trading goods through Northern Ireland
-    [Documentation]  IFS-9116
+    [Documentation]  IFS-9116  IFS-12116
     Given the user starts the subsidy section again
-    When the user selects the subsidy basis option       No
-    And the user selects the subsidy basis option        Yes
+    When the user determines the subsidy basis                  No  Yes  Yes  Yes  No  Yes  Yes
     And the user completes subsidy basis declaration
-    Then the user should see state aid answers
+    Then the user should see the element                        jQuery = p:contains("Based on the answers, the subsidy basis has been determined as falling under the") span:contains("Northern Ireland Protocol")
+    And the user should see provided answers for subsidy basis  No  Yes  Yes  Yes  No  Yes  Yes
 
 Lead applicant completes subsidy control subsidy basis application
     [Documentation]  IFS-9116
@@ -461,6 +463,31 @@ the user selects the subsidy basis option
     the user clicks the button twice      jQuery = label:contains("${answer}")
     the user clicks the button/link       jQuery = button:contains("Next")
 
+the user determines the subsidy basis
+    [Arguments]   ${answer1}  ${answer2}  ${answer3}  ${answer4}  ${answer5}  ${answer6}  ${answer7}
+    the user selects the subsidy basis question option                             ${answer1}
+    ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  jQuery = td:contains("Will the Innovate UK funding directly or indirectly have an effect upon either:")+td:contains("Yes")
+    Run Keyword if  '${status}' == 'PASS'  runkeywords  the user should see the element                         jQuery = p:contains("The funding you are applying for is potentially")
+    ...                             AND                 the user selects the subsidy basis question option      ${answer2}
+    ...                             AND                 the user selects the subsidy basis question option      ${answer3}
+    ...                             AND                 the user selects the subsidy basis question option      ${answer4}
+    ...                             AND                 the user selects the subsidy basis question option      ${answer5}
+    Run Keyword If  '${status}' == 'FAIL'    the user selects the subsidy basis question option      ${answer7}
+    ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible    jQuery = td:contains("Are you intending to trade any goods arising from the activities funded by Innovate UK with the European Union through Northern Ireland?")+td:contains("Yes")
+    Run Keyword if  '${status}' == 'PASS'  runkeywords  the user should see the element                         jQuery = p:contains("The funding you are applying for is potentially")
+    ...                             AND                 the user selects the subsidy basis question option      ${answer2}
+    ...                             AND                 the user selects the subsidy basis question option      ${answer3}
+    ...                             AND                 the user selects the subsidy basis question option      ${answer4}
+    ...                             AND                 the user selects the subsidy basis question option      ${answer5}
+    ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible    jQuery = td:contains("Is your enterprise engaged in the production, processing or marketing of agricultural products")+td:contains("Yes")
+    Run Keyword if  '${status}' == 'PASS'  runkeywords  the user should see the element                         jQuery = h4:contains("Can you confirm that the Innovate UK funding will be directed towards activities other than the production")
+    ...                             AND                 the user selects the subsidy basis question option      ${answer6}
+
+the user selects the subsidy basis question option
+    [Arguments]   ${answer}
+    the user clicks the button twice      jQuery = label:contains("${answer}")
+    the user clicks the button/link       jQuery = button:contains("Next")
+
 the user starts the subsidy section again
     the user clicks the button/link     id = edit-application-details-button
     the user clicks the button/link     link = Start again
@@ -496,26 +523,18 @@ lead review and submits the application
     the user clicks the button/link     link = ${leadSubsidyControlApplication}
     the user clicks the button/link     link = Review and submit
 
-the user should see subsidy control answers
-    the user should see the element     jQuery = p:contains("Based on the answers, the subsidy basis has been determined as falling under the") span:contains("EU-UK Trade and Cooperation Agreement")
-    the user should see the element     jQuery = td:contains("Will the activities that you want Innovate UK to support, have a direct link to Northern Ireland?")+ td:contains("No")
-    the user should see the element     jQuery = td:contains("Are you intending to trade any goods arising from the activities funded by Innovate UK with the European Union through Northern Ireland?")+ td:contains("No")
-
-the user should see state aid answers
-    the user should see the element     jQuery = p:contains("Based on the answers, the subsidy basis has been determined as falling under the") span:contains("Northern Ireland Protocol")
-    the user should see the element     jQuery = td:contains("Will the activities that you want Innovate UK to support, have a direct link to Northern Ireland?")+ td:contains("No")
-    the user should see the element     jQuery = td:contains("Are you intending to trade any goods arising from the activities funded by Innovate UK with the European Union through Northern Ireland?")+ td:contains("Yes")
-
 the user can see valid subsidy control answers
-    the user should see the element                 jQuery = td:contains("${subsidyOrgName}") + td:contains("Subsidy control")+ td:contains("View answers")
-    the user clicks the button/link                 jQuery = tr:nth-child(1) a:contains("View answers")
-    the user should see subsidy control answers
-    the user clicks the button/link                 link = Back to application overview
+    the user should see the element                             jQuery = td:contains("${subsidyOrgName}") + td:contains("Subsidy control")+ td:contains("View answers")
+    the user clicks the button/link                             jQuery = tr:nth-child(1) a:contains("View answers")
+    the user should see the element                             jQuery = p:contains("Based on the answers, the subsidy basis has been determined as falling under the") span:contains("Subsidy control Act")
+    the user should see provided answers for subsidy basis      Yes  No  No  No  No  No  No
+    the user clicks the button/link                             link = Back to application overview
 
 the user can see valid state aid answers
-    the user should see the element             jQuery = td:contains("${partnerOrganisationName}") + td:contains("State aid")+ td:contains("View answers")
-    the user clicks the button/link             jQuery = tr:nth-child(2) a:contains("View answers")
-    the user should see state aid answers
+    the user should see the element                             jQuery = td:contains("${partnerOrganisationName}") + td:contains("State aid")+ td:contains("View answers")
+    the user clicks the button/link                             jQuery = tr:nth-child(2) a:contains("View answers")
+    the user should see the element                             jQuery = p:contains("Based on the answers, the subsidy basis has been determined as falling under the") span:contains("Northern Ireland Protocol")
+    the user should see provided answers for subsidy basis      No  Yes  Yes  Yes  No  n/a  Yes
 
 requesting application ID of this application
     ${leadSubsidyControlApplicationID} =  get application id by name   ${leadSubsidyControlApplication}
@@ -565,12 +584,14 @@ the application is assigned to be an assessor
     the user clicks the button/link                        jQuery = button:contains("Confirm")
 
 assessor should see valid subsidy basis answers
-    the user clicks the button/link                 jQuery = tr:nth-child(1) a:contains("View answers")
-    the user should see subsidy control answers
-    the user clicks the button/link                 link = Back to subsidy basis
-    the user should see the element                 jQuery = td:contains("${partnerOrganisationName}") + td:contains("State aid")+ td:contains("View answers")
-    the user clicks the button/link                 jQuery = tr:nth-child(2) a:contains("View answers")
-    the user should see state aid answers
+    the user clicks the button/link                          jQuery = tr:nth-child(1) a:contains("View answers")
+    the user should see the element                          jQuery = p:contains("Based on the answers, the subsidy basis has been determined as falling under the") span:contains("Subsidy control Act")
+    the user should see provided answers for subsidy basis   Yes  No  No  No  No  No  No
+    the user clicks the button/link                          link = Back to subsidy basis
+    the user should see the element                          jQuery = td:contains("${partnerOrganisationName}") + td:contains("State aid")+ td:contains("View answers")
+    the user clicks the button/link                          jQuery = tr:nth-child(2) a:contains("View answers")
+    the user should see the element                          jQuery = p:contains("Based on the answers, the subsidy basis has been determined as falling under the") span:contains("Northern Ireland Protocol")
+    the user should see provided answers for subsidy basis   No  Yes  Yes  Yes  No  n/a  Yes
 
 the user can see the terms and conditions for the lead and partner applicant
     the user should see the element      jQuery = td:contains("${subsidyOrgName}")+ td:contains("Subsidy control")
@@ -582,3 +603,22 @@ get assessment period id and set as suite variable
     [Arguments]  ${competitionID}
     ${assessmentPeriodID} =   get assessment period using competition id   ${competitionID}
     Set suite variable  ${assessmentPeriodID}
+
+
+the user should see provided answers for subsidy basis
+    [Arguments]     ${selectedAnswer1}  ${selectedAnswer2}  ${selectedAnswer3}  ${selectedAnswer4}  ${selectedAnswer5}  ${selectedAnswer6}  ${selectedAnswer7}
+    the user should see the element        jQuery = td:contains("Will the Innovate UK funding directly or indirectly have an effect upon either:")+td:contains("${selectedAnswer1}")
+    ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  jQuery = td:contains("Will the Innovate UK funding directly or indirectly have an effect upon either:")+td:contains("Yes")
+    Run Keyword if  '${status}' == 'PASS'  runkeywords  the user should see the element     jQuery = td:contains("Is your enterprise based in or active in Northern Ireland?")+td:contains("${selectedAnswer2}")
+    ...                             AND                 the user should see the element     jQuery = td:contains("Does your enterprise trade directly with customers in Northern Ireland?")+td:contains("${selectedAnswer3}")
+    ...                             AND                 the user should see the element     jQuery = td:contains("Does your enterprise make goods or provide services to third parties with a view to")+td:contains("${selectedAnswer4}")
+    ...                             AND                 the user should see the element     jQuery = td:contains("Is your enterprise engaged in the production, processing or marketing of agricultural products")+td:contains("${selectedAnswer5}")
+    ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  jQuery = td:contains("Are you intending to trade any goods arising from the activities funded by Innovate UK with the European Union through Northern Ireland?")
+    Run Keyword if  '${status}' == 'PASS'  the user should see the element        jQuery = td:contains("Are you intending to trade any goods arising from the activities funded by Innovate UK with the European Union through Northern Ireland?")+td:contains("${selectedAnswer7}")
+    ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  jQuery = td:contains("Are you intending to trade any goods arising from the activities funded by Innovate UK with the European Union through Northern Ireland?")+td:contains("Yes")
+    Run Keyword if  '${status}' == 'PASS'  runkeywords  the user should see the element     jQuery = td:contains("Is your enterprise based in or active in Northern Ireland?")+td:contains("${selectedAnswer2}")
+    ...                             AND                 the user should see the element     jQuery = td:contains("Does your enterprise trade directly with customers in Northern Ireland?")+td:contains("${selectedAnswer3}")
+    ...                             AND                 the user should see the element     jQuery = td:contains("Does your enterprise make goods or provide services to third parties with a view to")+td:contains("${selectedAnswer4}")
+    ...                             AND                 the user should see the element     jQuery = td:contains("Is your enterprise engaged in the production, processing or marketing of agricultural products")+td:contains("${selectedAnswer5}")
+    ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible    jQuery = td:contains("Can you confirm that the Innovate UK funding will be directed towards activities other than the production")
+    Run Keyword if  '${status}' == 'PASS'   the user should see the element  jQuery = td:contains("Can you confirm that the Innovate UK funding will be directed towards activities other than the production")+td:contains("${selectedAnswer6}")

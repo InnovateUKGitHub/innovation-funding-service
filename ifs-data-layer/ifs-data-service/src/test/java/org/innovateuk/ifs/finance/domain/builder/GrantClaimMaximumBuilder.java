@@ -57,4 +57,8 @@ public class GrantClaimMaximumBuilder extends BaseBuilder<GrantClaimMaximum, Gra
     public GrantClaimMaximumBuilder withFundingRules(FundingRules... rules) {
         return withArray((value, max) -> max.setFundingRules(value), rules);
     }
+
+    public GrantClaimMaximumBuilder withFixedLevelFunding(boolean... fixedLevelFunding) {
+        return withArray((value, max) -> max.setFixedFundingLevel(value), fixedLevelFunding);
+    }
 }

@@ -121,11 +121,12 @@ Member can access salesforce form through B&FI question
 
 Member can mark the B&FI question as complete
     [Documentation]    IFS-11271
-    Given the sales force submits/unsubmits b&fi survey     1  ${newLoansApplicationID}
-    When the user navigates to the page                     ${server}/applicant/dashboard
-    And the user clicks the button/link                     link = loans b&fi application
-    And the user clicks the button/link                     link = Business and financial information
+    Given the user marks b&fi question as complete or incomplete    troy.ward@gmail.com  ${newLoansApplicationID}  Complete  2024-04-11T12:15:45.000Z
+    When the user navigates to the page                             ${server}/applicant/dashboard
+    And the user clicks the button/link                             link = loans b&fi application
+    And the user clicks the button/link                             link = Business and financial information
     Then the user can see B&FI question as complete
+    And the user checks valid question status received form SIL     ${newLoansApplicationID}   Complete  2024-04-11T12:15:45Z
 
 lead applicant sees B&FI question as complete when member completes it
     [Documentation]    IFS-11271
@@ -145,9 +146,10 @@ The user can see b&fi application question as complete and shows edit online sur
 
 The user can open the sales force new tab on clicking conitnue button in incomplete status of b&fi question
     [Documentation]   IFS-10703
-    When the sales force submits/unsubmits b&fi survey     0  ${loanApplicationID}
-    Then the user should see the element                   jQuery = a:contains("Continue")
-    And the user should see the element                    css = [href="https://loans-innovateuk.cs80.force.com/loansCommunity/s?CompanyNumber=60674010&IFSApplicationNumber=${loanApplicationID}&CompanyName=${EMPIRE_LTD_NAME}&CompetitionId=${loan_comp_appl_id}"]
+    When the user marks b&fi question as complete or incomplete     steve.smith@empire.com  ${loanApplicationID}  Incomplete  2023-04-11T12:15:45.000Z
+    Then the user should see the element                            jQuery = a:contains("Continue")
+    And the user should see the element                             css = [href="https://loans-innovateuk.cs80.force.com/loansCommunity/s?CompanyNumber=60674010&IFSApplicationNumber=${loanApplicationID}&CompanyName=${EMPIRE_LTD_NAME}&CompetitionId=${loan_comp_appl_id}"]
+    And the user checks valid question status received form SIL     ${loanApplicationID}  Incomplete  2023-04-11T12:15:45Z
 
 The user will not be able to mark the application as complete without completing business and financial information
     [Documentation]    IFS-9484  IFS-10705  IFS-10757  IFS-11137
@@ -165,8 +167,10 @@ The user will not be able to mark the application as complete without completing
 
 The user can see the business and financial information application question in application overview as complete
     [Documentation]    IFS-9484  IFS-10705
-    When the sales force submits/unsubmits b&fi survey     1  ${loanApplicationID}
-    Then the user should see the element                   jQuery = .section-complete + button:contains("Business and financial information")
+    When the user marks b&fi question as complete or incomplete     steve.smith@empire.com  ${loanApplicationID}  Complete  2025-04-11T12:15:45.000Z
+    And the user reloads the page
+    Then the user should see the element                            jQuery = .section-complete + button:contains("Business and financial information")
+    And the user checks valid question status received form SIL     ${loanApplicationID}  Complete  2025-04-11T12:15:45Z
 
 Return and edit button should not change the status of B&FI question
     [Documentation]    IFS-11019
@@ -475,8 +479,8 @@ the applicant should see the project setup complete stage enabled
     Log in as a different user       &{internal_finance_credentials}
 
 the applicant checks for project status
-    the user should see the element   jQuery = li:contains("${loan_PS_application1}") .status-and-action:contains("Live project")
-    the user should see the element   jQuery = li:contains("${loan_PS_application2}") .status-and-action:contains("Unsuccessful")
+    the user should see the element   jQuery = li:contains("${loan_PS_application1}") .status-msg:contains("Live project")
+    the user should see the element   jQuery = li:contains("${loan_PS_application2}") .status-msg:contains("Unsuccessful")
     the user navigates to the page    ${loan_PS}
     the user should see the element   jQuery = .progress-list li:nth-child(6):contains("Completed")
     the user clicks the button/link   link = Project setup complete
@@ -557,11 +561,6 @@ the application is assigned to a assessor
     the user selects the radio button     assessmentAccept  true
     the user clicks the button/link       jQuery = button:contains("Confirm")
 
-the sales force submits/unsubmits b&fi survey
-    [Arguments]  ${completeStatus}  ${applicationID}
-    execute sql string  UPDATE `${database_name}`.`question_status` SET `marked_as_complete`=${completeStatus} WHERE `application_id`='${applicationID}' and `question_id`='719';
-    reload page
-
 the user creates a new application
     the user select the competition and starts application     ${loan_comp_application}
     the user selects the radio button                          createNewApplication  true
@@ -611,9 +610,13 @@ Requesting application ID of loan competiton
      ${newLoansApplicationID} =     get application id by name         loans b&fi application
      Set suite variable             ${newLoansApplicationID}
 
-the user should see valid contact log message stored in db
-    ${userId} =  get user uuid   steve.smith@empire.com
+get auth token of user
+    [Arguments]  ${username}
+    ${userId} =  get user uuid   ${username}
     Set global variable  ${userId}
+
+the user should see valid contact log message stored in db
+    get auth token of user   steve.smith@empire.com
     ${contactPayload} =  get the loans contact payload delivered to SIL  ${userId}
     ${contactPayloadInString} =  Convert to string   ${contactPayload}
     Should Contain  ${contactPayloadInString}    "ifsUuid" : "${userId}"
@@ -632,3 +635,26 @@ the user should see valid application submission log message stored in db
     Should Contain  ${applicationSubmissionPayloadInString}    "projTotalCost" : 200903.0
     Should Contain  ${applicationSubmissionPayloadInString}    "projOtherFunding" : 2468.0
     Should Contain  ${applicationSubmissionPayloadInString}    "markedIneligible" : null
+
+the user marks b&fi question as complete or incomplete
+    [Arguments]  ${username}  ${applicatioID}  ${questionStatus}  ${questionDate}
+    get auth token of user  ${username}
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   Location Should Contain   host.docker.internal
+    Run Keyword If  '${status}' == 'PASS'  run loans curl command  ${localLoanCurl}  ${userId}  ${applicatioID}  ${questionStatus}  ${questionDate}
+    Run Keyword If  '${status}' == 'FAIL'  run loans curl command  ${cloudLoanCurl}  ${userId}  ${applicatioID}  ${questionStatus}  ${questionDate}
+
+run loans curl command
+    [Arguments]  ${curlVersion}  ${userId}  ${applicatioID}  ${questionStatus}  ${questionDate}
+    ${qStatus} =   Run Process    ${shellScriptFolder}/${curlVersion}   ${userId}  ${applicatioID}  ${questionStatus}  ${questionDate}
+    log  ${qStatus.rc}
+    log  ${qStatus.stderr}
+    log  ${qStatus.stdout}
+
+the user checks valid question status received form SIL
+    [Arguments]  ${applicationID}  ${completionStatus}  ${completionDate}
+    ${completionStatusPayload} =  get the loans question status payload received from SIL  ${applicationID}  ${completionStatus}
+    log  ${completionStatusPayload}
+    ${completionStatusPayloadInString} =  Convert to string   ${completionStatusPayload}
+    log  ${completionStatusPayloadInString}
+    Should Contain  ${completionStatusPayloadInString}    "completionStatus":"${completionStatus}"
+    Should Contain  ${completionStatusPayloadInString}    "completionDate":"${completionDate}"

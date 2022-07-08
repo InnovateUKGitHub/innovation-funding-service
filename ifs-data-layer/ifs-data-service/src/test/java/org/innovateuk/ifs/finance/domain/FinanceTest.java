@@ -18,6 +18,7 @@ import static org.innovateuk.ifs.category.builder.ResearchCategoryBuilder.newRes
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.domain.builder.GrantClaimMaximumBuilder.newGrantClaimMaximum;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -132,6 +133,72 @@ public class FinanceTest {
         when(competition.isFullyFunded()).thenReturn(false);
 
         assertThat(finance.getMaximumFundingLevel(), is(equalTo(20)));
+    }
+
+    @Test
+    public void isFixedLevelFunding_differentMaximum() {
+        Competition competition = spy(newCompetition()
+                .withFundingRules(FundingRules.SUBSIDY_CONTROL)
+                .withGrantClaimMaximums(newGrantClaimMaximum()
+                        .withMaximum(80,70,70,80)
+                        .withResearchCategory(null)
+                        .withFixedLevelFunding(true)
+                        .withSize(OrganisationSize.LARGE, OrganisationSize.LARGE, OrganisationSize.MEDIUM, OrganisationSize.SMALL)
+                        .withFundingRules(FundingRules.SUBSIDY_CONTROL, FundingRules.STATE_AID, FundingRules.SUBSIDY_CONTROL, FundingRules.SUBSIDY_CONTROL)
+                        .build(4))
+                .build());
+        Application application = newApplication()
+                .withCompetition(competition)
+                .build();
+        TestFinance finance = new TestFinance(application);
+        finance.setOrganisation(business);
+        finance.setOrganisationSize(OrganisationSize.LARGE);
+
+        assertEquals(0,  finance.getMaximumFundingLevel());
+        assertEquals(true, finance.isFixedFundingLevel());
+    }
+
+    @Test
+    public void isFixedLevelFunding_FixedMax() {
+        Competition competition = spy(newCompetition()
+                .withFundingRules(FundingRules.SUBSIDY_CONTROL)
+                .withGrantClaimMaximums(newGrantClaimMaximum()
+                        .withMaximum(80,80,80,80)
+                        .withResearchCategory(null)
+                        .withFixedLevelFunding(true)
+                        .withSize(OrganisationSize.LARGE, OrganisationSize.LARGE, OrganisationSize.MEDIUM, OrganisationSize.SMALL)
+                        .withFundingRules(FundingRules.SUBSIDY_CONTROL, FundingRules.STATE_AID, FundingRules.SUBSIDY_CONTROL, FundingRules.SUBSIDY_CONTROL)
+                        .build(4))
+                .build());
+        Application application = newApplication()
+                .withCompetition(competition)
+                .build();
+        TestFinance finance = new TestFinance(application);
+        finance.setOrganisation(business);
+        finance.setOrganisationSize(OrganisationSize.LARGE);
+
+        assertEquals(80,  finance.getMaximumFundingLevel());
+        assertEquals(true, finance.isFixedFundingLevel());
+    }
+
+    @Test
+    public void getFixedMaximumFundingLevel() {
+
+        Competition competition = spy(newCompetition()
+                .withGrantClaimMaximums(newGrantClaimMaximum()
+                        .withMaximum(77)
+                        .withFixedLevelFunding(true)
+                        .build(3))
+                .build());
+
+        Application application = newApplication()
+                .withCompetition(competition)
+                .build();
+        TestFinance finance = new TestFinance(application);
+        finance.setOrganisation(business);
+
+        assertEquals(77, finance.getMaximumFundingLevel());
+        assertEquals(true, finance.isFixedFundingLevel());
     }
 
     private static class TestFinance extends Finance {

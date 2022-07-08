@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationExpressionOfInterestConfigResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.competition.builder.StakeholderBuilder;
@@ -40,6 +41,8 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.ProcessRoleType.*;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.hasCompetitionAdministratorAuthority;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInnovationLead;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -89,7 +92,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     public void setup() {
         competition = newCompetition().withLeadTechnologist().build();
         User innovationLeadOnApp1 = newUser().build();
-        innovationLeadOnApplication1 = newUserResource().withRoleGlobal(INNOVATION_LEAD).build();
+        innovationLeadOnApplication1 = newUserResource().withRoleGlobal(Role.INNOVATION_LEAD).build();
         innovationLeadOnApplication1.setId(innovationLeadOnApp1.getId());
         InnovationLead innovationLead = newInnovationLead().withUser(innovationLeadOnApp1).build();
 
@@ -386,22 +389,57 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void markAsIneligibleAllowedBeforeAssessment() {
+    public void markAsIneligibleAllowedBeforeAssessmentWithEOI() {
         newArrayList(CompetitionStatus.values()).forEach(competitionStatus -> allGlobalRoleUsers.forEach(user -> {
             Competition competition = newCompetition()
                     .withAssessmentPeriods(newAssessmentPeriod().withMilestones(newMilestone().build(1)).build(1))
                     .withCompetitionStatus(competitionStatus)
+                    .withEnabledForExpressionOfInterest(true)
                     .withCompetitionType(newCompetitionType().withName("Sector").build())
                     .build();
-            ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
+
+            ApplicationExpressionOfInterestConfigResource applicationExpressionOfInterestConfigResource = new ApplicationExpressionOfInterestConfigResource();
+            applicationExpressionOfInterestConfigResource.setApplicationId(1L);
+            applicationExpressionOfInterestConfigResource.setEnabledForExpressionOfInterest(true);
+
+            ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).withId(1L)
+                    .withApplicationExpressionOfInterestConfigResource(applicationExpressionOfInterestConfigResource).build();
             when(competitionRepository.findById(application.getCompetition())).thenReturn(Optional.of(competition));
-            if (!EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP, PREVIOUS).contains(competitionStatus) && user.hasAnyRoles(IFS_ADMINISTRATOR, SYSTEM_MAINTAINER, PROJECT_FINANCE, COMP_ADMIN, INNOVATION_LEAD, SUPER_ADMIN_USER)) {
+            if (!EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP, PREVIOUS).contains(competitionStatus) &&
+                    (hasCompetitionAdministratorAuthority(user) || !application.isEnabledForExpressionOfInterest() || isInnovationLead(user))) {
                 assertTrue(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
             } else {
                 assertFalse(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
             }
         }));
     }
+    @Test
+    public void markAsIneligibleAllowedBeforeAssessmentWithoutEOI() {
+        newArrayList(CompetitionStatus.values()).forEach(competitionStatus -> allGlobalRoleUsers.forEach(user -> {
+            Competition competition = newCompetition()
+                    .withAssessmentPeriods(newAssessmentPeriod().withMilestones(newMilestone().build(1)).build(1))
+                    .withCompetitionStatus(competitionStatus)
+                    .withEnabledForExpressionOfInterest(false)
+                    .withCompetitionType(newCompetitionType().withName("Sector").build())
+                    .build();
+
+            ApplicationExpressionOfInterestConfigResource applicationExpressionOfInterestConfigResource = new ApplicationExpressionOfInterestConfigResource();
+            applicationExpressionOfInterestConfigResource.setApplicationId(1L);
+            applicationExpressionOfInterestConfigResource.setEnabledForExpressionOfInterest(false);
+
+            ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).withId(1L)
+                    .withApplicationExpressionOfInterestConfigResource(applicationExpressionOfInterestConfigResource).build();
+            when(competitionRepository.findById(application.getCompetition())).thenReturn(Optional.of(competition));
+            if (!EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP, PREVIOUS).contains(competitionStatus) &&
+                    (hasCompetitionAdministratorAuthority(user) || !application.isEnabledForExpressionOfInterest() || isInnovationLead(user))) {
+                assertTrue(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
+            } else {
+                assertFalse(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
+            }
+        }));
+    }
+
+
 
     @Test
     public void consortiumCanCheckCollaborativeFundingCriteriaIsMet() {

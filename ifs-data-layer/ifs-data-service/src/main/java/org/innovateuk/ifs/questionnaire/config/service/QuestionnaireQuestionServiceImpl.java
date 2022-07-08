@@ -39,6 +39,7 @@ public class QuestionnaireQuestionServiceImpl
         domain.setTitle(resource.getTitle());
         domain.setGuidance(resource.getGuidance());
         domain.setQuestion(resource.getQuestion());
+        domain.setMessage(resource.getMessage());
         return domain;
     }
 

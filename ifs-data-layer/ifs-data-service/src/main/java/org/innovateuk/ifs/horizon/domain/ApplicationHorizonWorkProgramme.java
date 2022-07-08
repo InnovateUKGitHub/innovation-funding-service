@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.horizon.domain;
 
-import org.innovateuk.ifs.horizon.resource.HorizonWorkProgramme;
-
 import javax.persistence.*;
 
 @Entity
@@ -14,7 +12,8 @@ public class ApplicationHorizonWorkProgramme {
 
     private Long applicationId;
 
-    @Enumerated(EnumType.STRING)
+    @ManyToOne(optional = true, fetch = FetchType.EAGER)
+    @JoinColumn(name="work_programme_id", referencedColumnName="id")
     private HorizonWorkProgramme workProgramme;
 
     public ApplicationHorizonWorkProgramme() {

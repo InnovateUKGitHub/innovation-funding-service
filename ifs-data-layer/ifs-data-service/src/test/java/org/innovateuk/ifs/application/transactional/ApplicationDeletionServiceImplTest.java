@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationExpressionOfInterestConfig;
 import org.innovateuk.ifs.application.repository.*;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.ApplicationUserCompositeId;
@@ -46,6 +47,9 @@ public class ApplicationDeletionServiceImplTest extends BaseServiceUnitTest<Appl
     private ApplicationFinanceRepository applicationFinanceRepository;
 
     @Mock
+    private ApplicationExpressionOfInterestConfigRepository applicationExpressionOfInterestConfigRepository;
+
+    @Mock
     private ApplicationRepository applicationRepository;
 
     @Mock
@@ -88,6 +92,8 @@ public class ApplicationDeletionServiceImplTest extends BaseServiceUnitTest<Appl
         long applicationId = 1L;
         Application application = newApplication()
                 .withApplicationState(ApplicationState.OPENED)
+                .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig
+                        .builder().enabledForExpressionOfInterest(true).build())
                 .build();
         String email = "test@test.com";
         String firstName = "test";
@@ -132,6 +138,7 @@ public class ApplicationDeletionServiceImplTest extends BaseServiceUnitTest<Appl
         verify(questionStatusRepository).deleteByApplicationId(applicationId);
         verify(applicationHiddenFromDashboardRepository).deleteByApplicationId(applicationId);
         verify(processHistoryRepository).deleteByProcessId(application.getApplicationProcess().getId());
+        verify(applicationExpressionOfInterestConfigRepository).delete(application.getApplicationExpressionOfInterestConfig());
         verify(applicationRepository).delete(application);
         verify(notificationService, only()).sendNotificationWithFlush(notification, EMAIL);
         verify(applicationInviteRepository).deleteAll(application.getInvites());
