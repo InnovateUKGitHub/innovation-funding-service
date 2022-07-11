@@ -240,4 +240,23 @@ public abstract class Finance {
     public void setFecCertExpiryDate(LocalDate fecCertExpiryDate) {
         this.fecCertExpiryDate = fecCertExpiryDate;
     }
+
+    public boolean isFixedFundingLevel() {
+
+        boolean allFundingLevelsAreFixed =
+                getCompetition().getGrantClaimMaximums().stream()
+                        .filter(this::isMatchingFundingRules)
+                        .map(GrantClaimMaximum::isFixedFundingLevel)
+                        .distinct()
+                        .count() == 1;
+        if (allFundingLevelsAreFixed) {
+            return getCompetition().getGrantClaimMaximums().stream()
+                    .filter(this::isMatchingFundingRules)
+                    .findFirst()
+                    .map(GrantClaimMaximum::isFixedFundingLevel)
+                    .orElse(false);
+        }
+
+        return false;
+    }
 }
