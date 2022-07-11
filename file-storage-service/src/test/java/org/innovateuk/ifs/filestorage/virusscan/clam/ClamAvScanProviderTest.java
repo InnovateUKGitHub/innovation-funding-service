@@ -2,7 +2,9 @@ package org.innovateuk.ifs.filestorage.virusscan.clam;
 
 import com.diluv.clamchowder.ClamClient;
 import com.diluv.clamchowder.ScanResult;
+import org.innovateuk.ifs.filestorage.exception.ServiceException;
 import org.innovateuk.ifs.filestorage.exception.VirusDetectedException;
+import org.innovateuk.ifs.filestorage.repository.FileStorageRecordRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +13,7 @@ import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketTimeoutException;
 import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -29,6 +32,9 @@ class ClamAvScanProviderTest {
     @MockBean
     private ClamClient clamClient;
 
+    @MockBean
+    private FileStorageRecordRepository fileStorageRecordRepository;
+
     @Test
     void scanFile() throws IOException {
         byte[] bytes = "foo".getBytes(StandardCharsets.UTF_8);
@@ -42,6 +48,26 @@ class ClamAvScanProviderTest {
         );
         assertThat(virusDetectedException.getStatus(), equalTo(HttpStatus.BAD_REQUEST));
         assertThat(virusDetectedException.getReason(), containsString("XYZ"));
+    }
+
+    @Test
+    void testRetry() throws IOException {
+        byte[] bytes = "foo".getBytes(StandardCharsets.UTF_8);
+        when(clamClient.scan(any(InputStream.class)))
+            .thenThrow(new SocketTimeoutException("foo"))
+            .thenReturn(new ScanResult("stream: OK"));
+        clamAvScanProvider.scanFile(bytes);
+    }
+
+    @Test
+    void testRetryFailure() throws IOException {
+        byte[] bytes = "foo".getBytes(StandardCharsets.UTF_8);
+        when(clamClient.scan(any(InputStream.class)))
+            .thenThrow(new SocketTimeoutException("foo"));
+        ServiceException serviceException = assertThrows(
+                ServiceException.class,
+                () -> clamAvScanProvider.scanFile(bytes)
+        );
     }
 
 }
