@@ -10,3 +10,6 @@ components:
   - ../../../../../components/registration-service
   - ../../../../../patches/
   - ../../patches/
+
+patchesStrategicMerge:
+  - registration-service-deployment.yml

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.forms.questions.horizon.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.innovateuk.ifs.horizon.resource.HorizonWorkProgramme;
+import org.innovateuk.ifs.horizon.resource.HorizonWorkProgrammeResource;
 
 import java.util.List;
 import java.util.Map;
@@ -16,7 +16,7 @@ public class HorizonWorkProgrammeViewModel {
     private final boolean complete;
     private final boolean open;
     private final boolean leadApplicant;
-    private Map<String, List<HorizonWorkProgramme>> readOnlyMap;
+    private Map<String, List<HorizonWorkProgrammeResource>> readOnlyMap;
     private boolean readOnly;
     private final String pageTitle;
     private final boolean isCallId;
@@ -35,7 +35,7 @@ public class HorizonWorkProgrammeViewModel {
                                           boolean open,
                                           boolean leadApplicant,
                                           boolean readOnly,
-                                          Map<String, List<HorizonWorkProgramme>> readOnlyMap
+                                          Map<String, List<HorizonWorkProgrammeResource>> readOnlyMap
     ) {
         this.applicationName = applicationName;
         this.applicationId = applicationId;

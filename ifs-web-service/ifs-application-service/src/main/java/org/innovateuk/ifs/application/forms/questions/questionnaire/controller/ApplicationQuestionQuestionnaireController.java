@@ -82,7 +82,7 @@ public class ApplicationQuestionQuestionnaireController {
                     setNorthernIrelandDeclaration(applicationId, organisationId,false);
                     break;
                 default:
-                    throw new ObjectNotFoundException("Unkown outcome type " + outcome);
+                    throw new ObjectNotFoundException("Unknown outcome type " + outcome);
             }
         }
         return "redirect:" + viewRedirectUrl(applicationId, organisationId, questionId);

@@ -65,7 +65,7 @@ public class PartnerOrganisationPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "REMOVE_PARTNER_ORGANISATION", description = "Internal users can remove partner organisations for any project")
     public boolean internalUsersCanRemovePartnerOrganisations(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
-        return isInternalAdmin(user);
+        return hasCompetitionAdministratorAuthority(user);
     }
 
     @PermissionRule(value = "READ", description = "Auditors can see partner organisations on projects in all competitions")

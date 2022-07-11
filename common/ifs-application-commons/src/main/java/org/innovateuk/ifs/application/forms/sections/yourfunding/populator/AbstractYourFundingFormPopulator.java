@@ -9,6 +9,7 @@ import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.category.PreviousFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -52,6 +53,15 @@ public abstract class AbstractYourFundingFormPopulator<R extends BaseOtherFundin
     @SuppressWarnings("unchecked")
     private AbstractYourFundingForm<R, T> getForm(BaseFinanceResource finance) {
         GrantClaim grantClaim = finance.getGrantClaim();
+
+        if (finance.isFixedFundingLevel()) {
+            YourFundingPercentageForm form = new YourFundingPercentageForm();
+            form.setGrantClaimPercentage(new BigDecimal(finance.getMaximumFundingLevel()));
+            form.setRequestingFunding(false);
+            GrantClaimPercentage grantClaimPercentage = (GrantClaimPercentage) grantClaim;
+            grantClaimPercentage.setPercentage(new BigDecimal(finance.getMaximumFundingLevel()));
+            return (AbstractYourFundingForm<R, T>) form;
+        }
 
         if (grantClaim instanceof GrantClaimPercentage) {
             GrantClaimPercentage grantClaimPercentage = (GrantClaimPercentage) grantClaim;

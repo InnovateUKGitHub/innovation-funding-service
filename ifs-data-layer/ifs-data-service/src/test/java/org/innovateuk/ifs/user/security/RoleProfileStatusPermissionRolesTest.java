@@ -23,7 +23,7 @@ public class RoleProfileStatusPermissionRolesTest extends BasePermissionRulesTes
         UserResource otherUser = newUserResource().build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (isInternalAdmin(user) || isSupport(user)) {
+            if (hasCompetitionAdministratorAuthority(user) || isSupport(user)) {
                 assertTrue(rules.adminsAndSupportCanRetrieveUserRoleProfile(otherUser, user));
             } else {
                 assertFalse(rules.adminsAndSupportCanRetrieveUserRoleProfile(otherUser, user));

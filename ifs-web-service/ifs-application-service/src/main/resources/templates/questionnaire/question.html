@@ -18,6 +18,12 @@
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.title},subTitle=${model.subtitle},size='govuk-heading-xl'" />
 
+        <th:block th:unless="${#strings.isEmpty(model.message)}">
+            <div class="message-alert govuk-!-margin-bottom-8">
+                <p class="govuk-body" th:text="${model.message}">Message content.</p>
+            </div>
+        </th:block>
+
         <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="POST">
             <input type="hidden" th:field="*{questionResponseId}" />
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('option')} ? 'govuk-form-group--error'">
