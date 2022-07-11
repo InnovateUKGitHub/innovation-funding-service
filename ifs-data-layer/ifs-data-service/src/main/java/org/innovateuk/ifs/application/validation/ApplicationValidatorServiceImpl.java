@@ -24,8 +24,6 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -47,8 +45,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  */
 @Service
 public class ApplicationValidatorServiceImpl extends BaseTransactionalService implements ApplicationValidatorService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ApplicationValidatorServiceImpl.class);
 
     @Value("${ifs.ktp.phase2.enabled}")
     private boolean ktpPhase2Enabled;
@@ -156,10 +152,7 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
     @Override
     public Boolean isApplicationComplete(Application application) {
         BigDecimal progressPercentage = applicationProgressService.getApplicationProgress(application.getId()).getSuccess();
-        Boolean isFinanceOverviewComplete = isFinanceOverviewComplete(application);
-        Boolean isApplicationProgressComplete = isApplicationProgressComplete(progressPercentage);
-
-        return isFinanceOverviewComplete && isApplicationProgressComplete;
+        return isFinanceOverviewComplete(application) && isApplicationProgressComplete(progressPercentage);
     }
 
     @Override

@@ -9,8 +9,6 @@ import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,8 +24,6 @@ import static org.innovateuk.ifs.util.MathFunctions.percentage;
  */
 @Service
 public class ApplicationProgressServiceImpl implements ApplicationProgressService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ApplicationProgressServiceImpl.class);
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -84,8 +80,6 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
 
         long competitionId = application.getCompetition().getId();
         long organisations = organisationRepository.countDistinctByProcessRolesApplicationId(application.getId());
-
-        LOG.info("application enabled for expression of interest->" + new Boolean(application.isEnabledForExpressionOfInterest()).toString());
 
         if (application.isEnabledForExpressionOfInterest()) {
             questionsWithMultipleStatuses = questionRepository.countPreRegQuestionsWithMultipleStatuses(competitionId);
