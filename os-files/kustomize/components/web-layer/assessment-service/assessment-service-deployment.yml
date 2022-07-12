@@ -31,7 +31,7 @@ spec:
         lifecycle:
           preStop:
             exec:
-              command: [ "/bin/sh", "-c", "echo terminating pod" ]
+              command: [ "/bin/sh", "-c", "echo 'terminating pod' >> /proc/1/fd/1" ]
         livenessProbe:
           httpGet:
             path: /assessment/monitoring/health
