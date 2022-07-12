@@ -10,6 +10,7 @@ import org.innovateuk.ifs.commons.security.authentication.token.Authentication;
 import org.innovateuk.ifs.commons.service.HttpHeadersUtils;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
@@ -43,10 +44,11 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
     @SuppressWarnings("unused")
     private int port;
 
+    @Autowired
+    private RestTemplate restTemplate;
+
     @Test
     public void testIncorrectUrl() throws Exception {
-
-        RestTemplate restTemplate = new RestTemplate();
 
         try {
             String url = "http://localhost:" + port + "/non/existent/url";
@@ -64,10 +66,7 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
     }
 
     @Test
-    @Ignore("TODO see how far the other tests get for now")
     public void testAccessDenied() throws Exception {
-
-        RestTemplate restTemplate = new RestTemplate();
 
         try {
             String url  = "http://localhost:" + port + "/application/2";
@@ -76,7 +75,7 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
 
         } catch (HttpClientErrorException | HttpServerErrorException e) {
             assertEquals(FORBIDDEN, e.getStatusCode());
-            RestErrorResponse restErrorResponse = new ObjectMapper().readValue(e.getResponseBodyAsString(), RestErrorResponse.class);
+            RestErrorResponse restErrorResponse = new ObjectMapper().readValue(e.getMessage(), RestErrorResponse.class);
             Error expectedError = new Error(GENERAL_FORBIDDEN.getErrorKey(), null);
             RestErrorResponse expectedResponse = new RestErrorResponse(expectedError);
             assertEquals(expectedResponse, restErrorResponse);
