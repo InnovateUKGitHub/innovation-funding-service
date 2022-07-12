@@ -312,16 +312,6 @@ spec:
             configMapKeyRef:
               key: SPRING_DATASOURCE_HIKARI_MAXLIFETIME
               name: data-service-config
-        - name: IFS_DATA_SERVICE_GLUSTER_FILE_MIGRATION_MILLIS
-          valueFrom:
-            configMapKeyRef:
-              key: IFS_DATA_SERVICE_GLUSTER_FILE_MIGRATION_MILLIS
-              name: data-service-config
-        - name: IFS_DATA_SERVICE_GLUSTER_FILE_MIGRATION_BATCH_SIZE
-          valueFrom:
-            configMapKeyRef:
-              key: IFS_DATA_SERVICE_GLUSTER_FILE_MIGRATION_BATCH_SIZE
-              name: data-service-config
         - name: SPRING_DATASOURCE_HIKARI_POOLNAME
           value: "IFS_DATA_SERVICE_CONNECTION_POOL"
         - name: FLYWAY_BASELINE_ON_MIGRATE
@@ -343,10 +333,3 @@ spec:
           requests:
             cpu: 400m
             memory: 1500M
-#          volumeMounts:
-#            - mountPath: /mnt/ifs_storage
-#              name: dir-1
-#      volumes:
-#        - name: dir-1
-#          persistentVolumeClaim:
-#            claimName: file-upload-claim
