@@ -1040,8 +1040,9 @@ the user fills correspondence address data
     Wait Until Keyword Succeeds Without Screenshots    10s    200ms    input text        id = addressLine1       ${addresLine1}
     Wait Until Keyword Succeeds Without Screenshots    10s    200ms    input text        id = addressLine2       ${addresLine2}
     Wait Until Keyword Succeeds Without Screenshots    10s    200ms    input text        id = town               ${town}
-    enter the country in the autocomplete field        Argentina      ${country}
     Wait Until Keyword Succeeds Without Screenshots    10s    200ms    input text        id = zipCode            ${zipCode}
+    enter the country in the autocomplete field        Argentina      ${country}
+    #Wait Until Keyword Succeeds Without Screenshots    10s    200ms    input text        id = zipCode            ${zipCode}
 
 the user should see read only view of completed correspondence address details
     the user should see the element     jQuery = td:contains("Calle 11, San Sebastian,")
