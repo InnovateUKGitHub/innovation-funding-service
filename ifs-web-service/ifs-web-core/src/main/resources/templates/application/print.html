@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Print Application'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.isExpressionOfInterestApplication} ? 'Print expression of interest application': 'Print application'" />
 </head>
 <body class="govuk-template__body print-doc">
 <th:block th:insert="fragments/layout :: body-start" />
 
 <div class="print-bar">
-    <button class="govuk-button" onclick="window.print()">Print your application</button>
-    <div class="hidden">You can print your application by pressing CTRL+P (Windows) or CMD+P (mac)</div>
+    <button class="govuk-button" onclick="window.print()">Print your <span th:text="${model.isExpressionOfInterestApplication} ? |expression of interest| : |application|" /></button>
+    <div class="hidden">You can print your <span th:text="${model.isExpressionOfInterestApplication} ? |expression of interest | : |application| " /> by pressing CTRL+P (Windows) or CMD+P (mac)</div>
 </div>
 
 <th:block th:insert="application/readonly/application-read-only :: print (${model})" />

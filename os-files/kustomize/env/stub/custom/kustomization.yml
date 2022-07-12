@@ -23,9 +23,6 @@ resources:
   - ../../../config-mgmt/env/aws/custom
   - routes/mail-route.yml
   - routes/fss-route.yml
-  - storage/gluster.yml
-  - storage/gluster-ep.yml
-  - storage/persistent-volume-claim.yml
 
 patchesStrategicMerge:
   - web-layer/registration-service/registration-service-deployment.yml

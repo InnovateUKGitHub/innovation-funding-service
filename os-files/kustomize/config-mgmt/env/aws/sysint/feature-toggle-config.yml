@@ -4,4 +4,3 @@ metadata:
   name: feature-toggle-config
 data:
   IFS_MONITORINGOFFICER_DASHBOARD_FILTER_ENABLED: "false"
-  IFS_MONITORINGOFFICER_JOURNEY_UPDATE_ENABLED: "false"
