@@ -15,7 +15,6 @@ import org.innovateuk.ifs.file.service.ByFormInputMediaTypesGenerator;
 import org.innovateuk.ifs.file.transactional.FileEntryServiceImpl;
 import org.innovateuk.ifs.file.transactional.FileServiceImpl;
 import org.innovateuk.ifs.file.transactional.FileServiceTransactionHelper;
-import org.innovateuk.ifs.file.transactional.gluster.GlusterFileServiceImpl;
 import org.innovateuk.ifs.form.transactional.FormInputServiceImpl;
 import org.innovateuk.ifs.granttransfer.controller.EuGrantTransferController;
 import org.innovateuk.ifs.granttransfer.domain.EuGrantTransfer;
@@ -68,9 +67,6 @@ public class UploadGrantAgreementComponentTest extends MockBeanTest {
 
     @Autowired // MockBean via MockBeanRepositoryConfiguration
     private EuGrantTransferRepository euGrantTransferRepository;
-
-    @MockBean // Gluster not available for local testing
-    private GlusterFileServiceImpl glusterFileService;
 
     @Test
     public void uploadGrantAgreement() throws IOException {
