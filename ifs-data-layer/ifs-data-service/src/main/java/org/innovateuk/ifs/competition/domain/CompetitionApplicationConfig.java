@@ -17,6 +17,9 @@ public class CompetitionApplicationConfig {
     @Column(columnDefinition = "double")
     private BigDecimal maximumFundingSought;
 
+    @Column(name="im_survey_required")
+    private boolean imSurveyRequired = false;
+
     public CompetitionApplicationConfig() {
     }
 
@@ -48,5 +51,13 @@ public class CompetitionApplicationConfig {
 
     public void setMaximumFundingSought(BigDecimal maximumFundingSought) {
         this.maximumFundingSought = maximumFundingSought;
+    }
+
+    public boolean isImSurveyRequired() {
+        return imSurveyRequired;
+    }
+
+    public void setImSurveyRequired(boolean imSurveyRequired) {
+        this.imSurveyRequired = imSurveyRequired;
     }
 }
