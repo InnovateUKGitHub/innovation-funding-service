@@ -2,7 +2,6 @@ server:
   port: 8080
   error:
     include-message: always
-  shutdown: graceful
 ifs:
   filestorage:
     mimeCheckEnabled: true
@@ -36,8 +35,6 @@ spring:
     generate-ddl: false
     hibernate:
       ddl-auto: none
-  lifecycle:
-    timeout-per-shutdown-phase: 1m
 
 management:
   endpoints:

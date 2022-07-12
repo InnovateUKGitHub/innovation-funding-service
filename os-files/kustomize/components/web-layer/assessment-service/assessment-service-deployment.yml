@@ -28,6 +28,10 @@ spec:
       - image: assessment-service
         name: spring-boot-service-container
         imagePullPolicy: IfNotPresent
+        lifecycle:
+          preStop:
+            exec:
+              command: [ "/bin/sh", "-c", "echo terminating pod" ]
         livenessProbe:
           httpGet:
             path: /assessment/monitoring/health

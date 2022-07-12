@@ -23,6 +23,10 @@ spec:
       - name: spring-boot-service-container
         image: data-service
         imagePullPolicy: IfNotPresent
+        lifecycle:
+          preStop:
+            exec:
+              command: [ "/bin/sh", "-c", "echo terminating pod" ]
         livenessProbe:
           httpGet:
             path: /monitoring/health
