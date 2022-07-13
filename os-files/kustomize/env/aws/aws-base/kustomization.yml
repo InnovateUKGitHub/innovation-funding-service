@@ -4,13 +4,10 @@ kind: Kustomization
 commonAnnotations:
   aws-base: aws-base
 
-bases:
+resources:
   - ../../../base
 
 components:
-  - ../../../components/sba
-  - ../../../components/bastion-client
-  - ../../../components/clamav
   - ../../../components/registration-service
   - ../../../components/data-layer/
   - ../../../components/web-layer
