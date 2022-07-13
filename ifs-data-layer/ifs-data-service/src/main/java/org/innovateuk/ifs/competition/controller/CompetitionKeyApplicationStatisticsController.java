@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competition.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyApplicationStatisticsResource;
+import org.innovateuk.ifs.competition.resource.CompetitionEoiKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionKeyApplicationStatisticsService;
@@ -55,6 +56,11 @@ public class CompetitionKeyApplicationStatisticsController {
     @GetMapping("/funded")
     public RestResult<CompetitionFundedKeyApplicationStatisticsResource> getFundedKeyStatistics(@PathVariable("id") long id) {
         return competitionKeyApplicationStatisticsService.getFundedKeyStatisticsByCompetition(id).toGetResponse();
+    }
+
+    @GetMapping("/eoi")
+    public RestResult<CompetitionEoiKeyApplicationStatisticsResource> getEoiKeyStatistics(@PathVariable("id") long id) {
+        return competitionKeyApplicationStatisticsService.getEoiKeyStatisticsByCompetition(id).toGetResponse();
     }
 
     @GetMapping({"/review"})

@@ -11,6 +11,8 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...
 ...               IFS-12257 Pre-registration No option to mark as ineligible for internal users
 ...
+...               IFS-12176 Pre-Registration (Internal Journey) - Submitted EOI applications & key statistics
+...
 ...               IFS-12265 Applicant dashboard: Unsuccessful pre-reg/EOI status update
 ...
 
@@ -110,6 +112,18 @@ Comp admin can not view mark as ineligible application link
     When the user navigates to the page             ${server}/management/competition/${preregCompetitionId}/application/${preregApplicationID}
     Then the user should not see the element        jQuery = span:contains("Mark application as ineligible")
 
+Internal users can see expression of interest statistics
+    [Documentation]  IFS-12176
+    Given the user navigates to the page        ${server}/management/competition/${preregCompetitionId}
+    When the user clicks the button/link        link = Applications: All, submitted, expression of interest, ineligible
+    Then the user should see the element        jQuery = .highlight-panel:contains("Expressions of interest") span:contains("1")
+
+Internal users can see submitted expression of interest applications
+    [Documentation]  IFS-12176
+    When the user clicks the button/link        link = Expressions of interest
+    Then the user should see the element        jQuery = td:contains("${preregApplicationID}") + td:contains("${hecpPreregAppName}")
+    And the user should see the element         jQuery = .highlight-panel:contains("Expressions of interest") span:contains("1")
+
 Internal user submit the EOI applications funding decision
     [Documentation]  IFS-12265
     Given Existing user creates and submits new application for unsuccessful EOI journey
@@ -132,11 +146,6 @@ Lead applicant can delete unsubmitted applications from dashboard
     When internal user closes the competition
     And Lead applicant deletes the unsubmitted EOI application
     Then the user should not see the element                                      jQuery = a:contains("${unSubmittedPreregAppName}")
-
-
-
-
-
 
 
 *** Keywords ***
@@ -260,8 +269,7 @@ Existing user creates and submits new application for unsuccessful EOI journey
 Internal user marks the application as successful/unsuccessful
     [Arguments]  ${applicationName}  ${fundingDecision}
     Log in as a different user                          &{Comp_admin1_credentials}
-    the user navigates to the page                      ${server}/management/competition/${preregCompetitionId}
-    the user clicks the button/link                     link = Input and review funding decision
+    the user navigates to the page                      ${server}/management/competition/${preregCompetitionId}/applications/eoi
     the user clicks the button/link                     jQuery = tr:contains("${applicationName}") label
     the user clicks the button/link                     css = [type="submit"][value="${fundingDecision}"]
     the user clicks the button/link                     link = Competition

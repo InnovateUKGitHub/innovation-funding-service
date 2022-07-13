@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.funding.form;
+package org.innovateuk.ifs.management.decision.form;
 
 /**
  * Contains both application id selection and filter values in one object.

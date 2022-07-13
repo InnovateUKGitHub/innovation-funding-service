@@ -10,10 +10,15 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionSummary.competitionId})}" />
+    <th:block th:if="${model.readOnly}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkUrl=@{/dashboard}" />
+    <th:block th:unless="${model.readOnly}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionSummary.competitionId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding decision',subTitle=|${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|,size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.eoi ? 'Expression of interest' : 'Funding decision'},subTitle=|${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|,size='govuk-heading-xl'" />
+
+        <th:block th:if="${model.eoi}">
+            <div th:replace="competition/key-statistics :: eoi-key-statistics(keyStatistics=${model.keyStatistics})" />
+        </th:block>
 
         <form method="GET" th:object="${fundingDecisionFilterForm}">
             <div class="search-filters govuk-!-margin-top-6">
@@ -22,7 +27,7 @@
                         <h2 class="govuk-fieldset__heading">Filter applications</h2>
                     </legend>
                     <div class="govuk-grid-row">
-                        <div class="govuk-grid-column-one-half">
+                        <div th:classappend="${model.eoi ? 'govuk-grid-column-one-third' : 'govuk-grid-column-one-half'}">
                             <div class="govuk-form-group">
                                 <label class="govuk-label"
                                        for="stringFilter">Search by application number</label>
@@ -33,19 +38,35 @@
                                        th:value="*{stringFilterValue}"/>
                             </div>
                         </div>
-                        <div class="govuk-grid-column-one-half">
+                        <th:block th:if="${model.eoi}">
+                            <div class="govuk-grid-column-one-third">
+                                <div class="govuk-form-group">
+                                    <label class="govuk-label"
+                                           for="sendFilter">Sent</label>
+                                    <select name="sendFilter"
+                                            id="sendFilter"
+                                            class="govuk-select"
+                                            th:field="*{sendFilter}">
+                                        <option value="">All</option>
+                                        <option value="1">Yes</option>
+                                        <option value="0">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </th:block>
+                        <div th:classappend="${model.eoi ? 'govuk-grid-column-one-third' : 'govuk-grid-column-one-half'}">
                             <div class="govuk-form-group">
                                 <label class="govuk-label"
-                                       for="fundingFilter">Funding decision</label>
+                                       for="fundingFilter" th:text="${model.eoi ? 'Expression of interest decision' : 'Funding decision'}">Funding decision</label>
                                 <select name="fundingFilter"
                                         id="fundingFilter"
                                         class="govuk-select"
-                                        th:value="*{fundingFilterValue}">
+                                        th:field="*{fundingFilter}">
                                     <option value="">Show all</option>
                                     <option value="UNDECIDED">Blank</option>
                                     <option value="FUNDED">Successful</option>
                                     <option value="UNFUNDED">Unsuccessful</option>
-                                    <option value="ON_HOLD">On hold</option>
+                                    <option th:unless="${model.eoi}" value="ON_HOLD">On hold</option>
                                 </select>
                             </div>
                         </div>
@@ -72,13 +93,22 @@
             <div class="govuk-grid-column-one-half">
                 <h3 class="govuk-!-margin-0 govuk-!-font-size-19 govuk-!-font-weight-bold"><span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.results.totalElements}" /> applications</h3>
             </div>
+            <th:block th:if="${model.eoi && !model.readOnly}">
+                <div class="govuk-grid-column-one-half">
+                    <fieldset class="govuk-fieldset mark-applications">
+                        <button class="govuk-button button-notification" data-submit-el="" id="manage-notifications" type="submit" name="manage-notifications"
+                                th:attr="disabled=${#lists.isEmpty(model.selectionForm.applicationIds)}">Manage notifications</button>
+                    </fieldset>
+                </div>
+            </th:block>
         </div>
+
         <form method="POST"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               data-multipage-select=""
               th:attr="data-total-checkboxes=${model.results.totalElements}"
               autocomplete="off">
-            <div class="govuk-grid-row sorting">
+            <div th:unless="${model.readOnly}" class="govuk-grid-row sorting">
                 <div class="govuk-grid-column-one-half">
                     <div class="select-all">
                         <fieldset class="govuk-fieldset">
@@ -109,56 +139,76 @@
                         <h3 class="govuk-heading-s">Mark application as:</h3>
                         <button th:disabled="${model.selectionForm.applicationIds.isEmpty()}" type="submit" value='FUNDED' name="fundingDecision" class="govuk-button govuk-button--secondary" data-submit-el="">Successful</button>
                         <button th:disabled="${model.selectionForm.applicationIds.isEmpty()}" type="submit" value='UNFUNDED' name="fundingDecision" class="govuk-button govuk-button--secondary" data-submit-el="">Unsuccessful</button>
-                        <button th:disabled="${model.selectionForm.applicationIds.isEmpty()}" type="submit" value='ON_HOLD' name="fundingDecision" class="govuk-button govuk-button--secondary" data-submit-el="">On hold</button>
+                        <th:block th:unless="${model.eoi}">
+                            <button th:disabled="${model.selectionForm.applicationIds.isEmpty()}" type="submit" value='ON_HOLD' name="fundingDecision" class="govuk-button govuk-button--secondary" data-submit-el="">On hold</button>
+                        </th:block>
                     </fieldset>
                 </div>
             </div>
+
             <div class="table-overflow">
                 <table class="govuk-table">
                     <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col" id="fund-project-label">Select applications</th>
+                        <tr class="govuk-table__row">
+                        <th th:unless="${model.readOnly}" class="govuk-table__header" scope="col" id="fund-project-label">Select applications</th>
                         <th class="govuk-table__header" scope="col">Application number</th>
                         <th class="govuk-table__header" scope="col">Project title</th>
-                        <th class="govuk-table__header" scope="col">Lead</th>
-                        <th class="govuk-table__header" scope="col">Number of partners</th>
-                        <th class="govuk-table__header" scope="col">Grant requested (£)</th>
-                        <th class="govuk-table__header" scope="col">Total project cost (£)</th>
-                        <th class="govuk-table__header" scope="col">Duration (months)</th>
-                        <th class="govuk-table__header" scope="col" id="fund-project-label">Funding decision</th>
+                        <th class="govuk-table__header" scope="col" th:text="${model.eoi ? 'Lead organisation' : 'Lead'}">Lead</th>
+                        <th:block th:unless="${model.eoi}">
+                            <th class="govuk-table__header" scope="col">Number of partners</th>
+                            <th class="govuk-table__header" scope="col">Grant requested (£)</th>
+                            <th class="govuk-table__header" scope="col">Total project cost (£)</th>
+                            <th class="govuk-table__header" scope="col">Duration (months)</th>
+                        </th:block>
+                        <th class="govuk-table__header" scope="col" id="fund-project-label" th:text="${model.eoi ? 'Expression of interest decision' : 'Funding decision'}">Funding decision</th>
+                        <th:block th:if="${model.eoi}">
+                            <th class="govuk-table__header" scope="col">Email status</th>
+                            <th scope="col" class="govuk-table__header alignright">Date sent</th>
+                        </th:block>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row" th:each="result, index : ${model.results.content}">
-                        <td class="govuk-table__cell">
-                            <div class="govuk-checkboxes">
-                                <div class="govuk-checkboxes__item" th:if="${result.applicationFundingDecisionIsChangeable()}">
-                                    <input type="checkbox"
-                                           class="govuk-checkboxes__input"
-                                           name="applicationIds"
-                                           th:id="${'app-row-'+index.count}"
-                                           th:checked="${#lists.contains(model.selectionForm.applicationIds, result.id)}"
-                                           th:value="${result.id}"
-                                           aria-labelledby="select-applications-label" />
-                                    <label th:for="${'app-row-'+index.count}"
-                                           class="govuk-label govuk-checkboxes__label">
-                                        <span class="govuk-visually-hidden">Select application</span>
-                                    </label>
+                        <tr class="govuk-table__row" th:each="result, index : ${model.results.content}">
+                            <td th:unless="${model.readOnly}" class="govuk-table__cell">
+                                <div class="govuk-checkboxes">
+                                    <div class="govuk-checkboxes__item" th:if="${result.applicationFundingDecisionIsChangeable()}">
+                                        <input type="checkbox"
+                                               class="govuk-checkboxes__input"
+                                               name="applicationIds"
+                                               th:id="${'app-row-'+index.count}"
+                                               th:checked="${#lists.contains(model.selectionForm.applicationIds, result.id)}"
+                                               th:value="${result.id}"
+                                               aria-labelledby="select-applications-label" />
+                                        <label th:for="${'app-row-'+index.count}"
+                                               class="govuk-label govuk-checkboxes__label">
+                                            <span class="govuk-visually-hidden">Select application</span>
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
-                            <th:block th:unless="${result.applicationFundingDecisionIsChangeable()}">
-                                <span class="empty-table-cell-select">-</span>
+                                <th:block th:unless="${result.applicationFundingDecisionIsChangeable()}">
+                                    <span class="empty-table-cell-select">-</span>
+                                </th:block>
+                            </td>
+                            <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/application/{rid}(cid=${model.competitionSummary.competitionId}, rid=${result.id})}"  th:text="${result.id}" class="govuk-link" /></td>
+                            <td class="govuk-table__cell" th:text="${result.name}"></td>
+                            <td class="govuk-table__cell" th:text="${result.lead}"></td>
+                            <th:block th:unless="${model.eoi}">
+                                <td class="govuk-table__cell" th:text="${result.numberOfPartners}"></td>
+                                <td class="govuk-table__cell" th:text="${#numbers.formatInteger(result.grantRequested, 0, 'DEFAULT')}"></td>
+                                <td class="govuk-table__cell" th:text="${#numbers.formatInteger(result.totalProjectCost, 0, 'DEFAULT')}"></td>
+                                <td class="govuk-table__cell" th:text="${result.duration}"></td>
                             </th:block>
-                        </td>
-                        <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/application/{rid}(cid=${model.competitionSummary.competitionId}, rid=${result.id})}"  th:text="${result.id}" class="govuk-link" /></td>
-                        <td class="govuk-table__cell" th:text="${result.name}"></td>
-                        <td class="govuk-table__cell" th:text="${result.lead}"></td>
-                        <td class="govuk-table__cell" th:text="${result.numberOfPartners}"></td>
-                        <td class="govuk-table__cell" th:text="${#numbers.formatInteger(result.grantRequested, 0, 'DEFAULT')}"></td>
-                        <td class="govuk-table__cell" th:text="${#numbers.formatInteger(result.totalProjectCost, 0, 'DEFAULT')}"></td>
-                        <td class="govuk-table__cell" th:text="${result.duration}"></td>
-                        <td class="govuk-table__cell" th:text="${result.fundingDecision?.name}"/>
-                    </tr>
+                            <td class="govuk-table__cell" th:text="${result.fundingDecision?.name}"/>
+                            <th:block th:if="${model.eoi}">
+                                <td class="govuk-table__cell" th:text="${result.emailStatus()}">-</td>
+                                <td class="govuk-table__cell alignright" th:text="${result.manageFundingEmailDate} ? ${#temporals.format(result.manageFundingEmailDate, 'd MMMM yyyy')} : '-'">9 January 2017</td>
+                            </th:block>
+                        </tr>
+                        <th:block th:if="${model.eoi}">
+                            <tr class="govuk-table__row" th:if="${#lists.isEmpty(model.results.content)}">
+                                <td class="govuk-table__cell" colspan="7">No applications found.</td>
+                            </tr>
+                        </th:block>
                     </tbody>
                 </table>
 
@@ -181,6 +231,7 @@
                     </tbody>
                 </table>
             </div>
+            <input type="hidden" name="eoi" th:value="${model.eoi}"/>
         </form>
         <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
 

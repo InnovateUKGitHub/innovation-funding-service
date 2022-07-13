@@ -11,7 +11,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.application.list.controller.CompetitionManagementApplicationsController;
 import org.innovateuk.ifs.management.application.list.populator.*;
 import org.innovateuk.ifs.management.application.list.viewmodel.*;
-import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.management.decision.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.Role;
@@ -29,7 +29,6 @@ import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;

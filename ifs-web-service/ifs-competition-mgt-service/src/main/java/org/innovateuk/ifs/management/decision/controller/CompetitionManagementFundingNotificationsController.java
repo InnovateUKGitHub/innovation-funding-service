@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.funding.controller;
+package org.innovateuk.ifs.management.decision.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
@@ -12,11 +12,11 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
-import org.innovateuk.ifs.management.funding.form.FundingNotificationFilterForm;
-import org.innovateuk.ifs.management.funding.form.FundingNotificationSelectionCookie;
-import org.innovateuk.ifs.management.funding.form.FundingNotificationSelectionForm;
-import org.innovateuk.ifs.management.funding.form.NotificationEmailsForm;
-import org.innovateuk.ifs.management.funding.populator.ManageFundingApplicationsModelPopulator;
+import org.innovateuk.ifs.management.decision.form.FundingNotificationFilterForm;
+import org.innovateuk.ifs.management.decision.form.FundingNotificationSelectionCookie;
+import org.innovateuk.ifs.management.decision.form.FundingNotificationSelectionForm;
+import org.innovateuk.ifs.management.decision.form.NotificationEmailsForm;
+import org.innovateuk.ifs.management.decision.populator.ManageFundingApplicationsModelPopulator;
 import org.innovateuk.ifs.management.notification.populator.SendNotificationsModelPopulator;
 import org.innovateuk.ifs.management.notification.viewmodel.SendNotificationsViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -324,7 +324,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
 
         return () -> {
             model.addAttribute("model", manageFundingApplicationsModelPopulator.populate(query, competitionId, totalSubmittableApplications));
-            return "comp-mgt-manage-funding-applications";
+            return MANAGE_FUNDING_APPLICATIONS_VIEW;
         };
     }
 

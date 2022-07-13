@@ -30,26 +30,38 @@ public class CompetitionSummaryServiceImpl extends BaseTransactionalService impl
         competitionSummaryResource.setCompetitionId(competitionId);
         competitionSummaryResource.setCompetitionName(competition.getName());
         competitionSummaryResource.setCompetitionStatus(competition.getCompetitionStatus());
-        competitionSummaryResource.setTotalNumberOfApplications(applicationRepository.countByCompetitionId(competitionId));
-        competitionSummaryResource.setApplicationsStarted(
-                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateInAndCompletionLessThanEqual(
-                        competitionId, CREATED_AND_OPEN_STATUSES, limit
-                )
-        );
-        competitionSummaryResource.setApplicationsInProgress(
-                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateNotInAndCompletionGreaterThan(
-                        competitionId, SUBMITTED_AND_INELIGIBLE_STATES, limit
-                )
-        );
-        competitionSummaryResource.setApplicationsSubmitted(
-                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_AND_INELIGIBLE_STATES)
-        );
-        competitionSummaryResource.setIneligibleApplications(
-                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, INELIGIBLE_STATES)
-        );
-        competitionSummaryResource.setApplicationsNotSubmitted(
-                competitionSummaryResource.getTotalNumberOfApplications() - competitionSummaryResource.getApplicationsSubmitted()
-        );
+        if(competition.isEnabledForPreRegistration()) {
+            competitionSummaryResource.setExpressionsOfInterestSubmitted(applicationRepository.countEOIByCompetitionIdAndStateIn(competitionId, SUBMITTED_STATES));
+            competitionSummaryResource.setTotalNumberOfApplications(applicationRepository.countApplicationsByCompetitionId(competitionId));
+            competitionSummaryResource.setApplicationsStarted(applicationRepository.countStartedApplicationsByCompetitionId(competitionId));
+            competitionSummaryResource.setApplicationsInProgress(applicationRepository.countInProgressApplicationsByCompetitionId(competitionId));
+            competitionSummaryResource.setApplicationsSubmitted(applicationRepository.countApplicationsByCompetitionIdAndStateIn(competitionId, SUBMITTED_AND_INELIGIBLE_STATES));
+            competitionSummaryResource.setIneligibleApplications(applicationRepository.countApplicationsByCompetitionIdAndStateIn(competitionId, INELIGIBLE_STATES));
+            competitionSummaryResource.setApplicationsNotSubmitted(competitionSummaryResource.getTotalNumberOfApplications() - competitionSummaryResource.getApplicationsSubmitted());
+        } else {
+            competitionSummaryResource.setExpressionsOfInterestSubmitted(0);
+            competitionSummaryResource.setTotalNumberOfApplications(applicationRepository.countByCompetitionId(competitionId));
+            competitionSummaryResource.setApplicationsStarted(
+                    applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateInAndCompletionLessThanEqual(
+                            competitionId, CREATED_AND_OPEN_STATUSES, limit
+                    )
+            );
+            competitionSummaryResource.setApplicationsInProgress(
+                    applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateNotInAndCompletionGreaterThan(
+                            competitionId, SUBMITTED_AND_INELIGIBLE_STATES, limit
+                    )
+            );
+            competitionSummaryResource.setApplicationsSubmitted(
+                    applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_AND_INELIGIBLE_STATES)
+            );
+            competitionSummaryResource.setIneligibleApplications(
+                    applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, INELIGIBLE_STATES)
+            );
+            competitionSummaryResource.setApplicationsNotSubmitted(
+                    competitionSummaryResource.getTotalNumberOfApplications() - competitionSummaryResource.getApplicationsSubmitted()
+            );
+        }
+
         competitionSummaryResource.setApplicationDeadline(competition.getEndDate());
         competitionSummaryResource.setApplicationsFunded(
                 applicationRepository.countByCompetitionIdAndApplicationProcessActivityState(competitionId, ApplicationState.APPROVED)

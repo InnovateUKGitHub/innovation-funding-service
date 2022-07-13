@@ -40,6 +40,7 @@ public class CompetitionInFlightViewModel {
     private boolean supporterEnabled;
     private boolean alwaysOpen;
     private boolean isSuperAdminUser;
+    private boolean expressionOfInterest;
 
     public CompetitionInFlightViewModel(CompetitionResource competitionResource,
                                         CompetitionAssessmentConfigResource competitionAssessmentConfigResource,
@@ -71,6 +72,7 @@ public class CompetitionInFlightViewModel {
         this.hasAssessmentStage = competitionResource.isHasAssessmentStage();
         this.supporterEnabled = competitionResource.isKtp();
         this.alwaysOpen = competitionResource.isAlwaysOpen();
+        this.expressionOfInterest = competitionResource.isEnabledForPreRegistration();
     }
 
     public Long getCompetitionId() {
@@ -136,6 +138,8 @@ public class CompetitionInFlightViewModel {
     public boolean isSuperAdminUser() {
         return isSuperAdminUser;
     }
+
+    public boolean isExpressionOfInterest() { return expressionOfInterest; }
 
     public CompetitionCompletionStage getCompetitionCompletionStage() {
         return competitionCompletionStage;

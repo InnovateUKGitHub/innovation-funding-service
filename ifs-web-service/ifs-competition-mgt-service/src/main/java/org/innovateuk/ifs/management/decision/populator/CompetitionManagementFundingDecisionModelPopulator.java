@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.funding.populator;
+package org.innovateuk.ifs.management.decision.populator;
 
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
@@ -6,11 +6,16 @@ import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.funding.form.FundingDecisionFilterForm;
-import org.innovateuk.ifs.management.funding.form.FundingDecisionPaginationForm;
-import org.innovateuk.ifs.management.funding.form.FundingDecisionSelectionForm;
-import org.innovateuk.ifs.management.funding.viewmodel.ManageFundingApplicationsViewModel;
+import org.innovateuk.ifs.management.competition.inflight.populator.CompetitionInFlightStatsModelPopulator;
+import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightStatsViewModel;
+import org.innovateuk.ifs.management.decision.form.FundingDecisionFilterForm;
+import org.innovateuk.ifs.management.decision.form.FundingDecisionPaginationForm;
+import org.innovateuk.ifs.management.decision.form.FundingDecisionSelectionForm;
+import org.innovateuk.ifs.management.decision.viewmodel.ManageFundingApplicationsViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
+import org.innovateuk.ifs.user.resource.Authority;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -29,27 +34,33 @@ import static org.innovateuk.ifs.management.cookie.CompetitionManagementCookieCo
 public class CompetitionManagementFundingDecisionModelPopulator  {
 
     private static final int PAGE_SIZE = 20;
+
+    @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
+
     @Value("${ifs.always.open.competition.enabled}")
     private boolean alwaysOpenCompetitionEnabled;
+
     @Autowired
     private CompetitionRestService competitionRestService;
 
     @Autowired
-    public CompetitionManagementFundingDecisionModelPopulator(ApplicationSummaryRestService applicationSummaryRestService) {
-        this.applicationSummaryRestService = applicationSummaryRestService;
-    }
+    private CompetitionInFlightStatsModelPopulator competitionInFlightStatsModelPopulator;
 
     public ManageFundingApplicationsViewModel populate(long competitionId,
                                                        FundingDecisionPaginationForm paginationForm,
                                                        FundingDecisionFilterForm fundingDecisionFilterForm,
-                                                       FundingDecisionSelectionForm selectionForm) {
+                                                       FundingDecisionSelectionForm selectionForm,
+                                                       UserResource user) {
 
         ApplicationSummaryPageResource results = getApplicationsByFilters(competitionId, paginationForm, fundingDecisionFilterForm);
 
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService
                 .getCompetitionSummary(competitionId)
                 .getSuccess();
+
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        CompetitionInFlightStatsViewModel keyStatistics = competitionInFlightStatsModelPopulator.populateEoiStatsViewModel(competitionResource);
 
         List<Long> submittableApplicationIds = getAllApplicationIdsByFilters(competitionId, fundingDecisionFilterForm);
         boolean selectionLimitWarning = limitIsExceeded(submittableApplicationIds.size());
@@ -62,7 +73,10 @@ public class CompetitionManagementFundingDecisionModelPopulator  {
                 fundingDecisionFilterForm,
                 competitionSummary,
                 selectAllDisabled,
-                selectionLimitWarning
+                selectionLimitWarning,
+                !user.hasAuthority(Authority.COMP_ADMIN),
+                fundingDecisionFilterForm.isEoi(),
+                keyStatistics
         );
     }
 
@@ -87,14 +101,11 @@ public class CompetitionManagementFundingDecisionModelPopulator  {
     }
 
     private ApplicationSummaryPageResource getSubmittedApplications(long competitionId, FundingDecisionPaginationForm paginationForm, FundingDecisionFilterForm fundingDecisionFilterForm) {
-        return applicationSummaryRestService.getSubmittedApplications(
-                        competitionId,
-                        "id",
-                        paginationForm.getPage(),
-                        PAGE_SIZE,
-                        fundingDecisionFilterForm.getStringFilter(),
-                        fundingDecisionFilterForm.getFundingFilter())
-                .getSuccess();
+        return fundingDecisionFilterForm.isEoi()
+                ? applicationSummaryRestService.getSubmittedEoiApplications(competitionId, "id", paginationForm.getPage(),
+                    PAGE_SIZE, fundingDecisionFilterForm.getStringFilter(), fundingDecisionFilterForm.getFundingFilter(), fundingDecisionFilterForm.getSendFilter()).getSuccess()
+                : applicationSummaryRestService.getSubmittedApplications(competitionId, "id", paginationForm.getPage(),
+                    PAGE_SIZE, fundingDecisionFilterForm.getStringFilter(), fundingDecisionFilterForm.getFundingFilter()).getSuccess();
     }
 
     private MultiValueMap<String, String> mapFormFilterParametersToMultiValueMap(FundingDecisionFilterForm fundingDecisionFilterForm) {
@@ -116,7 +127,13 @@ public class CompetitionManagementFundingDecisionModelPopulator  {
                 return applicationSummaryRestService.getAllAssessedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter()).getOrElse(emptyList());
             }
         }
-        return applicationSummaryRestService.getAllSubmittedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter()).getOrElse(emptyList());
+        return getAllSubmittedApplicationIds(competitionId, filterForm);
+    }
+
+    public List<Long> getAllSubmittedApplicationIds(long competitionId, FundingDecisionFilterForm filterForm) {
+        return filterForm.isEoi()
+                ? applicationSummaryRestService.getAllSubmittedEoiApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter(), filterForm.getSendFilter()).getOrElse(emptyList())
+                : applicationSummaryRestService.getAllSubmittedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter()).getOrElse(emptyList());
     }
 
     protected boolean limitIsExceeded(long amountOfIds) {

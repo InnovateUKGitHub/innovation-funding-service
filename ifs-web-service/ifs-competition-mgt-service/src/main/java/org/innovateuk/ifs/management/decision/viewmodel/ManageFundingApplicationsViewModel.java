@@ -1,10 +1,11 @@
-package org.innovateuk.ifs.management.funding.viewmodel;
+package org.innovateuk.ifs.management.decision.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
-import org.innovateuk.ifs.management.funding.form.FundingDecisionFilterForm;
-import org.innovateuk.ifs.management.funding.form.FundingDecisionSelectionForm;
+import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightStatsViewModel;
+import org.innovateuk.ifs.management.decision.form.FundingDecisionFilterForm;
+import org.innovateuk.ifs.management.decision.form.FundingDecisionSelectionForm;
 import org.innovateuk.ifs.management.navigation.Pagination;
 
 public class ManageFundingApplicationsViewModel {
@@ -16,6 +17,9 @@ public class ManageFundingApplicationsViewModel {
     private CompetitionSummaryResource competitionSummary;
     private boolean selectAllDisabled;
     private boolean selectionLimitWarning;
+    private boolean readOnly;
+    private boolean eoi;
+    private CompetitionInFlightStatsViewModel keyStatistics;
 
     public ManageFundingApplicationsViewModel(Pagination pagination,
                                               ApplicationSummaryPageResource results,
@@ -23,7 +27,10 @@ public class ManageFundingApplicationsViewModel {
                                               FundingDecisionFilterForm fundingDecisionFilterForm,
                                               CompetitionSummaryResource competitionSummary,
                                               boolean selectAllDisabled,
-                                              boolean selectionLimitWarning) {
+                                              boolean selectionLimitWarning,
+                                              boolean readOnly,
+                                              boolean eoi,
+                                              CompetitionInFlightStatsViewModel keyStatistics) {
         this.pagination = pagination;
         this.results = results;
         this.selectionForm = selectionForm;
@@ -31,6 +38,9 @@ public class ManageFundingApplicationsViewModel {
         this.competitionSummary = competitionSummary;
         this.selectAllDisabled = selectAllDisabled;
         this.selectionLimitWarning = selectionLimitWarning;
+        this.readOnly = readOnly;
+        this.eoi = eoi;
+        this.keyStatistics = keyStatistics;
     }
 
     public Pagination getPagination() {
@@ -61,6 +71,8 @@ public class ManageFundingApplicationsViewModel {
         return selectionLimitWarning;
     }
 
+    public boolean isReadOnly() { return readOnly; }
+
     public boolean isAnythingChangeable() {
         if (results != null) {
             return results.getContent().stream().anyMatch(ApplicationSummaryResource::applicationFundingDecisionIsChangeable);
@@ -69,4 +81,15 @@ public class ManageFundingApplicationsViewModel {
         }
     }
 
+    public boolean isEoi() {
+        return eoi;
+    }
+
+    public CompetitionInFlightStatsViewModel getKeyStatistics() {
+        return keyStatistics;
+    }
+
+    public void setKeyStatistics(CompetitionInFlightStatsViewModel keyStatistics) {
+        this.keyStatistics = keyStatistics;
+    }
 }
