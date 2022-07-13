@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.funding.form;
+package org.innovateuk.ifs.management.decision.form;
 
 import org.innovateuk.ifs.application.resource.FundingDecision;
 

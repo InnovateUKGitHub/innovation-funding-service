@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.funding.service;
+package org.innovateuk.ifs.management.decision.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;

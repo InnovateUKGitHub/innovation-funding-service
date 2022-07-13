@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.funding.service;
+package org.innovateuk.ifs.management.decision.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.resource.FundingDecision;

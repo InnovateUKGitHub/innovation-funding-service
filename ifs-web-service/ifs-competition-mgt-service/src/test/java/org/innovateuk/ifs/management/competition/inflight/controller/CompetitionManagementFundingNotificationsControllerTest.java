@@ -18,11 +18,11 @@ import org.innovateuk.ifs.management.application.view.viewmodel.ManageFundingApp
 import org.innovateuk.ifs.management.competition.inflight.populator.CompetitionInFlightModelPopulator;
 import org.innovateuk.ifs.management.competition.inflight.populator.CompetitionInFlightStatsModelPopulator;
 import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightStatsViewModel;
-import org.innovateuk.ifs.management.funding.controller.CompetitionManagementFundingNotificationsController;
-import org.innovateuk.ifs.management.funding.form.FundingNotificationFilterForm;
-import org.innovateuk.ifs.management.funding.form.FundingNotificationSelectionCookie;
-import org.innovateuk.ifs.management.funding.form.FundingNotificationSelectionForm;
-import org.innovateuk.ifs.management.funding.populator.ManageFundingApplicationsModelPopulator;
+import org.innovateuk.ifs.management.decision.controller.CompetitionManagementFundingNotificationsController;
+import org.innovateuk.ifs.management.decision.form.FundingNotificationFilterForm;
+import org.innovateuk.ifs.management.decision.form.FundingNotificationSelectionCookie;
+import org.innovateuk.ifs.management.decision.form.FundingNotificationSelectionForm;
+import org.innovateuk.ifs.management.decision.populator.ManageFundingApplicationsModelPopulator;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.management.notification.populator.SendNotificationsModelPopulator;
 import org.innovateuk.ifs.management.notification.viewmodel.SendNotificationsViewModel;

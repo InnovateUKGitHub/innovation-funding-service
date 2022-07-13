@@ -11,7 +11,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.internal.populator.InternalProjectSetupRowPopulator;
 import org.innovateuk.ifs.management.competition.previous.controller.PreviousCompetitionController;
 import org.innovateuk.ifs.management.competition.previous.viewmodel.PreviousCompetitionViewModel;
-import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.management.decision.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
@@ -26,7 +26,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.PreviousApplicationResourceBuilder.newPreviousApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
