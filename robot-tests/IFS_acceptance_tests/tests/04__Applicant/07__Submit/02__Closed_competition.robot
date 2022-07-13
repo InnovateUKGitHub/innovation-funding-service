@@ -17,8 +17,8 @@ Application shows as not submitted on the dashboard
     [Documentation]    INFUND-2741
     [Tags]  HappyPath
     Given the user clicks the application tile if displayed
-    Then the user should see that the application is not submitted
-    And the user clicks the button/link                                 link = ${IN_ASSESSMENT_APPLICATION_1_TITLE}
+    Then the user should see the element                        jQuery = li:contains("${IN_ASSESSMENT_APPLICATION_1_TITLE}") .status-msg:contains("Not submitted")
+    And the user clicks the button/link                         link = ${IN_ASSESSMENT_APPLICATION_1_TITLE}
 
 Application shows as not submitted on the overview
     [Documentation]    INFUND-2742
@@ -53,4 +53,4 @@ Already submitted application should not show error when the competition is clos
 
 *** Keywords ***
 the user should see that the application is not submitted
-    the user should see the element    css = div.status-and-action .not-submitted
+    the user should see the element    jQuery = li:contains("3D-printed buildings") .status-msg:contains("Not submitted")

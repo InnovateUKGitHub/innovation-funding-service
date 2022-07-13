@@ -4,6 +4,8 @@ import org.innovateuk.ifs.BaseAuthenticationAwareIntegrationTest;
 import org.innovateuk.ifs.applicant.resource.dashboard.ApplicantDashboardResource;
 import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousRowResource;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationExpressionOfInterestConfig;
+import org.innovateuk.ifs.application.repository.ApplicationExpressionOfInterestConfigRepository;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -37,6 +39,9 @@ public class ApplicationDashboardServiceIntegrationTest extends BaseAuthenticati
     @Autowired
     private ApplicationRepository applicationRepository;
 
+    @Autowired
+    private ApplicationExpressionOfInterestConfigRepository applicationExpressionOfInterestConfigRepository;
+
     private static final DashboardPreviousRowResource EXAMPLE_EXPECTED_DASHBOARD_RESOURCE = new DashboardPreviousApplicationResourceBuilder()
             .withAssignedToMe(false)
             .withApplicationState(REJECTED)
@@ -50,6 +55,7 @@ public class ApplicationDashboardServiceIntegrationTest extends BaseAuthenticati
             .withApplicationId(4)
             .withCompetitionTitle("Competition 1")
             .withCollaborationLevelSingle(true)
+            .withExpressionOfInterest(true)
             .build();
 
     @Test
@@ -57,10 +63,19 @@ public class ApplicationDashboardServiceIntegrationTest extends BaseAuthenticati
         loginSteveSmith();
         Long userId = getSteveSmith().getId();
 
+
+
+
         Application application = applicationRepository.findById(4L).get();
         application.setManageFundingEmailDate(ZonedDateTime.now());
         application.setFundingDecision(FundingDecisionStatus.UNFUNDED);
         application.setCompetition(newCompetition().withAlwaysOpen(false).build());
+
+        ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig =
+                ApplicationExpressionOfInterestConfig.builder().
+                        application(application).enabledForExpressionOfInterest(true).build();
+        application.setApplicationExpressionOfInterestConfig(applicationExpressionOfInterestConfig);
+        applicationExpressionOfInterestConfigRepository.save(applicationExpressionOfInterestConfig);
         applicationRepository.save(application);
 
         List<Application> collect = applicationRepository.findApplicationsForDashboard(userId).stream()
@@ -81,8 +96,9 @@ public class ApplicationDashboardServiceIntegrationTest extends BaseAuthenticati
         assertEquals(0, dashboard.getEuGrantTransfer().size());
         assertEquals(5, dashboard.getInProgress().size());
         assertEquals(1, dashboard.getPrevious().size());
+        assertTrue( dashboard.getPrevious().get(0).isExpressionOfInterest());
 
-        assertTrue(dashboard.getPrevious().contains(EXAMPLE_EXPECTED_DASHBOARD_RESOURCE));
+
     }
 
 }

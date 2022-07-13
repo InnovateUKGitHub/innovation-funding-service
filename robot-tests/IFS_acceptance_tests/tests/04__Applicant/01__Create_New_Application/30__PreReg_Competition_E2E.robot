@@ -11,6 +11,10 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...
 ...               IFS-12257 Pre-registration No option to mark as ineligible for internal users
 ...
+...               IFS-12176 Pre-Registration (Internal Journey) - Submitted EOI applications & key statistics
+...
+...               IFS-12265 Applicant dashboard: Unsuccessful pre-reg/EOI status update
+...
 
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -20,8 +24,13 @@ Resource          ../../../resources/common/PS_Common.robot
 Resource          ../../../resources/common/Competition_Commons.robot
 
 *** Variables ***
-${hecpPreregCompName}       Hecp Pre Registration Competition
-${hecpPreregAppName}        preRegApplication
+${hecpPreregCompName}                           Hecp Pre Registration Competition
+${hecpPreregAppName}                            preRegApplication
+${unSuccessPreregAppName}                       unSuccessfulPreRegApplication
+${unSubmittedPreregAppName}                     unSubmittedPreRegApplication
+${preRegApplicationUnsuccessfulEmail}           Thank you for submitting your application to Innovate UK for the competition
+${preRegApplicationSuccessfulEmail}             We are pleased to inform you that your application for the Horizon Europe collaborative competition has been successful and passed the technical assessment phase.
+${preregApplicationSubmissionEmail}             You have successfully submitted an application for funding to
 
 *** Test Cases ***
 Comp Admin creates a prereg competition
@@ -50,7 +59,7 @@ Applicants views expression of interest labels in application overview page for 
     [Documentation]  IFS-12077
     Given the user clicks the button/link                         link = Back to expression of interest overview
     When the user completes the application details section       ${hecpPreregAppName}  ${tomorrowday}  ${month}  ${nextyear}   23
-    And Requesting application ID of prereg application
+    And Requesting application ID of prereg application           ${hecpPreregAppName}
     Then the user should see EOI labels for prereg application
     And the user should see the element                           jQuery = dt:contains("Application number:")+dd:contains("${preregApplicationID}")
 
@@ -101,10 +110,45 @@ Comp admin can not view mark as ineligible application link
     [Documentation]  IFS-12257
     Given log in as a different user                &{ifs_admin_user_credentials}
     When the user navigates to the page             ${server}/management/competition/${preregCompetitionId}/application/${preregApplicationID}
-    Then the user should not see the element         jQuery = span:contains("Mark application as ineligible")
+    Then the user should not see the element        jQuery = span:contains("Mark application as ineligible")
+
+Internal users can see expression of interest statistics
+    [Documentation]  IFS-12176
+    Given the user navigates to the page        ${server}/management/competition/${preregCompetitionId}
+    When the user clicks the button/link        link = Applications: All, submitted, expression of interest, ineligible
+    Then the user should see the element        jQuery = .highlight-panel:contains("Expressions of interest") span:contains("1")
+
+Internal users can see submitted expression of interest applications
+    [Documentation]  IFS-12176
+    When the user clicks the button/link        link = Expressions of interest
+    Then the user should see the element        jQuery = td:contains("${preregApplicationID}") + td:contains("${hecpPreregAppName}")
+    And the user should see the element         jQuery = .highlight-panel:contains("Expressions of interest") span:contains("1")
+
+Internal user submit the EOI applications funding decision
+    [Documentation]  IFS-12265
+    Given Existing user creates and submits new application for unsuccessful EOI journey
+    When Internal user marks the application as successful/unsuccessful                     ${unSuccessPreregAppName}   UNFUNDED
+    And Internal user marks the application as successful/unsuccessful                      ${hecpPreregAppName}   FUNDED
+    Then the user reads his email                                                           steve.smith@empire.com  Important message about your application '${hecpPreregAppName}' for the competition '${hecpPreregCompName}'  ${preRegApplicationSuccessfulEmail}
+    And the user reads his email                                                            steve.smith@empire.com  Important message about your application '${unSuccessPreregAppName}' for the competition '${hecpPreregCompName}'  ${preRegApplicationUnsuccessfulEmail}
+
+Lead applicant views unsuccessful applications in previous dashboard
+    [Documentation]  IFS-12265
+    Given log in as a different user                                              &{lead_applicant_credentials}
+    When the user clicks the application tile if displayed
+    Then the user should see the element                                        jQuery = li:contains("${unSuccessPreregAppName}") .status-msg:contains("Unsuccessful")
+    And the user should see the element                                         jQuery = li:contains("${unSuccessPreregAppName}") .status-msg:contains("Expression of interest")
+
+Lead applicant can delete unsubmitted applications from dashboard
+    [Documentation]  IFS-12265
+    Given Existing applicant creates a new application with same organisation     ${hecpPreregCompName}
+    And the user completes the application details section                        ${unSubmittedPreregAppName}  ${tomorrowday}  ${month}  ${nextyear}   23
+    When internal user closes the competition
+    And Lead applicant deletes the unsubmitted EOI application
+    Then the user should not see the element                                      jQuery = a:contains("${unSubmittedPreregAppName}")
+
 
 *** Keywords ***
-
 Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
@@ -115,7 +159,8 @@ Custom Suite Teardown
     Disconnect from database
 
 Requesting application ID of prereg application
-    ${preregApplicationID} =  get application id by name  ${hecpPreregAppName}
+    [Arguments]  ${applicationName}
+    ${preregApplicationID} =  get application id by name  ${applicationName}
     Set suite variable    ${preregApplicationID}
 
 the user should see EOI labels for prereg application
@@ -208,3 +253,50 @@ Comp admin set the competion as prereg comp and hide the question, section and s
     set subsection as hidden in pre reg application      ${preregCompetitionId}
     set section as hidden in pre reg application         ${preregCompetitionId}
     update milestone to yesterday                        ${preregCompetitionId}  OPEN_DATE
+
+Existing user creates and submits new application for unsuccessful EOI journey
+    log in as a different user                                                &{lead_applicant_credentials}
+    Existing applicant creates a new application with same organisation       ${hecpPreregCompName}
+    the user completes the application details section                        ${unSuccessPreregAppName}  ${tomorrowday}  ${month}  ${nextyear}   23
+    the applicant completes Application Team                                  COMPLETE  steve.smith@empire.com
+    the user complete pre reg work programme
+    the user is able to complete horizon grant agreement section
+    the lead applicant fills all the questions and marks as complete(prereg)
+    the user completes prereg project finances                                ${unSuccessPreregAppName}   no
+    the user clicks the button/link                                           id = application-overview-submit-cta
+    the user clicks the button/link                                           id = submit-application-button
+
+Internal user marks the application as successful/unsuccessful
+    [Arguments]  ${applicationName}  ${fundingDecision}
+    Log in as a different user                          &{Comp_admin1_credentials}
+    the user navigates to the page                      ${server}/management/competition/${preregCompetitionId}/applications/eoi
+    the user clicks the button/link                     jQuery = tr:contains("${applicationName}") label
+    the user clicks the button/link                     css = [type="submit"][value="${fundingDecision}"]
+    the user clicks the button/link                     link = Competition
+    Requesting application ID of prereg application     ${applicationName}
+    the internal team notifies all applicants           ${preregApplicationID}
+
+Internal user closes the competition
+    log in as a different user          &{ifs_admin_user_credentials}
+    update milestone to yesterday       ${preregCompetitionId}  SUBMISSION_DATE
+    the user navigates to the page      ${server}/management/competition/${preregCompetitionId}
+    the user clicks the button/link     link = Close competition
+    the user clicks the button/link     jQuery = button:contains("Close competition")
+
+Lead applicant deletes the unsubmitted EOI application
+    log in as a different user                          &{lead_applicant_credentials}
+    the user clicks the application tile if displayed
+    the user should see the element                     jQuery = li:contains("${unSubmittedPreregAppName}") .status-msg:contains("Expression of interest")
+    Requesting application ID of prereg application     ${unSubmittedPreregAppName}
+    the user clicks the button/link                     name = delete-application-${preregApplicationID}
+    the user clicks the button/link                     jQuery = li:contains("${unSubmittedPreregAppName}") button:contains("Delete application")
+
+the user complete pre reg work programme
+    the user clicks the button/link     jQuery = a:contains("Work programme")
+    the user clicks the button twice    jQuery = label:contains("Culture, Creativity and Inclusive Society (CL2)")
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
+    the user clicks the button twice    jQuery = label:contains("HORIZON-CL2-2021-DEMOCRACY-01")
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
+    the user clicks the button/link     id = application-question-complete
+    the user clicks the button/link     link = Back to application overview
+    the user should see the element     jQuery = li:contains("Work programme") > .task-status-complete
