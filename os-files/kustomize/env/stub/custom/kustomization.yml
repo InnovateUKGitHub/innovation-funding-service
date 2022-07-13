@@ -6,9 +6,6 @@ commonAnnotations:
   environment: custom
 
 components:
-  - ../../../components/sba
-  - ../../../components/bastion-client
-  - ../../../components/clamav
   - ../../../components/mail
   - ../../../components/sil-stub
   - ../../../components/ifs-database
@@ -25,9 +22,7 @@ components:
 resources:
   - ../../../config-mgmt/env/aws/custom
   - routes/mail-route.yml
-  - routes/sba-route.yml
   - routes/fss-route.yml
-  - rbac/sba-rbac.yml
 
 patchesStrategicMerge:
   - web-layer/registration-service/registration-service-deployment.yml
