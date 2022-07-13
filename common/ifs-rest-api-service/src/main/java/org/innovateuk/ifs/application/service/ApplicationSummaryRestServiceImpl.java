@@ -49,13 +49,49 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
     }
 
     @Override
+    public RestResult<List<Long>> getAllSubmittedEoiApplicationIds(long competitionId,
+                                                                   Optional<String> filter,
+                                                                   Optional<FundingDecision> fundingFilter,
+                                                                   Optional<Boolean> sendFilter) {
+        String baseUrl = applicationSummaryRestUrl + "/find-by-competition/" + competitionId + "/all-submitted/eoi";
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+
+        filter.ifPresent(f -> params.set("filter", f));
+        fundingFilter.ifPresent(f -> params.set("fundingFilter", f.toString()));
+        sendFilter.ifPresent(f -> params.set("sendFilter", f.toString()));
+
+        String uri = UriComponentsBuilder.fromPath(baseUrl).queryParams(params).build().encode().toUriString();
+
+        return getWithRestResult(uri, longsListType());
+    }
+
+    @Override
     public RestResult<ApplicationSummaryPageResource> getSubmittedApplications(long competitionId,
                                                                                String sortField,
                                                                                int pageNumber,
                                                                                int pageSize,
                                                                                Optional<String> filter,
                                                                                Optional<FundingDecision> fundingFilter) {
-        return getSubmittedApplicationsWithPanelStatus(competitionId, sortField, pageNumber, pageSize, filter, fundingFilter, Optional.empty());
+        return getApplicationsByFilters(competitionId, sortField, pageNumber, pageSize, filter, fundingFilter, Optional.empty());
+    }
+
+    @Override
+    public RestResult<ApplicationSummaryPageResource> getSubmittedEoiApplications(long competitionId,
+                                                                                  String sortField,
+                                                                                  int pageNumber,
+                                                                                  int pageSize,
+                                                                                  Optional<String> filter,
+                                                                                  Optional<FundingDecision> fundingFilter,
+                                                                                  Optional<Boolean> sendFilter) {
+        String baseUrl = applicationSummaryRestUrl + "/find-by-competition/" + competitionId + "/submitted/eoi";
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+
+        filter.ifPresent(f -> params.set("filter", f));
+        fundingFilter.ifPresent(f -> params.set("fundingFilter", f.toString()));
+        sendFilter.ifPresent(f -> params.set("sendFilter", f.toString()));
+
+        String uriWithParams = buildPaginationUri(baseUrl, pageNumber, pageSize, sortField, params);
+        return getWithRestResult(uriWithParams, ApplicationSummaryPageResource.class);
     }
 
     @Override
@@ -66,6 +102,16 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
                                                                                               Optional<String> filter,
                                                                                               Optional<FundingDecision> fundingFilter,
                                                                                               Optional<Boolean> inAssessmentReviewPanel) {
+        return getApplicationsByFilters(competitionId, sortField, pageNumber, pageSize, filter, fundingFilter, inAssessmentReviewPanel);
+    }
+
+    private RestResult<ApplicationSummaryPageResource> getApplicationsByFilters(long competitionId,
+                                                                                String sortField,
+                                                                                int pageNumber,
+                                                                                int pageSize,
+                                                                                Optional<String> filter,
+                                                                                Optional<FundingDecision> fundingFilter,
+                                                                                Optional<Boolean> inAssessmentReviewPanel) {
         String baseUrl = applicationSummaryRestUrl + "/find-by-competition/" + competitionId + "/submitted";
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 

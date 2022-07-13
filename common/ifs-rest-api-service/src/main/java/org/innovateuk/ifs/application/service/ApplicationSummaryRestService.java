@@ -22,6 +22,14 @@ public interface ApplicationSummaryRestService {
                                                                         Optional<String> filter,
                                                                         Optional<FundingDecision> fundingFilter);
 
+    RestResult<ApplicationSummaryPageResource> getSubmittedEoiApplications(long competitionId,
+                                                                           String sortField,
+                                                                           int pageNumber,
+                                                                           int pageSize,
+                                                                           Optional<String> filter,
+                                                                           Optional<FundingDecision> fundingFilter,
+                                                                           Optional<Boolean> sendFilter);
+
     RestResult<ApplicationSummaryPageResource> getSubmittedApplicationsWithPanelStatus(long competitionId,
                                                                         String sortField,
                                                                         int pageNumber,
@@ -33,6 +41,11 @@ public interface ApplicationSummaryRestService {
     RestResult<List<Long>> getAllSubmittedApplicationIds(long competitionId,
                                                          Optional<String> filter,
                                                          Optional<FundingDecision> fundingFilter);
+
+    RestResult<List<Long>> getAllSubmittedEoiApplicationIds(long competitionId,
+                                                            Optional<String> filter,
+                                                            Optional<FundingDecision> fundingFilter,
+                                                            Optional<Boolean> sendFilter);
 
     RestResult<ApplicationSummaryPageResource> getNonSubmittedApplications(long competitionId, String sortField,
                                                                            int pageNumber,

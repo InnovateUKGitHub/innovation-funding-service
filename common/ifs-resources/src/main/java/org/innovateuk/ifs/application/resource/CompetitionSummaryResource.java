@@ -17,6 +17,7 @@ public class CompetitionSummaryResource {
     private String competitionName;
     private CompetitionStatus competitionStatus;
     private ZonedDateTime applicationDeadline;
+    private int expressionsOfInterestSubmitted;
     private int totalNumberOfApplications;
     private int applicationsStarted;
     private int applicationsInProgress;
@@ -59,13 +60,15 @@ public class CompetitionSummaryResource {
         return applicationDeadline.format(DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm"));
     }
 
+    public int getExpressionsOfInterestSubmitted() { return expressionsOfInterestSubmitted; }
+
+    public void setExpressionsOfInterestSubmitted(int expressionsOfInterestSubmitted) { this.expressionsOfInterestSubmitted = expressionsOfInterestSubmitted; }
+
     public int getTotalNumberOfApplications() {
         return totalNumberOfApplications;
     }
 
-    public void setTotalNumberOfApplications(int totalNumberOfApplications) {
-        this.totalNumberOfApplications = totalNumberOfApplications;
-    }
+    public void setTotalNumberOfApplications(int totalNumberOfApplications) { this.totalNumberOfApplications = totalNumberOfApplications; }
 
     public int getApplicationsStarted() {
         return applicationsStarted;
@@ -160,6 +163,7 @@ public class CompetitionSummaryResource {
                 .append(competitionName, that.competitionName)
                 .append(competitionStatus, that.competitionStatus)
                 .append(applicationDeadline, that.applicationDeadline)
+                .append(expressionsOfInterestSubmitted, that.expressionsOfInterestSubmitted)
                 .append(totalNumberOfApplications, that.totalNumberOfApplications)
                 .append(applicationsStarted, that.applicationsStarted)
                 .append(applicationsInProgress, that.applicationsInProgress)

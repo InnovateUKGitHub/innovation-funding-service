@@ -69,7 +69,7 @@ function addTestFiles() {
     oc ${SVC_ACCOUNT_CLAUSE} rsh ${DATA_SERVICE_POD} cp /tmp/testing.pdf ${virusScanQuarantinedFolder}/8
 
     echo "***********Adding standard file upload location ***********"
-    oc ${SVC_ACCOUNT_CLAUSE} rsh ${DATA_SERVICE_POD} mkdir -p ${storedFileFolder}000000000_999999999/000000_999999/000_999
+    oc ${SVC_ACCOUNT_CLAUSE} rsh ${DATA_SERVICE_POD} mkdir -p ${storedFileFolder}
 
     oc ${SVC_ACCOUNT_CLAUSE} rsync --include=fileForEachDBEntry.sh ${scriptDir}/ ${DATA_SERVICE_POD}:
     oc ${SVC_ACCOUNT_CLAUSE} rsh ${DATA_SERVICE_POD} sh fileForEachDBEntry.sh ${storedFileFolder}
@@ -94,8 +94,8 @@ webServiceCodeDir="${rootDir}/ifs-web-service"
 webBase="<<SHIB-ADDRESS>>"
 
 uploadFileDir="${scriptDir}/../upload_files"
-baseFileStorage="/mnt/ifs_storage"
-storedFileFolder="${baseFileStorage}/ifs/"
+baseFileStorage="/tmp"
+storedFileFolder="${baseFileStorage}"
 virusScanHoldingFolder="${baseFileStorage}/virus-scan-holding/"
 virusScanQuarantinedFolder="${baseFileStorage}/virus-scan-quarantined"
 virusScanScannedFolder="${baseFileStorage}/virus-scan-scanned"

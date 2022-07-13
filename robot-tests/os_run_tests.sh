@@ -157,7 +157,7 @@ section "=> GETTING SCRIPT VARIABLES"
 scriptDir="/robot-tests"
 cd ${scriptDir}
 
-./openshift/fileForEachDBEntry.sh
+sh openshift/fileForEachDBEntry.sh
 
 webBase=$BASE_URL
 

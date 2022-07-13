@@ -41,10 +41,4 @@ spec:
             requests:
               cpu: 100m
               memory: 400M
-          volumeMounts:
-          - mountPath: /mnt/ifs_storage
-            name: dir-1
-      volumes:
-        - name: dir-1
-          persistentVolumeClaim:
-            claimName: file-upload-claim
+
