@@ -75,7 +75,7 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
 
         } catch (HttpClientErrorException | HttpServerErrorException e) {
             assertEquals(FORBIDDEN, e.getStatusCode());
-            RestErrorResponse restErrorResponse = new ObjectMapper().readValue(e.getMessage(), RestErrorResponse.class);
+            RestErrorResponse restErrorResponse = new ObjectMapper().readValue(e.getResponseBodyAsString(), RestErrorResponse.class);
             Error expectedError = new Error(GENERAL_FORBIDDEN.getErrorKey(), null);
             RestErrorResponse expectedResponse = new RestErrorResponse(expectedError);
             assertEquals(expectedResponse, restErrorResponse);
