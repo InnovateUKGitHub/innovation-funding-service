@@ -3,7 +3,7 @@ commonAnnotations:
   environment: local-dev
 
 resources:
-  - sba-secret.yml
+  - ../../../../../secrets-mgmt/env/local
   - rbac/sba-rbac.yml
 
 components:
