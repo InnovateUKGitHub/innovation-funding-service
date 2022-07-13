@@ -4,8 +4,10 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
 import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionAssessmentConfigRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyApplicationStatisticsResource;
+import org.innovateuk.ifs.competition.resource.CompetitionEoiKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
@@ -38,15 +40,26 @@ public class CompetitionKeyApplicationStatisticsServiceImpl extends BaseTransact
                 CompetitionOpenKeyApplicationStatisticsResource();
         competitionOpenKeyApplicationStatisticsResource.setApplicationsPerAssessor(competitionAssessmentConfigRepository.findOneByCompetitionId
                 (competitionId).get().getAssessorCount());
-        competitionOpenKeyApplicationStatisticsResource.setApplicationsStarted(applicationRepository
-                .countByCompetitionIdAndApplicationProcessActivityStateInAndCompletionLessThanEqual(competitionId,
-                        CREATED_AND_OPEN_STATUSES, limit));
-        competitionOpenKeyApplicationStatisticsResource.setApplicationsPastHalf(applicationRepository
-                .countByCompetitionIdAndApplicationProcessActivityStateNotInAndCompletionGreaterThan(competitionId,
-                        SUBMITTED_AND_INELIGIBLE_STATES, limit));
-        competitionOpenKeyApplicationStatisticsResource.setApplicationsSubmitted(applicationRepository
-                .countByCompetitionIdAndApplicationProcessActivityStateIn(competitionId,
-                        SUBMITTED_AND_INELIGIBLE_STATES));
+
+        Competition competition = competitionRepository.findById(competitionId).get();
+        if(competition.isEnabledForPreRegistration()) {
+            competitionOpenKeyApplicationStatisticsResource.setApplicationsStarted(applicationRepository
+                    .countStartedApplicationsByCompetitionId(competitionId));
+            competitionOpenKeyApplicationStatisticsResource.setApplicationsPastHalf(applicationRepository
+                    .countInProgressApplicationsByCompetitionId(competitionId));
+            competitionOpenKeyApplicationStatisticsResource.setApplicationsSubmitted(applicationRepository
+                    .countApplicationsByCompetitionIdAndStateIn(competitionId, SUBMITTED_AND_INELIGIBLE_STATES));
+        } else {
+            competitionOpenKeyApplicationStatisticsResource.setApplicationsStarted(applicationRepository
+                    .countByCompetitionIdAndApplicationProcessActivityStateInAndCompletionLessThanEqual(competitionId,
+                            CREATED_AND_OPEN_STATUSES, limit));
+            competitionOpenKeyApplicationStatisticsResource.setApplicationsPastHalf(applicationRepository
+                    .countByCompetitionIdAndApplicationProcessActivityStateNotInAndCompletionGreaterThan(competitionId,
+                            SUBMITTED_AND_INELIGIBLE_STATES, limit));
+            competitionOpenKeyApplicationStatisticsResource.setApplicationsSubmitted(applicationRepository
+                    .countByCompetitionIdAndApplicationProcessActivityStateIn(competitionId,
+                            SUBMITTED_AND_INELIGIBLE_STATES));
+        }
         return serviceSuccess(competitionOpenKeyApplicationStatisticsResource);
     }
 
@@ -78,9 +91,14 @@ public class CompetitionKeyApplicationStatisticsServiceImpl extends BaseTransact
         CompetitionFundedKeyApplicationStatisticsResource competitionFundedKeyApplicationStatisticsResource = new
                 CompetitionFundedKeyApplicationStatisticsResource();
 
-
-        competitionFundedKeyApplicationStatisticsResource
-                .setApplicationsSubmitted(applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATES));
+        Competition competition = competitionRepository.findById(competitionId).get();
+        if(competition.isEnabledForPreRegistration()) {
+            competitionFundedKeyApplicationStatisticsResource.setApplicationsSubmitted(applicationRepository
+                    .countApplicationsByCompetitionIdAndStateIn(competitionId, SUBMITTED_AND_INELIGIBLE_STATES));
+        } else {
+            competitionFundedKeyApplicationStatisticsResource
+                    .setApplicationsSubmitted(applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATES));
+        }
         competitionFundedKeyApplicationStatisticsResource.setApplicationsFunded(applicationRepository.countByCompetitionIdAndFundingDecision(competitionId, FundingDecisionStatus.FUNDED));
         competitionFundedKeyApplicationStatisticsResource.setApplicationsNotFunded(applicationRepository.countByCompetitionIdAndFundingDecision(competitionId, FundingDecisionStatus.UNFUNDED));
         competitionFundedKeyApplicationStatisticsResource.setApplicationsOnHold(applicationRepository.countByCompetitionIdAndFundingDecision(competitionId, FundingDecisionStatus.ON_HOLD));
@@ -90,6 +108,16 @@ public class CompetitionKeyApplicationStatisticsServiceImpl extends BaseTransact
                 .countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNull(competitionId));
 
         return serviceSuccess(competitionFundedKeyApplicationStatisticsResource);
+    }
+
+    @Override
+    public ServiceResult<CompetitionEoiKeyApplicationStatisticsResource> getEoiKeyStatisticsByCompetition(long competitionId) {
+        CompetitionEoiKeyApplicationStatisticsResource competitionEoiKeyApplicationStatisticsResource = new CompetitionEoiKeyApplicationStatisticsResource();
+
+        int eoiApplicationsSubmitted = applicationRepository.countByCompetitionIdAndApplicationExpressionOfInterestConfigEnabledForExpressionOfInterestTrueAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATES);
+        competitionEoiKeyApplicationStatisticsResource.setApplicationsSubmitted(eoiApplicationsSubmitted);
+
+        return serviceSuccess(competitionEoiKeyApplicationStatisticsResource);
     }
 
     private int getFundingDecisionCount(List<Application> applications, FundingDecisionStatus fundingDecisionStatus) {

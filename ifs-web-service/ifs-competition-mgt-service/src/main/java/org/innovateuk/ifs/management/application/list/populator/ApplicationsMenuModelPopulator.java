@@ -25,6 +25,7 @@ public class ApplicationsMenuModelPopulator {
 
         return new ApplicationsMenuViewModel(
                 competition,
+                summary.getExpressionsOfInterestSubmitted(),
                 summary.getAssessorsInvited(),
                 summary.getApplicationsInProgress(),
                 summary.getApplicationsSubmitted(),
