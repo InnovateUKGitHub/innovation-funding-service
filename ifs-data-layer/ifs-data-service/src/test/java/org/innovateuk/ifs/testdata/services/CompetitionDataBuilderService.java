@@ -193,7 +193,8 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                 .withAssessmentConfig(line)
                 .withCompetitionTermsAndConditions(line)
                 .withThirdPartyConfig(line)
-                .withNewMilestones(line);
+                .withNewMilestones(line)
+                .withImSurveyEnabled(line);
 
         CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(line, competitionBeforeMilestones);
 

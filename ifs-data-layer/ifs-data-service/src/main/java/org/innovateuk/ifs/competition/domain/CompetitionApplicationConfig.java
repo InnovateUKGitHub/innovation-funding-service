@@ -24,9 +24,11 @@ public class CompetitionApplicationConfig {
     }
 
     public CompetitionApplicationConfig(Competition competition,
-                                        BigDecimal maximumFundingSought) {
+                                        BigDecimal maximumFundingSought,
+                                        boolean imSurveyRequired) {
         this.competition = competition;
         this.maximumFundingSought = maximumFundingSought;
+        this.imSurveyRequired = imSurveyRequired;
     }
 
     public Long getId() {
