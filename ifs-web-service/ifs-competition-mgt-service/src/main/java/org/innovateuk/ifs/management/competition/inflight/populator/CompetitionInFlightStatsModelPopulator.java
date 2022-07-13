@@ -26,8 +26,8 @@ public class CompetitionInFlightStatsModelPopulator {
     private CompetitionRestService competitionRestService;
 
     public CompetitionInFlightStatsViewModel populateStatsViewModel(Long competitionId) {
-        CompetitionResource competititon = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        return populateStatsViewModel(competititon);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        return populateStatsViewModel(competition);
     }
 
     public CompetitionInFlightStatsViewModel populateStatsViewModel(CompetitionResource competitionResource) {
@@ -88,6 +88,16 @@ public class CompetitionInFlightStatsModelPopulator {
                         completionStage);
             default:
                 return new CompetitionInFlightStatsViewModel();
+        }
+    }
+
+    public CompetitionInFlightStatsViewModel populateEoiStatsViewModel(CompetitionResource competitionResource) {
+        if (competitionResource.isEnabledForPreRegistration()) {
+            return new CompetitionInFlightStatsViewModel(
+                    competitionKeyApplicationStatisticsRestService.getEoiKeyStatisticsByCompetition(
+                            competitionResource.getId()).getSuccess());
+        } else {
+            return new CompetitionInFlightStatsViewModel();
         }
     }
 }

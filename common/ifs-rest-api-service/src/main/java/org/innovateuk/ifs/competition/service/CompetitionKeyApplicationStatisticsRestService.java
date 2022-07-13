@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyApplicationStatisticsResource;
+import org.innovateuk.ifs.competition.resource.CompetitionEoiKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
@@ -20,6 +21,8 @@ public interface CompetitionKeyApplicationStatisticsRestService {
     RestResult<CompetitionClosedKeyApplicationStatisticsResource> getClosedKeyStatisticsByCompetition(long competitionId);
 
     RestResult<CompetitionFundedKeyApplicationStatisticsResource> getFundedKeyStatisticsByCompetition(long competitionId);
+
+    RestResult<CompetitionEoiKeyApplicationStatisticsResource> getEoiKeyStatisticsByCompetition(long competitionId);
 
     RestResult<ReviewKeyStatisticsResource> getReviewKeyStatisticsByCompetition(long competitionId);
 
