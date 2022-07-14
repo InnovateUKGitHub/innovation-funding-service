@@ -5,6 +5,9 @@ import org.innovateuk.ifs.starters.newrelic.NewRelicEventChannel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Receive and automatically propagate spring events to the NewRelicEventChannel
  *
@@ -24,28 +27,34 @@ public class NewRelicSpringEventListener {
     @Autowired
     private NewRelicEventChannel newRelicEventChannel;
 
+    private void handleContextEvent(ApplicationContextEvent applicationContextEvent) {
+        log.trace(RECEIVED_SPRING_EVENT + applicationContextEvent.toString());
+        Map<String, Object> eventAttributes = new HashMap<>();
+        eventAttributes.put("Spring Application Name", applicationContextEvent.getApplicationContext().getApplicationName());
+        eventAttributes.put("Spring Display Name", applicationContextEvent.getApplicationContext().getDisplayName());
+        eventAttributes.put("Start Date", applicationContextEvent.getApplicationContext().getStartupDate());
+        eventAttributes.put("Event Time", applicationContextEvent.getTimestamp());
+        newRelicEventChannel.sendEvent(applicationContextEvent.getClass().getSimpleName(), eventAttributes);
+    }
+
     @EventListener
-    public void handleContextStart(ContextRefreshedEvent cse) {
-        log.trace(RECEIVED_SPRING_EVENT + cse.toString());
-        newRelicEventChannel.sendApplicationContextEvent(cse);
+    public void handleContextRefresh(ContextRefreshedEvent cre) {
+        handleContextEvent(cre);
     }
 
     @EventListener
     public void handleContextStart(ContextStartedEvent cse) {
-        log.trace(RECEIVED_SPRING_EVENT + cse.toString());
-        newRelicEventChannel.sendApplicationContextEvent(cse);
+        handleContextEvent(cse);
     }
 
     @EventListener
-    public void handleContextStart(ContextClosedEvent cse) {
-        log.trace(RECEIVED_SPRING_EVENT + cse.toString());
-        newRelicEventChannel.sendApplicationContextEvent(cse);
+    public void handleContextClose(ContextClosedEvent cce) {
+        handleContextEvent(cce);
     }
 
     @EventListener
-    public void handleContextStart(ContextStoppedEvent cse) {
-        log.trace(RECEIVED_SPRING_EVENT + cse.toString());
-        newRelicEventChannel.sendApplicationContextEvent(cse);
+    public void handleContextStop(ContextStoppedEvent cse) {
+        handleContextEvent(cse);
     }
 
 }

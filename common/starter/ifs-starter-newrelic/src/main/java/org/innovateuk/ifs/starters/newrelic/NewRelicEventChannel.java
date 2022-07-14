@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.starters.newrelic;
 
 import com.newrelic.api.agent.NewRelic;
-import org.springframework.context.event.ApplicationContextEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,41 +29,27 @@ import java.util.Map;
  */
 public class NewRelicEventChannel {
 
-    private static final String APP_ERROR_EVENT = "APP_ERROR_EVENT";
-
     /**
      * Ad-hoc call to the event api
      * @param eventType the event type (this will be searchable as FROM eventType in new relic.
      * @param eventAttributes any additional attributes
      */
-    public void sendCustomEvent(String eventType, Map<String, Object> eventAttributes) {
+    public void sendEvent(String eventType, Map<String, Object> eventAttributes) {
         NewRelic.getAgent().getInsights().recordCustomEvent(eventType, eventAttributes);
     }
 
     /**
      * Error are tracked anyway in new relic however it is often useful to be able to monitor specific error
-     * conditions for manual follow up. In addition it is well alertable, reported and searchable in new relic
+     * conditions for manual follow up. In addition, it is alertable, reported and searchable in new relic
      * rather than trawling logs.
      * @param ex the exception to track.
      * @param clz originating class
      */
-    public void sendErrorEvent(Exception ex, Class<?> clz) {
-        Map<String, Object> eventAttributes = new HashMap<>();
-        eventAttributes.put("Class", clz.getCanonicalName());
-        eventAttributes.put("Exception", ex.getClass().getCanonicalName());
-        NewRelic.getAgent().getInsights().recordCustomEvent(APP_ERROR_EVENT, eventAttributes);
-    }
-
-    /**
-     * Adapt from ApplicationContextEvents to new relic api event calls.
-     * @param applicationContextEvent subclass of applicationContextEvent
-     */
-    public void sendApplicationContextEvent(ApplicationContextEvent applicationContextEvent) {
-        Map<String, Object> eventAttributes = new HashMap<>();
-        eventAttributes.put("Spring Application Name", applicationContextEvent.getApplicationContext().getApplicationName());
-        eventAttributes.put("Spring Display Name", applicationContextEvent.getApplicationContext().getDisplayName());
-        eventAttributes.put("Start Date", applicationContextEvent.getApplicationContext().getStartupDate());
-        eventAttributes.put("Event Time", applicationContextEvent.getTimestamp());
-        NewRelic.getAgent().getInsights().recordCustomEvent(applicationContextEvent.getClass().getSimpleName(), eventAttributes);
+    public void sendErrorEvent(String eventType, Exception ex, Class<?> clz, Map<String, Object> eventAttributes) {
+        Map<String, Object> merged = new HashMap<>();
+        merged.putAll(eventAttributes);
+        merged.put("Class", clz.getCanonicalName());
+        merged.put("Exception", ex.getClass().getCanonicalName());
+        NewRelic.getAgent().getInsights().recordCustomEvent(eventType, merged);
     }
 }

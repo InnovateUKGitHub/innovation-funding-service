@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.filestorage.storage;
 
+import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
 import org.innovateuk.ifs.api.filestorage.v1.delete.FileDeletionRequest;
@@ -90,7 +91,12 @@ public class StorageService {
             storageServiceHelper.saveErrorResult(fileUploadRequest, responseStatusException);
             stopWatch.stop();
             log.info(stopWatch.prettyPrint());
-            newRelicEventChannel.sendErrorEvent(responseStatusException, this.getClass());
+            newRelicEventChannel.sendErrorEvent("FILE_UPLOAD_FAILURE",
+                    responseStatusException,
+                    this.getClass(),
+                    ImmutableMap.of("file_uuid", fileUploadRequest.getFileId(),
+                            "file_size", fileUploadRequest.getFileSizeBytes(),
+                            "file_name", fileUploadRequest.getFileName()));
             throw responseStatusException;
         }
 
