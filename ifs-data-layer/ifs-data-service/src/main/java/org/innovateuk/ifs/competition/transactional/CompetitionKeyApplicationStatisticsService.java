@@ -10,22 +10,22 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface CompetitionKeyApplicationStatisticsService {
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'innovation_lead', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'support', 'innovation_lead', 'stakeholder')")
     @SecuredBySpring(value = "READ", securedType = CompetitionOpenKeyApplicationStatisticsResource.class,
             description = "Comp admins, project finance, innovation leads and stakeholders can see competition statistics")
     ServiceResult<CompetitionOpenKeyApplicationStatisticsResource> getOpenKeyStatisticsByCompetition(long competitionId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'innovation_lead', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'support', 'innovation_lead', 'stakeholder')")
     @SecuredBySpring(value = "READ", securedType = CompetitionClosedKeyApplicationStatisticsResource.class,
             description = "Comp admins, project finance, innovation leads and stakeholders can see competition statistics")
     ServiceResult<CompetitionClosedKeyApplicationStatisticsResource> getClosedKeyStatisticsByCompetition(long competitionId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'innovation_lead', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'support', 'innovation_lead', 'stakeholder')")
     @SecuredBySpring(value = "READ", securedType = CompetitionFundedKeyApplicationStatisticsResource.class,
             description = "Comp admins, project finance, innovation leads and stakeholders can see competition statistics")
     ServiceResult<CompetitionFundedKeyApplicationStatisticsResource> getFundedKeyStatisticsByCompetition(long competitionId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'innovation_lead', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'support', 'innovation_lead', 'stakeholder')")
     @SecuredBySpring(value = "READ", securedType = CompetitionFundedKeyApplicationStatisticsResource.class,
             description = "Comp admins, project finance, innovation leads and stakeholders can see competition eoi statistics")
     ServiceResult<CompetitionEoiKeyApplicationStatisticsResource> getEoiKeyStatisticsByCompetition(long competitionId);

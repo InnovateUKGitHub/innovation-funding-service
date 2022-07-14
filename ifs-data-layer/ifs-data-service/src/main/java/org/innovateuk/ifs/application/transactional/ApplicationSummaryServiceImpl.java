@@ -11,6 +11,7 @@ import org.innovateuk.ifs.application.resource.comparators.*;
 import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,9 +117,16 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             int pageSize,
             Optional<String> filter) {
         String filterStr = filter.map(String::trim).orElse("");
-        return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateNotIn(competitionId, INELIGIBLE_STATES, filterStr, pageable),
-                () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateNotIn(competitionId, INELIGIBLE_STATES, filterStr));
+        Competition competition = competitionRepository.findById(competitionId).get();
+        if(competition.isEnabledForPreRegistration()) {
+            return applicationSummaries(sortBy, pageIndex, pageSize,
+                    pageable -> applicationRepository.findApplicationsByCompetitionIdAndStateNotIn(competitionId, INELIGIBLE_STATES, filterStr, pageable),
+                    () -> applicationRepository.findApplicationsByCompetitionIdAndStateNotIn(competitionId, INELIGIBLE_STATES, filterStr));
+        } else {
+            return applicationSummaries(sortBy, pageIndex, pageSize,
+                    pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateNotIn(competitionId, INELIGIBLE_STATES, filterStr, pageable),
+                    () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateNotIn(competitionId, INELIGIBLE_STATES, filterStr));
+        }
     }
 
     @Override
@@ -133,11 +141,20 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
         String filterString = trimFilterString(filter);
 
-        return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByApplicationStateAndFundingDecision(
-                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), inAssessmentReviewPanel.orElse(null), pageable),
-                () -> applicationRepository.findByApplicationStateAndFundingDecision(
-                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), inAssessmentReviewPanel.orElse(null)));
+        Competition competition = competitionRepository.findById(competitionId).get();
+        if(competition.isEnabledForPreRegistration()) {
+            return applicationSummaries(sortBy, pageIndex, pageSize,
+                    pageable -> applicationRepository.findApplicationsByApplicationStateAndFundingDecision(
+                            competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), inAssessmentReviewPanel.orElse(null), pageable),
+                    () -> applicationRepository.findApplicationsByApplicationStateAndFundingDecision(
+                            competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), inAssessmentReviewPanel.orElse(null)));
+        } else {
+            return applicationSummaries(sortBy, pageIndex, pageSize,
+                    pageable -> applicationRepository.findByApplicationStateAndFundingDecision(
+                            competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), inAssessmentReviewPanel.orElse(null), pageable),
+                    () -> applicationRepository.findByApplicationStateAndFundingDecision(
+                            competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), inAssessmentReviewPanel.orElse(null)));
+        }
     }
 
     @Override

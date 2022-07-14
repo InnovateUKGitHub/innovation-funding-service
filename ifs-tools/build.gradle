@@ -1,5 +1,0 @@
-group 'innovateuk'
-version project.version
-apply plugin: 'idea'
-
-

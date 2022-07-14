@@ -12,6 +12,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.competition.inflight.populator.CompetitionInFlightStatsModelPopulator;
 import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightStatsViewModel;
+<<<<<<< HEAD
 import org.innovateuk.ifs.management.funding.controller.CompetitionManagementFundingDecisionController;
 import org.innovateuk.ifs.management.funding.form.FundingDecisionFilterForm;
 import org.innovateuk.ifs.management.funding.form.FundingDecisionSelectionCookie;
@@ -19,6 +20,15 @@ import org.innovateuk.ifs.management.funding.form.FundingDecisionSelectionForm;
 import org.innovateuk.ifs.management.funding.populator.CompetitionManagementFundingDecisionModelPopulator;
 import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.management.funding.viewmodel.ManageFundingApplicationsViewModel;
+=======
+import org.innovateuk.ifs.management.decision.controller.CompetitionManagementFundingDecisionController;
+import org.innovateuk.ifs.management.decision.form.FundingDecisionFilterForm;
+import org.innovateuk.ifs.management.decision.form.FundingDecisionSelectionCookie;
+import org.innovateuk.ifs.management.decision.form.FundingDecisionSelectionForm;
+import org.innovateuk.ifs.management.decision.populator.CompetitionManagementFundingDecisionModelPopulator;
+import org.innovateuk.ifs.management.decision.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.management.decision.viewmodel.ManageFundingApplicationsViewModel;
+>>>>>>> development
 import org.innovateuk.ifs.util.CompressedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
@@ -62,7 +72,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CompetitionManagementFundingDecisionControllerTest extends BaseControllerMockMVCTest<CompetitionManagementFundingDecisionController> {
 
     public static final Long COMPETITION_ID = 123L;
-    public static final String FILTER_STRING = "an appliction id";
+    public static final String FILTER_STRING = "an application id";
 
     @InjectMocks
     private CompetitionManagementFundingDecisionController controller;
@@ -130,6 +140,8 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
         when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID)).thenReturn(restSuccess(competitionSummaryResource));
         when(applicationSummaryRestService.getAllSubmittedApplicationIds(COMPETITION_ID, empty(), empty())).thenReturn(restSuccess(asList(1L, 2L)));
+
+        when(competitionInFlightStatsModelPopulator.populateEoiStatsViewModel(competitionResource)).thenReturn(new CompetitionInFlightStatsViewModel());
 
         List<ApplicationSummaryResource> expectedSummaries = newApplicationSummaryResource()
                 .build(3);

@@ -173,13 +173,6 @@ profiles:
         paths:
           - os-files/kustomize/env/stub/local/adhoc/application-service
   - name: sba
-    build:
-      artifacts:
-        - image: sba
-          context: .
-          jib:
-            type: gradle
-            project: ifs-tools:sba
     deploy:
       statusCheckDeadlineSeconds: 600
       kustomize:
@@ -204,15 +197,3 @@ profiles:
       kustomize:
         paths:
           - os-files/kustomize/env/stub/local/adhoc/file-storage-service
-  - name: clam
-    deploy:
-      statusCheckDeadlineSeconds: 600
-      kustomize:
-        paths:
-          - os-files/kustomize/components/clamav
-  - name: bastion-client
-    deploy:
-      statusCheckDeadlineSeconds: 600
-      kustomize:
-        paths:
-          - os-files/kustomize/components/bastion-client
