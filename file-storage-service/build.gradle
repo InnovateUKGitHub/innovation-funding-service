@@ -7,6 +7,8 @@ dependencies {
     implementation project(':common:api:file-storage-rest-api')
     implementation project(':common:starter:ifs-starter-swagger-ui')
 
+    implementation "com.newrelic.agent.java:newrelic-api:7.8.0"
+
     implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.837') {
         exclude group: "commons-logging", module: "commons-logging"
     }

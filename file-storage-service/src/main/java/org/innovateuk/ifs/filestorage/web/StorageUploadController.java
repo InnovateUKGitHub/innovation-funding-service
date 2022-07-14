@@ -6,9 +6,11 @@ import org.innovateuk.ifs.api.filestorage.v1.upload.FileUpload;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadResponse;
 import org.innovateuk.ifs.filestorage.storage.StorageService;
+import org.innovateuk.ifs.filestorage.util.NewRelicEventChannel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
@@ -19,6 +21,14 @@ public class StorageUploadController implements FileUpload {
 
     @Autowired
     private StorageService storageService;
+
+    @Autowired
+    private NewRelicEventChannel newRelicEventChannel;
+
+    @Scheduled(fixedDelay = 20000, initialDelay = 1000)
+    public void sendEvent() {
+        newRelicEventChannel.doSendMessage();
+    }
 
     @Override
     public ResponseEntity<FileUploadResponse> fileUpload(FileUploadRequest fileUploadRequest) {

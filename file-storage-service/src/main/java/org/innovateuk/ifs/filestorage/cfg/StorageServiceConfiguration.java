@@ -7,6 +7,7 @@ import org.innovateuk.ifs.filestorage.storage.StorageService;
 import org.innovateuk.ifs.filestorage.storage.StorageServiceHelper;
 import org.innovateuk.ifs.filestorage.storage.validator.TikaFileValidator;
 import org.innovateuk.ifs.filestorage.storage.validator.UploadValidator;
+import org.innovateuk.ifs.filestorage.util.NewRelicEventChannel;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,11 @@ import org.springframework.context.annotation.Import;
 @EnableConfigurationProperties(StorageServiceConfigurationProperties.class)
 @Import({BackingStoreConfiguration.class, VirusScanConfiguration.class})
 public class StorageServiceConfiguration {
+
+    @Bean
+    public NewRelicEventChannel newRelicEventChannel() {
+        return new NewRelicEventChannel();
+    }
 
     @Bean
     public StorageService storageService() {
