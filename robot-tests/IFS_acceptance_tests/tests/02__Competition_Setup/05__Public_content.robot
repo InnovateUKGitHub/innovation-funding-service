@@ -413,8 +413,6 @@ Guest user can see the updated Summary information
     And the user should see the element                    jQuery = .govuk-grid-column-one-third:contains("Project size") ~ .govuk-grid-column-two-thirds:contains("10 millions")
     And the user should see the element                    jQuery = .govuk-grid-column-one-third:contains("A nice new Heading") ~ .govuk-grid-column-two-thirds:contains("Ut enim ad minim veniam,")
     And guest user downloads a file sucessfully            summary  ${valid_pdf} (opens in a new window)
-    #And guest user downloads the file                      ${server}/competition/${competitionId}/download/43  ${DOWNLOAD_FOLDER}/summary.pdf
-    #[Teardown]  Remove the file from the operating system  summary.pdf
 
 Guest user can see the updated Eligibility information
     [Documentation]  INFUND-7487
@@ -425,16 +423,6 @@ Guest user can see the updated Eligibility information
     And the user should see the element             jQuery = .govuk-grid-column-one-third:contains("Draft Care and Support - Eligibility Criteria") ~ .govuk-grid-column-two-thirds:contains("basic personal care activities")
     And guest user downloads a file sucessfully     eligibility  ${valid_pdf} (opens in a new window)
 
-#Guest user downloads Eligibility files
-#    [Documentation]  INFUND-7487
-#    [Tags]
-#    When guest user downloads the file              ${server}/competition/${competitionId}/download/44  ${DOWNLOAD_FOLDER}/eli.pdf
-#    Then Remove the file from the operating system  eli.pdf
-#    When guest user downloads the file              ${server}/competition/${competitionId}/download/45  ${DOWNLOAD_FOLDER}/eligi.pdf
-#    Then Remove the file from the operating system  eligi.pdf
-#    When guest user downloads the file              ${server}/competition/${competitionId}/download/46  ${DOWNLOAD_FOLDER}/eligibility.pdf
-#    Then Remove the file from the operating system  eligibility.pdf
-
 The guest user can see updated scope information
     [Documentation]    INFUND-7488
     [Tags]
@@ -442,8 +430,6 @@ The guest user can see updated scope information
     Then the user should see the element                   jQuery = .govuk-grid-column-one-third:contains("Heading 1") ~ .govuk-grid-column-two-thirds:contains("Content 1")
     And the user should see the element                    jQuery = .govuk-grid-column-one-third:contains("Heading 2") ~ .govuk-grid-column-two-thirds:contains("Content 2")
     And guest user downloads a file sucessfully            scope  ${valid_pdf} (opens in a new window)
-    #And guest user downloads the file                      ${server}/competition/${competitionId}/download/48    ${DOWNLOAD_FOLDER}/scope.pdf
-    #[Teardown]  Remove the file from the operating system  scope.pdf
 
 The guest user can see updated date information
    [Documentation]    INFUND-7489
