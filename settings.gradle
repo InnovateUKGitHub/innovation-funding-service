@@ -15,6 +15,7 @@ include("common:starter:ifs-starter-cache")
 include("common:starter:ifs-starter-common")
 include("common:starter:ifs-starter-feign")
 include("common:starter:ifs-starter-logging")
+include("common:starter:ifs-starter-newrelic")
 include("common:starter:ifs-starter-stubdev")
 include("common:starter:ifs-starter-swagger-ui")
 

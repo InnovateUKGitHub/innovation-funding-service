@@ -17,6 +17,7 @@ import org.innovateuk.ifs.filestorage.storage.validator.TikaFileValidator;
 import org.innovateuk.ifs.filestorage.storage.validator.UploadValidator;
 import org.innovateuk.ifs.filestorage.util.FileUploadResponseMapper;
 import org.innovateuk.ifs.filestorage.virusscan.VirusScanProvider;
+import org.innovateuk.ifs.starters.newrelic.NewRelicEventChannel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.InvalidMimeTypeException;
 import org.springframework.util.StopWatch;
@@ -52,6 +53,9 @@ public class StorageService {
     @Autowired
     private UploadValidator uploadValidator;
 
+    @Autowired
+    private NewRelicEventChannel newRelicEventChannel;
+
     public FileUploadResponse fileUpload(FileUploadRequest fileUploadRequest) throws VirusDetectedException, InvalidMimeTypeException {
         StopWatch stopWatch = new StopWatch(StorageService.class.getSimpleName()
                 + " id: " + fileUploadRequest.getFileId()
@@ -86,6 +90,7 @@ public class StorageService {
             storageServiceHelper.saveErrorResult(fileUploadRequest, responseStatusException);
             stopWatch.stop();
             log.info(stopWatch.prettyPrint());
+            newRelicEventChannel.sendErrorEvent(responseStatusException, this.getClass());
             throw responseStatusException;
         }
 
