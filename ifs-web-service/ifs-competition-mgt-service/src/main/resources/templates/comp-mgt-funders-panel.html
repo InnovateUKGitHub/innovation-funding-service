@@ -10,13 +10,11 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-<<<<<<< HEAD
     <th:block th:if="${model.expressionOfInterestEnabled}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Applications',linkUrl=@{/competition/{competitionId}/applications(competitionId=${model.competitionSummary.competitionId})}"></th:block>
-    <th:block th:unless="${model.expressionOfInterestEnabled}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionSummary.competitionId})}" />
-=======
-    <th:block th:if="${model.readOnly}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkUrl=@{/dashboard}" />
-    <th:block th:unless="${model.readOnly}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionSummary.competitionId})}" />
->>>>>>> development
+    <th:block th:unless="${model.expressionOfInterestEnabled}">
+        <th:block th:if="${model.readOnly}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkUrl=@{/dashboard}" />
+        <th:block th:unless="${model.readOnly}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionSummary.competitionId})}" />
+    </th:block>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.expressionOfInterestEnabled ? 'Expression of interest' : 'Funding decision'},subTitle=|${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|,size='govuk-heading-xl'" />
@@ -98,11 +96,7 @@
             <div class="govuk-grid-column-one-half">
                 <h3 class="govuk-!-margin-0 govuk-!-font-size-19 govuk-!-font-weight-bold"><span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.results.totalElements}" /> applications</h3>
             </div>
-<<<<<<< HEAD
-            <th:block th:if="${model.expressionOfInterestEnabled}">
-=======
-            <th:block th:if="${model.eoi && !model.readOnly}">
->>>>>>> development
+            <th:block th:if="${model.eoi && !model.model.expressionOfInterestEnabled}">
                 <div class="govuk-grid-column-one-half">
                     <fieldset class="govuk-fieldset mark-applications">
                         <button class="govuk-button button-notification" data-submit-el="" id="manage-notifications" type="submit" name="manage-notifications"
