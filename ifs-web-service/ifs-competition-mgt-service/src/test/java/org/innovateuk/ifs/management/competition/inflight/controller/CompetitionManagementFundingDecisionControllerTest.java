@@ -272,34 +272,6 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
     }
 
     @Test
-    public void testGetEoiApplications() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
-        CompetitionResource competitionResource = newCompetitionResource().withId(COMPETITION_ID).build();
-        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
-        when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID)).thenReturn(restSuccess(competitionSummaryResource));
-        when(applicationSummaryRestService.getAllSubmittedEoiApplicationIds(COMPETITION_ID, empty(), empty(), empty())).thenReturn(restSuccess(asList(1L, 2L)));
-
-        List<ApplicationSummaryResource> expectedSummaries = newApplicationSummaryResource()
-                .build(3);
-        ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource(50, 3, expectedSummaries, 1, 20);
-        when(applicationSummaryRestService.getSubmittedEoiApplications(COMPETITION_ID, "id", 0, 20, empty(), empty(), empty())).thenReturn(restSuccess(summary));
-
-        Map<String, Object> model = mockMvc.perform(get("/competition/{competitionId}/funding/eoi", COMPETITION_ID))
-                .andExpect(status().isOk())
-                .andExpect(view().name("comp-mgt-funders-panel"))
-                .andReturn().getModelAndView().getModel();
-
-        ManageFundingApplicationsViewModel viewModel = (ManageFundingApplicationsViewModel) model.get("model");
-
-        assertEquals(viewModel.getCompetitionSummary(), competitionSummaryResource);
-        assertEquals(viewModel.getResults(), summary);
-        assertTrue(viewModel.isExpressionOfInterestEnabled());
-
-        verify(applicationSummaryRestService).getSubmittedEoiApplications(COMPETITION_ID, "id", 0, 20, empty(), empty(), empty());
-        verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
-    }
-
-    @Test
     public void applications_validSubmitFundingDecisionShouldResultInServiceCall() throws Exception {
         String fundingDecision = "ON_HOLD";
         List<Long> applicationIds = asList(1L, 2L);

@@ -10,10 +10,10 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:if="${model.expressionOfInterestEnabled}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Applications',linkUrl=@{/competition/{competitionId}/applications(competitionId=${model.competitionSummary.competitionId})}"></th:block>
-    <th:block th:unless="${model.expressionOfInterestEnabled}">
-        <th:block th:if="${model.readOnly}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkUrl=@{/dashboard}" />
-        <th:block th:unless="${model.readOnly}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionSummary.competitionId})}" />
+    <th:block th:if="${model.readOnly}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkUrl=@{/dashboard}" />
+    <th:block th:unless="${model.readOnly}">
+        <th:block th:if="${model.expressionOfInterestEnabled}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Applications',linkUrl=@{/competition/{competitionId}/applications(competitionId=${model.competitionSummary.competitionId})}"></th:block>
+        <th:block th:unless="${model.expressionOfInterestEnabled}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionSummary.competitionId})}" />
     </th:block>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
