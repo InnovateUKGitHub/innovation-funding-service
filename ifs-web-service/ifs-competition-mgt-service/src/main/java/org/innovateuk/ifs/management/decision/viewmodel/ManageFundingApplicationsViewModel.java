@@ -17,12 +17,8 @@ public class ManageFundingApplicationsViewModel {
     private CompetitionSummaryResource competitionSummary;
     private boolean selectAllDisabled;
     private boolean selectionLimitWarning;
-<<<<<<< HEAD:ifs-web-service/ifs-competition-mgt-service/src/main/java/org/innovateuk/ifs/management/funding/viewmodel/ManageFundingApplicationsViewModel.java
     private boolean expressionOfInterestEnabled;
-=======
     private boolean readOnly;
-    private boolean eoi;
->>>>>>> development:ifs-web-service/ifs-competition-mgt-service/src/main/java/org/innovateuk/ifs/management/decision/viewmodel/ManageFundingApplicationsViewModel.java
     private CompetitionInFlightStatsViewModel keyStatistics;
 
     public ManageFundingApplicationsViewModel(Pagination pagination,
@@ -32,12 +28,8 @@ public class ManageFundingApplicationsViewModel {
                                               CompetitionSummaryResource competitionSummary,
                                               boolean selectAllDisabled,
                                               boolean selectionLimitWarning,
-<<<<<<< HEAD:ifs-web-service/ifs-competition-mgt-service/src/main/java/org/innovateuk/ifs/management/funding/viewmodel/ManageFundingApplicationsViewModel.java
-                                              boolean expressionOfInterestEnabled,
-=======
                                               boolean readOnly,
-                                              boolean eoi,
->>>>>>> development:ifs-web-service/ifs-competition-mgt-service/src/main/java/org/innovateuk/ifs/management/decision/viewmodel/ManageFundingApplicationsViewModel.java
+                                              boolean expressionOfInterestEnabled,
                                               CompetitionInFlightStatsViewModel keyStatistics) {
         this.pagination = pagination;
         this.results = results;
@@ -46,12 +38,8 @@ public class ManageFundingApplicationsViewModel {
         this.competitionSummary = competitionSummary;
         this.selectAllDisabled = selectAllDisabled;
         this.selectionLimitWarning = selectionLimitWarning;
-<<<<<<< HEAD:ifs-web-service/ifs-competition-mgt-service/src/main/java/org/innovateuk/ifs/management/funding/viewmodel/ManageFundingApplicationsViewModel.java
-        this.expressionOfInterestEnabled = expressionOfInterestEnabled;
-=======
         this.readOnly = readOnly;
-        this.eoi = eoi;
->>>>>>> development:ifs-web-service/ifs-competition-mgt-service/src/main/java/org/innovateuk/ifs/management/decision/viewmodel/ManageFundingApplicationsViewModel.java
+        this.expressionOfInterestEnabled = expressionOfInterestEnabled;
         this.keyStatistics = keyStatistics;
     }
 
