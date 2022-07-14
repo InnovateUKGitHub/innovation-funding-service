@@ -30,9 +30,7 @@ public class NewRelicSpringEventListener {
     private void handleContextEvent(ApplicationContextEvent applicationContextEvent) {
         log.trace(RECEIVED_SPRING_EVENT + applicationContextEvent.toString());
         Map<String, Object> eventAttributes = new HashMap<>();
-        eventAttributes.put("Spring Application Name", applicationContextEvent.getApplicationContext().getApplicationName());
-        eventAttributes.put("Spring Display Name", applicationContextEvent.getApplicationContext().getDisplayName());
-        eventAttributes.put("Start Date", applicationContextEvent.getApplicationContext().getStartupDate());
+        eventAttributes.put("Up Time", applicationContextEvent.getApplicationContext().getStartupDate());
         eventAttributes.put("Event Time", applicationContextEvent.getTimestamp());
         newRelicEventChannel.sendEvent(applicationContextEvent.getClass().getSimpleName(), eventAttributes);
     }
