@@ -9,7 +9,6 @@ import javax.persistence.*;
 import static javax.persistence.EnumType.STRING;
 
 @Entity
-@Table(name = "survey", schema = "ifs_survey")
 public class Survey {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
