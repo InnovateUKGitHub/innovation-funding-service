@@ -50,7 +50,7 @@ Applicants should view prereg related content when competition is opened
 Internal users should see EOI specifc content on funding decision page
     [Documentation]    IFS-12177
     Given the user navigates to the page            ${server}/management/competition/${preregCompetitionId}/applications
-    When the user clicks the button/link            link = Expression of interest
+    When the user clicks the button/link            link = Expressions of interest
     Then User should see EOI Related content
     And the user should see the element             jQuery = td:contains("No applications found.")
 
@@ -120,35 +120,6 @@ Comp admin can not view mark as ineligible application link
     When the user navigates to the page             ${server}/management/competition/${preregCompetitionId}/application/${preregApplicationID}
     Then the user should not see the element        jQuery = span:contains("Mark application as ineligible")
 
-<<<<<<< HEAD
-Internal user marks the EOI as successful
-    [Documentation]  IFS-12177
-    When Internal user marks the EOI as successful/unsuccessful        ${hecpPreregAppName}   FUNDED
-    Then the user should see the element            jQuery = td:contains("${preregApplicationID}") + td:contains("preRegApplication")+ td:contains("Empire Ltd")+ td:contains("Successful")
-
-#enable these two test cases after manage notifications stories completed
-#Internal user submit the EOI applications funding decision
-#    [Documentation]  IFS-12265
-#    Given Existing user creates and submits new application for unsuccessful EOI journey
-#    When Internal user marks the application as successful/unsuccessful                     ${unSuccessPreregAppName}   UNFUNDED
-#    Then the user reads his email                                                           steve.smith@empire.com  Important message about your application '${hecpPreregAppName}' for the competition '${hecpPreregCompName}'  ${preRegApplicationSuccessfulEmail}
-#    And the user reads his email                                                            steve.smith@empire.com  Important message about your application '${unSuccessPreregAppName}' for the competition '${hecpPreregCompName}'  ${preRegApplicationUnsuccessfulEmail}
-
-#Lead applicant views unsuccessful applications in previous dashboard
-#    [Documentation]  IFS-12265
-#    Given log in as a different user                                              &{lead_applicant_credentials}
-#    When the user clicks the application tile if displayed
-#    Then the user should see the element                                        jQuery = li:contains("${unSuccessPreregAppName}") .status-msg:contains("Unsuccessful")
-#    And the user should see the element                                         jQuery = li:contains("${unSuccessPreregAppName}") .status-msg:contains("Expression of interest")
-#
-#Lead applicant can delete unsubmitted applications from dashboard
-#    [Documentation]  IFS-12265
-#    Given Existing applicant creates a new application with same organisation     ${hecpPreregCompName}
-#    And the user completes the application details section                        ${unSubmittedPreregAppName}  ${tomorrowday}  ${month}  ${nextyear}   23
-#    When internal user closes the competition
-#    And Lead applicant deletes the unsubmitted EOI application
-#    Then the user should not see the element                                      jQuery = a:contains("${unSubmittedPreregAppName}")
-=======
 Internal users can see expression of interest statistics
     [Documentation]  IFS-12176
     Given the user navigates to the page        ${server}/management/competition/${preregCompetitionId}
@@ -164,27 +135,27 @@ Internal users can see submitted expression of interest applications
 Internal user submit the EOI applications funding decision
     [Documentation]  IFS-12265
     Given Existing user creates and submits new application for unsuccessful EOI journey
-    When Internal user marks the application as successful/unsuccessful                     ${unSuccessPreregAppName}   UNFUNDED
-    And Internal user marks the application as successful/unsuccessful                      ${hecpPreregAppName}   FUNDED
-    Then the user reads his email                                                           steve.smith@empire.com  Important message about your application '${hecpPreregAppName}' for the competition '${hecpPreregCompName}'  ${preRegApplicationSuccessfulEmail}
-    And the user reads his email                                                            steve.smith@empire.com  Important message about your application '${unSuccessPreregAppName}' for the competition '${hecpPreregCompName}'  ${preRegApplicationUnsuccessfulEmail}
+    And Requesting application ID of unsuccessful prereg application
+    And Log in as a different user                                                          &{Comp_admin1_credentials}
+    When Internal user marks the EOI as successful/unsuccessful                             ${unSuccessPreregAppName}   UNFUNDED
+    And Internal user marks the EOI as successful/unsuccessful                              ${hecpPreregAppName}   FUNDED
+    Then the user should see the element                                                    jQuery = td:contains("${preregApplicationID}")+td:contains("${hecpPreregAppName}")+td:contains("Empire Ltd")+td:contains("Successful")
+    And the user should see the element                                                     jQuery = td:contains("${unSuccessfulPreRegApplicationID}")+td:contains("${unSuccessPreregAppName}")+td:contains("Empire Ltd")+td:contains("Unsuccessful")
 
-Lead applicant views unsuccessful applications in previous dashboard
-    [Documentation]  IFS-12265
-    Given log in as a different user                                              &{lead_applicant_credentials}
-    When the user clicks the application tile if displayed
-    Then the user should see the element                                        jQuery = li:contains("${unSuccessPreregAppName}") .status-msg:contains("Unsuccessful")
-    And the user should see the element                                         jQuery = li:contains("${unSuccessPreregAppName}") .status-msg:contains("Expression of interest")
-
-Lead applicant can delete unsubmitted applications from dashboard
-    [Documentation]  IFS-12265
-    Given Existing applicant creates a new application with same organisation     ${hecpPreregCompName}
-    And the user completes the application details section                        ${unSubmittedPreregAppName}  ${tomorrowday}  ${month}  ${nextyear}   23
-    When internal user closes the competition
-    And Lead applicant deletes the unsubmitted EOI application
-    Then the user should not see the element                                      jQuery = a:contains("${unSubmittedPreregAppName}")
-
->>>>>>> development
+#Lead applicant views unsuccessful applications in previous dashboard
+#    [Documentation]  IFS-12265
+#    Given log in as a different user                                              &{lead_applicant_credentials}
+#    When the user clicks the application tile if displayed
+#    Then the user should see the element                                        jQuery = li:contains("${unSuccessPreregAppName}") .status-msg:contains("Unsuccessful")
+#    And the user should see the element                                         jQuery = li:contains("${unSuccessPreregAppName}") .status-msg:contains("Expression of interest")
+#
+#Lead applicant can delete unsubmitted applications from dashboard
+#    [Documentation]  IFS-12265
+#    Given Existing applicant creates a new application with same organisation     ${hecpPreregCompName}
+#    And the user completes the application details section                        ${unSubmittedPreregAppName}  ${tomorrowday}  ${month}  ${nextyear}   23
+#    When internal user closes the competition
+#    And Lead applicant deletes the unsubmitted EOI application
+#    Then the user should not see the element                                      jQuery = a:contains("${unSubmittedPreregAppName}")
 
 *** Keywords ***
 Requesting IDs of this hecp pre reg competition
@@ -205,6 +176,10 @@ Requesting application ID of prereg application
     [Arguments]  ${applicationName}
     ${preregApplicationID} =  get application id by name  ${applicationName}
     Set suite variable    ${preregApplicationID}
+
+Requesting application ID of unsuccessful prereg application
+    ${unSuccessfulPreRegApplicationID} =  get application id by name  ${unSuccessPreregAppName}
+    Set suite variable    ${unSuccessfulPreRegApplicationID}
 
 the user should see EOI labels for prereg application
     the user should see the element      jQuery = h1:contains("Expression of interest overview")
@@ -311,15 +286,7 @@ Existing user creates and submits new application for unsuccessful EOI journey
 
 Internal user marks the EOI as successful/unsuccessful
     [Arguments]  ${applicationName}  ${fundingDecision}
-    Log in as a different user                          &{Comp_admin1_credentials}
-<<<<<<< HEAD
-    the user navigates to the page                      ${server}/management/competition/${preregCompetitionId}
-    the user clicks the button/link                     jQuery = a:contains("Applications: All, submitted, ineligible")
-    the user clicks the button/link                     link = Expression of interest
-    the user should see the element                     jQuery = h1:contains("Expression of interest")
-=======
     the user navigates to the page                      ${server}/management/competition/${preregCompetitionId}/applications/eoi
->>>>>>> development
     the user clicks the button/link                     jQuery = tr:contains("${applicationName}") label
     the user clicks the button/link                     css = [type="submit"][value="${fundingDecision}"]
 
@@ -351,7 +318,6 @@ the user complete pre reg work programme
     the user clicks the button/link     id = application-question-complete
     the user clicks the button/link     link = Back to application overview
     the user should see the element     jQuery = li:contains("Work programme") > .task-status-complete
-<<<<<<< HEAD
 
 User should see EOI Related content
     the user should see the element     jQuery = th:contains("Select applications")
@@ -361,5 +327,3 @@ User should see EOI Related content
     the user should see the element     jQuery = th:contains("Expression of interest decision")
     the user should see the element     jQuery = th:contains("Email status")
     the user should see the element     jQuery = th:contains("Date sent")
-=======
->>>>>>> development

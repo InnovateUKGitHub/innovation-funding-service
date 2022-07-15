@@ -12,15 +12,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.competition.inflight.populator.CompetitionInFlightStatsModelPopulator;
 import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightStatsViewModel;
-<<<<<<< HEAD
-import org.innovateuk.ifs.management.funding.controller.CompetitionManagementFundingDecisionController;
-import org.innovateuk.ifs.management.funding.form.FundingDecisionFilterForm;
-import org.innovateuk.ifs.management.funding.form.FundingDecisionSelectionCookie;
-import org.innovateuk.ifs.management.funding.form.FundingDecisionSelectionForm;
-import org.innovateuk.ifs.management.funding.populator.CompetitionManagementFundingDecisionModelPopulator;
-import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
-import org.innovateuk.ifs.management.funding.viewmodel.ManageFundingApplicationsViewModel;
-=======
 import org.innovateuk.ifs.management.decision.controller.CompetitionManagementFundingDecisionController;
 import org.innovateuk.ifs.management.decision.form.FundingDecisionFilterForm;
 import org.innovateuk.ifs.management.decision.form.FundingDecisionSelectionCookie;
@@ -28,7 +19,6 @@ import org.innovateuk.ifs.management.decision.form.FundingDecisionSelectionForm;
 import org.innovateuk.ifs.management.decision.populator.CompetitionManagementFundingDecisionModelPopulator;
 import org.innovateuk.ifs.management.decision.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.management.decision.viewmodel.ManageFundingApplicationsViewModel;
->>>>>>> development
 import org.innovateuk.ifs.util.CompressedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
@@ -279,34 +269,6 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         expectedFundingDecisionSelectionCookie.setFundingDecisionFilterForm(new FundingDecisionFilterForm());
 
         verify(cookieUtil).saveToCookie(any(),eq("fundingDecisionSelectionForm_comp_123"), eq(getSerializedObject(expectedFundingDecisionSelectionCookie)));
-    }
-
-    @Test
-    public void testGetEoiApplications() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
-        CompetitionResource competitionResource = newCompetitionResource().withId(COMPETITION_ID).build();
-        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
-        when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID)).thenReturn(restSuccess(competitionSummaryResource));
-        when(applicationSummaryRestService.getAllSubmittedEoiApplicationIds(COMPETITION_ID, empty(), empty(), empty())).thenReturn(restSuccess(asList(1L, 2L)));
-
-        List<ApplicationSummaryResource> expectedSummaries = newApplicationSummaryResource()
-                .build(3);
-        ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource(50, 3, expectedSummaries, 1, 20);
-        when(applicationSummaryRestService.getSubmittedEoiApplications(COMPETITION_ID, "id", 0, 20, empty(), empty(), empty())).thenReturn(restSuccess(summary));
-
-        Map<String, Object> model = mockMvc.perform(get("/competition/{competitionId}/funding/eoi", COMPETITION_ID))
-                .andExpect(status().isOk())
-                .andExpect(view().name("comp-mgt-funders-panel"))
-                .andReturn().getModelAndView().getModel();
-
-        ManageFundingApplicationsViewModel viewModel = (ManageFundingApplicationsViewModel) model.get("model");
-
-        assertEquals(viewModel.getCompetitionSummary(), competitionSummaryResource);
-        assertEquals(viewModel.getResults(), summary);
-        assertTrue(viewModel.isExpressionOfInterestEnabled());
-
-        verify(applicationSummaryRestService).getSubmittedEoiApplications(COMPETITION_ID, "id", 0, 20, empty(), empty(), empty());
-        verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
     }
 
     @Test
