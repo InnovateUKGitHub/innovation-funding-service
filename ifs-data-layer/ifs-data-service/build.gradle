@@ -67,6 +67,8 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3'
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     implementation 'com.docusign:docusign-esign-java:3.2.0'
+    implementation 'javax.ws.rs:javax.ws.rs-api:2.0.1'
+    implementation 'org.glassfish.jersey.core:jersey-common'
     implementation "com.newrelic.agent.java:newrelic-api:6.1.0"
     implementation "com.hubspot.slack:slack-base:1.12"
     implementation "com.hubspot.slack:slack-java-client:1.12"
