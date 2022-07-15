@@ -349,7 +349,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
             List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
             List<ApplicationData> applications = flattenLists(simpleMap(createApplicationsFutures, CompletableFuture::join));
 
-            createFundingDecisions(competitions);
+            createDecisions(competitions);
             createProjects(applications);
             moveCompetitionsIntoFinalState(competitions);
 
@@ -390,13 +390,13 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         projectDataBuilderService.createProjects(applications);
     }
 
-    private void createFundingDecisions(List<CompetitionData> competitions) {
+    private void createDecisions(List<CompetitionData> competitions) {
         competitions.forEach(competition -> {
 
             CompetitionLine competitionLine = simpleFindFirstMandatory(competitionLines, l ->
                     Objects.equals(l.getName(), competition.getCompetition().getName()));
 
-            applicationDataBuilderService.createFundingDecisions(competition, competitionLine, applicationLines);
+            applicationDataBuilderService.createDecisions(competition, competitionLine, applicationLines);
         });
     }
 

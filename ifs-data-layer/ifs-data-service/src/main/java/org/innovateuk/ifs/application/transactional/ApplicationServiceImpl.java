@@ -195,7 +195,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(final Long applicationId,
                                                                                  final ZonedDateTime fundingEmailDateTime) {
         return getApplication(applicationId).andOnSuccessReturn(application -> {
-            application.setManageFundingEmailDate(fundingEmailDateTime);
+            application.setManageDecisionEmailDate(fundingEmailDateTime);
             if (application.getCompetition().isAlwaysOpen()) {
                 application.setFeedbackReleased(fundingEmailDateTime);
             }
@@ -225,7 +225,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return find(application(applicationId)).andOnSuccess(application ->
                 validateCompetitionIsNotAlwaysOpen(application).andOnSuccess(() ->
                         validateCompetitionIsOpen(application).andOnSuccess(() ->
-                                validateFundingDecisionHasNotBeSent(application).andOnSuccess(() ->
+                                validateDecisionHasNotBeSent(application).andOnSuccess(() ->
                                         validateApplicationIsSubmitted(application).andOnSuccess(() -> {
                                             applicationWorkflowHandler.notifyFromApplicationState(application, ApplicationState.OPENED);
                                             application.setSubmittedDate(null);
@@ -250,8 +250,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return application.isSubmitted() ? serviceSuccess() : serviceFailure(APPLICATION_MUST_BE_SUBMITTED);
     }
 
-    private ServiceResult<Void> validateFundingDecisionHasNotBeSent(Application application) {
-        return application.getFundingDecision() == null ? serviceSuccess() : serviceFailure(APPLICATION_CANNOT_BE_REOPENED);
+    private ServiceResult<Void> validateDecisionHasNotBeSent(Application application) {
+        return application.getDecision() == null ? serviceSuccess() : serviceFailure(APPLICATION_CANNOT_BE_REOPENED);
     }
 
     private static boolean applicationContainsUserRole(List<ProcessRole> roles,
@@ -287,8 +287,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<ZonedDateTime> findLatestEmailFundingDateByCompetitionId(Long id) {
-        return find(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(id),
-                notFoundError(Application.class, id)).andOnSuccessReturn(Application::getManageFundingEmailDate);
+        return find(applicationRepository.findTopByCompetitionIdOrderByManageDecisionEmailDateDesc(id),
+                notFoundError(Application.class, id)).andOnSuccessReturn(Application::getManageDecisionEmailDate);
     }
 
     @Override

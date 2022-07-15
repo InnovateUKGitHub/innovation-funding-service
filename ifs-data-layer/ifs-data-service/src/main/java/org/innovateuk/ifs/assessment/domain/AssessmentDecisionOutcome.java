@@ -11,7 +11,7 @@ import javax.persistence.Entity;
  */
 @Entity
 @DiscriminatorValue(value = "funding-decision")
-public class AssessmentFundingDecisionOutcome extends ProcessOutcome<Assessment> {
+public class AssessmentDecisionOutcome extends ProcessOutcome<Assessment> {
 
     public void setAssessment(Assessment assessment) {
         setProcess(assessment);

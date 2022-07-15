@@ -90,10 +90,10 @@ public class AssessmentSummaryController {
     }
 
     private void populateFormWithExistingValues(AssessmentSummaryForm form, AssessmentResource assessment) {
-        ofNullable(assessment.getFundingDecision()).ifPresent(fundingDecision -> {
-            form.setFundingConfirmation(fundingDecision.getFundingConfirmation());
-            form.setFeedback(fundingDecision.getFeedback());
-            form.setComment(fundingDecision.getComment());
+        ofNullable(assessment.getDecision()).ifPresent(decision -> {
+            form.setFundingConfirmation(decision.getFundingConfirmation());
+            form.setFeedback(decision.getFeedback());
+            form.setComment(decision.getComment());
         });
     }
 

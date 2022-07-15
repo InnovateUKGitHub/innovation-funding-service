@@ -88,7 +88,7 @@
                                             class="govuk-radios__input"
                                             th:field="*{fundingConfirmation}"
                                             required="required"
-                                            th:attr="data-required-errormessage=#{validation.assessmentFundingDecisionOutcome.fundingConfirmation.required}"
+                                            th:attr="data-required-errormessage=#{validation.assessmentDecisionOutcome.fundingConfirmation.required}"
                                             data-conditionally-remove-required="#feedback" />
                                         <label th:for="${#ids.prev('fundingConfirmation')}"
                                                class="govuk-label govuk-radios__label">Yes</label>
@@ -100,7 +100,7 @@
                                             class="govuk-radios__input"
                                             th:field="*{fundingConfirmation}"
                                             required="required"
-                                            th:attr="data-required-errormessage=#{validation.assessmentFundingDecisionOutcome.fundingConfirmation.required}"
+                                            th:attr="data-required-errormessage=#{validation.assessmentDecisionOutcome.fundingConfirmation.required}"
                                             data-conditionally-add-required="#feedback, .form-group input" />
                                         <label th:for="${#ids.prev('fundingConfirmation')}"
                                                class="govuk-label govuk-radios__label">No</label>

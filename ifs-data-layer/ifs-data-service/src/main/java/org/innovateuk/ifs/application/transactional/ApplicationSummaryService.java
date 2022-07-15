@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.fundingdecision.domain.DecisionStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public interface ApplicationSummaryService {
                                                                                                   int pageIndex,
                                                                                                   int pageSize,
                                                                                                   Optional<String> filter,
-                                                                                                  Optional<FundingDecisionStatus> fundingFilter,
+                                                                                                  Optional<DecisionStatus> fundingFilter,
                                                                                                   Optional<Boolean> inAssessmentReviewPanel);
 
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
@@ -36,20 +36,20 @@ public interface ApplicationSummaryService {
                                                                                                   int pageIndex,
                                                                                                   int pageSize,
                                                                                                   Optional<String> filter,
-                                                                                                  Optional<FundingDecisionStatus> fundingFilter,
+                                                                                                  Optional<DecisionStatus> fundingFilter,
                                                                                                   Optional<Boolean> sendFilter);
 
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @SecuredBySpring(value = "READ", description = "Internal users can see all submitted Application ids across the whole system", securedType = ApplicationSummaryPageResource.class)
     ServiceResult<List<Long>> getAllSubmittedApplicationIdsByCompetitionId(long competitionId,
                                                                            Optional<String> filter,
-                                                                           Optional<FundingDecisionStatus> fundingFilter);
+                                                                           Optional<DecisionStatus> fundingFilter);
 
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @SecuredBySpring(value = "READ", description = "Internal users can see all submitted eoi Application ids across the whole system", securedType = ApplicationSummaryPageResource.class)
     ServiceResult<List<Long>> getAllSubmittedEoiApplicationIdsByCompetitionId(long competitionId,
                                                                            Optional<String> filter,
-                                                                           Optional<FundingDecisionStatus> fundingFilter,
+                                                                           Optional<DecisionStatus> fundingFilter,
                                                                            Optional<Boolean> sendFilter);
 
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
@@ -61,21 +61,21 @@ public interface ApplicationSummaryService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @SecuredBySpring(value = "READ", description = "Internal users can see all Application Summaries with funding decisions across the whole system", securedType = ApplicationSummaryPageResource.class)
-    ServiceResult<ApplicationSummaryPageResource> getWithFundingDecisionApplicationSummariesByCompetitionId(long competitionId,
+    ServiceResult<ApplicationSummaryPageResource> getWithDecisionApplicationSummariesByCompetitionId(long competitionId,
                                                                                                             String sortBy,
                                                                                                             int pageIndex,
                                                                                                             int pageSize,
                                                                                                             Optional<String> filter,
                                                                                                             Optional<Boolean> sendFilter,
-                                                                                                            Optional<FundingDecisionStatus> fundingFilter,
+                                                                                                            Optional<DecisionStatus> fundingFilter,
                                                                                                             Optional<Boolean> eoiFilter);
 
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @SecuredBySpring(value = "READ", description = "Internal users can see all Application Ids with funding decisions across the whole system", securedType = ApplicationSummaryResource.class)
-    ServiceResult<List<Long>> getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(long competitionId,
+    ServiceResult<List<Long>> getWithDecisionIsChangeableApplicationIdsByCompetitionId(long competitionId,
                                                                                               Optional<String> filter,
                                                                                               Optional<Boolean> sendFilter,
-                                                                                              Optional<FundingDecisionStatus> fundingFilter,
+                                                                                              Optional<DecisionStatus> fundingFilter,
                                                                                               Optional<Boolean> eoiFilter);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'support', 'innovation_lead', 'stakeholder')")
@@ -95,7 +95,7 @@ public interface ApplicationSummaryService {
     @SecuredBySpring(value = "READ", description = "Internal users can see all submitted Application ids across the whole system", securedType = ApplicationSummaryPageResource.class)
     ServiceResult<List<Long>> getAllAssessedApplicationIdsByAssessmentPeriodId(long competitionId,
                                                                            Optional<String> filter,
-                                                                           Optional<FundingDecisionStatus> fundingFilter);
+                                                                           Optional<DecisionStatus> fundingFilter);
 
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @SecuredBySpring(value = "READ", description = "Internal users can see all submitted Application Summaries across the whole system", securedType = ApplicationSummaryPageResource.class)
@@ -104,7 +104,7 @@ public interface ApplicationSummaryService {
                                                                                                   int pageIndex,
                                                                                                   int pageSize,
                                                                                                   Optional<String> filter,
-                                                                                                  Optional<FundingDecisionStatus> fundingFilter,
+                                                                                                  Optional<DecisionStatus> fundingFilter,
                                                                                                   Optional<Boolean> inAssessmentReviewPanel);
 
 

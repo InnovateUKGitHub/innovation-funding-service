@@ -3,19 +3,19 @@ package org.innovateuk.ifs.application.resource;
 /**
  * Contains the information required when sending an email to notify of an application funding decision.
  */
-public class FundingDecisionToSendApplicationResource {
+public class ApplicationDecisionToSendApplicationResource {
     private long id;
     private String title;
     private String lead;
-    private FundingDecision fundingDecision;
+    private Decision decision;
 
-    private FundingDecisionToSendApplicationResource() {}
+    private ApplicationDecisionToSendApplicationResource() {}
 
-    public FundingDecisionToSendApplicationResource(long id, String title, String lead, FundingDecision fundingDecision) {
+    public ApplicationDecisionToSendApplicationResource(long id, String title, String lead, Decision decision) {
         this.id = id;
         this.title = title;
         this.lead = lead;
-        this.fundingDecision = fundingDecision;
+        this.decision = decision;
     }
 
     public long getId() {
@@ -30,7 +30,7 @@ public class FundingDecisionToSendApplicationResource {
         return lead;
     }
 
-    public FundingDecision getFundingDecision() {
-        return fundingDecision;
+    public Decision getDecision() {
+        return decision;
     }
 }

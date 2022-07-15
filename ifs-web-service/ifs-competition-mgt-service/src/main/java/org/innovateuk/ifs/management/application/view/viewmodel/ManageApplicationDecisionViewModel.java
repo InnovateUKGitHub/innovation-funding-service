@@ -4,7 +4,7 @@ package org.innovateuk.ifs.management.application.view.viewmodel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.Decision;
 import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightStatsViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
 
@@ -15,7 +15,7 @@ import static java.util.Collections.emptyList;
 /**
  * View model for manage funding applications page
  */
-public class ManageFundingApplicationViewModel {
+public class ManageApplicationDecisionViewModel {
 
     private ApplicationSummaryPageResource results;
     private String sortField;
@@ -27,7 +27,7 @@ public class ManageFundingApplicationViewModel {
     private boolean eoi;
 
 
-    public ManageFundingApplicationViewModel(ApplicationSummaryPageResource results, CompetitionInFlightStatsViewModel keyStatistics, Pagination pagination, String sortField, long competitionId, String competitionName, boolean selectAllDisabled, boolean eoi) {
+    public ManageApplicationDecisionViewModel(ApplicationSummaryPageResource results, CompetitionInFlightStatsViewModel keyStatistics, Pagination pagination, String sortField, long competitionId, String competitionName, boolean selectAllDisabled, boolean eoi) {
         this.results = results;
         this.sortField = sortField;
         this.competitionId = competitionId;
@@ -64,7 +64,7 @@ public class ManageFundingApplicationViewModel {
 
     public boolean isAnythingChangeable() {
         if (results != null) {
-            return results.getContent().stream().anyMatch(ApplicationSummaryResource::applicationFundingDecisionIsChangeable);
+            return results.getContent().stream().anyMatch(ApplicationSummaryResource::applicationDecisionIsChangeable);
         } else {
             return false;
         }
@@ -91,20 +91,27 @@ public class ManageFundingApplicationViewModel {
     }
 
     @JsonIgnore
-    public FundingDecision getFundedFundingDecision() {
-        return FundingDecision.FUNDED;
-    }
-
-    @JsonIgnore
-    public FundingDecision getUnFundedFundingDecision() {
-        return FundingDecision.UNFUNDED;
+    public Decision getFundedDecision() {
+        return Decision.FUNDED;
     }
     @JsonIgnore
-    public FundingDecision getUnDecidedFundingDecision() {
-        return FundingDecision.UNDECIDED;
+    public Decision getUnFundedDecision() {
+        return Decision.UNFUNDED;
     }
     @JsonIgnore
-    public FundingDecision getOnHoldFundingDecision() {
-        return FundingDecision.ON_HOLD;
+    public Decision getEOIApprovedDecision() {
+        return Decision.EOI_APPROVED;
+    }
+    @JsonIgnore
+    public Decision getEOIRejectedDecision() {
+        return Decision.EOI_REJECTED;
+    }
+    @JsonIgnore
+    public Decision getUnDecidedDecision() {
+        return Decision.UNDECIDED;
+    }
+    @JsonIgnore
+    public Decision getOnHoldDecision() {
+        return Decision.ON_HOLD;
     }
 }

@@ -270,12 +270,12 @@ Existing user creates and submits new application for unsuccessful EOI journey
     the user clicks the button/link                                           id = submit-application-button
 
 Internal user marks the application as successful/unsuccessful
-    [Arguments]  ${applicationName}  ${fundingDecision}
+    [Arguments]  ${applicationName}  ${decision}
     Log in as a different user                          &{Comp_admin1_credentials}
     the user navigates to the page                      ${server}/management/competition/${preregCompetitionId}
     the user clicks the button/link                     link = Input and review funding decision
     the user clicks the button/link                     jQuery = tr:contains("${applicationName}") label
-    the user clicks the button/link                     css = [type="submit"][value="${fundingDecision}"]
+    the user clicks the button/link                     css = [type="submit"][value="${decision}"]
     the user clicks the button/link                     link = Competition
     Requesting application ID of prereg application     ${applicationName}
     the internal team notifies all applicants           ${preregApplicationID}

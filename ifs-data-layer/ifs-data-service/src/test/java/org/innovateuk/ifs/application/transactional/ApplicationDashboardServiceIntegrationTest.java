@@ -9,7 +9,7 @@ import org.innovateuk.ifs.application.repository.ApplicationExpressionOfInterest
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.fundingdecision.domain.DecisionStatus;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -67,8 +67,8 @@ public class ApplicationDashboardServiceIntegrationTest extends BaseAuthenticati
 
 
         Application application = applicationRepository.findById(4L).get();
-        application.setManageFundingEmailDate(ZonedDateTime.now());
-        application.setFundingDecision(FundingDecisionStatus.UNFUNDED);
+        application.setManageDecisionEmailDate(ZonedDateTime.now());
+        application.setDecision(DecisionStatus.UNFUNDED);
         application.setCompetition(newCompetition().withAlwaysOpen(false).build());
 
         ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig =

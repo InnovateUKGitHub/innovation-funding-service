@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
+import org.innovateuk.ifs.assessment.domain.AssessmentDecisionOutcome;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 
 import java.util.List;
@@ -9,42 +9,42 @@ import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 
-public class AssessmentFundingDecisionOutcomeBuilder
-        extends BaseBuilder<AssessmentFundingDecisionOutcome, AssessmentFundingDecisionOutcomeBuilder> {
+public class AssessmentDecisionOutcomeBuilder
+        extends BaseBuilder<AssessmentDecisionOutcome, AssessmentDecisionOutcomeBuilder> {
 
-    private AssessmentFundingDecisionOutcomeBuilder(List<BiConsumer<Integer, AssessmentFundingDecisionOutcome>> multiActions) {
+    private AssessmentDecisionOutcomeBuilder(List<BiConsumer<Integer, AssessmentDecisionOutcome>> multiActions) {
         super(multiActions);
     }
 
-    public static AssessmentFundingDecisionOutcomeBuilder newAssessmentFundingDecisionOutcome() {
-        return new AssessmentFundingDecisionOutcomeBuilder(emptyList());
+    public static AssessmentDecisionOutcomeBuilder newAssessmentDecisionOutcome() {
+        return new AssessmentDecisionOutcomeBuilder(emptyList());
     }
 
     @Override
-    protected AssessmentFundingDecisionOutcomeBuilder createNewBuilderWithActions(List<BiConsumer<Integer,
-            AssessmentFundingDecisionOutcome>> actions) {
-        return new AssessmentFundingDecisionOutcomeBuilder(actions);
+    protected AssessmentDecisionOutcomeBuilder createNewBuilderWithActions(List<BiConsumer<Integer,
+            AssessmentDecisionOutcome>> actions) {
+        return new AssessmentDecisionOutcomeBuilder(actions);
     }
 
     @Override
-    protected AssessmentFundingDecisionOutcome createInitial() {
-        return new AssessmentFundingDecisionOutcome();
+    protected AssessmentDecisionOutcome createInitial() {
+        return new AssessmentDecisionOutcome();
     }
 
-    public AssessmentFundingDecisionOutcomeBuilder withId(Long... ids) {
+    public AssessmentDecisionOutcomeBuilder withId(Long... ids) {
         return withArray(BaseBuilderAmendFunctions::setId, ids);
     }
 
-    public AssessmentFundingDecisionOutcomeBuilder withFundingConfirmation(Boolean... fundingConfirmations) {
-        return withArray((value, assessmentFundingDecisionOutcome) -> assessmentFundingDecisionOutcome.setFundingConfirmation(value), fundingConfirmations);
+    public AssessmentDecisionOutcomeBuilder withFundingConfirmation(Boolean... fundingConfirmations) {
+        return withArray((value, assessmentDecisionOutcome) -> assessmentDecisionOutcome.setFundingConfirmation(value), fundingConfirmations);
     }
 
-    public AssessmentFundingDecisionOutcomeBuilder withComment(String... comments) {
-        return withArray((value, assessmentFundingDecisionOutcome) -> assessmentFundingDecisionOutcome.setComment(value), comments);
+    public AssessmentDecisionOutcomeBuilder withComment(String... comments) {
+        return withArray((value, assessmentDecisionOutcome) -> assessmentDecisionOutcome.setComment(value), comments);
     }
 
-    public AssessmentFundingDecisionOutcomeBuilder withFeedback(String... feedback) {
-        return withArray((value, assessmentFundingDecisionOutcome) -> assessmentFundingDecisionOutcome.setFeedback(value), feedback);
+    public AssessmentDecisionOutcomeBuilder withFeedback(String... feedback) {
+        return withArray((value, assessmentDecisionOutcome) -> assessmentDecisionOutcome.setFeedback(value), feedback);
     }
 
 }

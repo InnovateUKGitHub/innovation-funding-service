@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.decision.form;
 
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.Decision;
 
 import java.util.Optional;
 
@@ -9,7 +9,7 @@ public class FundingNotificationFilterForm {
     private int page = 0;
     private String stringFilter = "";
     private Optional<Boolean> sendFilter = Optional.empty();
-    private Optional<FundingDecision> fundingFilter = Optional.empty();
+    private Optional<Decision> fundingFilter = Optional.empty();
     private String sortField = "id";
     private boolean eoi;
 
@@ -33,11 +33,11 @@ public class FundingNotificationFilterForm {
         this.sendFilter = sendFilter;
     }
 
-    public Optional<FundingDecision> getFundingFilter() {
+    public Optional<Decision> getFundingFilter() {
         return fundingFilter;
     }
 
-    public void setFundingFilter(Optional<FundingDecision> fundingFilter) {
+    public void setFundingFilter(Optional<Decision> fundingFilter) {
         this.fundingFilter = fundingFilter;
     }
 
@@ -57,7 +57,7 @@ public class FundingNotificationFilterForm {
 
     public void setEoi(boolean eoi) { this.eoi = eoi; }
 
-    public void setAllFilterOptions(String stringFilter, Optional<Boolean> sendFilter, Optional<FundingDecision> fundingFilter, boolean eoi) {
+    public void setAllFilterOptions(String stringFilter, Optional<Boolean> sendFilter, Optional<Decision> fundingFilter, boolean eoi) {
         this.stringFilter = stringFilter;
         this.fundingFilter = fundingFilter;
         this.sendFilter = sendFilter;

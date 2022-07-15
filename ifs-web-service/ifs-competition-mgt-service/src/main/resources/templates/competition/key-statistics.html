@@ -98,4 +98,42 @@
             </li>
         </ul>
     </th:block>
+
+    <th:block th:fragment="eoi-notification-key-statistics(keyStatistics)">
+        <ul class="govuk-list govuk-grid-row govuk-!-margin-top-6">
+            <li th:if="${keyStatistics.statOne != null}" class="govuk-grid-column-one-third">
+                <div class="highlight-panel highlight-panel-padded">
+                    <span class="govuk-heading-l govuk-!-margin-bottom-0" th:text="${keyStatistics.statOne}">4</span>
+                    <small>EOI applications</small>
+                </div>
+            </li>
+            <li th:if="${keyStatistics.statTwo != null}" class="govuk-grid-column-one-third">
+                <div class="highlight-panel highlight-panel-padded">
+                    <span class="govuk-heading-l govuk-!-margin-bottom-0" th:text="${keyStatistics.statTwo}">4</span>
+                    <small>EOI applications successful</small>
+                </div>
+            </li>
+            <li th:if="${keyStatistics.statThree != null}" class="govuk-grid-column-one-third">
+                <div class="highlight-panel highlight-panel-padded">
+                    <span class="govuk-heading-l govuk-!-margin-bottom-0" th:text="${keyStatistics.statThree}">4</span>
+                    <small>EOI applications not successful</small>
+                </div>
+            </li>
+        </ul>
+
+        <ul class="govuk-list govuk-grid-row govuk-!-margin-top-6">
+            <li th:if="${keyStatistics.statFour != null}" class="govuk-grid-column-one-third">
+                <div class="highlight-panel highlight-panel-padded">
+                    <span class="govuk-heading-l govuk-!-margin-bottom-0" th:text="${keyStatistics.statFour}">4</span>
+                    <small>EOI applications notified of decision</small>
+                </div>
+            </li>
+            <li th:if="${keyStatistics.statFive != null}" class="govuk-grid-column-one-third">
+                <div class="highlight-panel highlight-panel-padded">
+                    <span class="govuk-heading-l govuk-!-margin-bottom-0" th:text="${keyStatistics.statFive}">4</span>
+                    <small>EOI applications awaiting notification</small>
+                </div>
+            </li>
+        </ul>
+    </th:block>
 </html>

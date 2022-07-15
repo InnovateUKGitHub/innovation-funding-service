@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.management.decision.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.Decision;
 
 import java.util.Optional;
 
@@ -9,10 +9,10 @@ import java.util.Optional;
  * Contains the Funding Decision filter values.
  */
 
-public class FundingDecisionFilterForm {
+public class DecisionFilterForm {
     private Optional<String>stringFilter  = Optional.empty();
     private Optional<Boolean> sendFilter = Optional.empty();
-    private Optional<FundingDecision> fundingFilter = Optional.empty();
+    private Optional<Decision> fundingFilter = Optional.empty();
     private boolean eoi = false;
 
     public Optional<String> getStringFilter() {
@@ -31,11 +31,11 @@ public class FundingDecisionFilterForm {
         this.sendFilter = sendFilter;
     }
 
-    public Optional<FundingDecision> getFundingFilter() {
+    public Optional<Decision> getFundingFilter() {
         return fundingFilter;
     }
 
-    public void setFundingFilter(Optional<FundingDecision> fundingFilter) {
+    public void setFundingFilter(Optional<Decision> fundingFilter) {
         this.fundingFilter = fundingFilter;
     }
 
@@ -51,7 +51,7 @@ public class FundingDecisionFilterForm {
         return this.fundingFilter.isPresent() || this.sendFilter.isPresent() || this.stringFilter.isPresent();
     }
 
-    public void updateAllFilters(FundingDecisionFilterForm updatedFilterForm) {
+    public void updateAllFilters(DecisionFilterForm updatedFilterForm) {
         this.stringFilter = updatedFilterForm.stringFilter;
         this.sendFilter = updatedFilterForm.getSendFilter();
         this.fundingFilter = updatedFilterForm.getFundingFilter();
@@ -64,7 +64,7 @@ public class FundingDecisionFilterForm {
     }
 
     @JsonIgnore
-    public FundingDecision getFundingFilterValue() {
+    public Decision getFundingFilterValue() {
         return fundingFilter.orElse(null);
     }
 }

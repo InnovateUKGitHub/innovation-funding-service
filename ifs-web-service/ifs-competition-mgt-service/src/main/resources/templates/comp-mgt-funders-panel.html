@@ -20,7 +20,7 @@
             <div th:replace="competition/key-statistics :: eoi-key-statistics(keyStatistics=${model.keyStatistics})" />
         </th:block>
 
-        <form method="GET" th:object="${fundingDecisionFilterForm}">
+        <form method="GET" th:object="${decisionFilterForm}">
             <div class="search-filters govuk-!-margin-top-6">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
@@ -139,10 +139,14 @@
                     <fieldset class="govuk-fieldset mark-applications">
                         <legend class="govuk-visually-hidden">Mark selected applications</legend>
                         <h3 class="govuk-heading-s">Mark application as:</h3>
-                        <button th:disabled="${model.selectionForm.applicationIds.isEmpty()}" type="submit" value='FUNDED' name="fundingDecision" class="govuk-button govuk-button--secondary" data-submit-el="">Successful</button>
-                        <button th:disabled="${model.selectionForm.applicationIds.isEmpty()}" type="submit" value='UNFUNDED' name="fundingDecision" class="govuk-button govuk-button--secondary" data-submit-el="">Unsuccessful</button>
+                        <th:block th:if="${model.eoi}">
+                        <button th:disabled="${model.selectionForm.applicationIds.isEmpty()}" type="submit" value="EOI_APPROVED" name="decision" class="govuk-button govuk-button--secondary" data-submit-el="">Successful</button>
+                        <button th:disabled="${model.selectionForm.applicationIds.isEmpty()}" type="submit" value="EOI_REJECTED" name="decision" class="govuk-button govuk-button--secondary" data-submit-el="">Unsuccessful</button>
+                        </th:block>
                         <th:block th:unless="${model.eoi}">
-                            <button th:disabled="${model.selectionForm.applicationIds.isEmpty()}" type="submit" value='ON_HOLD' name="fundingDecision" class="govuk-button govuk-button--secondary" data-submit-el="">On hold</button>
+                            <button th:disabled="${model.selectionForm.applicationIds.isEmpty()}" type="submit" value="FUNDED" name="decision" class="govuk-button govuk-button--secondary" data-submit-el="">Successful</button>
+                            <button th:disabled="${model.selectionForm.applicationIds.isEmpty()}" type="submit" value="UNFUNDED" name="decision" class="govuk-button govuk-button--secondary" data-submit-el="">Unsuccessful</button>
+                            <button th:disabled="${model.selectionForm.applicationIds.isEmpty()}" type="submit" value="ON_HOLD" name="decision" class="govuk-button govuk-button--secondary" data-submit-el="">On hold</button>
                         </th:block>
                     </fieldset>
                 </div>
@@ -173,7 +177,7 @@
                         <tr class="govuk-table__row" th:each="result, index : ${model.results.content}">
                             <td th:unless="${model.readOnly}" class="govuk-table__cell">
                                 <div class="govuk-checkboxes">
-                                    <div class="govuk-checkboxes__item" th:if="${result.applicationFundingDecisionIsChangeable()}">
+                                    <div class="govuk-checkboxes__item" th:if="${result.applicationDecisionIsChangeable()}">
                                         <input type="checkbox"
                                                class="govuk-checkboxes__input"
                                                name="applicationIds"
@@ -187,7 +191,7 @@
                                         </label>
                                     </div>
                                 </div>
-                                <th:block th:unless="${result.applicationFundingDecisionIsChangeable()}">
+                                <th:block th:unless="${result.applicationDecisionIsChangeable()}">
                                     <span class="empty-table-cell-select">-</span>
                                 </th:block>
                             </td>
@@ -200,10 +204,10 @@
                                 <td class="govuk-table__cell" th:text="${#numbers.formatInteger(result.totalProjectCost, 0, 'DEFAULT')}"></td>
                                 <td class="govuk-table__cell" th:text="${result.duration}"></td>
                             </th:block>
-                            <td class="govuk-table__cell" th:text="${result.fundingDecision?.name}"/>
+                            <td class="govuk-table__cell" th:text="${result.decision?.name}"/>
                             <th:block th:if="${model.eoi}">
                                 <td class="govuk-table__cell" th:text="${result.emailStatus()}">-</td>
-                                <td class="govuk-table__cell alignright" th:text="${result.manageFundingEmailDate} ? ${#temporals.format(result.manageFundingEmailDate, 'd MMMM yyyy')} : '-'">9 January 2017</td>
+                                <td class="govuk-table__cell alignright" th:text="${result.manageDecisionEmailDate} ? ${#temporals.format(result.manageDecisionEmailDate, 'd MMMM yyyy')} : '-'">9 January 2017</td>
                             </th:block>
                         </tr>
                         <th:block th:if="${model.eoi}">

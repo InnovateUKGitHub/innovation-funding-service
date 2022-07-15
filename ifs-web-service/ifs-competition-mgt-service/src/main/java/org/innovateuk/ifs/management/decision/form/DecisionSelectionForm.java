@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Form bean used to encapsulate information needed to make funding decisions.
  */
-public class FundingDecisionSelectionForm {
+public class DecisionSelectionForm {
     private List<Long> applicationIds = new ArrayList<>();
 
     private boolean allSelected;

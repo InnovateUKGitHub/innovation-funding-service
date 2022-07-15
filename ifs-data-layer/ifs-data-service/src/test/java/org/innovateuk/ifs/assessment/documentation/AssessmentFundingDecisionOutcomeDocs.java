@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.assessment.documentation;
 
-import org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder;
+import org.innovateuk.ifs.assessment.builder.AssessmentDecisionOutcomeResourceBuilder;
 
 import static java.lang.Boolean.TRUE;
-import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentDecisionOutcomeResourceBuilder.newAssessmentDecisionOutcomeResource;
 
-public class AssessmentFundingDecisionOutcomeDocs {
+public class AssessmentDecisionOutcomeDocs {
 
-    public static final AssessmentFundingDecisionOutcomeResourceBuilder assessmentFundingDecisionOutcomeResourceBuilder =
-            newAssessmentFundingDecisionOutcomeResource()
+    public static final AssessmentDecisionOutcomeResourceBuilder assessmentDecisionOutcomeResourceBuilder =
+            newAssessmentDecisionOutcomeResource()
                     .withFundingConfirmation(TRUE)
                     .withComment("comment")
                     .withFeedback("feedback");

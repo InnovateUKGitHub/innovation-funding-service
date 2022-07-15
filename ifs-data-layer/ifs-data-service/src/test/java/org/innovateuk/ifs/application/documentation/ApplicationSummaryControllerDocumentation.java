@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.controller.ApplicationSummaryController;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.transactional.ApplicationSummaryService;
-import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.fundingdecision.domain.DecisionStatus;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -33,7 +33,7 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
     }
 
     @Test
-    public void getWithFundingDecisionApplicationSummariesByCompetitionId() throws Exception {
+    public void getWithDecisionApplicationSummariesByCompetitionId() throws Exception {
         final Long competitionId = 1L;
         final String sort = "id";
         final Integer pageIndex = 0;
@@ -41,14 +41,14 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
         final Integer totalPages = pageIndex + 2; // In this test we are giving a full page of results before the last page.
         String filter = "filter";
         Boolean sendFilter = true;
-        FundingDecisionStatus fundingFilter = FundingDecisionStatus.UNDECIDED;
+        DecisionStatus fundingFilter = DecisionStatus.UNDECIDED;
         Boolean eoiFilter = false;
 
         List<ApplicationSummaryResource> applications = APPLICATION_SUMMARY_RESOURCE_BUILDER.build(5);
 
         ApplicationSummaryPageResource pageResource = new ApplicationSummaryPageResource(totalPages * size, totalPages, applications, pageIndex, size);
 
-        when(applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, sort, pageIndex, size, Optional.of(filter), Optional.of(sendFilter), Optional.of(fundingFilter), Optional.of(eoiFilter))).thenReturn(serviceSuccess(pageResource));
+        when(applicationSummaryService.getWithDecisionApplicationSummariesByCompetitionId(competitionId, sort, pageIndex, size, Optional.of(filter), Optional.of(sendFilter), Optional.of(fundingFilter), Optional.of(eoiFilter))).thenReturn(serviceSuccess(pageResource));
 
         mockMvc.perform(
                 get(baseUrl + "/find-by-competition/{competitionId}/with-funding-decision", competitionId)
@@ -63,15 +63,15 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
     }
 
     @Test
-    public void getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId() throws Exception {
+    public void getWithDecisionIsChangeableApplicationIdsByCompetitionId() throws Exception {
         final Long competitionId = 1L;
         String filter = "filter";
         Boolean sendFilter = false;
         Boolean eoiFilter = false;
-        FundingDecisionStatus fundingFilter = FundingDecisionStatus.FUNDED;
+        DecisionStatus fundingFilter = DecisionStatus.FUNDED;
         List<Long> applicationIds = asList(1L, 2L, 3L);
 
-        when(applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(competitionId, Optional.of(filter), Optional.of(sendFilter), Optional.of(fundingFilter), Optional.of(eoiFilter))).thenReturn(serviceSuccess(applicationIds));
+        when(applicationSummaryService.getWithDecisionIsChangeableApplicationIdsByCompetitionId(competitionId, Optional.of(filter), Optional.of(sendFilter), Optional.of(fundingFilter), Optional.of(eoiFilter))).thenReturn(serviceSuccess(applicationIds));
 
         mockMvc.perform(
                 get(baseUrl + "/find-by-competition/{competitionId}/with-funding-decision", competitionId)
@@ -87,7 +87,7 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
     public void getAllSubmittedApplicationIdsByCompetitionId() throws Exception {
         final Long competitionId = 1L;
         String filter = "filter";
-        FundingDecisionStatus fundingFilter = FundingDecisionStatus.FUNDED;
+        DecisionStatus fundingFilter = DecisionStatus.FUNDED;
         List<Long> applicationIds = asList(1L, 2L, 3L);
 
         when(applicationSummaryService.getAllSubmittedApplicationIdsByCompetitionId(competitionId, Optional.of(filter), Optional.of(fundingFilter))).thenReturn(serviceSuccess(applicationIds));

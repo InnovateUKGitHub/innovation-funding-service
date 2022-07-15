@@ -11,10 +11,10 @@ import javax.validation.constraints.Size;
 /**
  * DTO for recommending applications for funding during assessment.
  */
-@FieldRequiredIf(required = "feedback", argument = "fundingConfirmation", predicate = false, message = "{validation.assessmentFundingDecisionOutcome.feedback.required}")
-public class AssessmentFundingDecisionOutcomeResource {
+@FieldRequiredIf(required = "feedback", argument = "fundingConfirmation", predicate = false, message = "{validation.assessmentDecisionOutcome.feedback.required}")
+public class AssessmentDecisionOutcomeResource {
 
-    @NotNull(message = "{validation.assessmentFundingDecisionOutcome.fundingConfirmation.required}")
+    @NotNull(message = "{validation.assessmentDecisionOutcome.fundingConfirmation.required}")
     private Boolean fundingConfirmation;
     @Size(max = 5000, message = "{validation.field.too.many.characters}")
     @WordCount(max = 100, message = "{validation.field.max.word.count}")
@@ -23,10 +23,10 @@ public class AssessmentFundingDecisionOutcomeResource {
     @WordCount(max = 100, message = "{validation.field.max.word.count}")
     private String comment;
 
-    public AssessmentFundingDecisionOutcomeResource() {
+    public AssessmentDecisionOutcomeResource() {
     }
 
-    public AssessmentFundingDecisionOutcomeResource(Boolean fundingConfirmation, String feedback, String comment) {
+    public AssessmentDecisionOutcomeResource(Boolean fundingConfirmation, String feedback, String comment) {
         this.fundingConfirmation = fundingConfirmation;
         this.feedback = feedback;
         this.comment = comment;
@@ -62,7 +62,7 @@ public class AssessmentFundingDecisionOutcomeResource {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        AssessmentFundingDecisionOutcomeResource that = (AssessmentFundingDecisionOutcomeResource) o;
+        AssessmentDecisionOutcomeResource that = (AssessmentDecisionOutcomeResource) o;
 
         return new EqualsBuilder()
                 .append(fundingConfirmation, that.fundingConfirmation)

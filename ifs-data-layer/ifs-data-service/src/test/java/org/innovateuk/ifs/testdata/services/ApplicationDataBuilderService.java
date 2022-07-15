@@ -6,7 +6,7 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.Decision;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
@@ -424,7 +424,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         applicationBuilder.build();
     }
 
-    public void createFundingDecisions(
+    public void createDecisions(
             CompetitionData competition,
             CompetitionLine competitionLine,
             List<ApplicationLine> applicationLines) {
@@ -435,12 +435,12 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
             basicCompetitionInformation.
                     moveCompetitionIntoFundersPanelStatus().
-                    sendFundingDecisions(createFundingDecisionsFromCsv(competitionLine.getName(), applicationLines)).
+                    sendDecisions(createDecisionsFromCsv(competitionLine.getName(), applicationLines)).
                     build();
         }
     }
 
-    private List<Pair<String, FundingDecision>> createFundingDecisionsFromCsv(
+    private List<Pair<String, Decision>> createDecisionsFromCsv(
             String competitionName,
             List<ApplicationLine> applicationLines) {
 
@@ -451,8 +451,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 asList(ApplicationState.APPROVED, ApplicationState.REJECTED).contains(a.status));
 
         return simpleMap(applicationsWithDecisions, ma -> {
-            FundingDecision fundingDecision = ma.status == ApplicationState.APPROVED ? FundingDecision.FUNDED : FundingDecision.UNFUNDED;
-            return Pair.of(ma.title, fundingDecision);
+            Decision decision = ma.status == ApplicationState.APPROVED ? Decision.FUNDED : Decision.UNFUNDED;
+            return Pair.of(ma.title, decision);
         });
     }
 

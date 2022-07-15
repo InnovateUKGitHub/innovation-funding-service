@@ -3,10 +3,9 @@ package org.innovateuk.ifs.management.decision.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
-import org.innovateuk.ifs.application.service.ApplicationFundingDecisionRestService;
+import org.innovateuk.ifs.application.service.ApplicationDecisionRestService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.exception.IncorrectStateForPageException;
-import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -16,11 +15,10 @@ import org.innovateuk.ifs.management.decision.form.FundingNotificationFilterForm
 import org.innovateuk.ifs.management.decision.form.FundingNotificationSelectionCookie;
 import org.innovateuk.ifs.management.decision.form.FundingNotificationSelectionForm;
 import org.innovateuk.ifs.management.decision.form.NotificationEmailsForm;
-import org.innovateuk.ifs.management.decision.populator.ManageFundingApplicationsModelPopulator;
+import org.innovateuk.ifs.management.decision.populator.ManageApplicationDecisionsModelPopulator;
 import org.innovateuk.ifs.management.notification.populator.SendNotificationsModelPopulator;
 import org.innovateuk.ifs.management.notification.viewmodel.SendNotificationsViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
@@ -33,7 +31,6 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -46,13 +43,13 @@ public abstract class CompetitionManagementNotificationsController extends Compe
     private static final String FUNDING_DECISION_NOTIFICATION_VIEW = "comp-mgt-send-notifications";
 
     @Autowired
-    private ManageFundingApplicationsModelPopulator manageFundingApplicationsModelPopulator;
+    private ManageApplicationDecisionsModelPopulator manageApplicationDecisionsModelPopulator;
 
     @Autowired
     private SendNotificationsModelPopulator sendNotificationsModelPopulator;
 
     @Autowired
-    private ApplicationFundingDecisionRestService applicationFundingDecisionRestService;
+    private ApplicationDecisionRestService applicationDecisionRestService;
 
     @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
@@ -70,7 +67,7 @@ public abstract class CompetitionManagementNotificationsController extends Compe
         checkCompetitionIsOpen(competitionId);
 
         NotificationEmailsForm form = new NotificationEmailsForm();
-        return getFundingDecisionPage(model, form, competitionId, applicationIds);
+        return getDecisionPage(model, form, competitionId, applicationIds);
     }
 
     public String sendNotificationsSubmit(Model model,
@@ -80,16 +77,16 @@ public abstract class CompetitionManagementNotificationsController extends Compe
                                     ValidationHandler validationHandler) {
         checkCompetitionIsOpen(competitionId);
 
-        FundingNotificationResource fundingNotificationResource = new FundingNotificationResource(form.getMessage(), form.getFundingDecisions());
+        FundingNotificationResource fundingNotificationResource = new FundingNotificationResource(form.getMessage(), form.getDecisions());
 
-        Supplier<String> failureView = () -> getFundingDecisionPage(model, form, competitionId, form.getApplicationIds());
+        Supplier<String> failureView = () -> getDecisionPage(model, form, competitionId, form.getApplicationIds());
         Supplier<String> successView = () -> successfulEmailRedirect(competitionId);
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
-                () -> applicationFundingDecisionRestService.sendApplicationFundingDecisions(fundingNotificationResource));
+                () -> applicationDecisionRestService.sendApplicationDecisions(fundingNotificationResource));
     }
 
-    private String getFundingDecisionPage(Model model, NotificationEmailsForm form, long competitionId, List<Long> applicationIds) {
+    private String getDecisionPage(Model model, NotificationEmailsForm form, long competitionId, List<Long> applicationIds) {
         SendNotificationsViewModel viewModel = sendNotificationsModelPopulator.populate(competitionId, applicationIds, form);
         if (viewModel.getApplications().isEmpty()) {
             return "redirect:" + getManageFundingApplicationsPage(competitionId);
@@ -120,7 +117,7 @@ public abstract class CompetitionManagementNotificationsController extends Compe
 
         List<Long> submittableApplications = getAllApplicationIdsByFilters(competitionId, filterForm);
         return validationHandler.failNowOrSucceedWith(queryFailureView(competitionId), () -> {
-                model.addAttribute("model", manageFundingApplicationsModelPopulator.populate(filterForm, competitionId, submittableApplications.size()));
+                model.addAttribute("model", manageApplicationDecisionsModelPopulator.populate(filterForm, competitionId, submittableApplications.size()));
                 return MANAGE_FUNDING_APPLICATIONS_VIEW;
             }
         );
@@ -282,7 +279,7 @@ public abstract class CompetitionManagementNotificationsController extends Compe
     }
 
     private List<Long> getAllApplicationIdsByFilters(long competitionId, FundingNotificationFilterForm filterForm) {
-        return applicationSummaryRestService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(
+        return applicationSummaryRestService.getWithDecisionIsChangeableApplicationIdsByCompetitionId(
                 competitionId,
                 filterForm.getStringFilter().isEmpty() ? empty() : of(filterForm.getStringFilter()),
                 filterForm.getSendFilter(),
@@ -305,7 +302,7 @@ public abstract class CompetitionManagementNotificationsController extends Compe
         final long totalSubmittableApplications = ids.size();
 
         return () -> {
-            model.addAttribute("model", manageFundingApplicationsModelPopulator.populate(query, competitionId, totalSubmittableApplications));
+            model.addAttribute("model", manageApplicationDecisionsModelPopulator.populate(query, competitionId, totalSubmittableApplications));
             return MANAGE_FUNDING_APPLICATIONS_VIEW;
         };
     }

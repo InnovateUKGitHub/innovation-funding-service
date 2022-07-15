@@ -6,7 +6,7 @@ import javax.validation.constraints.Min;
  * Contains the Funding Decision pagination values.
  */
 
-public class FundingDecisionPaginationForm {
+public class DecisionPaginationForm {
 
     @Min(value = 0, message = "{validation.applicationsummaryqueryform.page.min}")
     private Integer page = 0;

@@ -20,14 +20,14 @@ public interface ApplicationSummaryRestService {
                                                                         int pageNumber,
                                                                         int pageSize,
                                                                         Optional<String> filter,
-                                                                        Optional<FundingDecision> fundingFilter);
+                                                                        Optional<Decision> fundingFilter);
 
     RestResult<ApplicationSummaryPageResource> getSubmittedEoiApplications(long competitionId,
                                                                            String sortField,
                                                                            int pageNumber,
                                                                            int pageSize,
                                                                            Optional<String> filter,
-                                                                           Optional<FundingDecision> fundingFilter,
+                                                                           Optional<Decision> fundingFilter,
                                                                            Optional<Boolean> sendFilter);
 
     RestResult<ApplicationSummaryPageResource> getSubmittedApplicationsWithPanelStatus(long competitionId,
@@ -35,16 +35,16 @@ public interface ApplicationSummaryRestService {
                                                                         int pageNumber,
                                                                         int pageSize,
                                                                         Optional<String> filter,
-                                                                        Optional<FundingDecision> fundingFilter,
+                                                                        Optional<Decision> fundingFilter,
                                                                         Optional<Boolean> inAssessmentReviewPanel);
 
     RestResult<List<Long>> getAllSubmittedApplicationIds(long competitionId,
                                                          Optional<String> filter,
-                                                         Optional<FundingDecision> fundingFilter);
+                                                         Optional<Decision> fundingFilter);
 
     RestResult<List<Long>> getAllSubmittedEoiApplicationIds(long competitionId,
                                                             Optional<String> filter,
-                                                            Optional<FundingDecision> fundingFilter,
+                                                            Optional<Decision> fundingFilter,
                                                             Optional<Boolean> sendFilter);
 
     RestResult<ApplicationSummaryPageResource> getNonSubmittedApplications(long competitionId, String sortField,
@@ -56,18 +56,19 @@ public interface ApplicationSummaryRestService {
 
     RestResult<ByteArrayResource> downloadByCompetition(long competitionId);
 
-    RestResult<ApplicationSummaryPageResource> getWithFundingDecisionApplications(Long competitionId,
+    RestResult<ApplicationSummaryPageResource> getWithDecisionApplications(Long competitionId,
                                                                                   String sortField,
                                                                                   int pageNumber,
                                                                                   int pageSize,
                                                                                   Optional<String> filter,
                                                                                   Optional<Boolean> sendFilter,
-                                                                                  Optional<FundingDecision> fundingFilter);
+                                                                                  Optional<Decision> fundingFilter,
+                                                                                  Optional<Boolean> eoiFilter);
 
-    RestResult<List<Long>> getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(Long competitionId,
+    RestResult<List<Long>> getWithDecisionIsChangeableApplicationIdsByCompetitionId(Long competitionId,
                                                                                            Optional<String> filter,
                                                                                            Optional<Boolean> sendFilter,
-                                                                                           Optional<FundingDecision> fundingFilter,
+                                                                                           Optional<Decision> fundingFilter,
                                                                                            Optional<Boolean> eoiFilter);
 
     RestResult<ApplicationSummaryPageResource> getIneligibleApplications(long competitionId,
@@ -81,21 +82,21 @@ public interface ApplicationSummaryRestService {
 
     RestResult<List<Long>> getAllAssessedApplicationIds(long competitionId,
                                                          Optional<String> filter,
-                                                         Optional<FundingDecision> fundingFilter);
+                                                         Optional<Decision> fundingFilter);
 
     RestResult<ApplicationSummaryPageResource> getAssessedApplications(long competitionId,
                                                                         String sortField,
                                                                         int pageNumber,
                                                                         int pageSize,
                                                                         Optional<String> filter,
-                                                                        Optional<FundingDecision> fundingFilter);
+                                                                        Optional<Decision> fundingFilter);
 
     RestResult<ApplicationSummaryPageResource> getAssessedApplicationsWithPanelStatus(long competitionId,
                                                                                        String sortField,
                                                                                        int pageNumber,
                                                                                        int pageSize,
                                                                                        Optional<String> filter,
-                                                                                       Optional<FundingDecision> fundingFilter,
+                                                                                       Optional<Decision> fundingFilter,
                                                                                        Optional<Boolean> inAssessmentReviewPanel);
 
 }

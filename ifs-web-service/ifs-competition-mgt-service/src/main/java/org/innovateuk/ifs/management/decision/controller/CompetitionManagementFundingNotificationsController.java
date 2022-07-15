@@ -2,24 +2,12 @@ package org.innovateuk.ifs.management.decision.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
-import org.innovateuk.ifs.application.resource.FundingNotificationResource;
-import org.innovateuk.ifs.application.service.ApplicationFundingDecisionRestService;
-import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.commons.exception.IncorrectStateForPageException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.decision.form.FundingNotificationFilterForm;
 import org.innovateuk.ifs.management.decision.form.FundingNotificationSelectionCookie;
 import org.innovateuk.ifs.management.decision.form.FundingNotificationSelectionForm;
 import org.innovateuk.ifs.management.decision.form.NotificationEmailsForm;
-import org.innovateuk.ifs.management.decision.populator.ManageFundingApplicationsModelPopulator;
-import org.innovateuk.ifs.management.notification.populator.SendNotificationsModelPopulator;
-import org.innovateuk.ifs.management.notification.viewmodel.SendNotificationsViewModel;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,9 +21,6 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 
 @Slf4j
 @Controller

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.fundingdecision.controller;
 
-import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.application.resource.FundingDecisionToSendApplicationResource;
+import org.innovateuk.ifs.application.resource.Decision;
+import org.innovateuk.ifs.application.resource.ApplicationDecisionToSendApplicationResource;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingNotificationBulkService;
@@ -17,7 +17,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/applicationfunding")
-public class ApplicationFundingDecisionController {
+public class ApplicationDecisionController {
 
     @Autowired
     private ApplicationFundingService applicationFundingService;
@@ -26,18 +26,18 @@ public class ApplicationFundingDecisionController {
     private ApplicationFundingNotificationBulkService applicationFundingNotificationBulkService;
 
     @PostMapping(value="/send-notifications")
-    public RestResult<Void> sendFundingDecisions(@RequestBody FundingNotificationResource fundingNotificationResource) {
+    public RestResult<Void> sendDecisions(@RequestBody FundingNotificationResource fundingNotificationResource) {
         return applicationFundingNotificationBulkService.sendBulkFundingNotifications(fundingNotificationResource).toPostResponse();
     }
     
     @PostMapping(value="/{competitionId}")
-    public RestResult<Void> saveFundingDecisionData(@PathVariable("competitionId") final Long competitionId, @RequestBody Map<Long, FundingDecision> applicationFundingDecisions) {
-        return applicationFundingService.saveFundingDecisionData(competitionId, applicationFundingDecisions).
+    public RestResult<Void> saveDecisionData(@PathVariable("competitionId") final Long competitionId, @RequestBody Map<Long, Decision> applicationDecisions) {
+        return applicationFundingService.saveDecisionData(competitionId, applicationDecisions).
                 toPutResponse();
     }
 
     @GetMapping("/notifications-to-send")
-    public RestResult<List<FundingDecisionToSendApplicationResource>> getNotificationResourceForApplications(@RequestParam("applicationIds") List<Long> applicationIds) {
+    public RestResult<List<ApplicationDecisionToSendApplicationResource>> getNotificationResourceForApplications(@RequestParam("applicationIds") List<Long> applicationIds) {
         return applicationFundingService.getNotificationResourceForApplications(applicationIds).toGetResponse();
     }
 

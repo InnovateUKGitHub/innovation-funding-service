@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.fundingdecision.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.Decision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
-import org.innovateuk.ifs.fundingdecision.controller.ApplicationFundingDecisionController;
+import org.innovateuk.ifs.fundingdecision.controller.ApplicationDecisionController;
 import org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingNotificationBulkService;
 import org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingService;
 import org.innovateuk.ifs.util.MapFunctions;
@@ -13,13 +13,13 @@ import org.springframework.http.MediaType;
 
 import java.util.Map;
 
-import static org.innovateuk.ifs.application.resource.FundingDecision.*;
+import static org.innovateuk.ifs.application.resource.Decision.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
-public class ApplicationFundingDecisionControllerDocumentation extends BaseControllerMockMVCTest<ApplicationFundingDecisionController> {
+public class ApplicationDecisionControllerDocumentation extends BaseControllerMockMVCTest<ApplicationDecisionController> {
 
     @Mock
     private ApplicationFundingService applicationFundingService;
@@ -28,16 +28,16 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
     private ApplicationFundingNotificationBulkService applicationFundingNotificationBulkService;
 
     @Override
-    protected ApplicationFundingDecisionController supplyControllerUnderTest() {
-        return new ApplicationFundingDecisionController();
+    protected ApplicationDecisionController supplyControllerUnderTest() {
+        return new ApplicationDecisionController();
     }
 
     @Test
-    public void saveFundingDecisionData() throws Exception {
+    public void saveDecisionData() throws Exception {
         Long competitionId = 1L;
-        Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FUNDED, 2L, UNFUNDED);
+        Map<Long, Decision> decision = MapFunctions.asMap(1L, FUNDED, 2L, UNFUNDED);
 
-        when(applicationFundingService.saveFundingDecisionData(competitionId, decision)).thenReturn(serviceSuccess());
+        when(applicationFundingService.saveDecisionData(competitionId, decision)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/applicationfunding/1")
                 .header("IFS_AUTH_TOKEN", "123abc")
@@ -47,7 +47,7 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
 
     @Test
     public void sendNotifications() throws Exception {
-        Map<Long, FundingDecision> decisions = MapFunctions.asMap(1L, FUNDED, 2L, UNFUNDED, 3L, ON_HOLD);
+        Map<Long, Decision> decisions = MapFunctions.asMap(1L, FUNDED, 2L, UNFUNDED, 3L, ON_HOLD);
         FundingNotificationResource notification = new FundingNotificationResource("Body of notification message.", decisions);
 
         when(applicationFundingNotificationBulkService.sendBulkFundingNotifications(notification)).thenReturn(serviceSuccess());
