@@ -67,7 +67,7 @@ Resource          ../../resources/common/Applicant_Commons.robot
 ${invitedFinanceContact}  ${test_mailbox_one}+invitedfinancecontact@gmail.com
 ${user_email}  phillip.ramos@katz.example.com
 ${pmEmailId}  ${user_ids['${user_email}']}
-${projectSetupCompMgtDetailsPage}  ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/1/details
+${projectSetupCompMgtDetailsPage}  ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/${PS_PD_Project_Id}/details
 
 # This suite uses the Magic material project
 
