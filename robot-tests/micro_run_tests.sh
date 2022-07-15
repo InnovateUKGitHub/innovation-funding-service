@@ -82,7 +82,7 @@ function addTestFiles() {
     kubectl exec $DATASERVICE_POD -- cp /tmp/testing.pdf ${virusScanQuarantinedFolder}/8
 
     echo "***********Adding standard file upload location ***********"
-    kubectl exec $DATASERVICE_POD -- mkdir -p ${storedFileFolder}/000000000_999999999/000000_999999/000_999
+    kubectl exec $DATASERVICE_POD -- mkdir -p ${storedFileFolder}
 
     echo "***********Creating file entry for each db entry***********"
     MYSQL_POD=$(kubectl get pod -l app=ifs-database -o jsonpath="{.items[0].metadata.name}")
@@ -91,7 +91,7 @@ function addTestFiles() {
     do
       if [ "${i}" != "8" ]
       then
-        kubectl exec $DATASERVICE_POD -- cp /tmp/testing.pdf ${storedFileFolder}/000000000_999999999/000000_999999/000_999/${i}
+        kubectl exec $DATASERVICE_POD -- cp /tmp/testing.pdf ${storedFileFolder}/${i}
       fi
     done
     echo "*********** Done Creating file entry for each db entry***********"

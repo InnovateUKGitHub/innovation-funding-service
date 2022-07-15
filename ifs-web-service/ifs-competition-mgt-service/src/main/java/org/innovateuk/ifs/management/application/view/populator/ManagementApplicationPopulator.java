@@ -38,11 +38,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
 import static org.innovateuk.ifs.form.resource.FormInputType.TEMPLATE_DOCUMENT;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Authority.*;
 
 
 @Component
@@ -177,7 +178,7 @@ public class ManagementApplicationPopulator {
     }
 
     private boolean canMarkAsIneligible(ApplicationResource application, UserResource user) {
-        return application.getApplicationState() == SUBMITTED
-                && user.hasAnyRoles(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, Role.INNOVATION_LEAD);
+        return !application.isEnabledForExpressionOfInterest() && application.getApplicationState() == SUBMITTED
+                && user.hasAnyAuthority(asList( COMP_ADMIN, INNOVATION_LEAD));
     }
 }

@@ -89,6 +89,7 @@ public class ProjectYourFundingViewModelPopulator {
                 organisationRequiredAndNotCompleted,
                 subsidyQuestionId,
                 competition.isThirdPartyOfgem(),
-                hash);
+                hash,
+                projectFinance.isFixedFundingLevel());
     }
 }

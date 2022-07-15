@@ -77,7 +77,7 @@ function startPybot() {
       local rerunString=''
     fi
 
-    pabot --processes 4 --xunit output-xunit.xml --outputdir target/${targetDir} ${rerunString} --pythonpath IFS_acceptance_tests/libs \
+    pabot --processes 2 --xunit output-xunit.xml --outputdir target/${targetDir} ${rerunString} --pythonpath IFS_acceptance_tests/libs \
     -v docker:1 \
     -v SERVER_BASE:${webBase} \
     -v PROTOCOL:'https://' \
@@ -157,7 +157,7 @@ section "=> GETTING SCRIPT VARIABLES"
 scriptDir="/robot-tests"
 cd ${scriptDir}
 
-./openshift/fileForEachDBEntry.sh
+sh openshift/fileForEachDBEntry.sh
 
 webBase=$BASE_URL
 

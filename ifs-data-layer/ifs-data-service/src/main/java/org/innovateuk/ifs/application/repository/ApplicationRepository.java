@@ -18,6 +18,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.CREATED_AND_OPEN_STATUSES;
+import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_AND_INELIGIBLE_STATES;
+
 /**
  * This interface is used to generate Spring Data Repositories.
  * For more info:
@@ -29,7 +32,9 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
     String COMP_NOT_STATUS_FILTER = "SELECT a FROM Application a WHERE " +
             "a.competition.id = :compId " +
             "AND (a.applicationProcess.activityState NOT IN :states) " +
-            "AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
+            "AND (str(a.id) LIKE CONCAT('%', :filter, '%')) ";
+
+    String APPLICATION_ONLY_WHERE = "AND a.applicationExpressionOfInterestConfig.enabledForExpressionOfInterest = false ";
 
     String APPLICATION_SELECT = "SELECT a FROM Application a ";
 
@@ -46,7 +51,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             ")";
 
     String COMP_STATUS_FILTER_WHERE =  COMP_STATUS_COMMON_FILTER_WHERE +
-            " AND (:inAssessmentReviewPanel IS NULL OR a.inAssessmentReviewPanel = :inAssessmentReviewPanel)";
+            " AND (:inAssessmentReviewPanel IS NULL OR a.inAssessmentReviewPanel = :inAssessmentReviewPanel) ";
 
     String EOI_FILTER_WHERE = COMP_STATUS_COMMON_FILTER_WHERE +
             " AND a.applicationExpressionOfInterestConfig.enabledForExpressionOfInterest = true" +
@@ -147,6 +152,14 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
                                                                @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel,
                                                                Pageable pageable);
 
+    @Query(APPLICATION_SELECT + COMP_STATUS_FILTER_WHERE + APPLICATION_ONLY_WHERE)
+    Page<Application> findApplicationsByApplicationStateAndFundingDecision(@Param("compId") long competitionId,
+                                                               @Param("states") Collection<ApplicationState> applicationStates,
+                                                               @Param("filter") String filter,
+                                                               @Param("funding") FundingDecisionStatus funding,
+                                                               @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel,
+                                                               Pageable pageable);
+
     @Query(APPLICATION_SELECT + EOI_FILTER_WHERE)
     Page<Application> findEoiByApplicationStateAndFundingDecision(@Param("compId") long competitionId,
                                                                   @Param("states") Collection<ApplicationState> applicationStates,
@@ -157,6 +170,13 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     @Query(APPLICATION_SELECT + COMP_STATUS_FILTER_WHERE)
     List<Application> findByApplicationStateAndFundingDecision(@Param("compId") long competitionId,
+                                                               @Param("states") Collection<ApplicationState> applicationStates,
+                                                               @Param("filter") String filter,
+                                                               @Param("funding") FundingDecisionStatus funding,
+                                                               @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel);
+
+    @Query(APPLICATION_SELECT + COMP_STATUS_FILTER_WHERE + APPLICATION_ONLY_WHERE)
+    List<Application> findApplicationsByApplicationStateAndFundingDecision(@Param("compId") long competitionId,
                                                                @Param("states") Collection<ApplicationState> applicationStates,
                                                                @Param("filter") String filter,
                                                                @Param("funding") FundingDecisionStatus funding,
@@ -189,7 +209,16 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
                                                                                  @Param("filter") String filter,
                                                                                  Pageable pageable);
 
+    @Query(COMP_NOT_STATUS_FILTER + APPLICATION_ONLY_WHERE)
+    Page<Application> findApplicationsByCompetitionIdAndStateNotIn(@Param("compId") long competitionId,
+                                                                                 @Param("states") Collection<ApplicationState> applicationStates,
+                                                                                 @Param("filter") String filter,
+                                                                                 Pageable pageable);
+
     List<Application> findByCompetitionIdAndApplicationProcessActivityStateIn(long competitionId, Collection<ApplicationState> applicationStates);
+
+    // default List<Application> findApplicationsByCompetitionIdAndStateIn(long competitionId, Collection<ApplicationState> applicationStates) { return findByCompetitionIdAndApplicationProcessActivityStateInApplicationExpressionOfInterestConfigEnabledForExpressionOfInterestFalse(competitionId, applicationStates); }
+    // List<Application> findByCompetitionIdAndApplicationProcessActivityStateInAndApplicationExpressionOfInterestConfigEnabledForExpressionOfInterestFalse(long competitionId, Collection<ApplicationState> applicationStates);
 
     List<Application> findByCompetitionIdAndAssessmentPeriodIdAndApplicationProcessActivityStateIn(long competitionId, long assessmentPeriodId, Collection<ApplicationState> applicationStates);
 
@@ -199,6 +228,10 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     @Query(COMP_NOT_STATUS_FILTER)
     List<Application> findByCompetitionIdAndApplicationProcessActivityStateNotIn(@Param("compId") long competitionId,
+                                                                                 @Param("states") Collection<ApplicationState> applicationStates,
+                                                                                 @Param("filter") String filter);
+    @Query(COMP_NOT_STATUS_FILTER + APPLICATION_ONLY_WHERE)
+    List<Application> findApplicationsByCompetitionIdAndStateNotIn(@Param("compId") long competitionId,
                                                                                  @Param("states") Collection<ApplicationState> applicationStates,
                                                                                  @Param("filter") String filter);
 
@@ -233,11 +266,33 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     int countByCompetitionIdAndApplicationProcessActivityStateIn(long competitionId, Collection<ApplicationState> submittedStates);
 
-    int countByCompetitionIdAndApplicationExpressionOfInterestConfigEnabledForExpressionOfInterestTrueAndApplicationProcessActivityStateIn(long competitionId, Collection<ApplicationState> submittedStates);
-
     int countByCompetitionIdAndApplicationProcessActivityStateNotInAndCompletionGreaterThan(Long competitionId, Collection<ApplicationState> submittedStates, BigDecimal limit);
 
     int countByCompetitionIdAndApplicationProcessActivityStateInAndCompletionLessThanEqual(long competitionId, Collection<ApplicationState> submittedStates, BigDecimal limit);
+
+    default int countApplicationsByCompetitionId(long competitionId) { return countByCompetitionIdAndApplicationExpressionOfInterestConfigEnabledForExpressionOfInterestFalse(competitionId); }
+    int countByCompetitionIdAndApplicationExpressionOfInterestConfigEnabledForExpressionOfInterestFalse(long competitionId);
+
+    default int countEOIByCompetitionId(long competitionId) { return countByCompetitionIdAndApplicationExpressionOfInterestConfigEnabledForExpressionOfInterestTrue(competitionId); }
+    int countByCompetitionIdAndApplicationExpressionOfInterestConfigEnabledForExpressionOfInterestTrue(long competitionId);
+
+    default int countEOIByCompetitionIdAndStateIn(long competitionId, Collection<ApplicationState> submittedStates) { return countByCompetitionIdAndApplicationExpressionOfInterestConfigEnabledForExpressionOfInterestTrueAndApplicationProcessActivityStateIn(competitionId, submittedStates); }
+    int countByCompetitionIdAndApplicationExpressionOfInterestConfigEnabledForExpressionOfInterestTrueAndApplicationProcessActivityStateIn(long competitionId, Collection<ApplicationState> submittedStates);
+
+    default int countInProgressApplicationsByCompetitionId(Long competitionId) {
+        return countByCompetitionIdAndApplicationProcessActivityStateNotInAndCompletionGreaterThanAndApplicationExpressionOfInterestConfigEnabledForExpressionOfInterestFalse(competitionId, SUBMITTED_AND_INELIGIBLE_STATES, new BigDecimal(50L));
+    }
+    int countByCompetitionIdAndApplicationProcessActivityStateNotInAndCompletionGreaterThanAndApplicationExpressionOfInterestConfigEnabledForExpressionOfInterestFalse(Long competitionId, Collection<ApplicationState> submittedStates, BigDecimal limit);
+
+    default int countStartedApplicationsByCompetitionId(Long competitionId) {
+        return countByCompetitionIdAndApplicationProcessActivityStateInAndCompletionLessThanEqualAndApplicationExpressionOfInterestConfigEnabledForExpressionOfInterestFalse(competitionId, CREATED_AND_OPEN_STATUSES, new BigDecimal(50L));
+    }
+    int countByCompetitionIdAndApplicationProcessActivityStateInAndCompletionLessThanEqualAndApplicationExpressionOfInterestConfigEnabledForExpressionOfInterestFalse(long competitionId, Collection<ApplicationState> submittedStates, BigDecimal limit);
+
+    default int countApplicationsByCompetitionIdAndStateIn(Long competitionId, Collection<ApplicationState> submittedStates) {
+        return countByCompetitionIdAndApplicationProcessActivityStateInAndApplicationExpressionOfInterestConfigEnabledForExpressionOfInterestFalse(competitionId, submittedStates);
+    }
+    int countByCompetitionIdAndApplicationProcessActivityStateInAndApplicationExpressionOfInterestConfigEnabledForExpressionOfInterestFalse(long competitionId, Collection<ApplicationState> submittedStates);
 
     int countByProcessRolesUserIdAndCompetitionId(long userId, long competitionId);
 

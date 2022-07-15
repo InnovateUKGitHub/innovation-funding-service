@@ -10,13 +10,15 @@ import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.funding.controller.CompetitionManagementFundingDecisionController;
-import org.innovateuk.ifs.management.funding.form.FundingDecisionFilterForm;
-import org.innovateuk.ifs.management.funding.form.FundingDecisionSelectionCookie;
-import org.innovateuk.ifs.management.funding.form.FundingDecisionSelectionForm;
-import org.innovateuk.ifs.management.funding.populator.CompetitionManagementFundingDecisionModelPopulator;
-import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
-import org.innovateuk.ifs.management.funding.viewmodel.ManageFundingApplicationsViewModel;
+import org.innovateuk.ifs.management.competition.inflight.populator.CompetitionInFlightStatsModelPopulator;
+import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightStatsViewModel;
+import org.innovateuk.ifs.management.decision.controller.CompetitionManagementFundingDecisionController;
+import org.innovateuk.ifs.management.decision.form.FundingDecisionFilterForm;
+import org.innovateuk.ifs.management.decision.form.FundingDecisionSelectionCookie;
+import org.innovateuk.ifs.management.decision.form.FundingDecisionSelectionForm;
+import org.innovateuk.ifs.management.decision.populator.CompetitionManagementFundingDecisionModelPopulator;
+import org.innovateuk.ifs.management.decision.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.management.decision.viewmodel.ManageFundingApplicationsViewModel;
 import org.innovateuk.ifs.util.CompressedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
@@ -48,7 +50,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
 import static org.innovateuk.ifs.util.JsonUtil.getSerializedObject;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -60,7 +62,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CompetitionManagementFundingDecisionControllerTest extends BaseControllerMockMVCTest<CompetitionManagementFundingDecisionController> {
 
     public static final Long COMPETITION_ID = 123L;
-    public static final String FILTER_STRING = "an appliction id";
+    public static final String FILTER_STRING = "an application id";
 
     @InjectMocks
     private CompetitionManagementFundingDecisionController controller;
@@ -81,6 +83,9 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
     @Mock
     private ApplicationFundingDecisionService applicationFundingDecisionService;
 
+    @Mock
+    private CompetitionInFlightStatsModelPopulator competitionInFlightStatsModelPopulator;
+
     private MockMvc mockMvc;
 
     private final FundingDecisionSelectionCookie cookieWithFilterAndSelectionParameters = createCookieWithFilterAndSelectionParameters();
@@ -98,6 +103,8 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         validator.afterPropertiesSet();
         ReflectionTestUtils.setField(controller, "validator", validator);
 
+        when(competitionInFlightStatsModelPopulator.populateEoiStatsViewModel(any(CompetitionResource.class)))
+                .thenReturn(new CompetitionInFlightStatsViewModel());
     }
 
     private FundingDecisionSelectionCookie createCookieWithFilterAndSelectionParameters() {
@@ -124,6 +131,8 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID)).thenReturn(restSuccess(competitionSummaryResource));
         when(applicationSummaryRestService.getAllSubmittedApplicationIds(COMPETITION_ID, empty(), empty())).thenReturn(restSuccess(asList(1L, 2L)));
 
+        when(competitionInFlightStatsModelPopulator.populateEoiStatsViewModel(competitionResource)).thenReturn(new CompetitionInFlightStatsViewModel());
+
         List<ApplicationSummaryResource> expectedSummaries = newApplicationSummaryResource()
                 .build(3);
         ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource(50, 3, expectedSummaries, 1, 20);
@@ -138,6 +147,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
 
         assertEquals(viewModel.getCompetitionSummary(), competitionSummaryResource);
         assertEquals(viewModel.getResults(), summary);
+        assertFalse(viewModel.isExpressionOfInterestEnabled());
 
         verify(applicationSummaryRestService).getSubmittedApplications(COMPETITION_ID, "id", 0, 20, empty(), empty());
         verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
@@ -380,7 +390,6 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         verify(applicationFundingDecisionService, times(0)).saveApplicationFundingDecisionData(any(), any(), any());
     }
 
-
     @Test
     public void applications_filteredParameterNameShouldNotBeReflectedInPaginationViewModel() throws Exception {
         String fundingDecisionString = "abc";
@@ -580,7 +589,6 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         verify(applicationSummaryRestService).getAssessedApplications(COMPETITION_ID, "id", 0, 20, empty(), empty());
         verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
     }
-
 
     private Cookie createFormCookie(FundingDecisionSelectionCookie form) throws Exception {
         String cookieContent = JsonUtil.getSerializedObject(form);
