@@ -1,0 +1,79 @@
+# Default application properties.
+logging:
+  level:
+    root: WARN
+    org.springframework: WARN
+    org.innovateuk.ifs: INFO
+
+server:
+  servlet:
+    session:
+      cookie:
+        secure: true
+        http-only: false
+  connection-timeout: 600000
+
+hibernate:
+  dialect:
+    storage_engine: innodb
+
+
+spring:
+  application:
+    name: IFS Finance Data Service
+  datasource:
+    url: jdbc:mysql://ifs-database:3306/ifs_finance
+    username: root
+    password: password
+    test-on-borrow: true
+    validation-query: SELECT 1
+    driver-class-name: org.mariadb.jdbc.Driver
+  flyway:
+    locations: db/migration
+    table: schema_version
+    check-location: false
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL57Dialect
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
+      temp:
+        # The validation fails without this
+        use_jdbc_metadata_defaults: false
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+
+ifs:
+  finance-totals.authSecretKey: supersecretkey
+  web:
+    system:
+      user:
+        uid: 8394d970-b250-4b15-9621-3534325691b4
+
+management:
+  endpoints:
+    web:
+      base-path: /monitoring
+      exposure:
+        include: '*'
+        exclude: threaddump,heapdump
+    enabled-by-default: true
+  endpoint:
+    health:
+      enabled: true
+      show-details: ALWAYS
+      show-components: ALWAYS
+      probes:
+        enabled: true
+      livenessState:
+        enabled: true
+      readinessState:
+        enabled: true
+    info:
+      enabled: true
+    shutdown:
+      enabled: false
+    restart:
+      enabled: false
+
+
