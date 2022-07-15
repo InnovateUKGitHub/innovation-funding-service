@@ -19,7 +19,7 @@ Admin can view Expression of Interest
     [Documentation]    IFS-12177
     Given The user logs-in in new browser           &{Comp_admin1_credentials}
     when the user navigates to the page             ${SERVER}/management/competition/${openCompetitionPreReg}
-    And the user clicks the button/link             jQuery = a:contains("Applications: All, submitted, ineligible")
+    And the user clicks the button/link             jQuery = a:contains("Applications: All, submitted, expression of interest, ineligible")
     And the user clicks the button/link             link = Expression of interest
     And the user should see the element             jQuery = h1:contains("Expression of interest")
 
