@@ -37,10 +37,7 @@ spring:
     database-platform: org.hibernate.dialect.MySQL57Dialect
     generate-ddl: false
     hibernate:
-      ddl-auto: validate
-      temp:
-        # The validation fails without this
-        use_jdbc_metadata_defaults: false
+      ddl-auto: none
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
 
