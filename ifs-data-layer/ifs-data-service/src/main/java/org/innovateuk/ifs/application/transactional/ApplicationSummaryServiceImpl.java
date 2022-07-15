@@ -216,7 +216,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             int pageIndex,
             int pageSize,
             Optional<String> filter, Optional<Boolean> sendFilter,
-            Optional<FundingDecisionStatus> fundingFilter) {
+            Optional<FundingDecisionStatus> fundingFilter, Optional<Boolean> eoiFilter) {
         String filterStr = filter.map(String::trim).orElse("");
         return applicationSummaries(sortBy, pageIndex, pageSize,
                 pageable -> applicationRepository.findByCompetitionIdAndFundingDecisionIsNotNull(
@@ -224,12 +224,14 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
                         filterStr,
                         sendFilter.orElse(null),
                         fundingFilter.orElse(null),
+                        eoiFilter.orElse(null),
                         pageable),
                 () -> applicationRepository.findByCompetitionIdAndFundingDecisionIsNotNull(
                         competitionId,
                         filterStr,
                         sendFilter.orElse(null),
-                        fundingFilter.orElse(null)));
+                        fundingFilter.orElse(null),
+                        eoiFilter.orElse(null)));
     }
 
     @Override
@@ -237,14 +239,16 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             long competitionId,
             Optional<String> filter,
             Optional<Boolean> sendFilter,
-            Optional<FundingDecisionStatus> fundingFilter) {
+            Optional<FundingDecisionStatus> fundingFilter,
+            Optional<Boolean> eoiFilter) {
         String filterStr = filter.map(String::trim).orElse("");
 
         return serviceSuccess(applicationRepository.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(
                 competitionId,
                 filterStr,
                 sendFilter.orElse(null),
-                fundingFilter.orElse(null)));
+                fundingFilter.orElse(null),
+                eoiFilter.orElse(null)));
     }
 
     @Override

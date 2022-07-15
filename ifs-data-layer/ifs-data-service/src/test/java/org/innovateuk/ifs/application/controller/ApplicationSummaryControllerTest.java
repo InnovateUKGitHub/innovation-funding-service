@@ -184,14 +184,14 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
 
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
-        when(applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, empty(), empty(), empty())).thenReturn(serviceSuccess(resource));
+        when(applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, empty(), empty(), empty(), empty())).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(get("/application-summary/find-by-competition/{compId}/with-funding-decision",competitionId)
                 .param("page",Integer.toString(page)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(resource)));
 
-        verify(applicationSummaryService).getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, empty(), empty(), empty());
+        verify(applicationSummaryService).getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, empty(), empty(), empty(), empty());
     }
 
     @Test
@@ -202,7 +202,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
 
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
-        when(applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, sort, page, PAGE_SIZE, empty(), empty(), empty())).thenReturn(serviceSuccess(resource));
+        when(applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, sort, page, PAGE_SIZE, empty(), empty(), empty(), empty())).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(get("/application-summary/find-by-competition/{compId}/with-funding-decision",competitionId)
                 .param("page",Integer.toString(page))
@@ -210,7 +210,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(resource)));
 
-        verify(applicationSummaryService).getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, sort, page, PAGE_SIZE, empty(), empty(), empty());
+        verify(applicationSummaryService).getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, sort, page, PAGE_SIZE, empty(), empty(), empty(), empty());
     }
 
     @Test
@@ -220,10 +220,11 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
         String strFilter = "filter";
         FundingDecisionStatus fundingFilter = FUNDED;
         boolean sendFilter = true;
+        boolean eoiFilter = false;
 
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
-        when(applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, of(strFilter), of(sendFilter), of(fundingFilter))).thenReturn(serviceSuccess(resource));
+        when(applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, of(strFilter), of(sendFilter), of(fundingFilter), of(eoiFilter))).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(get("/application-summary/find-by-competition/{compId}/with-funding-decision",competitionId)
                 .param("page",Integer.toString(page))
@@ -233,7 +234,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(resource)));
 
-        verify(applicationSummaryService).getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, of(strFilter), of(sendFilter), of(fundingFilter));
+        verify(applicationSummaryService).getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, of(strFilter), of(sendFilter), of(fundingFilter), of(eoiFilter));
     }
 
     @Test
@@ -242,10 +243,11 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
         String strFilter = "filter";
         FundingDecisionStatus fundingFilter = FUNDED;
         boolean sendFilter = true;
+        boolean eoiFilter = false;
 
         List<Long> applicationIds = asList(1L, 2L);
 
-        when(applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(competitionId, of(strFilter), of(sendFilter), of(fundingFilter))).thenReturn(serviceSuccess(applicationIds));
+        when(applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(competitionId, of(strFilter), of(sendFilter), of(fundingFilter), of(eoiFilter))).thenReturn(serviceSuccess(applicationIds));
 
         mockMvc.perform(get("/application-summary/find-by-competition/{compId}/with-funding-decision",competitionId)
                 .param("all", "")
@@ -255,7 +257,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(applicationIds)));
 
-        verify(applicationSummaryService).getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(competitionId, of(strFilter), of(sendFilter), of(fundingFilter));
+        verify(applicationSummaryService).getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(competitionId, of(strFilter), of(sendFilter), of(fundingFilter), of(eoiFilter));
     }
 
     @Test

@@ -15,7 +15,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
@@ -32,7 +32,7 @@ import static java.util.Collections.emptyList;
  * Handles the Competition Management decision views and submission of decision.
  */
 @Slf4j
-@Controller
+@Component
 public abstract class CompetitionManagementDecisionController extends CompetitionManagementCookieController<FundingDecisionSelectionCookie> {
 
     @Autowired

@@ -547,9 +547,9 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
         when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndFundingDecisionIsNotNull(eq(COMP_ID), eq("filter"), eq(false), eq(ON_HOLD), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
+        when(applicationRepositoryMock.findByCompetitionIdAndFundingDecisionIsNotNull(eq(COMP_ID), eq("filter"), eq(false), eq(ON_HOLD), eq(false), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
 
-        ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(COMP_ID, "id", 0, 20, of("filter"), of(false), of(ON_HOLD));
+        ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(COMP_ID, "id", 0, 20, of("filter"), of(false), of(ON_HOLD), of(false));
 
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccess().getNumber());
@@ -564,9 +564,9 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
                 .withFundingDecision(FUNDED)
                 .build(2);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndFundingDecisionIsNotNull(eq(COMP_ID), eq("filter"), eq(false), eq(FUNDED))).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndFundingDecisionIsNotNull(eq(COMP_ID), eq("filter"), eq(false), eq(FUNDED), eq(false))).thenReturn(applications);
 
-        ServiceResult<List<Long>> result = applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(false), of(FUNDED));
+        ServiceResult<List<Long>> result = applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(false), of(FUNDED), of(false));
 
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccess().size());
@@ -577,9 +577,9 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
         List<Long> longs = newArrayList(1L, 2L, 3L);
 
-        when(applicationRepositoryMock.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(eq(COMP_ID), eq("filter"), eq(false), eq(FUNDED))).thenReturn(longs);
+        when(applicationRepositoryMock.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(eq(COMP_ID), eq("filter"), eq(false), eq(FUNDED), eq(false))).thenReturn(longs);
 
-        ServiceResult<List<Long>> result = applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(false), of(FUNDED));
+        ServiceResult<List<Long>> result = applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(false), of(FUNDED), of(false));
 
         assertTrue(result.isSuccess());
         assertEquals(longs, result.getSuccess());

@@ -101,8 +101,9 @@ public class ApplicationSummaryController {
             @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
             @RequestParam(value = "filter", required = false) Optional<String> filter,
             @RequestParam(value = "sendFilter", required = false) Optional<Boolean> sendFilter,
-            @RequestParam(value = "fundingFilter", required = false) Optional<FundingDecisionStatus> fundingFilter) {
-        return applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter, sendFilter, fundingFilter).toGetResponse();
+            @RequestParam(value = "fundingFilter", required = false) Optional<FundingDecisionStatus> fundingFilter,
+            @RequestParam(value = "eoiFilter", required = false) Optional<Boolean> eoiFilter) {
+        return applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter, sendFilter, fundingFilter, eoiFilter).toGetResponse();
     }
 
     @GetMapping(value = "/find-by-competition/{competitionId}/with-funding-decision", params = "all")
@@ -110,8 +111,9 @@ public class ApplicationSummaryController {
             @PathVariable("competitionId") long competitionId,
             @RequestParam(value = "filter", required = false) Optional<String> filter,
             @RequestParam(value = "sendFilter", required = false) Optional<Boolean> sendFilter,
-            @RequestParam(value = "fundingFilter", required = false) Optional<FundingDecisionStatus> fundingFilter) {
-        return applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(competitionId, filter, sendFilter, fundingFilter).toGetResponse();
+            @RequestParam(value = "fundingFilter", required = false) Optional<FundingDecisionStatus> fundingFilter,
+            @RequestParam(value = "eoiFilter", required = false) Optional<Boolean> eoiFilter) {
+        return applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(competitionId, filter, sendFilter, fundingFilter, eoiFilter).toGetResponse();
     }
 
     @GetMapping("/find-by-competition/{competitionId}/ineligible")

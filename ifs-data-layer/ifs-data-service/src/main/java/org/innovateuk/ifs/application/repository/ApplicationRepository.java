@@ -75,9 +75,14 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             "AND (str(a.id) LIKE CONCAT('%', :filter, '%')) " +
             "AND (:sent IS NULL " +
             "OR (:sent = true AND a.manageFundingEmailDate IS NOT NULL) " +
-            "OR (:sent = false AND a.manageFundingEmailDate IS NULL))" +
+            "OR (:sent = false AND a.manageFundingEmailDate IS NULL)) " +
+            "AND (:eoi IS NULL OR :eoi = true OR :eoi = false) " +
+            //"AND (" +
+            //"((:eoi IS NULL OR :eoi = false) AND (a.applicationExpressionOfInterestConfig IS NULL OR a.applicationExpressionOfInterestConfig.enabledForExpressionOfInterest = false)) " +
+            //"OR (:eoi = true AND a.applicationExpressionOfInterestConfig IS NOT NULL AND a.applicationExpressionOfInterestConfig.enabledForExpressionOfInterest = true) " +
+            //") " +
             "AND (:funding IS NULL " +
-            "OR (a.fundingDecision = :funding))";
+            "OR (a.fundingDecision = :funding)) ";
 
     String SUBMITTED_APPLICATIONS_NOT_ON_INTERVIEW_PANEL = "SELECT a FROM Application a " +
             "WHERE " +
@@ -240,19 +245,22 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
                                                                      @Param("filter") String filter,
                                                                      @Param("sent") Boolean sent,
                                                                      @Param("funding") FundingDecisionStatus funding,
+                                                                     @Param("eoi") Boolean eoi,
                                                                      Pageable pageable);
 
     @Query("SELECT a FROM Application a " + COMP_FUNDING_FILTER)
     List<Application> findByCompetitionIdAndFundingDecisionIsNotNull(@Param("compId") long competitionId,
                                                                      @Param("filter") String filter,
                                                                      @Param("sent") Boolean sent,
-                                                                     @Param("funding") FundingDecisionStatus funding);
+                                                                     @Param("funding") FundingDecisionStatus funding,
+                                                                     @Param("eoi") Boolean eoi);
 
     @Query("SELECT a.id FROM Application a LEFT JOIN a.projectToBeCreated projectToBeCreated " + COMP_FUNDING_FILTER + " AND NOT ((a.manageFundingEmailDate != null AND a.fundingDecision = org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.FUNDED) OR (projectToBeCreated IS NOT NULL AND a.competition.fundingType != org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP))")
     List<Long> getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(@Param("compId") long competitionId,
                                                                      @Param("filter") String filter,
                                                                      @Param("sent") Boolean sent,
-                                                                     @Param("funding") FundingDecisionStatus funding);
+                                                                     @Param("funding") FundingDecisionStatus funding,
+                                                                     @Param("eoi") Boolean eoi);
 
     int countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNotNull(long competitionId);
 

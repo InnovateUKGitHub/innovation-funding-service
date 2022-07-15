@@ -11,6 +11,7 @@ public class FundingNotificationFilterForm {
     private Optional<Boolean> sendFilter = Optional.empty();
     private Optional<FundingDecision> fundingFilter = Optional.empty();
     private String sortField = "id";
+    private boolean eoi;
 
     public String getStringFilter() {
         return stringFilter;
@@ -52,11 +53,15 @@ public class FundingNotificationFilterForm {
         this.page = page;
     }
 
-    public void setAllFilterOptions(String stringFilter, Optional<Boolean> sendFilter, Optional<FundingDecision> fundingFilter) {
+    public boolean isEoi() { return eoi; }
+
+    public void setEoi(boolean eoi) { this.eoi = eoi; }
+
+    public void setAllFilterOptions(String stringFilter, Optional<Boolean> sendFilter, Optional<FundingDecision> fundingFilter, boolean eoi) {
         this.stringFilter = stringFilter;
         this.fundingFilter = fundingFilter;
         this.sendFilter = sendFilter;
-
+        this.eoi = eoi;
     }
 
     public boolean anyFilterIsActive() {

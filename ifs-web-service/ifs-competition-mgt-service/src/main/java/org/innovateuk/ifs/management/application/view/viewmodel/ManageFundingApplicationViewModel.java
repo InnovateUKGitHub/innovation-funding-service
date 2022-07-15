@@ -24,9 +24,10 @@ public class ManageFundingApplicationViewModel {
     private CompetitionInFlightStatsViewModel keyStatistics;
     private Pagination pagination;
     private boolean selectAllDisabled;
+    private boolean eoi;
 
 
-    public ManageFundingApplicationViewModel(ApplicationSummaryPageResource results, CompetitionInFlightStatsViewModel keyStatistics, Pagination pagination, String sortField, long competitionId, String competitionName, boolean selectAllDisabled) {
+    public ManageFundingApplicationViewModel(ApplicationSummaryPageResource results, CompetitionInFlightStatsViewModel keyStatistics, Pagination pagination, String sortField, long competitionId, String competitionName, boolean selectAllDisabled, boolean eoi) {
         this.results = results;
         this.sortField = sortField;
         this.competitionId = competitionId;
@@ -34,6 +35,7 @@ public class ManageFundingApplicationViewModel {
         this.keyStatistics = keyStatistics;
         this.pagination = pagination;
         this.selectAllDisabled = selectAllDisabled;
+        this.eoi = eoi;
     }
 
     public Pagination getPagination() {
@@ -78,6 +80,14 @@ public class ManageFundingApplicationViewModel {
 
     public void setSelectAllDisabled(boolean selectAllDisabled) {
         this.selectAllDisabled = selectAllDisabled;
+    }
+
+    public boolean isEoi() {
+        return eoi;
+    }
+
+    public void setEoi(boolean eoi) {
+        this.eoi = eoi;
     }
 
     @JsonIgnore

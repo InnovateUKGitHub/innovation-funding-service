@@ -55,6 +55,7 @@ public class ManageFundingApplicationsModelPopulator {
                 queryForm.getSortField(),
                 competitionId,
                 competitionResource.getName(),
-                selectAllDisabled);
+                selectAllDisabled,
+                queryForm.isEoi());
     }
 }

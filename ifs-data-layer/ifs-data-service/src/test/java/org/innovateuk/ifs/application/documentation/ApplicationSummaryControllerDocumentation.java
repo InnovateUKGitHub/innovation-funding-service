@@ -42,12 +42,13 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
         String filter = "filter";
         Boolean sendFilter = true;
         FundingDecisionStatus fundingFilter = FundingDecisionStatus.UNDECIDED;
+        Boolean eoiFilter = false;
 
         List<ApplicationSummaryResource> applications = APPLICATION_SUMMARY_RESOURCE_BUILDER.build(5);
 
         ApplicationSummaryPageResource pageResource = new ApplicationSummaryPageResource(totalPages * size, totalPages, applications, pageIndex, size);
 
-        when(applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, sort, pageIndex, size, Optional.of(filter), Optional.of(sendFilter), Optional.of(fundingFilter))).thenReturn(serviceSuccess(pageResource));
+        when(applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, sort, pageIndex, size, Optional.of(filter), Optional.of(sendFilter), Optional.of(fundingFilter), Optional.of(eoiFilter))).thenReturn(serviceSuccess(pageResource));
 
         mockMvc.perform(
                 get(baseUrl + "/find-by-competition/{competitionId}/with-funding-decision", competitionId)
@@ -66,10 +67,11 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
         final Long competitionId = 1L;
         String filter = "filter";
         Boolean sendFilter = false;
+        Boolean eoiFilter = false;
         FundingDecisionStatus fundingFilter = FundingDecisionStatus.FUNDED;
         List<Long> applicationIds = asList(1L, 2L, 3L);
 
-        when(applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(competitionId, Optional.of(filter), Optional.of(sendFilter), Optional.of(fundingFilter))).thenReturn(serviceSuccess(applicationIds));
+        when(applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(competitionId, Optional.of(filter), Optional.of(sendFilter), Optional.of(fundingFilter), Optional.of(eoiFilter))).thenReturn(serviceSuccess(applicationIds));
 
         mockMvc.perform(
                 get(baseUrl + "/find-by-competition/{competitionId}/with-funding-decision", competitionId)

@@ -170,7 +170,8 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
     public RestResult<List<Long>> getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(Long competitionId,
                                                                                                   Optional<String> filter,
                                                                                                   Optional<Boolean> sendFilter,
-                                                                                                  Optional<FundingDecision> fundingFilter) {
+                                                                                                  Optional<FundingDecision> fundingFilter,
+                                                                                                  Optional<Boolean> eoiFilter) {
         String baseUrl = format("%s/%s/%s/%s", applicationSummaryRestUrl, "find-by-competition", competitionId, "with-funding-decision");
         UriComponentsBuilder builder = UriComponentsBuilder
                 .fromPath(baseUrl)
@@ -179,6 +180,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
         filter.ifPresent(f -> builder.queryParam("filter", f));
         sendFilter.ifPresent(f -> builder.queryParam("sendFilter", f.toString()));
         fundingFilter.ifPresent(f -> builder.queryParam("fundingFilter", f.toString()));
+        eoiFilter.ifPresent(f -> builder.queryParam("eoiFilter", f.toString()));
         return getWithRestResult(builder.toUriString(), longsListType());
     }
 

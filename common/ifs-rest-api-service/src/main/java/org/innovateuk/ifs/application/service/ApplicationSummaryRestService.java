@@ -67,7 +67,8 @@ public interface ApplicationSummaryRestService {
     RestResult<List<Long>> getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(Long competitionId,
                                                                                            Optional<String> filter,
                                                                                            Optional<Boolean> sendFilter,
-                                                                                           Optional<FundingDecision> fundingFilter);
+                                                                                           Optional<FundingDecision> fundingFilter,
+                                                                                           Optional<Boolean> eoiFilter);
 
     RestResult<ApplicationSummaryPageResource> getIneligibleApplications(long competitionId,
                                                                          String sortField,

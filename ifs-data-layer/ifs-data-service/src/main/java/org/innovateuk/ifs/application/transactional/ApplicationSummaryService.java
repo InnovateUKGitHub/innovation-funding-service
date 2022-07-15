@@ -67,14 +67,16 @@ public interface ApplicationSummaryService {
                                                                                                             int pageSize,
                                                                                                             Optional<String> filter,
                                                                                                             Optional<Boolean> sendFilter,
-                                                                                                            Optional<FundingDecisionStatus> fundingFilter);
+                                                                                                            Optional<FundingDecisionStatus> fundingFilter,
+                                                                                                            Optional<Boolean> eoiFilter);
 
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @SecuredBySpring(value = "READ", description = "Internal users can see all Application Ids with funding decisions across the whole system", securedType = ApplicationSummaryResource.class)
     ServiceResult<List<Long>> getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(long competitionId,
                                                                                               Optional<String> filter,
                                                                                               Optional<Boolean> sendFilter,
-                                                                                              Optional<FundingDecisionStatus> fundingFilter);
+                                                                                              Optional<FundingDecisionStatus> fundingFilter,
+                                                                                              Optional<Boolean> eoiFilter);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'support', 'innovation_lead', 'stakeholder')")
     @SecuredBySpring(value = "READ", description = "Internal users can see all Ineligable Application Summaries across the whole system", securedType = ApplicationSummaryPageResource.class)

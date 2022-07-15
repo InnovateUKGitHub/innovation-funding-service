@@ -2,24 +2,12 @@ package org.innovateuk.ifs.management.decision.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
-import org.innovateuk.ifs.application.resource.FundingNotificationResource;
-import org.innovateuk.ifs.application.service.ApplicationFundingDecisionRestService;
-import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.commons.exception.IncorrectStateForPageException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.decision.form.FundingNotificationFilterForm;
 import org.innovateuk.ifs.management.decision.form.FundingNotificationSelectionCookie;
 import org.innovateuk.ifs.management.decision.form.FundingNotificationSelectionForm;
 import org.innovateuk.ifs.management.decision.form.NotificationEmailsForm;
-import org.innovateuk.ifs.management.decision.populator.ManageFundingApplicationsModelPopulator;
-import org.innovateuk.ifs.management.notification.populator.SendNotificationsModelPopulator;
-import org.innovateuk.ifs.management.notification.viewmodel.SendNotificationsViewModel;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,18 +22,15 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
-
 @Slf4j
 @Controller
-@RequestMapping("/competition/{competitionId}")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementFundingNotificationsController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin')")
-public class CompetitionManagementFundingNotificationsController extends CompetitionManagementNotificationsController {
+@RequestMapping("/competition/{competitionId}/eoi/notification")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementEOINotificationsController.class)
+@PreAuthorize("hasAnyAuthority('comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+public class CompetitionManagementEOINotificationsController extends CompetitionManagementNotificationsController {
 
     protected String getCookieName() {
-        return "applicationSelectionForm";
+        return "eoiSelectionForm";
     }
 
     protected Class<FundingNotificationSelectionCookie> getFormType() {
@@ -53,7 +38,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
     }
 
     protected String getManageFundingApplicationsPage(long competitionId){
-        return "/competition/" + competitionId + "/manage-funding-applications";
+        return "/competition/" + competitionId + "/eoi/notification";
     }
 
     protected String successfulEmailRedirect(long competitionId) {
@@ -62,14 +47,14 @@ public class CompetitionManagementFundingNotificationsController extends Competi
 
     protected String composeEmailRedirect(long competitionId, List<Long> ids) {
         String idParameters = ids.stream().map(Object::toString).collect(Collectors.joining(","));
-        return "redirect:/competition/" + competitionId + "/funding/send?application_ids=" + idParameters;
+        return "redirect:/competition/" + competitionId + "/eoi/notification/send?application_ids=" + idParameters;
     }
 
     protected Supplier<String> queryFailureView(long competitionId) {
-        return () -> "redirect:/competition/" + competitionId + "/funding";
+        return () -> "redirect:/competition/" + competitionId + "/applications/eoi";
     }
 
-    @GetMapping("/funding/send")
+    @GetMapping("/send")
     public String sendNotifications(Model model,
                                @PathVariable("competitionId") Long competitionId,
                                @RequestParam("application_ids") List<Long> applicationIds) {
@@ -78,7 +63,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                 applicationIds);
     }
 
-    @PostMapping("/funding/send")
+    @PostMapping("/send")
     public String sendNotificationsSubmit(Model model,
                                     @PathVariable("competitionId") long competitionId,
                                     @ModelAttribute("form") @Valid NotificationEmailsForm form,
@@ -91,7 +76,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                 validationHandler);
     }
 
-    @GetMapping("/manage-funding-applications")
+    @GetMapping("")
     public String applications(Model model,
                                @RequestParam MultiValueMap<String, String> params,
                                @PathVariable("competitionId") Long competitionId,
@@ -102,6 +87,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                                ValidationHandler validationHandler,
                                HttpServletRequest request,
                                HttpServletResponse response) {
+        filterForm.setEoi(true);
         return super.applications(model,
                 params,
                 competitionId,
@@ -114,7 +100,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                 response);
     }
 
-    @PostMapping("/manage-funding-applications")
+    @PostMapping("")
     public String selectApplications(Model model,
                                      @PathVariable("competitionId") Long competitionId,
                                      @ModelAttribute @Valid FundingNotificationFilterForm query,
@@ -135,7 +121,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                 response);
     }
 
-    @PostMapping(value = "/manage-funding-applications", params = {"selectionId"})
+    @PostMapping(value = "", params = {"selectionId"})
     public @ResponseBody JsonNode selectApplicationForEmailList(
             @PathVariable("competitionId") long competitionId,
             @RequestParam("selectionId") long applicationId,
@@ -150,7 +136,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                 response);
     }
 
-    @PostMapping(value = "/manage-funding-applications", params = {"addAll"})
+    @PostMapping(value = "", params = {"addAll"})
     public @ResponseBody JsonNode addAllApplicationsToEmailList(Model model,
                                            @PathVariable("competitionId") long competitionId,
                                            @RequestParam("addAll") boolean addAll,
