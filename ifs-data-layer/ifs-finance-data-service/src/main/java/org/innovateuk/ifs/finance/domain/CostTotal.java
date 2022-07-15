@@ -5,6 +5,7 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Entity
+@Table(name = "cost_total", schema = "ifs_finance")
 public class CostTotal {
 
     @Id
