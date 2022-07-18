@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.builder.FundingNotificationResourceBuilder
 import org.innovateuk.ifs.util.MapFunctions;
 
 import static org.innovateuk.ifs.application.builder.FundingNotificationResourceBuilder.newFundingNotificationResource;
-import static org.innovateuk.ifs.application.resource.funding.*;
+import static org.innovateuk.ifs.application.resource.Decision.*;
 
 public class FundingNotificationResourceDocs {
 
