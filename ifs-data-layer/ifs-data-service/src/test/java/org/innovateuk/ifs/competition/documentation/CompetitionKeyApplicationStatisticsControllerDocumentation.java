@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competition.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.controller.CompetitionKeyApplicationStatisticsController;
 import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyApplicationStatisticsResource;
+import org.innovateuk.ifs.competition.resource.CompetitionEoiKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionKeyApplicationStatisticsService;
@@ -15,6 +16,7 @@ import org.mockito.Mock;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.CompetitionClosedKeyApplicationStatisticsResourceDocs.competitionClosedKeyApplicationStatisticsResourceBuilder;
+import static org.innovateuk.ifs.documentation.CompetitionEoiKeyApplicationStatisticsResourceDocs.competitionEoiKeyApplicationStatisticsResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionFundedKeyApplicationStatisticsResourceDocs.competitionFundedKeyApplicationStatisticsResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionOpenKeyApplicationStatisticsResourceDocs.competitionOpenKeyApplicationStatisticsResourceBuilder;
 import static org.innovateuk.ifs.documentation.InterviewAssignmentKeyStatisticsResourceDocs.interviewAssignmentKeyStatisticsResourceBuilder;
@@ -88,6 +90,21 @@ public class CompetitionKeyApplicationStatisticsControllerDocumentation extends
 
         verify(competitionKeyApplicationStatisticsServiceMock, only()).getFundedKeyStatisticsByCompetition
                 (competitionId);
+    }
+
+    @Test
+    public void getEoiKeyStatistics() throws Exception {
+        long competitionId = 1L;
+        CompetitionEoiKeyApplicationStatisticsResource keyStatisticsResource =
+                competitionEoiKeyApplicationStatisticsResourceBuilder.build();
+
+        when(competitionKeyApplicationStatisticsServiceMock.getEoiKeyStatisticsByCompetition(competitionId))
+                .thenReturn(serviceSuccess(keyStatisticsResource));
+        mockMvc.perform(get("/competition-application-statistics/{id}/eoi", competitionId)
+                        .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk());
+
+        verify(competitionKeyApplicationStatisticsServiceMock, only()).getEoiKeyStatisticsByCompetition(competitionId);
     }
 
     @Test

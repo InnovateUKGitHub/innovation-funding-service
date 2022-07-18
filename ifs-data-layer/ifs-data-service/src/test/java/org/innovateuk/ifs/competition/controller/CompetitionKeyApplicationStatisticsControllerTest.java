@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyApplicationStatisticsResource;
+import org.innovateuk.ifs.competition.resource.CompetitionEoiKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionKeyApplicationStatisticsService;
@@ -17,6 +18,7 @@ import org.mockito.Mock;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionClosedKeyApplicationStatisticsResourceBuilder.newCompetitionClosedKeyApplicationStatisticsResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionEoiKeyApplicationStatisticsResourceBuilder.newCompetitionEoiKeyApplicationStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionFundedKeyApplicationStatisticsResourceBuilder.newCompetitionFundedKeyApplicationStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionOpenKeyApplicationStatisticsResourceBuilder.newCompetitionOpenKeyApplicationStatisticsResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatisticsResourceBuilder.newInterviewAssignmentKeyStatisticsResource;
@@ -86,6 +88,20 @@ public class CompetitionKeyApplicationStatisticsControllerTest extends
                 .thenReturn(serviceSuccess(keyStatisticsResource));
 
         mockMvc.perform(get("/competition-application-statistics/{id}/funded", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(keyStatisticsResource)));
+    }
+
+    @Test
+    public void getEoiKeyStatistics() throws Exception {
+        final long competitionId = 1L;
+
+        CompetitionEoiKeyApplicationStatisticsResource keyStatisticsResource =
+                newCompetitionEoiKeyApplicationStatisticsResource().build();
+        when(competitionKeyApplicationStatisticsServiceMock.getEoiKeyStatisticsByCompetition(competitionId))
+                .thenReturn(serviceSuccess(keyStatisticsResource));
+
+        mockMvc.perform(get("/competition-application-statistics/{id}/eoi", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(keyStatisticsResource)));
     }

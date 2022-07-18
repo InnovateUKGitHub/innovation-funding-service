@@ -11,6 +11,7 @@ import org.innovateuk.ifs.competition.domain.CompetitionAssessmentConfig;
 import org.innovateuk.ifs.competition.repository.CompetitionAssessmentConfigRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyApplicationStatisticsResource;
+import org.innovateuk.ifs.competition.resource.CompetitionEoiKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
@@ -149,5 +150,16 @@ public class CompetitionKeyApplicationStatisticsServiceImplTest extends
         assertEquals(1, response.getApplicationsOnHold());
         assertEquals(applicationsNotifiedOfDecision, response.getApplicationsNotifiedOfDecision());
         assertEquals(applicationsAwaitingDecision, response.getApplicationsAwaitingDecision());
+    }
+
+    @Test
+    public void getEoiKeyStatisticsByCompetition() {
+        long competitionId = 1L;
+
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationExpressionOfInterestConfigEnabledForExpressionOfInterestTrueAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATES)).thenReturn(3);
+
+        CompetitionEoiKeyApplicationStatisticsResource response = service.getEoiKeyStatisticsByCompetition(competitionId).getSuccess();
+
+        assertEquals(3, response.getApplicationsSubmitted());
     }
 }

@@ -121,6 +121,50 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     }
 
     @Test
+    public void findSubmittedEoiApplicationsByCompetitionWithoutSortField() {
+        ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
+        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/find-by-competition/123/submitted/eoi?page=6&size=20", ApplicationSummaryPageResource.class, responseBody);
+
+        RestResult<ApplicationSummaryPageResource> result = service.getSubmittedEoiApplications(123L, null, 6, 20, empty(), empty(), empty());
+
+        assertTrue(result.isSuccess());
+        assertEquals(responseBody, result.getSuccess());
+    }
+
+    @Test
+    public void findSubmittedEoiApplicationsByCompetitionWithSortField() {
+        ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
+        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/find-by-competition/123/submitted/eoi?page=6&size=20&sort=id", ApplicationSummaryPageResource.class, responseBody);
+
+        RestResult<ApplicationSummaryPageResource> result = service.getSubmittedEoiApplications(123L, "id", 6, 20, empty(), empty(), empty());
+
+        assertTrue(result.isSuccess());
+        assertEquals(responseBody, result.getSuccess());
+    }
+
+    @Test
+    public void findSubmittedEoiApplicationsByCompetitionWithFilter() {
+        ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
+        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/find-by-competition/123/submitted/eoi?filter=10&fundingFilter=FUNDED&sendFilter=true&page=6&size=20", ApplicationSummaryPageResource.class, responseBody);
+
+        RestResult<ApplicationSummaryPageResource> result = service.getSubmittedEoiApplications(123L, null, 6, 20, of("10"), of(FUNDED), of(true));
+
+        assertTrue(result.isSuccess());
+        assertEquals(responseBody, result.getSuccess());
+    }
+
+    @Test
+    public void findSubmittedEoiApplicationsByCompetitionWithFilterAndSortField() {
+        ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
+        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/find-by-competition/123/submitted/eoi?filter=10&sendFilter=false&page=6&size=20&sort=id", ApplicationSummaryPageResource.class, responseBody);
+
+        RestResult<ApplicationSummaryPageResource> result = service.getSubmittedEoiApplications(123L, "id", 6, 20, of("10"), empty(), of(false));
+
+        assertTrue(result.isSuccess());
+        assertEquals(responseBody, result.getSuccess());
+    }
+
+    @Test
     public void findIneligibleApplicationsByCompetitionWithoutSortField() {
     	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/find-by-competition/123/ineligible?page=6&size=20", ApplicationSummaryPageResource.class, responseBody);
