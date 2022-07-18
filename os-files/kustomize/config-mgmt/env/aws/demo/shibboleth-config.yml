@@ -5,8 +5,8 @@ metadata:
 data:
   SHIBBOLETH_LDAP_BASE_DN: "dc=int,dc=g2g3digital,dc=net"
   SHIBBOLETH_LDAP_USER: "cn=admin,dc=int,dc=g2g3digital,dc=net"
-  SP_DOMAIN: "ifs-demo.apps.ocp4.innovateuk.ukri.org"
-  IDP_DOMAIN: "auth-ifs-demo.apps.ocp4.innovateuk.ukri.org"
+  SP_DOMAIN: "ifs-demo.apps.org-env-0.org.innovateuk.ukri.org"
+  IDP_DOMAIN: "auth-ifs-demo.apps.org-env-0.org.innovateuk.ukri.org"
   MPM_STARTSERVERS: "4"
   MPM_MINSPARETHREADS: "75"
   MPM_MAXSPARETHREADS: "250"
