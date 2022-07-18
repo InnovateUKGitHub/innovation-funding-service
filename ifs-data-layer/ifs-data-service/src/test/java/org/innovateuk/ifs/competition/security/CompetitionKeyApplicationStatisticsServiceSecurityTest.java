@@ -32,4 +32,10 @@ public class CompetitionKeyApplicationStatisticsServiceSecurityTest extends
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getFundedKeyStatisticsByCompetition(1L),
                 COMP_ADMIN, PROJECT_FINANCE, SUPPORT, INNOVATION_LEAD, STAKEHOLDER, AUDITOR);
     }
+
+    @Test
+    public void getEoiKeyStatisticsByCompetition() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getEoiKeyStatisticsByCompetition(1L),
+                COMP_ADMIN, PROJECT_FINANCE, SUPPORT, INNOVATION_LEAD, STAKEHOLDER, AUDITOR);
+    }
 }

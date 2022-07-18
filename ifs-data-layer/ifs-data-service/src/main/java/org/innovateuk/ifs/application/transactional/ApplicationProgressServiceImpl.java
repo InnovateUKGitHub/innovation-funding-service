@@ -24,6 +24,7 @@ import static org.innovateuk.ifs.util.MathFunctions.percentage;
  */
 @Service
 public class ApplicationProgressServiceImpl implements ApplicationProgressService {
+
     @Autowired
     private ApplicationRepository applicationRepository;
 
@@ -79,7 +80,6 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
 
         long competitionId = application.getCompetition().getId();
         long organisations = organisationRepository.countDistinctByProcessRolesApplicationId(application.getId());
-
 
         if (application.isEnabledForExpressionOfInterest()) {
             questionsWithMultipleStatuses = questionRepository.countPreRegQuestionsWithMultipleStatuses(competitionId);

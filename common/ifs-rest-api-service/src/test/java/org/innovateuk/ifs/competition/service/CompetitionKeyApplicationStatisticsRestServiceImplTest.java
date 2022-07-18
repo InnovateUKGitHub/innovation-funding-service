@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyApplicationStatisticsResource;
+import org.innovateuk.ifs.competition.resource.CompetitionEoiKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
@@ -13,6 +14,7 @@ import org.junit.Test;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.competition.builder.CompetitionClosedKeyApplicationStatisticsResourceBuilder.newCompetitionClosedKeyApplicationStatisticsResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionEoiKeyApplicationStatisticsResourceBuilder.newCompetitionEoiKeyApplicationStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionFundedKeyApplicationStatisticsResourceBuilder.newCompetitionFundedKeyApplicationStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionOpenKeyApplicationStatisticsResourceBuilder.newCompetitionOpenKeyApplicationStatisticsResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatisticsResourceBuilder.newInterviewAssignmentKeyStatisticsResource;
@@ -67,6 +69,18 @@ public class CompetitionKeyApplicationStatisticsRestServiceImplTest extends
                 competitionId)
                 , CompetitionFundedKeyApplicationStatisticsResource.class, expected);
         assertSame(expected, service.getFundedKeyStatisticsByCompetition(competitionId).getSuccess());
+    }
+
+    @Test
+    public void getEoiKeyStatisticsByCompetition() {
+        CompetitionEoiKeyApplicationStatisticsResource expected =
+                newCompetitionEoiKeyApplicationStatisticsResource().build();
+        long competitionId = 1L;
+
+        setupGetWithRestResultExpectations(format("%s/%s/eoi", COMPETITION_APPLICATION_KEY_STATISTICS_REST_URL,
+                        competitionId)
+                , CompetitionEoiKeyApplicationStatisticsResource.class, expected);
+        assertSame(expected, service.getEoiKeyStatisticsByCompetition(competitionId).getSuccess());
     }
 
     @Test
