@@ -67,7 +67,7 @@ Resource          ../../resources/common/Applicant_Commons.robot
 ${invitedFinanceContact}  ${test_mailbox_one}+invitedfinancecontact@gmail.com
 ${user_email}  phillip.ramos@katz.example.com
 ${pmEmailId}  ${user_ids['${user_email}']}
-${projectSetupCompMgtDetailsPage}  ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/1/details
+${projectSetupCompMgtDetailsPage}  ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/${PS_PD_Project_Id}/details
 
 # This suite uses the Magic material project
 
@@ -364,7 +364,7 @@ the user logs in and navigates to project details
 
 the user checks for target start date validation
     the user clicks the button/link                 link = Target start date
-    the user should see the element                 jQuery = h2:contains("Project duration") ~ p:contains("3 months")
+    the user should see the element                 jQuery = h2:contains("Project duration") ~ p:contains("36 months")
     the user enters text to a text field            id = projectStartDate-date_year    2019
     the user clicks the button/link                 jQuery = .govuk-button:contains("Save")
     the user should see a field and summary error   Please enter a future date.

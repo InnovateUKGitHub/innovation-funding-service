@@ -6,9 +6,12 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionAssessmentConfig;
 import org.innovateuk.ifs.competition.repository.CompetitionAssessmentConfigRepository;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyApplicationStatisticsResource;
+import org.innovateuk.ifs.competition.resource.CompetitionEoiKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
@@ -24,6 +27,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationStatisticsBuilde
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.*;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.REJECTED;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionAssessmentConfigBuilder.newCompetitionAssessmentConfig;
 import static org.innovateuk.ifs.competition.builder.CompetitionClosedKeyApplicationStatisticsResourceBuilder.newCompetitionClosedKeyApplicationStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionOpenKeyApplicationStatisticsResourceBuilder.newCompetitionOpenKeyApplicationStatisticsResource;
@@ -35,6 +39,9 @@ public class CompetitionKeyApplicationStatisticsServiceImplTest extends
 
     @Mock
     private CompetitionAssessmentConfigRepository competitionAssessmentConfigRepository;
+
+    @Mock
+    private CompetitionRepository competitionRepositoryMock;
 
     @Mock
     private ApplicationRepository applicationRepositoryMock;
@@ -58,10 +65,13 @@ public class CompetitionKeyApplicationStatisticsServiceImplTest extends
                         .withApplicationsSubmitted(4)
                         .build();
 
+        Competition competition = newCompetition().withId(competitionId).build();
+
         CompetitionAssessmentConfig config = newCompetitionAssessmentConfig().withAssessorCount(2).build();
         BigDecimal limit = new BigDecimal(50L);
 
         when(competitionAssessmentConfigRepository.findOneByCompetitionId(competitionId)).thenReturn(Optional.of(config));
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(competition));
         when(applicationRepositoryMock
                 .countByCompetitionIdAndApplicationProcessActivityStateInAndCompletionLessThanEqual(competitionId,
                         CREATED_AND_OPEN_STATUSES, limit)).thenReturn(keyStatisticsResource.getApplicationsStarted());
@@ -117,7 +127,9 @@ public class CompetitionKeyApplicationStatisticsServiceImplTest extends
         long competitionId = 1L;
         int applicationsNotifiedOfDecision = 1;
         int applicationsAwaitingDecision = 2;
+        Competition competition = newCompetition().withId(competitionId).build();
 
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(competition));
 
         when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATES)).thenReturn(3);
         when(applicationRepositoryMock.countByCompetitionIdAndFundingDecision(competitionId, FundingDecisionStatus.FUNDED)).thenReturn(1);
@@ -138,5 +150,16 @@ public class CompetitionKeyApplicationStatisticsServiceImplTest extends
         assertEquals(1, response.getApplicationsOnHold());
         assertEquals(applicationsNotifiedOfDecision, response.getApplicationsNotifiedOfDecision());
         assertEquals(applicationsAwaitingDecision, response.getApplicationsAwaitingDecision());
+    }
+
+    @Test
+    public void getEoiKeyStatisticsByCompetition() {
+        long competitionId = 1L;
+
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationExpressionOfInterestConfigEnabledForExpressionOfInterestTrueAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATES)).thenReturn(3);
+
+        CompetitionEoiKeyApplicationStatisticsResource response = service.getEoiKeyStatisticsByCompetition(competitionId).getSuccess();
+
+        assertEquals(3, response.getApplicationsSubmitted());
     }
 }

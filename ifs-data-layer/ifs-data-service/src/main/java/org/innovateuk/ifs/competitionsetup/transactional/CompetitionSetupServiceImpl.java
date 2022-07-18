@@ -20,6 +20,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.controller.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.file.service.FileService;
 import org.innovateuk.ifs.grant.repository.GrantProcessConfigurationRepository;
+import org.innovateuk.ifs.horizon.transactional.HorizonWorkProgrammeService;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.setup.repository.SetupStatusRepository;
@@ -104,6 +105,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Autowired
     private MilestoneService milestoneService;
 
+    @Autowired
+    private HorizonWorkProgrammeService horizonWorkProgrammeService;
 
     @Value("${ifs.data.service.file.storage.competition.terms.max.filesize.bytes}")
     private Long maxFileSize;
@@ -361,6 +364,9 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     public ServiceResult<Void> markAsSetup(Long competitionId) {
         Competition competition = competitionRepository.findById(competitionId).get();
         competition.setSetupComplete(true);
+        if(competition.isHorizonEuropeGuarantee()) {
+            horizonWorkProgrammeService.initWorkProgrammesForCompetition(competitionId);
+        }
         return serviceSuccess();
     }
 
@@ -384,6 +390,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                     deleteCompetitionFinanceRowsTypesForCompetition(competition);
                     deleteGrantProcessConfiguration(competition);
                     deleteAssessmentPeriodsForCompetition(competition);
+                    deleteWorkProgrammesForCompetition(competition);
                     competitionRepository.delete(competition);
                     return serviceSuccess();
                 }));
@@ -445,6 +452,10 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private void deleteMilestonesForCompetition(Competition competition) {
         competition.getMilestones().clear();
         milestoneRepository.deleteByCompetitionId(competition.getId());
+    }
+
+    private void deleteWorkProgrammesForCompetition(Competition competition) {
+        horizonWorkProgrammeService.deleteWorkProgrammesForCompetition(competition.getId());
     }
 
     private void deleteAssessmentPeriodsForCompetition(Competition competition) {

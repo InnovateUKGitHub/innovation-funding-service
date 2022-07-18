@@ -1,14 +1,16 @@
 package org.innovateuk.ifs.horizon.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class ApplicationHorizonWorkProgrammeResource {
 
     private Long applicationId;
-    private HorizonWorkProgramme workProgramme;
+    private HorizonWorkProgrammeResource workProgramme;
 
     public ApplicationHorizonWorkProgrammeResource() {
     }
 
-    public ApplicationHorizonWorkProgrammeResource(Long applicationId, HorizonWorkProgramme workProgramme) {
+    public ApplicationHorizonWorkProgrammeResource(Long applicationId, HorizonWorkProgrammeResource workProgramme) {
         this.applicationId = applicationId;
         this.workProgramme = workProgramme;
     }
@@ -21,11 +23,16 @@ public class ApplicationHorizonWorkProgrammeResource {
         this.applicationId = applicationId;
     }
 
-    public HorizonWorkProgramme getWorkProgramme() {
+    public HorizonWorkProgrammeResource getWorkProgramme() {
         return workProgramme;
     }
 
-    public void setWorkProgramme(HorizonWorkProgramme workProgramme) {
+    public void setWorkProgramme(HorizonWorkProgrammeResource workProgramme) {
         this.workProgramme = workProgramme;
+    }
+
+    @JsonIgnore
+    public boolean isCallerId() {
+        return getWorkProgramme() != null && getWorkProgramme().isCallerId();
     }
 }

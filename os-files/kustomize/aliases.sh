@@ -143,7 +143,6 @@ k8s_clean_svc() {
   kubectl delete deployment project-setup-svc
   kubectl delete deployment survey-data-svc
   kubectl delete deployment survey-svc
-  kubectl delete deployment clam-av
 }
 
 k8s_clean_all() {
@@ -167,7 +166,6 @@ k8s_clean_all() {
   kubectl delete svc sil-stub
   kubectl delete svc survey-data-svc
   kubectl delete svc survey-svc
-  kubectl delete svc clam-av
   kubectl delete configmap cache-config
   kubectl delete configmap data-service-config
   kubectl delete configmap feature-toggle-config
