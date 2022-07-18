@@ -160,6 +160,6 @@ public class CompetitionKeyApplicationStatisticsServiceImplTest extends
 
         CompetitionEoiKeyApplicationStatisticsResource response = service.getEoiKeyStatisticsByCompetition(competitionId).getSuccess();
 
-        assertEquals(3, response.getApplicationsSubmitted());
+        assertEquals(3, response.getEOISubmitted());
     }
 }
