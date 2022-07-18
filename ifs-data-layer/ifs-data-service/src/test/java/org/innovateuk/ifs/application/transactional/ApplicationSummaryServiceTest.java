@@ -485,7 +485,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
         when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
 
-        when(applicationRepositoryMock.findEoiByApplicationStateAndFundingDecision(
+        when(applicationRepositoryMock.findEoiByApplicationStateAndDecision(
                 eq(COMP_ID),
                 eq(asLinkedSet(APPROVED, REJECTED, SUBMITTED)),
                 eq(""),
@@ -638,12 +638,12 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void getAllSubmittedEoiApplicationIdsByCompetitionId() {
         List<Application> applications = newApplication()
-                .withFundingDecision(UNFUNDED)
+                .withDecision(UNFUNDED)
                 .build(2);
 
         List<Long> ids = applications.stream().map(Application::getId).collect(Collectors.toList());
 
-        when(applicationRepositoryMock.findEoiApplicationIdsByApplicationStateAndFundingDecision(
+        when(applicationRepositoryMock.findEoiApplicationIdsByApplicationStateAndDecision(
                 eq(COMP_ID), eq(SUBMITTED_STATES),  eq("filter"), eq(UNFUNDED), eq(false))).thenReturn(ids);
 
         ServiceResult<List<Long>> result = applicationSummaryService.getAllSubmittedEoiApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(UNFUNDED), of(false));

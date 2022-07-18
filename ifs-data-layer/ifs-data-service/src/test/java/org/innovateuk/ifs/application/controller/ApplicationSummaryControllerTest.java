@@ -182,7 +182,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
         long competitionId = 3L;
         int page = 6;
         String strFilter = "filter";
-        FundingDecisionStatus fundingFilter = FUNDED;
+        DecisionStatus fundingFilter = FUNDED;
         Boolean sendFilter = true;
 
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
@@ -345,7 +345,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
     public void searchAllSubmittedEoiApplicationIdsByCompetitionId() throws Exception {
         long competitionId = 3L;
         String strFilter = "filter";
-        FundingDecisionStatus fundingFilter = FUNDED;
+        DecisionStatus fundingFilter = FUNDED;
         Boolean sendFilter = true;
 
         List<Long> applicationIds = asList(1L, 2L);

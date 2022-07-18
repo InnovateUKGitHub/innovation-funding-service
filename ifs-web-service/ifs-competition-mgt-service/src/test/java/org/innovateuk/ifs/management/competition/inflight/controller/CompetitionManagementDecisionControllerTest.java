@@ -12,7 +12,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.competition.inflight.populator.CompetitionInFlightStatsModelPopulator;
 import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightStatsViewModel;
-import org.innovateuk.ifs.management.decision.controller.CompetitionManagementDecisionController;
 import org.innovateuk.ifs.management.decision.controller.CompetitionManagementFundingDecisionController;
 import org.innovateuk.ifs.management.decision.form.DecisionFilterForm;
 import org.innovateuk.ifs.management.decision.form.DecisionSelectionCookie;
