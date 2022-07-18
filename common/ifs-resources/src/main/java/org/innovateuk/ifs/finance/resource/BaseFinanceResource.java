@@ -30,6 +30,7 @@ public abstract class BaseFinanceResource {
     private Boolean fecModelEnabled;
     private Long fecFileEntry;
     private LocalDate fecCertExpiryDate;
+    private boolean isFixedFundingLevel;
 
     public BaseFinanceResource(BaseFinanceResource originalFinance) {
         if (originalFinance != null) {
@@ -284,5 +285,13 @@ public abstract class BaseFinanceResource {
                 .filter(Vat::getRegistered)
                 .flatMap(vat -> ofNullable(vat.getRate()))
                 .orElse(BigDecimal.ZERO);
+    }
+
+    public boolean isFixedFundingLevel() {
+        return isFixedFundingLevel;
+    }
+
+    public void setFixedFundingLevel(boolean fixedFundingLevel) {
+        isFixedFundingLevel = fixedFundingLevel;
     }
 }

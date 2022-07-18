@@ -142,6 +142,65 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
+    public void searchEoiSubmittedByCompetitionId() throws Exception {
+        long competitionId = 3L;
+        int page = 6;
+
+        ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+
+        when(applicationSummaryService.getSubmittedEoiApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, empty(), empty(), empty())).thenReturn(serviceSuccess(resource));
+
+        mockMvc.perform(get("/application-summary/find-by-competition/{compId}/submitted/eoi",competitionId)
+                        .param("page",Integer.toString(page)))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(resource)));
+
+        verify(applicationSummaryService).getSubmittedEoiApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, empty(), empty(), empty());
+    }
+
+    @Test
+    public void searchEoiSubmittedByCompetitionIdWithSortField() throws Exception {
+        long competitionId = 3L;
+        int page = 6;
+        String sort = "id";
+
+        ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+
+        when(applicationSummaryService.getSubmittedEoiApplicationSummariesByCompetitionId(competitionId, sort, page, PAGE_SIZE, empty(), empty(), empty())).thenReturn(serviceSuccess(resource));
+
+        mockMvc.perform(get("/application-summary/find-by-competition/{compId}/submitted/eoi",competitionId)
+                        .param("page",Integer.toString(page))
+                        .param("sort", sort))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(resource)));
+
+        verify(applicationSummaryService).getSubmittedEoiApplicationSummariesByCompetitionId(competitionId, sort, page, PAGE_SIZE, empty(), empty(), empty());
+    }
+
+    @Test
+    public void searchEoiSubmittedByCompetitionIdWithFilter() throws Exception {
+        long competitionId = 3L;
+        int page = 6;
+        String strFilter = "filter";
+        FundingDecisionStatus fundingFilter = FUNDED;
+        Boolean sendFilter = true;
+
+        ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+
+        when(applicationSummaryService.getSubmittedEoiApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, of(strFilter), of(fundingFilter), of(sendFilter))).thenReturn(serviceSuccess(resource));
+
+        mockMvc.perform(get("/application-summary/find-by-competition/{compId}/submitted/eoi",competitionId)
+                        .param("page",Integer.toString(page))
+                        .param("filter", strFilter)
+                        .param("fundingFilter", fundingFilter.toString())
+                        .param("sendFilter", sendFilter.toString()))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(resource)));
+
+        verify(applicationSummaryService).getSubmittedEoiApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, of(strFilter), of(fundingFilter), of(sendFilter));
+    }
+
+    @Test
     public void searchNotSubmittedByCompetitionId() throws Exception {
         long competitionId = 3L;
         int page = 6;
@@ -280,6 +339,28 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(content().json(objectMapper.writeValueAsString(applicationIds)));
 
         verify(applicationSummaryService).getAllSubmittedApplicationIdsByCompetitionId(competitionId, of(strFilter), of(fundingFilter));
+    }
+
+    @Test
+    public void searchAllSubmittedEoiApplicationIdsByCompetitionId() throws Exception {
+        long competitionId = 3L;
+        String strFilter = "filter";
+        FundingDecisionStatus fundingFilter = FUNDED;
+        Boolean sendFilter = true;
+
+        List<Long> applicationIds = asList(1L, 2L);
+
+        when(applicationSummaryService.getAllSubmittedEoiApplicationIdsByCompetitionId(competitionId, of(strFilter), of(fundingFilter), of(sendFilter))).thenReturn(serviceSuccess(applicationIds));
+
+        mockMvc.perform(get("/application-summary/find-by-competition/{compId}/all-submitted/eoi",competitionId)
+                        .param("all", "")
+                        .param("filter", strFilter)
+                        .param("fundingFilter", fundingFilter.toString())
+                        .param("sendFilter", sendFilter.toString()))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(applicationIds)));
+
+        verify(applicationSummaryService).getAllSubmittedEoiApplicationIdsByCompetitionId(competitionId, of(strFilter), of(fundingFilter), of(sendFilter));
     }
 
     @Test

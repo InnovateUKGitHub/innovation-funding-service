@@ -50,7 +50,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
 import static org.innovateuk.ifs.util.JsonUtil.getSerializedObject;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -103,6 +103,8 @@ public class CompetitionManagementDecisionControllerTest extends BaseControllerM
         validator.afterPropertiesSet();
         ReflectionTestUtils.setField(controller, "validator", validator);
 
+        when(competitionInFlightStatsModelPopulator.populateEoiStatsViewModel(any(CompetitionResource.class)))
+                .thenReturn(new CompetitionInFlightStatsViewModel());
     }
 
     private DecisionSelectionCookie createCookieWithFilterAndSelectionParameters() {
@@ -145,6 +147,7 @@ public class CompetitionManagementDecisionControllerTest extends BaseControllerM
 
         assertEquals(viewModel.getCompetitionSummary(), competitionSummaryResource);
         assertEquals(viewModel.getResults(), summary);
+        assertFalse(viewModel.isExpressionOfInterestEnabled());
 
         verify(applicationSummaryRestService).getSubmittedApplications(COMPETITION_ID, "id", 0, 20, empty(), empty());
         verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
@@ -387,7 +390,6 @@ public class CompetitionManagementDecisionControllerTest extends BaseControllerM
         verify(applicationDecisionService, times(0)).saveApplicationDecisionData(any(), any(), any());
     }
 
-
     @Test
     public void applications_filteredParameterNameShouldNotBeReflectedInPaginationViewModel() throws Exception {
         String decisionString = "abc";
@@ -587,7 +589,6 @@ public class CompetitionManagementDecisionControllerTest extends BaseControllerM
         verify(applicationSummaryRestService).getAssessedApplications(COMPETITION_ID, "id", 0, 20, empty(), empty());
         verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
     }
-
 
     private Cookie createFormCookie(DecisionSelectionCookie form) throws Exception {
         String cookieContent = JsonUtil.getSerializedObject(form);

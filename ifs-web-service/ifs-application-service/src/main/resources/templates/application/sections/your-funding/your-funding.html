@@ -84,14 +84,15 @@
                 <input th:if="${model.ktpFundingType}" type="hidden" name="previous" value="previous" />
 
                 <th:block th:insert="application/your-funding-fragments :: form(
-                                form=${form},
+                               form=${form},
                                readOnly=${model.readOnly},
                                guidanceFragment=${model.business ? 'applicant-business' : 'applicant-non-business'},
                                maximumFundingLevel=${model.maximumFundingLevel},
                                hideAreYouRequestingFunding=${model.hideAreYouRequestingFunding()},
                                ktpFundingType=${model.ktpFundingType},
                                lead=${model.leadApplicant},
-                               isThirdPartyOfgem =${model.isThirdPartyOfgem}
+                               isThirdPartyOfgem =${model.isThirdPartyOfgem},
+                               isFixedFundingLevel = ${model.isFixedFundingLevel}
                 )"/>
 
                 <div class="form-footer" th:if="${model.open}">

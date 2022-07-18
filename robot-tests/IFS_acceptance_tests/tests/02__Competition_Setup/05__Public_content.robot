@@ -69,7 +69,7 @@ External users do not have access to the Public content sections
     Given log in as a different user                                     &{collaborator1_credentials}
     Then The user navigates to the page and gets a custom error message  ${public_content_overview}  ${403_error_message}
 
-Competition information and search: server side validation
+Competition information and search: server side validation for publish setting
     [Documentation]   IFS-11982
     Given log in as a different user                     &{Comp_admin1_credentials}
     When the internal user navigates to public content   ${public_content_competition_name}
@@ -77,7 +77,7 @@ Competition information and search: server side validation
     And the user clicks the button/link                  jQuery = .govuk-button:contains("Save and review")
     Then the user should see a summary error             Please select a publish setting.
 
-Competition information and search: server side validation
+Competition information and search: server side validation for all fields
     [Documentation]    INFUND-6915  IFS-179  IFS-11982
     When the user selects the radio button               publishSetting  public
     And the user clicks the button/link                  jQuery = .govuk-button:contains("Save and review")
@@ -412,26 +412,16 @@ Guest user can see the updated Summary information
     Then the user should see the element                   jQuery = .govuk-grid-column-one-third:contains("Description") ~ .govuk-grid-column-two-thirds:contains("This is a Summary description")
     And the user should see the element                    jQuery = .govuk-grid-column-one-third:contains("Project size") ~ .govuk-grid-column-two-thirds:contains("10 millions")
     And the user should see the element                    jQuery = .govuk-grid-column-one-third:contains("A nice new Heading") ~ .govuk-grid-column-two-thirds:contains("Ut enim ad minim veniam,")
-    Then guest user downloads the file                     ${server}/competition/${competitionId}/download/43  ${DOWNLOAD_FOLDER}/summary.pdf
-    [Teardown]  Remove the file from the operating system  summary.pdf
+    And guest user downloads a file sucessfully            summary  ${valid_pdf} (opens in a new window)
 
 Guest user can see the updated Eligibility information
     [Documentation]  INFUND-7487
     [Tags]
-    Given the user clicks the button/link  link = Eligibility
-    Then the user should see the element   jQuery = .govuk-grid-column-one-third:contains("Nationality Eligibility Heading") ~ .govuk-grid-column-two-thirds:contains("changing government policies")
-    Then the user should see the element   jQuery = .govuk-grid-column-one-third:contains("Minimum Eligibility Threshold") ~ .govuk-grid-column-two-thirds:contains("new changes we are introducing")
-    Then the user should see the element   jQuery = .govuk-grid-column-one-third:contains("Draft Care and Support - Eligibility Criteria") ~ .govuk-grid-column-two-thirds:contains("basic personal care activities")
-
-Guest user downloads Eligibility files
-    [Documentation]  INFUND-7487
-    [Tags]
-    When guest user downloads the file              ${server}/competition/${competitionId}/download/44  ${DOWNLOAD_FOLDER}/eli.pdf
-    Then Remove the file from the operating system  eli.pdf
-    When guest user downloads the file              ${server}/competition/${competitionId}/download/45  ${DOWNLOAD_FOLDER}/eligi.pdf
-    Then Remove the file from the operating system  eligi.pdf
-    When guest user downloads the file              ${server}/competition/${competitionId}/download/46  ${DOWNLOAD_FOLDER}/eligibility.pdf
-    Then Remove the file from the operating system  eligibility.pdf
+    Given the user clicks the button/link           link = Eligibility
+    Then the user should see the element            jQuery = .govuk-grid-column-one-third:contains("Nationality Eligibility Heading") ~ .govuk-grid-column-two-thirds:contains("changing government policies")
+    And the user should see the element             jQuery = .govuk-grid-column-one-third:contains("Minimum Eligibility Threshold") ~ .govuk-grid-column-two-thirds:contains("new changes we are introducing")
+    And the user should see the element             jQuery = .govuk-grid-column-one-third:contains("Draft Care and Support - Eligibility Criteria") ~ .govuk-grid-column-two-thirds:contains("basic personal care activities")
+    And guest user downloads a file sucessfully     eligibility  ${valid_pdf} (opens in a new window)
 
 The guest user can see updated scope information
     [Documentation]    INFUND-7488
@@ -439,8 +429,7 @@ The guest user can see updated scope information
     Given the user clicks the button/link                  link = Scope
     Then the user should see the element                   jQuery = .govuk-grid-column-one-third:contains("Heading 1") ~ .govuk-grid-column-two-thirds:contains("Content 1")
     And the user should see the element                    jQuery = .govuk-grid-column-one-third:contains("Heading 2") ~ .govuk-grid-column-two-thirds:contains("Content 2")
-    And guest user downloads the file                      ${server}/competition/${competitionId}/download/48    ${DOWNLOAD_FOLDER}/scope.pdf
-    [Teardown]  Remove the file from the operating system  scope.pdf
+    And guest user downloads a file sucessfully            scope  ${valid_pdf} (opens in a new window)
 
 The guest user can see updated date information
    [Documentation]    INFUND-7489
@@ -611,3 +600,10 @@ the user able to see edit view for
     the user clicks the button/link    jQuery = button:contains("Publish and review")
     the user should see the element    jQuery = h1:contains("${sectionTitle}")
     the user clicks the button/link    link = Return to public content
+
+Guest user downloads a file sucessfully
+    [Arguments]  ${section}  ${fileName}
+    the user clicks the button/link         jQuery = section[id="${section}"] a:contains("${fileName}")
+    Select Window                           NEW
+    the user should not see internal server and forbidden errors
+    the user closes the last opened tab

@@ -134,6 +134,12 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                     q.getMarkAsCompletedEnabled() &&
                     q.getQuestionSetupType().hasFormInputResponses());
 
+            if (applicationData.getCompetition().isEnabledForPreRegistration()) {
+                questionsToAnswer = questionsToAnswer.stream()
+                        .filter(questionResource -> questionResource.isEnabledForPreRegistration())
+                        .collect(toList());
+            }
+
             List<QuestionResponseDataBuilder> responseBuilders = simpleMap(questionsToAnswer, question -> {
 
                 String answerValue = "This is the applicant response for " + question.getName().toLowerCase() + ".";
@@ -431,8 +437,9 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
         CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competition);
 
-        if (!competition.getCompetition().isKtp() && asList(CompetitionStatus.PROJECT_SETUP, CompetitionStatus.ASSESSOR_FEEDBACK).contains(competitionLine.getCompetitionStatus())) {
-
+        if (!competition.getCompetition().isKtp()
+                && (asList(CompetitionStatus.PROJECT_SETUP, CompetitionStatus.ASSESSOR_FEEDBACK).contains(competitionLine.getCompetitionStatus())
+                        || (competition.getCompetition().isAlwaysOpen() && CompetitionStatus.OPEN == competitionLine.getCompetitionStatus()))) {
             basicCompetitionInformation.
                     moveCompetitionIntoFundersPanelStatus().
                     sendDecisions(createDecisionsFromCsv(competitionLine.getName(), applicationLines)).
