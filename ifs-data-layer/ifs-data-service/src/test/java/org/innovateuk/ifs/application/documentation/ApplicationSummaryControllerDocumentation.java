@@ -58,6 +58,7 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
                         .param("filter", filter)
                         .param("sendFilter", sendFilter.toString())
                         .param("fundingFilter", fundingFilter.toString())
+                        .param("eoiFilter", Boolean.toString(eoiFilter))
                         .contentType(APPLICATION_JSON)
                         .header("IFS_AUTH_TOKEN", "123abc"));
     }
@@ -79,6 +80,7 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
                         .param("filter", filter)
                         .param("sendFilter", sendFilter.toString())
                         .param("fundingFilter", fundingFilter.toString())
+                        .param("eoiFilter", Boolean.toString(eoiFilter))
                         .contentType(APPLICATION_JSON)
                         .header("IFS_AUTH_TOKEN", "123abc"));
     }

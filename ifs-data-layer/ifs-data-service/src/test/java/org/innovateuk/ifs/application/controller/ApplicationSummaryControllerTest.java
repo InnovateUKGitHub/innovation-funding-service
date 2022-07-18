@@ -230,7 +230,8 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
                 .param("page",Integer.toString(page))
                 .param("filter", strFilter)
                 .param("sendFilter", Boolean.toString(sendFilter))
-                .param("fundingFilter", fundingFilter.toString()))
+                .param("fundingFilter", fundingFilter.toString())
+                .param("eoiFilter", Boolean.toString(eoiFilter)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(resource)));
 
@@ -253,7 +254,8 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
                 .param("all", "")
                 .param("filter", strFilter)
                 .param("sendFilter", Boolean.toString(sendFilter))
-                .param("fundingFilter", fundingFilter.toString()))
+                .param("fundingFilter", fundingFilter.toString())
+                .param("eoiFilter", Boolean.toString(eoiFilter)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(applicationIds)));
 
