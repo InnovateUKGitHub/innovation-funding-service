@@ -674,7 +674,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .with(id(null))
                 .withCompetition(competition)
                 .withActivityState(SUBMITTED)
-                .withFundingDecision(FUNDED, null, UNFUNDED)
+                .withDecision(FUNDED, null, UNFUNDED)
                 .build(3);
 
         applicationRepository.saveAll(applications);
@@ -688,7 +688,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                     applicationExpressionOfInterestConfigRepository.save(applicationExpressionOfInterestConfig);
                 });
 
-        List<Application> foundApplications = repository.findEoiByApplicationStateAndFundingDecision(competition.getId(), SUBMITTED_STATES, null, null, false);
+        List<Application> foundApplications = repository.findEoiByApplicationStateAndDecision(competition.getId(), SUBMITTED_STATES, null, null, false);
 
         assertEquals(3, foundApplications.size());
     }
@@ -702,7 +702,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .with(id(null))
                 .withCompetition(competition)
                 .withActivityState(SUBMITTED)
-                .withFundingDecision(UNDECIDED, null)
+                .withDecision(UNDECIDED, null)
                 .build(2);
 
         applicationRepository.saveAll(applications);
@@ -716,7 +716,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                     applicationExpressionOfInterestConfigRepository.save(applicationExpressionOfInterestConfig);
                 });
 
-        List<Application> foundApplications = repository.findEoiByApplicationStateAndFundingDecision(competition.getId(), SUBMITTED_STATES, null, UNDECIDED, false);
+        List<Application> foundApplications = repository.findEoiByApplicationStateAndDecision(competition.getId(), SUBMITTED_STATES, null, UNDECIDED, false);
 
         assertEquals(2, foundApplications.size());
     }
@@ -729,9 +729,9 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         List<Application> applications = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
-                .withFundingDecision(FUNDED, null)
+                .withDecision(FUNDED, null)
                 .withActivityState(SUBMITTED, APPROVED)
-                .withManageFundingEmailDate(ZonedDateTime.now())
+                .withManageDecisionEmailDate(ZonedDateTime.now())
                 .build(2);
 
         applicationRepository.saveAll(applications);
@@ -747,7 +747,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         flushAndClearSession();
 
-        List<Application> foundApplications = repository.findEoiByApplicationStateAndFundingDecision(competition.getId(), SUBMITTED_STATES, null, FUNDED, true);
+        List<Application> foundApplications = repository.findEoiByApplicationStateAndDecision(competition.getId(), SUBMITTED_STATES, null, FUNDED, true);
 
         assertEquals(2, foundApplications.size());
     }
