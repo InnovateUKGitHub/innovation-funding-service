@@ -13,6 +13,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.competition.inflight.populator.CompetitionInFlightStatsModelPopulator;
 import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightStatsViewModel;
 import org.innovateuk.ifs.management.decision.controller.CompetitionManagementDecisionController;
+import org.innovateuk.ifs.management.decision.controller.CompetitionManagementFundingDecisionController;
 import org.innovateuk.ifs.management.decision.form.DecisionFilterForm;
 import org.innovateuk.ifs.management.decision.form.DecisionSelectionCookie;
 import org.innovateuk.ifs.management.decision.form.DecisionSelectionForm;
@@ -59,13 +60,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class CompetitionManagementDecisionControllerTest extends BaseControllerMockMVCTest<CompetitionManagementDecisionController> {
+public class CompetitionManagementDecisionControllerTest extends BaseControllerMockMVCTest<CompetitionManagementFundingDecisionController> {
 
     public static final Long COMPETITION_ID = 123L;
     public static final String FILTER_STRING = "an application id";
 
     @InjectMocks
-    private CompetitionManagementDecisionController controller;
+    private CompetitionManagementFundingDecisionController controller;
 
     @Spy
     @InjectMocks
@@ -91,8 +92,8 @@ public class CompetitionManagementDecisionControllerTest extends BaseControllerM
     private final DecisionSelectionCookie cookieWithFilterAndSelectionParameters = createCookieWithFilterAndSelectionParameters();
 
     @Override
-    protected CompetitionManagementDecisionController supplyControllerUnderTest() {
-        return new CompetitionManagementDecisionController();
+    protected CompetitionManagementFundingDecisionController supplyControllerUnderTest() {
+        return new CompetitionManagementFundingDecisionController();
     }
 
     @Before
@@ -401,7 +402,7 @@ public class CompetitionManagementDecisionControllerTest extends BaseControllerM
         CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
         CompetitionResource competitionResource = newCompetitionResource().withId(COMPETITION_ID).build();
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
-        
+
         when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID)).thenReturn(restSuccess(competitionSummaryResource));
         when(applicationDecisionService.saveApplicationDecisionData(COMPETITION_ID, Decision.ON_HOLD, applicationIds)).thenReturn(ServiceResult.serviceSuccess());
         when(applicationDecisionService.getDecisionForString(decisionString)).thenReturn(empty());
@@ -492,7 +493,7 @@ public class CompetitionManagementDecisionControllerTest extends BaseControllerM
                 .param("selectionId","1")
                 .param("isSelected", "true")
         )
-                        .andExpect(status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(content().string("{\"selectionCount\":-1,\"allSelected\":false,\"limitExceeded\":false}")).andReturn();
     }
 
