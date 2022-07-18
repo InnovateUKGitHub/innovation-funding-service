@@ -224,14 +224,14 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
                         filterStr,
                         sendFilter.orElse(null),
                         fundingFilter.orElse(null),
-                        eoiFilter.orElse(null),
+                        eoiFilter.orElse(false),
                         pageable),
                 () -> applicationRepository.findByCompetitionIdAndDecisionIsNotNull(
                         competitionId,
                         filterStr,
                         sendFilter.orElse(null),
                         fundingFilter.orElse(null),
-                        eoiFilter.orElse(null)));
+                        eoiFilter.orElse(false)));
         return p;
     }
 
@@ -249,7 +249,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
                 filterStr,
                 sendFilter.orElse(null),
                 fundingFilter.orElse(null),
-                eoiFilter.orElse(null)));
+                eoiFilter.orElse(false)));
     }
 
     @Override

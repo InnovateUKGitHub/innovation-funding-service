@@ -189,7 +189,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     @Test
     public void getWithDecisionApplications() {
         ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
-        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/find-by-competition/123/with-funding-decision?filter=filter&sendFilter=false&fundingFilter=FUNDED&page=6&size=20&sort=id", ApplicationSummaryPageResource.class, responseBody);
+        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/find-by-competition/123/with-funding-decision?filter=filter&sendFilter=false&fundingFilter=FUNDED&eoiFilter=false&page=6&size=20&sort=id", ApplicationSummaryPageResource.class, responseBody);
 
         RestResult<ApplicationSummaryPageResource> result = service.getWithDecisionApplications(123L, "id", 6, 20, of("filter"), Optional.of(false), Optional.of(FUNDED), Optional.of(false));
 
@@ -202,7 +202,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         List<Long> appIds = asList(1L, 2L);
 
         setupGetWithRestResultExpectations(
-                format("%s/%s/%s/%s?all&filter=filter&sendFilter=false&fundingFilter=FUNDED", APPLICATION_SUMMARY_REST_URL, "find-by-competition", 123L, "with-funding-decision"),
+                format("%s/%s/%s/%s?all&filter=filter&sendFilter=false&fundingFilter=FUNDED&eoiFilter=false", APPLICATION_SUMMARY_REST_URL, "find-by-competition", 123L, "with-funding-decision"),
                 ParameterizedTypeReferences.longsListType(),
                 appIds
         );
