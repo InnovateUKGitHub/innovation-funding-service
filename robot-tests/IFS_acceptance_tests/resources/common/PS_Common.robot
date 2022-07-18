@@ -797,7 +797,8 @@ the user fills correspondence address for non-uk based organisations
 enter the country in the autocomplete field
     [Arguments]         ${country}  ${completeCountryName}
     wait until keyword succeeds without screenshots   10s    200ms  input text    id = country        ${country}
-    wait until keyword succeeds without screenshots    60s   5s    click element     jQuery = ul li:contains("${completeCountryName}")
+    # wait until keyword succeeds without screenshots    60s   5s    click element     jQuery = ul li:contains("${completeCountryName}")
+    Execute Javascript                                document.evaluate("//li[text()='${completeCountryName}']",document.body,null,9,null).singleNodeValue.click();
 
 the user should see project is live with review its progress link
     the user should see the element     jQuery = p:contains("${reviewProgressMessage}")
