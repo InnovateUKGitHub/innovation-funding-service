@@ -82,7 +82,3 @@ include("ifs-registration-service")
 include("file-storage-service")
 
 include("robot-tests")
-
-// Tools...
-include("ifs-tools:sba")
-

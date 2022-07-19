@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyApplicationStatisticsResource;
+import org.innovateuk.ifs.competition.resource.CompetitionEoiKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
@@ -87,6 +88,14 @@ public class CompetitionKeyApplicationStatisticsControllerIntegrationTest extend
         assertEquals(0, keyStatisticsResource.getApplicationsOnHold());
         assertEquals(0, keyStatisticsResource.getApplicationsNotifiedOfDecision());
         assertEquals(0, keyStatisticsResource.getApplicationsAwaitingDecision());
+    }
+
+    @Test
+    public void getEoiKeyStatistics() {
+        CompetitionEoiKeyApplicationStatisticsResource keyStatisticsResource = controller.getEoiKeyStatistics
+                (1L).getSuccess();
+
+        assertEquals(0, keyStatisticsResource.getApplicationsSubmitted());
     }
 
     @Test
