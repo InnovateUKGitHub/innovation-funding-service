@@ -23,14 +23,14 @@
             <div th:replace="competition/key-statistics :: eoi-key-statistics(keyStatistics=${model.keyStatistics})" />
         </th:block>
 
-        <form method="GET" th:object="${fundingDecisionFilterForm}">
+        <form method="GET" th:object="${decisionFilterForm}">
             <div class="search-filters govuk-!-margin-top-6">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
                         <h2 class="govuk-fieldset__heading">Filter applications</h2>
                     </legend>
                     <div class="govuk-grid-row">
-                        <div th:classappend="${model.eoi ? 'govuk-grid-column-one-third' : 'govuk-grid-column-one-half'}">
+                        <div th:classappend="${model.expressionOfInterestEnabled ? 'govuk-grid-column-one-third' : 'govuk-grid-column-one-half'}">
                             <div class="govuk-form-group">
                                 <label class="govuk-label"
                                        for="stringFilter">Search by application number</label>
@@ -41,7 +41,7 @@
                                        th:value="*{stringFilterValue}"/>
                             </div>
                         </div>
-                        <th:block th:if="${model.eoi}">
+                        <th:block th:if="${model.expressionOfInterestEnabled}">
                             <div class="govuk-grid-column-one-third">
                                 <div class="govuk-form-group">
                                     <label class="govuk-label"
@@ -57,10 +57,10 @@
                                 </div>
                             </div>
                         </th:block>
-                        <div th:classappend="${model.eoi ? 'govuk-grid-column-one-third' : 'govuk-grid-column-one-half'}">
+                        <div th:classappend="${model.expressionOfInterestEnabled ? 'govuk-grid-column-one-third' : 'govuk-grid-column-one-half'}">
                             <div class="govuk-form-group">
                                 <label class="govuk-label"
-                                       for="fundingFilter" th:text="${model.eoi ? 'Expression of interest decision' : 'Funding decision'}">Funding decision</label>
+                                       for="fundingFilter" th:text="${model.expressionOfInterestEnabled ? 'Expression of interest decision' : 'Funding decision'}">Funding decision</label>
                                 <select name="fundingFilter"
                                         id="fundingFilter"
                                         class="govuk-select"
@@ -69,7 +69,7 @@
                                     <option value="UNDECIDED">Blank</option>
                                     <option value="FUNDED">Successful</option>
                                     <option value="UNFUNDED">Unsuccessful</option>
-                                    <option th:unless="${model.eoi}" value="ON_HOLD">On hold</option>
+                                    <option th:unless="${model.expressionOfInterestEnabled}" value="ON_HOLD">On hold</option>
                                 </select>
                             </div>
                         </div>
@@ -167,15 +167,15 @@
                         <th th:unless="${model.readOnly}" class="govuk-table__header" scope="col" id="fund-project-label">Select applications</th>
                         <th class="govuk-table__header" scope="col">Application number</th>
                         <th class="govuk-table__header" scope="col">Project title</th>
-                        <th class="govuk-table__header" scope="col" th:text="${model.eoi ? 'Lead organisation' : 'Lead'}">Lead</th>
-                        <th:block th:unless="${model.eoi}">
+                        <th class="govuk-table__header" scope="col" th:text="${model.expressionOfInterestEnabled ? 'Lead organisation' : 'Lead'}">Lead</th>
+                        <th:block th:unless="${model.expressionOfInterestEnabled}">
                             <th class="govuk-table__header" scope="col">Number of partners</th>
                             <th class="govuk-table__header" scope="col">Grant requested (£)</th>
                             <th class="govuk-table__header" scope="col">Total project cost (£)</th>
                             <th class="govuk-table__header" scope="col">Duration (months)</th>
                         </th:block>
-                        <th class="govuk-table__header" scope="col" id="fund-project-label" th:text="${model.eoi ? 'Expression of interest decision' : 'Funding decision'}">Funding decision</th>
-                        <th:block th:if="${model.eoi}">
+                        <th class="govuk-table__header" scope="col" id="fund-project-label" th:text="${model.expressionOfInterestEnabled ? 'Expression of interest decision' : 'Funding decision'}">Funding decision</th>
+                        <th:block th:if="${model.expressionOfInterestEnabled}">
                             <th class="govuk-table__header" scope="col">Email status</th>
                             <th scope="col" class="govuk-table__header alignright">Date sent</th>
                         </th:block>
@@ -185,7 +185,7 @@
                         <tr class="govuk-table__row" th:each="result, index : ${model.results.content}">
                             <td th:unless="${model.readOnly}" class="govuk-table__cell">
                                 <div class="govuk-checkboxes">
-                                    <div class="govuk-checkboxes__item" th:if="${result.applicationFundingDecisionIsChangeable()}">
+                                    <div class="govuk-checkboxes__item" th:if="${result.applicationDecisionIsChangeable()}">
                                         <input type="checkbox"
                                                class="govuk-checkboxes__input"
                                                name="applicationIds"

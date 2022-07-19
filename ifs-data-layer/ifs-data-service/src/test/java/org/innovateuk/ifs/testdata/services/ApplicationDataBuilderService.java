@@ -458,7 +458,9 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 asList(ApplicationState.APPROVED, ApplicationState.REJECTED).contains(a.status));
 
         return simpleMap(applicationsWithDecisions, ma -> {
-            Decision decision = ma.status == ApplicationState.APPROVED ? Decision.FUNDED : Decision.UNFUNDED;
+            Decision decision = ma.status == ApplicationState.APPROVED ?
+                    (ma.enabledForExpressionOfInterest ? Decision.EOI_APPROVED : Decision.FUNDED) :
+                    (ma.enabledForExpressionOfInterest ? Decision.EOI_REJECTED : Decision.UNFUNDED);
             return Pair.of(ma.title, decision);
         });
     }
