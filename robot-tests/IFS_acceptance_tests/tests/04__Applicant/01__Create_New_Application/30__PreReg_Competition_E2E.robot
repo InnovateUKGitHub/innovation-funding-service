@@ -137,14 +137,14 @@ Internal user submit the EOI applications funding decision
     Given Existing user creates and submits new application for unsuccessful EOI journey
     And Requesting application ID of unsuccessful prereg application
     And Log in as a different user                                                          &{Comp_admin1_credentials}
-    When Internal user marks the EOI as successful/unsuccessful                             ${unSuccessPreregAppName}   UNFUNDED
-    And Internal user marks the EOI as successful/unsuccessful                              ${hecpPreregAppName}   FUNDED
+    When Internal user marks the EOI as successful/unsuccessful                             ${unSuccessPreregAppName}   EOI_REJECTED
+    And Internal user marks the EOI as successful/unsuccessful                              ${hecpPreregAppName}   EOI_APPROVED
     Then the user should see the element                                                    jQuery = td:contains("${preregApplicationID}")+td:contains("${hecpPreregAppName}")+td:contains("Empire Ltd")+td:contains("Successful")
     And the user should see the element                                                     jQuery = td:contains("${unSuccessfulPreRegApplicationID}")+td:contains("${unSuccessPreregAppName}")+td:contains("Empire Ltd")+td:contains("Unsuccessful")
 
 Internal user able to click on Manage notification button
     [Documentation]    IFS-12261
-    When the user clicks the button/link                              jQuery = a:contains("manage-notifications")
+    When the user clicks the button/link                              jQuery = button:contains("manage notifications")
     Then the user should see the element                              jQuery = h1:contains("Expression of interest notifications")
     And The element should be disabled                                jQuery = button:contains("write-and-send-email")
 
