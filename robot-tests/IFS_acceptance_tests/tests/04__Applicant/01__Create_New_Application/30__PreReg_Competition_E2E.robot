@@ -144,9 +144,9 @@ Internal user submit the EOI applications funding decision
 
 Internal user able to click on Manage notification button
     [Documentation]    IFS-12261
-    When the user clicks the button/link                              jQuery = button:contains("manage notifications")
+    When the user clicks the button/link                              jQuery = button:contains("Manage notifications")
     Then the user should see the element                              jQuery = h1:contains("Expression of interest notifications")
-    And The element should be disabled                                jQuery = button:contains("write-and-send-email")
+    And The element should be disabled                                jQuery = button:contains("Write and send email")
 
 Internal user is able to see Write and email button enabled
    [Documentation]    IFS-12261
