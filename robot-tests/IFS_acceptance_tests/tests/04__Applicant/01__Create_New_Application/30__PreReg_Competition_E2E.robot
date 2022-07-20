@@ -142,6 +142,17 @@ Internal user submit the EOI applications funding decision
     Then the user should see the element                                                    jQuery = td:contains("${preregApplicationID}")+td:contains("${hecpPreregAppName}")+td:contains("Empire Ltd")+td:contains("Successful")
     And the user should see the element                                                     jQuery = td:contains("${unSuccessfulPreRegApplicationID}")+td:contains("${unSuccessPreregAppName}")+td:contains("Empire Ltd")+td:contains("Unsuccessful")
 
+Internal user able to click on Manage notification button
+    [Documentation]    IFS-12261
+    When the user clicks the button/link                              jQuery = a:contains("manage-notifications")
+    Then the user should see the element                              jQuery = h1:contains("Expression of interest submitted")
+    And The element should be disabled                                jQuery = button:contains("write-and-send-email")
+
+Internal user is able to see Write and email button enabled
+   [Documentation]    IFS-12261
+   When the user selects the checkbox                                  app-row-${preregApplicationID}
+   Then The user should see the element                                jQuery = button:contains("write-and-send-email")
+
 #Lead applicant views unsuccessful applications in previous dashboard
 #    [Documentation]  IFS-12265
 #    Given log in as a different user                                              &{lead_applicant_credentials}
@@ -293,6 +304,8 @@ Internal user marks the EOI as successful/unsuccessful
 Internal user sends a decision notifications to applicants
     Requesting application ID of prereg application     ${applicationName}
     the internal team notifies all applicants           ${preregApplicationID}
+
+bmitted")
 
 Internal user closes the competition
     log in as a different user          &{ifs_admin_user_credentials}
