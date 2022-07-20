@@ -146,6 +146,7 @@ Internal user able to click on Manage notification button
     [Documentation]    IFS-12261
     When the user clicks the button/link                              jQuery = button:contains("Manage notifications")
     Then the user should see the element                              jQuery = h1:contains("Expression of interest notifications")
+    And User should see EOI Related content
     And The element should be disabled                                jQuery = button:contains("Write and send email")
 
 Internal user is able to see Write and email button enabled
