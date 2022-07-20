@@ -98,8 +98,8 @@
               th:attr="data-total-checkboxes=${model.results.totalElements}"
               autocomplete="off">
 
-            <div class="govuk-body govuk-grid-row sorting">
-                <div class="govuk-grid-column-one-half">
+            <div class="govuk-grid-row sorting">
+                <div class="govuk-body govuk-grid-column-one-half">
                     <h3 class="govuk-!-margin-0 govuk-!-font-size-19 govuk-!-font-weight-bold"><span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.results.totalElements}" /> applications</h3>
                 </div>
                 <th:block th:if="${model.expressionOfInterestEnabled && !model.readOnly}">
