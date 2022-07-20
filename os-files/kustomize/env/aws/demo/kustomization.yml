@@ -2,17 +2,13 @@ commonAnnotations:
   deployedWith: kustomize
   environment: demo
 
-bases:
+resources:
   - ../aws-base
 
 components:
   - ../../../patches/new-relic-env-vars-patch
   - ../../../patches/pull-secrets-patch
   - ../../../patches/spring-profile-patch
-
-resources:
-  - rbac/sba-rbac.yml
-  - routes/sba-route.yml
 
 patchesStrategicMerge:
   - data-layer/data-service/data-service-deployment.yml
