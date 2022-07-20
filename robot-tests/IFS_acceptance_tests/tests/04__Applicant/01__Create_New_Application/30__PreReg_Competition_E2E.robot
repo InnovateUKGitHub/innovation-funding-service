@@ -145,7 +145,7 @@ Internal user submit the EOI applications funding decision
 Internal user able to click on Manage notification button
     [Documentation]    IFS-12261
     When the user clicks the button/link                              jQuery = a:contains("manage-notifications")
-    Then the user should see the element                              jQuery = h1:contains("Expression of interest submitted")
+    Then the user should see the element                              jQuery = h1:contains("Expression of interest notifications")
     And The element should be disabled                                jQuery = button:contains("write-and-send-email")
 
 Internal user is able to see Write and email button enabled
@@ -304,8 +304,6 @@ Internal user marks the EOI as successful/unsuccessful
 Internal user sends a decision notifications to applicants
     Requesting application ID of prereg application     ${applicationName}
     the internal team notifies all applicants           ${preregApplicationID}
-
-bmitted")
 
 Internal user closes the competition
     log in as a different user          &{ifs_admin_user_credentials}
