@@ -100,6 +100,5 @@ Pagination Expression of Interest notifications page
 *** Keywords ***
 Internal user marks the EOI as successful/unsuccessful
     [Arguments]  ${applicationName}  ${decision}
-    the user navigates to the page                      ${server}/management/competition/${preregCompetitionId}/applications/eoi
     the user clicks the button/link                     jQuery = tr:contains("${applicationName}") label
     the user clicks the button/link                     css = [type="submit"][value="${decision}"]
