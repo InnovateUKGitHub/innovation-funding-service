@@ -69,7 +69,8 @@ Admin can view Expression of Interest notifications page
     And Internal user marks the EOI as successful/unsuccessful            Horizon Europe Guarantee Eoi Application14   EOI_APPROVED
     And Internal user marks the EOI as successful/unsuccessful            Horizon Europe Guarantee Eoi Application16   EOI_REJECTED
     And Internal user marks the EOI as successful/unsuccessful            Horizon Europe Guarantee Eoi Application18   EOI_APPROVED
-    And Internal user marks the EOI as successful/unsuccessful            Horizon Europe Guarantee Eoi Application20  EOI_REJECTED
+    And Internal user marks the EOI as successful/unsuccessful            Horizon Europe Guarantee Eoi Application20   EOI_REJECTED
+    And Internal user marks the EOI as successful/unsuccessful            Horizon Europe Guarantee Eoi Application21   EOI_APPROVED
     And the user clicks the button/link                                   link = Manage notifications
     Then the user should see the element                                  jQuery = h1:contains("Expression of interest notifications")
 
