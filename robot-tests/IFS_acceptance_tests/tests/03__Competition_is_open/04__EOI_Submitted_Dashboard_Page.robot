@@ -60,6 +60,7 @@ Admin can view Expression of Interest notifications page
     [Documentation]    IFS-12261
     Given The user logs-in in new browser                                 &{Comp_admin1_credentials}
     when the user navigates to the page                                   ${SERVER}/management/competition/${openCompetitionPreReg}/applications/eoi
+    When Internal user marks the EOI as successful/unsuccessful           Horizon Europe Guarantee Eoi Application2   EOI_APPROVED
     When Internal user marks the EOI as successful/unsuccessful           Horizon Europe Guarantee Eoi Application4   EOI_REJECTED
     And Internal user marks the EOI as successful/unsuccessful            Horizon Europe Guarantee Eoi Application6   EOI_APPROVED
     And Internal user marks the EOI as successful/unsuccessful            Horizon Europe Guarantee Eoi Application8   EOI_REJECTED
