@@ -24,6 +24,10 @@ spec:
       - image: survey-data-service
         name: spring-boot-service-container
         imagePullPolicy: IfNotPresent
+        lifecycle:
+          preStop:
+            exec:
+              command: [ "/bin/sh", "-c", "echo 'terminating pod' >> /proc/1/fd/1" ]
         livenessProbe:
           httpGet:
             path: /monitoring/health
