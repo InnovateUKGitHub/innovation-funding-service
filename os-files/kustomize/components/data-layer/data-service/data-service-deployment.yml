@@ -327,9 +327,9 @@ spec:
           value: 'ifs-$(NEW_RELIC_ENV)-data-service'
         ports:
           - containerPort: 8080
-        resources:
-          limits:
-            cpu: 2000m
-          requests:
-            cpu: 400m
-            memory: 1500M
+#        resources:
+#          limits:
+#            cpu: 2000m
+#          requests:
+#            cpu: 400m
+#            memory: 1500M

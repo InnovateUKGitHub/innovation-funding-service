@@ -57,10 +57,10 @@ spec:
           value: 'ifs-$(NEW_RELIC_ENV)-file-storage-service'
         ports:
           - containerPort: 8080
-        resources:
-          limits:
-            cpu: 2000m
-          requests:
-            cpu: 400m
-            memory: 4000M
+#        resources:
+#          limits:
+#            cpu: 2000m
+#          requests:
+#            cpu: 400m
+#            memory: 4000M
 

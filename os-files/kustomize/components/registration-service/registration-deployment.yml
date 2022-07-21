@@ -117,12 +117,12 @@ spec:
               value: "false"
           ports:
             - containerPort: 8080
-          resources:
-            limits:
-              cpu: 1000m
-            requests:
-              cpu: 100m
-              memory: 1G
+#          resources:
+#            limits:
+#              cpu: 1000m
+#            requests:
+#              cpu: 100m
+#              memory: 1G
           volumeMounts:
             - mountPath: /var/certs
               name: registration-keys-volume
