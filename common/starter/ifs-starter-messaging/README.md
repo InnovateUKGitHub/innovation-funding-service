@@ -1,4 +1,4 @@
-ifs-messaging-starter
+ifs-starter-messaging
 =
 
 This is a light wrapper around the spring-amqp starter mostly based around obtaining configuration 
@@ -99,8 +99,8 @@ We can then add a listener to pick messages off of the queue
     public class ExampleMessageListener {
 
         @RabbitListener(queues = {CommonQueues.FOO})
-        public void fileUpload(WhatverYouLike whatverYouLike) {
-            service.doWhatever(whatverYouLike);
+        public void fileUpload(WhatEverYouLike whatEverYouLike) {
+            service.doWhatever(whatEverYouLike);
         }
     }
 
