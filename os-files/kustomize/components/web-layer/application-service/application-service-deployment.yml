@@ -152,6 +152,11 @@ spec:
               configMapKeyRef:
                 name: feature-toggle-config
                 key: IFS_EDI_UPDATE_ENABLED
+          - name: IFS_IMPACT_MANAGEMENT_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: feature-toggle-config
+                key: IFS_IMPACT_MANAGEMENT_ENABLED
           - name: IFS_EDI_SALESFORCE_PAGE_URL
             valueFrom:
               configMapKeyRef:
