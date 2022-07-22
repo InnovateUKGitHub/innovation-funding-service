@@ -26,13 +26,13 @@ spec:
           ports:
             - containerPort: 4444
             - containerPort: 3000
-          resources:
-            limits:
-              cpu: 4000m
-              memory: 4000M
-            requests:
-              cpu: 400m
-              memory: 1000M
+#          resources:
+#            limits:
+#              cpu: 4000m
+#              memory: 4000M
+#            requests:
+#              cpu: 400m
+#              memory: 1000M
           env:
             - name: NODE_MAX_SESSION
               value: "20"
