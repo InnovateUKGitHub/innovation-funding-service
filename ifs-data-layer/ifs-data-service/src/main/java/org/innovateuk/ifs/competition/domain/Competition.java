@@ -214,6 +214,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinColumn(name = "competitionThirdPartyConfigId", referencedColumnName = "id")
     private CompetitionThirdPartyConfig competitionThirdPartyConfig;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "competitionEoiEvidenceConfigId", referencedColumnName = "id")
+    private CompetitionEoiEvidenceConfig competitionEoiEvidenceConfig;
+
     public Competition() {
         setupComplete = false;
     }
@@ -1144,5 +1148,13 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setEnabledForPreRegistration(boolean enabledForPreRegistration) {
         this.enabledForPreRegistration = enabledForPreRegistration;
+    }
+
+    public CompetitionEoiEvidenceConfig getCompetitionEoiEvidenceConfig() {
+        return competitionEoiEvidenceConfig;
+    }
+
+    public void setCompetitionEoiEvidenceConfig(CompetitionEoiEvidenceConfig competitionEoiEvidenceConfig) {
+        this.competitionEoiEvidenceConfig = competitionEoiEvidenceConfig;
     }
 }

@@ -50,6 +50,7 @@ public class CompetitionLine {
     private boolean assessmentStage;
     private boolean preRegistration;
     private boolean priority;
+    private boolean eoiEvidenceRequired;
 
     public CompetitionLine() {
     }
@@ -380,5 +381,13 @@ public class CompetitionLine {
 
     public void setPreRegistration(boolean preRegistration) {
         this.preRegistration = preRegistration;
+    }
+
+    public boolean isEoiEvidenceRequired() {
+        return eoiEvidenceRequired;
+    }
+
+    public void setEoiEvidenceRequired(boolean eoiEvidenceRequired) {
+        this.eoiEvidenceRequired = eoiEvidenceRequired;
     }
 }

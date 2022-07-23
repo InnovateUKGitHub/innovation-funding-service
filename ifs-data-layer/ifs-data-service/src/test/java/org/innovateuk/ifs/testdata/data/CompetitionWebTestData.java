@@ -493,7 +493,12 @@ public class CompetitionWebTestData {
                 horizonEuropeGuaranteeCompetition()
                         .withName("Horizon Europe Guarantee Pre Registration Competition with EOI Decision")
                         .withAssessmentStage(false)
+                        .withPreRegistration(true),
+                horizonEuropeGuaranteeCompetition()
+                        .withName("Horizon Europe Guarantee Pre Registration Competition with Evidence Enabled")
+                        .withAssessmentStage(false)
                         .withPreRegistration(true)
+                        .withEoiEvidenceRequired(true)
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.OPEN))

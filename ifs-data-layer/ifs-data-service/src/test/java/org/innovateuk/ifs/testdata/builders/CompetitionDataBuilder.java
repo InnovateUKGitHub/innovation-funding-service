@@ -552,6 +552,14 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
+    public CompetitionDataBuilder withEoiEvidenceConfig(CompetitionLine line) {
+        return asCompAdmin(data -> {
+            if (line.isEoiEvidenceRequired()) {
+                //TODO: create eoi evidence config here
+            }
+        });
+    }
+
     private void updateCompetitionInCompetitionData(CompetitionData competitionData, Long competitionId) {
         CompetitionResource newCompetitionSaved = competitionService.getCompetitionById(competitionId).getSuccess();
         competitionData.setCompetition(newCompetitionSaved);
