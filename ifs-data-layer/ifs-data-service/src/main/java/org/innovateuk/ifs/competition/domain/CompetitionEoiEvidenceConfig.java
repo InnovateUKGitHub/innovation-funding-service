@@ -22,6 +22,7 @@ public class CompetitionEoiEvidenceConfig {
     @OneToOne(mappedBy = "competitionApplicationConfig",fetch = FetchType.LAZY)
     private Competition competition;
 
+    @Builder.Default
     private boolean evidenceRequired = false;
 
     private String evidenceTitle;
