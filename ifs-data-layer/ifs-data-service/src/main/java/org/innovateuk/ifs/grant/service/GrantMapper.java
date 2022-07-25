@@ -165,7 +165,7 @@ class GrantMapper {
         boolean competitionIncludesJesForm = project.getApplication().getCompetition().getIncludeJesForm().equals(Boolean.TRUE);
         boolean organisationIsResearch = organisation.getOrganisationType().getName().equals(RESEARCH.name());
 
-        String organisationTypeName = competitionIncludesJesForm && organisationIsResearch ?
+        String organisationTypeName = !competitionIncludesJesForm && organisationIsResearch ?
                 RTO.name() : organisation.getOrganisationType().getName();
 
         List<Forecast> forecasts = contactUser.isFinanceContact() ? forecastsForFinanceContact(profile) : null;
