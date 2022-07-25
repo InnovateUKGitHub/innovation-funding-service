@@ -23,15 +23,15 @@ public class ApplicationEoiEvidenceResponse {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name="application_id", referencedColumnName="id")
+    @JoinColumn(name="applicationId", referencedColumnName="id")
     private Application application;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "organisation_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "organisationId", referencedColumnName = "id", nullable = false)
     private Organisation organisation;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "file_entry_id", referencedColumnName = "id")
+    @JoinColumn(name = "fileEntryId", referencedColumnName = "id")
     private FileEntry fileEntry;
 
     @Enumerated(EnumType.STRING)
@@ -39,7 +39,7 @@ public class ApplicationEoiEvidenceResponse {
     private EoiEvidenceStatus eoiEvidenceStatus;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "process_role_id", referencedColumnName = "id")
+    @JoinColumn(name = "processRoleId", referencedColumnName = "id")
     private ProcessRole processRole;
 
     private ZonedDateTime uploadedOn;
