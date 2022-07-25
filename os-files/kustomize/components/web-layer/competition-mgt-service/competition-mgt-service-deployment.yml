@@ -94,7 +94,7 @@ spec:
                 key: IFS_KTP_PHASE2_ENABLED
           - name: IFS_EDI_UPDATE_ENABLED
             valueFrom:
-              configMapKeyRef:3
+              configMapKeyRef:
                 name: feature-toggle-config
                 key: IFS_EDI_UPDATE_ENABLED
           - name: IFS_IMPACT_MANAGEMENT_ENABLED
