@@ -37,6 +37,8 @@ import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
+import org.innovateuk.ifs.form.mapper.QuestionMapper;
+import org.innovateuk.ifs.form.mapper.SectionMapper;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.repository.SectionRepository;
@@ -250,6 +252,9 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected QuestionnaireResponseRepository questionnaireResponseRepository;
     protected CompetitionThirdPartyConfigService competitionThirdPartyConfigService;
     protected GrantTermsAndConditionsRepository termsAndConditionsRepository;
+    protected CompetitionApplicationConfigRepository competitionApplicationConfigRepository;
+    protected QuestionMapper questionMapper;
+    protected SectionMapper sectionMapper;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 
@@ -389,6 +394,9 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         questionnaireResponseRepository = serviceLocator.getBean(QuestionnaireResponseRepository.class);
         competitionThirdPartyConfigService = serviceLocator.getBean(CompetitionThirdPartyConfigService.class);
         termsAndConditionsRepository = serviceLocator.getBean(GrantTermsAndConditionsRepository.class);
+        competitionApplicationConfigRepository = serviceLocator.getBean(CompetitionApplicationConfigRepository.class);
+        questionMapper = serviceLocator.getBean(QuestionMapper.class);
+        sectionMapper = serviceLocator.getBean(SectionMapper.class);
     }
 
     protected UserResource compAdmin() {

@@ -163,7 +163,7 @@
                        rel="nofollow"
                        target="_blank">
                         <span class="icon icon-print"></span>
-                        Print application
+                        Print <span th:text="${model.application.isEnabledForExpressionOfInterest()} ? |expression of interest| : |application|" />
                     </a>
                 </div>
 

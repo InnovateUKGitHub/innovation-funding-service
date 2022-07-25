@@ -5,6 +5,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
+import org.innovateuk.ifs.competition.domain.CompetitionApplicationConfig;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
@@ -19,6 +20,7 @@ import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionLine;
+import org.innovateuk.ifs.testdata.builders.data.PreRegistrationSectionLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +29,7 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -294,27 +297,31 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     public CompetitionDataBuilder moveCompetitionIntoFundersPanelStatus() {
-        return asCompAdmin(data -> shiftMilestoneToTomorrow(data, MilestoneType.NOTIFICATIONS));
+        return asCompAdmin(data -> {
+            if (!data.getCompetition().isAlwaysOpen()) {
+                shiftMilestoneToTomorrow(data, MilestoneType.NOTIFICATIONS);
+            }
+        });
     }
 
     public CompetitionDataBuilder sendFundingDecisions(List<Pair<String, FundingDecision>> fundingDecisions) {
         return asCompAdmin(data -> {
+            if (fundingDecisions.size() > 0) {
+                List<Pair<Long, FundingDecision>> applicationIdAndDecisions = simpleMap(fundingDecisions, decisionInfo -> {
+                    FundingDecision decision = decisionInfo.getRight();
+                    Application application = applicationRepository.findByName(decisionInfo.getLeft()).get(0);
+                    return Pair.of(application.getId(), decision);
+                });
 
-            List<Pair<Long, FundingDecision>> applicationIdAndDecisions = simpleMap(fundingDecisions, decisionInfo -> {
-                FundingDecision decision = decisionInfo.getRight();
-                Application application = applicationRepository.findByName(decisionInfo.getLeft()).get(0);
-                return Pair.of(application.getId(), decision);
-            });
+                applicationFundingService.saveFundingDecisionData(data.getCompetition().getId(), pairsToMap(applicationIdAndDecisions)).
+                        getSuccess();
+                FundingNotificationResource fundingNotificationResource = new FundingNotificationResource("Body", pairsToMap(applicationIdAndDecisions));
+                applicationFundingService.notifyApplicantsOfFundingDecisions(fundingNotificationResource).
+                        getSuccess();
 
-            applicationFundingService.saveFundingDecisionData(data.getCompetition().getId(), pairsToMap(applicationIdAndDecisions)).
-                    getSuccess();
-            FundingNotificationResource fundingNotificationResource = new FundingNotificationResource("Body", pairsToMap(applicationIdAndDecisions));
-            applicationFundingService.notifyApplicantsOfFundingDecisions(fundingNotificationResource).
-                    getSuccess();
-
-            doAs(projectFinanceUser(),
-                    () -> projectService.createProjectsFromFundingDecisions(pairsToMap(applicationIdAndDecisions)).getSuccess());
-
+                doAs(projectFinanceUser(),
+                        () -> projectService.createProjectsFromFundingDecisions(pairsToMap(applicationIdAndDecisions)).getSuccess());
+            }
         });
     }
 
@@ -494,6 +501,20 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
+    public CompetitionDataBuilder withImSurveyEnabled(CompetitionLine line) {
+        return asCompAdmin(data -> {
+            if (line.isImSurveyEnabled()) {
+                CompetitionResource competition = data.getCompetition();
+                Optional<CompetitionApplicationConfig> competitionApplicationConfig = competitionApplicationConfigRepository.findOneByCompetitionId(competition.getId());
+                competitionApplicationConfig.ifPresent(applicationConfig -> {
+                    applicationConfig.setImSurveyRequired(line.isImSurveyEnabled());
+                    competitionApplicationConfigRepository.save(applicationConfig);
+                    updateCompetitionInCompetitionData(data, competition.getId());
+                });
+            }
+        });
+    }
+
     public CompetitionDataBuilder withAssessmentConfig(CompetitionLine line) {
         return asCompAdmin(data -> {
             CompetitionAssessmentConfigResource competitionAssessmentConfigResource = new CompetitionAssessmentConfigResource();
@@ -550,6 +571,59 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     private void updateCompetitionInCompetitionData(CompetitionData competitionData, Long competitionId) {
         CompetitionResource newCompetitionSaved = competitionService.getCompetitionById(competitionId).getSuccess();
         competitionData.setCompetition(newCompetitionSaved);
+    }
+
+    public CompetitionDataBuilder withPreRegistrationSections(CompetitionLine line, List<PreRegistrationSectionLine> preRegistrationSectionLines) {
+        return asCompAdmin(data -> {
+
+            doCompetitionDetailsUpdate(data, competition -> {
+
+                List<PreRegistrationSectionLine> sectionLines = simpleFilter(preRegistrationSectionLines, l ->
+                       line.getName().equals(l.competitionName));
+
+                sectionLines.forEach(sectionLine -> {
+                    List<SectionResource> competitionSections = sectionService.getByCompetitionId(competition.getId()).getSuccess();
+
+                    competitionSections.stream()
+                            .forEach(sectionResource -> {
+                                if (sectionResource.getName().equals(sectionLine.getSectionName())) {
+                                    if (sectionLine.getSubSectionName() == null && sectionLine.getQuestionName() == null) {
+                                        markSectionForPreRegistration(sectionResource, sectionLine.getSubSectionName(), sectionLine.getQuestionName());
+                                    } else if (sectionLine.getQuestionName() == null) {
+                                        markSubsectionForPreRegistration(sectionResource, sectionLine.getSubSectionName(), sectionLine.getQuestionName());
+                                    } else {
+                                        markQuestionForPreRegistration(sectionResource, sectionLine.getQuestionName());
+                                    }
+                                }
+                            });
+                });
+            });
+        });
+    }
+
+    private void  markSectionForPreRegistration(SectionResource section, String subSectionName, String questionName) {
+        section.setEnabledForPreRegistration(false);
+        sectionService.save(section);
+
+        markQuestionForPreRegistration(section, questionName);
+
+        markSubsectionForPreRegistration(section, subSectionName, questionName);
+    }
+
+    private void markSubsectionForPreRegistration(SectionResource section, String subSectionName, String questionName) {
+        sectionService.getChildSectionsByParentId(section.getId()).getSuccess().stream()
+                .filter(subSection -> subSectionName == null ? true : subSection.getName().equals(subSectionName))
+                .forEach(subSection -> markSectionForPreRegistration(subSection, subSectionName, questionName));
+    }
+
+    private void markQuestionForPreRegistration(SectionResource section, String questionName) {
+        section.getQuestions().stream()
+                .map(questionId -> questionService.getQuestionById(questionId).getSuccess())
+                .filter(question -> questionName == null ? true : question.getName().equals(questionName))
+                .forEach(question -> {
+                    question.setEnabledForPreRegistration(false);
+                    questionService.save(question);
+                });
     }
 
     public static CompetitionDataBuilder newCompetitionData(ServiceLocator serviceLocator) {

@@ -15,6 +15,8 @@ public class GrantClaimMaximumResource {
 
     private FundingRules fundingRules;
 
+    private boolean isFixedFundingLevel;
+
     public Long getId() {
         return id;
     }
@@ -53,5 +55,13 @@ public class GrantClaimMaximumResource {
 
     public void setFundingRules(FundingRules fundingRules) {
         this.fundingRules = fundingRules;
+    }
+
+    public boolean isFixedFundingLevel() {
+        return isFixedFundingLevel;
+    }
+
+    public void setFixedFundingLevel(boolean fixedFundingLevel) {
+        isFixedFundingLevel = fixedFundingLevel;
     }
 }

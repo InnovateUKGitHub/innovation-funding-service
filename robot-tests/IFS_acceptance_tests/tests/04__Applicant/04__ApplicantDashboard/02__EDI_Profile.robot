@@ -53,9 +53,10 @@ Lead applicant can not mark the application team as complete when the edi survey
 
 Applicant can view the EDI incomplete status
     [Documentation]  IFS-11252  IFS-11490  IFS-11924
-    Given the user clicks the button/link           jQuery = a:contains("Start survey")
-    When the user changed EDI survey status         INPROGRESS  2076-01-22 01:02:03
-    Then the user should see EDI section details    Incomplete  22 January 2076  Continue
+    Given the user clicks the button/link                               jQuery = a:contains("Start survey")
+    When the user changed EDI survey status                             ediFirstName.SurName@gmail.com  In Progress  2076-01-22T01:02:03Z
+    Then the user should see EDI section details                        Incomplete  22 January 2076  Continue
+    And the user should see valid EDI status log message stored in db   ediFirstName.SurName@gmail.com  In Progress  2076-01-22T01:02:03Z
 
 Applicant can not mark the application team as complete when edi survey is not completed by lead
     [Documentation]  IFS-11253
@@ -76,10 +77,11 @@ Lead applicant adds a partner organisation and check the status of edi as Comple
 
 Applicant can view the EDI status as complete in profile
     [Documentation]  IFS-11252  IFS-11490
-    Given log in as a different user                ediFirstName.SurName@gmail.com  ${short_password}
-    When the user clicks the button/link            link = Profile
-    And the user changed EDI survey status          COMPLETE  2089-03-25 01:02:03
-    Then the user should see EDI section details    Complete  25 March 2089  Review EDI summary
+    Given log in as a different user                                    ediFirstName.SurName@gmail.com  ${short_password}
+    When the user clicks the button/link                                link = Profile
+    And the user changed EDI survey status                              ediFirstName.SurName@gmail.com  Complete  2089-03-25T12:02:03Z
+    Then the user should see EDI section details                        Complete  25 March 2089  Review EDI summary
+    And the user should see valid EDI status log message stored in db   ediFirstName.SurName@gmail.com  Complete  2089-03-25T12:02:03Z
 
 Lead applicant can mark the application team as complete when edi status is complete for lead applicant
     [Documentation]  IFS-11253  IFS-11341
@@ -118,21 +120,21 @@ Assessor can view EDI section as a incomplete in profile page
 
 Assessor/applicant can not mark the application team as complete when the edi survey is not started
     [Documentation]  IFS-11534
-    Given log in as a different user  	                   &{edi_assessor_credentials}
-    And the user clicks the button/link                    jQuery = h2:contains("Applications")
-    And the user clicks the button/link                    link = ${AssessorapplicationNameEDI}
-    And the user clicks the button/link                    link = Application team
-    When the user clicks the button/link                   id = application-question-complete
-    And the user clicks the button/link                    jQuery = a:contains("Start survey")
-    And the assessor changed EDI survey status             INPROGRESS  2076-01-22 01:02:03
-    And the user edit the profile of an assessor
-    Then the user should see EDI section details           Incomplete  22 January 2076  Continue
+    Given log in as a different user  	                                &{edi_assessor_credentials}
+    And the user clicks the button/link                                 jQuery = h2:contains("Applications")
+    And the user clicks the button/link                                 link = ${AssessorapplicationNameEDI}
+    And the user clicks the button/link                                 link = Application team
+    When the user clicks the button/link                                id = application-question-complete
+    And the user clicks the button/link                                 jQuery = a:contains("Start survey")
+    And the user changed EDI survey status                              Aaron.Jennings@ukri.org  In Progress  2076-01-22T01:02:03Z
+    Then the user should see EDI section details                        Incomplete  22 January 2076  Continue
+    And the user should see valid EDI status log message stored in db   Aaron.Jennings@ukri.org  In Progress  2076-01-22T01:02:03Z
 
 Assessor/Applicant can view the EDI status as complete in profile
     [Documentation]  IFS-11534
-    When the assessor changed EDI survey status      COMPLETE  2089-03-25 01:02:03
-    And the user edit the profile of an assessor
-    Then the user should see EDI section details     Complete  25 March 2089  Review EDI summary
+    And the user changed EDI survey status                              Aaron.Jennings@ukri.org  Complete  2089-03-25T01:02:03Z
+    Then the user should see EDI section details                        Complete  25 March 2089  Review EDI summary
+    And the user should see valid EDI status log message stored in db   Aaron.Jennings@ukri.org  Complete  2089-03-25T01:02:03Z
 
 *** Keywords ***
 Custom Suite Setup
@@ -146,18 +148,13 @@ Custom suite teardown
 
 the user should see EDI section details
     [Arguments]  ${ediStatus}  ${ediReviewDate}  ${ediButton}
+    the user reloads the page
     the user should see the element  jQuery = h2:contains("Equality, diversity and inclusion")
     the user should see the element  jQuery = p:contains("Please complete our EDI monitoring survey.")
     the user should see the element  jQuery = th:contains("Survey status")+td:contains("${ediStatus}")
     the user should see the element  jQuery = th:contains("Last reviewed")+td:contains("${ediReviewDate}")
     the user should see the element  jQuery = a:contains("${ediButton}")
     the user should see the element  css=[href="https://loans-innovateuk.cs80.force.com/EDI/s"][target="_blank"]
-
-the user changed EDI survey status
-    [Arguments]  ${ediStatus}  ${ediReviewDate}
-    execute sql string   UPDATE `${database_name}`.`user` SET `edi_status` = '${ediStatus}', `edi_review_date` = '${ediReviewDate}' WHERE (`email` = 'ediFirstName.SurName@gmail.com');
-    the user clicks the button/link             link = Edit your details
-    the user clicks the button/link             jQuery = button:contains("Save changes")
 
 the user creates a new application
     the user select the competition and starts application     ${competitionNameEDI}
@@ -175,6 +172,11 @@ get application Id
 get application Id of assessor
     ${assessorApplicationIdEDI} =  get application id by name    ${AssessorapplicationNameEDI}
     Set suite variable    ${assessorApplicationIdEDI}
+
+get auth token of user
+    [Arguments]  ${username}
+    ${userId} =  get user uuid   ${username}
+    Set global variable  ${userId}
 
 the user fills in the EDI application details
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
@@ -210,18 +212,6 @@ the assessor should see the read only view of EDI status
     the user should see the element                 jQuery = th:contains("EDI survey")
     the user should see the element                 jQuery = td:contains("Aaron Jennings") ~ td:contains("${ediStatus}")
 
-the assessor changed EDI survey status
-    [Arguments]  ${ediStatus}  ${ediReviewDate}
-    execute sql string   UPDATE `${database_name}`.`user` SET `edi_status` = '${ediStatus}', `edi_review_date` = '${ediReviewDate}' WHERE (`email` = 'Aaron.Jennings@ukri.org');
-
-the user edit the profile of an assessor
-    the user navigates to the page         ${server}/assessment/profile/details/edit
-    the user enters text to a text field   id= addressLine1  test
-    the user enters text to a text field   id= town  test
-    the user enters text to a text field   id= postcode  test
-    the user clicks the button/link        jQuery=button:contains("Save and return to your details")
-    the user clicks the button/link        link = Profile
-
 External user starts a new application
     the user select the competition and starts application          ${competitionNameEDI}
     the user clicks the button/link                                 link = Continue and create an account
@@ -235,9 +225,32 @@ External user starts a new application
     Logging in and Error Checking                                   ediFirstName.SurName@gmail.com  ${short_password}
 
 the user should see valid EDI contact log message stored in db
-    ${userId} =  get user uuid   ediFirstName.SurName@gmail.com
-    Set global variable  ${userId}
+    get auth token of user  ediFirstName.SurName@gmail.com
     ${contactPayload} =  get the EDI contact payload delivered to SIL  ${userId}
     ${contactPayloadInString} =  Convert to string   ${contactPayload}
     Should Contain  ${contactPayloadInString}    "ifsUuid" : "${userId}"
     Should Contain  ${contactPayloadInString}    "email" : "ediFirstName.SurName@gmail.com"
+
+the user should see valid EDI status log message stored in db
+    [Arguments]  ${username}  ${ediStatus}  ${ediReviewDate}
+    get auth token of user          ${username}
+    ${ediStatusPayload} =  get the EDI contact payload received from SIL  ${userId}  ${ediStatus}
+    log  ${ediStatusPayload}
+    ${ediStatusPayloadInString} =  Convert to string   ${ediStatusPayload}
+    log  ${ediStatusPayloadInString}
+    Should Contain  ${ediStatusPayloadInString}    "ediStatus":"${ediStatus}"
+    Should Contain  ${ediStatusPayloadInString}    "ediReviewDate":"${ediReviewDate}"
+
+the user changed EDI survey status
+    [Arguments]   ${username}  ${ediStatus}  ${ediReviewDate}
+    get auth token of user          ${username}
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   Location Should Contain   host.docker.internal
+    Run Keyword If  '${status}' == 'PASS'   run edi curl command  ${localEDICurl}  ${userId}  ${ediStatus}  ${ediReviewDate}
+    Run Keyword If  '${status}' == 'FAIL'   run edi curl command  ${cloudEDICurl}  ${userId}  ${ediStatus}  ${ediReviewDate}
+
+run edi curl command
+    [Arguments]  ${curlVersion}  ${userId}  ${ediStatus}  ${ediReviewDate}
+    ${ediStatus} =   Run Process    ${shellScriptFolder}/${curlVersion}  ${userId}  ${ediStatus}  ${ediReviewDate}
+    log  ${ediStatus.rc}
+    log  ${ediStatus.stderr}
+    log  ${ediStatus.stdout}

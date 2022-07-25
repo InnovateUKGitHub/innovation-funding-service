@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationExpressionOfInterestConfig;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
@@ -98,6 +99,9 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Autowired
     private AssessmentPeriodRepository assessmentPeriodRepository;
+
+    @Autowired
+    private ApplicationExpressionOfInterestConfigRepository applicationExpressionOfInterestConfigRepository;
 
     @Autowired
     @Override
@@ -657,6 +661,93 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         flushAndClearSession();
 
         List<Application> foundApplications = repository.findByApplicationStateAndFundingDecision(competition.getId(), SUBMITTED_STATES, null, FUNDED, false);
+
+        assertEquals(2, foundApplications.size());
+    }
+
+    @Test
+    public void findEoiByApplicationStateAndFundingDecision() {
+        loginCompAdmin();
+        Competition competition = competitionRepository.save(newCompetition().with(id(null)).build());
+
+        List<Application> applications = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withActivityState(SUBMITTED)
+                .withFundingDecision(FUNDED, null, UNFUNDED)
+                .build(3);
+
+        applicationRepository.saveAll(applications);
+
+        applications.stream()
+                .forEach(application -> {
+                    ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig = new ApplicationExpressionOfInterestConfig();
+                    applicationExpressionOfInterestConfig.setApplication(application);
+                    applicationExpressionOfInterestConfig.setEnabledForExpressionOfInterest(true);
+
+                    applicationExpressionOfInterestConfigRepository.save(applicationExpressionOfInterestConfig);
+                });
+
+        List<Application> foundApplications = repository.findEoiByApplicationStateAndFundingDecision(competition.getId(), SUBMITTED_STATES, null, null, false);
+
+        assertEquals(3, foundApplications.size());
+    }
+
+    @Test
+    public void findEoiByApplicationStateAndFundingDecision_undecided() {
+        loginCompAdmin();
+        Competition competition = competitionRepository.save(newCompetition().with(id(null)).build());
+
+        List<Application> applications = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withActivityState(SUBMITTED)
+                .withFundingDecision(UNDECIDED, null)
+                .build(2);
+
+        applicationRepository.saveAll(applications);
+
+        applications.stream()
+                .forEach(application -> {
+                    ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig = new ApplicationExpressionOfInterestConfig();
+                    applicationExpressionOfInterestConfig.setApplication(application);
+                    applicationExpressionOfInterestConfig.setEnabledForExpressionOfInterest(true);
+
+                    applicationExpressionOfInterestConfigRepository.save(applicationExpressionOfInterestConfig);
+                });
+
+        List<Application> foundApplications = repository.findEoiByApplicationStateAndFundingDecision(competition.getId(), SUBMITTED_STATES, null, UNDECIDED, false);
+
+        assertEquals(2, foundApplications.size());
+    }
+
+    @Test
+    public void findEoiByApplicationStateAndFundingDecision_funded() {
+        loginCompAdmin();
+        Competition competition = competitionRepository.save(newCompetition().with(id(null)).build());
+
+        List<Application> applications = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withFundingDecision(FUNDED, null)
+                .withActivityState(SUBMITTED, APPROVED)
+                .withManageFundingEmailDate(ZonedDateTime.now())
+                .build(2);
+
+        applicationRepository.saveAll(applications);
+
+        applications.stream()
+                .forEach(application -> {
+                    ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig = new ApplicationExpressionOfInterestConfig();
+                    applicationExpressionOfInterestConfig.setApplication(application);
+                    applicationExpressionOfInterestConfig.setEnabledForExpressionOfInterest(true);
+
+                    applicationExpressionOfInterestConfigRepository.save(applicationExpressionOfInterestConfig);
+                });
+
+        flushAndClearSession();
+
+        List<Application> foundApplications = repository.findEoiByApplicationStateAndFundingDecision(competition.getId(), SUBMITTED_STATES, null, FUNDED, true);
 
         assertEquals(2, foundApplications.size());
     }

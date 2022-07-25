@@ -19,15 +19,20 @@ public class CompetitionApplicationConfig {
 
     private boolean maximumFundingSoughtEnabled;
 
+    @Column(name="im_survey_required")
+    private boolean imSurveyRequired = false;
+
     public CompetitionApplicationConfig() {
     }
 
     public CompetitionApplicationConfig(Competition competition,
                                         BigDecimal maximumFundingSought,
-                                        boolean maximumFundingSoughtEnabled) {
+                                        boolean maximumFundingSoughtEnabled,
+                                        boolean imSurveyRequired) {
         this.competition = competition;
         this.maximumFundingSought = maximumFundingSought;
         this.maximumFundingSoughtEnabled = maximumFundingSoughtEnabled;
+        this.imSurveyRequired = imSurveyRequired;
     }
 
     public Long getId() {
@@ -60,5 +65,13 @@ public class CompetitionApplicationConfig {
 
     public void setMaximumFundingSoughtEnabled(boolean maximumFundingSoughtEnabled) {
         this.maximumFundingSoughtEnabled = maximumFundingSoughtEnabled;
+    }
+
+    public boolean isImSurveyRequired() {
+        return imSurveyRequired;
+    }
+
+    public void setImSurveyRequired(boolean imSurveyRequired) {
+        this.imSurveyRequired = imSurveyRequired;
     }
 }

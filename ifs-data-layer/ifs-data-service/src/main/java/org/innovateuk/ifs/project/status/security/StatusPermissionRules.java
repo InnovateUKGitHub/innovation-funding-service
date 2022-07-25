@@ -62,7 +62,7 @@ public class StatusPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "VIEW_PROJECT_SETUP_COMPETITION_STATUS", description = "Internal admin team (comp admin and project finance) users should be able to access the current status of the competition")
     public boolean internalAdminTeamCanViewCompetitionStatus(CompetitionResource competition, UserResource user){
-        return isInternalAdmin(user);
+        return hasCompetitionAdministratorAuthority(user);
     }
 
     @PermissionRule(value = "VIEW_PROJECT_SETUP_COMPETITION_STATUS", description = "Support users should be able to access the current status of the competition")
@@ -87,7 +87,7 @@ public class StatusPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "VIEW_PROJECT_STATUS", description = "Internal admin team (comp admin and project finance) users should be able to access the current status of project")
     public boolean internalAdminTeamCanViewProjectStatus(ProjectResource project, UserResource user){
-        return isInternalAdmin(user);
+        return hasCompetitionAdministratorAuthority(user);
     }
 
     @PermissionRule(value = "VIEW_PROJECT_STATUS", description = "Support users should be able to view current status of project")

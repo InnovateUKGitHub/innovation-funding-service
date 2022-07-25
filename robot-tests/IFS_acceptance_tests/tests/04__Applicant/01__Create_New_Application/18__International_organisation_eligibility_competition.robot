@@ -522,7 +522,7 @@ United kingdom should display in country list of correspondence address for non-
 non-uk based lead applicant can complete the correspondence address
     [Documentation]     IFS - 7241
     [Tags]
-    When the user fills correspondence address data                                         Calle 11   No 1111    San Sebastian   Argentina      X5187XAB
+    When the user fills correspondence address data                                         Calle 11   No 1111    San Sebastian   Argentina   X518 XAB
     And the user clicks the button/link                                                     id = save-project-address-button
     Then the user should see read only view of completed correspondence address details
 
@@ -589,7 +589,7 @@ comp admin can see the correspondence address entered by non uk based lead appli
     [Documentation]     IFS - 7241
     When the user navigates to the page      ${server}/project-setup-management/competition/${internationalCompetitionId}/project/${ProjectID}/details
     Then the user should see the element     jQuery = td:contains("Calle 11, San Sebastian,")
-    And the user should see the element      jQuery = td:contains("Argentina, X5187XAB")
+    And the user should see the element      jQuery = td:contains("Argentina, X518 XAB")
 
 Monitoring officer assign link should be displayed on completing correspondence address and project location
     When the user navigates to the page     ${server}/project-setup-management/competition/${internationalCompetitionId}/status/all
@@ -1040,12 +1040,13 @@ the user fills correspondence address data
     Wait Until Keyword Succeeds Without Screenshots    10s    200ms    input text        id = addressLine1       ${addresLine1}
     Wait Until Keyword Succeeds Without Screenshots    10s    200ms    input text        id = addressLine2       ${addresLine2}
     Wait Until Keyword Succeeds Without Screenshots    10s    200ms    input text        id = town               ${town}
-    enter the country in the autocomplete field        Argentina      ${country}
     Wait Until Keyword Succeeds Without Screenshots    10s    200ms    input text        id = zipCode            ${zipCode}
+    enter the country in the autocomplete field        Argentina      ${country}
+    #Wait Until Keyword Succeeds Without Screenshots    10s    200ms    input text        id = zipCode            ${zipCode}
 
 the user should see read only view of completed correspondence address details
     the user should see the element     jQuery = td:contains("Calle 11, San Sebastian,")
-    the user should see the element     jQuery = td:contains("Argentina, X5187XAB")
+    the user should see the element     jQuery = td:contains("Argentina, X518 XAB")
     the user should see the element     id = project-address-status
 
 the user should see field and summary validation messages

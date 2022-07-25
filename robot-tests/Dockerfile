@@ -1,5 +1,7 @@
 FROM docker-ifs.devops.innovateuk.org/releases/ubuntu:20.04
 
+USER root
+
 ARG DEBIAN_FRONTEND=noninteractive
 # ARG WEBSWING_TOKEN=""
 
@@ -47,17 +49,16 @@ ENV GID=993
 ENV UID=996
 ENV PW=default
 
-RUN groupadd -g ${GID} gluster && \
-  useradd -p ${PW} -u ${UID} -g ${GID} gluster
-
-VOLUME /mnt/ifs_storage
-
 COPY robotPythonLibs-requirements.txt /tmp/
 RUN pip3 install -r /tmp/robotPythonLibs-requirements.txt
 COPY . /tmp/
 COPY set-umask0002.sh /robot-tests/set-umask0002.sh
 
+
+
 WORKDIR robot-tests
+RUN chmod -R 777 ./
+
 COPY ./ ./
 
 ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64/
@@ -66,12 +67,10 @@ ENV IS_CONTAINERIZED true
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
-RUN chown -R gluster:gluster . && \
-  find . \( -type d -o -type f \) -exec chmod 775 {} + && \
-  chown -R gluster:gluster /tmp && \
-  find /tmp \( -type d -o -type f \) -exec chmod 775 {} +
-
-USER gluster
+ARG KUBECTL_VERSION=v1.22.4
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl && \
+  mv kubectl /usr/bin/kubectl && \
+  chmod +x /usr/bin/kubectl
 
 COPY IFS_acceptance_tests/resources/variables/EMAIL_VARIABLES_TEMPLATE.robot /robot-tests/IFS_acceptance_tests/resources/variables/EMAIL_VARIABLES_SENSITIVE.robot
 
