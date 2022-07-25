@@ -163,7 +163,7 @@ class GrantMapper {
                 projectFinanceResource.getOrganisationSize().name() : ACADEMIC_ORGANISATION_SIZE_VALUE;
 
         boolean competitionIncludesJesForm = project.getApplication().getCompetition().getIncludeJesForm().equals(Boolean.TRUE);
-        boolean organisationIsResearch = organisation.getOrganisationType().getName().equals(RESEARCH.name());
+        boolean organisationIsResearch = organisation.getOrganisationTypeEnum().name().equals(RESEARCH.name());
 
         String organisationTypeName = !competitionIncludesJesForm && organisationIsResearch ?
                 RTO.name() : organisation.getOrganisationType().getName();
