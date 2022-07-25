@@ -6,7 +6,6 @@ import org.innovateuk.ifs.competition.domain.CompetitionEoiEvidenceConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionEoiEvidenceConfigMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionEoiEvidenceConfigRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionEoiEvidenceConfigResource;
-import org.innovateuk.ifs.file.mapper.FileTypeMapper;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
