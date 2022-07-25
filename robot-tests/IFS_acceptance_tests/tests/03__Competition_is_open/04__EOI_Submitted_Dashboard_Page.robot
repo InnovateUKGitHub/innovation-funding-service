@@ -66,7 +66,7 @@ Admin can view Expression of Interest notifications page
     when the user navigates to the page         ${SERVER}/management/competition/${openCompetitionPreReg}/applications/eoi
     And the user clicks the button/link         link = Manage notifications
     And the user should see the element         jQuery = h1:contains("Expression of interest notifications")
-    And The user should not see the element     css = .govuk-button[disabled]
+    And The user should see the element         css = .govuk-button[disabled]
 
 Filter on application number, sent and Expression of interest decision on Expression of Interest notifications page
     [Documentation]    IFS-12261
