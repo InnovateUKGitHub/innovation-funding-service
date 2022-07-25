@@ -6,12 +6,16 @@ import org.innovateuk.ifs.competition.domain.CompetitionEoiEvidenceConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionEoiEvidenceConfigMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionEoiEvidenceConfigRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionEoiEvidenceConfigResource;
+import org.innovateuk.ifs.file.domain.FileType;
+import org.innovateuk.ifs.file.mapper.FileTypeMapper;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -25,6 +29,9 @@ public class CompetitionEoiEvidenceConfigServiceImpl extends BaseTransactionalSe
 
     @Autowired
     private CompetitionEoiEvidenceConfigMapper mapper;
+
+    @Autowired
+    private FileTypeMapper fileTypeMapper;
 
     @Override
     public ServiceResult<CompetitionEoiEvidenceConfigResource> findOneByCompetitionId(long competitionId) {
@@ -45,6 +52,23 @@ public class CompetitionEoiEvidenceConfigServiceImpl extends BaseTransactionalSe
                 .andOnSuccessReturn((competition) -> {
                     competition.setCompetitionEoiEvidenceConfig(mapper.mapToDomain(competitionEoiEvidenceConfigResource));
                     return mapper.mapToResource(competition.getCompetitionEoiEvidenceConfig());
+                });
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> update(long competitionId, CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource) {
+        return find(competitionEoiEvidenceConfigRepository.findOneByCompetitionId(competitionId), notFoundError(CompetitionEoiEvidenceConfig.class, competitionId))
+                .andOnSuccessReturnVoid((config) -> {
+                    config.setEvidenceRequired(competitionEoiEvidenceConfigResource.isEvidenceRequired());
+                    config.setEvidenceTitle(competitionEoiEvidenceConfigResource.getEvidenceTitle());
+                    config.setEvidenceGuidance(competitionEoiEvidenceConfigResource.getEvidenceGuidance());
+
+                    List<FileType> fileTypes = competitionEoiEvidenceConfigResource.getFileTypes().stream()
+                            .map(fileTypeResource -> fileTypeMapper.mapToDomain(fileTypeResource))
+                                    .collect(Collectors.toList());
+
+                    config.setFileTypes(fileTypes);
                 });
     }
 }

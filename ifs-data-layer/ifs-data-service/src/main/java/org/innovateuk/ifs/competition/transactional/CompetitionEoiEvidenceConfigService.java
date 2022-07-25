@@ -11,4 +11,7 @@ public interface CompetitionEoiEvidenceConfigService {
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<CompetitionEoiEvidenceConfigResource> create(CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource);
+
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    ServiceResult<Void> update(long competitionId, CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource);
 }

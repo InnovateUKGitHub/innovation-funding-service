@@ -19,7 +19,7 @@ public class CompetitionEoiEvidenceConfig {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "competitionApplicationConfig",fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "competitionEoiEvidenceConfig",fetch = FetchType.LAZY)
     private Competition competition;
 
     @Builder.Default

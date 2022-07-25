@@ -566,8 +566,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                         .withExtension("xls, xlsx")
                         .build();
                 competitionEoiEvidenceConfigResource.setFileTypes(asList(fileTypeResource));
-                competitionEoiEvidenceConfigResource.setCompetitionId(data.getCompetition().getId());
-                competitionEoiEvidenceConfigService.create(competitionEoiEvidenceConfigResource);
+                competitionEoiEvidenceConfigService.update(data.getCompetition().getId(), competitionEoiEvidenceConfigResource);
             }
         });
     }
