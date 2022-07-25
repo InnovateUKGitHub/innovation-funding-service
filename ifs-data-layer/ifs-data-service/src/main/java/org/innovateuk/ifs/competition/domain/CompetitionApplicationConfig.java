@@ -17,8 +17,7 @@ public class CompetitionApplicationConfig {
     @Column(columnDefinition = "double")
     private BigDecimal maximumFundingSought;
 
-    @Column(name = "maximum_funding_sought_enabled", nullable = false)
-    private boolean maximumFundingSoughtEnabled = false;
+    private boolean maximumFundingSoughtEnabled;
 
     public CompetitionApplicationConfig() {
     }
