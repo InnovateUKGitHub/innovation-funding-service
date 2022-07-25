@@ -9,7 +9,9 @@ import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.file.builder.FileTypeResourceBuilder;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.file.resource.FileTypeResource;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
@@ -555,7 +557,17 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     public CompetitionDataBuilder withEoiEvidenceConfig(CompetitionLine line) {
         return asCompAdmin(data -> {
             if (line.isEoiEvidenceRequired()) {
-                //TODO: create eoi evidence config here
+                CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource = new CompetitionEoiEvidenceConfigResource();
+                competitionEoiEvidenceConfigResource.setEvidenceRequired(true);
+                competitionEoiEvidenceConfigResource.setEvidenceTitle("Eoi Evidence");
+                competitionEoiEvidenceConfigResource.setEvidenceGuidance("Please upload Eoi Evidence file.");
+                FileTypeResource fileTypeResource = FileTypeResourceBuilder.newFileTypeResource()
+                        .withName("Spreadsheet")
+                        .withExtension("xls, xlsx")
+                        .build();
+                competitionEoiEvidenceConfigResource.setFileTypes(asList(fileTypeResource));
+                competitionEoiEvidenceConfigResource.setCompetitionId(data.getCompetition().getId());
+                competitionEoiEvidenceConfigService.create(competitionEoiEvidenceConfigResource);
             }
         });
     }

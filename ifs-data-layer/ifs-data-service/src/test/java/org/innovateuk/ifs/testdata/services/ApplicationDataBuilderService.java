@@ -4,11 +4,15 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.application.domain.ApplicationEoiEvidenceResponse;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.EoiEvidenceStatus;
 import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.competition.resource.CompetitionEoiEvidenceConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.cost.AdditionalCompanyCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -424,6 +428,24 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
             if (applicationLine.status == ApplicationState.INELIGIBLE_INFORMED) {
                 applicationBuilder = applicationBuilder.informApplicationIneligible();
+            }
+        }
+
+        CompetitionResource competition = applicationData.getCompetition();
+
+        if (competition.isEnabledForPreRegistration()) {
+            CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource = competition.getCompetitionEoiEvidenceConfigResource();
+
+            if (competitionEoiEvidenceConfigResource != null
+                    && competitionEoiEvidenceConfigResource.isEvidenceRequired()) {
+                ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = ApplicationEoiEvidenceResponse.builder()
+                        .application(null)
+                        .organisation(null)
+                        .fileEntry(null)
+                        .eoiEvidenceStatus(EoiEvidenceStatus.SUBMITTED)
+                        .processRole(null)
+                        .build();
+                applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse);
             }
         }
 
