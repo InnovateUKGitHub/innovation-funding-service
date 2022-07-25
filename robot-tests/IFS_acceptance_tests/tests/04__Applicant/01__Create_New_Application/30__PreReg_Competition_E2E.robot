@@ -142,17 +142,13 @@ Internal user submit the EOI applications funding decision
     Then the user should see the element                                                    jQuery = td:contains("${preregApplicationID}")+td:contains("${hecpPreregAppName}")+td:contains("Empire Ltd")+td:contains("Successful")
     And the user should see the element                                                     jQuery = td:contains("${unSuccessfulPreRegApplicationID}")+td:contains("${unSuccessPreregAppName}")+td:contains("Empire Ltd")+td:contains("Unsuccessful")
 
-Internal user able to click on Manage notification button
+Internal user is able to see Write and email button enabled
     [Documentation]    IFS-12261
     When the user clicks the button/link        Link = Manage notifications
     Then the user should see the element        jQuery = h1:contains("Expression of interest notifications")
     And User should see EOI Related content
-    And The element should be disabled          jQuery = button:contains("write and send email")
-
-Internal user is able to see Write and email button enabled
-    [Documentation]    IFS-12261
-    When the user selects the checkbox                                  app-row-${preregApplicationID}
-    Then The user should see the element                                jQuery = button:contains("write and send email")
+    And the user selects the checkbox           app-row-${preregApplicationID}
+    And The user should not see the element     css = .govuk-button[disabled]
 
 #Lead applicant views unsuccessful applications in previous dashboard
 #    [Documentation]  IFS-12265
