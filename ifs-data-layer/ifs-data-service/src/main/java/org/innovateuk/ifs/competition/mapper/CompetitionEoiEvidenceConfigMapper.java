@@ -12,8 +12,7 @@ import org.mapstruct.Mappings;
 @Mapper(
         config = GlobalMapperConfig.class,
         uses = {
-                CompetitionMapper.class,
-                FileTypeMapper.class
+                CompetitionMapper.class
         }
 )
 public abstract class CompetitionEoiEvidenceConfigMapper extends BaseMapper<CompetitionEoiEvidenceConfig, CompetitionEoiEvidenceConfigResource, Long>  {

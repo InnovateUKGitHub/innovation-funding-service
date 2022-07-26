@@ -11,9 +11,11 @@ CREATE TABLE `competition_eoi_evidence_config` (
 
 -- Competition config holds allowed eoi evidence file types
 CREATE TABLE `eoi_evidence_config_file_type` (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
     `competition_eoi_evidence_config_id` bigint(20) NOT NULL,
     `file_type_id` bigint(20) NOT NULL,
-    PRIMARY KEY (`competition_eoi_evidence_config_id`,`file_type_id`),
+    PRIMARY KEY (`id`),
+    UNIQUE KEY (`competition_eoi_evidence_config_id`,`file_type_id`),
     CONSTRAINT `competition_eoi_evidence_config_fk` FOREIGN KEY (`competition_eoi_evidence_config_id`) REFERENCES `competition_eoi_evidence_config` (`id`),
     CONSTRAINT `evidence_file_type_fk` FOREIGN KEY (`file_type_id`) REFERENCES `file_type` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;

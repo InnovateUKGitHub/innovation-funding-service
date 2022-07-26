@@ -2,20 +2,20 @@ package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionEoiDocument;
 import org.innovateuk.ifs.competition.domain.CompetitionEoiEvidenceConfig;
+import org.innovateuk.ifs.competition.mapper.CompetitionEoiDocumentMapper;
 import org.innovateuk.ifs.competition.mapper.CompetitionEoiEvidenceConfigMapper;
+import org.innovateuk.ifs.competition.repository.CompetitionEoiDocumentRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionEoiEvidenceConfigRepository;
+import org.innovateuk.ifs.competition.resource.CompetitionEoiDocumentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionEoiEvidenceConfigResource;
 import org.innovateuk.ifs.file.domain.FileType;
-import org.innovateuk.ifs.file.mapper.FileTypeMapper;
+import org.innovateuk.ifs.file.repository.FileTypeRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -28,21 +28,16 @@ public class CompetitionEoiEvidenceConfigServiceImpl extends BaseTransactionalSe
     private CompetitionEoiEvidenceConfigRepository competitionEoiEvidenceConfigRepository;
 
     @Autowired
-    private CompetitionEoiEvidenceConfigMapper mapper;
+    private CompetitionEoiDocumentRepository competitionEoiDocumentRepository;
 
     @Autowired
-    private FileTypeMapper fileTypeMapper;
+    private CompetitionEoiEvidenceConfigMapper competitionEoiEvidenceConfigMapper;
 
-    @Override
-    public ServiceResult<CompetitionEoiEvidenceConfigResource> findOneByCompetitionId(long competitionId) {
-        Optional<CompetitionEoiEvidenceConfig> config = competitionEoiEvidenceConfigRepository.findOneByCompetitionId(competitionId);
+    @Autowired
+    private CompetitionEoiDocumentMapper competitionEoiDocumentMapper;
 
-        if (config.isPresent()) {
-            return serviceSuccess(mapper.mapToResource(config.get()));
-        }
-
-        return serviceSuccess(new CompetitionEoiEvidenceConfigResource());
-    }
+    @Autowired
+    private FileTypeRepository fileTypeRepository;
 
     @Override
     @Transactional
@@ -50,25 +45,19 @@ public class CompetitionEoiEvidenceConfigServiceImpl extends BaseTransactionalSe
         Long competitionId = competitionEoiEvidenceConfigResource.getCompetitionId();
         return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId))
                 .andOnSuccessReturn((competition) -> {
-                    competition.setCompetitionEoiEvidenceConfig(mapper.mapToDomain(competitionEoiEvidenceConfigResource));
-                    return mapper.mapToResource(competition.getCompetitionEoiEvidenceConfig());
+                    competition.setCompetitionEoiEvidenceConfig(competitionEoiEvidenceConfigMapper.mapToDomain(competitionEoiEvidenceConfigResource));
+                    return competitionEoiEvidenceConfigMapper.mapToResource(competition.getCompetitionEoiEvidenceConfig());
                 });
     }
 
     @Override
     @Transactional
-    public ServiceResult<Void> update(long competitionId, CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource) {
-        return find(competitionEoiEvidenceConfigRepository.findOneByCompetitionId(competitionId), notFoundError(CompetitionEoiEvidenceConfig.class, competitionId))
-                .andOnSuccessReturnVoid((config) -> {
-                    config.setEvidenceRequired(competitionEoiEvidenceConfigResource.isEvidenceRequired());
-                    config.setEvidenceTitle(competitionEoiEvidenceConfigResource.getEvidenceTitle());
-                    config.setEvidenceGuidance(competitionEoiEvidenceConfigResource.getEvidenceGuidance());
-
-                    List<FileType> fileTypes = competitionEoiEvidenceConfigResource.getFileTypes().stream()
-                            .map(fileTypeResource -> fileTypeMapper.mapToDomain(fileTypeResource))
-                                    .collect(Collectors.toList());
-
-                    config.setFileTypes(fileTypes);
+    public ServiceResult<CompetitionEoiDocumentResource> createDocument(CompetitionEoiDocumentResource competitionEoiDocumentResource) {
+        Long fileTypeId = competitionEoiDocumentResource.getFileTypeId();
+        return find(fileTypeRepository.findById(fileTypeId), notFoundError(FileType.class, fileTypeId))
+                .andOnSuccessReturn((fileType) -> {
+                    CompetitionEoiDocument competitionEoiDocument = competitionEoiDocumentMapper.mapToDomain(competitionEoiDocumentResource);
+                    return competitionEoiDocumentMapper.mapToResource(competitionEoiDocumentRepository.save(competitionEoiDocument));
                 });
     }
 }

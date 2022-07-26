@@ -9,9 +9,7 @@ import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.file.builder.FileTypeResourceBuilder;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.resource.FileTypeResource;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
@@ -556,18 +554,21 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     public CompetitionDataBuilder withEoiEvidenceConfig(CompetitionLine line) {
         return asCompAdmin(data -> {
-            if (line.isEoiEvidenceRequired()) {
-                CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource = new CompetitionEoiEvidenceConfigResource();
-                competitionEoiEvidenceConfigResource.setEvidenceRequired(true);
-                competitionEoiEvidenceConfigResource.setEvidenceTitle("Eoi Evidence");
-                competitionEoiEvidenceConfigResource.setEvidenceGuidance("Please upload Eoi Evidence file.");
-                FileTypeResource fileTypeResource = FileTypeResourceBuilder.newFileTypeResource()
-                        .withName("Spreadsheet")
-                        .withExtension("xls, xlsx")
-                        .build();
-                competitionEoiEvidenceConfigResource.setFileTypes(asList(fileTypeResource));
-                competitionEoiEvidenceConfigService.update(data.getCompetition().getId(), competitionEoiEvidenceConfigResource);
-            }
+            doCompetitionDetailsUpdate(data, competition -> {
+                if (line.isEoiEvidenceRequired()) {
+                    CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource = new CompetitionEoiEvidenceConfigResource();
+                    competitionEoiEvidenceConfigResource.setEvidenceRequired(true);
+                    competitionEoiEvidenceConfigResource.setEvidenceTitle("Eoi Evidence");
+                    competitionEoiEvidenceConfigResource.setEvidenceGuidance("Please upload Eoi Evidence file.");
+                    competitionEoiEvidenceConfigResource.setCompetitionId(data.getCompetition().getId());
+                    competitionEoiEvidenceConfigService.create(competitionEoiEvidenceConfigResource).getSuccess();
+                }
+            });
+            CompetitionEoiDocumentResource competitionEoiDocumentResource = new CompetitionEoiDocumentResource();
+            competitionEoiDocumentResource.setFileTypeId(3L);
+            Long competitionEoiEvidenceConfigId = data.getCompetition().getCompetitionEoiEvidenceConfigResource().getId();
+            competitionEoiDocumentResource.setCompetitionEoiEvidenceConfigId(competitionEoiEvidenceConfigId);
+            competitionEoiEvidenceConfigService.createDocument(competitionEoiDocumentResource);
         });
     }
 

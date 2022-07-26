@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.competition.domain;
 
 import lombok.*;
-import org.innovateuk.ifs.file.domain.FileType;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Data
 @Builder
@@ -29,10 +27,4 @@ public class CompetitionEoiEvidenceConfig {
 
     @Column(length=5000)
     private String evidenceGuidance;
-
-    @ManyToMany
-    @JoinTable(name = "eoi_evidence_config_file_type",
-            joinColumns = @JoinColumn(name = "competition_eoi_evidence_config_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "file_type_id", referencedColumnName = "id"))
-    private List<FileType> fileTypes;
 }
