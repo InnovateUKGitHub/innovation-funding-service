@@ -567,7 +567,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
             Long competitionEoiEvidenceConfigId = data.getCompetition().getCompetitionEoiEvidenceConfigResource().getId();
             CompetitionEoiDocumentResource competitionEoiDocumentResource = CompetitionEoiDocumentResource.builder()
-                    .fileTypeId(3L)
+                    .fileTypeId(EOI_DOCUMENT_FILE_TYPE)
                     .competitionEoiEvidenceConfigId(competitionEoiEvidenceConfigId).build();
             competitionEoiEvidenceConfigService.createDocument(competitionEoiDocumentResource);
         });

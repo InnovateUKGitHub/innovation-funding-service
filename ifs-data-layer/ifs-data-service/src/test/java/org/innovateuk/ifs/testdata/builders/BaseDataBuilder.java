@@ -133,6 +133,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
 
     public static final String IFS_SYSTEM_MAINTENANCE_USER_EMAIL = "ifs_system_maintenance_user@innovateuk.org";
     public static final String IFS_SYSTEM_REGISTRAR_USER_EMAIL = "ifs_web_user@innovateuk.org";
+    public static final Long EOI_DOCUMENT_FILE_TYPE = 1L;
 
     protected ServiceLocator serviceLocator;
     protected String compAdminEmail;
