@@ -36,7 +36,7 @@
                 <div class="highlight-panel highlight-panel-padded">
                     <span class="govuk-heading-l govuk-!-margin-bottom-0" th:text="${keyStatistics.statThree}">3</span>
                     <th:block th:switch="${keyStatistics.status.name()}">
-                        <small th:case="OPEN">Applications per assessor</small>
+                        <small th:case="OPEN">Assessors per application</small>
                         <small th:case="CLOSED">Assessors without applications</small>
                         <small th:case="IN_ASSESSMENT">Assignments accepted</small>
                         <small th:case="FUNDERS_PANEL">Applications not being funded</small>
@@ -78,7 +78,7 @@
                     <span class="govuk-heading-l govuk-!-margin-bottom-0" th:text="${keyStatistics.statSix}">6</span>
                     <th:block th:switch="${keyStatistics.status.name()}">
                         <small th:case="OPEN">Applications submitted</small>
-                        <small th:case="CLOSED">Applications per assessor</small>
+                        <small th:case="CLOSED">Assessors per application</small>
                         <small th:case="IN_ASSESSMENT">Supporters invited</small>
                         <small th:case="FUNDERS_PANEL">Applications awaiting notification</small>
                         <small th:case="ASSESSOR_FEEDBACK">Applications awaiting notification</small>

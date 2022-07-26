@@ -253,6 +253,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected QuestionnaireResponseRepository questionnaireResponseRepository;
     protected CompetitionThirdPartyConfigService competitionThirdPartyConfigService;
     protected GrantTermsAndConditionsRepository termsAndConditionsRepository;
+    protected CompetitionApplicationConfigRepository competitionApplicationConfigRepository;
     protected QuestionMapper questionMapper;
     protected SectionMapper sectionMapper;
     protected CompetitionEoiEvidenceConfigService competitionEoiEvidenceConfigService;
@@ -396,6 +397,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         questionnaireResponseRepository = serviceLocator.getBean(QuestionnaireResponseRepository.class);
         competitionThirdPartyConfigService = serviceLocator.getBean(CompetitionThirdPartyConfigService.class);
         termsAndConditionsRepository = serviceLocator.getBean(GrantTermsAndConditionsRepository.class);
+        competitionApplicationConfigRepository = serviceLocator.getBean(CompetitionApplicationConfigRepository.class);
         questionMapper = serviceLocator.getBean(QuestionMapper.class);
         sectionMapper = serviceLocator.getBean(SectionMapper.class);
         competitionEoiEvidenceConfigService = serviceLocator.getBean(CompetitionEoiEvidenceConfigService.class);

@@ -6,9 +6,12 @@ components:
   - ../../../../components/auth
   - ../../../../components/ifs-database
   - ../../../../components/mail
+  - ../../../../components/rabbitmq
+
   - ../../../../patches/new-relic-env-vars-patch
   - ../../../../patches/pull-secrets-patch
   - ../../../../patches/spring-profile-patch
+  - ../../../../patches/rabbitmq-config-secrets-patch
 
 resources:
   - ../../../../config-mgmt/env/local
@@ -22,3 +25,4 @@ patchesStrategicMerge:
   - auth/sp/sp.yml
   - auth/sp/sp-deployment.yml
   - auth/ldap/ldap-deployment.yml
+  - rabbitmq/rabbitmq.yml
