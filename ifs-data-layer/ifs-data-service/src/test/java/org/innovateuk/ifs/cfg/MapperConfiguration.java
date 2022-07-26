@@ -98,6 +98,11 @@ public class MapperConfiguration {
     }
 
     @Bean
+    CompetitionApplicationConfigMapperImpl competitionApplicationConfigMapper() {
+        return new CompetitionApplicationConfigMapperImpl();
+    }
+
+    @Bean
     GuidanceRowMapperImpl guidanceRowMapper() {
         return new GuidanceRowMapperImpl();
     }
