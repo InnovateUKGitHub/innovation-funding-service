@@ -38,6 +38,7 @@ public class CompetitionApplicationConfigServiceImpl extends RootTransactionalSe
                         updateMaximumFundingSought(competitionApplicationConfigResource, config);
                     } else {
                         updateMaximumFundingSoughtEnabled(competitionApplicationConfigResource, config);
+                        config.setMaximumFundingSought(null);
                     }
                 });
     }

@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 public class FundingAmountSoughtForm extends CompetitionSetupForm {
 
     @NotNull(message = "{validation.applicationfundingamountsoughtform.application.funding.amount.sought.applicable.required}")
-    private boolean fundingAmountSoughtApplicable;
+    private Boolean fundingAmountSoughtApplicable;
 
     private BigDecimal fundingAmountSought;
 
@@ -27,11 +27,11 @@ public class FundingAmountSoughtForm extends CompetitionSetupForm {
         this.fundingAmountSoughtApplicable = fundingAmountSoughtApplicable;
     }
 
-    public boolean getFundingAmountSoughtApplicable() {
+    public Boolean getFundingAmountSoughtApplicable() {
         return fundingAmountSoughtApplicable;
     }
 
-    public void setFundingAmountSoughtApplicable(boolean fundingAmountSoughtApplicable) {
+    public void setFundingAmountSoughtApplicable(Boolean fundingAmountSoughtApplicable) {
         this.fundingAmountSoughtApplicable = fundingAmountSoughtApplicable;
     }
 

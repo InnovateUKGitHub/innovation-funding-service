@@ -84,8 +84,13 @@
             <dl class="standard-definition-list">
                 <dt>Is a maximum funding sought required?</dt>
                 <dd th:text="${competitionSetupForm.fundingAmountSoughtApplicable ? 'Yes' : 'No'}"></dd>
+                <th:block th:if="${competitionSetupForm.fundingAmountSoughtApplicable}">
+                    <dt>Funding sought amount</dt>
+                    <dd th:text="'£' + ${#numbers.formatInteger(competitionSetupForm.fundingAmountSought, 0,'DEFAULT')}"></dd>
+                </th:block>
             </dl>
 
+            <p class="govuk-body govuk-!-font-weight-bold">Click edit to change the funding amount sought.</p>
             <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button">Edit</button>
         </th:block>
 

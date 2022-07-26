@@ -35,7 +35,7 @@ public enum CompetitionSetupSection {
     ORGANISATIONAL_ELIGIBILITY(12L, "organisational-eligibility", "Organisational eligibility", emptyList(), false, false),
     FUNDING_ELIGIBILITY(13L, "funding-eligibility", "Funding eligibility", emptyList(), false, false),
     FUNDING_LEVEL_PERCENTAGE(14L, "funding-level-percentage", "Funding level percentage", emptyList(), false, singletonList(FUNDING_ELIGIBILITY), false),
-    FUNDING_AMOUNT_SOUGHT(17L, "funding-amount-sought", "Funding amount sought", emptyList(), false, emptyList(), false);
+    FUNDING_AMOUNT_SOUGHT(17L, "funding-amount-sought", "Funding amount sought", emptyList(), false, singletonList(FUNDING_LEVEL_PERCENTAGE), false);
 
     private Long id;
     private String path;
