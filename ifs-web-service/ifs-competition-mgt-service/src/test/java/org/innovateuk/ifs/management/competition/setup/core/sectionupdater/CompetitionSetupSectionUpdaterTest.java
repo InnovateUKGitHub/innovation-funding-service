@@ -14,7 +14,7 @@ public class CompetitionSetupSectionUpdaterTest {
 
     @Test
     public void getNextSection() {
-        String expectedPath = String.format("redirect:/competition/setup/1/section/%s", CompetitionSetupSection.FUNDING_LEVEL_PERCENTAGE.getPath());
+        String expectedPath = String.format("redirect:/competition/setup/1/section/%s", CompetitionSetupSection.FUNDING_AMOUNT_SOUGHT.getPath());
 
         CompetitionSetupSectionUpdater competitionSetupSectionUpdater = new FundingLevelPercentageSectionUpdater();
 
@@ -25,7 +25,7 @@ public class CompetitionSetupSectionUpdaterTest {
                 .withCompletionStage(CompetitionCompletionStage.COMPETITION_CLOSE)
                 .build();
 
-        String path = competitionSetupSectionUpdater.getNextSection(form, competition, CompetitionSetupSection.FUNDING_ELIGIBILITY);
+        String path = competitionSetupSectionUpdater.getNextSection(form, competition, CompetitionSetupSection.FUNDING_AMOUNT_SOUGHT);
         assertEquals(expectedPath, path);
     }
 }
