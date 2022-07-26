@@ -391,7 +391,7 @@ The user fills in the Competition Setup Project eligibility section
     the user enters text to a text field                 id = researchParticipationPercentage   0
     the user selects the radio button                    resubmission    no
     the user clicks the button/link                      jQuery = button:contains("Done")
-    the user clicks the button/link                      jQuery = button:contains("Edit")
+    the user should see the element                      jQuery = button:contains("Edit")
     the user clicks the button/link                      link = Back to competition details
     the user should see the element                      jQuery = div:contains("Project eligibility") ~ .task-status-complete
 
