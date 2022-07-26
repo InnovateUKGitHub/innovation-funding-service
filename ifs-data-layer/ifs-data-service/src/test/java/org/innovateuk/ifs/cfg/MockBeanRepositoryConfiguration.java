@@ -117,4 +117,6 @@ public class MockBeanRepositoryConfiguration {
     @MockBean
     private UserRepository userRepository;
 
+    @MockBean
+    private CompetitionEoiEvidenceConfigRepository competitionEoiEvidenceConfigRepository;
 }

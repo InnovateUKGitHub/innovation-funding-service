@@ -147,4 +147,8 @@ public class MapperConfiguration {
         return new GrantTermsAndConditionsMapperImpl();
     }
 
+    @Bean
+    CompetitionEoiEvidenceConfigMapperImpl competitionEoiEvidenceConfigMapper() {
+        return new CompetitionEoiEvidenceConfigMapperImpl();
+    }
 }
