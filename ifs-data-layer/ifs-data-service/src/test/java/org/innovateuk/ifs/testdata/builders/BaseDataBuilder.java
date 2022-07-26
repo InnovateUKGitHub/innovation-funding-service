@@ -255,6 +255,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected QuestionMapper questionMapper;
     protected SectionMapper sectionMapper;
     protected CompetitionEoiEvidenceConfigService competitionEoiEvidenceConfigService;
+    protected ApplicationEoiEvidenceResponseService applicationEoiEvidenceResponseService;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 
@@ -397,6 +398,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         questionMapper = serviceLocator.getBean(QuestionMapper.class);
         sectionMapper = serviceLocator.getBean(SectionMapper.class);
         competitionEoiEvidenceConfigService = serviceLocator.getBean(CompetitionEoiEvidenceConfigService.class);
+        applicationEoiEvidenceResponseService = serviceLocator.getBean(ApplicationEoiEvidenceResponseService.class);
     }
 
     protected UserResource compAdmin() {

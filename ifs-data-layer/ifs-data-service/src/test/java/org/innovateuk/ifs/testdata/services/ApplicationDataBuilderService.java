@@ -4,11 +4,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.application.domain.ApplicationEoiEvidenceResponse;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.EoiEvidenceStatus;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.competition.resource.CompetitionEoiEvidenceConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -23,6 +19,8 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.*;
+import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +34,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -431,22 +430,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             }
         }
 
-        CompetitionResource competition = applicationData.getCompetition();
-
-        if (competition.isEnabledForPreRegistration()) {
-            CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource = competition.getCompetitionEoiEvidenceConfigResource();
-
-            if (competitionEoiEvidenceConfigResource != null
-                    && competitionEoiEvidenceConfigResource.isEvidenceRequired()) {
-                ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = ApplicationEoiEvidenceResponse.builder()
-                        .application(null)
-                        .organisation(null)
-                        .fileEntry(null)
-                        .eoiEvidenceStatus(EoiEvidenceStatus.SUBMITTED)
-                        .processRole(null)
-                        .build();
-                applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse);
-            }
+        if (applicationData.getCompetition().isEnabledForPreRegistration()) {
+            applicationBuilder = applicationBuilder.uploadEoiEvidence();
         }
 
         applicationBuilder.build();

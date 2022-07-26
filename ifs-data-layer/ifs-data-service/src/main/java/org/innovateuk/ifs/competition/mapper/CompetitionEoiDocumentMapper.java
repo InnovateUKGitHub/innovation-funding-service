@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competition.mapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.domain.CompetitionEoiDocument;
-import org.innovateuk.ifs.competition.domain.CompetitionEoiEvidenceConfig;
 import org.innovateuk.ifs.competition.resource.CompetitionEoiDocumentResource;
 import org.innovateuk.ifs.file.mapper.FileTypeMapper;
 import org.mapstruct.Mapper;

@@ -2,7 +2,6 @@ package org.innovateuk.ifs.testdata.services;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import org.innovateuk.ifs.application.repository.ApplicationEoiEvidenceResponseRepository;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -60,9 +59,6 @@ public abstract class BaseDataBuilderService {
 
     @Autowired
     private FormInputService formInputService;
-
-    @Autowired
-    protected ApplicationEoiEvidenceResponseRepository applicationEoiEvidenceResponseRepository;
 
     UserResource retrieveUserByEmail(String emailAddress) {
         return doAs(systemRegistrar(), () -> userService.findByEmail(emailAddress).getSuccess());

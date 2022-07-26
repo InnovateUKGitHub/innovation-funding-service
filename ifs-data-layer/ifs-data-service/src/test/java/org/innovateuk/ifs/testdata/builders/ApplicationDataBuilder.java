@@ -4,7 +4,9 @@ import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.competition.resource.CompetitionEoiEvidenceConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
@@ -14,6 +16,8 @@ import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
+import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -195,6 +199,30 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         return asCompAdmin(data -> {
             ApplicationIneligibleSendResource resource = new ApplicationIneligibleSendResource("subject", "content");
             applicationNotificationService.informIneligible(data.getApplication().getId(), resource);
+        });
+    }
+
+    public ApplicationDataBuilder uploadEoiEvidence() {
+        return asCompAdmin(data -> {
+            CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource = data.getCompetition().getCompetitionEoiEvidenceConfigResource();
+
+            if (competitionEoiEvidenceConfigResource != null
+                    && competitionEoiEvidenceConfigResource.isEvidenceRequired()) {
+                ApplicationResource application = data.getApplication();
+                ProcessRole processRole = processRoleRepository.findOneByApplicationIdAndRole(application.getId(), ProcessRoleType.LEADAPPLICANT);
+                FileEntry fileEntry = fileEntryRepository.save(
+                        new FileEntry(null, "eoi-evidence-file" + application.getId() + ".pdf", "application/pdf", 7945));
+
+                ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = ApplicationEoiEvidenceResponseResource.builder()
+                        .applicationId(application.getId())
+                        .organisationId(application.getLeadOrganisationId())
+                        .fileEntryId(fileEntry.getId())
+                        .eoiEvidenceStatus(EoiEvidenceStatus.SUBMITTED)
+                        .processRoleId(processRole.getId())
+                        .uploadedOn(ZonedDateTime.now()).build();
+
+                applicationEoiEvidenceResponseService.create(applicationEoiEvidenceResponseResource);
+            }
         });
     }
 

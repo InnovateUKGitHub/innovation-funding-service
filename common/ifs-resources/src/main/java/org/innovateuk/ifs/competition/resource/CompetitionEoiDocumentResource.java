@@ -1,13 +1,10 @@
 package org.innovateuk.ifs.competition.resource;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.innovateuk.ifs.file.resource.FileTypeResource;
+import lombok.*;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class CompetitionEoiDocumentResource {

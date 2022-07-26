@@ -3,11 +3,9 @@ package org.innovateuk.ifs.competition.transactional;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionEoiDocument;
-import org.innovateuk.ifs.competition.domain.CompetitionEoiEvidenceConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionEoiDocumentMapper;
 import org.innovateuk.ifs.competition.mapper.CompetitionEoiEvidenceConfigMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionEoiDocumentRepository;
-import org.innovateuk.ifs.competition.repository.CompetitionEoiEvidenceConfigRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionEoiDocumentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionEoiEvidenceConfigResource;
 import org.innovateuk.ifs.file.domain.FileType;
@@ -18,14 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 public class CompetitionEoiEvidenceConfigServiceImpl extends BaseTransactionalService implements CompetitionEoiEvidenceConfigService {
-
-    @Autowired
-    private CompetitionEoiEvidenceConfigRepository competitionEoiEvidenceConfigRepository;
 
     @Autowired
     private CompetitionEoiDocumentRepository competitionEoiDocumentRepository;

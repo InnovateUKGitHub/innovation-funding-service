@@ -556,18 +556,19 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         return asCompAdmin(data -> {
             doCompetitionDetailsUpdate(data, competition -> {
                 if (line.isEoiEvidenceRequired()) {
-                    CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource = new CompetitionEoiEvidenceConfigResource();
-                    competitionEoiEvidenceConfigResource.setEvidenceRequired(true);
-                    competitionEoiEvidenceConfigResource.setEvidenceTitle("Eoi Evidence");
-                    competitionEoiEvidenceConfigResource.setEvidenceGuidance("Please upload Eoi Evidence file.");
-                    competitionEoiEvidenceConfigResource.setCompetitionId(data.getCompetition().getId());
+                    CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource = CompetitionEoiEvidenceConfigResource.builder()
+                            .evidenceRequired(true)
+                            .evidenceTitle("Eoi Evidence")
+                            .evidenceGuidance("Please upload Eoi Evidence file.")
+                            .competitionId(data.getCompetition().getId()).build();
                     competitionEoiEvidenceConfigService.create(competitionEoiEvidenceConfigResource).getSuccess();
                 }
             });
-            CompetitionEoiDocumentResource competitionEoiDocumentResource = new CompetitionEoiDocumentResource();
-            competitionEoiDocumentResource.setFileTypeId(3L);
+
             Long competitionEoiEvidenceConfigId = data.getCompetition().getCompetitionEoiEvidenceConfigResource().getId();
-            competitionEoiDocumentResource.setCompetitionEoiEvidenceConfigId(competitionEoiEvidenceConfigId);
+            CompetitionEoiDocumentResource competitionEoiDocumentResource = CompetitionEoiDocumentResource.builder()
+                    .fileTypeId(3L)
+                    .competitionEoiEvidenceConfigId(competitionEoiEvidenceConfigId).build();
             competitionEoiEvidenceConfigService.createDocument(competitionEoiDocumentResource);
         });
     }
