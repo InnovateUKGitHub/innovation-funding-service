@@ -37,8 +37,8 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.groupingBy;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.innovateuk.ifs.knowledgebase.resourse.KnowledgeBaseType.RTO;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RESEARCH;
-import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RTO;
 import static org.innovateuk.ifs.project.core.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -166,7 +166,7 @@ class GrantMapper {
         boolean organisationIsResearch = organisation.getOrganisationTypeEnum().name().equals(RESEARCH.name());
 
         String organisationTypeName = !competitionIncludesJesForm && organisationIsResearch ?
-                RTO.name() : organisation.getOrganisationType().getName();
+                RTO.getText() : organisation.getOrganisationType().getName();
 
         List<Forecast> forecasts = contactUser.isFinanceContact() ? forecastsForFinanceContact(profile) : null;
 
