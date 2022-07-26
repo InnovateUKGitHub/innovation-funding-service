@@ -15,7 +15,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.sil.SilPayloadKeyType;
 import org.innovateuk.ifs.sil.SilPayloadType;
-import org.innovateuk.ifs.sil.crm.resource.SilLoanApplicationStatus;
+import org.innovateuk.ifs.sil.crm.resource.SilApplicationStatus;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.UsersRolesService;
@@ -44,7 +44,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class LoanApplicationControllerTest extends BaseControllerMockMVCTest<LoanApplicationController> {
+public class ApplicationUpdateControllerTest extends BaseControllerMockMVCTest<ApplicationUpdateController> {
 
     public static final String APPLICATION_PAYLOAD = "{\"questionSetupType\":\"LOAN_BUSINESS_AND_FINANCIAL_INFORMATION\",\"completionStatus\":\"Complete\",\"completionDate\":\"2022-05-12T09:42:07.403057Z\"}";
     @Mock
@@ -66,8 +66,8 @@ public class LoanApplicationControllerTest extends BaseControllerMockMVCTest<Loa
     private ObjectMapper objectMapper;
 
     @Override
-    protected LoanApplicationController supplyControllerUnderTest() {
-        return new LoanApplicationController();
+    protected ApplicationUpdateController supplyControllerUnderTest() {
+        return new ApplicationUpdateController();
     }
 
     @Before
@@ -86,7 +86,7 @@ public class LoanApplicationControllerTest extends BaseControllerMockMVCTest<Loa
         QuestionResource question = newQuestionResource().withId(1L).withQuestionSetupType(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION).build();
         QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(question.getId(), applicationId);
 
-        SilLoanApplicationStatus silStatus = new SilLoanApplicationStatus();
+        SilApplicationStatus silStatus = new SilApplicationStatus();
         silStatus.setCompletionStatus(QuestionStatus.COMPLETE);
         silStatus.setQuestionSetupType(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION);
         silStatus.setCompletionDate(ZonedDateTime.now(ZoneId.of("UTC")));
@@ -118,7 +118,7 @@ public class LoanApplicationControllerTest extends BaseControllerMockMVCTest<Loa
         QuestionResource question = newQuestionResource().withId(1L).withQuestionSetupType(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION).build();
         QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(question.getId(), applicationId);
 
-        SilLoanApplicationStatus silStatus = new SilLoanApplicationStatus();
+        SilApplicationStatus silStatus = new SilApplicationStatus();
         silStatus.setCompletionStatus(QuestionStatus.COMPLETE);
         silStatus.setQuestionSetupType(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION);
         silStatus.setCompletionDate(ZonedDateTime.now(ZoneId.of("UTC")));
@@ -152,7 +152,7 @@ public class LoanApplicationControllerTest extends BaseControllerMockMVCTest<Loa
         QuestionResource question = newQuestionResource().withId(1L).withQuestionSetupType(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION).build();
         QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(question.getId(), applicationId);
 
-        SilLoanApplicationStatus silStatus = new SilLoanApplicationStatus();
+        SilApplicationStatus silStatus = new SilApplicationStatus();
         silStatus.setCompletionStatus(QuestionStatus.INCOMPLETE);
         silStatus.setQuestionSetupType(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION);
         silStatus.setCompletionDate(ZonedDateTime.now(ZoneId.of("UTC")));
@@ -178,7 +178,7 @@ public class LoanApplicationControllerTest extends BaseControllerMockMVCTest<Loa
     @Test
     public void updateApplicationUnauthorized() throws Exception {
         long applicationId = 1L;
-        SilLoanApplicationStatus silStatus = new SilLoanApplicationStatus();
+        SilApplicationStatus silStatus = new SilApplicationStatus();
 
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(null);
 
@@ -196,7 +196,7 @@ public class LoanApplicationControllerTest extends BaseControllerMockMVCTest<Loa
         QuestionResource question = newQuestionResource().withId(1L).build();
         QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(question.getId(), applicationId);
 
-        SilLoanApplicationStatus silStatus = new SilLoanApplicationStatus();
+        SilApplicationStatus silStatus = new SilApplicationStatus();
         silStatus.setCompletionStatus(QuestionStatus.COMPLETE);
         silStatus.setQuestionSetupType(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION);
         silStatus.setCompletionDate(ZonedDateTime.now(ZoneId.of("UTC")));
