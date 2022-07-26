@@ -386,7 +386,7 @@ The user is able to go to Application overview
 The user fills in the Competition Setup Project eligibility section
     [Arguments]  ${organisationType}
     the user clicks the button/link                      link = Project eligibility
-    the user clicks the button/link                      jQuery = label:contains("single-or-collaborative-single")
+    the user clicks the button/link                      jQuery = label:contains("single-or-collaborative-single-or-collaborative")
     The user clicks the button/link                      css = label[for="lead-applicant-type-${organisationType}"]
     the user enters text to a text field                 id = researchParticipationPercentage   0
     the user clicks the button/link                      jQuery = label:contains("comp-resubmissions-no")
