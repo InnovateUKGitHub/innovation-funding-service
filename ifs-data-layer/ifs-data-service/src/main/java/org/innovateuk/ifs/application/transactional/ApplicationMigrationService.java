@@ -21,4 +21,8 @@ public interface ApplicationMigrationService {
     @SecuredBySpring(value = "UPDATE_APPLICATION_MIGRATION_STATUS", description = "A System Maintenance User can update application migration status.")
     @PreAuthorize("hasAuthority('system_maintainer')")
     ServiceResult<ApplicationMigration> updateApplicationMigrationStatus(ApplicationMigration applicationMigration);
+
+    @SecuredBySpring(value = "CLONE_PRE_REG_APPLICATION", description = "An ifs admin can clone pre reg application.")
+    @PreAuthorize("hasAuthority('comp_admin')")
+    ServiceResult<Long> clonePreRegApplication(long applicationId);
 }

@@ -2,6 +2,8 @@ package org.innovateuk.ifs.fundingdecision.transactional;
 
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
+import org.innovateuk.ifs.application.transactional.ApplicationMigrationService;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -10,6 +12,7 @@ import org.innovateuk.ifs.project.core.transactional.ProjectToBeCreatedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
@@ -28,6 +31,12 @@ public class ApplicationFundingNotificationBulkServiceImpl implements Applicatio
 
     @Autowired
     private ProjectToBeCreatedService projectToBeCreatedService;
+
+    @Autowired
+    private ApplicationService applicationService;
+
+    @Autowired
+    private ApplicationMigrationService applicationMigrationService;
 
     @Override
     public ServiceResult<Void> sendBulkFundingNotifications(FundingNotificationResource fundingNotificationResource) {
@@ -56,9 +65,18 @@ public class ApplicationFundingNotificationBulkServiceImpl implements Applicatio
 
     private ServiceResult<Void> handleSuccessfulNotificationsCreatingProjects(FundingNotificationResource fundingNotificationResource) {
         return aggregate(fundingNotificationResource.getFundingDecisions().keySet().stream()
-                .map(applicationId -> projectToBeCreatedService.markApplicationReadyToBeCreated(applicationId, fundingNotificationResource.getMessageBody()))
+                .map(applicationId -> applicationService.getApplicationById(applicationId).getSuccess())
+                .map(application -> application.isEnabledForExpressionOfInterest()
+                        ? clonePreRegApplication(application.getId(), fundingNotificationResource.getMessageBody())
+                        : projectToBeCreatedService.markApplicationReadyToBeCreated(application.getId(), fundingNotificationResource.getMessageBody()))
                 .collect(toList()))
                 .andOnSuccessReturnVoid();
+    }
+
+    private ServiceResult<Void> clonePreRegApplication(long applicationId, String emailBody) {
+        return applicationMigrationService.clonePreRegApplication(applicationId)
+                .andOnSuccessReturnVoid(clonedApplicationId -> applicationFundingService.notifyApplicantsOfFundingDecisions(
+                        new FundingNotificationResource(emailBody, Collections.singletonMap(clonedApplicationId, FundingDecision.FUNDED))));
     }
 
     private boolean fundingNotificationTriggersProjectSetup(Map<Long, FundingDecision> fundingDecisions) {

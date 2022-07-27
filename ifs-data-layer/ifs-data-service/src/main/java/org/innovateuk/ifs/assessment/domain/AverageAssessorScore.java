@@ -39,6 +39,10 @@ public class AverageAssessorScore {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public BigDecimal getScore() {
         return score;
     }

@@ -67,6 +67,11 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isMemberOfProjectTeam(application.getId(), user);
     }
 
+    @PermissionRule(value = "UPDATE", description = "A comp admin can update application")
+    public boolean compAdminCanUpdateApplicationResource(ApplicationResource application, UserResource user) {
+        return isCompAdmin(user);
+    }
+
     @PermissionRule(value = "READ_AVAILABLE_INNOVATION_AREAS", description = "A user can view the Innovation Areas that are available to their applications")
     public boolean usersConnectedToTheApplicationCanViewInnovationAreas(ApplicationResource applicationResource, final UserResource user) {
         return isMemberOfProjectTeam(applicationResource.getId(), user);

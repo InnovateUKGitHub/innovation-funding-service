@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.fundingdecision.transactional;
 
 import com.google.common.collect.ImmutableMap;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -16,6 +18,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Map;
 
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
 import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -39,6 +42,9 @@ public class ApplicationFundingNotificationBulkServiceImplTest {
     @Mock
     private ProjectToBeCreatedService projectToBeCreatedService;
 
+    @Mock
+    private ApplicationService applicationService;
+
     @Test
     public void sendBulkFundingNotifications() {
         String messageBody = "MyMessage";
@@ -47,6 +53,9 @@ public class ApplicationFundingNotificationBulkServiceImplTest {
                 .build();
         long successfulApplicationId = 1L;
         long unsuccessfulApplicationId = 2L;
+        ApplicationResource application = newApplicationResource()
+                .withId(successfulApplicationId)
+                .build();
         Map<Long, FundingDecision> decisions = ImmutableMap.<Long, FundingDecision> builder()
             .put(successfulApplicationId, FUNDED)
             .put(unsuccessfulApplicationId, UNFUNDED)
@@ -60,6 +69,7 @@ public class ApplicationFundingNotificationBulkServiceImplTest {
         when(competitionService.getCompetitionByApplicationId(successfulApplicationId)).thenReturn(serviceSuccess(competition));
         when(applicationFundingService.notifyApplicantsOfFundingDecisions(unfundedResource)).thenReturn(serviceSuccess());
         when(projectToBeCreatedService.markApplicationReadyToBeCreated(successfulApplicationId, messageBody)).thenReturn(serviceSuccess());
+        when(applicationService.getApplicationById(successfulApplicationId)).thenReturn(serviceSuccess(application));
 
         ServiceResult<Void> result = service.sendBulkFundingNotifications(resource);
 
