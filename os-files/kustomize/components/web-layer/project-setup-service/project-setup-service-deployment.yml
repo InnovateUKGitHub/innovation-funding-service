@@ -113,9 +113,9 @@ spec:
               value: 'ifs-$(NEW_RELIC_ENV)-project-setup-service'
           ports:
             - containerPort: 8080
-#          resources:
-#            limits:
-#              cpu: 1000m
-#            requests:
-#              cpu: 100m
-#              memory: 1G
+          resources:
+            limits:
+              cpu: 1000m
+            requests:
+              cpu: 100m
+              memory: 1G

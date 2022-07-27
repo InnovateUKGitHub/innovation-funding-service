@@ -23,7 +23,6 @@ resources:
   - ../../../config-mgmt/env/aws/custom
   - routes/mail-route.yml
   - routes/fss-route.yml
-  - limitRange.yml
 
 patchesStrategicMerge:
   - web-layer/registration-service/registration-service-deployment.yml

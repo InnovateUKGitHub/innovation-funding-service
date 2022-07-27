@@ -34,11 +34,11 @@ spec:
                   name: shibboleth-config
             - name: BAMBOO_TESTSUITE
               value: BAMBOO_TESTSUITE_VAR
-#          resources:
-#            limits:
-#              cpu: 2000m
-#              memory: 2000M
-#            requests:
-#              cpu: 100m
-#              memory: 400M
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 2000M
+            requests:
+              cpu: 100m
+              memory: 400M
 

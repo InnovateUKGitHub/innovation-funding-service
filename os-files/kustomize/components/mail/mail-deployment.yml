@@ -25,8 +25,8 @@ spec:
             - containerPort: 8025
             - containerPort: 4443
             - containerPort: 8143
-#          resources:
-#            requests:
-#              memory: 50M
-#            limits:
-#              memory: 60M
+          resources:
+            requests:
+              memory: 50M
+            limits:
+              memory: 60M

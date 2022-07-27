@@ -71,10 +71,10 @@ spec:
                 key: DB_PASS
         ports:
           - containerPort: 8080
-#        resources:
-#          limits:
-#            cpu: 1000m
-#            memory: 1000M
-#          requests:
-#            cpu: 200m
-#            memory: 750M
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1000M
+          requests:
+            cpu: 200m
+            memory: 750M

@@ -32,11 +32,11 @@ spec:
             - name: mysql-initdb
               mountPath: /etc/mysql/my.cnf
               subPath: my.cnf
-#          resources:
-#            requests:
-#              memory: 600M
-#            limits:
-#              memory: 1500M
+          resources:
+            requests:
+              memory: 600M
+            limits:
+              memory: 1500M
       volumes:
         - name: mysql-tmp-storage
           emptyDir: {}

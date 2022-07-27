@@ -94,9 +94,9 @@ spec:
             value: 'ifs-$(NEW_RELIC_ENV)-finance-data-service'
         ports:
           - containerPort: 8080
-#        resources:
-#          limits:
-#            cpu: 1000m
-#          requests:
-#            cpu: 200m
-#            memory: 750M
+        resources:
+          limits:
+            cpu: 1000m
+          requests:
+            cpu: 200m
+            memory: 750M
