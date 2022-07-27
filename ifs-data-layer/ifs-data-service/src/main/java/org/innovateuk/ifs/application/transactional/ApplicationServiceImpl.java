@@ -12,6 +12,7 @@ import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
+import org.innovateuk.ifs.application.workflow.configuration.ApplicationEoiEvidenceWorkflowHandler;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -420,6 +421,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             }
         }
     }
+
     private void setExpressionOfInterest(Application application, ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig) {
         applicationExpressionOfInterestConfig.setApplication(application);
         applicationExpressionOfInterestConfig.setEnabledForExpressionOfInterest(true);

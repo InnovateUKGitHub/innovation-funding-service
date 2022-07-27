@@ -54,6 +54,7 @@ public class ApplicationResource {
     private Long assessmentPeriodId;
     private ZonedDateTime feedbackReleased;
     private ApplicationExpressionOfInterestConfigResource applicationExpressionOfInterestConfigResource;
+    private ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource;
 
     public Long getId() {
         return id;
@@ -363,6 +364,14 @@ public class ApplicationResource {
         return applicationExpressionOfInterestConfigResource != null ? applicationExpressionOfInterestConfigResource.isEnabledForExpressionOfInterest() : false;
     }
 
+    public ApplicationEoiEvidenceResponseResource getApplicationEoiEvidenceResponseResource() {
+        return applicationEoiEvidenceResponseResource;
+    }
+
+    public void setApplicationEoiEvidenceResponseResource(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource) {
+        this.applicationEoiEvidenceResponseResource = applicationEoiEvidenceResponseResource;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -400,6 +409,7 @@ public class ApplicationResource {
                 .append(lastStateChangeDate, that.lastStateChangeDate)
                 .append(assessmentPeriodId, that.assessmentPeriodId)
                 .append(applicationExpressionOfInterestConfigResource, that.applicationExpressionOfInterestConfigResource)
+                .append(applicationEoiEvidenceResponseResource, that.applicationEoiEvidenceResponseResource)
                 .isEquals();
     }
 
@@ -434,6 +444,7 @@ public class ApplicationResource {
                 .append(lastStateChangeDate)
                 .append(assessmentPeriodId)
                 .append(applicationExpressionOfInterestConfigResource)
+                .append(applicationEoiEvidenceResponseResource)
                 .toHashCode();
     }
 }

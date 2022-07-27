@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.testdata.builders;
 
+import org.innovateuk.ifs.application.domain.ApplicationEoiEvidenceResponse;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
@@ -217,11 +218,11 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                         .applicationId(application.getId())
                         .organisationId(application.getLeadOrganisationId())
                         .fileEntryId(fileEntry.getId())
-                        .eoiEvidenceStatus(EoiEvidenceStatus.SUBMITTED)
-                        .processRoleId(processRole.getId())
-                        .uploadedOn(ZonedDateTime.now()).build();
+                        .build();
 
-                applicationEoiEvidenceResponseService.create(applicationEoiEvidenceResponseResource);
+                applicationEoiEvidenceResponseService.create(applicationEoiEvidenceResponseResource)
+                        .andOnSuccess((createdApplicationEoiEvidenceResponseResource) -> applicationEoiEvidenceResponseService.submit(createdApplicationEoiEvidenceResponseResource, data.getLeadApplicant()))
+                ;
             }
         });
     }

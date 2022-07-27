@@ -24,5 +24,6 @@ public enum State {
     CONFLICT_OF_INTEREST,
     HANDLED_OFFLINE,
     COMPLETED_OFFLINE,
-    ON_HOLD
+    ON_HOLD,
+    NOT_SUBMITTED
 }
