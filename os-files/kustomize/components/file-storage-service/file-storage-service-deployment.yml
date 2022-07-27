@@ -9,6 +9,7 @@ metadata:
     pullSecrets: pullSecrets
     slow: slow
     newRelic: newRelic
+    rabbitMQ: rabbitMQ
 spec:
   replicas: 1
   selector:
@@ -23,6 +24,10 @@ spec:
       - name: spring-boot-service-container
         image: file-storage-service
         imagePullPolicy: IfNotPresent
+        lifecycle:
+          preStop:
+            exec:
+              command: [ "/bin/sh", "-c", "echo 'terminating pod' >> /proc/1/fd/1" ]
         livenessProbe:
           httpGet:
             path: /monitoring/health

@@ -1,0 +1,6 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+org.innovateuk.ifs.starters.audit.cfg.AuditAutoConfiguration
+
+# Environment Post Processors
+org.springframework.context.ApplicationContextInitializer=\
+org.innovateuk.ifs.starters.audit.cfg.rabbit.IfsRabbitContextInitializer
