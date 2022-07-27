@@ -63,8 +63,8 @@ ATI subsidy control t&c's are correct
     And the user clicks the button/link                  link = Terms and conditions
     And the user clicks the button/link                  jQuery = button:contains("Edit")
     When the user clicks the button/link                 link = ${atiSubsidyControl}
-    And select window                                    title = Terms and conditions of an Innovate UK grant award - Innovation Funding Service
-    Then the user should see the element                 jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
+    And select window                                    title = Terms and conditions of an ATI Programme grant - Innovation Funding Service
+    Then the user should see the element                 jQuery = h1:contains("Terms and conditions of an ATI Programme grant")
     And the user should see the element                  jQuery = li:contains("UK Subsidy obligations")
     [Teardown]   the user closes the last opened tab
 
