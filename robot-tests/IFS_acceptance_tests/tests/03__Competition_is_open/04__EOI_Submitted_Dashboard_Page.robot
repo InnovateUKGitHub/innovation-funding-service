@@ -29,7 +29,7 @@ Filter on application number, sent and Expression of interest decision
     [Documentation]    IFS-12177
     Given the user enters text to a text field                  id = stringFilter    ${openCompetitionPreRegApplicationId}
     And the user selects the option from the drop-down menu     Yes    id= sendFilter
-    And the user selects the option from the drop-down menu     Successful    id= EOI_APPROVED
+    And the user selects the option from the drop-down menu     Successful    id= fundingFilter
     When the user clicks the button/link                        jQuery = button:contains("Filter")
     Then the user should see the element                        jQuery = td:contains("Horizon Europe Guarantee Eoi Application3")
     And the user should see the element                         jQuery = td:contains("Successful")
@@ -72,7 +72,7 @@ Filter on application number, sent and Expression of interest decision on Expres
     [Documentation]    IFS-12261
     When the user enters text to a text field                   id = stringFilter    ${openCompetitionPreRegApplicationId}
     And the user selects the option from the drop-down menu     Yes    id= sendFilter
-    And the user selects the option from the drop-down menu     Successful    id= EOI_APPROVED
+    And the user selects the option from the drop-down menu     Successful    id= fundingFilter
     When the user clicks the button/link                        jQuery = button:contains("Filter")
     Then the user should see the element                        jQuery = td:contains("Horizon Europe Guarantee Eoi Application3")
     And the user should see the element                         jQuery = td:contains("Successful")
