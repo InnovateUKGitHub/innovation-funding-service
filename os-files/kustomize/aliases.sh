@@ -148,6 +148,7 @@ k8s_clean_svc() {
 k8s_clean_all() {
   _assert_context
   kubectl delete deployment --all
+  kubectl delete statefulset --all
   kubectl delete svc application-svc
   kubectl delete svc assessment-svc
   kubectl delete svc competition-mgt-svc

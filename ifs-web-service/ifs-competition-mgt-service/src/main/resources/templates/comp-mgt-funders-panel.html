@@ -67,9 +67,15 @@
                                         th:field="*{fundingFilter}">
                                     <option value="">Show all</option>
                                     <option value="UNDECIDED">Blank</option>
-                                    <option value="FUNDED">Successful</option>
-                                    <option value="UNFUNDED">Unsuccessful</option>
-                                    <option th:unless="${model.expressionOfInterestEnabled}" value="ON_HOLD">On hold</option>
+                                    <th:block th:if="${model.expressionOfInterestEnabled}">
+                                        <option value="EOI_APPROVED">Successful</option>
+                                        <option value="EOI_REJECTED">Unsuccessful</option>
+                                    </th:block>
+                                    <th:block th:unless="${model.expressionOfInterestEnabled}">
+                                        <option value="FUNDED">Successful</option>
+                                        <option value="UNFUNDED">Unsuccessful</option>
+                                        <option value="ON_HOLD">On hold</option>
+                                    </th:block>
                                 </select>
                             </div>
                         </div>
