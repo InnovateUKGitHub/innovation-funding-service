@@ -22,6 +22,7 @@ import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -32,6 +33,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
+@Service
 public class ApplicationEoiServiceImpl implements ApplicationEoiService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationEoiServiceImpl.class);
