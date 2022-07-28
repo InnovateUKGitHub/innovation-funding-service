@@ -154,7 +154,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                 .andOnSuccessReturnVoid();
     }
 
-    public ServiceResult<Long> migrateApplication(long applicationId, boolean isDeleteApplication) {
+    private ServiceResult<Long> migrateApplication(long applicationId, boolean isDeleteApplication) {
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
                 .andOnSuccess(application -> {
                     Application migratedApplication = migrateApplication(application);
