@@ -107,7 +107,8 @@ public class ApplicationUpdateController {
                 failure -> RestResult.restFailure(failure.getErrors(), HttpStatus.BAD_REQUEST),
                 competition -> {
 
-                    if (!(competition.isLoan() || competition.getCompetitionApplicationConfigResource().isImSurveyRequired())) {
+                    if (!(competition.isLoan() ||
+                            (competition.getCompetitionApplicationConfigResource() !=null && competition.getCompetitionApplicationConfigResource().isImSurveyRequired()))) {
                         log.error(String.format("application-update error: application %d is not an application for a Loans or IM competition", applicationId));
                         return RestResult.restFailure(new Error(CommonFailureKeys.GENERAL_FORBIDDEN));
                     }

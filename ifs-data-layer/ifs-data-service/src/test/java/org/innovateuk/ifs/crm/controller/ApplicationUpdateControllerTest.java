@@ -3,6 +3,7 @@ package org.innovateuk.ifs.crm.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
+import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResource;
 import org.innovateuk.ifs.crm.transactional.SilMessageRecordingService;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.QuestionStatus;
@@ -188,11 +189,18 @@ public class ApplicationUpdateControllerTest extends BaseControllerMockMVCTest<A
     }
 
     @Test
-    public void updateApplicationNotLoan() throws Exception {
+    public void updateApplicationNotLoanOrIM() throws Exception {
         long applicationId = 1L;
         UserResource user = newUserResource().withId(1L).build();
+        CompetitionApplicationConfigResource competitionApplicationConfigResource = new CompetitionApplicationConfigResource();
+        competitionApplicationConfigResource.setImSurveyRequired(false);
+
         ProcessRoleResource processRole = newProcessRoleResource().withId(1L).build();
-        CompetitionResource competition = newCompetitionResource().withId(1L).build();
+        CompetitionResource competition = newCompetitionResource().withId(1L)
+                .withCompetitionApplicationConfig(competitionApplicationConfigResource)
+                .build();
+
+
         QuestionResource question = newQuestionResource().withId(1L).build();
         QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(question.getId(), applicationId);
 
