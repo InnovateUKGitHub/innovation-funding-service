@@ -69,7 +69,7 @@ public class ApplicationPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "UPDATE", description = "A comp admin can update application")
     public boolean compAdminCanUpdateApplicationResource(ApplicationResource application, UserResource user) {
-        return isCompAdmin(user);
+        return (application.eoiApplicationId() != null) && isCompAdmin(user);
     }
 
     @PermissionRule(value = "READ_AVAILABLE_INNOVATION_AREAS", description = "A user can view the Innovation Areas that are available to their applications")

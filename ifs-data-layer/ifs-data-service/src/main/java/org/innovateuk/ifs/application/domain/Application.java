@@ -123,8 +123,6 @@ public class Application implements ProcessActivity {
     @OneToOne(mappedBy = "application", fetch = FetchType.LAZY)
     private ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig;
 
-    private Long preRegApplicationId;
-
     public Application() {
     }
 
@@ -162,7 +160,6 @@ public class Application implements ProcessActivity {
         this.companyAge = application.getCompanyAge();
         this.companyPrimaryFocus = application.getCompanyPrimaryFocus();
         this.applicationExpressionOfInterestConfig = application.getApplicationExpressionOfInterestConfig();
-        this.preRegApplicationId = application.getPreRegApplicationId();
     }
 
     protected boolean canEqual(Object other) {
@@ -573,13 +570,5 @@ public class Application implements ProcessActivity {
     @Transient
     public boolean isEnabledForExpressionOfInterest() {
         return applicationExpressionOfInterestConfig != null ? applicationExpressionOfInterestConfig.isEnabledForExpressionOfInterest() : false;
-    }
-
-    public Long getPreRegApplicationId() {
-        return preRegApplicationId;
-    }
-
-    public void setPreRegApplicationId(Long preRegApplicationId) {
-        this.preRegApplicationId = preRegApplicationId;
     }
 }

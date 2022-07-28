@@ -363,6 +363,10 @@ public class ApplicationResource {
         return applicationExpressionOfInterestConfigResource != null ? applicationExpressionOfInterestConfigResource.isEnabledForExpressionOfInterest() : false;
     }
 
+    public Long eoiApplicationId() {
+        return applicationExpressionOfInterestConfigResource.getEoiApplicationId();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

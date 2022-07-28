@@ -25,4 +25,6 @@ public class ApplicationExpressionOfInterestConfig {
     @Column(name = "pre_registration", nullable = false)
     private boolean enabledForExpressionOfInterest;
 
+    @Column(name = "pre_registration_application_id")
+    private Long eoiApplicationId;
 }

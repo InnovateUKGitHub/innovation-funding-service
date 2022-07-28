@@ -2,7 +2,7 @@ package org.innovateuk.ifs.fundingdecision.transactional;
 
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
-import org.innovateuk.ifs.application.transactional.ApplicationMigrationService;
+import org.innovateuk.ifs.application.transactional.ApplicationEoiService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
@@ -36,7 +36,7 @@ public class ApplicationFundingNotificationBulkServiceImpl implements Applicatio
     private ApplicationService applicationService;
 
     @Autowired
-    private ApplicationMigrationService applicationMigrationService;
+    private ApplicationEoiService applicationEoiService;
 
     @Override
     public ServiceResult<Void> sendBulkFundingNotifications(FundingNotificationResource fundingNotificationResource) {
@@ -67,16 +67,16 @@ public class ApplicationFundingNotificationBulkServiceImpl implements Applicatio
         return aggregate(fundingNotificationResource.getFundingDecisions().keySet().stream()
                 .map(applicationId -> applicationService.getApplicationById(applicationId).getSuccess())
                 .map(application -> application.isEnabledForExpressionOfInterest()
-                        ? clonePreRegApplication(application.getId(), fundingNotificationResource.getMessageBody())
+                        ? sendEoiNotificationAndCreateFullApplication(application.getId(), fundingNotificationResource.getMessageBody())
                         : projectToBeCreatedService.markApplicationReadyToBeCreated(application.getId(), fundingNotificationResource.getMessageBody()))
                 .collect(toList()))
                 .andOnSuccessReturnVoid();
     }
 
-    private ServiceResult<Void> clonePreRegApplication(long applicationId, String emailBody) {
-        return applicationMigrationService.clonePreRegApplication(applicationId)
-                .andOnSuccessReturnVoid(clonedApplicationId -> applicationFundingService.notifyApplicantsOfFundingDecisions(
-                        new FundingNotificationResource(emailBody, Collections.singletonMap(clonedApplicationId, FundingDecision.FUNDED))));
+    private ServiceResult<Void> sendEoiNotificationAndCreateFullApplication(long applicationId, String emailBody) {
+        return applicationFundingService.notifyApplicantsOfFundingDecisions(
+                    new FundingNotificationResource(emailBody, Collections.singletonMap(applicationId, FundingDecision.FUNDED)))
+                .andOnSuccessReturnVoid(() -> applicationEoiService.createFullApplicationFromEoi(applicationId));
     }
 
     private boolean fundingNotificationTriggersProjectSetup(Map<Long, FundingDecision> fundingDecisions) {

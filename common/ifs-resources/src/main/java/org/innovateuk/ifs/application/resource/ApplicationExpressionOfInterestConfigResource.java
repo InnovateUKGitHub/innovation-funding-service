@@ -8,13 +8,16 @@ public class ApplicationExpressionOfInterestConfigResource {
 
     private boolean enabledForExpressionOfInterest;
 
+    private Long eoiApplicationId;
+
     public ApplicationExpressionOfInterestConfigResource() {
     }
 
-    public ApplicationExpressionOfInterestConfigResource(Long id, Long applicationId, boolean enabledForExpressionOfInterest) {
+    public ApplicationExpressionOfInterestConfigResource(Long id, Long applicationId, boolean enabledForExpressionOfInterest, Long eoiApplicationId) {
         this.id = id;
         this.applicationId = applicationId;
         this.enabledForExpressionOfInterest = enabledForExpressionOfInterest;
+        this.eoiApplicationId = eoiApplicationId;
     }
 
     public Long getId() {
@@ -39,5 +42,13 @@ public class ApplicationExpressionOfInterestConfigResource {
 
     public void setEnabledForExpressionOfInterest(boolean enabledForExpressionOfInterest) {
         this.enabledForExpressionOfInterest = enabledForExpressionOfInterest;
+    }
+
+    public Long getEoiApplicationId() {
+        return eoiApplicationId;
+    }
+
+    public void setEoiApplicationId(Long eoiApplicationId) {
+        this.eoiApplicationId = eoiApplicationId;
     }
 }
