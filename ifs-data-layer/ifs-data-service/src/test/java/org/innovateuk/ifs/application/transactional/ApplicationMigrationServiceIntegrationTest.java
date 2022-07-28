@@ -25,8 +25,17 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder;
+import org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder;
+import org.innovateuk.ifs.finance.builder.FinanceRowMetaFieldBuilder;
+import org.innovateuk.ifs.finance.builder.FinanceRowMetaValueBuilder;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
+import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
+import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
+import org.innovateuk.ifs.finance.domain.FinanceRowMetaValue;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
+import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
+import org.innovateuk.ifs.finance.repository.FinanceRowMetaValueRepository;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.grant.domain.GrantProcess;
@@ -34,6 +43,11 @@ import org.innovateuk.ifs.grant.repository.GrantProcessRepository;
 import org.innovateuk.ifs.granttransfer.builder.EuGrantTransferBuilder;
 import org.innovateuk.ifs.granttransfer.domain.EuGrantTransfer;
 import org.innovateuk.ifs.granttransfer.repository.EuGrantTransferRepository;
+import org.innovateuk.ifs.horizon.builder.HorizonWorkProgrammeBuilder;
+import org.innovateuk.ifs.horizon.domain.ApplicationHorizonWorkProgramme;
+import org.innovateuk.ifs.horizon.domain.HorizonWorkProgramme;
+import org.innovateuk.ifs.horizon.repository.ApplicationHorizonWorkProgrammeRepository;
+import org.innovateuk.ifs.horizon.repository.HorizonWorkProgrammeRepository;
 import org.innovateuk.ifs.interview.domain.Interview;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
@@ -111,6 +125,15 @@ public class ApplicationMigrationServiceIntegrationTest extends BaseAuthenticati
     private ApplicationFinanceRepository applicationFinanceRepository;
 
     @Autowired
+    private ApplicationFinanceRowRepository applicationFinanceRowRepository;
+
+    @Autowired
+    private FinanceRowMetaValueRepository financeRowMetaValueRepository;
+
+    @Autowired
+    private FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
+
+    @Autowired
     private ApplicationHiddenFromDashboardRepository applicationHiddenFromDashboardRepository;
 
     @Autowired
@@ -182,6 +205,15 @@ public class ApplicationMigrationServiceIntegrationTest extends BaseAuthenticati
     @Autowired
     private ApplicationMigrationService applicationMigrationService;
 
+    @Autowired
+    private ApplicationExpressionOfInterestConfigRepository applicationExpressionOfInterestConfigRepository;
+
+    @Autowired
+    private HorizonWorkProgrammeRepository horizonWorkProgrammeRepository;
+
+    @Autowired
+    private ApplicationHorizonWorkProgrammeRepository applicationHorizonWorkProgrammeRepository;
+
     private Long applicationId;
 
     @Before
@@ -218,8 +250,25 @@ public class ApplicationMigrationServiceIntegrationTest extends BaseAuthenticati
                 .withType(ActivityType.APPLICATION_SUBMITTED)
                 .build());
 
-        applicationFinanceRepository.save(ApplicationFinanceBuilder.newApplicationFinance()
-                .withApplication(application).build());
+        ApplicationFinance applicationFinance = applicationFinanceRepository.save(ApplicationFinanceBuilder.newApplicationFinance()
+                .withApplication(application)
+                .build());
+
+        ApplicationFinanceRow applicationFinanceRow = applicationFinanceRowRepository.save(ApplicationFinanceRowBuilder.newApplicationFinanceRow()
+                .withTarget(applicationFinance)
+                .build());
+
+        FinanceRowMetaField financeRowMetaField = financeRowMetaFieldRepository.save(FinanceRowMetaFieldBuilder.newFinanceRowMetaField()
+                .withTitle("country")
+                .withType("String")
+                .build());
+
+        FinanceRowMetaValue financeRowMetaValue = FinanceRowMetaValueBuilder.newFinanceRowMetaValue()
+                .withFinanceRow(applicationFinanceRow.getId())
+                .withFinanceRowMetaField(financeRowMetaField)
+                .withValue("GB")
+                .build();
+        financeRowMetaValueRepository.save(financeRowMetaValue);
 
         applicationHiddenFromDashboardRepository.save(new ApplicationHiddenFromDashboard(application, user));
 
@@ -286,6 +335,18 @@ public class ApplicationMigrationServiceIntegrationTest extends BaseAuthenticati
         applicationKtaInviteRepository.save(new ApplicationKtaInvite("name", "application_kta_invite@email.com", application,UUID.randomUUID().toString(), InviteStatus.CREATED));
 
         applicationMigrationRepository.save(new ApplicationMigration(applicationId, MigrationStatus.CREATED));
+
+        ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig = ApplicationExpressionOfInterestConfig.builder()
+                .application(application)
+                .enabledForExpressionOfInterest(true)
+                .build();
+        applicationExpressionOfInterestConfigRepository.save(applicationExpressionOfInterestConfig);
+
+        HorizonWorkProgramme horizonWorkProgramme = horizonWorkProgrammeRepository.save(HorizonWorkProgrammeBuilder.newHorizonWorkProgramme()
+                .withName("HorizonWorkProgramme")
+                .withEnabled(true)
+                .build());
+        applicationHorizonWorkProgrammeRepository.save(new ApplicationHorizonWorkProgramme(applicationId, horizonWorkProgramme));
     }
 
     @Test
@@ -317,6 +378,18 @@ public class ApplicationMigrationServiceIntegrationTest extends BaseAuthenticati
         Application newApplication = optionalNewApplication.get();
         assertNotEquals(newApplication.getId(), applicationId);
 
+        applicationExpressionOfInterestConfigRepository.findOneByApplicationId(newApplication.getId()).stream()
+                        .forEach(applicationExpressionOfInterestConfig -> {
+                            assertNotNull(applicationExpressionOfInterestConfig);
+                            assertNotEquals(applicationExpressionOfInterestConfig.getApplication().getId(), applicationId);
+                        });
+
+        applicationHorizonWorkProgrammeRepository.findByApplicationId(newApplication.getId()).stream()
+                        .forEach(applicationHorizonWorkProgramme -> {
+                            assertNotNull(applicationHorizonWorkProgramme);
+                            assertNotEquals(applicationHorizonWorkProgramme.getApplicationId(), applicationId);
+                        });
+
         activityLogRepository.findByApplicationId(newApplication.getId()).stream()
                 .forEach(activityLog -> {
                     assertNotNull(activityLog);
@@ -327,6 +400,19 @@ public class ApplicationMigrationServiceIntegrationTest extends BaseAuthenticati
                 .forEach(applicationFinance -> {
                     assertNotNull(applicationFinance);
                     assertNotEquals(applicationFinance.getApplication().getId(), applicationId);
+
+                    applicationFinanceRowRepository.findByTargetId(applicationFinance.getId()).stream()
+                            .forEach(applicationFinanceRow -> {
+                                assertNotNull(applicationFinanceRow);
+                                assertNotNull(applicationFinanceRow);
+
+                                financeRowMetaValueRepository.financeRowId(applicationFinanceRow.getId()).stream()
+                                        .forEach(financeRowMetaValue -> {
+                                            assertNotNull(financeRowMetaValue);
+                                            assertNotNull(financeRowMetaValue.getFinanceRowMetaField());
+                                            assertNotNull(financeRowMetaValue.getValue());
+                                        });
+                            });
                 });
 
         applicationHiddenFromDashboardRepository.findByApplicationId(newApplication.getId()).stream()

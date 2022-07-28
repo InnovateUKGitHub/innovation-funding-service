@@ -19,6 +19,11 @@ public class ApplicationHorizonWorkProgramme {
     public ApplicationHorizonWorkProgramme() {
     }
 
+    public ApplicationHorizonWorkProgramme(Long applicationId, HorizonWorkProgramme workProgramme) {
+        this.applicationId = applicationId;
+        this.workProgramme = workProgramme;
+    }
+
     public ApplicationHorizonWorkProgramme(Long id, Long applicationId, HorizonWorkProgramme workProgramme) {
         this.id = id;
         this.applicationId = applicationId;
