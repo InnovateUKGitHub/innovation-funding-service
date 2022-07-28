@@ -33,6 +33,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.IMPACT_MANAGEMENT;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -79,7 +80,7 @@ public class ApplicationUpdateControllerTest extends BaseControllerMockMVCTest<A
     }
 
     @Test
-    public void updateApplicationSuccess() throws Exception {
+    public void updateLoanApplicationSuccess() throws Exception {
         long applicationId = 1L;
         UserResource user = newUserResource().withId(1L).build();
         ProcessRoleResource processRole = newProcessRoleResource().withId(1L).build();
@@ -90,6 +91,45 @@ public class ApplicationUpdateControllerTest extends BaseControllerMockMVCTest<A
         SilApplicationStatus silStatus = new SilApplicationStatus();
         silStatus.setCompletionStatus(QuestionStatus.COMPLETE);
         silStatus.setQuestionSetupType(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION);
+        silStatus.setCompletionDate(ZonedDateTime.now(ZoneId.of("UTC")));
+
+        when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
+        when(usersRolesService.getProcessRoleByUserIdAndApplicationId(user.getId(), applicationId))
+                .thenReturn(serviceSuccess(processRole));
+        when(competitionService.getCompetitionByApplicationId(applicationId))
+                .thenReturn(serviceSuccess(competition));
+        when(questionService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), silStatus.getQuestionSetupType()))
+                .thenReturn(serviceSuccess(question));
+        when(questionService.getQuestionById(ids.questionId)).thenReturn(serviceSuccess(question));
+        when(questionStatusService.markAsCompleteNoValidate(ids,processRole.getId())).thenReturn(serviceSuccess());
+        when(questionStatusService.markAsComplete(ids, processRole.getId(), silStatus.getCompletionDate()))
+                .thenReturn(serviceSuccess(Collections.emptyList()));
+
+        mockMvc.perform(patch("/application-update/{applicationId}", applicationId).contentType(APPLICATION_JSON).content(toJson(silStatus)))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void updateIMApplicationSuccess() throws Exception {
+        long applicationId = 1L;
+        UserResource user = newUserResource().withId(1L).build();
+        ProcessRoleResource processRole = newProcessRoleResource().withId(1L).build();
+
+        CompetitionApplicationConfigResource competitionApplicationConfigResource = new CompetitionApplicationConfigResource();
+        competitionApplicationConfigResource.setImSurveyRequired(true);
+
+        CompetitionResource competition = newCompetitionResource().withId(1L)
+                .withFundingType(FundingType.GRANT)
+                .withCompetitionApplicationConfig(competitionApplicationConfigResource)
+                .build();
+
+        QuestionResource question = newQuestionResource().withId(1L).withQuestionSetupType(IMPACT_MANAGEMENT).build();
+        QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(question.getId(), applicationId);
+
+        SilApplicationStatus silStatus = new SilApplicationStatus();
+        silStatus.setCompletionStatus(QuestionStatus.COMPLETE);
+        silStatus.setQuestionSetupType(IMPACT_MANAGEMENT);
         silStatus.setCompletionDate(ZonedDateTime.now(ZoneId.of("UTC")));
 
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
@@ -145,17 +185,25 @@ public class ApplicationUpdateControllerTest extends BaseControllerMockMVCTest<A
     }
 
     @Test
-    public void updateApplicationIncomplete() throws Exception {
+    public void updateLoanApplicationIncomplete() throws Exception {
         long applicationId = 1L;
         UserResource user = newUserResource().withId(1L).build();
         ProcessRoleResource processRole = newProcessRoleResource().withId(1L).build();
-        CompetitionResource competition = newCompetitionResource().withId(1L).withFundingType(FundingType.LOAN).build();
-        QuestionResource question = newQuestionResource().withId(1L).withQuestionSetupType(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION).build();
+
+        CompetitionApplicationConfigResource competitionApplicationConfigResource = new CompetitionApplicationConfigResource();
+        competitionApplicationConfigResource.setImSurveyRequired(true);
+        CompetitionResource competition = newCompetitionResource()
+                .withId(1L)
+                .withCompetitionApplicationConfig(competitionApplicationConfigResource)
+                .withFundingType(FundingType.GRANT).build();
+
+
+        QuestionResource question = newQuestionResource().withId(1L).withQuestionSetupType(IMPACT_MANAGEMENT).build();
         QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(question.getId(), applicationId);
 
         SilApplicationStatus silStatus = new SilApplicationStatus();
         silStatus.setCompletionStatus(QuestionStatus.INCOMPLETE);
-        silStatus.setQuestionSetupType(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION);
+        silStatus.setQuestionSetupType(IMPACT_MANAGEMENT);
         silStatus.setCompletionDate(ZonedDateTime.now(ZoneId.of("UTC")));
 
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
@@ -174,7 +222,36 @@ public class ApplicationUpdateControllerTest extends BaseControllerMockMVCTest<A
                 .andDo(print())
                 .andExpect(status().isNoContent());
     }
+    @Test
+    public void updateIMApplicationIncomplete() throws Exception {
+        long applicationId = 1L;
+        UserResource user = newUserResource().withId(1L).build();
+        ProcessRoleResource processRole = newProcessRoleResource().withId(1L).build();
+        CompetitionResource competition = newCompetitionResource().withId(1L).withFundingType(FundingType.GRANT).build();
+        QuestionResource question = newQuestionResource().withId(1L).withQuestionSetupType(IMPACT_MANAGEMENT).build();
+        QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(question.getId(), applicationId);
 
+        SilApplicationStatus silStatus = new SilApplicationStatus();
+        silStatus.setCompletionStatus(QuestionStatus.INCOMPLETE);
+        silStatus.setQuestionSetupType(IMPACT_MANAGEMENT);
+        silStatus.setCompletionDate(ZonedDateTime.now(ZoneId.of("UTC")));
+
+        when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
+        when(usersRolesService.getProcessRoleByUserIdAndApplicationId(user.getId(), applicationId))
+                .thenReturn(serviceSuccess(processRole));
+        when(competitionService.getCompetitionByApplicationId(applicationId))
+                .thenReturn(serviceSuccess(competition));
+        when(questionService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), silStatus.getQuestionSetupType()))
+                .thenReturn(serviceSuccess(question));
+        when(questionService.getQuestionById(ids.questionId)).thenReturn(serviceSuccess(question));
+        when(questionStatusService.markAsCompleteNoValidate(ids, user.getId())).thenReturn(serviceSuccess());
+        when(questionStatusService.markAsInComplete(ids, processRole.getId()))
+                .thenReturn(serviceSuccess(Collections.emptyList()));
+
+        mockMvc.perform(patch("/application-update/{applicationId}", applicationId).contentType(APPLICATION_JSON).content(toJson(silStatus)))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+    }
 
     @Test
     public void updateApplicationUnauthorized() throws Exception {
