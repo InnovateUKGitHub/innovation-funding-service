@@ -27,7 +27,7 @@ import static org.innovateuk.ifs.IfsProfileConstants.STUBDEV;
 import static org.innovateuk.ifs.starters.stubdev.cfg.StubDevConfigurationProperties.STUB_DEV_PROPS_PREFIX;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class IfsStubDevAutoConfigurationTest {
+class IfsStubDevAutoConfigurationTest {
 
     private static final List COMMON = ImmutableList.of(
             WarningLogger.class,
@@ -46,7 +46,7 @@ public class IfsStubDevAutoConfigurationTest {
 
     @Test
     @ResourceLock("COMMON")
-    public void testConfigWithDevtoolsAndProfileAndThymleafDebug() {
+    void testConfigWithDevtoolsAndProfileAndThymleafDebug() {
         new ApplicationContextRunner()
                 .withSystemProperties(ProfileUtils.activeProfilesString(STUBDEV))
                 .withSystemProperties(
@@ -65,9 +65,9 @@ public class IfsStubDevAutoConfigurationTest {
 
     @Test
     @ResourceLock("COMMON")
-    public void testConfigWithDevtoolsAndWrongProfile() {
+    void testConfigWithDevtoolsAndWrongProfile() {
         new ApplicationContextRunner()
-                .withSystemProperties(ProfileUtils.activeProfilesString(IfsProfileConstants.AMQP_PROFILE))
+                .withSystemProperties(ProfileUtils.activeProfilesString(IfsProfileConstants.LOCAL_STORAGE))
                 .withConfiguration(
                         AutoConfigurations.of(LocalDevToolsAutoConfiguration.class, IfsStubDevAutoConfiguration.class)
                 ).run((context) -> {
@@ -78,7 +78,7 @@ public class IfsStubDevAutoConfigurationTest {
 
     @Test
     @ResourceLock("COMMON")
-    public void testConfigWithDevtoolsAndProfile() {
+    void testConfigWithDevtoolsAndProfile() {
         new ApplicationContextRunner()
                 .withSystemProperties(
                     ProfileUtils.activeProfilesString(STUBDEV),
@@ -94,7 +94,7 @@ public class IfsStubDevAutoConfigurationTest {
 
     @Test
     @ResourceLock("COMMON")
-    public void testConfigWithDevtoolsNoProfile() {
+    void testConfigWithDevtoolsNoProfile() {
         new ApplicationContextRunner()
                 .withConfiguration(
                         AutoConfigurations.of(LocalDevToolsAutoConfiguration.class, IfsStubDevAutoConfiguration.class)
@@ -106,7 +106,7 @@ public class IfsStubDevAutoConfigurationTest {
 
     @Test
     @ResourceLock("COMMON")
-    public void testConfigNoDevtoolsNoProfile() {
+    void testConfigNoDevtoolsNoProfile() {
         new ApplicationContextRunner()
                 .withConfiguration(
                         AutoConfigurations.of(IfsStubDevAutoConfiguration.class)
