@@ -43,7 +43,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BooleanSupplier;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -66,7 +65,6 @@ public class CrmServiceImpl implements CrmService {
 
     @Autowired
     private CompetitionService competitionService;
-
 
     @Autowired
     private AssessmentService assessmentService;
@@ -104,7 +102,7 @@ public class CrmServiceImpl implements CrmService {
     @Override
     public ServiceResult<Void> syncCrmContact(long userId) {
         return userService.getUserById(userId).andOnSuccess(user -> {
-            syncExternalUser(user, null, null);
+            syncExternalUser(user, null, null, null);
             syncMonitoringOfficer(user);
 
             return serviceSuccess();
@@ -128,18 +126,18 @@ public class CrmServiceImpl implements CrmService {
         FundingType fundingType = competitionService.getCompetitionById(competitionId).getSuccess().getFundingType();
 
         return userService.getUserById(userId).andOnSuccess(user -> {
-            syncExternalUser(user, fundingType.getDisplayName(), applicationId);
+            syncExternalUser(user, fundingType.getDisplayName(), applicationId, competitionId);
             return serviceSuccess();
         });
     }
 
-    private void syncExternalUser(UserResource user, String fundingType, Long applicationId) {
+    private void syncExternalUser(UserResource user, String fundingType, Long applicationId, Long competitionId) {
         if (!user.isInternalUser()) {
             organisationService.getAllByUserId(user.getId()).andOnSuccessReturn(organisations -> {
                 ServiceResult<Void> result = serviceSuccess();
                 for (OrganisationResource organisation : organisations) {
                     result = result.andOnSuccess(() -> {
-                        SilContact silContact = externalUserToSilContact(user, organisation, fundingType, applicationId);
+                        SilContact silContact = externalUserToSilContact(user, organisation, fundingType, applicationId, competitionId);
                         getSilContactEmailAndOrganisationNameAndUpdateContact(silContact);
                     });
                 }
@@ -151,7 +149,7 @@ public class CrmServiceImpl implements CrmService {
     private void syncExternalUser(UserResource user, long projectId) {
         if (!user.isInternalUser()) {
             organisationService.getByUserAndProjectId(user.getId(), projectId).andOnSuccessReturn(organisation -> {
-                SilContact silContact = externalUserToSilContact(user, organisation, null, null);
+                SilContact silContact = externalUserToSilContact(user, organisation, null, null, null);
                 getSilContactEmailAndOrganisationNameAndUpdateContact(silContact);
                 return serviceSuccess();
             });
@@ -193,7 +191,6 @@ public class CrmServiceImpl implements CrmService {
     }
 
     private FailingOrSucceedingResult<Void, ServiceFailure> getSilContactEmailAndOrganisationNameAndUpdateContact(SilContact silContact) {
-        stripAttributesNotNeeded(silContact, () -> !FundingType.LOAN.getDisplayName().equals(silContact.getExperienceType()));
         log.info(format("Updating CRM contact %s and organisation %s %nPayload is:%s ",
                 silContact.getEmail(), silContact.getOrganisation().getName(), silContact));
         return silCrmEndpoint.updateContact(silContact);
@@ -229,17 +226,9 @@ public class CrmServiceImpl implements CrmService {
         }
     }
 
-    private void stripAttributesNotNeeded(SilContact silContact, BooleanSupplier supplier) {
+    private SilContact externalUserToSilContact(UserResource user, OrganisationResource organisation, String fundingType, Long applicationId, Long competitionId) {
 
-        if (supplier.getAsBoolean()) {
-            silContact.setExperienceType(null);
-            silContact.setIfsAppID(null);
-        }
-    }
-
-    private SilContact externalUserToSilContact(UserResource user, OrganisationResource organisation, String fundingType, Long applicationId) {
-
-        SilContact silContact = setSilContactDetails(user, fundingType, applicationId);
+        SilContact silContact = setSilContactDetails(user, fundingType, applicationId, competitionId);
         SilOrganisation silOrganisation = setSilOrganisation(organisation.getName(), organisation.getCompaniesHouseNumber(),
                 String.valueOf(organisation.getId()));
 
@@ -293,7 +282,7 @@ public class CrmServiceImpl implements CrmService {
         return silAddress;
     }
 
-    private SilContact setSilContactDetails(UserResource user, String fundingType, Long applicationId) {
+    private SilContact setSilContactDetails(UserResource user, String fundingType, Long applicationId, Long competitionId) {
 
         SilContact silContact = new SilContact();
         silContact.setEmail(user.getEmail());
@@ -301,16 +290,29 @@ public class CrmServiceImpl implements CrmService {
         silContact.setLastName(user.getLastName());
         silContact.setTitle(Optional.ofNullable(user.getTitle()).map(Title::getDisplayName).orElse(null));
         silContact.setSrcSysContactId(String.valueOf(user.getId()));
-        silContact.setExperienceType(fundingType);
+        silContact.setExperienceType(getExperienceType(fundingType, competitionId));
         silContact.setIfsAppID(String.valueOf(applicationId));
         silContact.setIfsUuid(user.getUid());
         silContact.setPhoneNumber(user.getPhoneNumber());
         return silContact;
     }
 
+    private String getExperienceType(String fundingType, long competitionId) {
+        boolean imSurveyRequired = competitionService.getCompetitionById(competitionId).getSuccess().getCompetitionApplicationConfigResource().isImSurveyRequired();
+        if (fundingType.equals("Loan") && imSurveyRequired) {
+            return "Loan-Impact management";
+        } else if (fundingType.equals("Loan")) {
+            return "Loan";
+        } else if (imSurveyRequired) {
+            return "Impact management";
+        } else {
+            return null;
+        }
+    }
+
     private SilContact monitoringOfficerToSilContact(UserResource user) {
 
-        SilContact silContact = setSilContactDetails(user, null, null);
+        SilContact silContact = setSilContactDetails(user, null, null, null);
         SilOrganisation moSilOrganisation = setSilOrganisation("IFS MO Company", "", "IFSMO01");
         silContact.setOrganisation(moSilOrganisation);
 
