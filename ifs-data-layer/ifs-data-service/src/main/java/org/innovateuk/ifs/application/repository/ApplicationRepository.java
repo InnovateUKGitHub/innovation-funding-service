@@ -117,6 +117,10 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             "INNER JOIN Project p ON p.application = app " +
             "WHERE p.id = :projectId";
 
+    String FIND_BY_EOI_APPLICATION = "SELECT app FROM Application app " +
+            "INNER JOIN ApplicationExpressionOfInterestConfig e ON e.application = app " +
+            "WHERE e.eoiApplicationId = :eoiApplicationId";
+
     @Override
     List<Application> findAll();
 
@@ -396,4 +400,6 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
                                                                                       @Param("closedAssessmentPeriods") List<Long> closedAssessmentPeriods,
                                                                                       Pageable pageable);
 
+    @Query(FIND_BY_EOI_APPLICATION)
+    Optional<Application> findByEoiApplicationId(@Param("eoiApplicationId") long eoiApplicationId);
 }

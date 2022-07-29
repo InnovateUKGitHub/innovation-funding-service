@@ -195,7 +195,6 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
     }
 
     private void deleteApplication(Application application) {
-        deleteApplicationDependency(application);
         applicationRepository.delete(application);
 
         LOG.debug("Deleted application : " + application.getId());
@@ -205,6 +204,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
         activityLogRepository.deleteByApplicationId(application.getId());
         grantProcessRepository.deleteByApplicationId(application.getId());
         applicationHiddenFromDashboardRepository.deleteByApplicationId(application.getId());
+        applicationExpressionOfInterestConfigRepository.deleteByApplicationId(application.getId());
 
         LOG.debug("Deleted application dependency for application : " + application.getId());
     }
@@ -450,13 +450,20 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
     }
 
     private void migrateApplicationExpressionOfInterestConfig(Application application, Application migratedApplication) {
-        applicationExpressionOfInterestConfigRepository.findOneByApplicationId(application.getId()).ifPresent(
-                applicationExpressionOfInterestConfig -> {
-                    applicationExpressionOfInterestConfig.setApplication(migratedApplication);
-                    applicationExpressionOfInterestConfigRepository.save(applicationExpressionOfInterestConfig);
-                });
+        if (application.getApplicationExpressionOfInterestConfig() != null) {
+            Long applicationExpressionOfInterestConfigId =  application.getApplicationExpressionOfInterestConfig().getId();
+            applicationExpressionOfInterestConfigRepository.findById(applicationExpressionOfInterestConfigId).ifPresent(
+                    applicationExpressionOfInterestConfig -> {
+                        ApplicationExpressionOfInterestConfig migratedApplicationExpressionOfInterestConfig = ApplicationExpressionOfInterestConfig.builder()
+                                .application(migratedApplication)
+                                .enabledForExpressionOfInterest(applicationExpressionOfInterestConfig.isEnabledForExpressionOfInterest())
+                                .build();
+                        applicationExpressionOfInterestConfigRepository.save(migratedApplicationExpressionOfInterestConfig);
+                        migratedApplication.setApplicationExpressionOfInterestConfig(migratedApplicationExpressionOfInterestConfig);
+                    });
 
-        LOG.debug("Migrated application expression of interest config for application : " + application.getId());
+            LOG.debug("Migrated application expression of interest config for application : " + application.getId());
+        }
     }
 
     private Application migrateApplication(Application application) {

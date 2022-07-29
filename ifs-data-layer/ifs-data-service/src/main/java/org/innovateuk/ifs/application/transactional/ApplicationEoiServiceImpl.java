@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationExpressionOfInterestConfig;
 import org.innovateuk.ifs.application.domain.ApplicationProcess;
 import org.innovateuk.ifs.application.repository.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -284,17 +285,21 @@ public class ApplicationEoiServiceImpl implements ApplicationEoiService {
     }
 
     private void populateApplicationExpressionOfInterestConfig(Application application, Application migratedApplication) {
-        applicationExpressionOfInterestConfigRepository.findOneByApplicationId(migratedApplication.getId()).ifPresent(
-                applicationExpressionOfInterestConfig -> {
-                    em.detach(applicationExpressionOfInterestConfig);
-                    applicationExpressionOfInterestConfig.setId(null);
-                    applicationExpressionOfInterestConfig.setApplication(application);
-                    applicationExpressionOfInterestConfig.setEnabledForExpressionOfInterest(false);
-                    applicationExpressionOfInterestConfig.setEoiApplicationId(migratedApplication.getId());
-                    applicationExpressionOfInterestConfigRepository.save(applicationExpressionOfInterestConfig);
-                });
+        if (migratedApplication.getApplicationExpressionOfInterestConfig() != null) {
+            Long applicationExpressionOfInterestConfigId =  migratedApplication.getApplicationExpressionOfInterestConfig().getId();
+            applicationExpressionOfInterestConfigRepository.findById(applicationExpressionOfInterestConfigId).ifPresent(
+                    applicationExpressionOfInterestConfig -> {
+                        ApplicationExpressionOfInterestConfig fullApplicationExpressionOfInterestConfig = ApplicationExpressionOfInterestConfig.builder()
+                                .application(application)
+                                .enabledForExpressionOfInterest(false)
+                                .eoiApplicationId(migratedApplication.getId())
+                                .build();
+                        applicationExpressionOfInterestConfigRepository.save(fullApplicationExpressionOfInterestConfig);
+                        application.setApplicationExpressionOfInterestConfig(fullApplicationExpressionOfInterestConfig);
+                    });
 
-        LOG.debug("Populate application expression of interest config for application : " + application.getId());
+            LOG.debug("Populate application expression of interest config for application : " + application.getId());
+        }
     }
 
     private void populateApplicationDetails(Application application, Application migratedApplication) {
