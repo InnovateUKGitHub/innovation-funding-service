@@ -4,16 +4,16 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightStatsViewModel;
-import org.innovateuk.ifs.management.decision.form.FundingDecisionFilterForm;
-import org.innovateuk.ifs.management.decision.form.FundingDecisionSelectionForm;
+import org.innovateuk.ifs.management.decision.form.DecisionFilterForm;
+import org.innovateuk.ifs.management.decision.form.DecisionSelectionForm;
 import org.innovateuk.ifs.management.navigation.Pagination;
 
 public class ManageFundingApplicationsViewModel {
 
     private Pagination pagination;
     private ApplicationSummaryPageResource results;
-    private FundingDecisionSelectionForm selectionForm;
-    private FundingDecisionFilterForm fundingDecisionFilterForm;
+    private DecisionSelectionForm selectionForm;
+    private DecisionFilterForm decisionFilterForm;
     private CompetitionSummaryResource competitionSummary;
     private boolean selectAllDisabled;
     private boolean selectionLimitWarning;
@@ -23,8 +23,8 @@ public class ManageFundingApplicationsViewModel {
 
     public ManageFundingApplicationsViewModel(Pagination pagination,
                                               ApplicationSummaryPageResource results,
-                                              FundingDecisionSelectionForm selectionForm,
-                                              FundingDecisionFilterForm fundingDecisionFilterForm,
+                                              DecisionSelectionForm selectionForm,
+                                              DecisionFilterForm decisionFilterForm,
                                               CompetitionSummaryResource competitionSummary,
                                               boolean selectAllDisabled,
                                               boolean selectionLimitWarning,
@@ -34,7 +34,7 @@ public class ManageFundingApplicationsViewModel {
         this.pagination = pagination;
         this.results = results;
         this.selectionForm = selectionForm;
-        this.fundingDecisionFilterForm = fundingDecisionFilterForm;
+        this.decisionFilterForm = decisionFilterForm;
         this.competitionSummary = competitionSummary;
         this.selectAllDisabled = selectAllDisabled;
         this.selectionLimitWarning = selectionLimitWarning;
@@ -51,12 +51,12 @@ public class ManageFundingApplicationsViewModel {
         return results;
     }
 
-    public FundingDecisionSelectionForm getSelectionForm() {
+    public DecisionSelectionForm getSelectionForm() {
         return selectionForm;
     }
 
-    public FundingDecisionFilterForm getFundingDecisionFilterForm() {
-        return fundingDecisionFilterForm;
+    public DecisionFilterForm getDecisionFilterForm() {
+        return decisionFilterForm;
     }
 
     public CompetitionSummaryResource getCompetitionSummary() {
@@ -75,7 +75,7 @@ public class ManageFundingApplicationsViewModel {
 
     public boolean isAnythingChangeable() {
         if (results != null) {
-            return results.getContent().stream().anyMatch(ApplicationSummaryResource::applicationFundingDecisionIsChangeable);
+            return results.getContent().stream().anyMatch(ApplicationSummaryResource::applicationDecisionIsChangeable);
         } else {
             return false;
         }

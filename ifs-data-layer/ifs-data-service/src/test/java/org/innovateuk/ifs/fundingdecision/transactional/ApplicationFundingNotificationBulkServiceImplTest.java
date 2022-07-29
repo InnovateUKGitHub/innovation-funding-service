@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.fundingdecision.transactional;
 
 import com.google.common.collect.ImmutableMap;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.Decision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
@@ -16,8 +16,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Map;
 
-import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
-import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
+import static org.innovateuk.ifs.application.resource.Decision.FUNDED;
+import static org.innovateuk.ifs.application.resource.Decision.UNFUNDED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertTrue;
@@ -47,25 +47,25 @@ public class ApplicationFundingNotificationBulkServiceImplTest {
                 .build();
         long successfulApplicationId = 1L;
         long unsuccessfulApplicationId = 2L;
-        Map<Long, FundingDecision> decisions = ImmutableMap.<Long, FundingDecision> builder()
+        Map<Long, Decision> decisions = ImmutableMap.<Long, Decision> builder()
             .put(successfulApplicationId, FUNDED)
             .put(unsuccessfulApplicationId, UNFUNDED)
             .build();
         FundingNotificationResource resource = new FundingNotificationResource(messageBody, decisions);
         FundingNotificationResource unfundedResource = new FundingNotificationResource(messageBody,
-                ImmutableMap.<Long, FundingDecision> builder()
+                ImmutableMap.<Long, Decision> builder()
                 .put(unsuccessfulApplicationId, UNFUNDED)
                 .build());
 
         when(competitionService.getCompetitionByApplicationId(successfulApplicationId)).thenReturn(serviceSuccess(competition));
-        when(applicationFundingService.notifyApplicantsOfFundingDecisions(unfundedResource)).thenReturn(serviceSuccess());
+        when(applicationFundingService.notifyApplicantsOfDecisions(unfundedResource)).thenReturn(serviceSuccess());
         when(projectToBeCreatedService.markApplicationReadyToBeCreated(successfulApplicationId, messageBody)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.sendBulkFundingNotifications(resource);
 
         assertTrue(result.isSuccess());
 
-        verify(applicationFundingService).notifyApplicantsOfFundingDecisions(unfundedResource);
+        verify(applicationFundingService).notifyApplicantsOfDecisions(unfundedResource);
         verify(projectToBeCreatedService).markApplicationReadyToBeCreated(successfulApplicationId, messageBody);
     }
 
@@ -77,20 +77,20 @@ public class ApplicationFundingNotificationBulkServiceImplTest {
                 .build();
         long successfulApplicationId = 1L;
         long unsuccessfulApplicationId = 2L;
-        Map<Long, FundingDecision> decisions = ImmutableMap.<Long, FundingDecision> builder()
+        Map<Long, Decision> decisions = ImmutableMap.<Long, Decision> builder()
                 .put(successfulApplicationId, FUNDED)
                 .put(unsuccessfulApplicationId, UNFUNDED)
                 .build();
         FundingNotificationResource resource = new FundingNotificationResource(messageBody, decisions);
 
         when(competitionService.getCompetitionByApplicationId(successfulApplicationId)).thenReturn(serviceSuccess(competition));
-        when(applicationFundingService.notifyApplicantsOfFundingDecisions(resource)).thenReturn(serviceSuccess());
+        when(applicationFundingService.notifyApplicantsOfDecisions(resource)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.sendBulkFundingNotifications(resource);
 
         assertTrue(result.isSuccess());
 
-        verify(applicationFundingService).notifyApplicantsOfFundingDecisions(resource);
+        verify(applicationFundingService).notifyApplicantsOfDecisions(resource);
     }
 
 }

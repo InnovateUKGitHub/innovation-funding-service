@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage funding decisions and notifications',hasFormErrors=${#fields.hasErrors('${fundingNotificationFilterForm.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.eoi} ? 'Expression of interest notifications' : 'Manage funding decisions and notifications',hasFormErrors=${#fields.hasErrors('${fundingNotificationFilterForm.*}')}" />
 </head>
 
 <body class="govuk-template__body competition-management">
@@ -10,7 +10,8 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
+    <th:block th:if="${model.eoi}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to expression of interest applications',linkUrl=@{/competition/{competitionId}/applications/eoi(competitionId=${model.competitionId})}" />
+    <th:block th:unless="${model.eoi}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${fundingNotificationFilterForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
@@ -18,9 +19,15 @@
             <th:block th:insert="fragments/elements :: error-summary-list(fundingNotificationFilterForm)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage funding decisions and notifications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.eoi} ? 'Expression of interest notifications' : 'Manage funding decisions and notifications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'" />
 
-        <div th:replace="competition/key-statistics :: key-statistics(keyStatistics=${model.keyStatistics})" />
+        <th:block th:if="${model.eoi}">
+            <div th:replace="competition/key-statistics :: eoi-notification-key-statistics(keyStatistics=${model.keyStatistics})" />
+        </th:block>
+        <th:block th:unless="${model.eoi}">
+            <div th:replace="competition/key-statistics :: key-statistics(keyStatistics=${model.keyStatistics})" />
+        </th:block>
+
         <form method="GET" th:object="${fundingNotificationFilterForm}">
             <div class="search-filters govuk-!-margin-top-6">
                 <fieldset class="govuk-fieldset">
@@ -54,16 +61,20 @@
                         </div>
                         <div class="govuk-grid-column-one-third">
                             <div class="govuk-form-group">
-                                <label class="govuk-label"
+                                <label th:if="${model.eoi}" class="govuk-label"
+                                       for="fundingFilter">Expression of interest decision</label>
+                                <label th:unless="${model.eoi}" class="govuk-label"
                                        for="fundingFilter">Funding</label>
                                 <select name="fundingFilter"
                                         id="fundingFilter"
                                         class="govuk-select"
                                         th:field="*{fundingFilter}">
                                     <option value="">Show all</option>
-                                    <option value="FUNDED">Successful</option>
-                                    <option value="UNFUNDED">Unsuccessful</option>
-                                    <option value="ON_HOLD">On hold</option>
+                                    <option th:if="${model.eoi}" value="EOI_APPROVED">Successful</option>
+                                    <option th:if="${model.eoi}" value="EOI_REJECTED">Unsuccessful</option>
+                                    <option th:unless="${model.eoi}" value="FUNDED">Successful</option>
+                                    <option th:unless="${model.eoi}" value="UNFUNDED">Unsuccessful</option>
+                                    <option th:unless="${model.eoi}" value="ON_HOLD">On hold</option>
                                 </select>
                             </div>
                         </div>
@@ -127,8 +138,9 @@
                             <th class="govuk-table__header" scope="col" id="select-applications-label">Select applications</th>
                             <th class="govuk-table__header" scope="col">Application number</th>
                             <th class="govuk-table__header" scope="col">Project title</th>
-                            <th class="govuk-table__header" scope="col">Lead</th>
-                            <th class="govuk-table__header" scope="col">Funding decision</th>
+                            <th class="govuk-table__header" scope="col">Lead organisation</th>
+                            <th th:if="${model.eoi}" class="govuk-table__header" scope="col">Expression of interest decision</th>
+                            <th th:unless="${model.eoi}" class="govuk-table__header" scope="col">Funding decision</th>
                             <th class="govuk-table__header" scope="col">Email status</th>
                             <th scope="col" class="govuk-table__header alignright">Date sent</th>
                         </tr>
@@ -138,7 +150,7 @@
                             <td class="govuk-table__cell form-group-cell">
                                 <div class="govuk-checkboxes">
                                     <div class="govuk-checkboxes__item"
-                                         th:if="${applicationSummary.applicationFundingDecisionIsChangeable()}">
+                                         th:if="${applicationSummary.applicationDecisionIsChangeable()}">
                                         <input type="checkbox"
                                                class="govuk-checkboxes__input app-row-select row-successful"
                                                th:field="*{selectionForm.ids}"
@@ -152,22 +164,24 @@
                                     </div>
                                 </div>
 
-                                <th:block th:unless="${applicationSummary.applicationFundingDecisionIsChangeable()}">
+                                <th:block th:unless="${applicationSummary.applicationDecisionIsChangeable()}">
                                     <span class="empty-table-cell-select">-</span>
                                 </th:block>
                             </td>
                             <td class="govuk-table__cell" th:text="${applicationSummary.id}">194731</td>
                             <td class="govuk-table__cell" th:text="${applicationSummary.name}">Machine learning in robots</td>
                             <td class="govuk-table__cell" th:text="${applicationSummary.lead}">PWC</td>
-                            <th:block th:switch="${applicationSummary.fundingDecision}">
-                                <td class="govuk-table__cell" th:case="${model.getFundedFundingDecision()}">Successful</td>
-                                <td class="govuk-table__cell" th:case="${model.getUnFundedFundingDecision()}">Unsuccessful</td>
-                                <td class="govuk-table__cell" th:case="${model.getUnDecidedFundingDecision()}">Undecided</td>
-                                <td class="govuk-table__cell" th:case="${model.getOnHoldFundingDecision()}">On hold</td>
+                            <th:block th:switch="${applicationSummary.decision}">
+                                <td class="govuk-table__cell" th:case="${model.getFundedDecision()}">Successful</td>
+                                <td class="govuk-table__cell" th:case="${model.getUnFundedDecision()}">Unsuccessful</td>
+                                <td class="govuk-table__cell" th:case="${model.getEOIApprovedDecision()}">Successful</td>
+                                <td class="govuk-table__cell" th:case="${model.getEOIRejectedDecision()}">Unsuccessful</td>
+                                <td class="govuk-table__cell" th:case="${model.getUnDecidedDecision()}">Undecided</td>
+                                <td class="govuk-table__cell" th:case="${model.getOnHoldDecision()}">On hold</td>
                                 <td class="govuk-table__cell" th:case="*">-</td>
                             </th:block>
                             <td class="govuk-table__cell" th:text="${applicationSummary.emailStatus()}">-</td>
-                            <td class="govuk-table__cell alignright" th:text="${applicationSummary.manageFundingEmailDate} ? ${#temporals.format(applicationSummary.manageFundingEmailDate, 'd MMMM yyyy')} : '-'">9 January 2017</td>
+                            <td class="govuk-table__cell alignright" th:text="${applicationSummary.manageDecisionEmailDate} ? ${#temporals.format(applicationSummary.manageDecisionEmailDate, 'd MMMM yyyy')} : '-'">9 January 2017</td>
                         </tr>
                         <tr class="govuk-table__row" th:if="${#lists.isEmpty(model.content)}">
                             <td class="govuk-table__cell" colspan="7">No applications found.</td>

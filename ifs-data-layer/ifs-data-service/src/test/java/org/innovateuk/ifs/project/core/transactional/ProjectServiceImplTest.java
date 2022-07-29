@@ -7,7 +7,7 @@ import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.Decision;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
@@ -15,7 +15,7 @@ import org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.SectionType;
-import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.fundingdecision.domain.DecisionStatus;
 import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -216,7 +216,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withName("My Application").
                 withDurationInMonths(5L).
                 withStartDate(LocalDate.of(2017, 3, 2)).
-                withFundingDecision(FundingDecisionStatus.FUNDED).
+                withDecision(DecisionStatus.FUNDED).
                 withApplicationFinancesList(applicationFinances).
                 build();
 
@@ -524,7 +524,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void createProjectsFromFundingDecisions() {
+    public void createProjectsFromDecisions() {
 
         ProjectResource newProjectResource = newProjectResource().build();
 
@@ -565,9 +565,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(projectMapperMock.mapToResource(savedProject)).thenReturn(newProjectResource);
 
-        Map<Long, FundingDecision> fundingDecisions = new HashMap<>();
-        fundingDecisions.put(applicationId, FundingDecision.FUNDED);
-        ServiceResult<Void> project = service.createProjectsFromFundingDecisions(fundingDecisions);
+        Map<Long, Decision> decisions = new HashMap<>();
+        decisions.put(applicationId, Decision.FUNDED);
+        ServiceResult<Void> project = service.createProjectsFromDecisions(decisions);
         assertTrue(project.isSuccess());
         assertNotNull(competition.getProjectSetupStarted());
 
@@ -586,14 +586,14 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void createProjectsFromFundingDecisions_saveFails() throws Exception {
+    public void createProjectsFromDecisions_saveFails() throws Exception {
         Project newProjectExpectations = createProjectExpectationsFromOriginalApplication();
         when(projectRepositoryMock.save(newProjectExpectations)).thenThrow(new DataIntegrityViolationException("dummy constraint violation"));
 
-        Map<Long, FundingDecision> fundingDecisions = new HashMap<>();
-        fundingDecisions.put(applicationId, FundingDecision.FUNDED);
+        Map<Long, Decision> decisions = new HashMap<>();
+        decisions.put(applicationId, Decision.FUNDED);
         try {
-            service.createProjectsFromFundingDecisions(fundingDecisions);
+            service.createProjectsFromDecisions(decisions);
             assertThat("Service failed to throw expected exception.", false);
         } catch (Exception e) {
             assertEquals(e.getCause().getMessage(),"dummy constraint violation");
@@ -601,14 +601,14 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void createProjectsFromFundingDecisions_noFinanceFails() throws Exception {
+    public void createProjectsFromDecisions_noFinanceFails() throws Exception {
         createProjectExpectationsFromOriginalApplication();
         List<Section> oldSections = competition.getSections();
         competition.setSections(emptyList());
 
-        Map<Long, FundingDecision> fundingDecisions = new HashMap<>();
-        fundingDecisions.put(applicationId, FundingDecision.FUNDED);
-        ServiceResult<Void> result = service.createProjectsFromFundingDecisions(fundingDecisions);
+        Map<Long, Decision> decisions = new HashMap<>();
+        decisions.put(applicationId, Decision.FUNDED);
+        ServiceResult<Void> result = service.createProjectsFromDecisions(decisions);
         assertTrue(result.isFailure());
         assertEquals(result.getFailure().getErrors().get(0).getErrorKey(), "CREATE_PROJECT_FROM_APPLICATION_FAILS");
         competition.setSections(oldSections);

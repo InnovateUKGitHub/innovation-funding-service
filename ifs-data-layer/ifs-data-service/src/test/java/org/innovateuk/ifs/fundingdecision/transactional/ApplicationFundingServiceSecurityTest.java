@@ -22,7 +22,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
     @Test
     public void notifyLeadApplicantAllowedIfGlobalCompAdminRole() {
         setLoggedInUser(newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
-        classUnderTest.notifyApplicantsOfFundingDecisions(new FundingNotificationResource());
+        classUnderTest.notifyApplicantsOfDecisions(new FundingNotificationResource());
     }
 
     @Test
@@ -30,7 +30,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 
         setLoggedInUser(null);
         try {
-            classUnderTest.notifyApplicantsOfFundingDecisions(new FundingNotificationResource());
+            classUnderTest.notifyApplicantsOfDecisions(new FundingNotificationResource());
             fail("Should not have been able to notify lead applicants of funding decision without first logging in");
         } catch (AccessDeniedException e) {
             // expected behaviour
@@ -41,7 +41,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
     public void notifyLeadApplicantDeniedIfNoGlobalRolesAtAll() {
 
         try {
-            classUnderTest.notifyApplicantsOfFundingDecisions(new FundingNotificationResource());
+            classUnderTest.notifyApplicantsOfDecisions(new FundingNotificationResource());
             fail("Should not have been able to notify lead applicants of funding decision without the global comp " +
                     "admin role");
         } catch (AccessDeniedException e) {
@@ -55,7 +55,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
             setLoggedInUser(
                     newUserResource().withRoleGlobal(role).build());
             try {
-                classUnderTest.notifyApplicantsOfFundingDecisions(new FundingNotificationResource());
+                classUnderTest.notifyApplicantsOfDecisions(new FundingNotificationResource());
                 fail("Should not have been able to notify lead applicants of funding decision without the global Comp" +
                         " Admin role");
             } catch (AccessDeniedException e) {
@@ -65,17 +65,17 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
     }
 
     @Test
-    public void saveFundingDecisionDataAllowedIfGlobalCompAdminRole() {
+    public void saveDecisionDataAllowedIfGlobalCompAdminRole() {
         setLoggedInUser(newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
-        classUnderTest.saveFundingDecisionData(123L, new HashMap<>());
+        classUnderTest.saveDecisionData(123L, new HashMap<>());
     }
 
     @Test
-    public void saveFundingDecisionDataDeniedIfNotLoggedIn() {
+    public void saveDecisionDataDeniedIfNotLoggedIn() {
 
         setLoggedInUser(null);
         try {
-            classUnderTest.saveFundingDecisionData(123L, new HashMap<>());
+            classUnderTest.saveDecisionData(123L, new HashMap<>());
             fail("Should not have been able to save funding decision data without first logging in");
         } catch (AccessDeniedException e) {
             // expected behaviour
@@ -83,9 +83,9 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
     }
 
     @Test
-    public void saveFundingDecisionDataDeniedIfNoGlobalRolesAtAll() {
+    public void saveDecisionDataDeniedIfNoGlobalRolesAtAll() {
         try {
-            classUnderTest.saveFundingDecisionData(123L, new HashMap<>());
+            classUnderTest.saveDecisionData(123L, new HashMap<>());
             fail("Should not have been able to save funding decision data without the global comp admin role");
         } catch (AccessDeniedException e) {
             // expected behaviour
@@ -93,12 +93,12 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
     }
 
     @Test
-    public void saveFundingDecisionDataDeniedIfNotCorrectGlobalRoles() {
+    public void saveDecisionDataDeniedIfNotCorrectGlobalRoles() {
         NON_COMP_ADMIN_ROLES.forEach(role -> {
             setLoggedInUser(
                     newUserResource().withRoleGlobal(role).build());
             try {
-                classUnderTest.saveFundingDecisionData(123L, new HashMap<>());
+                classUnderTest.saveDecisionData(123L, new HashMap<>());
                 fail("Should not have been able to save funding decision data without the global Comp Admin role");
             } catch (AccessDeniedException e) {
                 // expected behaviour

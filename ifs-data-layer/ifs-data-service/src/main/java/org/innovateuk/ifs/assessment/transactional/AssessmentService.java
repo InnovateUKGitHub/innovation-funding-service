@@ -56,7 +56,7 @@ public interface AssessmentService {
     ServiceResult<AssessmentTotalScoreResource> getTotalScore(long assessmentId);
 
     @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'UPDATE')")
-    ServiceResult<Void> recommend(long assessmentId, AssessmentFundingDecisionOutcomeResource assessmentFundingDecision);
+    ServiceResult<Void> recommend(long assessmentId, AssessmentDecisionOutcomeResource assessmentDecision);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<ApplicationAssessmentFeedbackResource> getApplicationFeedback(long applicationId);

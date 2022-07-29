@@ -10,7 +10,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyApplicationSt
 import org.innovateuk.ifs.competition.resource.CompetitionEoiKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyApplicationStatisticsResource;
-import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.fundingdecision.domain.DecisionStatus;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -99,13 +99,13 @@ public class CompetitionKeyApplicationStatisticsServiceImpl extends BaseTransact
             competitionFundedKeyApplicationStatisticsResource
                     .setApplicationsSubmitted(applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATES));
         }
-        competitionFundedKeyApplicationStatisticsResource.setApplicationsFunded(applicationRepository.countByCompetitionIdAndFundingDecision(competitionId, FundingDecisionStatus.FUNDED));
-        competitionFundedKeyApplicationStatisticsResource.setApplicationsNotFunded(applicationRepository.countByCompetitionIdAndFundingDecision(competitionId, FundingDecisionStatus.UNFUNDED));
-        competitionFundedKeyApplicationStatisticsResource.setApplicationsOnHold(applicationRepository.countByCompetitionIdAndFundingDecision(competitionId, FundingDecisionStatus.ON_HOLD));
+        competitionFundedKeyApplicationStatisticsResource.setApplicationsFunded(applicationRepository.countByCompetitionIdAndDecision(competitionId, DecisionStatus.FUNDED));
+        competitionFundedKeyApplicationStatisticsResource.setApplicationsNotFunded(applicationRepository.countByCompetitionIdAndDecision(competitionId, DecisionStatus.UNFUNDED));
+        competitionFundedKeyApplicationStatisticsResource.setApplicationsOnHold(applicationRepository.countByCompetitionIdAndDecision(competitionId, DecisionStatus.ON_HOLD));
         competitionFundedKeyApplicationStatisticsResource.setApplicationsNotifiedOfDecision(applicationRepository
-                .countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNotNull(competitionId));
+                .countByDecidedAndSentApplications(competitionId));
         competitionFundedKeyApplicationStatisticsResource.setApplicationsAwaitingDecision(applicationRepository
-                .countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNull(competitionId));
+                .countByDecidedAndAwaitSendApplications(competitionId));
 
         return serviceSuccess(competitionFundedKeyApplicationStatisticsResource);
     }
@@ -115,15 +115,21 @@ public class CompetitionKeyApplicationStatisticsServiceImpl extends BaseTransact
         CompetitionEoiKeyApplicationStatisticsResource competitionEoiKeyApplicationStatisticsResource = new CompetitionEoiKeyApplicationStatisticsResource();
 
         int eoiApplicationsSubmitted = applicationRepository.countByCompetitionIdAndApplicationExpressionOfInterestConfigEnabledForExpressionOfInterestTrueAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATES);
-        competitionEoiKeyApplicationStatisticsResource.setApplicationsSubmitted(eoiApplicationsSubmitted);
+        competitionEoiKeyApplicationStatisticsResource.setEOISubmitted(eoiApplicationsSubmitted);
+        competitionEoiKeyApplicationStatisticsResource.setEOISuccessful(applicationRepository.countByCompetitionIdAndDecision(competitionId, DecisionStatus.EOI_APPROVED));
+        competitionEoiKeyApplicationStatisticsResource.setEOIUnsuccessful(applicationRepository.countByCompetitionIdAndDecision(competitionId, DecisionStatus.EOI_REJECTED));
+        competitionEoiKeyApplicationStatisticsResource.setEOINotifiedOfDecision(applicationRepository
+                .countByDecidedAndSentEOI(competitionId));
+        competitionEoiKeyApplicationStatisticsResource.setEOIAwaitingDecision(applicationRepository
+                .countByDecidedAndAwaitSendEOI(competitionId));
 
         return serviceSuccess(competitionEoiKeyApplicationStatisticsResource);
     }
 
-    private int getFundingDecisionCount(List<Application> applications, FundingDecisionStatus fundingDecisionStatus) {
+    private int getDecisionCount(List<Application> applications, DecisionStatus DecisionStatus) {
         return (int) applications.stream().filter(application -> {
-            if (application.getFundingDecision() != null) {
-                return application.getFundingDecision().equals(fundingDecisionStatus);
+            if (application.getDecision() != null) {
+                return application.getDecision().equals(DecisionStatus);
             }
             return false;
         }).count();
