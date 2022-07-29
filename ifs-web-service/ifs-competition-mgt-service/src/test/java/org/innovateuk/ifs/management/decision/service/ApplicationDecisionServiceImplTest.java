@@ -63,7 +63,7 @@ public class ApplicationDecisionServiceImplTest extends BaseServiceUnitTest<Appl
 
         assertTrue(result.isFailure());
 
-        verifyZeroInteractions(applicationDecisionRestService);
+        verifyNoInteractions(applicationDecisionRestService);
     }
 
     @Test
