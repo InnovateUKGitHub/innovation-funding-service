@@ -84,6 +84,7 @@ import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.UUID;
 
 public class BaseApplicationMigrationSetupTest extends BaseAuthenticationAwareIntegrationTest {
@@ -328,5 +329,18 @@ public class BaseApplicationMigrationSetupTest extends BaseAuthenticationAwareIn
                 .withEnabled(true)
                 .build());
         applicationHorizonWorkProgrammeRepository.save(new ApplicationHorizonWorkProgramme(applicationId, horizonWorkProgramme));
+    }
+
+    protected void setupEoiApplication() {
+        Optional<Application> optionalApplication =  applicationRepository.findById(applicationId);
+
+        optionalApplication.ifPresent(application -> {
+            ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig = ApplicationExpressionOfInterestConfig.builder()
+                    .application(application)
+                    .enabledForExpressionOfInterest(true)
+                    .build();
+            applicationExpressionOfInterestConfigRepository.save(applicationExpressionOfInterestConfig);
+            application.setApplicationExpressionOfInterestConfig(applicationExpressionOfInterestConfig);
+        });
     }
 }

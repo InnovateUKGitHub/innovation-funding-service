@@ -41,15 +41,6 @@ public class ApplicationEoiServiceIntegrationTest extends BaseApplicationMigrati
 
         Application eoiApplication = optionalEoiApplication.get();
         assertNotEquals(applicationId, eoiApplication.getId());
-        assertTrue(eoiApplication.getApplicationExpressionOfInterestConfig().isEnabledForExpressionOfInterest());
-
-        ApplicationExpressionOfInterestConfig eoiApplicationExpressionOfInterestConfig = eoiApplication.getApplicationExpressionOfInterestConfig();
-        applicationExpressionOfInterestConfigRepository.findById(eoiApplicationExpressionOfInterestConfig.getId()).stream()
-                .forEach(applicationExpressionOfInterestConfig -> {
-                    assertNotNull(applicationExpressionOfInterestConfig);
-                    assertTrue(applicationExpressionOfInterestConfig.isEnabledForExpressionOfInterest());
-                    assertEquals(eoiApplication.getId(), applicationExpressionOfInterestConfig.getApplication().getId());
-                });
 
         Optional<Application> optionalFullApplication =  applicationRepository.findByEoiApplicationId(eoiApplication.getId());
         assertTrue(optionalFullApplication.isPresent());
@@ -133,21 +124,5 @@ public class ApplicationEoiServiceIntegrationTest extends BaseApplicationMigrati
         assertEquals(0, applicationProcessHistory.size());
 
         assertTrue(fullApplication.getCompletion().compareTo(BigDecimal.ZERO) > 0);
-
-        Optional<Application> oldApplication = applicationRepository.findById(applicationId);
-        assertTrue(oldApplication.isPresent());
-    }
-
-    private void setupEoiApplication() {
-        Optional<Application> optionalApplication =  applicationRepository.findById(applicationId);
-
-        optionalApplication.ifPresent(application -> {
-            ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig = ApplicationExpressionOfInterestConfig.builder()
-                    .application(application)
-                    .enabledForExpressionOfInterest(true)
-                    .build();
-            applicationExpressionOfInterestConfigRepository.save(applicationExpressionOfInterestConfig);
-            application.setApplicationExpressionOfInterestConfig(applicationExpressionOfInterestConfig);
-        });
     }
 }

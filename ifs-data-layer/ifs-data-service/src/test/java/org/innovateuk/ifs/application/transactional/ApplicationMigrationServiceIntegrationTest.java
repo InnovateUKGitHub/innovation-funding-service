@@ -62,7 +62,7 @@ public class ApplicationMigrationServiceIntegrationTest extends BaseApplicationM
 
         assertThat(result.isSuccess(), equalTo(true));
 
-        Optional<Application> optionalNewApplication =  applicationRepository.findByPreviousApplicationId(applicationId);
+        Optional<Application> optionalNewApplication = applicationRepository.findByPreviousApplicationId(applicationId);
         assertTrue(optionalNewApplication.isPresent());
 
         Application newApplication = optionalNewApplication.get();
@@ -106,11 +106,11 @@ public class ApplicationMigrationServiceIntegrationTest extends BaseApplicationM
                     assertNotEquals(applicationId, applicationHiddenFromDashboard.getApplication().getId());
                 });
 
-       applicationOrganisationAddressRepository.findByApplicationId(newApplication.getId()).stream()
-               .forEach(applicationOrganisationAddress -> {
-                   assertNotNull(applicationOrganisationAddress);
-                   assertNotEquals(applicationId, applicationOrganisationAddress.getApplication().getId());
-               });
+        applicationOrganisationAddressRepository.findByApplicationId(newApplication.getId()).stream()
+                .forEach(applicationOrganisationAddress -> {
+                    assertNotNull(applicationOrganisationAddress);
+                    assertNotEquals(applicationId, applicationOrganisationAddress.getApplication().getId());
+                });
 
         Optional<AverageAssessorScore> averageAssessorScore = averageAssessorScoreRepository.findByApplicationId(newApplication.getId());
         assertTrue(averageAssessorScore.isPresent());
@@ -174,11 +174,11 @@ public class ApplicationMigrationServiceIntegrationTest extends BaseApplicationM
                     assertNotEquals(applicationId, interview.getTarget().getId());
                 });
 
-       interviewAssignmentRepository.findByTargetId(newApplication.getId()).stream()
-               .forEach(interviewAssignment -> {
-                   assertNotNull(interviewAssignment);
-                   assertNotEquals(applicationId, interviewAssignment.getTarget().getId());
-               });
+        interviewAssignmentRepository.findByTargetId(newApplication.getId()).stream()
+                .forEach(interviewAssignment -> {
+                    assertNotNull(interviewAssignment);
+                    assertNotEquals(applicationId, interviewAssignment.getTarget().getId());
+                });
 
         reviewRepository.findByTargetId(newApplication.getId()).stream()
                 .forEach(review -> {
@@ -289,5 +289,34 @@ public class ApplicationMigrationServiceIntegrationTest extends BaseApplicationM
 
         assertEquals(applicationId, migration.getApplicationId());
         assertEquals(MigrationStatus.MIGRATED, migration.getStatus());
+    }
+
+    @Test
+    public void migrateEoiApplication() {
+        setupEoiApplication();
+
+        loginCompAdmin();
+
+        ServiceResult<Long> result = applicationMigrationService.migrateApplication(applicationId, false);
+
+        assertThat(result.isSuccess(), equalTo(true));
+
+        Optional<Application> optionalEoiApplication =  applicationRepository.findByPreviousApplicationId(applicationId);
+        assertTrue(optionalEoiApplication.isPresent());
+
+        Application eoiApplication = optionalEoiApplication.get();
+        assertNotEquals(applicationId, eoiApplication.getId());
+        assertTrue(eoiApplication.getApplicationExpressionOfInterestConfig().isEnabledForExpressionOfInterest());
+
+        ApplicationExpressionOfInterestConfig eoiApplicationExpressionOfInterestConfig = eoiApplication.getApplicationExpressionOfInterestConfig();
+        applicationExpressionOfInterestConfigRepository.findById(eoiApplicationExpressionOfInterestConfig.getId()).stream()
+                .forEach(applicationExpressionOfInterestConfig -> {
+                    assertNotNull(applicationExpressionOfInterestConfig);
+                    assertTrue(applicationExpressionOfInterestConfig.isEnabledForExpressionOfInterest());
+                    assertEquals(eoiApplication.getId(), applicationExpressionOfInterestConfig.getApplication().getId());
+                });
+
+        Optional<Application> oldApplication = applicationRepository.findById(applicationId);
+        assertTrue(oldApplication.isPresent());
     }
 }

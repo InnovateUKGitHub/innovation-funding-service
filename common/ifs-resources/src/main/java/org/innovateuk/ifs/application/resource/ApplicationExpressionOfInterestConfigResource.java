@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.application.resource;
 
+import lombok.Builder;
+
+@Builder
 public class ApplicationExpressionOfInterestConfigResource {
 
     private Long id;
