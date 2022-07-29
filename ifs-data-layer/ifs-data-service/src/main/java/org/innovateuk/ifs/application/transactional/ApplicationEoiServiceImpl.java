@@ -303,12 +303,12 @@ public class ApplicationEoiServiceImpl implements ApplicationEoiService {
     }
 
     private void populateApplicationDetails(Application application, Application migratedApplication) {
-        String clonedApplicationName = migratedApplication.getName() + " (Full Application)";
-        application.setName(clonedApplicationName);
         application.setDurationInMonths(migratedApplication.getDurationInMonths());
         application.setStartDate(migratedApplication.getStartDate());
         application.setResearchCategory(migratedApplication.getResearchCategory());
         application.setFundingDecision(null);
+        application.setManageFundingEmailDate(null);
+        application.setFeedbackReleased(null);
         applicationRepository.save(application);
 
         LOG.debug("Populate additional details for application : " + application.getId());
