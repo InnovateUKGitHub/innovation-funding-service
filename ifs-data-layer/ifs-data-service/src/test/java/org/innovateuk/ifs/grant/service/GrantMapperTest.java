@@ -402,7 +402,7 @@ public class GrantMapperTest {
                         newApplication()
                                 .withId(applicationId)
                                 .withCompetition(
-                                        newCompetition().withId(competitionId).withFundingType(fundingType).build())
+                                        newCompetition().withId(competitionId).withIncludeJesForm(false).withFundingType(fundingType).build())
                                 .build())
                     .withProjectUsers(projectUsers)
                     .withProjectMonitoringOfficer(projectMonitoringOfficer)

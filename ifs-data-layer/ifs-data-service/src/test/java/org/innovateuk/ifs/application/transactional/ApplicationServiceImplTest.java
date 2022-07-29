@@ -79,7 +79,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
-import static org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.FUNDED;
+import static org.innovateuk.ifs.fundingdecision.domain.DecisionStatus.FUNDED;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
@@ -306,9 +306,9 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void reopenApplicationFundingDecisionSet(){
+    public void reopenApplicationDecisionSet(){
         // Setup
-        Application application = newApplication().withFundingDecision(FUNDED).withCompetition(newCompetition().withCompetitionStatus(OPEN).build()).build();
+        Application application = newApplication().withDecision(FUNDED).withCompetition(newCompetition().withCompetitionStatus(OPEN).build()).build();
         when(applicationRepository.findById(application.getId())).thenReturn(of(application));
         // Method under test
         ServiceResult<Void> result = service.reopenApplication(application.getId());
@@ -550,7 +550,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         ApplicationResource newApplication = newApplicationResource().build();
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
-            assertEquals(tomorrow, created.getManageFundingEmailDate());
+            assertEquals(tomorrow, created.getManageDecisionEmailDate());
             return true;
         }));
         when(applicationMapper.mapToResource(applicationExpectations.get())).thenReturn(newApplication);
@@ -568,7 +568,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         ApplicationResource newApplication = newApplicationResource().build();
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
-            assertEquals(tomorrow, created.getManageFundingEmailDate());
+            assertEquals(tomorrow, created.getManageDecisionEmailDate());
             assertNotNull(created.getFeedbackReleased());
             return true;
         }));
@@ -589,7 +589,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         ApplicationResource newApplication = newApplicationResource().build();
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
-            assertEquals(tomorrow, created.getManageFundingEmailDate());
+            assertEquals(tomorrow, created.getManageDecisionEmailDate());
             return true;
         }));
         when(applicationMapper.mapToResource(applicationExpectations.get())).thenReturn(newApplication);
@@ -688,10 +688,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         ZonedDateTime expectedDateTime = ZonedDateTime.of(2018, 8, 1, 1, 0, 0, 0, ZoneId.systemDefault());
 
         Application application = newApplication()
-                .withManageFundingEmailDate(expectedDateTime)
+                .withManageDecisionEmailDate(expectedDateTime)
                 .build();
 
-        when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(competitionId))
+        when(applicationRepository.findTopByCompetitionIdOrderByManageDecisionEmailDateDesc(competitionId))
                 .thenReturn(of(application));
 
         ServiceResult<ZonedDateTime> result = service

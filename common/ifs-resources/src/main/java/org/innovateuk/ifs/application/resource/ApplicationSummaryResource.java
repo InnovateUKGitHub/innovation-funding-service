@@ -17,19 +17,19 @@ public class ApplicationSummaryResource {
     private BigDecimal grantRequested;
     private BigDecimal totalProjectCost;
     private Long duration;
-    private FundingDecision fundingDecision;
+    private Decision decision;
     private String innovationArea;
-    private ZonedDateTime manageFundingEmailDate;
+    private ZonedDateTime manageDecisionEmailDate;
     private Boolean ineligibleInformed;
     private boolean inAssessmentPanel;
     private boolean emailInQueue;
 
-    public ZonedDateTime getManageFundingEmailDate() {
-        return manageFundingEmailDate;
+    public ZonedDateTime getManageDecisionEmailDate() {
+        return manageDecisionEmailDate;
     }
 
-    public void setManageFundingEmailDate(ZonedDateTime manageFundingEmailDate) {
-        this.manageFundingEmailDate = manageFundingEmailDate;
+    public void setManageDecisionEmailDate(ZonedDateTime manageDecisionEmailDate) {
+        this.manageDecisionEmailDate = manageDecisionEmailDate;
     }
 
     public Boolean isIneligibleInformed() {
@@ -121,15 +121,15 @@ public class ApplicationSummaryResource {
     }
 
     public Boolean isFunded() {
-        return FundingDecision.FUNDED.equals(fundingDecision);
+        return Decision.FUNDED.equals(decision);
     }
 
-    public FundingDecision getFundingDecision() {
-        return fundingDecision;
+    public Decision getDecision() {
+        return decision;
     }
 
-    public void setFundingDecision(FundingDecision fundingDecision) {
-        this.fundingDecision = fundingDecision;
+    public void setDecision(Decision decision) {
+        this.decision = decision;
     }
 
     public String getInnovationArea() {
@@ -148,12 +148,12 @@ public class ApplicationSummaryResource {
         this.emailInQueue = emailInQueue;
     }
 
-    public Boolean applicationFundingDecisionIsChangeable() {
-        return (this.manageFundingEmailDate == null || !fundingDecision.equals(FundingDecision.FUNDED)) && !emailInQueue;
+    public Boolean applicationDecisionIsChangeable() {
+        return (this.manageDecisionEmailDate == null || !decision.equals(Decision.FUNDED)) && !emailInQueue;
     }
 
     public String emailStatus() {
-        if (manageFundingEmailDate != null) {
+        if (manageDecisionEmailDate != null) {
             return "Sent";
         } else if (emailInQueue) {
             return "Pending";

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.management.previous.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.Decision;
 import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -11,7 +11,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.internal.populator.InternalProjectSetupRowPopulator;
 import org.innovateuk.ifs.management.competition.previous.controller.PreviousCompetitionController;
 import org.innovateuk.ifs.management.competition.previous.viewmodel.PreviousCompetitionViewModel;
-import org.innovateuk.ifs.management.decision.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.management.decision.service.ApplicationDecisionService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
@@ -52,7 +52,7 @@ public class PreviousCompetitionControllerTest extends BaseControllerMockMVCTest
     private CompetitionRestService competitionRestService;
 
     @Mock
-    private ApplicationFundingDecisionService applicationFundingDecisionService;
+    private ApplicationDecisionService applicationDecisionService;
 
     @Mock
     private ProjectRestService projectRestService;
@@ -129,7 +129,7 @@ public class PreviousCompetitionControllerTest extends BaseControllerMockMVCTest
                 .withName("Successful project")
                 .build();
 
-        when(applicationFundingDecisionService.saveApplicationFundingDecisionData(anyLong(), any(FundingDecision.class), anyList()))
+        when(applicationDecisionService.saveApplicationDecisionData(anyLong(), any(Decision.class), anyListOf(Long.class)))
                 .thenReturn(ServiceResult.serviceSuccess());
         when(projectRestService.createProjectFromApplicationId(anyLong()))
                 .thenReturn(restSuccess(projectResource));
@@ -139,9 +139,9 @@ public class PreviousCompetitionControllerTest extends BaseControllerMockMVCTest
                 .andExpect(view().name("redirect:/competition/{competitionId}/previous"))
                 .andReturn();
 
-        verify(applicationFundingDecisionService).saveApplicationFundingDecisionData(anyLong(), any(FundingDecision.class), anyList());
+        verify(applicationDecisionService).saveApplicationDecisionData(anyLong(), any(Decision.class), anyListOf(Long.class));
         verify(projectRestService).createProjectFromApplicationId(anyLong());
-        verifyNoMoreInteractions(applicationFundingDecisionService, projectRestService);
+        verifyNoMoreInteractions(applicationDecisionService, projectRestService);
 
     }
 

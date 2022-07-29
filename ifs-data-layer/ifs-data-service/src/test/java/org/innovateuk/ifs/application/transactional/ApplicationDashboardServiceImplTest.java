@@ -10,7 +10,7 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.fundingdecision.domain.DecisionStatus;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
 import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.project.resource.ProjectState;
@@ -139,7 +139,7 @@ public class ApplicationDashboardServiceImplTest {
                 .withProcessRole(processRole)
                 .withCompetition(alwaysOpenCompetition)
                 .withApplicationState(ApplicationState.SUBMITTED)
-                .withFundingDecision((FundingDecisionStatus) null)
+                .withDecision((DecisionStatus) null)
                 .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig
                         .builder().enabledForExpressionOfInterest(true).build())
                 .build();
@@ -172,8 +172,8 @@ public class ApplicationDashboardServiceImplTest {
                 .withProcessRole(processRole)
                 .withCompetition(closedCompetition)
                 .withApplicationState(ApplicationState.REJECTED)
-                .withFundingDecision(FundingDecisionStatus.UNFUNDED)
-                .withManageFundingEmailDate(ZonedDateTime.now())
+                .withDecision(DecisionStatus.UNFUNDED)
+                .withManageDecisionEmailDate(ZonedDateTime.now())
                 .build();
     }
 
@@ -182,8 +182,8 @@ public class ApplicationDashboardServiceImplTest {
                 .withProcessRole(processRole)
                 .withCompetition(closedCompetition)
                 .withApplicationState(ApplicationState.SUBMITTED)
-                .withFundingDecision(FundingDecisionStatus.ON_HOLD)
-                .withManageFundingEmailDate(ZonedDateTime.now())
+                .withDecision(DecisionStatus.ON_HOLD)
+                .withManageDecisionEmailDate(ZonedDateTime.now())
                 .build();
     }
 
