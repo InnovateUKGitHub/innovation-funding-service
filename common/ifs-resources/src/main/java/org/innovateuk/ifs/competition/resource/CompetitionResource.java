@@ -116,15 +116,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean hasBusinessAndFinancialInformationQuestion;
     private CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource;
     private boolean enabledForPreRegistration;
-    private CompetitionApplicationConfigResource competitionApplicationConfigResource;
-
-    public CompetitionApplicationConfigResource getCompetitionApplicationConfigResource() {
-        return competitionApplicationConfigResource;
-    }
-
-    public void setCompetitionApplicationConfigResource(CompetitionApplicationConfigResource competitionApplicationConfigResource) {
-        this.competitionApplicationConfigResource = competitionApplicationConfigResource;
-    }
 
     public CompetitionResource() {
     }
