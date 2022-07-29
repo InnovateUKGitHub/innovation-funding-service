@@ -43,7 +43,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BooleanSupplier;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -66,7 +65,6 @@ public class CrmServiceImpl implements CrmService {
 
     @Autowired
     private CompetitionService competitionService;
-
 
     @Autowired
     private AssessmentService assessmentService;
@@ -126,9 +124,16 @@ public class CrmServiceImpl implements CrmService {
     @Override
     public ServiceResult<Void> syncCrmContact(long userId, long competitionId, Long applicationId) {
         FundingType fundingType = competitionService.getCompetitionById(competitionId).getSuccess().getFundingType();
+        boolean imSurveyRequired = competitionService.getCompetitionById(competitionId).getSuccess().getCompetitionApplicationConfigResource().isImSurveyRequired();
 
         return userService.getUserById(userId).andOnSuccess(user -> {
-            syncExternalUser(user, fundingType.getDisplayName(), applicationId);
+            if (imSurveyRequired && fundingType.getDisplayName().equals("Loan")) {
+                syncExternalUser(user, "Loan-Impact_Management", applicationId);
+            } else if (imSurveyRequired) {
+                syncExternalUser(user, "Impact_Management", applicationId);
+            } else {
+                syncExternalUser(user, fundingType.getDisplayName(), applicationId);
+            }
             return serviceSuccess();
         });
     }
@@ -193,7 +198,7 @@ public class CrmServiceImpl implements CrmService {
     }
 
     private FailingOrSucceedingResult<Void, ServiceFailure> getSilContactEmailAndOrganisationNameAndUpdateContact(SilContact silContact) {
-        stripAttributesNotNeeded(silContact, () -> !FundingType.LOAN.getDisplayName().equals(silContact.getExperienceType()));
+        stripAttributesNotNeeded(silContact);
         log.info(format("Updating CRM contact %s and organisation %s %nPayload is:%s ",
                 silContact.getEmail(), silContact.getOrganisation().getName(), silContact));
         return silCrmEndpoint.updateContact(silContact);
@@ -229,9 +234,13 @@ public class CrmServiceImpl implements CrmService {
         }
     }
 
-    private void stripAttributesNotNeeded(SilContact silContact, BooleanSupplier supplier) {
+    private void stripAttributesNotNeeded(SilContact silContact) {
 
-        if (supplier.getAsBoolean()) {
+        boolean experienceTypeApplicable = silContact.getExperienceType().equals("Loan")
+                || silContact.getExperienceType().equals("Impact_Management")
+                || silContact.getExperienceType().equals("Loan-Impact_Management");
+
+        if (!experienceTypeApplicable) {
             silContact.setExperienceType(null);
             silContact.setIfsAppID(null);
         }
