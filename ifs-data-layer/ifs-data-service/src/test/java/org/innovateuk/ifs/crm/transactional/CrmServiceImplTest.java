@@ -23,6 +23,7 @@ import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseServ
 import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseServiceImpl;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.log.MemoryAppender;
@@ -66,6 +67,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorE
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationExecutiveOfficerResourceBuilder.newOrganisationExecutiveOfficerResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -150,7 +152,6 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
 
         Long userId = 1L;
 
-
         when(baseUserService.getUserById(userId)).thenReturn(serviceSuccess(user));
     }
 
@@ -191,7 +192,6 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     @Test
     public void syncExternalCrmContactWithOrganisationUpdates() {
         long userId = 1L;
-
 
         OrganisationResource organisation = newOrganisationResource()
                 .withDateOfIncorporation(LocalDate.now())
@@ -258,7 +258,6 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         long userId = 1L;
         long projectId = 2L;
 
-
         OrganisationResource organisation = newOrganisationResource()
                 .withDateOfIncorporation(LocalDate.now())
                 .withSicCodes(newOrganisationSicCodeResource().withSicCode("code-1", "code-2").build(2))
@@ -301,16 +300,17 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     @Test
     public void syncExternalCrmContactWithExperienceTypeLOANShouldHaveAllAttributes() {
 
-        String expectedLogMessage = "Updating CRM contact test@innovate.com and organisation OrganisationResource 5 \n" +
-                "Payload is:SilContact(ifsUuid=17a0e34c-719a-4db4-b011-ccd4c375ad79, experienceType=Loan, ifsAppID=3, email=test@innovate.com, lastName=Doe, firstName=Jon, title=null, jobTitle=null, address=null, organisation=SilOrganisation(name=OrganisationResource 5, registrationNumber=null, registeredAddress=SilAddress(buildingName=Line1, street=Line2, Line3, locality=County, town=Town, postcode=Postcode, country=Country), srcSysOrgId=5), sourceSystem=IFS, srcSysContactId=1, phoneNumber=888888888888) ";
-
+        String expectedLogMessage = "Updating CRM contact test@innovate.com and organisation OrganisationResource 6 \n" +
+                "Payload is:SilContact(ifsUuid=17a0e34c-719a-4db4-b011-ccd4c375ad79, experienceType=Loan, ifsAppID=3, email=test@innovate.com, lastName=Doe, firstName=Jon, title=null, jobTitle=null, address=null, organisation=SilOrganisation(name=OrganisationResource 6, registrationNumber=null, registeredAddress=SilAddress(buildingName=Line1, street=Line2, Line3, locality=County, town=Town, postcode=Postcode, country=Country), srcSysOrgId=6), sourceSystem=IFS, srcSysContactId=1, phoneNumber=888888888888) ";
 
         long userId = 1L;
         long applicationId = 3L;
         long competitionId = 4L;
-        CompetitionResource competitionResource = new CompetitionResource();
-        competitionResource.setFundingType(FundingType.LOAN);
-
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withId(competitionId)
+                .withFundingType(FundingType.LOAN)
+                .withCompetitionApplicationConfig(new CompetitionApplicationConfigResource())
+                .build();
 
         List<OrganisationResource> organisation = Arrays.asList(newOrganisationResource()
                 .withDateOfIncorporation(LocalDate.now())
@@ -357,16 +357,14 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     @Test
     public void syncExternalCrmContactWithPhone() {
 
-        String expectedLogMessage = "Updating CRM contact test@innovate.com and organisation OrganisationResource 5 \n" +
-                "Payload is:SilContact(ifsUuid=17a0e34c-719a-4db4-b011-ccd4c375ad79, experienceType=Loan, ifsAppID=3, email=test@innovate.com, lastName=Doe, firstName=Jon, title=null, jobTitle=null, address=null, organisation=SilOrganisation(name=OrganisationResource 5, registrationNumber=null, registeredAddress=SilAddress(buildingName=Line1, street=Line2, Line3, locality=County, town=Town, postcode=Postcode, country=Country), srcSysOrgId=5), sourceSystem=IFS, srcSysContactId=1, phoneNumber=888888888888) ";
-
-
         long userId = 1L;
         long applicationId = 3L;
         long competitionId = 4L;
-        CompetitionResource competitionResource = new CompetitionResource();
-        competitionResource.setFundingType(FundingType.LOAN);
-
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withId(competitionId)
+                .withFundingType(FundingType.LOAN)
+                .withCompetitionApplicationConfig(new CompetitionApplicationConfigResource())
+                .build();
 
         List<OrganisationResource> organisation = Arrays.asList(newOrganisationResource()
                 .withDateOfIncorporation(LocalDate.now())
@@ -393,6 +391,9 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
                         .withName(OrganisationAddressType.REGISTERED.name()).build())
                 .build();
 
+        String expectedLogMessage = "Updating CRM contact test@innovate.com and organisation OrganisationResource 6 \n" +
+                "Payload is:SilContact(ifsUuid=17a0e34c-719a-4db4-b011-ccd4c375ad79, experienceType=Loan, ifsAppID=3, email=test@innovate.com, lastName=Doe, firstName=Jon, title=null, jobTitle=null, address=null, organisation=SilOrganisation(name=OrganisationResource 6, registrationNumber=null, registeredAddress=SilAddress(buildingName=Line1, street=Line2, Line3, locality=County, town=Town, postcode=Postcode, country=Country), srcSysOrgId=6), sourceSystem=IFS, srcSysContactId=1, phoneNumber=888888888888) ";
+
         when(baseUserService.getUserById(userId)).thenReturn(serviceSuccess(user));
         when(organisationService.getAllByUserId(userId)).thenReturn(serviceSuccess(organisation));
         when(organisationAddressService.findByOrganisationIdAndAddressType(organisation.get(0).getId(), addressType))
@@ -413,16 +414,17 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     @Test
     public void syncExternalCrmContactWithExperienceTypeNotLoanShouldHaveAttributesStripped() {
 
-        String expectedLogMessage = "Updating CRM contact test@innovate.com and organisation OrganisationResource 5 \n" +
-                "Payload is:SilContact(ifsUuid=17a0e34c-719a-4db4-b011-ccd4c375ad79, experienceType=null, ifsAppID=null, email=test@innovate.com, lastName=Doe, firstName=Jon, title=null, jobTitle=null, address=null, organisation=SilOrganisation(name=OrganisationResource 5, registrationNumber=null, registeredAddress=SilAddress(buildingName=Line1, street=Line2, Line3, locality=County, town=Town, postcode=Postcode, country=Country), srcSysOrgId=5), sourceSystem=IFS, srcSysContactId=1, phoneNumber=888888888888) ";
-
-
+        String expectedLogMessage = "Updating CRM contact test@innovate.com and organisation OrganisationResource 6 \n" +
+                "Payload is:SilContact(ifsUuid=17a0e34c-719a-4db4-b011-ccd4c375ad79, experienceType=null, ifsAppID=3, email=test@innovate.com, lastName=Doe, firstName=Jon, title=null, jobTitle=null, address=null, organisation=SilOrganisation(name=OrganisationResource 6, registrationNumber=null, registeredAddress=SilAddress(buildingName=Line1, street=Line2, Line3, locality=County, town=Town, postcode=Postcode, country=Country), srcSysOrgId=6), sourceSystem=IFS, srcSysContactId=1, phoneNumber=888888888888) ";
+        
         long userId = 1L;
         long applicationId = 3L;
         long competitionId = 4L;
-        CompetitionResource competitionResource = new CompetitionResource();
-        competitionResource.setFundingType(FundingType.GRANT);
-
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withId(competitionId)
+                .withFundingType(FundingType.GRANT)
+                .withCompetitionApplicationConfig(new CompetitionApplicationConfigResource())
+                .build();
 
         List<OrganisationResource> organisation = Arrays.asList(newOrganisationResource()
                 .withDateOfIncorporation(LocalDate.now())

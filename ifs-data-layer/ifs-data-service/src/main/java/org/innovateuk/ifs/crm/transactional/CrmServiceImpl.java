@@ -297,17 +297,20 @@ public class CrmServiceImpl implements CrmService {
         return silContact;
     }
 
-    private String getExperienceType(String fundingType, long competitionId) {
-        boolean imSurveyRequired = competitionService.getCompetitionById(competitionId).getSuccess().getCompetitionApplicationConfigResource().isImSurveyRequired();
-        if (fundingType.equals("Loan") && imSurveyRequired) {
-            return "Loan-Impact management";
-        } else if (fundingType.equals("Loan")) {
-            return "Loan";
-        } else if (imSurveyRequired) {
-            return "Impact management";
-        } else {
-            return null;
+    private String getExperienceType(String fundingType, Long competitionId) {
+        if (competitionId != null) {
+            boolean imSurveyRequired = competitionService.getCompetitionById(competitionId).getSuccess().getCompetitionApplicationConfigResource().isImSurveyRequired();
+            if (fundingType.equals("Loan") && imSurveyRequired) {
+                return "Loan-Impact management";
+            } else if (fundingType.equals("Loan")) {
+                return "Loan";
+            } else if (imSurveyRequired) {
+                return "Impact management";
+            } else {
+                return null;
+            }
         }
+        return null;
     }
 
     private SilContact monitoringOfficerToSilContact(UserResource user) {
