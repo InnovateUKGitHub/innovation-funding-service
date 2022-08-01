@@ -306,8 +306,8 @@ public class ApplicationEoiServiceImpl implements ApplicationEoiService {
         application.setDurationInMonths(migratedApplication.getDurationInMonths());
         application.setStartDate(migratedApplication.getStartDate());
         application.setResearchCategory(migratedApplication.getResearchCategory());
-        application.setFundingDecision(null);
-        application.setManageFundingEmailDate(null);
+        application.setDecision(null);
+        application.setManageDecisionEmailDate(null);
         application.setFeedbackReleased(null);
         applicationRepository.save(application);
 

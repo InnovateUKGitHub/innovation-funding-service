@@ -175,7 +175,7 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
                 () -> classUnderTest.acceptInvite("hash"),
                 () -> {
                     verify(reviewParticipantLookupStrategy, only()).getAssessmentPanelParticipantResource("hash");
-                    verifyZeroInteractions(reviewParticipantPermissionRules);
+                    verifyNoInteractions(reviewParticipantPermissionRules);
                 }
         );
     }
@@ -221,7 +221,7 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
                 () -> {
                     verify(reviewParticipantLookupStrategy, only()).getAssessmentPanelParticipantResource("hash not " +
                             "exists");
-                    verifyZeroInteractions(reviewParticipantPermissionRules);
+                    verifyNoInteractions(reviewParticipantPermissionRules);
                 }
         );
     }

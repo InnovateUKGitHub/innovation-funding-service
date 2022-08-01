@@ -66,7 +66,7 @@ public class CompetitionSetupMilestoneServiceImplTest {
         MilestoneRowForm milestoneRowForm = new MilestoneRowForm(MilestoneType.SUBMISSION_DATE, LocalDateTime.MIN.atZone(ZoneId.systemDefault()));
         newMilestones.put(MilestoneType.SUBMISSION_DATE.name(), milestoneRowForm);
 
-        when(milestoneRestService.updateMilestones(anyListOf(MilestoneResource.class))).thenReturn(restSuccess());
+        when(milestoneRestService.updateMilestones(anyList())).thenReturn(restSuccess());
 
         ServiceResult<Void> result = service.updateMilestonesForCompetition(oldMilestones, newMilestones, 123L);
 

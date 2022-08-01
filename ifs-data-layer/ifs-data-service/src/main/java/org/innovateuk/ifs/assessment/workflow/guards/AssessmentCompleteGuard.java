@@ -22,14 +22,14 @@ public class AssessmentCompleteGuard implements Guard<AssessmentState, Assessmen
     @Override
     public boolean evaluate(StateContext<AssessmentState, AssessmentEvent> context) {
         Assessment assessment = (Assessment) context.getMessageHeader("target");
-        return isFeedbackComplete(assessment) && isFundingDecisionComplete(assessment);
+        return isFeedbackComplete(assessment) && isDecisionComplete(assessment);
     }
 
     private boolean isFeedbackComplete(Assessment assessment) {
         return assessmentRepository.isFeedbackComplete(assessment.getId());
     }
 
-    private boolean isFundingDecisionComplete(Assessment assessment) {
-        return assessment.getFundingDecision() != null;
+    private boolean isDecisionComplete(Assessment assessment) {
+        return assessment.getDecision() != null;
     }
 }

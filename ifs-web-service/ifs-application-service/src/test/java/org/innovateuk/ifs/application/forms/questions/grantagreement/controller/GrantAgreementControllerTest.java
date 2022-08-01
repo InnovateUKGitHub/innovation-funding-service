@@ -106,7 +106,7 @@ public class GrantAgreementControllerTest extends BaseControllerMockMVCTest<Gran
                 .andExpect(view().name("application/questions/grant-agreement"))
                 .andReturn();
 
-        verifyZeroInteractions(questionStatusRestService);
+        verifyNoInteractions(questionStatusRestService);
     }
 
     @Test

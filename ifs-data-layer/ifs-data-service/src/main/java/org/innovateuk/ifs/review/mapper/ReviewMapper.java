@@ -2,7 +2,7 @@ package org.innovateuk.ifs.review.mapper;
 
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.assessment.domain.Assessment;
-import org.innovateuk.ifs.assessment.mapper.AssessmentFundingDecisionOutcomeMapper;
+import org.innovateuk.ifs.assessment.mapper.AssessmentDecisionOutcomeMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
@@ -25,7 +25,7 @@ import org.mapstruct.NullValueMappingStrategy;
                 ApplicationMapper.class,
                 UserMapper.class,
                 CompetitionMapper.class,
-                AssessmentFundingDecisionOutcomeMapper.class,
+                AssessmentDecisionOutcomeMapper.class,
                 ReviewRejectOutcomeMapper.class
         },
         nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL

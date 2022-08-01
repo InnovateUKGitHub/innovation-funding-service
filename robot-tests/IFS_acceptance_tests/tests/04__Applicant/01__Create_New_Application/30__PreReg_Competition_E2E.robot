@@ -137,10 +137,18 @@ Internal user submit the EOI applications funding decision
     Given Existing user creates and submits new application for unsuccessful EOI journey
     And Requesting application ID of unsuccessful prereg application
     And Log in as a different user                                                          &{Comp_admin1_credentials}
-    When Internal user marks the EOI as successful/unsuccessful                             ${unSuccessPreregAppName}   UNFUNDED
-    And Internal user marks the EOI as successful/unsuccessful                              ${hecpPreregAppName}   FUNDED
+    When Internal user marks the EOI as successful/unsuccessful                             ${unSuccessPreregAppName}   EOI_REJECTED
+    And Internal user marks the EOI as successful/unsuccessful                              ${hecpPreregAppName}   EOI_APPROVED
     Then the user should see the element                                                    jQuery = td:contains("${preregApplicationID}")+td:contains("${hecpPreregAppName}")+td:contains("Empire Ltd")+td:contains("Successful")
     And the user should see the element                                                     jQuery = td:contains("${unSuccessfulPreRegApplicationID}")+td:contains("${unSuccessPreregAppName}")+td:contains("Empire Ltd")+td:contains("Unsuccessful")
+
+Internal user is able to see Write and email button enabled
+    [Documentation]    IFS-12261
+    When the user clicks the button/link        Link = Manage notifications
+    Then the user should see the element        jQuery = h1:contains("Expression of interest notifications")
+    And User should see EOI Related content
+    And the user selects the checkbox           app-row-${preregApplicationID}
+    And The user should not see the element     css = .govuk-button[disabled]
 
 #Lead applicant views unsuccessful applications in previous dashboard
 #    [Documentation]  IFS-12265
@@ -285,10 +293,10 @@ Existing user creates and submits new application for unsuccessful EOI journey
     the user clicks the button/link                                           id = submit-application-button
 
 Internal user marks the EOI as successful/unsuccessful
-    [Arguments]  ${applicationName}  ${fundingDecision}
+    [Arguments]  ${applicationName}  ${decision}
     the user navigates to the page                      ${server}/management/competition/${preregCompetitionId}/applications/eoi
     the user clicks the button/link                     jQuery = tr:contains("${applicationName}") label
-    the user clicks the button/link                     css = [type="submit"][value="${fundingDecision}"]
+    the user clicks the button/link                     css = [type="submit"][value="${decision}"]
 
 Internal user sends a decision notifications to applicants
     Requesting application ID of prereg application     ${applicationName}

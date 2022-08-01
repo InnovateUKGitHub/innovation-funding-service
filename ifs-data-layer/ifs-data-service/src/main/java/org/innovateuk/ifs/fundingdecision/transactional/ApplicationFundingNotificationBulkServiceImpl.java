@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.fundingdecision.transactional;
 
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.Decision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationEoiService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
@@ -40,21 +40,21 @@ public class ApplicationFundingNotificationBulkServiceImpl implements Applicatio
 
     @Override
     public ServiceResult<Void> sendBulkFundingNotifications(FundingNotificationResource fundingNotificationResource) {
-        if (!fundingNotificationTriggersProjectSetup(fundingNotificationResource.getFundingDecisions())) {
-            return applicationFundingService.notifyApplicantsOfFundingDecisions(fundingNotificationResource);
+        if (!fundingNotificationTriggersProjectSetup(fundingNotificationResource.getDecisions())) {
+            return applicationFundingService.notifyApplicantsOfDecisions(fundingNotificationResource);
         } else {
-            Map<Long, FundingDecision> successfulDecisions = fundingNotificationResource.getFundingDecisions()
+            Map<Long, Decision> successfulDecisions = fundingNotificationResource.getDecisions()
                     .entrySet().stream()
-                    .filter(entry -> entry.getValue() == FundingDecision.FUNDED)
+                    .filter(entry -> filterSuccessfulDecisions(entry))
                     .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
-            Map<Long, FundingDecision> otherDecisions = fundingNotificationResource.getFundingDecisions()
+            Map<Long, Decision> otherDecisions = fundingNotificationResource.getDecisions()
                     .entrySet().stream()
-                    .filter(entry -> entry.getValue() != FundingDecision.FUNDED)
+                    .filter(entry -> !filterSuccessfulDecisions(entry))
                     .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 
             ServiceResult<Void> result = serviceSuccess();
             if (!otherDecisions.isEmpty()) {
-                result.andOnSuccess(() -> applicationFundingService.notifyApplicantsOfFundingDecisions(new FundingNotificationResource(fundingNotificationResource.getMessageBody(), otherDecisions)));
+                result.andOnSuccess(() -> applicationFundingService.notifyApplicantsOfDecisions(new FundingNotificationResource(fundingNotificationResource.getMessageBody(), otherDecisions)));
             }
             if (!successfulDecisions.isEmpty()) {
                 result.andOnSuccess(() -> handleSuccessfulNotificationsCreatingProjects(new FundingNotificationResource(fundingNotificationResource.getMessageBody(), successfulDecisions)));
@@ -63,8 +63,13 @@ public class ApplicationFundingNotificationBulkServiceImpl implements Applicatio
         }
     }
 
+    private boolean filterSuccessfulDecisions(Map.Entry<Long, Decision> entry) {
+        return entry.getValue() == Decision.FUNDED
+                || entry.getValue() == Decision.EOI_APPROVED;
+    }
+
     private ServiceResult<Void> handleSuccessfulNotificationsCreatingProjects(FundingNotificationResource fundingNotificationResource) {
-        return aggregate(fundingNotificationResource.getFundingDecisions().keySet().stream()
+        return aggregate(fundingNotificationResource.getDecisions().keySet().stream()
                 .map(applicationId -> applicationService.getApplicationById(applicationId).getSuccess())
                 .map(application -> application.isEnabledForExpressionOfInterest()
                         ? sendEoiNotificationAndCreateFullApplication(application.getId(), fundingNotificationResource.getMessageBody())
@@ -74,13 +79,13 @@ public class ApplicationFundingNotificationBulkServiceImpl implements Applicatio
     }
 
     private ServiceResult<Void> sendEoiNotificationAndCreateFullApplication(long applicationId, String emailBody) {
-        return applicationFundingService.notifyApplicantsOfFundingDecisions(
-                    new FundingNotificationResource(emailBody, Collections.singletonMap(applicationId, FundingDecision.FUNDED)))
+        return applicationFundingService.notifyApplicantsOfDecisions(
+                    new FundingNotificationResource(emailBody, Collections.singletonMap(applicationId, Decision.EOI_APPROVED)))
                 .andOnSuccessReturnVoid(() -> applicationEoiService.createFullApplicationFromEoi(applicationId));
     }
 
-    private boolean fundingNotificationTriggersProjectSetup(Map<Long, FundingDecision> fundingDecisions) {
-        return fundingDecisions.keySet().stream().findFirst().map(applicationId -> {
+    private boolean fundingNotificationTriggersProjectSetup(Map<Long, Decision> decisions) {
+        return decisions.keySet().stream().findFirst().map(applicationId -> {
             CompetitionResource competition = competitionService.getCompetitionByApplicationId(applicationId).getSuccess();
             return CompetitionCompletionStage.PROJECT_SETUP.equals(competition.getCompletionStage())
                     && !competition.isKtp();

@@ -3,7 +3,7 @@ package org.innovateuk.ifs.fundingdecision.transactional;
 import com.google.common.collect.ImmutableMap;
 import org.innovateuk.ifs.application.resource.ApplicationExpressionOfInterestConfigResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.Decision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationEoiService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
@@ -21,8 +21,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Map;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
-import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
+import static org.innovateuk.ifs.application.resource.Decision.FUNDED;
+import static org.innovateuk.ifs.application.resource.Decision.UNFUNDED;
+import static org.innovateuk.ifs.application.resource.Decision.EOI_APPROVED;
+import static org.innovateuk.ifs.application.resource.Decision.EOI_REJECTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertTrue;
@@ -61,18 +63,18 @@ public class ApplicationFundingNotificationBulkServiceImplTest {
         ApplicationResource application = newApplicationResource()
                 .withId(successfulApplicationId)
                 .build();
-        Map<Long, FundingDecision> decisions = ImmutableMap.<Long, FundingDecision> builder()
+        Map<Long, Decision> decisions = ImmutableMap.<Long, Decision> builder()
             .put(successfulApplicationId, FUNDED)
             .put(unsuccessfulApplicationId, UNFUNDED)
             .build();
         FundingNotificationResource resource = new FundingNotificationResource(messageBody, decisions);
         FundingNotificationResource unfundedResource = new FundingNotificationResource(messageBody,
-                ImmutableMap.<Long, FundingDecision> builder()
+                ImmutableMap.<Long, Decision> builder()
                 .put(unsuccessfulApplicationId, UNFUNDED)
                 .build());
 
         when(competitionService.getCompetitionByApplicationId(successfulApplicationId)).thenReturn(serviceSuccess(competition));
-        when(applicationFundingService.notifyApplicantsOfFundingDecisions(unfundedResource)).thenReturn(serviceSuccess());
+        when(applicationFundingService.notifyApplicantsOfDecisions(unfundedResource)).thenReturn(serviceSuccess());
         when(projectToBeCreatedService.markApplicationReadyToBeCreated(successfulApplicationId, messageBody)).thenReturn(serviceSuccess());
         when(applicationService.getApplicationById(successfulApplicationId)).thenReturn(serviceSuccess(application));
 
@@ -80,7 +82,7 @@ public class ApplicationFundingNotificationBulkServiceImplTest {
 
         assertTrue(result.isSuccess());
 
-        verify(applicationFundingService).notifyApplicantsOfFundingDecisions(unfundedResource);
+        verify(applicationFundingService).notifyApplicantsOfDecisions(unfundedResource);
         verify(projectToBeCreatedService).markApplicationReadyToBeCreated(successfulApplicationId, messageBody);
     }
 
@@ -100,23 +102,23 @@ public class ApplicationFundingNotificationBulkServiceImplTest {
                         .enabledForExpressionOfInterest(true)
                         .build())
                 .build();
-        Map<Long, FundingDecision> decisions = ImmutableMap.<Long, FundingDecision> builder()
-                .put(successfulApplicationId, FUNDED)
-                .put(unsuccessfulApplicationId, UNFUNDED)
+        Map<Long, Decision> decisions = ImmutableMap.<Long, Decision> builder()
+                .put(successfulApplicationId, EOI_APPROVED)
+                .put(unsuccessfulApplicationId, EOI_REJECTED)
                 .build();
         FundingNotificationResource resource = new FundingNotificationResource(messageBody, decisions);
         FundingNotificationResource fundedResource = new FundingNotificationResource(messageBody,
-                ImmutableMap.<Long, FundingDecision> builder()
-                        .put(successfulApplicationId, FUNDED)
+                ImmutableMap.<Long, Decision> builder()
+                        .put(successfulApplicationId, EOI_APPROVED)
                         .build());
         FundingNotificationResource unfundedResource = new FundingNotificationResource(messageBody,
-                ImmutableMap.<Long, FundingDecision> builder()
-                        .put(unsuccessfulApplicationId, UNFUNDED)
+                ImmutableMap.<Long, Decision> builder()
+                        .put(unsuccessfulApplicationId, EOI_REJECTED)
                         .build());
 
         when(competitionService.getCompetitionByApplicationId(successfulApplicationId)).thenReturn(serviceSuccess(competition));
-        when(applicationFundingService.notifyApplicantsOfFundingDecisions(fundedResource)).thenReturn(serviceSuccess());
-        when(applicationFundingService.notifyApplicantsOfFundingDecisions(unfundedResource)).thenReturn(serviceSuccess());
+        when(applicationFundingService.notifyApplicantsOfDecisions(fundedResource)).thenReturn(serviceSuccess());
+        when(applicationFundingService.notifyApplicantsOfDecisions(unfundedResource)).thenReturn(serviceSuccess());
         when(applicationEoiService.createFullApplicationFromEoi(successfulApplicationId)).thenReturn(serviceSuccess(anyLong()));
         when(applicationService.getApplicationById(successfulApplicationId)).thenReturn(serviceSuccess(application));
 
@@ -124,7 +126,8 @@ public class ApplicationFundingNotificationBulkServiceImplTest {
 
         assertTrue(result.isSuccess());
 
-        verify(applicationFundingService).notifyApplicantsOfFundingDecisions(unfundedResource);
+        verify(applicationFundingService).notifyApplicantsOfDecisions(fundedResource);
+        verify(applicationFundingService).notifyApplicantsOfDecisions(unfundedResource);
         verify(applicationEoiService).createFullApplicationFromEoi(successfulApplicationId);
         verifyNoInteractions(projectToBeCreatedService);
     }
@@ -137,20 +140,20 @@ public class ApplicationFundingNotificationBulkServiceImplTest {
                 .build();
         long successfulApplicationId = 1L;
         long unsuccessfulApplicationId = 2L;
-        Map<Long, FundingDecision> decisions = ImmutableMap.<Long, FundingDecision> builder()
+        Map<Long, Decision> decisions = ImmutableMap.<Long, Decision> builder()
                 .put(successfulApplicationId, FUNDED)
                 .put(unsuccessfulApplicationId, UNFUNDED)
                 .build();
         FundingNotificationResource resource = new FundingNotificationResource(messageBody, decisions);
 
         when(competitionService.getCompetitionByApplicationId(successfulApplicationId)).thenReturn(serviceSuccess(competition));
-        when(applicationFundingService.notifyApplicantsOfFundingDecisions(resource)).thenReturn(serviceSuccess());
+        when(applicationFundingService.notifyApplicantsOfDecisions(resource)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.sendBulkFundingNotifications(resource);
 
         assertTrue(result.isSuccess());
 
-        verify(applicationFundingService).notifyApplicantsOfFundingDecisions(resource);
+        verify(applicationFundingService).notifyApplicantsOfDecisions(resource);
     }
 
 }

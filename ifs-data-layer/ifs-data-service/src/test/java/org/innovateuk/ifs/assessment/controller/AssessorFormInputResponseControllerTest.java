@@ -114,7 +114,7 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
                 .andExpect(content().json(toJson(new RestErrorResponse(fieldError("responses[1].value", valueInvalid,
                         "validation.field.too.many.characters", "", "5000", "0")))));
 
-        verifyZeroInteractions(assessorFormInputResponseServiceMock);
+        verifyNoInteractions(assessorFormInputResponseServiceMock);
     }
 
     @Test
