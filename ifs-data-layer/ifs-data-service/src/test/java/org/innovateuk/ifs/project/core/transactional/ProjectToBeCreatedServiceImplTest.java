@@ -107,7 +107,7 @@ public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<Proje
 
         verify(applicationFundingService).notifyApplicantsOfDecisions(fundingNotificationResource);
         verify(projectService).createProjectFromApplication(application.getId());
-        verifyZeroInteractions(ktpProjectNotificationService);
+        verifyNoInteractions(ktpProjectNotificationService);
         verify(applicationMigrationService).findByApplicationIdAndStatus(application.getId(), MigrationStatus.CREATED);
     }
 
@@ -142,7 +142,7 @@ public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<Proje
 
         verify(applicationFundingService).notifyApplicantsOfDecisions(fundingNotificationResource);
         verify(projectService).createProjectFromApplication(application.getId());
-        verifyZeroInteractions(ktpProjectNotificationService);
+        verifyNoInteractions(ktpProjectNotificationService);
         verify(applicationMigrationService).findByApplicationIdAndStatus(application.getId(), MigrationStatus.CREATED);
         verify(applicationMigrationService).migrateApplication(application.getId());
 
@@ -173,7 +173,7 @@ public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<Proje
         assertEquals("Project created: " + applicationId, result.getSuccess().getResponse());
         assertFalse(projectToBeCreated.isPending());
 
-        verifyZeroInteractions(applicationFundingService);
+        verifyNoInteractions(applicationFundingService);
         verify(projectService).createProjectFromApplication(application.getId());
         verify(ktpProjectNotificationService, times(1)).sendProjectSetupNotification(application.getId());
         verify(applicationMigrationService).findByApplicationIdAndStatus(application.getId(), MigrationStatus.CREATED);
@@ -197,7 +197,7 @@ public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<Proje
 
         assertFalse(result.isSuccess());
 
-        verifyZeroInteractions(applicationFundingService);
+        verifyNoInteractions(applicationFundingService);
         verify(projectService).createProjectFromApplication(application.getId());
         verify(ktpProjectNotificationService, times(1)).sendProjectSetupNotification(application.getId());
     }
