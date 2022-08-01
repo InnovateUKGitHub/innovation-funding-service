@@ -291,7 +291,7 @@ public class CrmServiceImpl implements CrmService {
         silContact.setTitle(Optional.ofNullable(user.getTitle()).map(Title::getDisplayName).orElse(null));
         silContact.setSrcSysContactId(String.valueOf(user.getId()));
         silContact.setExperienceType(getExperienceType(fundingType, competitionId));
-        silContact.setIfsAppID(String.valueOf(applicationId));
+        silContact.setIfsAppID(getAppID(fundingType, competitionId, applicationId));
         silContact.setIfsUuid(user.getUid());
         silContact.setPhoneNumber(user.getPhoneNumber());
         return silContact;
@@ -309,6 +309,17 @@ public class CrmServiceImpl implements CrmService {
             } else {
                 return null;
             }
+        }
+        return null;
+    }
+
+    private String getAppID(String fundingType, Long competitionId, Long applicationId) {
+        if (competitionId != null) {
+            boolean imSurveyRequired = competitionService.getCompetitionById(competitionId).getSuccess().getCompetitionApplicationConfigResource().isImSurveyRequired();
+            if (fundingType.equals("Loan") || imSurveyRequired) {
+                return String.valueOf(applicationId);
+            }
+            return null;
         }
         return null;
     }

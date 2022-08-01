@@ -399,7 +399,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     public void syncExternalCrmContactWithExperienceTypeNotLoanShouldHaveAttributesStripped() {
 
         String expectedLogMessage = "Updating CRM contact test@innovate.com and organisation Organisation1 \n" +
-                "Payload is:SilContact(ifsUuid=17a0e34c-719a-4db4-b011-ccd4c375ad79, experienceType=null, ifsAppID=3, email=test@innovate.com, lastName=Doe, firstName=Jon, title=null, jobTitle=null, address=null, organisation=SilOrganisation(name=Organisation1, registrationNumber=Something, registeredAddress=SilAddress(buildingName=Line1, street=Line2, Line3, locality=County, town=Town, postcode=Postcode, country=Country), srcSysOrgId=33), sourceSystem=IFS, srcSysContactId=1, phoneNumber=888888888888) ";
+                "Payload is:SilContact(ifsUuid=17a0e34c-719a-4db4-b011-ccd4c375ad79, experienceType=null, ifsAppID=null, email=test@innovate.com, lastName=Doe, firstName=Jon, title=null, jobTitle=null, address=null, organisation=SilOrganisation(name=Organisation1, registrationNumber=Something, registeredAddress=SilAddress(buildingName=Line1, street=Line2, Line3, locality=County, town=Town, postcode=Postcode, country=Country), srcSysOrgId=33), sourceSystem=IFS, srcSysContactId=1, phoneNumber=888888888888) ";
         
         long userId = 1L;
         long applicationId = 3L;
