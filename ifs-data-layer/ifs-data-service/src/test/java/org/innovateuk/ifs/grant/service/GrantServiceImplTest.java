@@ -269,7 +269,7 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
         verify(grantProcessService).findOneReadyToSend();
         verify(grantProcessService).sendFailed(anyLong(), anyString());
         verifyNoMoreInteractions(grantProcessService);
-        verifyZeroInteractions(grantEndpoint);
+        verifyNoInteractions(grantEndpoint);
     }
 
     private static Predicate<Grant> matchGrant(Project project) {

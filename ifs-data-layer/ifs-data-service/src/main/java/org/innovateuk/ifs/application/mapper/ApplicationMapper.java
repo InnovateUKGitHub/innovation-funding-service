@@ -57,12 +57,12 @@ public abstract class ApplicationMapper extends BaseMapper<Application, Applicat
     public abstract ApplicationResource mapToResource(Application domain);
 
     @Mappings({
-            @Mapping(target = "fundingDecision", ignore = true),
+            @Mapping(target = "decision", ignore = true),
             @Mapping(target = "formInputResponses", ignore = true),
             @Mapping(target = "invites", ignore = true),
             @Mapping(target = "applicationFinances", ignore = true),
             @Mapping(target = "processRoles", ignore = true),
-            @Mapping(target = "manageFundingEmailDate", ignore = true),
+            @Mapping(target = "manageDecisionEmailDate", ignore = true),
             @Mapping(target = "project", ignore = true),
             @Mapping(target = "assessmentPeriod", ignore = true),
             @Mapping(target = "previousApplicationId", ignore = true),

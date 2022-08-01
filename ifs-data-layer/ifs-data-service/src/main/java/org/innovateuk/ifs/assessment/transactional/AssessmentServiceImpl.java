@@ -2,8 +2,8 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.domain.Assessment;
-import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
-import org.innovateuk.ifs.assessment.mapper.AssessmentFundingDecisionOutcomeMapper;
+import org.innovateuk.ifs.assessment.domain.AssessmentDecisionOutcome;
+import org.innovateuk.ifs.assessment.mapper.AssessmentDecisionOutcomeMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessmentRejectOutcomeMapper;
 import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
@@ -52,7 +52,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Autowired
     private AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapper;
     @Autowired
-    private AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapper;
+    private AssessmentDecisionOutcomeMapper assessmentDecisionOutcomeMapper;
     @Autowired
     private AssessmentWorkflowHandler assessmentWorkflowHandler;
     @Autowired
@@ -142,9 +142,9 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Override
     @Transactional
-    public ServiceResult<Void> recommend(long assessmentId, AssessmentFundingDecisionOutcomeResource assessmentFundingDecision) {
+    public ServiceResult<Void> recommend(long assessmentId, AssessmentDecisionOutcomeResource assessmentDecision) {
         return find(assessmentRepository.findById(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
-            if (!assessmentWorkflowHandler.fundingDecision(found, assessmentFundingDecisionOutcomeMapper.mapToDomain(assessmentFundingDecision))) {
+            if (!assessmentWorkflowHandler.decision(found, assessmentDecisionOutcomeMapper.mapToDomain(assessmentDecision))) {
                 return serviceFailure(ASSESSMENT_RECOMMENDATION_FAILED);
             }
             return serviceSuccess();
@@ -155,9 +155,9 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     public ServiceResult<ApplicationAssessmentFeedbackResource> getApplicationFeedback(long applicationId) {
         return serviceSuccess(new ApplicationAssessmentFeedbackResource(
                             assessmentRepository.findByTargetId(applicationId).stream()
-                                    .map(Assessment::getFundingDecision)
+                                    .map(Assessment::getDecision)
                                     .filter(Objects::nonNull)
-                                    .map(AssessmentFundingDecisionOutcome::getFeedback)
+                                    .map(AssessmentDecisionOutcome::getFeedback)
                                     .collect(Collectors.toList())
                 )
         );

@@ -50,7 +50,7 @@ public class ApplicationResource {
     private CompanyPrimaryFocus companyPrimaryFocus;
     private String event;
     private ZonedDateTime lastStateChangeDate;
-    private FundingDecision fundingDecision;
+    private Decision decision;
     private Long assessmentPeriodId;
     private ZonedDateTime feedbackReleased;
     private ApplicationExpressionOfInterestConfigResource applicationExpressionOfInterestConfigResource;
@@ -143,7 +143,7 @@ public class ApplicationResource {
         return applicationState == ApplicationState.OPENED
                 || applicationState == ApplicationState.CREATED
                 || applicationState == ApplicationState.SUBMITTED
-                && fundingDecision == null;
+                && decision == null;
     }
 
     @JsonIgnore
@@ -324,12 +324,12 @@ public class ApplicationResource {
         this.lastStateChangeDate = lastStateChangeDate;
     }
 
-    public FundingDecision getFundingDecision() {
-        return fundingDecision;
+    public Decision getDecision() {
+        return decision;
     }
 
-    public void setFundingDecision(FundingDecision fundingDecision) {
-        this.fundingDecision = fundingDecision;
+    public void setDecision(Decision decision) {
+        this.decision = decision;
     }
 
     public Long getAssessmentPeriodId() {

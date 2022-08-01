@@ -336,7 +336,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
         RegistrationForm form = (RegistrationForm) result.getModelAndView().getModel().get("form");
 
-        assertEquals(form.getAddressForm().isManualAddressEntry(), true);
+        assertEquals(true, form.getAddressForm().isManualAddressEntry());
     }
 
     @Test
@@ -392,7 +392,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         RegistrationForm form = (RegistrationForm) result.getModelAndView().getModel().get("form");
         assertEquals(postcodeInput, form.getAddressForm().getPostcodeInput());
 
-        verifyZeroInteractions(addressRestService);
+        verifyNoInteractions(addressRestService);
     }
 
     @Test
@@ -420,7 +420,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/invite/competition/%s", inviteHash)));
 
-        verifyZeroInteractions(competitionInviteRestService);
+        verifyNoInteractions(competitionInviteRestService);
     }
 
     @Test

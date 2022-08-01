@@ -12,7 +12,7 @@ import java.util.List;
 
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentDecisionOutcomeResourceBuilder.newAssessmentDecisionOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
@@ -101,19 +101,19 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
         String feedback = "feedback for decision";
         String comment = "comment for decision";
 
-        AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource =
-                newAssessmentFundingDecisionOutcomeResource()
+        AssessmentDecisionOutcomeResource assessmentDecisionOutcomeResource =
+                newAssessmentDecisionOutcomeResource()
                         .withFundingConfirmation(TRUE)
                         .withFeedback(feedback)
                         .withComment(comment)
                         .build();
 
-        when(assessmentRestService.recommend(assessmentId, assessmentFundingDecisionOutcomeResource)).thenReturn(restSuccess());
+        when(assessmentRestService.recommend(assessmentId, assessmentDecisionOutcomeResource)).thenReturn(restSuccess());
 
         ServiceResult<Void> response = service.recommend(assessmentId, TRUE, feedback, comment);
 
         assertTrue(response.isSuccess());
-        verify(assessmentRestService, only()).recommend(assessmentId, assessmentFundingDecisionOutcomeResource);
+        verify(assessmentRestService, only()).recommend(assessmentId, assessmentDecisionOutcomeResource);
     }
 
     @Test

@@ -4,11 +4,11 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.application.resource.*;
-import org.innovateuk.ifs.competition.resource.CompetitionEoiEvidenceConfigResource;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.Decision;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.cost.AdditionalCompanyCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -19,8 +19,6 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.*;
-import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +32,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -437,7 +434,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         applicationBuilder.build();
     }
 
-    public void createFundingDecisions(
+    public void createDecisions(
             CompetitionData competition,
             CompetitionLine competitionLine,
             List<ApplicationLine> applicationLines) {
@@ -449,12 +446,12 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         || (competition.getCompetition().isAlwaysOpen() && CompetitionStatus.OPEN == competitionLine.getCompetitionStatus()))) {
             basicCompetitionInformation.
                     moveCompetitionIntoFundersPanelStatus().
-                    sendFundingDecisions(createFundingDecisionsFromCsv(competitionLine.getName(), applicationLines)).
+                    sendDecisions(createDecisionsFromCsv(competitionLine.getName(), applicationLines)).
                     build();
         }
     }
 
-    private List<Pair<String, FundingDecision>> createFundingDecisionsFromCsv(
+    private List<Pair<String, Decision>> createDecisionsFromCsv(
             String competitionName,
             List<ApplicationLine> applicationLines) {
 
@@ -465,8 +462,10 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 asList(ApplicationState.APPROVED, ApplicationState.REJECTED).contains(a.status));
 
         return simpleMap(applicationsWithDecisions, ma -> {
-            FundingDecision fundingDecision = ma.status == ApplicationState.APPROVED ? FundingDecision.FUNDED : FundingDecision.UNFUNDED;
-            return Pair.of(ma.title, fundingDecision);
+            Decision decision = ma.status == ApplicationState.APPROVED ?
+                    (ma.enabledForExpressionOfInterest ? Decision.EOI_APPROVED : Decision.FUNDED) :
+                    (ma.enabledForExpressionOfInterest ? Decision.EOI_REJECTED : Decision.UNFUNDED);
+            return Pair.of(ma.title, decision);
         });
     }
 

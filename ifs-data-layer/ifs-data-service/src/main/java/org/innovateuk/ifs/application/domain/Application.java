@@ -12,7 +12,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.form.domain.FormInput;
-import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.fundingdecision.domain.DecisionStatus;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.procurement.milestone.domain.ProcurementMilestone;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -50,7 +50,8 @@ public class Application implements ProcessActivity {
     private Boolean resubmission;
     private String previousApplicationNumber;
     private String previousApplicationTitle;
-    private ZonedDateTime manageFundingEmailDate;
+    @Column(name = "manage_funding_email_date")
+    private ZonedDateTime manageDecisionEmailDate;
     private Long previousApplicationId;
     private ZonedDateTime feedbackReleased;
 
@@ -77,7 +78,8 @@ public class Application implements ProcessActivity {
     private List<ApplicationInvite> invites;
 
     @Enumerated(EnumType.STRING)
-    private FundingDecisionStatus fundingDecision;
+    @Column(name = "funding_decision")
+    private DecisionStatus decision;
 
     @OneToMany(mappedBy = "application", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private List<FormInputResponse> formInputResponses = new ArrayList<>();
@@ -148,14 +150,14 @@ public class Application implements ProcessActivity {
         this.resubmission = application.getResubmission();
         this.previousApplicationNumber = application.getPreviousApplicationNumber();
         this.previousApplicationTitle = application.getPreviousApplicationTitle();
-        this.manageFundingEmailDate = application.getManageFundingEmailDate();
+        this.manageDecisionEmailDate = application.getManageDecisionEmailDate();
         this.previousApplicationId = application.getId();
         this.durationInMonths = application.getDurationInMonths();
         this.completion = application.getCompletion();
         setNoInnovationAreaApplicable(application.getNoInnovationAreaApplicable());
         this.inAssessmentReviewPanel = application.isInAssessmentReviewPanel();
         this.competition = application.getCompetition();
-        this.fundingDecision = application.getFundingDecision();
+        this.decision = application.getDecision();
         setResearchCategory(application.getResearchCategory());
         setInnovationArea(application.getInnovationArea());
         this.assessmentPeriod = application.getAssessmentPeriod();
@@ -245,12 +247,12 @@ public class Application implements ProcessActivity {
         }
     }
 
-    public ZonedDateTime getManageFundingEmailDate() {
-        return manageFundingEmailDate;
+    public ZonedDateTime getManageDecisionEmailDate() {
+        return manageDecisionEmailDate;
     }
 
-    public void setManageFundingEmailDate(ZonedDateTime manageFundingEmailDate) {
-        this.manageFundingEmailDate = manageFundingEmailDate;
+    public void setManageDecisionEmailDate(ZonedDateTime manageDecisionEmailDate) {
+        this.manageDecisionEmailDate = manageDecisionEmailDate;
     }
 
     public LocalDate getStartDate() {
@@ -329,12 +331,12 @@ public class Application implements ProcessActivity {
         this.submittedDate = submittedDate;
     }
 
-    public FundingDecisionStatus getFundingDecision() {
-        return fundingDecision;
+    public DecisionStatus getDecision() {
+        return decision;
     }
 
-    public void setFundingDecision(FundingDecisionStatus fundingDecision) {
-        this.fundingDecision = fundingDecision;
+    public void setDecision(DecisionStatus decision) {
+        this.decision = decision;
     }
 
     public List<FormInputResponse> getFormInputResponses() {
@@ -444,9 +446,9 @@ public class Application implements ProcessActivity {
         return applicationProcess;
     }
 
-    public boolean applicationFundingDecisionIsChangeable() {
-        return !(this.manageFundingEmailDate != null &&
-                (fundingDecision != null && fundingDecision.equals(FundingDecisionStatus.FUNDED)));
+    public boolean applicationDecisionIsChangeable() {
+        return !(this.manageDecisionEmailDate != null &&
+                (decision != null && decision.equals(DecisionStatus.FUNDED)));
     }
 
     public boolean isInAssessmentReviewPanel() {

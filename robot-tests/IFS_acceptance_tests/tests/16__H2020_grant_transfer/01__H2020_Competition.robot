@@ -58,7 +58,7 @@ User can populate Funding information and Project eligibility
     Given the user clicks the button/link                                       link = Funding information
     When the user completes funding information
     Then the user clicks the button/link                                        link = Return to setup overview
-    And the user fills in the Competition Setup Project eligibility section     ${BUSINESS_TYPE_ID}  4
+    And the user fills in the Competition Setup Project eligibility section     ${BUSINESS_TYPE_ID}
     And the user fills in the CS funding eligibility                            false   ${compType_H2020}   STATE_AID
 
 User can complete the Application
@@ -384,13 +384,14 @@ The user is able to go to Application overview
     the user should see the element  link = Horizon 2020 grant agreement
 
 The user fills in the Competition Setup Project eligibility section
-    [Arguments]  ${organisationType}  ${researchParticipation}
+    [Arguments]  ${organisationType}
     the user clicks the button/link                      link = Project eligibility
-    the user clicks the button twice                     css = label[for="single-or-collaborative-single"]
-    the user clicks the button twice                     css = label[for="lead-applicant-type-${organisationType}"]
+    the user selects the radio button                    singleOrCollaborative    single-or-collaborative
+    the user selects the checkbox                        lead-applicant-type-${organisationType}
     the user enters text to a text field                 id = researchParticipationPercentage   0
-    the user clicks the button twice                     css = label[for="comp-resubmissions-no"]
+    the user selects the radio button                    resubmission    no
     the user clicks the button/link                      jQuery = button:contains("Done")
+    the user should see the element                      jQuery = button:contains("Edit")
     the user clicks the button/link                      link = Back to competition details
     the user should see the element                      jQuery = div:contains("Project eligibility") ~ .task-status-complete
 

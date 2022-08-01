@@ -3,7 +3,7 @@ package org.innovateuk.ifs.testdata.builders;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.Decision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.competition.domain.CompetitionApplicationConfig;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
@@ -304,23 +304,23 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder sendFundingDecisions(List<Pair<String, FundingDecision>> fundingDecisions) {
+    public CompetitionDataBuilder sendDecisions(List<Pair<String, Decision>> decisions) {
         return asCompAdmin(data -> {
-            if (fundingDecisions.size() > 0) {
-                List<Pair<Long, FundingDecision>> applicationIdAndDecisions = simpleMap(fundingDecisions, decisionInfo -> {
-                    FundingDecision decision = decisionInfo.getRight();
+            if (decisions.size() > 0) {
+                List<Pair<Long, Decision>> applicationIdAndDecisions = simpleMap(decisions, decisionInfo -> {
+                    Decision decision = decisionInfo.getRight();
                     Application application = applicationRepository.findByName(decisionInfo.getLeft()).get(0);
                     return Pair.of(application.getId(), decision);
                 });
 
-                applicationFundingService.saveFundingDecisionData(data.getCompetition().getId(), pairsToMap(applicationIdAndDecisions)).
+                applicationFundingService.saveDecisionData(data.getCompetition().getId(), pairsToMap(applicationIdAndDecisions)).
                         getSuccess();
                 FundingNotificationResource fundingNotificationResource = new FundingNotificationResource("Body", pairsToMap(applicationIdAndDecisions));
-                applicationFundingService.notifyApplicantsOfFundingDecisions(fundingNotificationResource).
+                applicationFundingService.notifyApplicantsOfDecisions(fundingNotificationResource).
                         getSuccess();
 
                 doAs(projectFinanceUser(),
-                        () -> projectService.createProjectsFromFundingDecisions(pairsToMap(applicationIdAndDecisions)).getSuccess());
+                        () -> projectService.createProjectsFromDecisions(pairsToMap(applicationIdAndDecisions)).getSuccess());
             }
         });
     }
