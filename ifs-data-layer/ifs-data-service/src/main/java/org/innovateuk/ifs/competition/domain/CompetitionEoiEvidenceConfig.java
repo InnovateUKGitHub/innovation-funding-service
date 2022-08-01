@@ -25,6 +25,6 @@ public class CompetitionEoiEvidenceConfig {
 
     private String evidenceTitle;
 
-    @Column(length=5000)
+    @Column(length=5000, columnDefinition = "LONGTEXT")
     private String evidenceGuidance;
 }
