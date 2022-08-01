@@ -33,8 +33,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.IMPACT_MANAGEMENT;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.*;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -195,15 +194,15 @@ public class ApplicationUpdateControllerTest extends BaseControllerMockMVCTest<A
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
                 .withCompetitionApplicationConfig(competitionApplicationConfigResource)
-                .withFundingType(FundingType.GRANT).build();
+                .withFundingType(FundingType.LOAN).build();
 
 
-        QuestionResource question = newQuestionResource().withId(1L).withQuestionSetupType(IMPACT_MANAGEMENT).build();
+        QuestionResource question = newQuestionResource().withId(1L).withQuestionSetupType(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION).build();
         QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(question.getId(), applicationId);
 
         SilApplicationStatus silStatus = new SilApplicationStatus();
         silStatus.setCompletionStatus(QuestionStatus.INCOMPLETE);
-        silStatus.setQuestionSetupType(IMPACT_MANAGEMENT);
+        silStatus.setQuestionSetupType(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION);
         silStatus.setCompletionDate(ZonedDateTime.now(ZoneId.of("UTC")));
 
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
@@ -227,7 +226,15 @@ public class ApplicationUpdateControllerTest extends BaseControllerMockMVCTest<A
         long applicationId = 1L;
         UserResource user = newUserResource().withId(1L).build();
         ProcessRoleResource processRole = newProcessRoleResource().withId(1L).build();
-        CompetitionResource competition = newCompetitionResource().withId(1L).withFundingType(FundingType.GRANT).build();
+
+        CompetitionApplicationConfigResource competitionApplicationConfigResource = new CompetitionApplicationConfigResource();
+        competitionApplicationConfigResource.setImSurveyRequired(true);
+        CompetitionResource competition = newCompetitionResource()
+                .withId(1L)
+                .withCompetitionApplicationConfig(competitionApplicationConfigResource)
+                .withFundingType(FundingType.GRANT).build();
+
+
         QuestionResource question = newQuestionResource().withId(1L).withQuestionSetupType(IMPACT_MANAGEMENT).build();
         QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(question.getId(), applicationId);
 
@@ -283,7 +290,7 @@ public class ApplicationUpdateControllerTest extends BaseControllerMockMVCTest<A
 
         SilApplicationStatus silStatus = new SilApplicationStatus();
         silStatus.setCompletionStatus(QuestionStatus.COMPLETE);
-        silStatus.setQuestionSetupType(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION);
+        silStatus.setQuestionSetupType(KTP_ASSESSMENT);
         silStatus.setCompletionDate(ZonedDateTime.now(ZoneId.of("UTC")));
 
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);

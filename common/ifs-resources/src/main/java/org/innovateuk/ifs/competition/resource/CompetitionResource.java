@@ -118,14 +118,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean enabledForPreRegistration;
     private CompetitionApplicationConfigResource competitionApplicationConfigResource;
 
-    public CompetitionApplicationConfigResource getCompetitionApplicationConfigResource() {
-        return competitionApplicationConfigResource;
-    }
-
-    public void setCompetitionApplicationConfigResource(CompetitionApplicationConfigResource competitionApplicationConfigResource) {
-        this.competitionApplicationConfigResource = competitionApplicationConfigResource;
-    }
-
     public CompetitionResource() {
     }
 
@@ -1112,5 +1104,13 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     public void setEnabledForPreRegistration(boolean enabledForPreRegistration) {
         this.enabledForPreRegistration = enabledForPreRegistration;
     }
+    public CompetitionApplicationConfigResource getCompetitionApplicationConfigResource() {
+        return competitionApplicationConfigResource;
+    }
+
+    public void setCompetitionApplicationConfigResource(CompetitionApplicationConfigResource competitionApplicationConfigResource) {
+        this.competitionApplicationConfigResource = competitionApplicationConfigResource;
+    }
+
 }
 
