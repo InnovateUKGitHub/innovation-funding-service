@@ -667,7 +667,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
         assertTrue(resultFailure.isFailure());
     }
     @Test
-    public void getProjectStatusResourceByProjectGolApplicationNoFundingDecision() {
+    public void getProjectStatusResourceByProjectGolApplicationNoDecision() {
         long projectId = 2345L;
 
         Project project = createProjectStatusResource(projectId,

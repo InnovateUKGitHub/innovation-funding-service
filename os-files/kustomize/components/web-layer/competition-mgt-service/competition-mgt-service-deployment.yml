@@ -28,6 +28,10 @@ spec:
       - image: competition-mgt-service
         name: spring-boot-service-container
         imagePullPolicy: IfNotPresent
+        lifecycle:
+          preStop:
+            exec:
+              command: [ "/bin/sh", "-c", "echo 'terminating pod' >> /proc/1/fd/1" ]
         livenessProbe:
           httpGet:
             path: /management/monitoring/health
@@ -93,6 +97,11 @@ spec:
               configMapKeyRef:
                 name: feature-toggle-config
                 key: IFS_EDI_UPDATE_ENABLED
+          - name: IFS_IMPACT_MANAGEMENT_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: feature-toggle-config
+                key: IFS_IMPACT_MANAGEMENT_ENABLED
           - name: IFS_ASSESSMENT_STAGE_COMPETITION_ENABLED
             valueFrom:
               configMapKeyRef:

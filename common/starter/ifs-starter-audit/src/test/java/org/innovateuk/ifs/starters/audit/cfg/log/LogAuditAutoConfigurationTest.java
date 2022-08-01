@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.starters.audit.cfg.log;
 
+import org.innovateuk.ifs.IfsProfileConstants;
+import org.innovateuk.ifs.starter.common.util.ProfileUtils;
 import org.innovateuk.ifs.starters.audit.AuditAdapter;
 import org.innovateuk.ifs.starters.audit.AuditChannel;
 import org.innovateuk.ifs.starters.audit.cfg.AuditAutoConfiguration;
@@ -25,6 +27,7 @@ class LogAuditAutoConfigurationTest {
     @ResourceLock(CONTEXT_RESOURCE_LOCK)
     void logContextConfiguration() {
         ApplicationContextRunner contextRunner = new ApplicationContextRunner()
+            .withSystemProperties(ProfileUtils.activeProfilesString(IfsProfileConstants.DISABLE_AMQP))
             .withConfiguration(UserConfigurations.of(AuditConfigurationProperties.class))
             .withConfiguration(AutoConfigurations.of(AuditAutoConfiguration.class));
         contextRunner.run((context) -> {

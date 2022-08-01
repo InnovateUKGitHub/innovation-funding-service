@@ -184,7 +184,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
                 .andExpect(redirectedUrl(String.format("%s%s/form/your-project-costs/organisation/%s/section/%s", APPLICATION_BASE_URL, APPLICATION_ID, ORGANISATION_ID, SECTION_ID)));
 
 
-        verifyZeroInteractions(saver);
+        verifyNoInteractions(saver);
         verify(sectionStatusRestService).markAsInComplete(SECTION_ID, APPLICATION_ID, PROCESS_ROLE_ID);
     }
 
@@ -223,7 +223,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
                 .andExpect(view().name(VIEW))
                 .andExpect(status().isOk());
 
-        verifyZeroInteractions(saver);
+        verifyNoInteractions(saver);
     }
 
 

@@ -6,7 +6,7 @@ import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
 import org.innovateuk.ifs.application.repository.ApplicationOrganisationAddressRepository;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.Decision;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.BaseFailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -131,11 +131,11 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     @Transactional
-    public ServiceResult<Void> createProjectsFromFundingDecisions(Map<Long, FundingDecision> applicationFundingDecisions) {
-        List<ServiceResult<ProjectResource>> projectCreationResults = applicationFundingDecisions
+    public ServiceResult<Void> createProjectsFromDecisions(Map<Long, Decision> applicationDecisions) {
+        List<ServiceResult<ProjectResource>> projectCreationResults = applicationDecisions
                 .keySet()
                 .stream()
-                .filter(d -> applicationFundingDecisions.get(d).equals(FundingDecision.FUNDED))
+                .filter(d -> applicationDecisions.get(d).equals(Decision.FUNDED))
                 .map(this::createSingletonProjectFromApplicationId)
                 .collect(toList());
 

@@ -23,7 +23,7 @@ import org.mapstruct.NullValueMappingStrategy;
                 ApplicationMapper.class,
                 UserMapper.class,
                 CompetitionMapper.class,
-                AssessmentFundingDecisionOutcomeMapper.class,
+                AssessmentDecisionOutcomeMapper.class,
                 AssessmentRejectOutcomeMapper.class
         },
         nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL

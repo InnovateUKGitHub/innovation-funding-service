@@ -225,8 +225,8 @@ public class AsyncTestExpectationHelper {
             return createTupleNHandlerMockFromFutureList(futures);
         };
 
-        when(futuresGeneratorMock.awaitAll(isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture.class), ArgumentMatchers.<CompletableFuture> anyVararg())).thenAnswer(tupleNFromVarargsAnswer);
-        when(futuresGeneratorMock.awaitAll(isA(String.class), isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture.class), ArgumentMatchers.<CompletableFuture> anyVararg())).thenAnswer(tupleNFromVarargsAnswer);
+        when(futuresGeneratorMock.awaitAll(isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture.class), ArgumentMatchers.<CompletableFuture> any())).thenAnswer(tupleNFromVarargsAnswer);
+        when(futuresGeneratorMock.awaitAll(isA(String.class), isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture.class), ArgumentMatchers.<CompletableFuture> any())).thenAnswer(tupleNFromVarargsAnswer);
 
         // expectations for when awaitAll() is called with n futures with a List
         Answer<Object> tupleNFromListAnswer = invocation -> {

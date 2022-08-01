@@ -105,7 +105,7 @@ public class ApplicationAssessmentServiceImpl implements ApplicationAssessmentSe
     }
 
     private Boolean getRecommended(Assessment assessment) {
-        return ofNullable(assessment.getFundingDecision())
-                .map(fundingDecision -> fundingDecision.isFundingConfirmation()).orElse(null);
+        return ofNullable(assessment.getDecision())
+                .map(decision -> decision.isFundingConfirmation()).orElse(null);
     }
 }

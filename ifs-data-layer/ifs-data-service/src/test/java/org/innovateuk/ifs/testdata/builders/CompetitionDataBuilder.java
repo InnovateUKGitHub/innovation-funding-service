@@ -3,8 +3,9 @@ package org.innovateuk.ifs.testdata.builders;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.Decision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
+import org.innovateuk.ifs.competition.domain.CompetitionApplicationConfig;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
@@ -28,6 +29,7 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -302,23 +304,23 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder sendFundingDecisions(List<Pair<String, FundingDecision>> fundingDecisions) {
+    public CompetitionDataBuilder sendDecisions(List<Pair<String, Decision>> decisions) {
         return asCompAdmin(data -> {
-            if (fundingDecisions.size() > 0) {
-                List<Pair<Long, FundingDecision>> applicationIdAndDecisions = simpleMap(fundingDecisions, decisionInfo -> {
-                    FundingDecision decision = decisionInfo.getRight();
+            if (decisions.size() > 0) {
+                List<Pair<Long, Decision>> applicationIdAndDecisions = simpleMap(decisions, decisionInfo -> {
+                    Decision decision = decisionInfo.getRight();
                     Application application = applicationRepository.findByName(decisionInfo.getLeft()).get(0);
                     return Pair.of(application.getId(), decision);
                 });
 
-                applicationFundingService.saveFundingDecisionData(data.getCompetition().getId(), pairsToMap(applicationIdAndDecisions)).
+                applicationFundingService.saveDecisionData(data.getCompetition().getId(), pairsToMap(applicationIdAndDecisions)).
                         getSuccess();
                 FundingNotificationResource fundingNotificationResource = new FundingNotificationResource("Body", pairsToMap(applicationIdAndDecisions));
-                applicationFundingService.notifyApplicantsOfFundingDecisions(fundingNotificationResource).
+                applicationFundingService.notifyApplicantsOfDecisions(fundingNotificationResource).
                         getSuccess();
 
                 doAs(projectFinanceUser(),
-                        () -> projectService.createProjectsFromFundingDecisions(pairsToMap(applicationIdAndDecisions)).getSuccess());
+                        () -> projectService.createProjectsFromDecisions(pairsToMap(applicationIdAndDecisions)).getSuccess());
             }
         });
     }
@@ -496,6 +498,20 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             competitionSetupFinanceResource.setIncludeYourOrganisationSection(line.getIncludeYourOrganisation());
             competitionSetupFinanceResource.setIncludeJesForm(line.getIncludeJesForm());
             competitionSetupFinanceService.save(competitionSetupFinanceResource);
+        });
+    }
+
+    public CompetitionDataBuilder withImSurveyEnabled(CompetitionLine line) {
+        return asCompAdmin(data -> {
+            if (line.isImSurveyEnabled()) {
+                CompetitionResource competition = data.getCompetition();
+                Optional<CompetitionApplicationConfig> competitionApplicationConfig = competitionApplicationConfigRepository.findOneByCompetitionId(competition.getId());
+                competitionApplicationConfig.ifPresent(applicationConfig -> {
+                    applicationConfig.setImSurveyRequired(line.isImSurveyEnabled());
+                    competitionApplicationConfigRepository.save(applicationConfig);
+                    updateCompetitionInCompetitionData(data, competition.getId());
+                });
+            }
         });
     }
 

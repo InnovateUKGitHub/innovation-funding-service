@@ -95,7 +95,7 @@ the counts of the key statistics of the closed competition should be correct
     Should Be Equal As Integers    ${INVITED_COUNT}    ${Invited}
     ${ACCEPTED_COUNT} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Invitations accepted") .govuk-heading-l
     Should Be Equal As Integers    ${ACCEPTED_COUNT}    ${Accepted}
-    ${APPLICATIONS_PER_ASSESSOR} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Applications per assessor") .govuk-heading-l
+    ${APPLICATIONS_PER_ASSESSOR} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Assessors per application") .govuk-heading-l
     Should Be Equal As Integers    ${APPLICATIONS_PER_ASSESSOR}    5
     ${APPLICATIONS_REQ} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Applications requiring additional assessors") .govuk-heading-l
     Should Be Equal As Integers  ${APPLICATIONS_REQ}     5

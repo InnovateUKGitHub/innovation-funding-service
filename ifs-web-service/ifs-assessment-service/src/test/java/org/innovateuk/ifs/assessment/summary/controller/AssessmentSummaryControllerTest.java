@@ -41,7 +41,7 @@ import static java.util.Collections.nCopies;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentDecisionOutcomeResourceBuilder.newAssessmentDecisionOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -148,7 +148,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         AssessmentResource assessmentResource = newAssessmentResource()
                 .withApplication(applicationId)
                 .withCompetition(competitionResource.getId())
-                .withFundingDecision(newAssessmentFundingDecisionOutcomeResource()
+                .withDecision(newAssessmentDecisionOutcomeResource()
                         .withFundingConfirmation(true)
                         .withFeedback(expectedFeedback)
                         .withComment(expectedComment)

@@ -2,9 +2,9 @@ package org.innovateuk.ifs.filestorage.storage;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
-import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
 import org.innovateuk.ifs.api.filestorage.v1.delete.FileDeletionRequest;
 import org.innovateuk.ifs.api.filestorage.v1.delete.FileDeletionResponse;
+import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadResponse;
 import org.innovateuk.ifs.filestorage.cfg.StorageServiceConfigurationProperties;
