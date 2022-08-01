@@ -123,7 +123,7 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
         assertFalse(result.isSuccess());
         verify(publicContentRepository).findByCompetitionId(COMPETITION_ID);
         verifyNoMoreInteractions(publicContentRepository);
-        verifyZeroInteractions(contentSectionRepository);
+        verifyNoInteractions(contentSectionRepository);
     }
 
     @Test

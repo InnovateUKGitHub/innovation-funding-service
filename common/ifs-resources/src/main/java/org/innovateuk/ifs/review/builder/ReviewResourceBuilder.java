@@ -2,7 +2,7 @@ package org.innovateuk.ifs.review.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.Builder;
-import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionOutcomeResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentDecisionOutcomeResource;
 import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.review.resource.ReviewState;
@@ -46,8 +46,8 @@ public class ReviewResourceBuilder extends BaseBuilder<ReviewResource, ReviewRes
         return withArraySetFieldByReflection("endDate", value);
     }
 
-    public ReviewResourceBuilder withFundingDecision(AssessmentFundingDecisionOutcomeResource... value) {
-        return withArraySetFieldByReflection("fundingDecision", value);
+    public ReviewResourceBuilder withDecision(AssessmentDecisionOutcomeResource... value) {
+        return withArraySetFieldByReflection("decision", value);
     }
 
     public ReviewResourceBuilder withRejection(ReviewRejectOutcomeResource... value) {

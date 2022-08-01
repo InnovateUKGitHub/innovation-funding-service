@@ -8,7 +8,7 @@ dependencies {
 
     // This BOM combines with these two boms - defer to these and only declare overrides and things not in these below
     api platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
-    api platform("org.springframework.cloud:spring-cloud-dependencies:2020.0.5")
+    api platform("org.springframework.cloud:spring-cloud-dependencies:2021.0.2")
 
     // These will appear in referencing modules (actual deps so keep it light)
     api("com.google.guava:guava")
@@ -33,7 +33,7 @@ dependencies {
 
         // version must match gradle-support/java.gradle
         // here and in IFS
-        api("org.projectlombok:lombok:1.18.22")
+        api("org.projectlombok:lombok:1.18.24")
         api("com.google.guava:guava:31.0.1-jre")
         api("javax.validation:validation-api:2.0.1.Final")
 

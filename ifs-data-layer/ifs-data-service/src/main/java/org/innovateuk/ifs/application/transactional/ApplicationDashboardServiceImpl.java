@@ -31,7 +31,7 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBL
 import static org.innovateuk.ifs.application.resource.ApplicationState.inProgressStates;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
-import static org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.ON_HOLD;
+import static org.innovateuk.ifs.fundingdecision.domain.DecisionStatus.ON_HOLD;
 
 /**
  * Transactional and secured service that generates a dashboard of applications for a user.
@@ -108,8 +108,8 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
                 return PREVIOUS;
             }
         }
-        if (applicantHasBeenNotifiedOfFundingDecision(application)) {
-            if (application.getFundingDecision().equals(ON_HOLD)) {
+        if (applicantHasBeenNotifiedOfDecision(application)) {
+            if (application.getDecision().equals(ON_HOLD)) {
                 return IN_PROGRESS;
             } else {
                 return PREVIOUS;
@@ -133,8 +133,8 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
         return application.getCompetition().getCompetitionStatus().equals(CompetitionStatus.PREVIOUS);
     }
 
-    private boolean applicantHasBeenNotifiedOfFundingDecision(Application application) {
-        return application.getManageFundingEmailDate() != null;
+    private boolean applicantHasBeenNotifiedOfDecision(Application application) {
+        return application.getManageDecisionEmailDate() != null;
     }
 
     private boolean applicationIsInProgress(Application application) {
@@ -206,7 +206,7 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
         return !application.getCompetition().isAlwaysOpen() &&
                 application.getLeadApplicant().getId().equals(userId) &&
                 CompetitionStatus.OPEN.equals(application.getCompetition().getCompetitionStatus()) &&
-                application.getFundingDecision() == null &&
+                application.getDecision() == null &&
                 application.isSubmitted();
     }
 

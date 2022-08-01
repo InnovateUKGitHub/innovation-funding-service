@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.core.transactional;
 
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.Decision;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -35,7 +35,7 @@ public interface ProjectService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to create projects (by making decisions)" )
-    ServiceResult<Void> createProjectsFromFundingDecisions(Map<Long, FundingDecision> applicationFundingDecisions);
+    ServiceResult<Void> createProjectsFromDecisions(Map<Long, Decision> applicationDecisions);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ProjectResource>> findByUserId(long userId);

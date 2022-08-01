@@ -82,12 +82,13 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
     String BY_STATUS_AND_COMPLIANT_AND_NAME = "SELECT assessmentParticipant " +
             "FROM AssessmentParticipant assessmentParticipant " +
             "JOIN assessmentParticipant.competition competition " +
+            "JOIN assessmentParticipant.invite invite " +
             "LEFT JOIN assessmentParticipant.user user " +
             "LEFT JOIN assessmentParticipant.user.roleProfileStatuses roleStatuses " +
             "LEFT JOIN Profile profile ON profile.id = assessmentParticipant.user.profileId " +
             "WHERE assessmentParticipant.competition.id = :competitionId " +
             "AND assessmentParticipant.role = 'ASSESSOR' " +
-            "AND assessmentParticipant.invite.name LIKE CONCAT('%', :assessorName, '%') " +
+            "AND invite.name LIKE CONCAT('%', :assessorName, '%') " +
             "AND assessmentParticipant.status IN :status " +
             "AND (:isCompliant IS NULL " +
             "   OR (:isCompliant = true AND (" +
