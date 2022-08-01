@@ -67,7 +67,7 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(Parameterized.class)
@@ -402,7 +402,7 @@ public class GrantMapperTest {
                         newApplication()
                                 .withId(applicationId)
                                 .withCompetition(
-                                        newCompetition().withId(competitionId).withFundingType(fundingType).build())
+                                        newCompetition().withId(competitionId).withIncludeJesForm(false).withFundingType(fundingType).build())
                                 .build())
                     .withProjectUsers(projectUsers)
                     .withProjectMonitoringOfficer(projectMonitoringOfficer)

@@ -97,7 +97,7 @@ public class AbstractPublicContentFormSaverTest {
         assertThat(result.isSuccess(), equalTo(false));
         assertThat(result.getErrors().size(), equalTo(1));
         assertThat(result.getErrors().get(0).getFieldName(), equalTo("contentGroups"));
-        verifyZeroInteractions(publicContentService);
+        verifyNoInteractions(publicContentService);
 
     }
 

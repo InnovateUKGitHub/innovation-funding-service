@@ -74,7 +74,7 @@ public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest
                 () -> classUnderTest.acceptInvite("hash", getLoggedInUser()),
                 () -> {
                     verify(competitionParticipantLookupStrategy, only()).getCompetitionParticipantResource("hash");
-                    verifyZeroInteractions(competitionParticipantPermissionRules);
+                    verifyNoInteractions(competitionParticipantPermissionRules);
                 }
         );
     }
@@ -117,7 +117,7 @@ public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest
                 () -> {
                     verify(competitionParticipantLookupStrategy, only()).getCompetitionParticipantResource("hash not " +
                             "exists");
-                    verifyZeroInteractions(competitionParticipantPermissionRules);
+                    verifyNoInteractions(competitionParticipantPermissionRules);
                 }
         );
     }

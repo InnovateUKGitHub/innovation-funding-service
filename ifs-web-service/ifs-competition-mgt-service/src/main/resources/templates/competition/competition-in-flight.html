@@ -153,10 +153,10 @@
                             </li>
                             <li th:unless="${model.readOnly}">
                                 <a class="disabled govuk-link" aria-disabled="true"
-                                   th:unless="${model.fundingDecisionEnabled}">
+                                   th:unless="${model.decisionEnabled}">
                                     Input and review funding decision
                                 </a>
-                                <a th:if="${model.fundingDecisionEnabled}"
+                                <a th:if="${model.decisionEnabled}"
                                    th:href="@{/competition/{competitionId}/funding(competitionId=${model.competitionId})}"
                                    class="govuk-link">
                                     Input and review funding decision

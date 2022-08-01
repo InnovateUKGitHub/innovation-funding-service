@@ -11,7 +11,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
-import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.fundingdecision.domain.DecisionStatus;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -48,8 +48,8 @@ import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newIn
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.FEEDBACK_RELEASED;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.OPEN_DATE;
-import static org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.FUNDED;
-import static org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.UNFUNDED;
+import static org.innovateuk.ifs.fundingdecision.domain.DecisionStatus.FUNDED;
+import static org.innovateuk.ifs.fundingdecision.domain.DecisionStatus.UNFUNDED;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.resource.ProjectState.*;
@@ -126,7 +126,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         milestoneRepository.save(feedbackReleasedMilestone);
 
         Application applicationFundedAndInformed = newApplication().withCompetition(compInProjectSetup)
-                .withFundingDecision(FundingDecisionStatus.FUNDED).withManageFundingEmailDate(now()).build();
+                .withDecision(DecisionStatus.FUNDED).withManageDecisionEmailDate(now()).build();
 
         applicationRepository.save(applicationFundedAndInformed);
         ProjectProcess activeProcess = newProjectProcess().withActivityState(ProjectState.SETUP).build();
@@ -171,7 +171,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         milestoneRepository.save(feedbackReleasedMilestone);
 
         Application applicationFundedAndInformed = newApplication().withCompetition(compWithInactiveProject)
-                .withFundingDecision(FundingDecisionStatus.FUNDED).withManageFundingEmailDate(now()).build();
+                .withDecision(DecisionStatus.FUNDED).withManageDecisionEmailDate(now()).build();
 
         applicationRepository.save(applicationFundedAndInformed);
         ProjectProcess inactiveProcess = newProjectProcess().withActivityState(ProjectState.COMPLETED_OFFLINE).build();
@@ -207,8 +207,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         Application applicationFundedAndInformed = newApplication()
                 .withCompetition(competitionWithNoProjects)
-                .withFundingDecision(FUNDED)
-                .withManageFundingEmailDate(now())
+                .withDecision(FUNDED)
+                .withManageDecisionEmailDate(now())
                 .build();
 
         applicationRepository.save(applicationFundedAndInformed);
@@ -240,8 +240,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         Application applicationOne = newApplication()
                 .withId().withCompetition(competitionOne)
-                .withFundingDecision(FUNDED)
-                .withManageFundingEmailDate(now())
+                .withDecision(FUNDED)
+                .withManageDecisionEmailDate(now())
                 .build();
 
         applicationOne = applicationRepository.save(applicationOne);
@@ -269,7 +269,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         competitionTwo = repository.save(competitionTwo);
 
         Application applicationTwo = newApplication().withId().withCompetition(competitionTwo)
-                .withFundingDecision(FUNDED).withManageFundingEmailDate(now()).build();
+                .withDecision(FUNDED).withManageDecisionEmailDate(now()).build();
         applicationTwo = applicationRepository.save(applicationTwo);
 
         ProjectProcess activeProcessTwo = newProjectProcess().withActivityState(HANDLED_OFFLINE).build();
@@ -318,7 +318,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         milestoneRepository.save(feedbackReleasedMilestone);
 
         Application applicationFundedAndInformed = newApplication().withCompetition(compFundedAndInformed)
-                .withFundingDecision(FundingDecisionStatus.FUNDED).withManageFundingEmailDate(now()).build();
+                .withDecision(DecisionStatus.FUNDED).withManageDecisionEmailDate(now()).build();
         applicationRepository.save(applicationFundedAndInformed);
 
         assertEquals(1L, repository.countPrevious().longValue());
@@ -342,7 +342,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         fundedNotInformed = repository.save(fundedNotInformed);
 
         Application applicationFundedAndInformed = newApplication().withCompetition(fundedNotInformed)
-                .withFundingDecision(FUNDED).build();
+                .withDecision(FUNDED).build();
         applicationRepository.save(applicationFundedAndInformed);
 
         assertFalse(repository.findProjectSetup(PageRequest.of(0, 10)).getContent().contains(fundedNotInformed));
@@ -364,8 +364,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         Application applicationFundedAndInformed = newApplication()
                 .withCompetition(notFundedAndInformed)
-                .withFundingDecision(UNFUNDED)
-                .withManageFundingEmailDate(now())
+                .withDecision(UNFUNDED)
+                .withManageDecisionEmailDate(now())
                 .build();
 
         applicationRepository.save(applicationFundedAndInformed);

@@ -21,23 +21,23 @@ import javax.validation.Valid;
 @Slf4j
 @Controller
 @RequestMapping(CompetitionManagementFundingDecisionController.DEFAULT_VIEW)
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementFundingDecisionController.class)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementDecisionController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin')")
 public class CompetitionManagementFundingDecisionController extends CompetitionManagementDecisionController {
 
     public static final String DEFAULT_VIEW = "/competition/{competitionId}/funding";
 
     protected String getCookieName() {
-        return "fundingDecisionSelectionForm";
+        return "decisionSelectionForm";
     }
 
     @GetMapping
     public String applications(Model model,
                                @PathVariable("competitionId") long competitionId,
                                @RequestParam(name = "filterChanged", required = false) boolean filterChanged,
-                               @ModelAttribute @Valid FundingDecisionPaginationForm paginationForm,
-                               @ModelAttribute FundingDecisionFilterForm filterForm,
-                               @ModelAttribute FundingDecisionSelectionForm selectionForm,
+                               @ModelAttribute @Valid DecisionPaginationForm paginationForm,
+                               @ModelAttribute DecisionFilterForm filterForm,
+                               @ModelAttribute DecisionSelectionForm selectionForm,
                                UserResource user,
                                BindingResult bindingResult,
                                HttpServletRequest request,
@@ -57,10 +57,10 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
     @PostMapping(value = {""})
     public String makeDecision(Model model,
                                @PathVariable("competitionId") long competitionId,
-                               @ModelAttribute FundingDecisionPaginationForm paginationForm,
-                               @ModelAttribute FundingDecisionSelectionForm fundingDecisionSelectionForm,
-                               @ModelAttribute @Valid FundingDecisionChoiceForm fundingDecisionChoiceForm,
-                               @ModelAttribute FundingDecisionFilterForm filterForm,
+                               @ModelAttribute DecisionPaginationForm paginationForm,
+                               @ModelAttribute DecisionSelectionForm decisionSelectionForm,
+                               @ModelAttribute @Valid DecisionChoiceForm decisionChoiceForm,
+                               @ModelAttribute DecisionFilterForm filterForm,
                                UserResource user,
                                BindingResult bindingResult,
                                HttpServletRequest request,
@@ -69,8 +69,8 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                 model,
                 competitionId,
                 paginationForm,
-                fundingDecisionSelectionForm,
-                fundingDecisionChoiceForm,
+                decisionSelectionForm,
+                decisionChoiceForm,
                 filterForm,
                 user,
                 bindingResult,
@@ -79,11 +79,11 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
     }
 
     @PostMapping(value = {""}, params = {"addAll"})
-    public @ResponseBody JsonNode addAllApplicationsToFundingDecisionSelectionList(@PathVariable("competitionId") long competitionId,
+    public @ResponseBody JsonNode addAllApplicationsToDecisionSelectionList(@PathVariable("competitionId") long competitionId,
                                                                                    @RequestParam("addAll") boolean addAll,
                                                                                    HttpServletRequest request,
                                                                                    HttpServletResponse response) {
-        return super.addAllApplicationsToFundingDecisionSelectionList(
+        return super.addAllApplicationsToDecisionSelectionList(
                 competitionId,
                 addAll,
                 request,
@@ -91,12 +91,12 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
     }
 
     @PostMapping(value = {""}, params = {"selectionId", "isSelected"})
-    public @ResponseBody JsonNode addSelectedApplicationsToFundingDecisionList(@PathVariable("competitionId") long competitionId,
+    public @ResponseBody JsonNode addSelectedApplicationsToDecisionList(@PathVariable("competitionId") long competitionId,
                                                                                @RequestParam("selectionId") long applicationId,
                                                                                @RequestParam("isSelected") boolean isSelected,
                                                                                HttpServletRequest request,
                                                                                HttpServletResponse response) {
-        return super.addSelectedApplicationsToFundingDecisionList(
+        return super.addSelectedApplicationsToDecisionList(
                 competitionId,
                 applicationId,
                 isSelected,

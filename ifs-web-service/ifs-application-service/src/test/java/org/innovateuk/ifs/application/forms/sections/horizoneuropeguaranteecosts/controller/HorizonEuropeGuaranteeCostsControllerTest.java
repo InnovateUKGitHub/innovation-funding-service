@@ -92,7 +92,7 @@ public class HorizonEuropeGuaranteeCostsControllerTest extends AbstractAsyncWait
                 .andExpect(redirectedUrl(String.format("%s%s/form/hecp-costs/organisation/%s/section/%s", APPLICATION_BASE_URL, APPLICATION_ID, ORGANISATION_ID, SECTION_ID)));
 
 
-        verifyZeroInteractions(saver);
+        verifyNoInteractions(saver);
         verify(sectionStatusRestService).markAsInComplete(SECTION_ID, APPLICATION_ID, PROCESS_ROLE_ID);
     }
 

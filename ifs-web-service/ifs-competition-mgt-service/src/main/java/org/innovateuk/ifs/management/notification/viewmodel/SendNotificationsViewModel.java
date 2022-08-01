@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.management.notification.viewmodel;
 
 
-import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.application.resource.FundingDecisionToSendApplicationResource;
+import org.innovateuk.ifs.application.resource.Decision;
+import org.innovateuk.ifs.application.resource.ApplicationDecisionToSendApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 import java.util.Collections;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class SendNotificationsViewModel {
 
-    private List<FundingDecisionToSendApplicationResource> applications;
+    private List<ApplicationDecisionToSendApplicationResource> applications;
     private long competitionId;
     private String competitionName;
     private long successfulRecipientsCount;
@@ -25,7 +25,7 @@ public class SendNotificationsViewModel {
     private boolean hasAssessmentStage;
     private boolean isDirectAward;
 
-    public SendNotificationsViewModel(List<FundingDecisionToSendApplicationResource> applications,
+    public SendNotificationsViewModel(List<ApplicationDecisionToSendApplicationResource> applications,
                                       long successfulRecipientsCount,
                                       long unsuccessfulRecipientsCount,
                                       long onHoldRecipientsCount,
@@ -55,7 +55,7 @@ public class SendNotificationsViewModel {
         return competitionName;
     }
 
-    public List<FundingDecisionToSendApplicationResource> getApplications() {
+    public List<ApplicationDecisionToSendApplicationResource> getApplications() {
         return applications != null ? applications : Collections.emptyList();
     }
 
@@ -92,12 +92,12 @@ public class SendNotificationsViewModel {
                 ? "Send decision notification and release feedback" : "Send decision notification";
     }
 
-    public Map<Long, FundingDecision> getFundingDecisions() {
+    public Map<Long, Decision> getDecisions() {
         return getApplications()
                 .stream()
                 .collect(Collectors.toMap(
-                        FundingDecisionToSendApplicationResource::getId,
-                        FundingDecisionToSendApplicationResource::getFundingDecision
+                        ApplicationDecisionToSendApplicationResource::getId,
+                        ApplicationDecisionToSendApplicationResource::getDecision
                 ));
     }
 

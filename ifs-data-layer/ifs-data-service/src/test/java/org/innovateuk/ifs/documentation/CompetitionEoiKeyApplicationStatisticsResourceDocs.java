@@ -9,5 +9,5 @@ public class CompetitionEoiKeyApplicationStatisticsResourceDocs {
     public static final CompetitionEoiKeyApplicationStatisticsResourceBuilder
             competitionEoiKeyApplicationStatisticsResourceBuilder =
            newCompetitionEoiKeyApplicationStatisticsResource()
-                    .withApplicationsSubmitted(1);
+                    .withEOISubmitted(1);
 }

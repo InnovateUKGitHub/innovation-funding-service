@@ -13,6 +13,8 @@ dependencies {
     implementation "javax.servlet:javax.servlet-api"
     implementation "org.apache.commons:commons-lang3"
     implementation "org.springframework.security:spring-security-core"
+    implementation "org.springframework.security:spring-security-web"
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "junit:junit"
