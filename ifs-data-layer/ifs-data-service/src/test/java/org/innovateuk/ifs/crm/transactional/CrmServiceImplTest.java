@@ -53,8 +53,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static freemarker.template.utility.Collections12.singletonList;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
@@ -226,9 +226,9 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
                 .build();
 
         when(baseUserService.getUserById(userId)).thenReturn(serviceSuccess(user));
-        when(organisationService.getAllByUserId(userId)).thenReturn(serviceSuccess(Collections.singletonList(organisations.get(0))));
+        when(organisationService.getAllByUserId(userId)).thenReturn(serviceSuccess(singletonList(organisations.get(0))));
         when(organisationAddressService.findByOrganisationIdAndAddressType(organisations.get(0).getId(), addressType))
-                .thenReturn(serviceSuccess(Collections.singletonList(organisationAddressResource)));
+                .thenReturn(serviceSuccess(singletonList(organisationAddressResource)));
         when(silCrmEndpoint.updateContact(any(SilContact.class))).thenReturn(serviceSuccess());
 
         ReflectionTestUtils.setField(service, "newOrganisationSearchEnabled", true);
@@ -282,7 +282,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         when(baseUserService.getUserById(userId)).thenReturn(serviceSuccess(user));
         when(organisationService.getByUserAndProjectId(userId, projectId)).thenReturn(serviceSuccess(organisations.get(0)));
         when(organisationAddressService.findByOrganisationIdAndAddressType(organisations.get(0).getId(), addressType))
-                .thenReturn(serviceSuccess(Collections.singletonList(organisationAddressResource)));
+                .thenReturn(serviceSuccess(singletonList(organisationAddressResource)));
         when(silCrmEndpoint.updateContact(any(SilContact.class))).thenReturn(serviceSuccess());
 
         ReflectionTestUtils.setField(service, "newOrganisationSearchEnabled", true);
@@ -330,7 +330,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
 
         when(organisationService.getAllByUserId(userId)).thenReturn(serviceSuccess(singletonList(organisations.get(0))));
         when(organisationAddressService.findByOrganisationIdAndAddressType(organisations.get(0).getId(), addressType))
-                .thenReturn(serviceSuccess(Collections.singletonList(organisationAddressResource)));
+                .thenReturn(serviceSuccess(singletonList(organisationAddressResource)));
         when(silCrmEndpoint.updateContact(any(SilContact.class))).thenReturn(serviceSuccess());
         when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competitionResource));
 
@@ -381,7 +381,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         when(baseUserService.getUserById(userId)).thenReturn(serviceSuccess(user));
         when(organisationService.getAllByUserId(userId)).thenReturn(serviceSuccess(singletonList(organisations.get(0))));
         when(organisationAddressService.findByOrganisationIdAndAddressType(organisations.get(0).getId(), addressType))
-                .thenReturn(serviceSuccess(Collections.singletonList(organisationAddressResource)));
+                .thenReturn(serviceSuccess(singletonList(organisationAddressResource)));
         when(silCrmEndpoint.updateContact(any(SilContact.class))).thenReturn(serviceSuccess());
         when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competitionResource));
 
@@ -433,7 +433,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         when(baseUserService.getUserById(userId)).thenReturn(serviceSuccess(user));
         when(organisationService.getAllByUserId(userId)).thenReturn(serviceSuccess(singletonList(organisations.get(0))));
         when(organisationAddressService.findByOrganisationIdAndAddressType(organisations.get(0).getId(), addressType))
-                .thenReturn(serviceSuccess(Collections.singletonList(organisationAddressResource)));
+                .thenReturn(serviceSuccess(singletonList(organisationAddressResource)));
         when(silCrmEndpoint.updateContact(any(SilContact.class))).thenReturn(serviceSuccess());
         when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competitionResource));
 
@@ -519,7 +519,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
 
         when(organisationService.getAllByUserId(userId)).thenReturn(serviceSuccess(singletonList(organisations.get(0))));
         when(organisationAddressService.findByOrganisationIdAndAddressType(organisations.get(0).getId(), addressType))
-                .thenReturn(serviceSuccess(Collections.singletonList(organisationAddressResource)));
+                .thenReturn(serviceSuccess(singletonList(organisationAddressResource)));
         when(silCrmEndpoint.updateContact(any(SilContact.class))).thenReturn(serviceSuccess());
         when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competitionResource));
 
@@ -574,7 +574,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
 
         when(organisationService.getAllByUserId(userId)).thenReturn(serviceSuccess(singletonList(organisations.get(0))));
         when(organisationAddressService.findByOrganisationIdAndAddressType(organisations.get(0).getId(), addressType))
-                .thenReturn(serviceSuccess(Collections.singletonList(organisationAddressResource)));
+                .thenReturn(serviceSuccess(singletonList(organisationAddressResource)));
         when(silCrmEndpoint.updateContact(any(SilContact.class))).thenReturn(serviceSuccess());
         when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competitionResource));
 
