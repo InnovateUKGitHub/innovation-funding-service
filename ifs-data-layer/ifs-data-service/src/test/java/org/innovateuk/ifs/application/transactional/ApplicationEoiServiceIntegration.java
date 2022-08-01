@@ -22,7 +22,7 @@ import static org.junit.Assert.assertFalse;
 
 @Rollback
 @Transactional
-public class ApplicationEoiServiceIntegrationTest extends BaseApplicationMigrationSetupTest  {
+public class ApplicationEoiServiceIntegration extends BaseApplicationMigrationSetup {
 
     @Autowired
     private ApplicationEoiService applicationEoiService;

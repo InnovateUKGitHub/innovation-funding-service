@@ -35,7 +35,7 @@ import static org.junit.Assert.*;
  */
 @Rollback
 @Transactional
-public class ApplicationMigrationServiceIntegrationTest extends BaseApplicationMigrationSetupTest {
+public class ApplicationMigrationServiceIntegration extends BaseApplicationMigrationSetup {
 
     @Autowired
     private ApplicationMigrationService applicationMigrationService;
