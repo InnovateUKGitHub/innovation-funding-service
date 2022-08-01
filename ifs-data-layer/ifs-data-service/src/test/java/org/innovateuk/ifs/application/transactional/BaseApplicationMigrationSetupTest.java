@@ -80,7 +80,6 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.workflow.audit.ProcessHistoryRepository;
-import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
@@ -196,8 +195,7 @@ public class BaseApplicationMigrationSetupTest extends BaseAuthenticationAwareIn
 
     protected Long applicationId;
 
-    @Before
-    public void setup() {
+    protected void prepareData() {
         loginIfsAdmin();
 
         Competition competition = competitionRepository.findById(1L).get();

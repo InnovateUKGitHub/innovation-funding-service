@@ -18,6 +18,7 @@ import org.innovateuk.ifs.review.domain.Review;
 import org.innovateuk.ifs.supporter.domain.SupporterAssignment;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.workflow.audit.ProcessHistory;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -38,6 +39,11 @@ public class ApplicationMigrationServiceIntegrationTest extends BaseApplicationM
 
     @Autowired
     private ApplicationMigrationService applicationMigrationService;
+
+    @Before
+    public void setup() {
+        prepareData();
+    }
 
     @Test
     public void findByApplicationIdAndStatus() {

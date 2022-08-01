@@ -6,6 +6,7 @@ import org.innovateuk.ifs.assessment.domain.AverageAssessorScore;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.granttransfer.domain.EuGrantTransfer;
 import org.innovateuk.ifs.workflow.audit.ProcessHistory;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -26,10 +27,15 @@ public class ApplicationEoiServiceIntegrationTest extends BaseApplicationMigrati
     @Autowired
     private ApplicationEoiService applicationEoiService;
 
+    @Before
+    public void setup() {
+        prepareData();
+
+        setupEoiApplication();
+    }
+
     @Test
     public void createFullApplicationFromEoi() {
-        setupEoiApplication();
-
         loginCompAdmin();
 
         ServiceResult<Long> result = applicationEoiService.createFullApplicationFromEoi(applicationId);
