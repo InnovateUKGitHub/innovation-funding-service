@@ -1,0 +1,13 @@
+apply from: rootProject.file("common/gradle-support/java.gradle")
+apply from: rootProject.file("gradle-support/junit5.gradle")
+
+dependencies {
+
+    api platform(project(":common:bom"))
+    implementation project(":common:starter:ifs-starter-common")
+
+    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "com.newrelic.agent.java:newrelic-api:7.8.0"
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+}
