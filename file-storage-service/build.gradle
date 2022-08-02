@@ -6,6 +6,7 @@ dependencies {
 
     implementation project(':common:api:file-storage-rest-api')
     implementation project(':common:starter:ifs-starter-audit')
+    implementation project(':common:starter:ifs-starter-newrelic')
 
     if (isStubDevMode()) {
         developmentOnly "org.springframework.boot:spring-boot-devtools"
