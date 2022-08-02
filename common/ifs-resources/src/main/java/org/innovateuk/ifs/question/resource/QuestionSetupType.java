@@ -24,7 +24,7 @@ public enum QuestionSetupType {
     KTP_ASSESSMENT("Ktp Assessment", FORM_INPUTS),
     /* Loan */
     LOAN_BUSINESS_AND_FINANCIAL_INFORMATION("Business and financial information", FORM_INPUTS),
-    IMPACT_MANAGEMENT("Impact management", FORM_INPUTS),
+    IMPACT_MANAGEMENT_SURVEY("Impact management survey", FORM_INPUTS),
     HORIZON_WORK_PROGRAMME("Work programme", FORM_INPUTS);
 
 

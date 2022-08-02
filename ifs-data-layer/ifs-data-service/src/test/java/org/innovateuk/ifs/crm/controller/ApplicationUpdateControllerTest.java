@@ -123,12 +123,12 @@ public class ApplicationUpdateControllerTest extends BaseControllerMockMVCTest<A
                 .withCompetitionApplicationConfig(competitionApplicationConfigResource)
                 .build();
 
-        QuestionResource question = newQuestionResource().withId(1L).withQuestionSetupType(IMPACT_MANAGEMENT).build();
+        QuestionResource question = newQuestionResource().withId(1L).withQuestionSetupType(IMPACT_MANAGEMENT_SURVEY).build();
         QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(question.getId(), applicationId);
 
         SilApplicationStatus silStatus = new SilApplicationStatus();
         silStatus.setCompletionStatus(QuestionStatus.COMPLETE);
-        silStatus.setQuestionSetupType(IMPACT_MANAGEMENT);
+        silStatus.setQuestionSetupType(IMPACT_MANAGEMENT_SURVEY);
         silStatus.setCompletionDate(ZonedDateTime.now(ZoneId.of("UTC")));
 
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
@@ -235,12 +235,12 @@ public class ApplicationUpdateControllerTest extends BaseControllerMockMVCTest<A
                 .withFundingType(FundingType.GRANT).build();
 
 
-        QuestionResource question = newQuestionResource().withId(1L).withQuestionSetupType(IMPACT_MANAGEMENT).build();
+        QuestionResource question = newQuestionResource().withId(1L).withQuestionSetupType(IMPACT_MANAGEMENT_SURVEY).build();
         QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(question.getId(), applicationId);
 
         SilApplicationStatus silStatus = new SilApplicationStatus();
         silStatus.setCompletionStatus(QuestionStatus.INCOMPLETE);
-        silStatus.setQuestionSetupType(IMPACT_MANAGEMENT);
+        silStatus.setQuestionSetupType(IMPACT_MANAGEMENT_SURVEY);
         silStatus.setCompletionDate(ZonedDateTime.now(ZoneId.of("UTC")));
 
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);

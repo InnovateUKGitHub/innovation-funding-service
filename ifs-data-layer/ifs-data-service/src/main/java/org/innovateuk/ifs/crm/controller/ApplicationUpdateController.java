@@ -33,7 +33,7 @@ import javax.validation.Valid;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_INVALID_ARGUMENT;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.IMPACT_MANAGEMENT;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.IMPACT_MANAGEMENT_SURVEY;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION;
 
 @Slf4j
@@ -137,7 +137,7 @@ public class ApplicationUpdateController {
             String logInfo = String.format("application-update: %s application %d marked complete", questionName, ids.applicationId);
 
             QuestionSetupType questionSetupType = questionService.getQuestionById(ids.questionId).getSuccess().getQuestionSetupType();
-            if (questionSetupType.equals(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION) || questionSetupType.equals(IMPACT_MANAGEMENT)) {
+            if (questionSetupType.equals(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION) || questionSetupType.equals(IMPACT_MANAGEMENT_SURVEY)) {
                 return questionStatusService.markAsCompleteNoValidate(ids, processRoleId).handleSuccessOrFailure(
                         failure -> {
                             log.error(logError);
