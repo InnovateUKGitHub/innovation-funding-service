@@ -57,6 +57,10 @@ import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 @Service
 public class CrmServiceImpl implements CrmService {
 
+    private static String LOAN = "Loan";
+    private static String IMPACT_MANAGEMENT = "Impact Management";
+    private static String LOAN_IMPACT_MANAGEMENT = "Loan-Impact Management";
+
     @Autowired
     private BaseUserService userService;
 
@@ -300,12 +304,12 @@ public class CrmServiceImpl implements CrmService {
     private String getExperienceType(String fundingType, Long competitionId) {
         if (competitionId != null) {
             boolean imSurveyRequired = competitionService.getCompetitionById(competitionId).getSuccess().getCompetitionApplicationConfigResource().isImSurveyRequired();
-            if (fundingType.equals("Loan") && imSurveyRequired) {
-                return "Loan-Impact management";
-            } else if (fundingType.equals("Loan")) {
-                return "Loan";
+            if (fundingType.equals(LOAN) && imSurveyRequired) {
+                return LOAN_IMPACT_MANAGEMENT;
+            } else if (fundingType.equals(LOAN)) {
+                return LOAN;
             } else if (imSurveyRequired) {
-                return "Impact management";
+                return IMPACT_MANAGEMENT;
             } else {
                 return null;
             }
