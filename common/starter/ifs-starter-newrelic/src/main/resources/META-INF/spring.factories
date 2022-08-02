@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+org.innovateuk.ifs.starters.newrelic.cfg.NewRelicEventAutoConfiguration

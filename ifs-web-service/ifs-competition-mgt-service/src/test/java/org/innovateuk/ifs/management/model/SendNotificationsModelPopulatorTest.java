@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.management.model;
 
 import org.innovateuk.ifs.application.resource.ApplicationNotificationTemplateResource;
-import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.application.resource.FundingDecisionToSendApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationFundingDecisionRestService;
+import org.innovateuk.ifs.application.resource.Decision;
+import org.innovateuk.ifs.application.resource.ApplicationDecisionToSendApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationDecisionRestService;
 import org.innovateuk.ifs.application.service.ApplicationNotificationTemplateRestService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
@@ -27,8 +27,8 @@ import java.util.Map;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.innovateuk.ifs.application.resource.FundingDecision.ON_HOLD;
-import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
+import static org.innovateuk.ifs.application.resource.Decision.ON_HOLD;
+import static org.innovateuk.ifs.application.resource.Decision.UNFUNDED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionAssessmentConfigResourceBuilder.newCompetitionAssessmentConfigResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -48,7 +48,7 @@ public class SendNotificationsModelPopulatorTest {
     private CompetitionRestService competitionRestService;
 
     @Mock
-    private ApplicationFundingDecisionRestService applicationFundingDecisionRestService;
+    private ApplicationDecisionRestService applicationDecisionRestService;
 
     @Mock
     private CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
@@ -61,22 +61,22 @@ public class SendNotificationsModelPopulatorTest {
 
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().withId(COMPETITION_ID).withName(COMPETITION_NAME).build();
 
-        FundingDecisionToSendApplicationResource application1
-                = new FundingDecisionToSendApplicationResource(1L, "", "", ON_HOLD);
-        FundingDecisionToSendApplicationResource application3
-                = new FundingDecisionToSendApplicationResource(3L, "", "", UNFUNDED);
+        ApplicationDecisionToSendApplicationResource application1
+                = new ApplicationDecisionToSendApplicationResource(1L, "", "", ON_HOLD);
+        ApplicationDecisionToSendApplicationResource application3
+                = new ApplicationDecisionToSendApplicationResource(3L, "", "", UNFUNDED);
 
-        List<FundingDecisionToSendApplicationResource> applicationResults = Arrays.asList(application1, application3);
+        List<ApplicationDecisionToSendApplicationResource> applicationResults = Arrays.asList(application1, application3);
         CompetitionAssessmentConfigResource assessmentConfig = newCompetitionAssessmentConfigResource().withIncludeAverageAssessorScoreInNotifications(Boolean.FALSE).build();
 
         List<Long> requestedIds = Arrays.asList(application1.getId(), application3.getId());
 
-        when(applicationFundingDecisionRestService.getNotificationResourceForApplications(requestedIds)).thenReturn(restSuccess(applicationResults));
+        when(applicationDecisionRestService.getNotificationResourceForApplications(requestedIds)).thenReturn(restSuccess(applicationResults));
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
         when(competitionAssessmentConfigRestService.findOneByCompetitionId(COMPETITION_ID)).thenReturn(restSuccess(assessmentConfig));
 
-        List<FundingDecisionToSendApplicationResource> expectedApplications = Arrays.asList(application1, application3);
-        Map<Long, FundingDecision> expectedDecisions = asMap(application1.getId(), ON_HOLD, application3.getId(), UNFUNDED);
+        List<ApplicationDecisionToSendApplicationResource> expectedApplications = Arrays.asList(application1, application3);
+        Map<Long, Decision> expectedDecisions = asMap(application1.getId(), ON_HOLD, application3.getId(), UNFUNDED);
 
         SendNotificationsViewModel viewModel = sendNotificationsModelPopulator.populate(COMPETITION_ID, requestedIds, new NotificationEmailsForm());
 
@@ -86,7 +86,7 @@ public class SendNotificationsModelPopulatorTest {
         assertThat(viewModel.getSuccessfulRecipientsCount(), is(equalTo(0L)));
         assertThat(viewModel.getUnsuccessfulRecipientsCount(), is(equalTo(1L)));
         assertThat(viewModel.getOnHoldRecipientsCount(), is(equalTo(1L)));
-        assertThat(viewModel.getFundingDecisions(), is(equalTo(expectedDecisions)));
+        assertThat(viewModel.getDecisions(), is(equalTo(expectedDecisions)));
         assertFalse(viewModel.isHorizonEurope());
     }
 
@@ -103,15 +103,15 @@ public class SendNotificationsModelPopulatorTest {
 
         ApplicationNotificationTemplateResource notificationTemplateResource = new ApplicationNotificationTemplateResource("horizonEurope_unsuccessful_template.html");
 
-        FundingDecisionToSendApplicationResource application
-                = new FundingDecisionToSendApplicationResource(3L, "", "", UNFUNDED);
+        ApplicationDecisionToSendApplicationResource application
+                = new ApplicationDecisionToSendApplicationResource(3L, "", "", UNFUNDED);
 
-        List<FundingDecisionToSendApplicationResource> applicationResults = Collections.singletonList(application);
+        List<ApplicationDecisionToSendApplicationResource> applicationResults = Collections.singletonList(application);
         CompetitionAssessmentConfigResource assessmentConfig = newCompetitionAssessmentConfigResource().withIncludeAverageAssessorScoreInNotifications(Boolean.FALSE).build();
 
         List<Long> requestedIds =  Collections.singletonList(application.getId());
 
-        when(applicationFundingDecisionRestService.getNotificationResourceForApplications(requestedIds)).thenReturn(restSuccess(applicationResults));
+        when(applicationDecisionRestService.getNotificationResourceForApplications(requestedIds)).thenReturn(restSuccess(applicationResults));
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
         when(competitionAssessmentConfigRestService.findOneByCompetitionId(COMPETITION_ID)).thenReturn(restSuccess(assessmentConfig));
         when(applicationNotificationTemplateRestService.getUnsuccessfulNotificationTemplate(COMPETITION_ID)).thenReturn(restSuccess(notificationTemplateResource));

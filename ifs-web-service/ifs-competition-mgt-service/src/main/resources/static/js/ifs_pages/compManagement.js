@@ -4,40 +4,40 @@ IFS.competitionManagement.various = (function () {
   var s
   return {
     settings: {
-      fundingDecisionSelects: '.funding-decision',
+      decisionSelects: '.funding-decision',
       assessorFeedbackButton: '#publish-assessor-feedback',
       noJsAssessorFeedbackButton: '#publish-assessor-feedback-no-js',
-      submitFundingDecisionButton: '#publish-funding-decision',
-      noJsSubmitFundingDecisionButton: '#no-js-notify-applicants',
-      noJsSaveFundingDecisionButton: '#no-js-save-funding-decision',
-      fundingDecisionForm: '#submit-funding-decision-form'
+      submitDecisionButton: '#publish-funding-decision',
+      noJsSubmitDecisionButton: '#no-js-notify-applicants',
+      noJsSaveDecisionButton: '#no-js-save-funding-decision',
+      decisionForm: '#submit-funding-decision-form'
     },
     init: function () {
       s = this.settings
 
-      jQuery(document).on('change', s.fundingDecisionSelects, IFS.competitionManagement.various.handleFundingDecisionEnableOrDisable)
-      IFS.competitionManagement.various.handleFundingDecisionEnableOrDisable()
+      jQuery(document).on('change', s.decisionSelects, IFS.competitionManagement.various.handleDecisionEnableOrDisable)
+      IFS.competitionManagement.various.handleDecisionEnableOrDisable()
       IFS.competitionManagement.various.alterSubmitDecisionFormAction()
     },
     disableFundingDecisonButton: function () {
-      var button = jQuery(s.submitFundingDecisionButton)
+      var button = jQuery(s.submitDecisionButton)
       var modal = button.attr('data-js-modal')
       // remove the modal action and add aria-disabled and disabled styling
       button.on('click', function (event) { event.preventDefault() })
       button.removeAttr('data-js-modal').attr({'data-js-modal-disabled': modal, 'aria-disabled': 'true'}).addClass('disabled')
     },
-    enableFundingDecisionButton: function () {
-      var button = jQuery(s.submitFundingDecisionButton)
+    enableDecisionButton: function () {
+      var button = jQuery(s.submitDecisionButton)
       var modal = button.attr('data-js-modal-disabled')
       button.off('click').removeAttr('data-js-modal-disabled aria-disabled').attr('data-js-modal', modal).removeClass('disabled')
     },
     alterSubmitDecisionFormAction: function () {
-      var form = jQuery(s.fundingDecisionForm)
+      var form = jQuery(s.decisionForm)
       var action = form.attr('action')
       form.attr('action', action + 'submit')
     },
     allSelectsDecided: function () {
-      var selects = jQuery(s.fundingDecisionSelects)
+      var selects = jQuery(s.decisionSelects)
       if (selects === null || selects === undefined || selects.length === 0) {
         return false
       }
@@ -53,9 +53,9 @@ IFS.competitionManagement.various = (function () {
 
       return allDecided
     },
-    handleFundingDecisionEnableOrDisable: function () {
+    handleDecisionEnableOrDisable: function () {
       if (IFS.competitionManagement.various.allSelectsDecided()) {
-        IFS.competitionManagement.various.enableFundingDecisionButton()
+        IFS.competitionManagement.various.enableDecisionButton()
       } else {
         IFS.competitionManagement.various.disableFundingDecisonButton()
       }

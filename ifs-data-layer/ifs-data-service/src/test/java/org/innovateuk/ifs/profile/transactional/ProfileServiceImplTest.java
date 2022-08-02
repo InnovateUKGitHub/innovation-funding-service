@@ -303,8 +303,8 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         assertTrue(response.getFailure().is(notFoundError(User.class, userIdNotExists)));
 
         verify(userRepositoryMock, only()).findById(userIdNotExists);
-        verifyZeroInteractions(agreementRepositoryMock);
-        verifyZeroInteractions(agreementMapperMock);
+        verifyNoInteractions(agreementRepositoryMock);
+        verifyNoInteractions(agreementMapperMock);
     }
 
     @Test
@@ -449,8 +449,8 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         assertTrue(result.getFailure().is(notFoundError(User.class, userIdNotExists)));
 
         verify(userRepositoryMock, only()).findById(userIdNotExists);
-        verifyZeroInteractions(agreementRepositoryMock);
-        verifyZeroInteractions(agreementMapperMock);
+        verifyNoInteractions(agreementRepositoryMock);
+        verifyNoInteractions(agreementMapperMock);
     }
 
     @Test
@@ -803,7 +803,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         inOrder.verify(userRepositoryMock).findById(existingUser.getId());
         inOrder.verifyNoMoreInteractions();
 
-        verifyZeroInteractions(addressMapperMock);
+        verifyNoInteractions(addressMapperMock);
     }
 
     @Test

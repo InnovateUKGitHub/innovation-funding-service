@@ -2,20 +2,20 @@ package org.innovateuk.ifs.management.decision.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.Decision;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.decision.form.*;
-import org.innovateuk.ifs.management.decision.populator.CompetitionManagementFundingDecisionModelPopulator;
-import org.innovateuk.ifs.management.decision.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.management.decision.populator.CompetitionManagementApplicationDecisionModelPopulator;
+import org.innovateuk.ifs.management.decision.service.ApplicationDecisionService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
@@ -32,20 +32,20 @@ import static java.util.Collections.emptyList;
  * Handles the Competition Management decision views and submission of decision.
  */
 @Slf4j
-@Controller
-public abstract class CompetitionManagementDecisionController extends CompetitionManagementCookieController<FundingDecisionSelectionCookie> {
+@Component
+public abstract class CompetitionManagementDecisionController extends CompetitionManagementCookieController<DecisionSelectionCookie> {
 
     @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
 
     @Autowired
-    private ApplicationFundingDecisionService applicationFundingDecisionService;
+    private ApplicationDecisionService applicationDecisionService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
 
     @Autowired
-    private CompetitionManagementFundingDecisionModelPopulator competitionManagementFundingDecisionModelPopulator;
+    private CompetitionManagementApplicationDecisionModelPopulator competitionManagementApplicationDecisionModelPopulator;
 
     @Value("${ifs.always.open.competition.enabled}")
     private boolean alwaysOpenCompetitionEnabled;
@@ -56,16 +56,16 @@ public abstract class CompetitionManagementDecisionController extends Competitio
 
     protected abstract String getCookieName();
 
-    protected Class<FundingDecisionSelectionCookie> getFormType() {
-        return FundingDecisionSelectionCookie.class;
+    protected Class<DecisionSelectionCookie> getFormType() {
+        return DecisionSelectionCookie.class;
     }
 
     public String applications(Model model,
                                long competitionId,
                                boolean filterChanged,
-                               FundingDecisionPaginationForm paginationForm,
-                               FundingDecisionFilterForm filterForm,
-                               FundingDecisionSelectionForm selectionForm,
+                               DecisionPaginationForm paginationForm,
+                               DecisionFilterForm filterForm,
+                               DecisionSelectionForm selectionForm,
                                UserResource user,
                                BindingResult bindingResult,
                                HttpServletRequest request,
@@ -76,44 +76,44 @@ public abstract class CompetitionManagementDecisionController extends Competitio
     protected String viewApplications(Model model,
                                     long competitionId,
                                     boolean filterChanged,
-                                    FundingDecisionPaginationForm paginationForm,
-                                    FundingDecisionFilterForm filterForm,
-                                    FundingDecisionSelectionForm selectionForm,
+                                    DecisionPaginationForm paginationForm,
+                                    DecisionFilterForm filterForm,
+                                    DecisionSelectionForm selectionForm,
                                     UserResource user,
                                     BindingResult bindingResult,
                                     HttpServletRequest request,
                                     HttpServletResponse response) {
         redirectIfErrorsOrCompNotInCorrectState(competitionId, filterForm, bindingResult);
 
-        FundingDecisionSelectionCookie selectionCookieForm = getSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
+        DecisionSelectionCookie selectionCookieForm = getSelectionFormFromCookie(request, competitionId).orElse(new DecisionSelectionCookie());
 
-        selectionForm = selectionCookieForm.getFundingDecisionSelectionForm();
-        FundingDecisionFilterForm filterCookieForm = selectionCookieForm.getFundingDecisionFilterForm();
+        selectionForm = selectionCookieForm.getDecisionSelectionForm();
+        DecisionFilterForm filterCookieForm = selectionCookieForm.getDecisionFilterForm();
 
         if (!filterForm.anyFilterIsActive()
                 && filterCookieForm.anyFilterIsActive()
                 && !filterChanged
                 && selectionForm.anySelectionIsMade()) {
-            filterForm.updateAllFilters(selectionCookieForm.getFundingDecisionFilterForm());
+            filterForm.updateAllFilters(selectionCookieForm.getDecisionFilterForm());
         }
 
-        FundingDecisionSelectionForm trimmedSelectionForm = trimSelectionByFilteredResult(selectionForm, filterForm, competitionId);
+        DecisionSelectionForm trimmedSelectionForm = trimSelectionByFilteredResult(selectionForm, filterForm, competitionId);
         selectionForm.setApplicationIds(trimmedSelectionForm.getApplicationIds());
         selectionForm.setAllSelected(trimmedSelectionForm.isAllSelected());
-        selectionCookieForm.setFundingDecisionFilterForm(filterForm);
+        selectionCookieForm.setDecisionFilterForm(filterForm);
 
         saveFormToCookie(response, competitionId, selectionCookieForm);
-        model.addAttribute("model", competitionManagementFundingDecisionModelPopulator.populate(competitionId, paginationForm, filterForm, selectionForm, user));
+        model.addAttribute("model", competitionManagementApplicationDecisionModelPopulator.populate(competitionId, paginationForm, filterForm, selectionForm, user));
 
         return "comp-mgt-funders-panel";
     }
 
     public String makeDecision(Model model,
                                long competitionId,
-                               FundingDecisionPaginationForm paginationForm,
-                               FundingDecisionSelectionForm fundingDecisionSelectionForm,
-                               FundingDecisionChoiceForm fundingDecisionChoiceForm,
-                               FundingDecisionFilterForm filterForm,
+                               DecisionPaginationForm paginationForm,
+                               DecisionSelectionForm decisionSelectionForm,
+                               DecisionChoiceForm decisionChoiceForm,
+                               DecisionFilterForm filterForm,
                                UserResource user,
                                BindingResult bindingResult,
                                HttpServletRequest request,
@@ -121,49 +121,49 @@ public abstract class CompetitionManagementDecisionController extends Competitio
 
         redirectIfErrorsOrCompNotInCorrectState(competitionId, filterForm, bindingResult);
 
-        FundingDecisionSelectionCookie selectionForm = getSelectionFormFromCookie(request, competitionId)
-                .orElse(new FundingDecisionSelectionCookie(fundingDecisionSelectionForm));
-        return fundersPanelCompetition(model, competitionId, selectionForm, paginationForm, fundingDecisionChoiceForm, filterForm, user, bindingResult, response);
+        DecisionSelectionCookie selectionForm = getSelectionFormFromCookie(request, competitionId)
+                .orElse(new DecisionSelectionCookie(decisionSelectionForm));
+        return fundersPanelCompetition(model, competitionId, selectionForm, paginationForm, decisionChoiceForm, filterForm, user, bindingResult, response);
     }
 
-    public JsonNode addAllApplicationsToFundingDecisionSelectionList(
+    public JsonNode addAllApplicationsToDecisionSelectionList(
            long competitionId,
            boolean addAll,
            HttpServletRequest request,
            HttpServletResponse response) {
-        FundingDecisionSelectionCookie selectionCookie;
+        DecisionSelectionCookie selectionCookie;
 
         try {
-            selectionCookie = getSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
+            selectionCookie = getSelectionFormFromCookie(request, competitionId).orElse(new DecisionSelectionCookie());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return createFailureResponse();
         }
 
         if (addAll) {
-            List<Long> allApplicationIdsBasedOnFilter = getAllApplicationIdsByFilters(competitionId, selectionCookie.getFundingDecisionFilterForm());
+            List<Long> allApplicationIdsBasedOnFilter = getAllApplicationIdsByFilters(competitionId, selectionCookie.getDecisionFilterForm());
             addAllApplicationsIdsBasedOnFilter(selectionCookie, allApplicationIdsBasedOnFilter);
         } else {
-            removeAllApplicationsIds(selectionCookie.getFundingDecisionSelectionForm());
+            removeAllApplicationsIds(selectionCookie.getDecisionSelectionForm());
         }
 
         saveFormToCookie(response, competitionId, selectionCookie);
-        return createSuccessfulResponseWithSelectionStatus(selectionCookie.getFundingDecisionSelectionForm().getApplicationIds().size(), selectionCookie.getFundingDecisionSelectionForm().isAllSelected(), false);
+        return createSuccessfulResponseWithSelectionStatus(selectionCookie.getDecisionSelectionForm().getApplicationIds().size(), selectionCookie.getDecisionSelectionForm().isAllSelected(), false);
     }
 
-    private void addAllApplicationsIdsBasedOnFilter(FundingDecisionSelectionCookie selectionCookie, List<Long> allIds) {
+    private void addAllApplicationsIdsBasedOnFilter(DecisionSelectionCookie selectionCookie, List<Long> allIds) {
         List<Long> limitedList = limitList(allIds);
 
-        selectionCookie.getFundingDecisionSelectionForm().setApplicationIds(limitedList);
-        selectionCookie.getFundingDecisionSelectionForm().setAllSelected(true);
+        selectionCookie.getDecisionSelectionForm().setApplicationIds(limitedList);
+        selectionCookie.getDecisionSelectionForm().setAllSelected(true);
     }
 
-    private void removeAllApplicationsIds(FundingDecisionSelectionForm selectionForm) {
+    private void removeAllApplicationsIds(DecisionSelectionForm selectionForm) {
         selectionForm.getApplicationIds().clear();
         selectionForm.setAllSelected(false);
     }
 
-    public JsonNode addSelectedApplicationsToFundingDecisionList(
+    public JsonNode addSelectedApplicationsToDecisionList(
             long competitionId,
             long applicationId,
             boolean isSelected,
@@ -172,8 +172,8 @@ public abstract class CompetitionManagementDecisionController extends Competitio
         boolean limitExceeded = false;
 
         try {
-            FundingDecisionSelectionCookie cookieForm = getSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
-            FundingDecisionSelectionForm selectionForm = cookieForm.getFundingDecisionSelectionForm();
+            DecisionSelectionCookie cookieForm = getSelectionFormFromCookie(request, competitionId).orElse(new DecisionSelectionCookie());
+            DecisionSelectionForm selectionForm = cookieForm.getDecisionSelectionForm();
             if (isSelected) {
                 List<Long> applicationIds = selectionForm.getApplicationIds();
                 int predictedSize = selectionForm.getApplicationIds().size() + 1;
@@ -184,7 +184,7 @@ public abstract class CompetitionManagementDecisionController extends Competitio
                         limitExceeded = true;
                     } else {
                         selectionForm.getApplicationIds().add(applicationId);
-                        List<Long> filteredApplicationList = getAllApplicationIdsByFilters(competitionId, cookieForm.getFundingDecisionFilterForm());
+                        List<Long> filteredApplicationList = getAllApplicationIdsByFilters(competitionId, cookieForm.getDecisionFilterForm());
 
                         if (selectionForm.containsAll(filteredApplicationList)) {
                             selectionForm.setAllSelected(true);
@@ -196,7 +196,7 @@ public abstract class CompetitionManagementDecisionController extends Competitio
                 selectionForm.setAllSelected(false);
             }
 
-            cookieForm.setFundingDecisionSelectionForm(selectionForm);
+            cookieForm.setDecisionSelectionForm(selectionForm);
             saveFormToCookie(response, competitionId, cookieForm);
             return createSuccessfulResponseWithSelectionStatus(selectionForm.getApplicationIds().size(), selectionForm.isAllSelected(), limitExceeded);
         } catch (Exception e) {
@@ -205,7 +205,7 @@ public abstract class CompetitionManagementDecisionController extends Competitio
         }
     }
 
-    private List<Long> getAllApplicationIdsByFilters(long competitionId, FundingDecisionFilterForm filterForm) {
+    private List<Long> getAllApplicationIdsByFilters(long competitionId, DecisionFilterForm filterForm) {
         if(alwaysOpenCompetitionEnabled) {
             CompetitionResource competition = getCompetitionIfExist(competitionId);
             if (competition.isAlwaysOpen() && competition.isHasAssessmentStage()) {
@@ -213,14 +213,14 @@ public abstract class CompetitionManagementDecisionController extends Competitio
             }
         }
 
-        return  competitionManagementFundingDecisionModelPopulator.getAllSubmittedApplicationIds(competitionId, filterForm);
+        return  competitionManagementApplicationDecisionModelPopulator.getAllSubmittedApplicationIds(competitionId, filterForm);
     }
 
-    private FundingDecisionSelectionForm trimSelectionByFilteredResult(FundingDecisionSelectionForm selectionForm,
-                                                                       FundingDecisionFilterForm filterForm,
+    private DecisionSelectionForm trimSelectionByFilteredResult(DecisionSelectionForm selectionForm,
+                                                                       DecisionFilterForm filterForm,
                                                                        long competitionId) {
         List<Long> filteredApplicationIds = getAllApplicationIdsByFilters(competitionId, filterForm);
-        FundingDecisionSelectionForm updatedSelectionForm = new FundingDecisionSelectionForm();
+        DecisionSelectionForm updatedSelectionForm = new DecisionSelectionForm();
 
         selectionForm.getApplicationIds().retainAll(filteredApplicationIds);
         updatedSelectionForm.setApplicationIds(selectionForm.getApplicationIds());
@@ -236,27 +236,27 @@ public abstract class CompetitionManagementDecisionController extends Competitio
 
     private String fundersPanelCompetition(Model model,
                                            long competitionId,
-                                           FundingDecisionSelectionCookie selectionCookie,
-                                           FundingDecisionPaginationForm fundingDecisionPaginationForm,
-                                           FundingDecisionChoiceForm fundingDecisionChoiceForm,
-                                           FundingDecisionFilterForm fundingDecisionFilterForm,
+                                           DecisionSelectionCookie selectionCookie,
+                                           DecisionPaginationForm decisionPaginationForm,
+                                           DecisionChoiceForm decisionChoiceForm,
+                                           DecisionFilterForm decisionFilterForm,
                                            UserResource user,
                                            BindingResult bindingResult,
                                            HttpServletResponse response) {
-        FundingDecisionSelectionForm selectionForm = selectionCookie.getFundingDecisionSelectionForm();
-        if (fundingDecisionChoiceForm.getFundingDecision() != null) {
+        DecisionSelectionForm selectionForm = selectionCookie.getDecisionSelectionForm();
+        if (decisionChoiceForm.getDecision() != null) {
             validator.validate(selectionForm, bindingResult);
             if (!bindingResult.hasErrors()) {
-                Optional<FundingDecision> fundingDecision = applicationFundingDecisionService.getFundingDecisionForString(fundingDecisionChoiceForm.getFundingDecision());
-                if (fundingDecision.isPresent()) {
-                    applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, fundingDecision.get(), selectionForm.getApplicationIds());
+                Optional<Decision> decision = applicationDecisionService.getDecisionForString(decisionChoiceForm.getDecision());
+                if (decision.isPresent()) {
+                    applicationDecisionService.saveApplicationDecisionData(competitionId, decision.get(), selectionForm.getApplicationIds());
                     removeAllApplicationsIds(selectionForm);
                     saveFormToCookie(response, competitionId, selectionCookie);
                 }
             }
         }
 
-        model.addAttribute("model", competitionManagementFundingDecisionModelPopulator.populate(competitionId, fundingDecisionPaginationForm, fundingDecisionFilterForm, selectionForm, user));
+        model.addAttribute("model", competitionManagementApplicationDecisionModelPopulator.populate(competitionId, decisionPaginationForm, decisionFilterForm, selectionForm, user));
 
         return "comp-mgt-funders-panel";
     }
@@ -267,7 +267,7 @@ public abstract class CompetitionManagementDecisionController extends Competitio
 
     protected abstract String getDefaultView(long competitionId);
 
-    private String redirectIfErrorsOrCompNotInCorrectState(long competitionId, FundingDecisionFilterForm filterForm, BindingResult bindingResult) {
+    private String redirectIfErrorsOrCompNotInCorrectState(long competitionId, DecisionFilterForm filterForm, BindingResult bindingResult) {
 
         CompetitionResource competition = getCompetitionIfExist(competitionId);
         List<CompetitionStatus> acceptedCompStates = Arrays.asList(CompetitionStatus.ASSESSOR_FEEDBACK, CompetitionStatus.FUNDERS_PANEL);

@@ -10,8 +10,8 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.competition.inflight.populator.CompetitionInFlightStatsModelPopulator;
 import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightStatsViewModel;
 import org.innovateuk.ifs.management.decision.controller.CompetitionManagementEOIDecisionController;
-import org.innovateuk.ifs.management.decision.populator.CompetitionManagementFundingDecisionModelPopulator;
-import org.innovateuk.ifs.management.decision.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.management.decision.populator.CompetitionManagementApplicationDecisionModelPopulator;
+import org.innovateuk.ifs.management.decision.service.ApplicationDecisionService;
 import org.innovateuk.ifs.management.decision.viewmodel.ManageFundingApplicationsViewModel;
 import org.innovateuk.ifs.util.CompressedCookieService;
 import org.junit.Before;
@@ -56,7 +56,7 @@ public class CompetitionManagementEoiDecisionControllerTest extends BaseControll
 
     @Spy
     @InjectMocks
-    private CompetitionManagementFundingDecisionModelPopulator competitionManagementFundingDecisionModelPopulator;
+    private CompetitionManagementApplicationDecisionModelPopulator competitionManagementFundingDecisionModelPopulator;
 
     @Mock
     private CompetitionRestService competitionRestService;
@@ -68,7 +68,7 @@ public class CompetitionManagementEoiDecisionControllerTest extends BaseControll
     private CompressedCookieService cookieUtil;
 
     @Mock
-    private ApplicationFundingDecisionService applicationFundingDecisionService;
+    private ApplicationDecisionService applicationFundingDecisionService;
 
     @Mock
     private CompetitionInFlightStatsModelPopulator competitionInFlightStatsModelPopulator;

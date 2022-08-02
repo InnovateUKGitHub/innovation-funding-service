@@ -6,6 +6,7 @@ dependencies {
 
     implementation project(':common:api:file-storage-rest-api')
     implementation project(':common:starter:ifs-starter-audit')
+    implementation project(':common:starter:ifs-starter-newrelic')
 
     if (isStubDevMode()) {
         developmentOnly "org.springframework.boot:spring-boot-devtools"
@@ -19,7 +20,7 @@ dependencies {
         exclude group: "commons-logging", module: "commons-logging"
     }
 
-    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-core:7.15.0'
 
     implementation 'com.diluv.clamchowder:Clam-Chowder:1.0.0'
 

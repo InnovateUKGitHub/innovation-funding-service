@@ -4,3 +4,4 @@ metadata:
   name: feature-toggle-config
 data:
   IFS_MONITORINGOFFICER_DASHBOARD_FILTER_ENABLED: "false"
+  IFS_IMPACT_MANAGEMENT_ENABLED: "false"
