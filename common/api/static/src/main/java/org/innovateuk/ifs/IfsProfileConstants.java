@@ -36,10 +36,10 @@ public class IfsProfileConstants {
 
     /**
      * Used to denote the presence of AMQP in the deployment
-     * Audit can then push over AMQP instead of logging
+     * This means something for audit and messaging.
      */
-    public static final String AMQP_PROFILE = "AMQP";
-    public static final String NOT_AMQP_PROFILE = "!" + AMQP_PROFILE;
+    public static final String DISABLE_AMQP = "DISABLE_AMQP";
+    public static final String AMQP_ENABLED = "!" + DISABLE_AMQP;
 
     /**
      * Used to enable simple and redis caching.
