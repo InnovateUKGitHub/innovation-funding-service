@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationEoiEvidenceResponse;
 import org.innovateuk.ifs.application.mapper.ApplicationEoiEvidenceResponseMapper;
-import org.innovateuk.ifs.application.repository.ApplicationEoiEvidenceProcessRepository;
 import org.innovateuk.ifs.application.repository.ApplicationEoiEvidenceResponseRepository;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceResponseResource;
@@ -44,9 +43,6 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
     @Autowired
     private UserMapper userMapper;
 
-    @Autowired
-    private ApplicationEoiEvidenceProcessRepository applicationEoiEvidenceProcessRepository;
-
     @Override
     @Transactional
     public ServiceResult<ApplicationEoiEvidenceResponseResource> create(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource) {
@@ -66,16 +62,16 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
 
     private ServiceResult<ApplicationEoiEvidenceResponse> initialiseApplicationEoiEvidenceWorkflow(Application application, ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse) {
         if (application.getCompetition().isEnabledForPreRegistration()
-                && application.getCompetition().getCompetitionEoiEvidenceConfig().isEvidenceRequired()
+                && application.getCompetition().isEoiEvidenceRequired()
                 && application.isEnabledForExpressionOfInterest()) {
             if (applicationEoiEvidenceWorkflowHandler.documentUploaded(applicationEoiEvidenceResponse)) {
                 return serviceSuccess(applicationEoiEvidenceResponse);
             } else {
                 return serviceFailure(CommonFailureKeys.APPLICATION_UNABLE_TO_INITIALISE_EOI_EVIDENCE_UPLOAD);
             }
+        } else {
+            return serviceFailure(CommonFailureKeys.APPLICATION_NOT_ENABLED_FOR_EOI_EVIDENCE_UPLOAD);
         }
-
-        return serviceSuccess(applicationEoiEvidenceResponse);
     }
 
     @Override

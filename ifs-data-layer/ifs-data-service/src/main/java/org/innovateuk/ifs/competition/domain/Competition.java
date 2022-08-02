@@ -1157,4 +1157,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     public void setCompetitionEoiEvidenceConfig(CompetitionEoiEvidenceConfig competitionEoiEvidenceConfig) {
         this.competitionEoiEvidenceConfig = competitionEoiEvidenceConfig;
     }
+
+    @Transient
+    public boolean isEoiEvidenceRequired() {
+        return competitionEoiEvidenceConfig != null ? competitionEoiEvidenceConfig.isEvidenceRequired() : false;
+    }
 }
