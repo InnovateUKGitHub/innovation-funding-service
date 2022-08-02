@@ -33,7 +33,7 @@ public class ApplicationEoiEvidenceWorkflowHandler extends BaseWorkflowEventHand
 
     @Override
     protected ApplicationEoiEvidenceProcess createNewProcess(ApplicationEoiEvidenceResponse target, ProcessRole participant) {
-        return new ApplicationEoiEvidenceProcess(participant, target, ApplicationEoiEvidenceState.NOT_SUBMITTED);
+        return new ApplicationEoiEvidenceProcess(participant, target, ApplicationEoiEvidenceState.CREATED);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class ApplicationEoiEvidenceWorkflowHandler extends BaseWorkflowEventHand
     }
 
     public boolean documentUploaded(ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse) {
-        return fireEvent(unSubmitEvent(applicationEoiEvidenceResponse), ApplicationEoiEvidenceState.NOT_SUBMITTED);
+        return fireEvent(unSubmitEvent(applicationEoiEvidenceResponse), applicationEoiEvidenceResponse);
     }
 
     private MessageBuilder<ApplicationEoiEvidenceEvent> submitEvent(ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse, ProcessRole  participant, User internalUser) {

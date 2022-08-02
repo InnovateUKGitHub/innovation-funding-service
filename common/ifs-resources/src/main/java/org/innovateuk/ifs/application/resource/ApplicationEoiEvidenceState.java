@@ -10,8 +10,9 @@ import org.innovateuk.ifs.workflow.resource.State;
 @AllArgsConstructor
 public enum ApplicationEoiEvidenceState implements ProcessState, IdentifiableEnum  {
 
-    NOT_SUBMITTED(63, State.NOT_SUBMITTED, "Submitted"),
-    SUBMITTED(64, State.SUBMITTED, "Not Submitted");
+    CREATED(63, State.CREATED, "Created"),
+    NOT_SUBMITTED(64, State.NOT_SUBMITTED, "Submitted"),
+    SUBMITTED(65, State.SUBMITTED, "Not Submitted");
 
     final long id;
     final State backingState;

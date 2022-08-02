@@ -24,14 +24,14 @@ public class ApplicationEoiEvidenceWorkflow extends StateMachineConfigurerAdapte
     @Override
     public void configure(StateMachineStateConfigurer<ApplicationEoiEvidenceState, ApplicationEoiEvidenceEvent> states) throws Exception {
         states.withStates()
-                .initial(ApplicationEoiEvidenceState.NOT_SUBMITTED)
-                .states(EnumSet.of(ApplicationEoiEvidenceState.NOT_SUBMITTED, ApplicationEoiEvidenceState.SUBMITTED));
+                .initial(ApplicationEoiEvidenceState.CREATED)
+                .states(EnumSet.of(ApplicationEoiEvidenceState.CREATED, ApplicationEoiEvidenceState.NOT_SUBMITTED, ApplicationEoiEvidenceState.SUBMITTED));
     }
     @Override
     public void configure(StateMachineTransitionConfigurer<ApplicationEoiEvidenceState, ApplicationEoiEvidenceEvent> transitions) throws Exception {
         transitions
                 .withExternal()
-                .source(ApplicationEoiEvidenceState.NOT_SUBMITTED)
+                .source(ApplicationEoiEvidenceState.CREATED)
                 .event(ApplicationEoiEvidenceEvent.UNSUBMIT)
                 .target(ApplicationEoiEvidenceState.NOT_SUBMITTED)
                 .and()

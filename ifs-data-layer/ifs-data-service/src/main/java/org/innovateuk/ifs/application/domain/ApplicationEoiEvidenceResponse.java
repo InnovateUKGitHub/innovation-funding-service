@@ -38,14 +38,14 @@ public class ApplicationEoiEvidenceResponse implements ProcessActivity  {
     private ApplicationEoiEvidenceProcess applicationEoiEvidenceProcess;
 
     public ApplicationEoiEvidenceResponse() {
-        this.applicationEoiEvidenceProcess = new ApplicationEoiEvidenceProcess(null, this, ApplicationEoiEvidenceState.NOT_SUBMITTED);
+        this.applicationEoiEvidenceProcess = new ApplicationEoiEvidenceProcess(null, this, ApplicationEoiEvidenceState.CREATED);
     }
 
     public ApplicationEoiEvidenceResponse(Application application, Organisation organisation, FileEntry fileEntry) {
         this.application = application;
         this.organisation = organisation;
         this.fileEntry = fileEntry;
-        this.applicationEoiEvidenceProcess = new ApplicationEoiEvidenceProcess(null, this, ApplicationEoiEvidenceState.NOT_SUBMITTED);
+        this.applicationEoiEvidenceProcess = new ApplicationEoiEvidenceProcess(null, this, ApplicationEoiEvidenceState.CREATED);
     }
 
     public void setId(Long id) {
