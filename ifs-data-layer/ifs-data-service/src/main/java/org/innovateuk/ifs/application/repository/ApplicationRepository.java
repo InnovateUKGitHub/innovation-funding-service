@@ -383,9 +383,13 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
            "    ON pu.project.id = proj.id " +
            "        AND pu.user.id=:userId " +
            "        AND type(pu) = ProjectUser " +
+           " LEFT JOIN ApplicationExpressionOfInterestConfig eoiConfig " +
+           "    ON eoiConfig.application.id = app.id " +
            " WHERE (proj.id IS NULL AND pr iS NOT NULL" + // No project exists and user has applicant process role
            "    OR  pu.id IS NOT NULL)" + // Or project exists and user is a project user.
-            "   AND hidden IS NULL")
+           "   AND hidden IS NULL" +
+           "   AND (eoiConfig IS NULL OR eoiConfig.enabledForExpressionOfInterest = false" +
+           " OR (eoiConfig.enabledForExpressionOfInterest = true AND (app.decision IS NULL OR app.decision NOT IN (org.innovateuk.ifs.fundingdecision.domain.DecisionStatus.EOI_APPROVED))))")
     List<Application> findApplicationsForDashboard(long userId);
 
     boolean existsByProcessRolesUserIdAndCompetitionId(long userId, long competitionId);
