@@ -118,14 +118,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean enabledForPreRegistration;
     private CompetitionApplicationConfigResource competitionApplicationConfigResource;
 
-    public CompetitionApplicationConfigResource getCompetitionApplicationConfigResource() {
-        return competitionApplicationConfigResource;
-    }
-
-    public void setCompetitionApplicationConfigResource(CompetitionApplicationConfigResource competitionApplicationConfigResource) {
-        this.competitionApplicationConfigResource = competitionApplicationConfigResource;
-    }
-
     public CompetitionResource() {
     }
 
@@ -909,7 +901,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     @JsonIgnore
     public boolean isDirectAward() {
-         return competitionTypeEnum == CompetitionTypeEnum.DIRECT_AWARD;
+        return competitionTypeEnum == CompetitionTypeEnum.DIRECT_AWARD;
     }
 
     @Override
@@ -1091,7 +1083,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     @JsonIgnore
     public boolean isApplicationCreatedOrOpenedCompStatusOpen(ApplicationState applicationState) {
-        return (applicationState == ApplicationState.CREATED || applicationState == ApplicationState.OPENED )
+        return (applicationState == ApplicationState.CREATED || applicationState == ApplicationState.OPENED)
                 && !competitionStatus.name().equals("OPEN");
     }
 
@@ -1112,5 +1104,14 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     public void setEnabledForPreRegistration(boolean enabledForPreRegistration) {
         this.enabledForPreRegistration = enabledForPreRegistration;
     }
+
+    public CompetitionApplicationConfigResource getCompetitionApplicationConfigResource() {
+        return competitionApplicationConfigResource;
+    }
+
+    public void setCompetitionApplicationConfigResource(CompetitionApplicationConfigResource competitionApplicationConfigResource) {
+        this.competitionApplicationConfigResource = competitionApplicationConfigResource;
+    }
+
 }
 

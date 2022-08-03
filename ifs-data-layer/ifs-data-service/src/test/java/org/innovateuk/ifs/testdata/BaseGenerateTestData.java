@@ -286,7 +286,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         when(silExperianEndpointMock.validate(isA(SILBankDetails.class))).thenReturn(serviceSuccess(new ValidationResult(true, "", emptyList())));
         when(silExperianEndpointMock.verify(isA(AccountDetails.class))).thenReturn(serviceSuccess(new VerificationResult("10", "10", "10", "10", emptyList())));
 
-        when(silCrmEndpointMock.updateLoanApplicationState(any(SilLoanApplication.class))).thenReturn(serviceSuccess());
+        when(silCrmEndpointMock.updateApplicationState(any(SilLoanApplication.class))).thenReturn(serviceSuccess());
         when(silCrmEndpointMock.updateLoanAssessment(any(SilLoanAssessment.class))).thenReturn(serviceSuccess());
 
         RegistrationService registrationServiceUnwrapped = (RegistrationService) unwrapProxy(registrationService);

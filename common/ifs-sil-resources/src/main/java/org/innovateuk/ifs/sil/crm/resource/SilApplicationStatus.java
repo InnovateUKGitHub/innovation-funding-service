@@ -20,9 +20,9 @@ import java.time.ZonedDateTime;
 @Getter
 @Setter
 @ToString
-public class SilLoanApplicationStatus {
+public class SilApplicationStatus {
     @JsonProperty(value = "questionSetupType", required = true)
-    @NotNull(message = "{validation.sil.loans.questionSetupType.required}")
+    @NotNull(message = "{validation.sil.application.questionSetupType.required}")
     private QuestionSetupType questionSetupType;
 
     @JsonProperty(value = "completionStatus", required = true)
@@ -33,7 +33,7 @@ public class SilLoanApplicationStatus {
     @JsonProperty(value = "completionDate", required = true)
     @JsonSerialize(using = ZonedDateTimeSerializer.class)
     @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
-    @NotNull(message = "{validation.sil.loans.completionDate.required}")
+    @NotNull(message = "{validation.sil.application.completionDate.required}")
     private ZonedDateTime completionDate;
 
     @JsonIgnore
