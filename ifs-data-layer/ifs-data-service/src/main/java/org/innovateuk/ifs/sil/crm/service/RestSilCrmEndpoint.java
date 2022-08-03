@@ -78,7 +78,7 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
 
     @SneakyThrows(JsonProcessingException.class)
     @Override
-    public ServiceResult<Void> updateLoanApplicationState(SilLoanApplication silApplication) {
+    public ServiceResult<Void> updateApplicationState(SilLoanApplication silApplication) {
         String silApplicationJson = objectWriter.writeValueAsString(silApplication);
         log.info("Json Payload: " + silApplicationJson);
         return handlingErrors(() -> {
