@@ -582,10 +582,14 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             });
 
             Long competitionEoiEvidenceConfigId = data.getCompetition().getCompetitionEoiEvidenceConfigResource().getId();
-            CompetitionEoiDocumentResource competitionEoiDocumentResource = CompetitionEoiDocumentResource.builder()
-                    .fileTypeId(EOI_DOCUMENT_FILE_TYPE)
-                    .competitionEoiEvidenceConfigId(competitionEoiEvidenceConfigId).build();
-            competitionEoiEvidenceConfigService.createDocument(competitionEoiDocumentResource);
+
+            EOI_DOCUMENT_FILE_TYPES.stream()
+                    .forEach(fileTypeId -> {
+                        CompetitionEoiDocumentResource competitionEoiDocumentResource = CompetitionEoiDocumentResource.builder()
+                                .fileTypeId(fileTypeId)
+                                .competitionEoiEvidenceConfigId(competitionEoiEvidenceConfigId).build();
+                        competitionEoiEvidenceConfigService.createDocument(competitionEoiDocumentResource);
+                    });
         });
     }
 
