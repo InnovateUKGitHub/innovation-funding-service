@@ -1,0 +1,51 @@
+idp:
+    rest:
+        baseURL: http://does-not-exist/
+        key: 1234567890
+ifs:
+    data:
+        postcode:
+            lookup:
+                key: ''
+        service:
+            file:
+                storage:
+                    base: /tmp
+                    virus:
+                        scanning:
+                            enabled: false
+    finance-totals:
+        baseURL: http://localhost:8080
+    system:
+        email:
+            address: noreply-innovateuk@example.com
+    web:
+        baseURL: https://ifs.local-dev
+sil:
+    available: false
+    rest:
+        baseURL: http://localhost:8080/silstub
+    stub:
+        send:
+            mail:
+                from:
+                    ifs: false
+spring:
+    cache:
+        type: NONE
+    datasource:
+        password: password
+        test-on-borrow: false
+        url: jdbc:mysql://ifs-database:3306/ifs_test?characterEncoding=utf8&useMysqlMetadata=true
+        username: root
+    flyway:
+        locations: db/migration,db/reference,db/setup,db/integration
+        password: password
+        placeholders:
+            ifs:
+                system:
+                    user:
+                        uuid: c0d02979-e66e-11e7-ac43-0242ac120002
+        table: flyway_schema_history
+        url: jdbc:mysql://ifs-database:3306/ifs_test?characterEncoding=utf8&useMysqlMetadata=true
+        user: root

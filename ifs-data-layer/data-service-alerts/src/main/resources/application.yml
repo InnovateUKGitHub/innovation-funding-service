@@ -1,0 +1,59 @@
+hibernate:
+    dialect:
+        storage_engine: innodb
+ifs:
+    web:
+        system:
+            user:
+                uid: ${IFS_WEB_SYSTEM_USER_ID:8394d970-b250-4b15-9621-3534325691b4}
+management:
+    endpoint:
+        health:
+            show-components: ALWAYS
+            show-details: ALWAYS
+        restart:
+            enabled: false
+        shutdown:
+            enabled: false
+    endpoints:
+        enabled-by-default: true
+        health:
+            enabled: true
+        info:
+            enabled: true
+        web:
+            base-path: /monitoring
+            exposure:
+                exclude: threaddump,heapdump
+                include: '*'
+server:
+    connection-timeout: 600000
+    port: 8080
+    servlet:
+        session:
+            cookie:
+                http-only: false
+                secure: true
+    tomcat:
+        accept-count: 700
+        max-connections: 700
+        max-threads: 300
+        min-spare-threads: 20
+spring:
+    application:
+        name: IFS Alerts Service
+    datasource:
+        driver-class-name: org.mariadb.jdbc.Driver
+        password: ${DB_PASS:password}
+        test-on-borrow: true
+        url: ${DB_URL:jdbc:mysql://ifs-database:3306/ifs}
+        username: ${DB_USER:root}
+        validation-query: SELECT 1
+    flyway:
+        driver-class-name: org.mariadb.jdbc.Driver
+        enabled: false
+    jpa:
+        database-platform: org.hibernate.dialect.MySQL57Dialect
+        generate-ddl: false
+        hibernate:
+            ddl-auto: none

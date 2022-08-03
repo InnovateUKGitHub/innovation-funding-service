@@ -1,0 +1,54 @@
+management:
+    endpoint:
+        health:
+            show-components: ALWAYS
+            show-details: ALWAYS
+        restart:
+            enabled: false
+        shutdown:
+            enabled: false
+    endpoints:
+        enabled-by-default: true
+        health:
+            enabled: true
+        info:
+            enabled: true
+        web:
+            base-path: /monitoring
+            exposure:
+                exclude: threaddump,heapdump
+                include: '*'
+shibboleth:
+    ldap:
+        password: default
+        url: ldaps://ldap:8389
+    password:
+        policy:
+            blacklist:
+            - welcome123
+            - welcome1234
+            - welcome1
+            - password123
+            - password1234
+            - testtest1
+            - test1test1
+            - 1testtest
+            - 123test123
+            - test1234
+            - null
+            - null
+            - null
+            - null
+            - null
+            - null
+            - null
+            - null
+            - null
+            - admin123
+            - 123admin
+            - qwertyui1
+            - changeme1
+            - xxxxxxx1
+            - abc123abc
+            - letmein123
+            - inn0vate
