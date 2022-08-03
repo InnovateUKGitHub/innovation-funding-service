@@ -18,7 +18,7 @@ import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.sil.SilPayloadKeyType;
 import org.innovateuk.ifs.sil.SilPayloadType;
-import org.innovateuk.ifs.sil.crm.resource.SilLoanApplicationStatus;
+import org.innovateuk.ifs.sil.crm.resource.SilApplicationStatus;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.UsersRolesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +33,14 @@ import javax.validation.Valid;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_INVALID_ARGUMENT;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.IMPACT_MANAGEMENT_SURVEY;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION;
 
 @Slf4j
 @RestController
 @RequestMapping("/application-update")
-@SecuredBySpring(value = "Controller", description = "LoanApplicationController", securedType = LoanApplicationController.class)
-public class LoanApplicationController {
+@SecuredBySpring(value = "Controller", description = "ApplicationUpdateController", securedType = ApplicationUpdateController.class)
+public class ApplicationUpdateController {
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -61,7 +62,7 @@ public class LoanApplicationController {
     @PreAuthorize("permitAll()")
     @PatchMapping(value = "/{applicationId}")
     public RestResult<Void> updateApplication(@PathVariable("applicationId") final Long applicationId,
-                                              @RequestBody SilLoanApplicationStatus silStatus,
+                                              @RequestBody SilApplicationStatus silStatus,
                                               BindingResult bindingResult, HttpServletRequest request) throws JsonProcessingException {
         return updateApplicationV1(applicationId, silStatus, bindingResult, request);
     }
@@ -69,7 +70,7 @@ public class LoanApplicationController {
     @PreAuthorize("permitAll()")
     @PatchMapping(value = "/v1/{applicationId}")
     public RestResult<Void> updateApplicationV1(@PathVariable("applicationId") final Long applicationId,
-                                                @Valid @RequestBody SilLoanApplicationStatus silStatus,
+                                                @Valid @RequestBody SilApplicationStatus silStatus,
                                                 BindingResult bindingResult, HttpServletRequest request) throws JsonProcessingException {
 
         String silStatusJson = objectMapper.writer().writeValueAsString(silStatus);
@@ -92,7 +93,7 @@ public class LoanApplicationController {
         }
     }
 
-    private RestResult<Void> getProcessRole(UserResource user, Long applicationId, SilLoanApplicationStatus silStatus) {
+    private RestResult<Void> getProcessRole(UserResource user, Long applicationId, SilApplicationStatus silStatus) {
         return usersRolesService.getProcessRoleByUserIdAndApplicationId(user.getId(), applicationId).handleSuccessOrFailure(
                 failure -> {
                     log.error(String.format("application-update error: process role not found using user %d, application %d", user.getId(), applicationId));
@@ -101,12 +102,14 @@ public class LoanApplicationController {
                 processRole -> getCompetition(user, applicationId, silStatus, processRole.getId()));
     }
 
-    private RestResult<Void> getCompetition(UserResource user, Long applicationId, SilLoanApplicationStatus silStatus, Long processRoleId) {
+    private RestResult<Void> getCompetition(UserResource user, Long applicationId, SilApplicationStatus silStatus, Long processRoleId) {
         return competitionService.getCompetitionByApplicationId(applicationId).handleSuccessOrFailure(
                 failure -> RestResult.restFailure(failure.getErrors(), HttpStatus.BAD_REQUEST),
                 competition -> {
-                    if (!competition.isLoan()) {
-                        log.error(String.format("application-update error: application %d is not an application for a loan competition", applicationId));
+
+                    if (!(competition.isLoan() ||
+                            (competition.getCompetitionApplicationConfigResource() !=null && competition.getCompetitionApplicationConfigResource().isImSurveyRequired()))) {
+                        log.error(String.format("application-update error: application %d is not an application for a Loans or IM competition", applicationId));
                         return RestResult.restFailure(new Error(CommonFailureKeys.GENERAL_FORBIDDEN));
                     }
 
@@ -114,7 +117,7 @@ public class LoanApplicationController {
                 });
     }
 
-    private RestResult<Void> getQuestion(UserResource user, Long applicationId, SilLoanApplicationStatus silStatus, Long competitionId, Long processRoleId) {
+    private RestResult<Void> getQuestion(UserResource user, Long applicationId, SilApplicationStatus silStatus, Long competitionId, Long processRoleId) {
         return questionService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId, silStatus.getQuestionSetupType()).handleSuccessOrFailure(
                 failure -> {
                         log.error(String.format("application-update error: question not found using application %d", applicationId));
@@ -126,7 +129,7 @@ public class LoanApplicationController {
                 });
     }
 
-    private RestResult<Void> markQuestionStatus(UserResource user, SilLoanApplicationStatus silStatus, QuestionApplicationCompositeId ids, Long processRoleId)  {
+    private RestResult<Void> markQuestionStatus(UserResource user, SilApplicationStatus silStatus, QuestionApplicationCompositeId ids, Long processRoleId)  {
         log.debug(String.format("application-update: application=%d, question=%s, processrole=%d", ids.applicationId, silStatus.getQuestionSetupType() , processRoleId));
         if(silStatus.isStatusComplete()) {
             String questionName = silStatus.getQuestionSetupType().getShortName();
@@ -134,7 +137,7 @@ public class LoanApplicationController {
             String logInfo = String.format("application-update: %s application %d marked complete", questionName, ids.applicationId);
 
             QuestionSetupType questionSetupType = questionService.getQuestionById(ids.questionId).getSuccess().getQuestionSetupType();
-            if (questionSetupType.equals(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION)) {
+            if (questionSetupType.equals(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION) || questionSetupType.equals(IMPACT_MANAGEMENT_SURVEY)) {
                 return questionStatusService.markAsCompleteNoValidate(ids, processRoleId).handleSuccessOrFailure(
                         failure -> {
                             log.error(logError);

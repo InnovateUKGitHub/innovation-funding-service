@@ -116,6 +116,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean hasBusinessAndFinancialInformationQuestion;
     private CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource;
     private boolean enabledForPreRegistration;
+    private CompetitionApplicationConfigResource competitionApplicationConfigResource;
     private CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource;
 
     public CompetitionResource() {
@@ -898,6 +899,14 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.enabledForPreRegistration = enabledForPreRegistration;
     }
 
+    public CompetitionApplicationConfigResource getCompetitionApplicationConfigResource() {
+        return competitionApplicationConfigResource;
+    }
+
+    public void setCompetitionApplicationConfigResource(CompetitionApplicationConfigResource competitionApplicationConfigResource) {
+        this.competitionApplicationConfigResource = competitionApplicationConfigResource;
+    }
+
     public CompetitionEoiEvidenceConfigResource getCompetitionEoiEvidenceConfigResource() {
         return competitionEoiEvidenceConfigResource;
     }
@@ -982,6 +991,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(assessmentPeriods, that.assessmentPeriods)
                 .append(competitionThirdPartyConfigResource, that.competitionThirdPartyConfigResource)
                 .append(enabledForPreRegistration, that.enabledForPreRegistration)
+                .append(competitionApplicationConfigResource, that.competitionApplicationConfigResource)
                 .append(competitionEoiEvidenceConfigResource, that.competitionEoiEvidenceConfigResource)
                 .isEquals();
     }
@@ -1052,6 +1062,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(assessmentPeriods)
                 .append(competitionThirdPartyConfigResource)
                 .append(enabledForPreRegistration)
+                .append(competitionApplicationConfigResource)
                 .append(competitionEoiEvidenceConfigResource)
                 .toHashCode();
     }
@@ -1100,7 +1111,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     @JsonIgnore
     public boolean isApplicationCreatedOrOpenedCompStatusOpen(ApplicationState applicationState) {
-        return (applicationState == ApplicationState.CREATED || applicationState == ApplicationState.OPENED )
+        return (applicationState == ApplicationState.CREATED || applicationState == ApplicationState.OPENED)
                 && !competitionStatus.name().equals("OPEN");
     }
 
