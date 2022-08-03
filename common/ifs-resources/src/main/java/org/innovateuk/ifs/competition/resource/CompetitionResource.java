@@ -1087,7 +1087,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     @JsonIgnore
     public boolean isDirectAward() {
-         return competitionTypeEnum == CompetitionTypeEnum.DIRECT_AWARD;
+        return competitionTypeEnum == CompetitionTypeEnum.DIRECT_AWARD;
     }
 
     @Override
