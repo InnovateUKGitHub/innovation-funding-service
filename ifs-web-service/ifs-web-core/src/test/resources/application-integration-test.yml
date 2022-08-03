@@ -1,0 +1,22 @@
+ifs:
+    data:
+        service:
+            rest:
+                baseURL: ''
+    web:
+        ajp:
+            connections:
+                max:
+                    total: 10
+        googleanalytics:
+            trackingid: ''
+        security:
+            csrf:
+                encryption:
+                    password: a180fb6c-878a-4850-bccc-bd244f4c41c9
+                    salt: 9ea751556a3feee7
+        system:
+            user:
+                uid: ''
+logout:
+    url: ''
