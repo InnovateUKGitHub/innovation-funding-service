@@ -1,0 +1,38 @@
+ifs:
+    edi:
+        update:
+            enabled: true
+    ktp:
+        phase2:
+            enabled: true
+    loan:
+        partb:
+            enabled: true
+    monitoringofficer:
+        journey:
+            update:
+                enabled: true
+        spendprofile:
+            update:
+                enabled: true
+    subsidy:
+        control:
+            gol:
+                enabled: true
+            northern:
+                ireland:
+                    enabled: true
+    thirdparty:
+        ofgem:
+            enabled: true
+server:
+    servlet:
+        context-path: /project-setup-management
+spring:
+    application:
+        name: Project Setup Management Service
+    boot:
+        admin:
+            client:
+                name: IFS Project Setup Management Service
+                service-url: http://project-setup-mgt-svc:8080/project-setup-management

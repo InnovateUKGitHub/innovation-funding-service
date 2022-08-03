@@ -1,0 +1,12 @@
+ifs:
+    data:
+        service:
+            rest:
+                baseURL: http://desnotexist.dummyapi.innovateuk.org
+logout:
+    url: http://desnotexist.innovateuk.org/Logout
+server:
+    servlet:
+        session:
+            cookie:
+                secure: false

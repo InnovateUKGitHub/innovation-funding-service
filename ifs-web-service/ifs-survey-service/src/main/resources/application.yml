@@ -1,0 +1,20 @@
+ifs:
+    survey:
+        data:
+            service:
+                baseURL: http://survey-data-service:8080
+server:
+    servlet:
+        context-path: /survey
+spring:
+    application:
+        name: Survey Service
+    boot:
+        admin:
+            client:
+                service-url: http://survey-svc:8080/survey
+    jpa:
+        properties:
+            hibernate:
+                temp:
+                    use_jdbc_metadata_defaults: false

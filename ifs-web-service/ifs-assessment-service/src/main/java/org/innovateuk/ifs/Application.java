@@ -9,7 +9,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.PropertySource;
 
 @Slf4j
-@PropertySource(value = {"classpath:application.properties", "classpath:/application-web-core.properties"})
+@PropertySource(value = {"classpath:application.yml", "classpath:/application-web-core.properties"})
 @SpringBootApplication
 @EnableAspectJAutoProxy(proxyTargetClass=true)
 public class Application extends SpringBootServletInitializer {

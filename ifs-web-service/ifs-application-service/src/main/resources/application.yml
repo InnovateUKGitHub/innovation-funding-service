@@ -1,0 +1,49 @@
+ifs:
+    early:
+        metrics:
+            url: http://localhost/early-metrics
+    edi:
+        salesforce:
+            page:
+                url: https://loans-innovateuk.cs80.force.com/EDI/s
+        update:
+            enabled: true
+    forminputresponse:
+        max:
+            filesize:
+                bytes: 33554432
+    ktp:
+        phase2:
+            enabled: true
+    loan:
+        partb:
+            enabled: true
+    loans:
+        salesforce:
+            page:
+                url: https://loans-innovateuk.cs80.force.com/loansCommunity/s
+    new:
+        organisation:
+            search:
+                enabled: true
+    subsidy:
+        control:
+            northern:
+                ireland:
+                    enabled: true
+    thirdparty:
+        ofgem:
+            enabled: true
+    web:
+        virtualAssistant:
+            botId: bot_id-dev
+            botSecret: 123456
+            tokenExchangeUrl: https://webchat.botframework.com/api/tokens
+spring:
+    application:
+        name: Application Service
+    boot:
+        admin:
+            client:
+                name: IFS Application Service
+                service-url: http://application-svc:8080

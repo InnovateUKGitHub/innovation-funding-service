@@ -61,7 +61,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-@TestPropertySource(locations = { "classpath:application.properties", "classpath:/application-web-core.properties"} )
+@TestPropertySource(locations = { "classpath:application.yml", "classpath:/application-web-core.properties"} )
 public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<AssessorDashboardController> {
 
     @Spy
