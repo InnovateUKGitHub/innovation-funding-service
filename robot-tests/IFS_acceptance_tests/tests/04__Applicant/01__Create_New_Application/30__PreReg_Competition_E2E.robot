@@ -16,6 +16,9 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...               IFS-12265 Applicant dashboard: Unsuccessful pre-reg/EOI status update
 ...
 ...               IFS-12177 Pre-reg/EOI next stage decision - input
+...
+...               IFS-12521 Pre-registration - full application creation (cloning)
+...
 
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -149,6 +152,14 @@ Internal user is able to see Write and email button enabled
     And User should see EOI Related content
     And the user selects the checkbox           app-row-${preregApplicationID}
     And The user should not see the element     css = .govuk-button[disabled]
+
+Internal user send funding decision email for successful application
+     When the user clicks the button/link                     jQuery = button:contains("Write and send email")
+     Then the user should see the element                     jQuery = h1:contains("Send decision notification")
+     Then the user enters text to a text field                css=.editor  ${preRegApplicationSuccessfulEmail}
+     And the user clicks the button/link                      jQuery = button:contains("Send notification")[data-js-modal = "send-to-all-applicants-modal"]
+     Then the user clicks the button/link                     jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
+     the user refreshes until element appears on page         jQuery = td:contains("${hecpPreregAppName}") ~ td:contains("Sent") ~ td:contains("${today}")
 
 #Lead applicant views unsuccessful applications in previous dashboard
 #    [Documentation]  IFS-12265
