@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@TestPropertySource(locations = { "classpath:application.yml", "classpath:/application-web-core.properties"})
+@TestPropertySource(locations = { "classpath:application.yml", "classpath:/application-web-core.yml"})
 public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVCTest<ApplicantDashboardController> {
 
     @Override

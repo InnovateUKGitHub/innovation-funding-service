@@ -13,7 +13,7 @@ import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @Slf4j
-@PropertySource(value = {"classpath:application.yml", "classpath:/application-web-core.properties"})
+@PropertySource(value = {"classpath:application.yml", "classpath:/application-web-core.yml"})
 @SpringBootApplication
 @EnableAspectJAutoProxy(proxyTargetClass=true)
 @EnableAsync

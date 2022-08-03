@@ -58,4 +58,9 @@ public class IfsProfileConstants {
     public static final String NOT_LOCAL_STORAGE = "!" + LOCAL_STORAGE;
     public static final String S3_STORAGE = "S3_STORAGE";
 
+    /**
+     * Web-core - just means the config from application-web-core.yml is pulled in
+     */
+    public static final String WEB_CORE = "web-core";
+
 }
