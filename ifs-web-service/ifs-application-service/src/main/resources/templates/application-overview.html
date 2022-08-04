@@ -71,6 +71,15 @@
                 <div th:include="fragments/elements :: progress-indicator"
                      th:with="percentage=${model.application.completion.intValue()},size='medium'" class="govuk-!-margin-top-6"/>
             </div>
+            <div class="govuk-grid-column-one-half">
+                <ul class="govuk-list govuk-list--bullet">
+                    <li th:if="${model.application.isEoiFullApplication()}">
+                        <a th:href="${'/application/' + model.application.eoiApplicationId() + '/summary'}" class="govuk-link">
+                            Expression of interest
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="post" class="application-overview">
