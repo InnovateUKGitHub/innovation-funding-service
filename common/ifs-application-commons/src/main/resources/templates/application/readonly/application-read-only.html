@@ -79,16 +79,18 @@
                                 <th:block th:unless="${section.termsAndConditions && model.thirdPartyProcurement}"
                                           th:text="${question.name}"></th:block>
                             </span>
-                            <th:block th:if="${model.settings.includeAllAssessorFeedback}">
-                                <th:block th:if="${question.fragment == 'generic'}" th:insert="application/readonly/score-overview :: generic (${question}, ${model.settings.assessmentId}, )"/>
-                            </th:block>
-                            <th:block th:if="${model.settings.includeStatuses}">
-                                <div th:if="${question.isComplete() and question.displayCompleteStatus}" class="section-status section-complete">Complete</div>
-                                <div th:unless="${question.isComplete()}" class="section-status section-incomplete">Incomplete</div>
-                            </th:block>
-                            <th:block th:if="${model.isEoiFullApplication() && question.isEnabledForPreRegistration()}">
-                                <div class="section-status section-awaiting">Expression of interest</div>
-                            </th:block>
+                            <span class="govuk-width-container">
+                                <th:block th:if="${model.settings.includeAllAssessorFeedback}">
+                                    <th:block th:if="${question.fragment == 'generic'}" th:insert="application/readonly/score-overview :: generic (${question}, ${model.settings.assessmentId}, )"/>
+                                </th:block>
+                                <th:block th:if="${model.settings.includeStatuses}">
+                                    <div th:if="${question.isComplete() and question.displayCompleteStatus}" class="section-status section-complete">Complete</div>
+                                    <div th:unless="${question.isComplete()}" class="section-status section-incomplete">Incomplete</div>
+                                </th:block>
+                                <th:block th:if="${model.isEoiFullApplication() && question.isEnabledForPreRegistration()}">
+                                    <div class="section-status section-awaiting govuk-!-width-one-third">Expression of interest</div>
+                                </th:block>
+                            </span>
                         </h2>
                     </div>
                     <div th:id="|accordion-questions-content-${sectionIter.count}-${questionIter.count}|" class="govuk-accordion__section-content" th:aria-labelledby="|accordion-questions-heading-${sectionIter.count}-${questionIter.count}|">
