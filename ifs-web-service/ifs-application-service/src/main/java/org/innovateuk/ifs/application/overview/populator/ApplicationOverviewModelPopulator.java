@@ -124,7 +124,8 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                                     childSection.getName(),
                                     format("/application/%d/form/section/%d", data.getApplication().getId(), childSection.getId()),
                                     data.getCompletedSectionIds().contains(childSection.getId()),
-                                    true
+                                    true,
+                                    childSection.isEnabledForPreRegistration()
                             )
                     )
                     .collect(toCollection(LinkedHashSet::new));
@@ -205,13 +206,15 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                                 getRowUrlFromQuestion(question, data),
                                 complete,
                                 avm,
-                                showStatus)
+                                showStatus,
+                                question.isEnabledForPreRegistration())
                 ).orElse(
                         new ApplicationOverviewRowViewModel(
                                 getQuestionTitle(question, data.getCompetition()),
                                 getRowUrlFromQuestion(question, data),
                                 complete,
-                                showStatus)
+                                showStatus,
+                                question.isEnabledForPreRegistration())
                 );
     }
 

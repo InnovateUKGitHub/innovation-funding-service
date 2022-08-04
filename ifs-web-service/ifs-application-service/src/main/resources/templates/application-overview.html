@@ -89,6 +89,11 @@
 
                                 </h3>
                             </div>
+                            <th:block th:if="${model.application.isEoiFullApplication() && row.isEnabledForPreRegistration()}">
+                                <div class="status secondary-notification">
+                                    <span class="status-msg msg-deadline-waiting govuk-!-font-weight-bold">Expression of interest</span>
+                                </div>
+                            </th:block>
                             <th:block th:unless="${row.complete}">
                                 <!-- /* Assigned to */-->
                                 <div th:if="${row.assignable}"

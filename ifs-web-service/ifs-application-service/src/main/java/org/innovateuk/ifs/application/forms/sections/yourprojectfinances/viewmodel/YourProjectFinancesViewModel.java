@@ -16,12 +16,13 @@ public class YourProjectFinancesViewModel implements BaseAnalyticsViewModel {
     private final boolean fullyFunded;
     private final boolean ktp;
     private final boolean isThirdPartyOfgem;
-
     private FinanceSummaryTableViewModel financeSummaryTableViewModel;
-
     private final List<YourFinancesRowViewModel> rows;
+    private boolean eoiFullApplication;
 
-    public YourProjectFinancesViewModel(long applicationId, String applicationName, CompetitionResource competition, FinanceSummaryTableViewModel financeSummaryTableViewModel, List<YourFinancesRowViewModel> rows, boolean isThirdPartyOfgem) {
+    public YourProjectFinancesViewModel(long applicationId, String applicationName, CompetitionResource competition,
+                                        FinanceSummaryTableViewModel financeSummaryTableViewModel, List<YourFinancesRowViewModel> rows,
+                                        boolean isThirdPartyOfgem, boolean eoiFullApplication) {
         this.applicationId = applicationId;
         this.competitionName = competition.getName();
         this.applicationName = applicationName;
@@ -32,6 +33,7 @@ public class YourProjectFinancesViewModel implements BaseAnalyticsViewModel {
         this.financeSummaryTableViewModel = financeSummaryTableViewModel;
         this.rows = rows;
         this.isThirdPartyOfgem = isThirdPartyOfgem;
+        this.eoiFullApplication = eoiFullApplication;
     }
 
     @Override
@@ -74,5 +76,9 @@ public class YourProjectFinancesViewModel implements BaseAnalyticsViewModel {
 
     public boolean isThirdPartyOfgem() {
         return isThirdPartyOfgem;
+    }
+
+    public boolean isEoiFullApplication() {
+        return eoiFullApplication;
     }
 }

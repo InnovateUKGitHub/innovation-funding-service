@@ -43,6 +43,11 @@
                                    th:text="${row.title}" class="govuk-link"></a>
                             </h3>
                         </div>
+                        <th:block th:if="${model.isEoiFullApplication() && row.isEnabledForPreRegistration()}">
+                            <div class="status secondary-notification">
+                                <span class="status-msg msg-deadline-waiting govuk-!-font-weight-bold">Expression of interest</span>
+                            </div>
+                        </th:block>
                         <div th:if="${row.complete}"
                              class="task-status-complete"><span>Complete</span></div>
                         <div th:unless="${row.complete}"
