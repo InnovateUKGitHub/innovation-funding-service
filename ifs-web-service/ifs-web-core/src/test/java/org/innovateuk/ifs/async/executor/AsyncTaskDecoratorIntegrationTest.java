@@ -6,31 +6,22 @@ import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
 import org.innovateuk.ifs.async.util.AsyncAllowedThreadLocal;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.range;
-import static org.innovateuk.ifs.IfsProfileConstants.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 import static org.junit.Assert.*;
@@ -41,23 +32,10 @@ import static org.mockito.Mockito.mock;
  * blocks of code.  The main job of the {@link AsyncTaskDecorator} is to transfer important ThreadLocals from a Thread
  * to any child Threads that it initiates via @Async code block execution.
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles({INTEGRATION_TEST, SIMPLE_CACHE, WEB_CORE})
-public class AsyncTaskDecoratorIntegrationTest {
+public class AsyncTaskDecoratorIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private AsyncExecutionTestHelper helper;
-
-    @Autowired
-    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
-
-    @PostConstruct
-    public void init() {
-        // Test requires a pool size of 10
-        threadPoolTaskExecutor.setCorePoolSize(10);
-        threadPoolTaskExecutor.setMaxPoolSize(10);
-    }
 
     /**
      * This test case asserts that the ThreadLocal value of {@link SecurityContext} is transferred from the top-level

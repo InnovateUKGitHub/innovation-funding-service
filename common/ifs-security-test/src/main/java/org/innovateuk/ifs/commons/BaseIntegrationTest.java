@@ -19,7 +19,7 @@ import static org.innovateuk.ifs.IfsProfileConstants.*;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles({INTEGRATION_TEST, SIMPLE_CACHE, WEB_CORE})
+@ActiveProfiles({INTEGRATION_TEST, SIMPLE_CACHE})
 public abstract class BaseIntegrationTest extends BaseTest {
 
     /**

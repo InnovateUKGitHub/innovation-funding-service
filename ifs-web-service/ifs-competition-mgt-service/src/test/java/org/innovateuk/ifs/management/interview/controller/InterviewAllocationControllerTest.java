@@ -65,7 +65,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-@TestPropertySource(locations = { "classpath:application.yml", "classpath:/application-web-core.yml"} )
+@TestPropertySource(locations = { "classpath:application.yml", "classpath:/application-web-core.properties"} )
 public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest<InterviewAllocationController> {
 
     @Spy

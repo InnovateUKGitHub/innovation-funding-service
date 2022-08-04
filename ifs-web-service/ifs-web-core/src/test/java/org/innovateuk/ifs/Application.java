@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @Slf4j
 @SpringBootApplication
-@PropertySource(value = {"classpath:application-web-core.yml"})
+@PropertySource(value = {"classpath:application-web-core.properties"})
 @EnableAspectJAutoProxy(proxyTargetClass=true)
 @EnableAsync
 public class Application extends SpringBootServletInitializer {

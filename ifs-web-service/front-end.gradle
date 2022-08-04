@@ -12,6 +12,22 @@ gulp_default.dependsOn 'installGulp'
 
 processResources.dependsOn gulp_default
 
+processResources {
+    if(!project.hasProperty("skipExpansion")) {
+        filesMatching("*.properties") {
+            expand project.properties
+        }
+    }
+}
+
+processTestResources {
+    if(!project.hasProperty("skipExpansion")) {
+        filesMatching("*.properties") {
+            expand project.properties
+        }
+    }
+}
+
 // javascript unit testing
 task testUnit(type: NpmTask) {
     args = ['run', 'test']
