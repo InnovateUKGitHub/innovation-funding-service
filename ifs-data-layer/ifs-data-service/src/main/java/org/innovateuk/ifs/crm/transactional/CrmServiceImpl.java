@@ -22,6 +22,7 @@ import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
@@ -303,23 +304,29 @@ public class CrmServiceImpl implements CrmService {
 
     private String getExperienceType(String fundingType, Long competitionId) {
         if (competitionId != null) {
-            boolean imSurveyRequired = competitionService.getCompetitionById(competitionId).getSuccess().getCompetitionApplicationConfigResource().isImSurveyRequired();
-            if (fundingType.equals(LOAN) && imSurveyRequired) {
-                return LOAN_IMPACT_MANAGEMENT;
-            } else if (fundingType.equals(LOAN)) {
-                return LOAN;
-            } else if (imSurveyRequired) {
-                return IMPACT_MANAGEMENT;
-            } else {
-                return null;
+            boolean imSurveyRequired = getImSurveyRequired(competitionId);
+                if (fundingType.equals(LOAN) && imSurveyRequired) {
+                    return LOAN_IMPACT_MANAGEMENT;
+                } else if (fundingType.equals(LOAN)) {
+                    return LOAN;
+                } else if (imSurveyRequired) {
+                    return IMPACT_MANAGEMENT;
+                } else {
+                    return null;
+                }
             }
-        }
         return null;
+    }
+
+    private Boolean getImSurveyRequired(Long competitionId) {
+        return Optional.ofNullable(competitionService.getCompetitionById(competitionId).getSuccess().getCompetitionApplicationConfigResource())
+                .map(CompetitionApplicationConfigResource::isImSurveyRequired)
+                .orElse(false);
     }
 
     private String getAppID(String fundingType, Long competitionId, Long applicationId) {
         if (competitionId != null) {
-            boolean imSurveyRequired = competitionService.getCompetitionById(competitionId).getSuccess().getCompetitionApplicationConfigResource().isImSurveyRequired();
+            boolean imSurveyRequired = getImSurveyRequired(competitionId);
             if (fundingType.equals("Loan") || imSurveyRequired) {
                 return String.valueOf(applicationId);
             }

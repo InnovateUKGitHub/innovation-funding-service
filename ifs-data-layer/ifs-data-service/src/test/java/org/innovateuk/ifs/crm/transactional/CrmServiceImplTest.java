@@ -493,7 +493,6 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         CompetitionResource competitionResource = newCompetitionResource()
                 .withId(competitionId)
                 .withFundingType(FundingType.GRANT)
-                .withCompetitionApplicationConfig()
                 .withCompetitionApplicationConfig(competitionApplicationConfigResource)
                 .build();
 
@@ -548,7 +547,6 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         CompetitionResource competitionResource = newCompetitionResource()
                 .withId(competitionId)
                 .withFundingType(FundingType.LOAN)
-                .withCompetitionApplicationConfig()
                 .withCompetitionApplicationConfig(competitionApplicationConfigResource)
                 .build();
 
@@ -586,6 +584,58 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
 
         List<ILoggingEvent> eventList = memoryAppender.search("Payload", Level.INFO);
         assertEquals(expectedLogMessage, eventList.get(0).getMessage());
+    }
+
+    @Test
+    public void syncExternalCrmContactWithNullCompetitionApplicationConfigResourceIdShouldNotHaveAttributes() {
+
+        String expectedLogMessage = "Updating CRM contact test@innovate.com and organisation Organisation1 \n" +
+                "Payload is:SilContact(ifsUuid=17a0e34c-719a-4db4-b011-ccd4c375ad79, experienceType=null, ifsAppID=null, email=test@innovate.com, lastName=Doe, firstName=Jon, title=null, jobTitle=null, address=null, organisation=SilOrganisation(name=Organisation1, registrationNumber=Something, registeredAddress=SilAddress(buildingName=Line1, street=Line2, Line3, locality=County, town=Town, postcode=Postcode, country=Country), srcSysOrgId=33), sourceSystem=IFS, srcSysContactId=1, phoneNumber=888888888888) ";
+
+        long userId = 1L;
+        long applicationId = 3L;
+        long competitionId = 4L;
+
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withId(competitionId)
+                .withFundingType(FundingType.GRANT)
+                .build();
+
+        AddressType addressType = newAddressType()
+                .withId(OrganisationAddressType.REGISTERED.getId())
+                .withName(OrganisationAddressType.REGISTERED.name())
+                .build();
+
+        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource()
+                .withAddress(newAddressResource()
+                        .withAddressLine1("Line1")
+                        .withAddressLine2("Line2")
+                        .withAddressLine3("Line3")
+                        .withCounty("County")
+                        .withTown("Town")
+                        .withCountry("Country")
+                        .withPostcode("Postcode").build())
+                .withAddressType(newAddressTypeResource()
+                        .withId(OrganisationAddressType.REGISTERED.getId())
+                        .withName(OrganisationAddressType.REGISTERED.name()).build())
+                .build();
+        organisations.get(0).setAddresses(singletonList(organisationAddressResource));
+
+        when(organisationService.getAllByUserId(userId)).thenReturn(serviceSuccess(singletonList(organisations.get(0))));
+        when(organisationAddressService.findByOrganisationIdAndAddressType(organisations.get(0).getId(), addressType))
+                .thenReturn(serviceSuccess(singletonList(organisationAddressResource)));
+        when(silCrmEndpoint.updateContact(any(SilContact.class))).thenReturn(serviceSuccess());
+        when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competitionResource));
+
+        ReflectionTestUtils.setField(service, "newOrganisationSearchEnabled", true);
+        ServiceResult<Void> result = service.syncCrmContact(userId, competitionId, applicationId);
+        assertThat(result.isSuccess(), equalTo(true));
+
+        verify(silCrmEndpoint).updateContact(LambdaMatcher.createLambdaMatcher(matchExternalSilContactWithOrganisationUpdates(user, organisations.get(0))));
+
+        List<ILoggingEvent> eventList = memoryAppender.search("Payload", Level.INFO);
+        assertEquals(expectedLogMessage, eventList.get(0).getMessage());
+
     }
 
 
@@ -933,5 +983,6 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         assertThat(result.isFailure(), equalTo(true));
 
     }
+
 
 }
