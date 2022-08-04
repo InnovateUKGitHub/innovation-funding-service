@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.testdata.builders.AcademicCostDataBuilder.newAcademicCostData;
@@ -109,6 +110,12 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
                         .getSuccess();
 
                 List<QuestionResource> questionsToComplete = simpleFilter(questions, QuestionResource::hasMultipleStatuses);
+
+                if (data.getCompetition().isEnabledForPreRegistration() && data.getApplication().isEnabledForExpressionOfInterest()) {
+                    questionsToComplete = questionsToComplete.stream()
+                            .filter(questionResource -> questionResource.isEnabledForPreRegistration())
+                            .collect(Collectors.toList());
+                }
 
                 forEachWithIndex(questionsToComplete, (i, q) -> {
                     QuestionApplicationCompositeId questionKey = new QuestionApplicationCompositeId(q.getId(), data.getApplication().getId());

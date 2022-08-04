@@ -88,7 +88,15 @@ public class CompetitionPreRegistrationWebTestData {
                 aPreRegistrationSectionLine()
                         .withCompetitionName("Horizon Europe Guarantee Pre Registration Competition with EOI Decision")
                         .withSectionName("Application questions")
-                        .withQuestionName("How much budget is allocated for PhD students employed at your institution on this project?")
+                        .withQuestionName("How much budget is allocated for PhD students employed at your institution on this project?"),
+                aPreRegistrationSectionLine()
+                        .withCompetitionName("Horizon Europe Guarantee Pre Registration Competition with EOI Decision")
+                        .withSectionName("Project details")
+                        .withQuestionName("Work programme question for Horizon competitions."),
+                aPreRegistrationSectionLine()
+                        .withCompetitionName("Horizon Europe Guarantee Pre Registration Competition with EOI Decision")
+                        .withSectionName("Project details")
+                        .withQuestionName("Horizon Europe Guarantee grant agreement")
                 )
                 .stream()
                 .collect(Collectors.toList());
