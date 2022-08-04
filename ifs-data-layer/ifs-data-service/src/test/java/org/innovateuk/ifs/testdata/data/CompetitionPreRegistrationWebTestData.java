@@ -92,7 +92,7 @@ public class CompetitionPreRegistrationWebTestData {
                 aPreRegistrationSectionLine()
                         .withCompetitionName("Horizon Europe Guarantee Pre Registration Competition with EOI Decision")
                         .withSectionName("Project details")
-                        .withQuestionName("Work programme question for Horizon competitions."),
+                        .withQuestionName("Work programme"),
                 aPreRegistrationSectionLine()
                         .withCompetitionName("Horizon Europe Guarantee Pre Registration Competition with EOI Decision")
                         .withSectionName("Project details")
