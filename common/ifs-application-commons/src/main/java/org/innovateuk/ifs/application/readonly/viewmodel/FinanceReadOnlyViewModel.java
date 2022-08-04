@@ -20,13 +20,15 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
     private final boolean ktpCompetition;
     private final boolean procurementMilestones;
     private final boolean hecpCompetition;
+    private final boolean sectionEnabledForPreRegistration;
 
     public FinanceReadOnlyViewModel(long applicationId, boolean fullyFunded, long financeSectionId,
                                     ApplicationProcurementMilestonesSummaryViewModel applicationProcurementMilestonesSummaryViewModel,
                                     ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel,
                                     ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel,
                                     ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
-                                    boolean collaborativeProject, boolean ktpCompetition, boolean procurementMilestones, boolean hecpCompetition) {
+                                    boolean collaborativeProject, boolean ktpCompetition, boolean procurementMilestones,
+                                    boolean hecpCompetition, boolean sectionEnabledForPreRegistration) {
         this.applicationId = applicationId;
         this.fullyFunded = fullyFunded;
         this.financeSectionId = financeSectionId;
@@ -39,6 +41,7 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
         this.ktpCompetition = ktpCompetition;
         this.procurementMilestones = procurementMilestones;
         this.hecpCompetition = hecpCompetition;
+        this.sectionEnabledForPreRegistration = sectionEnabledForPreRegistration;
     }
 
     @Override
@@ -123,5 +126,10 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
     @Override
     public boolean isLead() {
         return false; // not required
+    }
+
+    @Override
+    public boolean isEnabledForPreRegistration() {
+        return sectionEnabledForPreRegistration;
     }
 }

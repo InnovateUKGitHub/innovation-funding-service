@@ -21,6 +21,7 @@ public class ApplicationReadOnlyViewModel {
     private final CompetitionThirdPartyConfigResource thirdPartyConfig;
     private final boolean isLoanPartBEnabled;
     private final boolean isExpressionOfInterestApplication;
+    private boolean eoiFullApplication;
 
     public ApplicationReadOnlyViewModel(ApplicationReadOnlySettings settings,
                                         Set<ApplicationSectionReadOnlyViewModel> sections,
@@ -32,7 +33,8 @@ public class ApplicationReadOnlyViewModel {
                                         boolean thirdPartyProcurement,
                                         CompetitionThirdPartyConfigResource thirdPartyConfig,
                                         boolean isLoanPartBEnabled,
-                                        boolean isExpressionOfInterestApplication) {
+                                        boolean isExpressionOfInterestApplication,
+                                        boolean eoiFullApplication) {
         this.settings = settings;
         this.sections = sections;
         this.applicationScore = applicationScore;
@@ -44,6 +46,7 @@ public class ApplicationReadOnlyViewModel {
         this.thirdPartyConfig = thirdPartyConfig;
         this.isLoanPartBEnabled = isLoanPartBEnabled;
         this.isExpressionOfInterestApplication = isExpressionOfInterestApplication;
+        this.eoiFullApplication = eoiFullApplication;
     }
 
     public List<String> getOverallFeedbacks() {
@@ -106,5 +109,9 @@ public class ApplicationReadOnlyViewModel {
 
     public boolean isExpressionOfInterestApplication() {
         return isExpressionOfInterestApplication;
+    }
+
+    public boolean isEoiFullApplication() {
+        return eoiFullApplication;
     }
 }
