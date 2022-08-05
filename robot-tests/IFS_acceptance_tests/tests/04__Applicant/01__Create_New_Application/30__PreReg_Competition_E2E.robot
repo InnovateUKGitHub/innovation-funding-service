@@ -161,6 +161,12 @@ Internal user send funding decision email for successful application
      Then the user clicks the button/link                     jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
      the user refreshes until element appears on page         jQuery = td:contains("${hecpPreregAppName}") ~ td:contains("Sent")
 
+Lead applicant can see pre-registration application in Application in progress and Previous sections
+     Given log in as a different user        &{lead_applicant_credentials}
+     When the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
+     Then the user should see the element   jQuery = .in-progress li:contains("${hecpPreregAppName}") .status:contains("% complete")
+     And the user should see the element   jQuery = .previous li:contains("${hecpPreregAppName}") .msg-progress:contains("Successful")
+
 #Lead applicant views unsuccessful applications in previous dashboard
 #    [Documentation]  IFS-12265
 #    Given log in as a different user                                              &{lead_applicant_credentials}
