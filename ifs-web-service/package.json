@@ -9,7 +9,7 @@
     "html5shiv": "^3.7.3",
     "http-proxy-agent": "^2.1.0",
     "jquery": "^1.12.4",
-    "jquery-ui": "^1.12.1",
+    "jquery-ui": "^1.13.2",
     "js-cookie": "^2.2.0",
     "jshint-stylish": "^2.2.1",
     "resolve": "^1.7.1",
