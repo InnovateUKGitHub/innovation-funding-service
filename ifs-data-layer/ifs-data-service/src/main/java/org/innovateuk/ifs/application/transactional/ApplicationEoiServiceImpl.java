@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationExpressionOfInterestConfig;
 import org.innovateuk.ifs.application.domain.ApplicationProcess;
@@ -34,10 +35,9 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
+@Slf4j
 @Service
 public class ApplicationEoiServiceImpl implements ApplicationEoiService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ApplicationEoiServiceImpl.class);
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -137,13 +137,13 @@ public class ApplicationEoiServiceImpl implements ApplicationEoiService {
         ApplicationProcess process = new ApplicationProcess(application, null, ApplicationState.OPENED);
         applicationProcessRepository.save(process);
 
-        LOG.debug("Added application process for application : " + application.getId());
+        log.debug("Added application process for application : " + application.getId());
     }
 
     private void updateApplicationProgress(Application application) {
         applicationProgressService.updateApplicationProgress(application.getId());
 
-        LOG.debug("Recalculated progress for updated application : " + application.getId());
+        log.debug("Recalculated progress for updated application : " + application.getId());
     }
 
     private void populateQuestionStatus(Application application, Application migratedApplication) {
@@ -155,7 +155,7 @@ public class ApplicationEoiServiceImpl implements ApplicationEoiService {
                     questionStatusRepository.save(questionStatus);
                 });
 
-        LOG.debug("Populate question status for application : " + application.getId());
+        log.debug("Populate question status for application : " + application.getId());
     }
 
     private void populateformInputResponse(Application application, Application migratedApplication) {
@@ -182,7 +182,7 @@ public class ApplicationEoiServiceImpl implements ApplicationEoiService {
                     formInputResponseRepository.save(formInputResponse);
                 });
 
-        LOG.debug("Populate form input response for application : " + application.getId());
+        log.debug("Populate form input response for application : " + application.getId());
     }
 
     private void populateProcessRole(Application application, Application migratedApplication) {
@@ -194,7 +194,7 @@ public class ApplicationEoiServiceImpl implements ApplicationEoiService {
                     processRoleRepository.save(processRole);
                 });
 
-        LOG.debug("Populate process role for application : " + application.getId());
+        log.debug("Populate process role for application : " + application.getId());
     }
 
     private void populateEuGrantTransfer(Application application, Application migratedApplication) {
@@ -215,7 +215,7 @@ public class ApplicationEoiServiceImpl implements ApplicationEoiService {
                     }
                 });
 
-        LOG.debug("Populate eu grant transfer for application : " + application.getId());
+        log.debug("Populate eu grant transfer for application : " + application.getId());
     }
 
     private void populateAverageAssessorScore(Application application, Application migratedApplication) {
@@ -227,7 +227,7 @@ public class ApplicationEoiServiceImpl implements ApplicationEoiService {
                     averageAssessorScoreRepository.save(averageAssessorScore);
                 });
 
-        LOG.debug("Populate average assessor score for application : " + application.getId());
+        log.debug("Populate average assessor score for application : " + application.getId());
     }
 
     private void populateApplicationOrganisationAddress(Application application, Application migratedApplication) {
@@ -239,7 +239,7 @@ public class ApplicationEoiServiceImpl implements ApplicationEoiService {
                     applicationOrganisationAddressRepository.save(applicationOrganisationAddress);
                 });
 
-        LOG.debug("Populate application organisation address for application : " + application.getId());
+        log.debug("Populate application organisation address for application : " + application.getId());
     }
 
     private void populateApplicationFinance(Application application, Application migratedApplication) {
@@ -267,7 +267,7 @@ public class ApplicationEoiServiceImpl implements ApplicationEoiService {
                             });
                 });
 
-        LOG.debug("Populate application finance for application : " + application.getId());
+        log.debug("Populate application finance for application : " + application.getId());
     }
 
     private void populateApplicationHorizonWorkProgramme(Application application, Application migratedApplication) {
@@ -280,7 +280,7 @@ public class ApplicationEoiServiceImpl implements ApplicationEoiService {
                         applicationHorizonWorkProgrammeRepository.save(applicationHorizonWorkProgramme);
                     });
 
-            LOG.debug("Populate Horizon Work Programme for application : " + application.getId());
+            log.debug("Populate Horizon Work Programme for application : " + application.getId());
         }
     }
 
@@ -298,7 +298,7 @@ public class ApplicationEoiServiceImpl implements ApplicationEoiService {
                         application.setApplicationExpressionOfInterestConfig(fullApplicationExpressionOfInterestConfig);
                     });
 
-            LOG.debug("Populate application expression of interest config for application : " + application.getId());
+            log.debug("Populate application expression of interest config for application : " + application.getId());
         }
     }
 
@@ -311,6 +311,6 @@ public class ApplicationEoiServiceImpl implements ApplicationEoiService {
         application.setFeedbackReleased(null);
         applicationRepository.save(application);
 
-        LOG.debug("Populate additional details for application : " + application.getId());
+        log.debug("Populate additional details for application : " + application.getId());
     }
 }
