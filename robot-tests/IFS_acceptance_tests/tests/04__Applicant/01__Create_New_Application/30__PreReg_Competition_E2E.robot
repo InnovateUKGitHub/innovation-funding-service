@@ -159,7 +159,7 @@ Internal user send funding decision email for successful application
      Then the user enters text to a text field                css=.editor  ${preRegApplicationSuccessfulEmail}
      And the user clicks the button/link                      jQuery = button:contains("Send notification")[data-js-modal = "send-to-all-applicants-modal"]
      Then the user clicks the button/link                     jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
-     the user refreshes until element appears on page         jQuery = td:contains("${hecpPreregAppName}") ~ td:contains("Sent") ~ td:contains("${today}")
+     the user refreshes until element appears on page         jQuery = td:contains("${hecpPreregAppName}") ~ td:contains("Sent")
 
 #Lead applicant views unsuccessful applications in previous dashboard
 #    [Documentation]  IFS-12265
