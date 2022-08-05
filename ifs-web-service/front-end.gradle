@@ -38,7 +38,7 @@ test.dependsOn testUnit
 
 node {
     // Version of node to use.
-    version = '16.16.0'
+    version = '17.9.1'
 
     // Version of npm to use.
     npmVersion = '8.16.0'
