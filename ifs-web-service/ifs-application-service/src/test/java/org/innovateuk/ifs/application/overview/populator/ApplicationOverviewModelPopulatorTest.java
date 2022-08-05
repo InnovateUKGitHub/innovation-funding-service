@@ -297,6 +297,7 @@ public class ApplicationOverviewModelPopulatorTest {
         assertNull(sectionWithQuestions.getSubTitle());
         assertEquals((long) sections.get(0).getId(), sectionWithQuestions.getId());
         assertEquals(1, sectionWithQuestions.getRows().size());
+        assertTrue(sections.get(0).isEnabledForPreRegistration());
 
         ApplicationOverviewRowViewModel questionRow = sectionWithQuestions.getRows().iterator().next();
         assertEquals("4. A question", questionRow.getTitle());
@@ -304,6 +305,7 @@ public class ApplicationOverviewModelPopulatorTest {
         assertEquals(false, questionRow.isComplete());
         assertEquals(processRoles.get(1), questionRow.getAssignButtonsViewModel().get().getAssignee());
         assertEquals(processRoles, questionRow.getAssignButtonsViewModel().get().getAssignableApplicants());
+        assertTrue(questionRow.isEnabledForPreRegistration());
 
         ApplicationOverviewSectionViewModel sectionWithChildSections = sectionIterator.next();
         assertEquals("Finances", sectionWithChildSections.getTitle());
@@ -315,11 +317,13 @@ public class ApplicationOverviewModelPopulatorTest {
         assertEquals(String.format("/application/%d/form/section/%d", application.getId(), childSection.getId()), childSectionRow.getUrl());
         assertEquals(true, childSectionRow.isComplete());
         assertFalse(childSectionRow.getAssignButtonsViewModel().isPresent());
+        assertTrue(childSectionRow.isEnabledForPreRegistration());
 
         ApplicationOverviewSectionViewModel projectDetailsSection = sectionIterator.next();
         assertEquals("Project details", projectDetailsSection.getTitle());
         assertEquals("Project details description", projectDetailsSection.getSubTitle());
         assertEquals((long) sections.get(2).getId(), projectDetailsSection.getId());
+        assertTrue(sections.get(2).isEnabledForPreRegistration());
 
         ApplicationOverviewSectionViewModel termsAndConditionsSection = sectionIterator.next();
         assertEquals("Terms and conditions", termsAndConditionsSection.getTitle());
