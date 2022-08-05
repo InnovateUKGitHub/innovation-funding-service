@@ -29,7 +29,7 @@
     "lodash": "^4.17.21"
   },
   "engines": {
-    "node": "^16.16.0"
+    "node": "^14.20.0"
   },
   "standard": {
     "globals": [
