@@ -8,7 +8,7 @@
   }
 
   &.cell-error {
-    @extend td.cell-error;
+    @extend td, .cell-error;
 
     input {
       color:#fff;

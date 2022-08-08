@@ -26,7 +26,8 @@
     "gulp-standard": "^14.0.0",
     "gulp-uglify": "^3.0.0",
     "jest": "^26.6.3",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "sass": "^1.54.3"
   },
   "engines": {
     "node": "^14.20.0"
