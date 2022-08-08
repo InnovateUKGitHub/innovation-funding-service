@@ -17,7 +17,8 @@
     "tablesorter": "^2.31.1"
   },
   "devDependencies": {
-    "eslint": "^4.19.1",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint": "^8.21.0",
     "gulp": "^4.0.2",
     "gulp-concat": "^2.6.1",
     "gulp-replace": "^1.0.0",
