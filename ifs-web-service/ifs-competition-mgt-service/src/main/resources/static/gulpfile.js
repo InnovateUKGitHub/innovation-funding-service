@@ -13,7 +13,7 @@ gulp.task('competition-mgt:js', function () {
   ])
   .pipe(standard())
   .pipe(concat('comp-management.min.js'))
-  .pipe(uglify())
+  //.pipe(uglify())
   .pipe(gulp.dest(__dirname + '/js/dest'))
   .pipe(standard.reporter('default', {
     breakOnError: true,

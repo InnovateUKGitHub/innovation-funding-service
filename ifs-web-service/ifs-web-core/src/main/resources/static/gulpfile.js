@@ -76,7 +76,7 @@ gulp.task('web-core:ifs-js', function () {
   ])
   .pipe(standard())
   .pipe(concat('ifs.min.js'))
-  .pipe(uglify())
+  //.pipe(uglify())
   .pipe(gulp.dest(__dirname + '/js/dest'))
   .pipe(standard.reporter('default', {
     breakOnError: true,
@@ -89,7 +89,7 @@ gulp.task('web-core:ifs-js', function () {
 gulp.task('web-core:vendor', function () {
   return gulp.src(filesExist(vendorJsFiles))
   .pipe(concat('vendor.min.js'))
-  .pipe(uglify())
+  //.pipe(uglify())
   .pipe(gulp.dest(__dirname + '/js/dest'))
 })
 

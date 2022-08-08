@@ -13,7 +13,7 @@ gulp.task('application:js', function () {
   ])
   .pipe(standard())
   .pipe(concat('application.min.js'))
-  .pipe(uglify())
+  //.pipe(uglify())
   .pipe(gulp.dest(__dirname + '/js/dest'))
   .pipe(standard.reporter('default', {
     breakOnError: true,

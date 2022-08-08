@@ -13,7 +13,7 @@ gulp.task('project-setup:js', function () {
    	])
     .pipe(standard())
     .pipe(concat('project-setup.min.js'))
-    .pipe(uglify())
+    //.pipe(uglify())
     .pipe(gulp.dest(__dirname + '/js/dest'))
     .pipe(standard.reporter('default', {
       breakOnError: true,
