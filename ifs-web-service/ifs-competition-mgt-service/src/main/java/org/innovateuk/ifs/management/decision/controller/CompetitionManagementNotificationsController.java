@@ -82,7 +82,7 @@ public abstract class CompetitionManagementNotificationsController extends Compe
                                              NotificationEmailsForm form,
                                              BindingResult bindingResult,
                                              ValidationHandler validationHandler) {
-        return sendNotificationsSubmit(model, competitionId, form, bindingResult, validationHandler);
+        return sendNotificationsSubmit(model, competitionId, form, bindingResult, validationHandler, false);
     }
 
     protected String sendNotificationsSubmit(Model model,
@@ -100,10 +100,6 @@ public abstract class CompetitionManagementNotificationsController extends Compe
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
                 () -> applicationDecisionRestService.sendApplicationDecisions(fundingNotificationResource));
-    }
-
-    private String getDecisionPage(Model model, NotificationEmailsForm form, long competitionId, List<Long> applicationIds) {
-        return getDecisionPage(model, form, competitionId, applicationIds, false);
     }
 
     private String getDecisionPage(Model model, NotificationEmailsForm form, long competitionId, List<Long> applicationIds, boolean eoi) {
