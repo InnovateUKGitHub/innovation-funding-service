@@ -30,6 +30,9 @@ public class SendNotificationsModelPopulator {
     @Autowired
     private ApplicationDecisionRestService applicationDecisionRestService;
 
+    public SendNotificationsViewModel populate(long competitionId, List<Long> applicationIds, NotificationEmailsForm form) {
+        return populate(competitionId, applicationIds, form, false);
+    }
 
     public SendNotificationsViewModel populate(long competitionId, List<Long> applicationIds, NotificationEmailsForm form, boolean eoi) {
         List<ApplicationDecisionToSendApplicationResource> filteredApplications = applicationDecisionRestService.getNotificationResourceForApplications(applicationIds).getSuccess();

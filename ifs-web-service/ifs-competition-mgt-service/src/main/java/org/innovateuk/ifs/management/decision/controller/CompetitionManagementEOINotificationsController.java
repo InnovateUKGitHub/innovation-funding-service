@@ -73,9 +73,9 @@ public class CompetitionManagementEOINotificationsController extends Competition
         return super.sendNotificationsSubmit(model,
                 competitionId,
                 form,
-                true,
                 bindingResult,
-                validationHandler);
+                validationHandler,
+                true);
     }
 
     @GetMapping("")

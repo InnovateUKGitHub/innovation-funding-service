@@ -63,6 +63,12 @@ public abstract class CompetitionManagementNotificationsController extends Compe
 
     protected String sendNotifications(Model model,
                                        Long competitionId,
+                                       List<Long> applicationIds) {
+        return sendNotifications(model, competitionId, applicationIds, false);
+    }
+
+    protected String sendNotifications(Model model,
+                                       Long competitionId,
                                        List<Long> applicationIds,
                                        boolean eoi) {
         checkCompetitionIsOpen(competitionId);
@@ -74,9 +80,17 @@ public abstract class CompetitionManagementNotificationsController extends Compe
     protected String sendNotificationsSubmit(Model model,
                                              long competitionId,
                                              NotificationEmailsForm form,
-                                             boolean eoi,
                                              BindingResult bindingResult,
                                              ValidationHandler validationHandler) {
+        return sendNotificationsSubmit(model, competitionId, form, bindingResult, validationHandler);
+    }
+
+    protected String sendNotificationsSubmit(Model model,
+                                             long competitionId,
+                                             NotificationEmailsForm form,
+                                             BindingResult bindingResult,
+                                             ValidationHandler validationHandler,
+                                             boolean eoi) {
         checkCompetitionIsOpen(competitionId);
 
         FundingNotificationResource fundingNotificationResource = new FundingNotificationResource(form.getMessage(), form.getDecisions());
@@ -86,6 +100,10 @@ public abstract class CompetitionManagementNotificationsController extends Compe
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
                 () -> applicationDecisionRestService.sendApplicationDecisions(fundingNotificationResource));
+    }
+
+    private String getDecisionPage(Model model, NotificationEmailsForm form, long competitionId, List<Long> applicationIds) {
+        return getDecisionPage(model, form, competitionId, applicationIds, false);
     }
 
     private String getDecisionPage(Model model, NotificationEmailsForm form, long competitionId, List<Long> applicationIds, boolean eoi) {
