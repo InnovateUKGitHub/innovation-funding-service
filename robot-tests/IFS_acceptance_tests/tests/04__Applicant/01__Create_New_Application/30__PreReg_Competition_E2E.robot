@@ -145,7 +145,7 @@ Internal user submit the EOI applications funding decision
     Then the user should see the element                                                    jQuery = td:contains("${preregApplicationID}")+td:contains("${hecpPreregAppName}")+td:contains("Empire Ltd")+td:contains("Successful")
     And the user should see the element                                                     jQuery = td:contains("${unSuccessfulPreRegApplicationID}")+td:contains("${unSuccessPreregAppName}")+td:contains("Empire Ltd")+td:contains("Unsuccessful")
 
-Internal user is able to see Write and email button enabled
+Write and send email button enabled for internal users
     [Documentation]    IFS-12261
     When the user clicks the button/link        Link = Manage notifications
     Then the user should see the element        jQuery = h1:contains("Expression of interest notifications")
@@ -153,19 +153,31 @@ Internal user is able to see Write and email button enabled
     And the user selects the checkbox           app-row-${preregApplicationID}
     And The user should not see the element     css = .govuk-button[disabled]
 
-Internal user send funding decision email for successful application
-     When the user clicks the button/link                     jQuery = button:contains("Write and send email")
-     Then the user should see the element                     jQuery = h1:contains("Send decision notification")
-     Then the user enters text to a text field                css=.editor  ${preRegApplicationSuccessfulEmail}
-     And the user clicks the button/link                      jQuery = button:contains("Send notification")[data-js-modal = "send-to-all-applicants-modal"]
-     Then the user clicks the button/link                     jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
-     the user refreshes until element appears on page         jQuery = td:contains("${hecpPreregAppName}") ~ td:contains("Sent")
+Full application will be created on successful notification of EOI application by internal user
+    [Documentation]  IFS-12521
+    When the user clicks the button/link                    jQuery = button:contains("Write and send email")
+    And the user enters text to a text field                css=.editor  ${preRegApplicationSuccessfulEmail}
+    And the user clicks the button/link                     jQuery = button:contains("Send notification")[data-js-modal = "send-to-all-applicants-modal"]
+    And the user clicks the button/link                     jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
+    And the user refreshes until element appears on page    jQuery = td:contains("${hecpPreregAppName}") ~ td:contains("Sent")
+    And the user reads his email                            steve.smith@empire.com  Important message about your application '${hecpPreregAppName}' for the competition '${hecpPreregCompName}'  ${preRegApplicationSuccessfulEmail}
+    And the user navigates to the page                      ${server}/management/competition/${preregCompetitionId}/applications/all
+    Then the user should see the element                    jQuery = td:contains("${preregApplicationID}")+td:contains("${hecpPreregAppName}")
 
-Lead applicant can see pre-registration application in Application in progress and Previous sections
-     Given log in as a different user        &{lead_applicant_credentials}
-     When the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
-     Then the user should see the element   jQuery = .in-progress li:contains("${hecpPreregAppName}") .status:contains("% complete")
-     And the user should see the element   jQuery = .previous li:contains("${hecpPreregAppName}") .msg-progress:contains("Successful")
+Lead applicant can view full application details in dashboard
+    [Documentation]  IFS-12521
+    Given log in as a different user            &{lead_applicant_credentials}
+    When the user navigates to the page         ${APPLICANT_DASHBOARD_URL}
+    Then the user should see the element        jQuery = .in-progress li:contains("${hecpPreregAppName}") .status:contains("% complete")
+    And the user should not see the element     jQuery = li:contains("${preregApplicationID}") .status-msg:contains("Expression of interest")
+
+Lead applicant can view the answers provided in EOI applications in full application along with new application questions
+    [Documentation]  IFS-12521
+    Given the user clicks the button/link                                   link = ${hecpPreregAppName}
+    When the user clicks the button/link                                    link = Tell us where your organisation is based
+    Then the user should see the element                                    jQuery = p:contains("My organisation is based in the UK or a British Overseas Territory")
+    And Lead applicant should see new questions added in full application
+
 
 #Lead applicant views unsuccessful applications in previous dashboard
 #    [Documentation]  IFS-12265
@@ -352,3 +364,10 @@ User should see EOI Related content
     the user should see the element     jQuery = th:contains("Expression of interest decision")
     the user should see the element     jQuery = th:contains("Email status")
     the user should see the element     jQuery = th:contains("Date sent")
+
+Lead applicant should see new questions added in full application
+    the user clicks the button/link     link = Back to application overview
+    the user should see the element     link = Participating Organisation project region
+    the user should see the element     link = Award terms and conditions
+    the user clicks the button/link     link = Your project finances
+    the user should see the element     link = Your project location
