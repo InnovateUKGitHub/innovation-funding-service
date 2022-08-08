@@ -45,7 +45,7 @@ public class SilIMApplicationLocationInfo {
     private String fundingDecisionStatus;
 
     @JsonProperty("durationInMonths")
-    private Integer durationInMonths;
+    private Long durationInMonths;
 
     @JsonProperty("completion")
     @JsonSerialize(using = PercentageSerializer.class)

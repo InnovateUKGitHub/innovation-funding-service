@@ -103,7 +103,8 @@ public class IMApplicationOrgLocationController {
         silIMApplicationLocationInfo.setCompetitionID(competitionResource.getId().toString());
         String fundingDecisionStatus = applicationResource.getFundingDecision() == null ? "" : applicationResource.getFundingDecision().getName();
         silIMApplicationLocationInfo.setFundingDecisionStatus(fundingDecisionStatus);
-        silIMApplicationLocationInfo.setDurationInMonths(applicationResource.getDurationInMonths().intValue());
+
+        silIMApplicationLocationInfo.setDurationInMonths(applicationResource.getDurationInMonths());
         silIMApplicationLocationInfo.setCompletionPercentage(applicationResource.getCompletion());
 
         ZonedDateTime mangeFundingEmailDate = applicationService.findLatestEmailFundingDateByCompetitionId(competitionResource.getId()).getSuccess();
