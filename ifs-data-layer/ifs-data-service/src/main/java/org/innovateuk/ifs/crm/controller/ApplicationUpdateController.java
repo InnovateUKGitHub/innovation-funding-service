@@ -138,7 +138,7 @@ public class ApplicationUpdateController {
 
             QuestionSetupType questionSetupType = questionService.getQuestionById(ids.questionId).getSuccess().getQuestionSetupType();
             if (questionSetupType.equals(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION) || questionSetupType.equals(IMPACT_MANAGEMENT_SURVEY)) {
-                return questionStatusService.markAsCompleteNoValidate(ids, processRoleId).handleSuccessOrFailure(
+                return questionStatusService.markAsCompleteNoValidate(ids, processRoleId,silStatus.getCompletionDate()).handleSuccessOrFailure(
                         failure -> {
                             log.error(logError);
                             return RestResult.restFailure(failure.getErrors(), HttpStatus.BAD_REQUEST);
@@ -162,7 +162,7 @@ public class ApplicationUpdateController {
                     }
             );
         } else if(silStatus.isStatusIncomplete()) {
-            return questionStatusService.markAsInComplete(ids, processRoleId).handleSuccessOrFailure(
+            return questionStatusService.markAsInComplete(ids, processRoleId,silStatus.getCompletionDate()).handleSuccessOrFailure(
                     failure -> {
                         log.error(String.format("application-update error: application %d mark as incomplete failed", ids.applicationId));
                         return RestResult.restFailure(failure.getErrors(), HttpStatus.BAD_REQUEST);
