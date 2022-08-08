@@ -8,4 +8,6 @@ public interface ApplicationNotificationTemplateRestService {
     RestResult<ApplicationNotificationTemplateResource> getSuccessfulNotificationTemplate(long competitionId);
     RestResult<ApplicationNotificationTemplateResource> getUnsuccessfulNotificationTemplate(long competitionId);
     RestResult<ApplicationNotificationTemplateResource> getIneligibleNotificationTemplate(long competitionId);
+    RestResult<ApplicationNotificationTemplateResource> getEoiApprovedNotificationTemplate(long competitionId);
+    RestResult<ApplicationNotificationTemplateResource> getEoiRejectedNotificationTemplate(long competitionId);
 }

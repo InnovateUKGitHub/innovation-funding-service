@@ -391,6 +391,6 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         List<ApplicationDecisionToSendApplicationResource> resourceList = singletonList(new ApplicationDecisionToSendApplicationResource(1L, "", "", UNFUNDED));
         return new SendNotificationsViewModel(resourceList, 0L, 0L,
                 0L, newCompetitionResource().withId(COMPETITION_ID).withName("compName").withAlwaysOpen(false).build(),
-                false, horizonEurope, false);
+                false, horizonEurope);
     }
 }

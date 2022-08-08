@@ -32,8 +32,7 @@ public class SendNotificationsViewModel {
                                       long onHoldRecipientsCount,
                                       CompetitionResource competition,
                                       boolean includeAssessorsScore,
-                                      boolean horizonEurope,
-                                      boolean eoi) {
+                                      boolean horizonEurope) {
 
         this.successfulRecipientsCount = successfulRecipientsCount;
         this.unsuccessfulRecipientsCount = unsuccessfulRecipientsCount;
@@ -47,6 +46,15 @@ public class SendNotificationsViewModel {
         this.horizonEurope = horizonEurope;
         this.hasAssessmentStage = competition.isHasAssessmentStage();
         this.isDirectAward = competition.isDirectAward();
+        this.eoi = eoi;
+    }
+
+    public SendNotificationsViewModel(List<ApplicationDecisionToSendApplicationResource> applications,
+                                      CompetitionResource competition,
+                                      boolean eoi) {
+        this.applications = applications;
+        this.competitionId = competition.getId();
+        this.competitionName = competition.getName();
         this.eoi = eoi;
     }
 

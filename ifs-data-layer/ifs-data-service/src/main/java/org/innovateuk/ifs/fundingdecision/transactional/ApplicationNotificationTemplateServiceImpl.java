@@ -111,6 +111,24 @@ public class ApplicationNotificationTemplateServiceImpl extends BaseTransactiona
         });
     }
 
+    @Override
+    public ServiceResult<ApplicationNotificationTemplateResource> getEoiApprovedNotificationTemplate(long competitionId) {
+        return renderTemplate(competitionId, "eoi_approved_decision.html", (competition) -> {
+            Map<String, Object> arguments = new HashMap<>();
+            arguments.put("dashboardUrl", webBaseUrl);
+            return arguments;
+        });
+    }
+
+    @Override
+    public ServiceResult<ApplicationNotificationTemplateResource> getEoiRejectedNotificationTemplate(long competitionId) {
+        return renderTemplate(competitionId, "eoi_rejected_decision.html", (competition) -> {
+            Map<String, Object> arguments = new HashMap<>();
+            arguments.put("competitionName", competition.getName());
+            return arguments;
+        });
+    }
+
     private ServiceResult<ApplicationNotificationTemplateResource> renderTemplate(long competitionId, String template, Function<Competition, Map<String, Object>> argumentFunction) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
             NotificationTarget notificationTarget = new UserNotificationTarget("", "");
