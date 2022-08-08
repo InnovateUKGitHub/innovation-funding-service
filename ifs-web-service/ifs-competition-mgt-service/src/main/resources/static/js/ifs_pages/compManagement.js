@@ -24,7 +24,7 @@ IFS.competitionManagement.various = (function () {
       var modal = button.attr('data-js-modal')
       // remove the modal action and add aria-disabled and disabled styling
       button.on('click', function (event) { event.preventDefault() })
-      button.removeAttr('data-js-modal').attr({'data-js-modal-disabled': modal, 'aria-disabled': 'true'}).addClass('disabled')
+      button.removeAttr('data-js-modal').attr({ 'data-js-modal-disabled': modal, 'aria-disabled': 'true' }).addClass('disabled')
     },
     enableDecisionButton: function () {
       var button = jQuery(s.submitDecisionButton)

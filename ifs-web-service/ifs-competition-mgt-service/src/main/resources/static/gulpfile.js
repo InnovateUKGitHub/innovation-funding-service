@@ -16,7 +16,7 @@ gulp.task('competition-mgt:js', function () {
   .pipe(uglify())
   .pipe(gulp.dest(__dirname + '/js/dest'))
   .pipe(standard.reporter('default', {
-    breakOnError: false,
+    breakOnError: true,
     breakOnWarning: false,
     quiet: false
   }))
