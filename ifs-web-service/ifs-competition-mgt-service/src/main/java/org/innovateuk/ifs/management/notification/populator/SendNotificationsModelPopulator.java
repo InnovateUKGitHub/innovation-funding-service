@@ -31,7 +31,7 @@ public class SendNotificationsModelPopulator {
     private ApplicationDecisionRestService applicationDecisionRestService;
 
 
-    public SendNotificationsViewModel populate(long competitionId, List<Long> applicationIds, NotificationEmailsForm form) {
+    public SendNotificationsViewModel populate(long competitionId, List<Long> applicationIds, NotificationEmailsForm form, boolean eoi) {
         List<ApplicationDecisionToSendApplicationResource> filteredApplications = applicationDecisionRestService.getNotificationResourceForApplications(applicationIds).getSuccess();
 
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
@@ -51,7 +51,8 @@ public class SendNotificationsModelPopulator {
                                               onHoldCount,
                                               competitionResource,
                                               Boolean.TRUE.equals(competitionAssessmentConfigResource.getIncludeAverageAssessorScoreInNotifications()),
-                                              competitionResource.isHorizonEuropeGuarantee());
+                                              competitionResource.isHorizonEuropeGuarantee(),
+                                              eoi);
     }
 
     private long getApplicationCountByDecision(List<ApplicationDecisionToSendApplicationResource> filteredApplications, Decision decision) {

@@ -61,33 +61,35 @@ public abstract class CompetitionManagementNotificationsController extends Compe
 
     protected abstract Class<FundingNotificationSelectionCookie> getFormType();
 
-    public String sendNotifications(Model model,
-                               @PathVariable("competitionId") Long competitionId,
-                               @RequestParam("application_ids") List<Long> applicationIds) {
+    protected String sendNotifications(Model model,
+                                       Long competitionId,
+                                       List<Long> applicationIds,
+                                       boolean eoi) {
         checkCompetitionIsOpen(competitionId);
 
         NotificationEmailsForm form = new NotificationEmailsForm();
-        return getDecisionPage(model, form, competitionId, applicationIds);
+        return getDecisionPage(model, form, competitionId, applicationIds, eoi);
     }
 
-    public String sendNotificationsSubmit(Model model,
-                                    @PathVariable("competitionId") long competitionId,
-                                    @ModelAttribute("form") @Valid NotificationEmailsForm form,
-                                    BindingResult bindingResult,
-                                    ValidationHandler validationHandler) {
+    protected String sendNotificationsSubmit(Model model,
+                                             long competitionId,
+                                             NotificationEmailsForm form,
+                                             boolean eoi,
+                                             BindingResult bindingResult,
+                                             ValidationHandler validationHandler) {
         checkCompetitionIsOpen(competitionId);
 
         FundingNotificationResource fundingNotificationResource = new FundingNotificationResource(form.getMessage(), form.getDecisions());
 
-        Supplier<String> failureView = () -> getDecisionPage(model, form, competitionId, form.getApplicationIds());
+        Supplier<String> failureView = () -> getDecisionPage(model, form, competitionId, form.getApplicationIds(), eoi);
         Supplier<String> successView = () -> successfulEmailRedirect(competitionId);
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
                 () -> applicationDecisionRestService.sendApplicationDecisions(fundingNotificationResource));
     }
 
-    private String getDecisionPage(Model model, NotificationEmailsForm form, long competitionId, List<Long> applicationIds) {
-        SendNotificationsViewModel viewModel = sendNotificationsModelPopulator.populate(competitionId, applicationIds, form);
+    private String getDecisionPage(Model model, NotificationEmailsForm form, long competitionId, List<Long> applicationIds, boolean eoi) {
+        SendNotificationsViewModel viewModel = sendNotificationsModelPopulator.populate(competitionId, applicationIds, form, eoi);
         if (viewModel.getApplications().isEmpty()) {
             return "redirect:" + getManageFundingApplicationsPage(competitionId);
         }
@@ -96,16 +98,16 @@ public abstract class CompetitionManagementNotificationsController extends Compe
         return FUNDING_DECISION_NOTIFICATION_VIEW;
     }
 
-    public String applications(Model model,
-                               @RequestParam MultiValueMap<String, String> params,
-                               @PathVariable("competitionId") Long competitionId,
-                               @ModelAttribute @Valid FundingNotificationFilterForm filterForm,
-                               @ModelAttribute(name = "selectionForm") @Valid FundingNotificationSelectionForm selectionForm,
-                               @RequestParam(value = "filterChanged", required = false) boolean filterChanged,
-                               BindingResult bindingResult,
-                               ValidationHandler validationHandler,
-                               HttpServletRequest request,
-                               HttpServletResponse response) {
+    protected String applications(Model model,
+                                  MultiValueMap<String, String> params,
+                                  Long competitionId,
+                                  FundingNotificationFilterForm filterForm,
+                                  FundingNotificationSelectionForm selectionForm,
+                                  boolean filterChanged,
+                                  BindingResult bindingResult,
+                                  ValidationHandler validationHandler,
+                                  HttpServletRequest request,
+                                  HttpServletResponse response) {
         checkCompetitionIsOpen(competitionId);
 
         updateSelectionForm(request,
@@ -174,15 +176,15 @@ public abstract class CompetitionManagementNotificationsController extends Compe
         return updatedSelectionForm;
     }
 
-    public String selectApplications(Model model,
-                                     @PathVariable("competitionId") Long competitionId,
-                                     @ModelAttribute @Valid FundingNotificationFilterForm query,
-                                     ValidationHandler queryFormValidationHandler,
-                                     @ModelAttribute("form") @Valid FundingNotificationSelectionForm selectionForm,
-                                     BindingResult idsBindingResult,
-                                     ValidationHandler idsValidationHandler,
-                                     HttpServletRequest request,
-                                     HttpServletResponse response) {
+    protected String selectApplications(Model model,
+                                        Long competitionId,
+                                        FundingNotificationFilterForm query,
+                                        ValidationHandler queryFormValidationHandler,
+                                        FundingNotificationSelectionForm selectionForm,
+                                        BindingResult idsBindingResult,
+                                        ValidationHandler idsValidationHandler,
+                                        HttpServletRequest request,
+                                        HttpServletResponse response) {
         checkCompetitionIsOpen(competitionId);
 
         FundingNotificationSelectionCookie selectionCookie = getSelectionFormFromCookie(request, competitionId)
@@ -205,12 +207,11 @@ public abstract class CompetitionManagementNotificationsController extends Compe
         );
     }
 
-    public @ResponseBody JsonNode selectApplicationForEmailList(
-            @PathVariable("competitionId") long competitionId,
-            @RequestParam("selectionId") long applicationId,
-            @RequestParam("isSelected") boolean isSelected,
-            HttpServletRequest request,
-            HttpServletResponse response) {
+    protected JsonNode selectApplicationForEmailList(long competitionId,
+                                                     long applicationId,
+                                                     boolean isSelected,
+                                                     HttpServletRequest request,
+                                                     HttpServletResponse response) {
         checkCompetitionIsOpen(competitionId);
 
         boolean limitIsExceeded = false;
@@ -251,11 +252,11 @@ public abstract class CompetitionManagementNotificationsController extends Compe
         }
     }
 
-    public @ResponseBody JsonNode addAllApplicationsToEmailList(Model model,
-                                           @PathVariable("competitionId") long competitionId,
-                                           @RequestParam("addAll") boolean addAll,
-                                           HttpServletRequest request,
-                                           HttpServletResponse response) {
+    protected JsonNode addAllApplicationsToEmailList(Model model,
+                                                     long competitionId,
+                                                     boolean addAll,
+                                                     HttpServletRequest request,
+                                                     HttpServletResponse response) {
         checkCompetitionIsOpen(competitionId);
         try {
             FundingNotificationSelectionCookie selectionCookie = getSelectionFormFromCookie(request, competitionId).orElse(new FundingNotificationSelectionCookie());

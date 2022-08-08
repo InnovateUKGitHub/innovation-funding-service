@@ -60,7 +60,8 @@ public class CompetitionManagementEOINotificationsController extends Competition
                                @RequestParam("application_ids") List<Long> applicationIds) {
         return super.sendNotifications(model,
                 competitionId,
-                applicationIds);
+                applicationIds,
+                true);
     }
 
     @PostMapping("/send")
@@ -72,6 +73,7 @@ public class CompetitionManagementEOINotificationsController extends Competition
         return super.sendNotificationsSubmit(model,
                 competitionId,
                 form,
+                true,
                 bindingResult,
                 validationHandler);
     }

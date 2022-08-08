@@ -287,7 +287,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     public void getSendNotificationsPageTest() throws Exception {
 
         List<Long> applicationsIds = singletonList(APPLICATION_ID_ONE);
-        when(sendNotificationsModelPopulator.populate(eq(COMPETITION_ID), eq(applicationsIds), any())).thenReturn(emptyViewModel(false));
+        when(sendNotificationsModelPopulator.populate(eq(COMPETITION_ID), eq(applicationsIds), any(), eq(false))).thenReturn(emptyViewModel(false));
         mockMvc.perform(get("/competition/{competitionId}/funding/send?application_ids={applicationId}", COMPETITION_ID, APPLICATION_ID_ONE))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-send-notifications"))
@@ -298,7 +298,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     public void getSendNotificationsPageTest_horizonEurope() throws Exception {
 
         List<Long> applicationsIds = singletonList(APPLICATION_ID_ONE);
-        when(sendNotificationsModelPopulator.populate(eq(COMPETITION_ID), eq(applicationsIds), any())).thenReturn(emptyViewModel(true));
+        when(sendNotificationsModelPopulator.populate(eq(COMPETITION_ID), eq(applicationsIds), any(), eq(false))).thenReturn(emptyViewModel(true));
         mockMvc.perform(get("/competition/{competitionId}/funding/send?application_ids={applicationId}", COMPETITION_ID, APPLICATION_ID_ONE))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-send-notifications"))
@@ -340,7 +340,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     @Test
     public void sendNotificationsTestWithInvalidMessage() throws Exception {
         when(applicationDecisionRestService.sendApplicationDecisions(any(FundingNotificationResource.class))).thenReturn(restSuccess());
-        when(sendNotificationsModelPopulator.populate(anyLong(), any(), any())).thenReturn(emptyViewModel(false));
+        when(sendNotificationsModelPopulator.populate(anyLong(), any(), any(), eq(false))).thenReturn(emptyViewModel(false));
         mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("decisions[" + APPLICATION_ID_ONE + "]", String.valueOf(FUNDED)))
@@ -354,7 +354,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     @Test
     public void sendNotificationsWithInvalidDecisions() throws Exception {
         when(applicationDecisionRestService.sendApplicationDecisions(any(FundingNotificationResource.class))).thenReturn(restSuccess());
-        when(sendNotificationsModelPopulator.populate(anyLong(), any(), any())).thenReturn(emptyViewModel(false));
+        when(sendNotificationsModelPopulator.populate(anyLong(), any(), any(), eq(false))).thenReturn(emptyViewModel(false));
 
         mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -389,6 +389,8 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
 
     private SendNotificationsViewModel emptyViewModel(boolean horizonEurope) {
         List<ApplicationDecisionToSendApplicationResource> resourceList = singletonList(new ApplicationDecisionToSendApplicationResource(1L, "", "", UNFUNDED));
-        return new SendNotificationsViewModel(resourceList, 0L, 0L, 0L, newCompetitionResource().withId(COMPETITION_ID).withName("compName").withAlwaysOpen(false).build(), false, horizonEurope);
+        return new SendNotificationsViewModel(resourceList, 0L, 0L,
+                0L, newCompetitionResource().withId(COMPETITION_ID).withName("compName").withAlwaysOpen(false).build(),
+                false, horizonEurope, false);
     }
 }

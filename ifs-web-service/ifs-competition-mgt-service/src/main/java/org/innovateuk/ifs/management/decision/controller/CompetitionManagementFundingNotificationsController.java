@@ -60,7 +60,8 @@ public class CompetitionManagementFundingNotificationsController extends Competi
                                @RequestParam("application_ids") List<Long> applicationIds) {
         return super.sendNotifications(model,
                 competitionId,
-                applicationIds);
+                applicationIds,
+                false);
     }
 
     @PostMapping("/funding/send")
@@ -72,6 +73,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
         return super.sendNotificationsSubmit(model,
                 competitionId,
                 form,
+                false,
                 bindingResult,
                 validationHandler);
     }
