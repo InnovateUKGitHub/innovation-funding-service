@@ -21,7 +21,7 @@ spec:
         app: data-service-alerts
     spec:
       containers:
-      - image: data-service-alerts
+      - image: git
         name: spring-boot-service-container
         imagePullPolicy: IfNotPresent
         lifecycle:
