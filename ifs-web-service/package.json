@@ -29,8 +29,14 @@
     "lodash": "^4.17.21",
     "sass": "^1.54.3"
   },
+  "overrides": {
+    "gonzales-pe-sl": {
+      "minimist": ">=1.2.6"
+    }
+  },
   "engines": {
-    "node": "^14.20.0"
+    "node": ">=16.16.0",
+    "npm": ">=8.11.0"
   },
   "standard": {
     "globals": [
