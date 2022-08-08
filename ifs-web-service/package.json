@@ -33,7 +33,8 @@
     "minimist": ">=1.2.6",
     "shelljs": ">=0.8.4",
     "merge": ">=2.1.1",
-    "glob-parent": ">=5.1.2"
+    "glob-parent": ">=5.1.2",
+    "ajv": ">=6.12.3"
   },
   "engines": {
     "node": ">=16.16.0",
