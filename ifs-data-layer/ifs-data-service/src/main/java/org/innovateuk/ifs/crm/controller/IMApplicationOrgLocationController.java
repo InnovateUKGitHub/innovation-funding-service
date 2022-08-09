@@ -55,10 +55,10 @@ public class IMApplicationOrgLocationController {
         ApplicationResource application = applicationService.getApplicationById(applicationId).getSuccess();
 
         if (application == null) {
-            log.error(String.format("application-org-location error: application not found IFS %d: %s", applicationId));
+            log.error(String.format("application-organisation location error: application not found IFS %d: %s", applicationId));
             return RestResult.restFailure(HttpStatus.BAD_REQUEST);
         } else {
-            log.debug(String.format("GET application-org-location : ", applicationId));
+            log.debug(String.format("GET application-organisation location : ", applicationId));
             return getApplicationLocationObj(application);
         }
     }
@@ -70,6 +70,14 @@ public class IMApplicationOrgLocationController {
         silIMApplicationLocationInfo = setApplicationData(applicationResource, silIMApplicationLocationInfo);
 
         Set<OrganisationResource> organisations = organisationService.findByApplicationId(applicationId).getSuccess();
+        List<SilOrganisationLocation> silOrganisations = setOrganisationData(applicationId, organisations);
+        silIMApplicationLocationInfo.setOrganisations(silOrganisations);
+
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(silIMApplicationLocationInfo);
+    }
+
+    private List<SilOrganisationLocation> setOrganisationData (Long applicationId, Set<OrganisationResource> organisations) {
         List<SilOrganisationLocation> silOrganisations = new ArrayList<SilOrganisationLocation>();
         for (OrganisationResource org : organisations) {
             SilOrganisationLocation silOrganisationLocation = new SilOrganisationLocation();
@@ -86,10 +94,7 @@ public class IMApplicationOrgLocationController {
             silOrganisationLocation.setWorkPostcode(applicationFinanceResource.getWorkPostcode());
             silOrganisations.add(silOrganisationLocation);
         }
-        silIMApplicationLocationInfo.setOrganisations(silOrganisations);
-
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(silIMApplicationLocationInfo);
+        return silOrganisations;
     }
 
     private SilIMApplicationLocationInfo setApplicationData(ApplicationResource applicationResource, SilIMApplicationLocationInfo silIMApplicationLocationInfo) {
@@ -101,7 +106,7 @@ public class IMApplicationOrgLocationController {
         CompetitionResource competitionResource = applicationService.
                 getCompetitionByApplicationId(applicationId).getSuccess();
         silIMApplicationLocationInfo.setCompetitionID(competitionResource.getId().toString());
-        String fundingDecisionStatus = applicationResource.getFundingDecision() == null ? "" : applicationResource.getFundingDecision().getName();
+        String fundingDecisionStatus = applicationResource.getDecision() == null ? null : applicationResource.getDecision().getName();
         silIMApplicationLocationInfo.setFundingDecisionStatus(fundingDecisionStatus);
 
         silIMApplicationLocationInfo.setDurationInMonths(applicationResource.getDurationInMonths());
@@ -110,14 +115,12 @@ public class IMApplicationOrgLocationController {
         ZonedDateTime mangeFundingEmailDate = applicationService.findLatestEmailFundingDateByCompetitionId(competitionResource.getId()).getSuccess();
         silIMApplicationLocationInfo.setManageFundingEmailDate(mangeFundingEmailDate);
 
-
         silIMApplicationLocationInfo.setInAssessmentReviewPanel(applicationResource.isInAssessmentReviewPanel());
-        String companyAge = applicationResource.getCompanyAge() == null ? "" : applicationResource.getCompanyAge().getName();
+        String companyAge = applicationResource.getCompanyAge() == null ? null : applicationResource.getCompanyAge().getName();
         silIMApplicationLocationInfo.setCompanyAge(companyAge);
-        String companyPrimaryFocus = applicationResource.getCompanyPrimaryFocus() == null ? "" : applicationResource.getCompanyPrimaryFocus().getName();
+        String companyPrimaryFocus = applicationResource.getCompanyPrimaryFocus() == null ? null : applicationResource.getCompanyPrimaryFocus().getName();
         silIMApplicationLocationInfo.setCompanyPrimaryFocus(companyPrimaryFocus);
         return silIMApplicationLocationInfo;
     }
-
 }
 
