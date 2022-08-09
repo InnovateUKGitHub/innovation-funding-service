@@ -80,7 +80,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             "OR (:sent = true AND a.manageDecisionEmailDate IS NOT NULL) " +
             "OR (:sent = false AND a.manageDecisionEmailDate IS NULL)) " +
             "AND (" +
-            "(:eoi = false AND (eoiConfig IS NULL OR eoiConfig.eoiConfig.enabledForExpressionOfInterest = false)) " +
+            "(:eoi = false AND (eoiConfig IS NULL OR eoiConfig.enabledForExpressionOfInterest = false)) " +
             "OR (:eoi = true AND eoiConfig.enabledForExpressionOfInterest = true)) " +
             "AND (:funding IS NULL " +
             "OR (a.decision = :funding)) ";
