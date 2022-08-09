@@ -38,11 +38,11 @@ public class SendNotificationsModelPopulator {
         List<ApplicationDecisionToSendApplicationResource> filteredApplications = applicationDecisionRestService.getNotificationResourceForApplications(applicationIds).getSuccess();
 
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        CompetitionAssessmentConfigResource competitionAssessmentConfigResource = competitionAssessmentConfigRestService.findOneByCompetitionId(competitionId).getSuccess();
 
         if (eoi) {
             return eoiSendNotificationsViewModel(form, filteredApplications, competitionResource);
         } else {
+            CompetitionAssessmentConfigResource competitionAssessmentConfigResource = competitionAssessmentConfigRestService.findOneByCompetitionId(competitionId).getSuccess();
             return sendNotificationsViewModel(form, filteredApplications, competitionResource, competitionAssessmentConfigResource);
         }
     }
