@@ -39,7 +39,7 @@ import static org.innovateuk.ifs.application.builder.PreviousApplicationResource
 import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATES;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.*;
+import static org.innovateuk.ifs.fundingdecision.domain.DecisionStatus.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -453,7 +453,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         Competition competition = newCompetition().withId(COMP_ID).build();
         when(competitionRepositoryMock.findById(COMP_ID)).thenReturn(Optional.of(competition));
 
-        when(applicationRepositoryMock.findByApplicationStateAndFundingDecision(
+        when(applicationRepositoryMock.findByApplicationStateAndDecision(
                 eq(COMP_ID),
                 eq(asLinkedSet(APPROVED, REJECTED, SUBMITTED)),
                 eq(""),
@@ -485,7 +485,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
         when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
 
-        when(applicationRepositoryMock.findEoiByApplicationStateAndFundingDecision(
+        when(applicationRepositoryMock.findEoiByApplicationStateAndDecision(
                 eq(COMP_ID),
                 eq(asLinkedSet(APPROVED, REJECTED, SUBMITTED)),
                 eq(""),
@@ -517,7 +517,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
         when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
 
-        when(applicationRepositoryMock.findByApplicationStateAndFundingDecision(
+        when(applicationRepositoryMock.findByApplicationStateAndDecision(
                 eq(COMP_ID),
                 eq(asLinkedSet(ApplicationState.INELIGIBLE, ApplicationState.INELIGIBLE_INFORMED)),
                 eq(""),
@@ -548,7 +548,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
         when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
 
-        when(applicationRepositoryMock.findByApplicationStateAndFundingDecision(
+        when(applicationRepositoryMock.findByApplicationStateAndDecision(
                 eq(COMP_ID),
                 eq(singleton(ApplicationState.INELIGIBLE_INFORMED)),
                 eq(""),
@@ -572,16 +572,16 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void findByCompetitionWithFundingDecisionApplications() {
+    public void findByCompetitionWithDecisionApplications() {
 
         Page<Application> page = mock(Page.class);
 
         ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
         when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndFundingDecisionIsNotNull(eq(COMP_ID), eq("filter"), eq(false), eq(ON_HOLD), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
+        when(applicationRepositoryMock.findByCompetitionIdAndDecisionIsNotNull(eq(COMP_ID), eq("filter"), eq(false), eq(ON_HOLD), eq(false), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
 
-        ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(COMP_ID, "id", 0, 20, of("filter"), of(false), of(ON_HOLD));
+        ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getWithDecisionApplicationSummariesByCompetitionId(COMP_ID, "id", 0, 20, of("filter"), of(false), of(ON_HOLD), of(false));
 
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccess().getNumber());
@@ -589,29 +589,29 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void findWithFundingDecisionIsChangeableApplicationIdsByCompetitionId() {
+    public void findWithDecisionIsChangeableApplicationIdsByCompetitionId() {
 
         List<Application> applications = newApplication()
-                .withManageFundingEmailDate(ZonedDateTime.now())
-                .withFundingDecision(FUNDED)
+                .withManageDecisionEmailDate(ZonedDateTime.now())
+                .withDecision(FUNDED)
                 .build(2);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndFundingDecisionIsNotNull(eq(COMP_ID), eq("filter"), eq(false), eq(FUNDED))).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndDecisionIsNotNull(eq(COMP_ID), eq("filter"), eq(false), eq(FUNDED), eq(false))).thenReturn(applications);
 
-        ServiceResult<List<Long>> result = applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(false), of(FUNDED));
+        ServiceResult<List<Long>> result = applicationSummaryService.getWithDecisionIsChangeableApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(false), of(FUNDED), of(false));
 
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccess().size());
     }
 
     @Test
-    public void findWithFundingDecisionIsNotChangeableApplicationIdsByCompetitionId() {
+    public void findWithDecisionIsNotChangeableApplicationIdsByCompetitionId() {
 
         List<Long> longs = newArrayList(1L, 2L, 3L);
 
-        when(applicationRepositoryMock.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(eq(COMP_ID), eq("filter"), eq(false), eq(FUNDED))).thenReturn(longs);
+        when(applicationRepositoryMock.getWithDecisionIsChangeableApplicationIdsByCompetitionId(eq(COMP_ID), eq("filter"), eq(false), eq(FUNDED), eq(false))).thenReturn(longs);
 
-        ServiceResult<List<Long>> result = applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(false), of(FUNDED));
+        ServiceResult<List<Long>> result = applicationSummaryService.getWithDecisionIsChangeableApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(false), of(FUNDED), of(false));
 
         assertTrue(result.isSuccess());
         assertEquals(longs, result.getSuccess());
@@ -620,12 +620,12 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void getAllSubmittedApplicationIdsByCompetitionId() {
         List<Application> applications = newApplication()
-                .withFundingDecision(UNFUNDED)
+                .withDecision(UNFUNDED)
                 .build(2);
 
         List<Long> ids = applications.stream().map(Application::getId).collect(Collectors.toList());
 
-        when(applicationRepositoryMock.findApplicationIdsByApplicationStateAndFundingDecision(
+        when(applicationRepositoryMock.findApplicationIdsByApplicationStateAndDecision(
                 eq(COMP_ID), eq(SUBMITTED_STATES),  eq("filter"), eq(UNFUNDED), eq(null))).thenReturn(ids);
 
         ServiceResult<List<Long>> result = applicationSummaryService.getAllSubmittedApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(UNFUNDED));
@@ -638,12 +638,12 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void getAllSubmittedEoiApplicationIdsByCompetitionId() {
         List<Application> applications = newApplication()
-                .withFundingDecision(UNFUNDED)
+                .withDecision(UNFUNDED)
                 .build(2);
 
         List<Long> ids = applications.stream().map(Application::getId).collect(Collectors.toList());
 
-        when(applicationRepositoryMock.findEoiApplicationIdsByApplicationStateAndFundingDecision(
+        when(applicationRepositoryMock.findEoiApplicationIdsByApplicationStateAndDecision(
                 eq(COMP_ID), eq(SUBMITTED_STATES),  eq("filter"), eq(UNFUNDED), eq(false))).thenReturn(ids);
 
         ServiceResult<List<Long>> result = applicationSummaryService.getAllSubmittedEoiApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(UNFUNDED), of(false));

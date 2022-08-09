@@ -92,7 +92,7 @@ public class ApplicationTeamMarkAsCompleteValidatorTest {
         validator.validate(application, errors);
 
         // then
-        verifyZeroInteractions(errors);
+        verifyNoInteractions(errors);
     }
 
     @Test
@@ -110,7 +110,7 @@ public class ApplicationTeamMarkAsCompleteValidatorTest {
         validator.validate(application, errors);
 
         // then
-        verifyZeroInteractions(applicationKtaInviteService, errors);
+        verifyNoInteractions(applicationKtaInviteService, errors);
     }
 
     @Test
@@ -166,7 +166,7 @@ public class ApplicationTeamMarkAsCompleteValidatorTest {
         validator.validate(application, errors);
 
         // then
-        verifyZeroInteractions(errors);
+        verifyNoInteractions(errors);
     }
 
     @Test

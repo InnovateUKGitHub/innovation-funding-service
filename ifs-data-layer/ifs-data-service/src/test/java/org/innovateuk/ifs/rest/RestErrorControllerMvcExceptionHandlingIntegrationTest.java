@@ -8,7 +8,9 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.commons.security.authentication.token.Authentication;
 import org.innovateuk.ifs.commons.service.HttpHeadersUtils;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
@@ -42,10 +44,11 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
     @SuppressWarnings("unused")
     private int port;
 
+    @Autowired
+    private RestTemplate restTemplate;
+
     @Test
     public void testIncorrectUrl() throws Exception {
-
-        RestTemplate restTemplate = new RestTemplate();
 
         try {
             String url = "http://localhost:" + port + "/non/existent/url";
@@ -64,8 +67,6 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
 
     @Test
     public void testAccessDenied() throws Exception {
-
-        RestTemplate restTemplate = new RestTemplate();
 
         try {
             String url  = "http://localhost:" + port + "/application/2";

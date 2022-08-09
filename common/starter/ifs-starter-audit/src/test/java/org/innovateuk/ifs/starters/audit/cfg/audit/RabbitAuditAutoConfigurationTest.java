@@ -18,7 +18,6 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.innovateuk.ifs.IfsProfileConstants.AMQP_PROFILE;
 import static org.innovateuk.ifs.starters.audit.cfg.AuditConfigurationProperties.AUDIT_CONFIG_PREFIX;
 import static org.innovateuk.ifs.starters.audit.cfg.rabbit.RabbitAuditConfiguration.AUDIT_OBJECT_MAPPER_BEAN_NAME;
 import static org.innovateuk.ifs.starters.audit.cfg.rabbit.RabbitAuditConfiguration.AUDIT_QUEUE_BEAN_NAME;
@@ -31,7 +30,6 @@ class RabbitAuditAutoConfigurationTest {
     @ResourceLock(CONTEXT_RESOURCE_LOCK)
     void auditContextConfiguration() {
         ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-            .withSystemProperties(ProfileUtils.activeProfilesString(AMQP_PROFILE))
             .withPropertyValues(AUDIT_CONFIG_PREFIX + ".auditQueueName=audit",
                     AUDIT_CONFIG_PREFIX + ".auditExchangeName=amqp.fanout")
             .withConfiguration(UserConfigurations.of(AuditConfigurationProperties.class))

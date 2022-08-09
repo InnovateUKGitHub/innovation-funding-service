@@ -2,7 +2,7 @@ package org.innovateuk.ifs.assessment.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.Builder;
-import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionOutcomeResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentDecisionOutcomeResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
@@ -46,12 +46,12 @@ public class AssessmentResourceBuilder extends BaseBuilder<AssessmentResource, A
         return withArraySetFieldByReflection("endDate", value);
     }
 
-    public AssessmentResourceBuilder withFundingDecision(AssessmentFundingDecisionOutcomeResource... value) {
-        return withArraySetFieldByReflection("fundingDecision", value);
+    public AssessmentResourceBuilder withDecision(AssessmentDecisionOutcomeResource... value) {
+        return withArraySetFieldByReflection("decision", value);
     }
 
-    public AssessmentResourceBuilder withFundingDecision(Builder<AssessmentFundingDecisionOutcomeResource, ?> value) {
-        return withFundingDecision(value.build());
+    public AssessmentResourceBuilder withDecision(Builder<AssessmentDecisionOutcomeResource, ?> value) {
+        return withDecision(value.build());
     }
 
     public AssessmentResourceBuilder withRejection(AssessmentRejectOutcomeResource... value) {

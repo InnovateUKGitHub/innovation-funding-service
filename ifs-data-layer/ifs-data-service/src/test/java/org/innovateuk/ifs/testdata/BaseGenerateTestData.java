@@ -286,7 +286,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         when(silExperianEndpointMock.validate(isA(SILBankDetails.class))).thenReturn(serviceSuccess(new ValidationResult(true, "", emptyList())));
         when(silExperianEndpointMock.verify(isA(AccountDetails.class))).thenReturn(serviceSuccess(new VerificationResult("10", "10", "10", "10", emptyList())));
 
-        when(silCrmEndpointMock.updateLoanApplicationState(any(SilLoanApplication.class))).thenReturn(serviceSuccess());
+        when(silCrmEndpointMock.updateApplicationState(any(SilLoanApplication.class))).thenReturn(serviceSuccess());
         when(silCrmEndpointMock.updateLoanAssessment(any(SilLoanAssessment.class))).thenReturn(serviceSuccess());
 
         RegistrationService registrationServiceUnwrapped = (RegistrationService) unwrapProxy(registrationService);
@@ -349,7 +349,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
             List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
             List<ApplicationData> applications = flattenLists(simpleMap(createApplicationsFutures, CompletableFuture::join));
 
-            createFundingDecisions(competitions);
+            createDecisions(competitions);
             createProjects(applications);
             moveCompetitionsIntoFinalState(competitions);
 
@@ -386,13 +386,13 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         projectDataBuilderService.createProjects(applications);
     }
 
-    private void createFundingDecisions(List<CompetitionData> competitions) {
+    private void createDecisions(List<CompetitionData> competitions) {
         competitions.forEach(competition -> {
 
             CompetitionLine competitionLine = simpleFindFirstMandatory(competitionLines, l ->
                     Objects.equals(l.getName(), competition.getCompetition().getName()));
 
-            applicationDataBuilderService.createFundingDecisions(competition, competitionLine, applicationLines);
+            applicationDataBuilderService.createDecisions(competition, competitionLine, applicationLines);
         });
     }
 

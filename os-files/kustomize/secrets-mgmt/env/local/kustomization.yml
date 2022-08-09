@@ -17,9 +17,10 @@ resources:
   - ldap-secrets.yml
   - new-relic-secrets.yml
   - registration-keys-secrets.yml
+  - sba-secret.yml
   - shibboleth-secrets.yml
   - sp-keys-secrets.yml
   - sp-secrets.yml
   - survey-data-service-secrets.yml
   - web-secrets.yml
-  - sba-secret.yml
+  - rabbitmq-secrets.yml

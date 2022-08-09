@@ -21,7 +21,7 @@ public class ClamAvScanProvider implements VirusScanProvider {
     @Autowired
     private ClamClient clamAVClient;
 
-    @Scheduled(initialDelay = 2000L, fixedDelay = 10000L)
+    @Scheduled(initialDelay = 2000L, fixedDelay = 30000L)
     public void getStats() {
         try {
             log.debug(clamAVClient.getVersion());
@@ -32,13 +32,7 @@ public class ClamAvScanProvider implements VirusScanProvider {
     }
 
     public void scanFile(byte[] fileBytes) {
-        ScanResult scanResult;
-        try {
-            scanResult = clamAVClient.scan(new ByteArrayInputStream(fileBytes));
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new ServiceException(e);
-        }
+        ScanResult scanResult = clientRead(fileBytes);
         switch (scanResult.getStatus()) {
             case OK:
                 return;
@@ -48,6 +42,20 @@ public class ClamAvScanProvider implements VirusScanProvider {
                 throw new ServiceException("File too large to scan (see config) " + scanResult.getResponse());
             case UNKNOWN:
                 throw new ServiceException(scanResult.getResponse());
+        }
+    }
+
+    private ScanResult clientRead(byte[] fileBytes) {
+        try {
+            return clamAVClient.scan(new ByteArrayInputStream(fileBytes));
+        } catch (Exception e) {
+            log.error("First Failure: " + e.getMessage(), e);
+            try {
+                return clamAVClient.scan(new ByteArrayInputStream(fileBytes));
+            } catch (Exception retryfailure) {
+                log.error("Retry Failure: " + e.getMessage(), e);
+            }
+            throw new ServiceException(e);
         }
     }
 

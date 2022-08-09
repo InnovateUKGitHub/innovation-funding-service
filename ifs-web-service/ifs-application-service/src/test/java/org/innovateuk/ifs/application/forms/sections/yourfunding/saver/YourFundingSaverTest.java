@@ -35,7 +35,6 @@ import static org.innovateuk.ifs.finance.builder.OtherFundingCostBuilder.newOthe
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostCategoryBuilder.newOtherFundingCostCategory;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> {

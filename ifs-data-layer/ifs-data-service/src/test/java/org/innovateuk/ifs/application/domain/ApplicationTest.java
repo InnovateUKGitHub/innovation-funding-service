@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.form.domain.FormInput;
-import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.fundingdecision.domain.DecisionStatus;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.junit.Assert;
 import org.junit.Before;
@@ -137,32 +137,32 @@ public class ApplicationTest {
     }
 
     @Test
-    public void applicationFundingDecisionIsNotChangeable() {
+    public void applicationDecisionIsNotChangeable() {
         Application application = new Application();
-        application.setFundingDecision(FundingDecisionStatus.FUNDED);
-        application.setManageFundingEmailDate(ZonedDateTime.now());
-        assertFalse(application.applicationFundingDecisionIsChangeable());
+        application.setDecision(DecisionStatus.FUNDED);
+        application.setManageDecisionEmailDate(ZonedDateTime.now());
+        assertFalse(application.applicationDecisionIsChangeable());
     }
 
     @Test
-    public void applicationFundingDecisionIsChangeableNotFunded() {
+    public void applicationDecisionIsChangeableNotFunded() {
         Application application = new Application();
-        application.setManageFundingEmailDate(ZonedDateTime.now());
-        application.setFundingDecision(FundingDecisionStatus.ON_HOLD);
-        assertTrue(application.applicationFundingDecisionIsChangeable());
+        application.setManageDecisionEmailDate(ZonedDateTime.now());
+        application.setDecision(DecisionStatus.ON_HOLD);
+        assertTrue(application.applicationDecisionIsChangeable());
     }
 
     @Test
-    public void applicationFundingDecisionIsChangeableNoFundingEmail() {
+    public void applicationDecisionIsChangeableNoFundingEmail() {
         Application application = new Application();
-        application.setManageFundingEmailDate(null);
-        application.setFundingDecision(FundingDecisionStatus.FUNDED);
-        assertTrue(application.applicationFundingDecisionIsChangeable());
+        application.setManageDecisionEmailDate(null);
+        application.setDecision(DecisionStatus.FUNDED);
+        assertTrue(application.applicationDecisionIsChangeable());
     }
 
     @Test
-    public void applicationFundingDecisionIsChangeable() {
-        assertTrue(new Application().applicationFundingDecisionIsChangeable());
+    public void applicationDecisionIsChangeable() {
+        assertTrue(new Application().applicationDecisionIsChangeable());
     }
 
     @Test

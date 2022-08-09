@@ -18,7 +18,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.*;
 import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentFeedbackResourceBuilder.newApplicationAssessmentFeedbackResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
-import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentDecisionOutcomeResourceBuilder.newAssessmentDecisionOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
@@ -183,21 +183,21 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
         long assessmentId = 1L;
         String feedback = String.join(" ", nCopies(100, "feedback"));
         String comment = String.join(" ", nCopies(100, "comment"));
-        AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource =
-                newAssessmentFundingDecisionOutcomeResource()
+        AssessmentDecisionOutcomeResource assessmentDecisionOutcomeResource =
+                newAssessmentDecisionOutcomeResource()
                 .withFundingConfirmation(TRUE)
                 .withFeedback(feedback)
                 .withComment(comment)
                 .build();
 
-        when(assessmentService.recommend(assessmentId, assessmentFundingDecisionOutcomeResource)).thenReturn(serviceSuccess());
+        when(assessmentService.recommend(assessmentId, assessmentDecisionOutcomeResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(toJson(assessmentFundingDecisionOutcomeResource)))
+                .content(toJson(assessmentDecisionOutcomeResource)))
                 .andExpect(status().isOk());
 
-        verify(assessmentService, only()).recommend(assessmentId, assessmentFundingDecisionOutcomeResource);
+        verify(assessmentService, only()).recommend(assessmentId, assessmentDecisionOutcomeResource);
     }
 
     @Test
@@ -205,17 +205,17 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
         Long assessmentId = 1L;
         String feedback = String.join(" ", nCopies(100, "feedback"));
         String comment = String.join(" ", nCopies(100, "comment"));
-        AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource =
-                newAssessmentFundingDecisionOutcomeResource()
+        AssessmentDecisionOutcomeResource assessmentDecisionOutcomeResource =
+                newAssessmentDecisionOutcomeResource()
                 .withFeedback(feedback)
                 .withComment(comment)
                 .build();
 
-        Error fundingConfirmationError = fieldError("fundingConfirmation", null, "validation.assessmentFundingDecisionOutcome.fundingConfirmation.required", "");
+        Error fundingConfirmationError = fieldError("fundingConfirmation", null, "validation.assessmentDecisionOutcome.fundingConfirmation.required", "");
 
         mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(toJson(assessmentFundingDecisionOutcomeResource)))
+                .content(toJson(assessmentDecisionOutcomeResource)))
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(new RestErrorResponse(fundingConfirmationError))));
 
@@ -226,37 +226,37 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
     public void recommend_noFeedbackAndFundingConfirmationIsTrue() throws Exception {
         long assessmentId = 1L;
         String comment = String.join(" ", nCopies(100, "comment"));
-        AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource =
-                newAssessmentFundingDecisionOutcomeResource()
+        AssessmentDecisionOutcomeResource assessmentDecisionOutcomeResource =
+                newAssessmentDecisionOutcomeResource()
                 .withFundingConfirmation(TRUE)
                 .withComment(comment)
                 .build();
 
-        when(assessmentService.recommend(assessmentId, assessmentFundingDecisionOutcomeResource)).thenReturn(serviceSuccess());
+        when(assessmentService.recommend(assessmentId, assessmentDecisionOutcomeResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(toJson(assessmentFundingDecisionOutcomeResource)))
+                .content(toJson(assessmentDecisionOutcomeResource)))
                 .andExpect(status().isOk());
 
-        verify(assessmentService, only()).recommend(assessmentId, assessmentFundingDecisionOutcomeResource);
+        verify(assessmentService, only()).recommend(assessmentId, assessmentDecisionOutcomeResource);
     }
 
     @Test
     public void recommend_noFeedbackAndFundingConfirmationIsFalse() throws Exception {
         Long assessmentId = 1L;
         String comment = String.join(" ", nCopies(100, "comment"));
-        AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource =
-                newAssessmentFundingDecisionOutcomeResource()
+        AssessmentDecisionOutcomeResource assessmentDecisionOutcomeResource =
+                newAssessmentDecisionOutcomeResource()
                 .withFundingConfirmation(FALSE)
                 .withComment(comment)
                 .build();
 
-        Error feedbackError = fieldError("feedback", null, "validation.assessmentFundingDecisionOutcome.feedback.required", "", "fundingConfirmation", "false", "feedback");
+        Error feedbackError = fieldError("feedback", null, "validation.assessmentDecisionOutcome.feedback.required", "", "fundingConfirmation", "false", "feedback");
 
         mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(toJson(assessmentFundingDecisionOutcomeResource)))
+                .content(toJson(assessmentDecisionOutcomeResource)))
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(new RestErrorResponse(feedbackError))))
                 .andReturn();
@@ -269,8 +269,8 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
         Long assessmentId = 1L;
         String feedback = RandomStringUtils.random(5001);
         String comment = RandomStringUtils.random(5001);
-        AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource =
-                newAssessmentFundingDecisionOutcomeResource()
+        AssessmentDecisionOutcomeResource assessmentDecisionOutcomeResource =
+                newAssessmentDecisionOutcomeResource()
                 .withFundingConfirmation(TRUE)
                 .withFeedback(feedback)
                 .withComment(comment)
@@ -281,7 +281,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(toJson(assessmentFundingDecisionOutcomeResource)))
+                .content(toJson(assessmentDecisionOutcomeResource)))
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(new RestErrorResponse(asList(feedbackError, commentError)))));
 
@@ -293,8 +293,8 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
         Long assessmentId = 1L;
         String feedback = String.join(" ", nCopies(101, "feedback"));
         String comment = String.join(" ", nCopies(101, "comment"));
-        AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource =
-                newAssessmentFundingDecisionOutcomeResource()
+        AssessmentDecisionOutcomeResource assessmentDecisionOutcomeResource =
+                newAssessmentDecisionOutcomeResource()
                 .withFundingConfirmation(TRUE)
                 .withFeedback(feedback)
                 .withComment(comment)
@@ -305,7 +305,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(toJson(assessmentFundingDecisionOutcomeResource)))
+                .content(toJson(assessmentDecisionOutcomeResource)))
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(new RestErrorResponse(asList(feedbackError, commentError)))));
 
@@ -317,26 +317,26 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
         long assessmentId = 1L;
         String feedback = String.join(" ", nCopies(100, "feedback"));
         String comment = String.join(" ", nCopies(100, "comment"));
-        AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource =
-                newAssessmentFundingDecisionOutcomeResource()
+        AssessmentDecisionOutcomeResource assessmentDecisionOutcomeResource =
+                newAssessmentDecisionOutcomeResource()
                 .withFundingConfirmation(TRUE)
                 .withFeedback(feedback)
                 .withComment(comment)
                 .build();
 
-        when(assessmentService.recommend(assessmentId, assessmentFundingDecisionOutcomeResource))
+        when(assessmentService.recommend(assessmentId, assessmentDecisionOutcomeResource))
                 .thenReturn(serviceFailure(ASSESSMENT_RECOMMENDATION_FAILED));
 
         Error recommendationFailedError = new Error(ASSESSMENT_RECOMMENDATION_FAILED.getErrorKey(), null);
 
         mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(toJson(assessmentFundingDecisionOutcomeResource)))
+                .content(toJson(assessmentDecisionOutcomeResource)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(toJson(new RestErrorResponse(recommendationFailedError))))
                 .andReturn();
 
-        verify(assessmentService, only()).recommend(assessmentId, assessmentFundingDecisionOutcomeResource);
+        verify(assessmentService, only()).recommend(assessmentId, assessmentDecisionOutcomeResource);
     }
 
     @Test
