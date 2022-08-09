@@ -12,7 +12,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentFeedbackResourceBuilder.newApplicationAssessmentFeedbackResource;
-import static org.innovateuk.ifs.assessment.documentation.AssessmentFundingDecisionOutcomeDocs.assessmentFundingDecisionOutcomeResourceBuilder;
+import static org.innovateuk.ifs.assessment.documentation.AssessmentDecisionOutcomeDocs.assessmentDecisionOutcomeResourceBuilder;
 import static org.innovateuk.ifs.assessment.documentation.AssessmentRejectOutcomeDocs.assessmentRejectOutcomeResourceBuilder;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.AssessmentDocs.assessmentResourceBuilder;
@@ -113,15 +113,15 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
     @Test
     public void recommend() throws Exception {
         long assessmentId = 1L;
-        AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource =
-                assessmentFundingDecisionOutcomeResourceBuilder.build();
+        AssessmentDecisionOutcomeResource assessmentDecisionOutcomeResource =
+                assessmentDecisionOutcomeResourceBuilder.build();
 
-        when(assessmentService.recommend(assessmentId, assessmentFundingDecisionOutcomeResource)).thenReturn(serviceSuccess());
+        when(assessmentService.recommend(assessmentId, assessmentDecisionOutcomeResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(assessmentFundingDecisionOutcomeResource)))
+                .content(objectMapper.writeValueAsString(assessmentDecisionOutcomeResource)))
                 .andExpect(status().isOk());
     }
 

@@ -169,7 +169,7 @@ public class CrmServiceImpl implements CrmService {
             if (isLoanPartBEnabled) {
                 SilLoanApplication loanApplication = setLoanApplication(application);
                 log.info(format("Updating CRM application for appId:%s state:%s, payload:%s", loanApplication.getApplicationID(), application.getApplicationState(), loanApplication));
-                return silCrmEndpoint.updateLoanApplicationState(loanApplication);
+                return silCrmEndpoint.updateApplicationState(loanApplication);
             } else {
                 return serviceSuccess();
             }

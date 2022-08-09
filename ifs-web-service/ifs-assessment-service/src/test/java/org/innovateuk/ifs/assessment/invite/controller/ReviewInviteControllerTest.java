@@ -88,7 +88,7 @@ public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<Review
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/invite-accept/panel/hash/accept"));
 
-        verifyZeroInteractions(reviewInviteRestService);
+        verifyNoInteractions(reviewInviteRestService);
     }
 
     @Test

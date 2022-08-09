@@ -63,7 +63,7 @@ public class CsrfStatelessFilterTest {
         filter.doFilterInternal(invalidRequest, response, filterChain);
 
         verify(accessDeniedHandler, times(1)).handle(invalidRequest, response, expectedException);
-        verifyZeroInteractions(filterChain);
+        verifyNoInteractions(filterChain);
     }
 
     @Test
@@ -110,7 +110,7 @@ public class CsrfStatelessFilterTest {
         verify(filterChain, times(1)).doFilter(request, response);
         assertSame(CSRF_TOKEN, request.getAttribute(CsrfToken.class.getName()));
         assertSame(CSRF_TOKEN.getToken(), response.getCookie("CSRF-TOKEN").getValue());
-        verifyZeroInteractions(accessDeniedHandler);
+        verifyNoInteractions(accessDeniedHandler);
     }
 
     private void verifyUnprotected(final HttpMethod method) throws Exception {
@@ -122,6 +122,6 @@ public class CsrfStatelessFilterTest {
         verify(tokenUtility, never()).validateToken(any(HttpServletRequest.class));
         assertSame(CSRF_TOKEN, request.getAttribute(CsrfToken.class.getName()));
         assertSame(CSRF_TOKEN.getToken(), response.getCookie("CSRF-TOKEN").getValue());
-        verifyZeroInteractions(accessDeniedHandler);
+        verifyNoInteractions(accessDeniedHandler);
     }
 }

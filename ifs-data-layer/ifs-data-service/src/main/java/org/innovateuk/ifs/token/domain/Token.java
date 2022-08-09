@@ -39,7 +39,7 @@ public class Token {
     private ZonedDateTime updated;
 
     @Convert(converter = JpaJsonConverter.class)
-    @Column( length = 5000 )
+    @Column(length=5000 , columnDefinition="LONGTEXT")
     JsonNode extraInfo;
 
     public Token(TokenType type, String className, Long classPk, String hash, ZonedDateTime created, JsonNode extraInfo) {

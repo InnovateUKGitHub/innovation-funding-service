@@ -159,7 +159,7 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
         assertTrue(bindingResult.getFieldError("innovationSectorCategoryId").getDefaultMessage().equals("This field cannot be left blank."));
         assertTrue(bindingResult.getFieldError("innovationAreaCategoryId").getDefaultMessage().equals("This field cannot be left blank."));
 
-        verifyZeroInteractions(nonIfsDetailsFormSaver);
+        verifyNoInteractions(nonIfsDetailsFormSaver);
     }
 
     @Test
@@ -187,7 +187,7 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
         assertEquals("This field cannot be left blank.", bindingResult.getFieldError("innovationSectorCategoryId").getDefaultMessage());
         assertEquals("This field cannot be left blank.", bindingResult.getFieldError("innovationAreaCategoryId").getDefaultMessage());
 
-        verifyZeroInteractions(nonIfsDetailsFormSaver);
+        verifyNoInteractions(nonIfsDetailsFormSaver);
     }
 
     @Test
@@ -221,7 +221,7 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
         assertEquals("Please enter a valid date.", bindingResult.getFieldError("registrationCloseDate.year").getDefaultMessage());
         assertEquals("Please enter a valid date.", bindingResult.getFieldError("closeDate.year").getDefaultMessage());
 
-        verifyZeroInteractions(nonIfsDetailsFormSaver);
+        verifyNoInteractions(nonIfsDetailsFormSaver);
 
     }
 
@@ -255,6 +255,6 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
         assertEquals("Please enter a valid date.", bindingResult.getFieldError("registrationCloseDate").getDefaultMessage());
         assertEquals("Please enter a valid date.", bindingResult.getFieldError("closeDate").getDefaultMessage());
 
-        verifyZeroInteractions(nonIfsDetailsFormSaver);
+        verifyNoInteractions(nonIfsDetailsFormSaver);
     }
 }
