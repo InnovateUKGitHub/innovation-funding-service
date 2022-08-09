@@ -21,8 +21,7 @@ import static java.time.format.DateTimeFormatter.ofPattern;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.*;
 import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.DEFAULT_NOTIFICATION_TEMPLATES_PATH;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 import static org.junit.Assert.assertEquals;
@@ -230,4 +229,51 @@ public class ApplicationNotificationTemplateServiceImplTest extends BaseServiceU
         assertEquals("MessageBody", result.getSuccess().getMessageBody());
     }
 
+    @Test
+    public void getEoiApprovedNotificationTemplate() {
+        ZonedDateTime feedbackDate = ZonedDateTime.now();
+        Competition competition = newCompetition()
+                .withName("Competition")
+                .withFundingType(HECP)
+                .withReleaseFeedbackDate(feedbackDate)
+                .withEnabledForExpressionOfInterest(true)
+                .build();
+
+        Map<String, Object> arguments = new HashMap<>();
+        arguments.put("dashboardUrl", webBaseUrl);
+
+        when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(renderer.renderTemplate(eq(systemNotificationSource), any(),
+                eq(DEFAULT_NOTIFICATION_TEMPLATES_PATH + "eoi_approved_decision.html"), eq(arguments)))
+                .thenReturn(serviceSuccess("MessageBody"));
+
+        ServiceResult<ApplicationNotificationTemplateResource> result = service.getEoiApprovedNotificationTemplate(competitionId);
+
+        assertTrue(result.isSuccess());
+        assertEquals("MessageBody", result.getSuccess().getMessageBody());
+    }
+
+    @Test
+    public void getEoiRejectedNotificationTemplate() {
+        ZonedDateTime feedbackDate = ZonedDateTime.now();
+        Competition competition = newCompetition()
+                .withName("Competition")
+                .withFundingType(HECP)
+                .withReleaseFeedbackDate(feedbackDate)
+                .withEnabledForExpressionOfInterest(true)
+                .build();
+
+        Map<String, Object> arguments = new HashMap<>();
+        arguments.put("competitionName", competition.getName());
+
+        when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(renderer.renderTemplate(eq(systemNotificationSource), any(),
+                eq(DEFAULT_NOTIFICATION_TEMPLATES_PATH + "eoi_rejected_decision.html"), eq(arguments)))
+                .thenReturn(serviceSuccess("MessageBody"));
+
+        ServiceResult<ApplicationNotificationTemplateResource> result = service.getEoiRejectedNotificationTemplate(competitionId);
+
+        assertTrue(result.isSuccess());
+        assertEquals("MessageBody", result.getSuccess().getMessageBody());
+    }
 }
