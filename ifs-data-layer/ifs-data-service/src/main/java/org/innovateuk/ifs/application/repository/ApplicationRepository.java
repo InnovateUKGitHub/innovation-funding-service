@@ -80,7 +80,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             "OR (:sent = true AND a.manageDecisionEmailDate IS NOT NULL) " +
             "OR (:sent = false AND a.manageDecisionEmailDate IS NULL)) " +
             "AND (" +
-            "(:eoi = false AND (eoiConfig IS NULL)) " +
+            "(:eoi = false AND (eoiConfig IS NULL OR eoiConfig.eoiConfig.enabledForExpressionOfInterest = false)) " +
             "OR (:eoi = true AND eoiConfig.enabledForExpressionOfInterest = true)) " +
             "AND (:funding IS NULL " +
             "OR (a.decision = :funding)) ";
@@ -222,9 +222,6 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
                                                                                  Pageable pageable);
 
     List<Application> findByCompetitionIdAndApplicationProcessActivityStateIn(long competitionId, Collection<ApplicationState> applicationStates);
-
-    // default List<Application> findApplicationsByCompetitionIdAndStateIn(long competitionId, Collection<ApplicationState> applicationStates) { return findByCompetitionIdAndApplicationProcessActivityStateInApplicationExpressionOfInterestConfigEnabledForExpressionOfInterestFalse(competitionId, applicationStates); }
-    // List<Application> findByCompetitionIdAndApplicationProcessActivityStateInAndApplicationExpressionOfInterestConfigEnabledForExpressionOfInterestFalse(long competitionId, Collection<ApplicationState> applicationStates);
 
     List<Application> findByCompetitionIdAndAssessmentPeriodIdAndApplicationProcessActivityStateIn(long competitionId, long assessmentPeriodId, Collection<ApplicationState> applicationStates);
 
