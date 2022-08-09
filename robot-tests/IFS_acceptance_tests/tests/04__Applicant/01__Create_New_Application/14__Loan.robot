@@ -161,7 +161,7 @@ The user will not be able to mark the application as complete without completing
     And The user should see the element                         jQuery = span:contains("Business and financial information")
     And The user should see the element                         jQuery = p:contains("Information not yet provided")
     And The user should not see the element                     jQuery = #accordion-questions-content-1-1 button:contains("Mark")
-    And the user should see the element                         jQuery = .section-incomplete + button:contains("Business and financial information")
+    And the user should see the element                         jQuery = div:contains("Incomplete") button:contains("Business and financial information")
     And the user should see the element                         jQuery = h2:contains("Applicant details")
     And the user should see the element                         jQuery = h2:contains("Project finance")
 
@@ -169,7 +169,7 @@ The user can see the business and financial information application question in 
     [Documentation]    IFS-9484  IFS-10705
     When the user marks b&fi question as complete or incomplete     steve.smith@empire.com  ${loanApplicationID}  Complete  2025-04-11T12:15:45.000Z
     And the user reloads the page
-    Then the user should see the element                            jQuery = .section-complete + button:contains("Business and financial information")
+    Then the user should see the element                            jQuery = div:contains("Complete") button:contains("Business and financial information")
     And the user checks valid question status received form SIL     ${loanApplicationID}  Complete  2025-04-11T12:15:45Z
 
 Return and edit button should not change the status of B&FI question

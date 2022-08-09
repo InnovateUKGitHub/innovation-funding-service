@@ -17,7 +17,7 @@ Status is updated after marking as complete
     When the user clicks the button/link    link = 4. Economic benefit
     And the applicant adds some content and marks this section as complete
     And the user navigates to the review and submit page of the Robot test application
-    Then the user should see the element    jQuery = .section-complete + button:contains("Economic benefit")
+    Then the user should see the element    jQuery = div:contains("Complete") button:contains("Economic benefit")
 
 Status is updated after editing a section
     [Documentation]    INFUND-544

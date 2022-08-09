@@ -295,7 +295,7 @@ Lead applicant gets validation message when submiting the application without al
     When lead review and submits the application
     And the user clicks the button/link               id = accordion-questions-heading-1-1
     Then the user should see the element              jQuery = td:contains("${partnerOrganisationName}") + td:contains("Not determined")
-    And the user should see the element               jQuery = .section-incomplete + button:contains("Subsidy basis")
+    And the user should see the element               jQuery = div:contains("Incomplete") button:contains("Subsidy basis")
 
 Lead applicant submits subsidy control subsidy basis application
     [Documentation]  IFS-9116
