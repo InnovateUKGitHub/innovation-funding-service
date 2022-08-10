@@ -202,7 +202,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         return getAssignableViewModel(question, data)
                 .map(avm ->
                         new ApplicationOverviewRowViewModel(
-                                getQuestionTitle(question, data.getCompetition()),
+                                getQuestionTitle(question, data),
                                 getRowUrlFromQuestion(question, data),
                                 complete,
                                 avm,
@@ -210,7 +210,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                                 question.isEnabledForPreRegistration())
                 ).orElse(
                         new ApplicationOverviewRowViewModel(
-                                getQuestionTitle(question, data.getCompetition()),
+                                getQuestionTitle(question, data),
                                 getRowUrlFromQuestion(question, data),
                                 complete,
                                 showStatus,
@@ -273,8 +273,10 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         }
     }
 
-    private static String getQuestionTitle(QuestionResource question, CompetitionResource competition) {
-        boolean preRegistration = competition.isEnabledForPreRegistration();
+    private static String getQuestionTitle(QuestionResource question, ApplicationOverviewData data) {
+        CompetitionResource competition = data.getCompetition();
+        ApplicationResource application = data.getApplication();
+        boolean preRegistration = application.isEnabledForExpressionOfInterest();
         String questionTitle = preRegistration ? format("%s", question.getShortName()) : format("%s. %s", question.getQuestionNumber(), question.getShortName());
 
         return (question.getQuestionSetupType() == ASSESSED_QUESTION) ?
