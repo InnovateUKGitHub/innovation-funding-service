@@ -389,7 +389,14 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
            "    OR  pu.id IS NOT NULL)" + // Or project exists and user is a project user.
            "   AND hidden IS NULL" +
            "   AND (eoiConfig IS NULL OR eoiConfig.enabledForExpressionOfInterest = false" +
-           " OR (eoiConfig.enabledForExpressionOfInterest = true AND (app.decision IS NULL OR app.decision NOT IN (org.innovateuk.ifs.fundingdecision.domain.DecisionStatus.EOI_APPROVED))))")
+           "        OR (eoiConfig.enabledForExpressionOfInterest = true" +
+           "            AND (app.decision IS NULL" +
+           "                 OR (app.decision IN (org.innovateuk.ifs.fundingdecision.domain.DecisionStatus.EOI_APPROVED)" +
+           "                     AND app.manageDecisionEmailDate IS NULL)" +
+           "                 OR (app.decision IN (org.innovateuk.ifs.fundingdecision.domain.DecisionStatus.EOI_REJECTED))" +
+           "                )" +
+           "           )" +
+           "       )")
     List<Application> findApplicationsForDashboard(long userId);
 
     boolean existsByProcessRolesUserIdAndCompetitionId(long userId, long competitionId);
