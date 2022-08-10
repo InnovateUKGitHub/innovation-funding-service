@@ -10,7 +10,7 @@ metadata:
     slow: slow
     newRelic: newRelic
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: application-svc
