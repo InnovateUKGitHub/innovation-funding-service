@@ -16,6 +16,9 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...               IFS-12265 Applicant dashboard: Unsuccessful pre-reg/EOI status update
 ...
 ...               IFS-12177 Pre-reg/EOI next stage decision - input
+...
+...               IFS-12262 Pre-Reg/EOI Send notifications
+...
 
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -29,8 +32,8 @@ ${hecpPreregCompName}                           Hecp Pre Registration Competitio
 ${hecpPreregAppName}                            preRegApplication
 ${unSuccessPreregAppName}                       unSuccessfulPreRegApplication
 ${unSubmittedPreregAppName}                     unSubmittedPreRegApplication
-${preRegApplicationUnsuccessfulEmail}           Thank you for submitting your application to Innovate UK for the competition
-${preRegApplicationSuccessfulEmail}             We are pleased to inform you that your application for the Horizon Europe collaborative competition has been successful and passed the technical assessment phase.
+${preRegApplicationUnsuccessfulEmail}           You have been unsuccessful in the expression of interest stage for funding to Innovate UK's ${hecpPreregCompName} competition.
+${preRegApplicationSuccessfulEmail}             We are pleased to inform you that your expression of interest application has been successful.
 ${preregApplicationSubmissionEmail}             You have successfully submitted an application for funding to
 
 *** Test Cases ***
@@ -149,6 +152,29 @@ Internal user is able to see Write and email button enabled
     And User should see EOI Related content
     And the user selects the checkbox           app-row-${preregApplicationID}
     And The user should not see the element     css = .govuk-button[disabled]
+
+Internal user should view EOI related content in the notification template
+    [Documentation]  IFS-12262
+    When the user clicks the button/link    jQuery = button:contains("Write and send email")
+    Then the user should see the element    jQuery = h1:contains("Send an expression of interest notification")
+    And the user should see the element     css = [value="Notification regarding your expression of interest application '[application name]' for the competition '[competition name]'"]
+    And the user should see the element     jQuery = th:contains("Expression of interest decision")
+
+Internal user sends a successful notification of an EOI application
+    [Documentation]    IFS-12262
+    When the user clicks the button/link                    jQuery = button:contains("Send notification")[data-js-modal = "send-to-all-applicants-modal"]
+    And the user clicks the button/link                     jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
+    And the user refreshes until element appears on page    jQuery = td:contains("${hecpPreregAppName}") ~ td:contains("Sent")
+    Then the user reads his email                           steve.smith@empire.com  Important message about your application '${hecpPreregAppName}' for the competition '${hecpPreregCompName}'  ${preRegApplicationSuccessfulEmail}
+
+Internal user sends a unsuccessful notification of an EOI application
+    [Documentation]    IFS-12262
+    Given the user selects the checkbox                     app-row-${unSuccessfulPreRegApplicationID}
+    When the user clicks the button/link                    jQuery = button:contains("Write and send email")
+    And the user clicks the button/link                     jQuery = button:contains("Send notification")[data-js-modal = "send-to-all-applicants-modal"]
+    And the user clicks the button/link                     jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
+    And the user refreshes until element appears on page    jQuery = td:contains("${unSuccessPreregAppName}") ~ td:contains("Sent")
+    Then the user reads his email                           steve.smith@empire.com  Important message about your application '${unSuccessPreregAppName}' for the competition '${hecpPreregCompName}'  ${preRegApplicationUnsuccessfulEmail}
 
 #Lead applicant views unsuccessful applications in previous dashboard
 #    [Documentation]  IFS-12265
