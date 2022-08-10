@@ -6,8 +6,8 @@ package org.innovateuk.ifs.application.resource;
 public enum Decision {
     FUNDED("Successful"),
     UNFUNDED("Unsuccessful"),
-    EOI_APPROVED("Approved"),
-    EOI_REJECTED("Rejected"),
+    EOI_APPROVED("Successful"),
+    EOI_REJECTED("Unsuccessful"),
     UNDECIDED("-"),
     ON_HOLD("On hold");
 
