@@ -17,7 +17,7 @@
                  th:classappend="${#fields.hasErrors('fundingAmountSoughtApplicable')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingAmountSoughtApplicable">
-                        <h2 class="govuk-fieldset__heading">Is a maximum funding sought required?</h2>
+                        <h2 class="govuk-fieldset__heading">Is a maximum funding sought?</h2>
                     </legend>
                     <span th:if="${#fields.hasErrors('fundingAmountSoughtApplicable')}" class="govuk-error-message"
                           th:each="err : ${#fields.errors('fundingAmountSoughtApplicable')}" th:text="${err}"/>
@@ -76,13 +76,13 @@
                     </div>
                 </fieldset>
             </div>
-            <button class="govuk-button">Done</button>
+            <button class="govuk-button govuk-!-margin-top-6">Done</button>
         </th:block>
 
         <th:block th:if="${!model.general.editable}">
 
-            <dl class="standard-definition-list">
-                <dt>Is a maximum funding sought required?</dt>
+            <dl class="standard-definition-list column-definition-list">
+                <dt>Is a maximum funding sought?</dt>
                 <dd th:text="${competitionSetupForm.fundingAmountSoughtApplicable ? 'Yes' : 'No'}"></dd>
                 <th:block th:if="${competitionSetupForm.fundingAmountSoughtApplicable}">
                     <dt>Funding sought amount</dt>
@@ -90,8 +90,8 @@
                 </th:block>
             </dl>
 
-            <p class="govuk-body govuk-!-font-weight-bold">Click edit to change the funding amount sought.</p>
-            <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button">Edit</button>
+            <p th:unless="${!competitionSetupForm.fundingAmountSoughtApplicable}" class="govuk-body govuk-!-font-weight-bold">Click edit to change the funding amount sought.</p>
+            <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button govuk-!-margin-top-6">Edit</button>
         </th:block>
 
     </form>
