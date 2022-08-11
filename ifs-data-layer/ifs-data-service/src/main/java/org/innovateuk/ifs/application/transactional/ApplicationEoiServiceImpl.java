@@ -20,6 +20,7 @@ import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.granttransfer.repository.EuGrantTransferRepository;
 import org.innovateuk.ifs.horizon.repository.ApplicationHorizonWorkProgrammeRepository;
+import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Collections;
+import java.util.UUID;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -79,6 +81,9 @@ public class ApplicationEoiServiceImpl implements ApplicationEoiService {
     private QuestionStatusRepository questionStatusRepository;
 
     @Autowired
+    private ApplicationInviteRepository applicationInviteRepository;
+
+    @Autowired
     private ApplicationProcessRepository applicationProcessRepository;
 
     @Autowired
@@ -119,9 +124,11 @@ public class ApplicationEoiServiceImpl implements ApplicationEoiService {
 
                                         populateProcessRole(application, migratedApplication);
 
-                                        populateformInputResponse(application, migratedApplication);
+                                        populateFormInputResponse(application, migratedApplication);
 
                                         populateQuestionStatus(application, migratedApplication);
+
+                                        populateApplicationInvite(application, migratedApplication);
 
                                         updateApplicationProgress(application);
 
@@ -146,6 +153,19 @@ public class ApplicationEoiServiceImpl implements ApplicationEoiService {
         log.debug("Recalculated progress for updated application : " + application.getId());
     }
 
+    private void populateApplicationInvite(Application application, Application migratedApplication) {
+        applicationInviteRepository.findByApplicationId(migratedApplication.getId()).stream()
+                .forEach(applicationInvite -> {
+                    em.detach(applicationInvite);
+                    applicationInvite.setId(null);
+                    applicationInvite.setHash(UUID.randomUUID().toString());
+                    applicationInvite.setTarget(application);
+                    applicationInviteRepository.save(applicationInvite);
+                });
+
+        log.debug("Populate application invite for application : " + application.getId());
+    }
+
     private void populateQuestionStatus(Application application, Application migratedApplication) {
         questionStatusRepository.findByApplicationId(migratedApplication.getId()).stream()
                 .forEach(questionStatus -> {
@@ -158,7 +178,7 @@ public class ApplicationEoiServiceImpl implements ApplicationEoiService {
         log.debug("Populate question status for application : " + application.getId());
     }
 
-    private void populateformInputResponse(Application application, Application migratedApplication) {
+    private void populateFormInputResponse(Application application, Application migratedApplication) {
         formInputResponseRepository.findByApplicationId(migratedApplication.getId()).stream()
                 .forEach(formInputResponse -> {
                     em.detach(formInputResponse);
