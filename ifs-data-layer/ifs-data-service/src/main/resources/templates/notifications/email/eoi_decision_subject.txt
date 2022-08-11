@@ -1,1 +1,1 @@
-Notification regarding your expression of interest application '[${applicationName}]' for the competition '[${competitionName}]'
+Notification regarding your expression of interest application '${applicationName}' for the competition '${competitionName}'
