@@ -27,7 +27,7 @@ public class HttpClientHealthIndicator implements HealthIndicator {
     @Autowired
     private PoolingHttpClientConnectionManager poolingHttpClientConnectionManager;
 
-    @Scheduled(timeUnit = TimeUnit.MINUTES, initialDelay = 15)
+    @Scheduled(timeUnit = TimeUnit.MINUTES, initialDelay = 15, fixedDelay = 500)
     public void scheduled() {
         log.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX");
         log.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX");
