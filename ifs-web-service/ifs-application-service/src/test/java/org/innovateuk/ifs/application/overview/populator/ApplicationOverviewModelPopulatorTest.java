@@ -299,7 +299,7 @@ public class ApplicationOverviewModelPopulatorTest {
         assertTrue(sections.get(0).isEnabledForPreRegistration());
 
         ApplicationOverviewRowViewModel questionRow = sectionWithQuestions.getRows().iterator().next();
-        assertEquals("4. A question", questionRow.getTitle());
+        assertEquals("A question", questionRow.getTitle());
         assertEquals("/the-question-url", questionRow.getUrl());
         assertEquals(false, questionRow.isComplete());
         assertEquals(processRoles.get(1), questionRow.getAssignButtonsViewModel().get().getAssignee());
