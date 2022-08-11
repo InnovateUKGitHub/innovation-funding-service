@@ -27,12 +27,21 @@ spec:
               containerPort: 5672
           livenessProbe:
             exec:
-              command: ["rabbitmq-diagnostics", "status"]
-            # Tune for fast startup on dev
-            initialDelaySeconds: 5
-            failureThreshold: 10
+              command:
+                - /bin/bash
+                - -ec
+                - rabbitmq-diagnostics -q check_running
+            initialDelaySeconds: 20
+            failureThreshold: 3
+            timeoutSeconds: 5
+            periodSeconds: 10
           readinessProbe:
             exec:
-              command: ["rabbitmq-diagnostics", "ping"]
-            initialDelaySeconds: 5
+              command:
+                - /bin/bash
+                - -ec
+                - rabbitmq-diagnostics -q ping
+            initialDelaySeconds: 20
+            timeoutSeconds: 5
+            periodSeconds: 10
           imagePullPolicy: IfNotPresent
