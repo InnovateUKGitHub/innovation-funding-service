@@ -2,6 +2,7 @@ package org.innovateuk.ifs.fundingdecision.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationExpressionOfInterestConfig;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -64,8 +65,7 @@ import static org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder.new
 import static org.innovateuk.ifs.competition.builder.CompetitionAssessmentConfigBuilder.newCompetitionAssessmentConfig;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
-import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDING;
-import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingServiceImpl.Notifications.HORIZON_EUROPE_FUNDING;
+import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingServiceImpl.Notifications.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
@@ -303,15 +303,6 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
                 "averageAssessorScore", "Average assessor score: " + averageAssessorScore3.getScore() + "%"));
         List<NotificationMessage> expectedLeadApplicants = newArrayList(application1LeadApplicantMessage, application2LeadApplicantMessage, application3LeadApplicantMessage);
 
-/*
-
-                    perNotificationTargetArguments.put("applicationName", application.getName());
-                    perNotificationTargetArguments.put("applicationId", applicationId);
-                    perNotificationTargetArguments.put("competitionName", application.getCompetition().getName());
-                    perNotificationTargetArguments.put("competitionId", application.getCompetition().getId());
-                    perNotificationTargetArguments.put("alwaysOpen", application.getCompetition().isAlwaysOpen());
-                    perNotificationTargetArguments.put("webBaseUrl", webBaseUrl);
- */
         Map<Long, Decision> decisions = MapFunctions.asMap(
                 application1.getId(), Decision.FUNDED,
                 application2.getId(), Decision.UNFUNDED,
@@ -472,6 +463,100 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
                         .stream()
                         .map(NotificationMessage::new)
                         .collect(Collectors.toList()), HORIZON_EUROPE_FUNDING, emptyMap());
+
+        List<Long> applicationIds = newArrayList(application1.getId(), application2.getId());
+        List<Application> applications = newArrayList(application1, application2);
+        when(applicationRepository.findAllById(applicationIds)).thenReturn(applications);
+
+        newArrayList(application1, application2).forEach(application ->
+                when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application))
+        );
+
+        allProcessRoles.forEach(processRole ->
+                when(processRoleRepository.findByApplicationIdAndRole(processRole.getApplicationId(), processRole.getRole()))
+                        .thenReturn(singletonList(processRole))
+        );
+
+        when(notificationService.sendNotificationWithFlush(createSimpleNotificationExpectations(expectedFundingNotification), eq(EMAIL)))
+                .thenReturn(serviceSuccess());
+        when(applicationService.setApplicationFundingEmailDateTime(any(Long.class), any(ZonedDateTime.class)))
+                .thenReturn(serviceSuccess(new ApplicationResource()));
+        when(competitionService.manageInformState(competition.getId())).thenReturn(serviceSuccess());
+
+        when(applicationWorkflowHandler.notifyFromApplicationState(any(), any())).thenReturn(true);
+        ServiceResult<Void> result = service.notifyApplicantsOfDecisions(fundingNotificationResource);
+        assertTrue(result.isSuccess());
+
+        verify(notificationService).sendNotificationWithFlush(createSimpleNotificationExpectations(expectedFundingNotification), eq(EMAIL));
+        verifyNoMoreInteractions(notificationService);
+
+        verify(applicationService).setApplicationFundingEmailDateTime(eq(application1.getId()), any(ZonedDateTime.class));
+        verify(applicationService).setApplicationFundingEmailDateTime(eq(application2.getId()), any(ZonedDateTime.class));
+        verifyNoMoreInteractions(applicationService);
+    }
+
+    @Test
+    public void notifyAllApplicantsOfDecisions_Eoi() {
+        CompetitionAssessmentConfig competitionAssessmentConfig = new CompetitionAssessmentConfig();
+        Competition competition = newCompetition()
+                .withCompetitionAssessmentConfig(competitionAssessmentConfig)
+                .withFundingType(FundingType.HECP)
+                .withCompetitionType(newCompetitionType()
+                        .withName("Horizon Europe Guarantee")
+                        .build())
+                .withEnabledForExpressionOfInterest(true)
+                .build();
+
+        Application application1 = newApplication()
+                .withActivityState(ApplicationState.SUBMITTED)
+                .withCompetition(competition)
+                .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig.builder()
+                        .enabledForExpressionOfInterest(true)
+                        .build())
+                .build();
+        Application application2 = newApplication()
+                .withActivityState(ApplicationState.SUBMITTED)
+                .withCompetition(competition)
+                .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig.builder()
+                        .enabledForExpressionOfInterest(true)
+                        .build())
+                .build();
+
+        User application1LeadApplicant = newUser().build();
+        User application1Collaborator = newUser().build();
+        User application2LeadApplicant = newUser().build();
+        User application2Collaborator = newUser().build();
+
+        List<ProcessRole> allProcessRoles = newProcessRole().
+                withUser(application1LeadApplicant, application1Collaborator,
+                        application2LeadApplicant, application2Collaborator).
+                withApplication(application1, application1, application2, application2).
+                withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR,
+                        ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR).
+                build(4);
+
+        UserNotificationTarget application1LeadApplicantTarget = new UserNotificationTarget(application1LeadApplicant.getName(),
+                application1LeadApplicant.getEmail());
+        UserNotificationTarget application2LeadApplicantTarget = new UserNotificationTarget(application2LeadApplicant.getName(),
+                application2LeadApplicant.getEmail());
+        UserNotificationTarget application1CollaboratorTarget = new UserNotificationTarget(application1Collaborator.getName(),
+                application1Collaborator.getEmail());
+        UserNotificationTarget application2CollaboratorTarget = new UserNotificationTarget(application2Collaborator.getName(),
+                application2Collaborator.getEmail());
+        List<NotificationTarget> expectedApplicants = newArrayList(application1LeadApplicantTarget, application2LeadApplicantTarget,
+                application1CollaboratorTarget, application2CollaboratorTarget);
+
+        Map<Long, Decision> decisions = new HashMap<>();
+        decisions.put(application1.getId(), EOI_APPROVED);
+        decisions.put(application2.getId(), EOI_REJECTED);
+
+        FundingNotificationResource fundingNotificationResource = new FundingNotificationResource("The message body.", decisions);
+
+        Notification expectedFundingNotification =
+                new Notification(systemNotificationSource, expectedApplicants
+                        .stream()
+                        .map(NotificationMessage::new)
+                        .collect(Collectors.toList()), EOI_DECISION, emptyMap());
 
         List<Long> applicationIds = newArrayList(application1.getId(), application2.getId());
         List<Application> applications = newArrayList(application1, application2);
