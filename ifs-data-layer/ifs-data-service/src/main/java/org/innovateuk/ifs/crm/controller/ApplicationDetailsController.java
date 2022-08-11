@@ -5,33 +5,44 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.CompanyAge;
+import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
+import org.innovateuk.ifs.application.resource.Decision;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
+import org.innovateuk.ifs.sil.crm.resource.SilApplicationStatus;
 import org.innovateuk.ifs.sil.crm.resource.SilIMApplicationLocationInfo;
 import org.innovateuk.ifs.sil.crm.resource.SilOrganisationLocation;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserStatus;
+import org.innovateuk.ifs.user.transactional.UsersRolesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
 @RestController
-@RequestMapping("/application/v1")
-@SecuredBySpring(value = "Controller", description = "IMApplicationOrgLocationController", securedType = IMApplicationOrgLocationController.class)
-public class IMApplicationOrgLocationController {
+@RequestMapping("/application-details")
+@SecuredBySpring(value = "Controller", description = "ApplicationDetailsController", securedType = ApplicationDetailsController.class)
+public class ApplicationDetailsController {
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -45,25 +56,44 @@ public class IMApplicationOrgLocationController {
     @Autowired
     private ApplicationFinanceService applicationFinanceService;
 
+    @Autowired
+    private UsersRolesService usersRolesService;
+
     @PreAuthorize("permitAll()")
-    @GetMapping(value = "/{applicationId}")
+    @GetMapping(value = "/v1/{applicationId}")
     @ResponseBody
-    public Object getApplicationLocationInfo(
+    public RestResult<SilIMApplicationLocationInfo> getApplicationLocationInfo(
             @PathVariable("applicationId") final Long applicationId,
             HttpServletRequest request) throws JsonProcessingException {
 
-        ApplicationResource application = applicationService.getApplicationById(applicationId).getSuccess();
-
-        if (application == null) {
-            log.error(String.format("application-organisation location error: application not found IFS %d: %s", applicationId));
-            return RestResult.restFailure(HttpStatus.BAD_REQUEST);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        if (user == null) {
+            log.error("application-details : user not found or inactive in the system ");
+            return RestResult.restFailure(HttpStatus.UNAUTHORIZED);
         } else {
-            log.debug(String.format("GET application-organisation location : ", applicationId));
-            return getApplicationLocationObj(application);
+            ApplicationResource application = applicationService.getApplicationById(applicationId).getSuccess();
+
+            if (application == null) {
+                log.error(String.format("application-details : application %d, not found in the system ", applicationId));
+                return RestResult.restFailure(HttpStatus.BAD_REQUEST);
+            } else {
+                log.debug(String.format("GET application-details : ", applicationId));
+                return getAssociatedApplicationData(user, applicationId, application);
+            }
         }
     }
 
-    private Object getApplicationLocationObj(ApplicationResource applicationResource) throws JsonProcessingException {
+    private RestResult<SilIMApplicationLocationInfo> getAssociatedApplicationData(UserResource user, Long applicationId, ApplicationResource applicationResource) {
+        return usersRolesService.getProcessRoleByUserIdAndApplicationId(user.getId(), applicationId).handleSuccessOrFailure(
+                failure -> {
+                    log.error(String.format("application-details error: process role not found using user %d, application %d", user.getId(), applicationId));
+                    return RestResult.restFailure(failure.getErrors(), HttpStatus.FORBIDDEN);
+                },
+                processRole -> getApplicationLocationObj(applicationResource));
+    }
+
+
+    private RestResult<SilIMApplicationLocationInfo> getApplicationLocationObj(ApplicationResource applicationResource) throws JsonProcessingException {
         Long applicationId = applicationResource.getId();
         SilIMApplicationLocationInfo silIMApplicationLocationInfo = new SilIMApplicationLocationInfo();
 
@@ -73,8 +103,7 @@ public class IMApplicationOrgLocationController {
         List<SilOrganisationLocation> silOrganisations = setOrganisationData(applicationId, organisations);
         silIMApplicationLocationInfo.setOrganisations(silOrganisations);
 
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(silIMApplicationLocationInfo);
+        return  RestResult.restSuccess(silIMApplicationLocationInfo);
     }
 
     private List<SilOrganisationLocation> setOrganisationData (Long applicationId, Set<OrganisationResource> organisations) {
@@ -87,9 +116,10 @@ public class IMApplicationOrgLocationController {
             silOrganisationLocation.setInternationalRegistrationNumber(org.getInternationalRegistrationNumber());
             ApplicationFinanceResource applicationFinanceResource =
                     applicationFinanceService.financeDetails(applicationId, org.getId()).getSuccess();
-            String orgSize = applicationFinanceResource.getOrganisationSize() == null ? null : applicationFinanceResource.getOrganisationSize().getDescription();
+
+            String orgSize = Optional.ofNullable(applicationFinanceResource.getOrganisationSize()).map(OrganisationSize::getDescription).orElse(null);
             silOrganisationLocation.setOrganisationSize(orgSize);
-            String internationalLoc = applicationFinanceResource.getInternationalLocation() == null ? null : applicationFinanceResource.getInternationalLocation();
+            String internationalLoc = Optional.ofNullable(applicationFinanceResource.getInternationalLocation()).orElse(null);
             silOrganisationLocation.setInternationalLocation(internationalLoc);
             silOrganisationLocation.setWorkPostcode(applicationFinanceResource.getWorkPostcode());
             silOrganisations.add(silOrganisationLocation);
@@ -101,12 +131,12 @@ public class IMApplicationOrgLocationController {
         Long applicationId = applicationResource.getId();
         silIMApplicationLocationInfo.setApplicationID(applicationId.intValue());
         silIMApplicationLocationInfo.setApplicationName(applicationResource.getName());
-        silIMApplicationLocationInfo.setApplicationStartDate(applicationResource.getStartDate());
+        silIMApplicationLocationInfo.setApplicationStartDate(applicationResource.getStartDate().atStartOfDay(ZoneId.systemDefault()));
 
         CompetitionResource competitionResource = applicationService.
                 getCompetitionByApplicationId(applicationId).getSuccess();
         silIMApplicationLocationInfo.setCompetitionID(competitionResource.getId().toString());
-        String fundingDecisionStatus = applicationResource.getDecision() == null ? null : applicationResource.getDecision().getName();
+        String fundingDecisionStatus = Optional.ofNullable(applicationResource.getDecision()).map(Decision::getName) .orElse(null);
         silIMApplicationLocationInfo.setFundingDecisionStatus(fundingDecisionStatus);
 
         silIMApplicationLocationInfo.setDurationInMonths(applicationResource.getDurationInMonths());
@@ -116,9 +146,9 @@ public class IMApplicationOrgLocationController {
         silIMApplicationLocationInfo.setManageFundingEmailDate(mangeFundingEmailDate);
 
         silIMApplicationLocationInfo.setInAssessmentReviewPanel(applicationResource.isInAssessmentReviewPanel());
-        String companyAge = applicationResource.getCompanyAge() == null ? null : applicationResource.getCompanyAge().getName();
+        String companyAge = Optional.ofNullable(applicationResource.getCompanyAge()).map(CompanyAge::getName) .orElse(null);
         silIMApplicationLocationInfo.setCompanyAge(companyAge);
-        String companyPrimaryFocus = applicationResource.getCompanyPrimaryFocus() == null ? null : applicationResource.getCompanyPrimaryFocus().getName();
+        String companyPrimaryFocus = Optional.ofNullable(applicationResource.getCompanyPrimaryFocus()).map(CompanyPrimaryFocus::getName) .orElse(null);
         silIMApplicationLocationInfo.setCompanyPrimaryFocus(companyPrimaryFocus);
         return silIMApplicationLocationInfo;
     }

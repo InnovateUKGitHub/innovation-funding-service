@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -34,9 +35,8 @@ public class SilIMApplicationLocationInfo {
     private String applicationName;
 
     @JsonProperty("appStartDate")
-    @JsonSerialize(using = LocalDateSerializer.class)
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    private LocalDate applicationStartDate;
+    @JsonSerialize(using = ZonedDateTimeSerializer.class)
+    private ZonedDateTime applicationStartDate;
 
     @JsonProperty("compID")
     private String competitionID;
@@ -49,12 +49,10 @@ public class SilIMApplicationLocationInfo {
 
     @JsonProperty("completion")
     @JsonSerialize(using = PercentageSerializer.class)
-    @JsonDeserialize(using = PercentageDeserializer.class)
     private BigDecimal completionPercentage;
 
     @JsonProperty("manageFundingEmailDate")
     @JsonSerialize(using = ZonedDateTimeSerializer.class)
-    @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
     private ZonedDateTime manageFundingEmailDate;
 
     @JsonProperty("inAssessmentReviewPanel")
