@@ -213,16 +213,15 @@ public class ApplicationOverviewModelPopulatorTest {
         CompetitionResource competition = newCompetitionResource()
                 .withCollaborationLevel(SINGLE)
                 .withTermsAndConditions(termsAndCondition)
+                .withEnabledForExpressionOfInterest(true)
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
                 .build();
-
         ApplicationExpressionOfInterestConfigResource applicationExpressionOfInterestConfigResource =
                  newApplicationExpressionOfInterestConfigResource()
                 .withApplicationId(application.getId())
                 .withEnabledForExpressionOfInterest(true).build();
-
         application.setApplicationExpressionOfInterestConfigResource(applicationExpressionOfInterestConfigResource);
         List<QuestionResource> questions = newQuestionResource()
                 .withShortName("A question")
