@@ -165,7 +165,7 @@ Internal user sends a successful notification of an EOI application
     When the user clicks the button/link                    jQuery = button:contains("Send notification")[data-js-modal = "send-to-all-applicants-modal"]
     And the user clicks the button/link                     jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
     And the user refreshes until element appears on page    jQuery = td:contains("${hecpPreregAppName}") ~ td:contains("Sent")
-    Then the user reads his email                           steve.smith@empire.com  Important message about your application '${hecpPreregAppName}' for the competition '${hecpPreregCompName}'  ${preRegApplicationSuccessfulEmail}
+    Then the user reads his email                           steve.smith@empire.com  Notification regarding your expression of interest application '${hecpPreregAppName}' for the competition '${hecpPreregCompName}'  ${preRegApplicationSuccessfulEmail}
 
 Internal user sends a unsuccessful notification of an EOI application
     [Documentation]    IFS-12262
@@ -174,7 +174,7 @@ Internal user sends a unsuccessful notification of an EOI application
     And the user clicks the button/link                     jQuery = button:contains("Send notification")[data-js-modal = "send-to-all-applicants-modal"]
     And the user clicks the button/link                     jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
     And the user refreshes until element appears on page    jQuery = td:contains("${unSuccessPreregAppName}") ~ td:contains("Sent")
-    Then the user reads his email                           steve.smith@empire.com  Important message about your application '${unSuccessPreregAppName}' for the competition '${hecpPreregCompName}'  ${preRegApplicationUnsuccessfulEmail}
+    Then the user reads his email                           steve.smith@empire.com  Notification regarding your expression of interest application '${unSuccessPreregAppName}' for the competition '${hecpPreregCompName}'  ${preRegApplicationUnsuccessfulEmail}
 
 #Lead applicant views unsuccessful applications in previous dashboard
 #    [Documentation]  IFS-12265
