@@ -122,6 +122,12 @@ public class ApplicationEoiServiceIntegrationTest extends BaseApplicationMigrati
                     assertEquals(applicationId, questionStatus.getApplication().getId());
                 });
 
+        applicationInviteRepository.findByApplicationId(fullApplication.getId()).stream()
+                .forEach(applicationInvite -> {
+                    assertNotNull(applicationInvite);
+                    assertEquals(applicationId, applicationInvite.getTarget().getId());
+                });
+
         List<ApplicationProcess> applicationProcess = applicationProcessRepository.findByTargetId(fullApplication.getId());
         assertEquals(1, applicationProcess.size());
         assertEquals(applicationProcess.get(0).getTarget().getId(), applicationId);
