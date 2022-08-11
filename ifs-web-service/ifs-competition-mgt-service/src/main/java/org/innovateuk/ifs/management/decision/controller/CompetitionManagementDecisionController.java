@@ -251,6 +251,7 @@ public abstract class CompetitionManagementDecisionController extends Competitio
                 if (decision.isPresent()) {
                     applicationDecisionService.saveApplicationDecisionData(competitionId, decision.get(), selectionForm.getApplicationIds());
                     removeAllApplicationsIds(selectionForm);
+                    selectionCookie.setDecisionSelectionForm(selectionForm);
                     saveFormToCookie(response, competitionId, selectionCookie);
                 }
             }
