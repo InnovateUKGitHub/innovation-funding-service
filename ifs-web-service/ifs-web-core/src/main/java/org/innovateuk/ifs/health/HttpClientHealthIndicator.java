@@ -27,7 +27,7 @@ public class HttpClientHealthIndicator implements HealthIndicator {
     @Autowired
     private PoolingHttpClientConnectionManager poolingHttpClientConnectionManager;
 
-    @Scheduled(timeUnit = TimeUnit.MINUTES, initialDelay = 15, fixedDelay = 500)
+    @Scheduled(timeUnit = TimeUnit.MINUTES, initialDelay = 1, fixedDelay = 500)
     public void scheduled() {
         log.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX");
         log.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX");
@@ -40,19 +40,27 @@ public class HttpClientHealthIndicator implements HealthIndicator {
     @Override
     public Health health() {
         PoolStats poolStats = poolingHttpClientConnectionManager.getTotalStats();
+        logWarning(poolStats);
         Map<String, Integer> stats = getStats(poolStats);
         if (getIsShutdown()) {
-            return Health.up().withDetails(stats).build();
-        } else if (poolStats.getAvailable() <= lowPoolWarningCount) {
-            return Health.outOfService().withDetails(stats).build();
+            return Health.down().withDetails(stats).build();
+        } return Health.up().withDetails(stats).build();
+    }
+
+    private void logWarning(PoolStats poolStats) {
+        if (poolStats.getPending() > lowPoolWarningCount | poolStats.getLeased() + lowPoolWarningCount > poolStats.getMax()) {
+            log.warn(poolStats.toString());
         }
-        return Health.down().withDetails(stats).build();
+        log.trace(poolStats.toString());
     }
 
     private boolean getIsShutdown() {
         Field isShutDownField = ReflectionUtils.findField(PoolingHttpClientConnectionManager.class, "isShutDown");
         ReflectionUtils.makeAccessible(isShutDownField);
         AtomicBoolean isShutdown = (AtomicBoolean) ReflectionUtils.getField(isShutDownField, poolingHttpClientConnectionManager);
+        if (isShutdown.get()) {
+            log.error("Connection pool has been terminated by the HttpClient Library");
+        }
         return isShutdown.get();
     }
 
