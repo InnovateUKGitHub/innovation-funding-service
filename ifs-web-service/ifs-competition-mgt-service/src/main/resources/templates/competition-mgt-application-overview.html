@@ -117,6 +117,11 @@
                             view activity log
                         </a>
                     </li>
+                    <li th:if="${model.application.isEoiFullApplication()}">
+                        <a th:href="@{/competition/{competitionId}/application/applicationId(competitionId=${model.application.competition},applicationId=${model.application.id})}" class="govuk-link">
+                            Expression of interest
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
