@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertFalse;
 
@@ -119,6 +120,12 @@ public class ApplicationEoiServiceIntegrationTest extends BaseApplicationMigrati
                 .forEach(questionStatus -> {
                     assertNotNull(questionStatus);
                     assertEquals(applicationId, questionStatus.getApplication().getId());
+                });
+
+        applicationInviteRepository.findByApplicationId(fullApplication.getId()).stream()
+                .forEach(applicationInvite -> {
+                    assertNotNull(applicationInvite);
+                    assertEquals(applicationId, applicationInvite.getTarget().getId());
                 });
 
         List<ApplicationProcess> applicationProcess = applicationProcessRepository.findByTargetId(fullApplication.getId());

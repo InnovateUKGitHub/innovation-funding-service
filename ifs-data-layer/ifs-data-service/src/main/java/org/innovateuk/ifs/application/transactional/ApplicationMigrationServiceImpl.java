@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.activitylog.domain.ActivityLog;
 import org.innovateuk.ifs.activitylog.repository.ActivityLogRepository;
 import org.innovateuk.ifs.application.domain.*;
@@ -38,10 +39,9 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
+@Slf4j
 @Service
 public class ApplicationMigrationServiceImpl implements ApplicationMigrationService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ApplicationMigrationServiceImpl.class);
 
     @Autowired
     private ApplicationMigrationRepository applicationMigrationRepository;
@@ -197,7 +197,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
     private void deleteApplication(Application application) {
         applicationRepository.delete(application);
 
-        LOG.debug("Deleted application : " + application.getId());
+        log.debug("Deleted application : " + application.getId());
     }
 
     private void deleteApplicationDependency(Application application) {
@@ -206,7 +206,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
         applicationHiddenFromDashboardRepository.deleteByApplicationId(application.getId());
         applicationExpressionOfInterestConfigRepository.deleteByApplicationId(application.getId());
 
-        LOG.debug("Deleted application dependency for application : " + application.getId());
+        log.debug("Deleted application dependency for application : " + application.getId());
     }
 
     private void migrateApplicationKtaInvite(Application application, Application migratedApplication) {
@@ -217,7 +217,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                 }
         );
 
-        LOG.debug("Migrated application kta invite for application : " + application.getId());
+        log.debug("Migrated application kta invite for application : " + application.getId());
     }
 
     private void migrateApplicationInvite(Application application, Application migratedApplication) {
@@ -227,7 +227,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                     applicationInviteRepository.save(applicationInvite);
                 });
 
-        LOG.debug("Migrated application invite for application : " + application.getId());
+        log.debug("Migrated application invite for application : " + application.getId());
     }
 
     private void migrateSupporterAssignment(Application application, Application migratedApplication) {
@@ -237,7 +237,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                     supporterAssignmentRepository.save(supporterAssignmentProcess);
                 });
 
-        LOG.debug("Migrated supporter assignment process for application : " + application.getId());
+        log.debug("Migrated supporter assignment process for application : " + application.getId());
     }
 
     private void migrateReviewProcess(Application application, Application migratedApplication) {
@@ -247,7 +247,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                     reviewRepository.save(reviewProcess);
                 });
 
-        LOG.debug("Migrated review process for application : " + application.getId());
+        log.debug("Migrated review process for application : " + application.getId());
     }
 
     private void migrateInterviewAssignmentProcess(Application application, Application migratedApplication) {
@@ -257,7 +257,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                     interviewAssignmentRepository.save(interviewAssignmentProcess);
                 });
 
-        LOG.debug("Migrated interview assignment process for application : " + application.getId());
+        log.debug("Migrated interview assignment process for application : " + application.getId());
     }
 
     private void migrateInterviewProcess(Application application, Application migratedApplication) {
@@ -267,7 +267,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                     interviewRepository.save(interviewProcess);
                 });
 
-        LOG.debug("Migrated interview process for application : " + application.getId());
+        log.debug("Migrated interview process for application : " + application.getId());
     }
 
     private void migrateAssessmentProcess(Application application, Application migratedApplication) {
@@ -277,7 +277,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                     assessmentRepository.save(assessmentProcess);
                 });
 
-        LOG.debug("Migrated assessment process for application : " + application.getId());
+        log.debug("Migrated assessment process for application : " + application.getId());
     }
 
     private void migrateApplicationProcess(Application application, Application migratedApplication) {
@@ -287,7 +287,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                     applicationProcessRepository.save(applicationProcess);
                 });
 
-        LOG.debug("Migrated application process for application : " + application.getId());
+        log.debug("Migrated application process for application : " + application.getId());
     }
 
     private void migrateGrantProcess(Application application, Application migratedApplication) {
@@ -303,7 +303,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                     }
                 });
 
-        LOG.debug("Migrated grant process for application : " + application.getId());
+        log.debug("Migrated grant process for application : " + application.getId());
     }
 
     private void migrateQuestionStatus(Application application, Application migratedApplication) {
@@ -313,7 +313,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                     questionStatusRepository.save(questionStatus);
                 });
 
-        LOG.debug("Migrated question status for application : " + application.getId());
+        log.debug("Migrated question status for application : " + application.getId());
     }
 
     private void migrateProjectToBeCreated(Application application, Application migratedApplication) {
@@ -324,7 +324,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                 }
         );
 
-        LOG.debug("Migrated project to be created for application : " + application.getId());
+        log.debug("Migrated project to be created for application : " + application.getId());
     }
 
     private void migrateProject(Application application, Application migratedApplication) {
@@ -335,7 +335,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                 }
         );
 
-        LOG.debug("Migrated project for application : " + application.getId());
+        log.debug("Migrated project for application : " + application.getId());
     }
 
     private void migrateProcessRole(Application application, Application migratedApplication) {
@@ -345,7 +345,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                     processRoleRepository.save(processRole);
                 });
 
-        LOG.debug("Migrated process role for application : " + application.getId());
+        log.debug("Migrated process role for application : " + application.getId());
     }
 
     private void migrateFormInputResponse(Application application, Application migratedApplication) {
@@ -355,7 +355,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                     formInputResponseRepository.save(formInputResponse);
                 });
 
-        LOG.debug("Migrated form input response for application : " + application.getId());
+        log.debug("Migrated form input response for application : " + application.getId());
     }
 
     private void migrateEuGrantTransfer(Application application, Application migratedApplication) {
@@ -367,7 +367,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                     }
                 });
 
-        LOG.debug("Migrated eu grant transfer for application : " + application.getId());
+        log.debug("Migrated eu grant transfer for application : " + application.getId());
     }
 
     private void migrateAverageAssessorScore(Application application, Application migratedApplication) {
@@ -377,7 +377,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                     averageAssessorScoreRepository.save(averageAssessorScore);
                 });
 
-        LOG.debug("Migrated average assessor score for application : " + application.getId());
+        log.debug("Migrated average assessor score for application : " + application.getId());
     }
 
     private void migrateApplicationOrganisationAddress(Application application, Application migratedApplication) {
@@ -387,7 +387,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                     applicationOrganisationAddressRepository.save(applicationOrganisationAddress);
                 });
 
-        LOG.debug("Migrated application organisation address for application : " + application.getId());
+        log.debug("Migrated application organisation address for application : " + application.getId());
     }
 
     private void migrateApplicationHiddenFromDashboard(Application application, Application migratedApplication) {
@@ -398,7 +398,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                     applicationHiddenFromDashboardRepository.save(migratedApplicationHiddenFromDashboard);
                 });
 
-        LOG.debug("Migrated application hidden from dashboard for application : " + application.getId());
+        log.debug("Migrated application hidden from dashboard for application : " + application.getId());
     }
 
     private void migrateApplicationFinance(Application application, Application migratedApplication) {
@@ -420,7 +420,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                             });
                 });
 
-        LOG.debug("Migrated application finance for application : " + application.getId());
+        log.debug("Migrated application finance for application : " + application.getId());
     }
 
     private void migrateActivityLog(Application application, Application migratedApplication) {
@@ -434,7 +434,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                     activityLogRepository.save(migratedActivityLog);
                 });
 
-        LOG.debug("Migrated activity log for application : " + application.getId());
+        log.debug("Migrated activity log for application : " + application.getId());
     }
 
     private void migrateApplicationHorizonWorkProgramme(Application application, Application migratedApplication) {
@@ -445,7 +445,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                         applicationHorizonWorkProgrammeRepository.save(applicationHorizonWorkProgramme);
                     });
 
-            LOG.debug("Migrated Horizon Work Programme for application : " + application.getId());
+            log.debug("Migrated Horizon Work Programme for application : " + application.getId());
         }
     }
 
@@ -462,14 +462,14 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                         migratedApplication.setApplicationExpressionOfInterestConfig(migratedApplicationExpressionOfInterestConfig);
                     });
 
-            LOG.debug("Migrated application expression of interest config for application : " + application.getId());
+            log.debug("Migrated application expression of interest config for application : " + application.getId());
         }
     }
 
     private Application migrateApplication(Application application) {
         Application migratedApplication = applicationRepository.save(new Application(application));
 
-        LOG.debug("Migrated application : " + application.getId());
+        log.debug("Migrated application : " + application.getId());
 
         return migratedApplication;
     }
