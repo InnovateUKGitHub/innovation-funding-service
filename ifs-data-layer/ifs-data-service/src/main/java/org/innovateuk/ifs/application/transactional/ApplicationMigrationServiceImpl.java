@@ -1,19 +1,22 @@
 package org.innovateuk.ifs.application.transactional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.activitylog.domain.ActivityLog;
 import org.innovateuk.ifs.activitylog.repository.ActivityLogRepository;
-import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.ApplicationHiddenFromDashboard;
-import org.innovateuk.ifs.application.domain.ApplicationMigration;
-import org.innovateuk.ifs.application.domain.MigrationStatus;
+import org.innovateuk.ifs.application.domain.*;
 import org.innovateuk.ifs.application.repository.*;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.repository.AverageAssessorScoreRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.domain.ApplicationFinance;
+import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
+import org.innovateuk.ifs.finance.repository.FinanceRowMetaValueRepository;
 import org.innovateuk.ifs.grant.domain.GrantProcess;
 import org.innovateuk.ifs.grant.repository.GrantProcessRepository;
 import org.innovateuk.ifs.granttransfer.repository.EuGrantTransferRepository;
+import org.innovateuk.ifs.horizon.repository.ApplicationHorizonWorkProgrammeRepository;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
@@ -36,10 +39,9 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
+@Slf4j
 @Service
 public class ApplicationMigrationServiceImpl implements ApplicationMigrationService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ApplicationMigrationServiceImpl.class);
 
     @Autowired
     private ApplicationMigrationRepository applicationMigrationRepository;
@@ -52,6 +54,12 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
 
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
+
+    @Autowired
+    private ApplicationFinanceRowRepository applicationFinanceRowRepository;
+
+    @Autowired
+    private FinanceRowMetaValueRepository financeRowMetaValueRepository;
 
     @Autowired
     private ApplicationHiddenFromDashboardRepository applicationHiddenFromDashboardRepository;
@@ -107,6 +115,12 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
     @Autowired
     private ApplicationKtaInviteRepository applicationKtaInviteRepository;
 
+    @Autowired
+    private ApplicationHorizonWorkProgrammeRepository applicationHorizonWorkProgrammeRepository;
+
+    @Autowired
+    private ApplicationExpressionOfInterestConfigRepository applicationExpressionOfInterestConfigRepository;
+
     @Override
     public ServiceResult<Optional<ApplicationMigration>> findByApplicationIdAndStatus(long applicationId, MigrationStatus status) {
         return serviceSuccess(applicationMigrationRepository.findByApplicationIdAndStatus(applicationId, status));
@@ -115,200 +129,349 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
     @Override
     @Transactional
     public ServiceResult<Void> migrateApplication(long applicationId) {
+        return migrateApplication(applicationId, true)
+                .andOnSuccessReturnVoid();
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Long> migrateApplication(long applicationId, boolean isDeleteApplication) {
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
                 .andOnSuccess(application -> {
-                    Application migratedApplication = applicationRepository.save(new Application(application));
+                    Application migratedApplication = migrateApplication(application);
 
-                    LOG.debug("Migrated application : " + application.getId());
+                    migrateApplicationExpressionOfInterestConfig(application, migratedApplication);
 
-                    activityLogRepository.findByApplicationId(application.getId()).stream()
-                            .forEach(activityLog -> {
-                                ActivityLog migratedActivityLog = new ActivityLog(migratedApplication, activityLog.getType(),
-                                        activityLog.getOrganisation().orElse(null),
-                                        activityLog.getCompetitionDocument().orElse(null),
-                                        activityLog.getQuery().orElse(null),
-                                        activityLog.getCreatedOn(), activityLog.getCreatedBy(), activityLog.getAuthor());
-                                activityLogRepository.save(migratedActivityLog);
-                            });
+                    migrateApplicationHorizonWorkProgramme(application, migratedApplication);
 
-                    LOG.debug("Migrated activity log for application : " + application.getId());
+                    migrateActivityLog(application, migratedApplication);
 
-                    applicationFinanceRepository.findByApplicationId(application.getId()).stream()
-                            .forEach(applicationFinance -> {
-                                applicationFinance.setApplication(migratedApplication);
-                                applicationFinanceRepository.save(applicationFinance);
-                            });
+                    migrateApplicationFinance(application, migratedApplication);
 
-                    LOG.debug("Migrated application finance for application : " + application.getId());
+                    migrateApplicationHiddenFromDashboard(application, migratedApplication);
 
-                    applicationHiddenFromDashboardRepository.findByApplicationId(application.getId()).stream()
-                            .forEach(applicationHiddenFromDashboard -> {
-                                ApplicationHiddenFromDashboard migratedApplicationHiddenFromDashboard = new ApplicationHiddenFromDashboard(migratedApplication, applicationHiddenFromDashboard.getUser());
-                                migratedApplicationHiddenFromDashboard.setCreatedOn(applicationHiddenFromDashboard.getCreatedOn());
-                                applicationHiddenFromDashboardRepository.save(migratedApplicationHiddenFromDashboard);
-                            });
+                    migrateApplicationOrganisationAddress(application, migratedApplication);
 
-                    LOG.debug("Migrated application hidden from dashboard for application : " + application.getId());
+                    migrateAverageAssessorScore(application, migratedApplication);
 
-                    applicationOrganisationAddressRepository.findByApplicationId(application.getId()).stream()
-                            .forEach(applicationOrganisationAddress -> {
-                                applicationOrganisationAddress.setApplication(migratedApplication);
-                                applicationOrganisationAddressRepository.save(applicationOrganisationAddress);
-                            });
+                    migrateEuGrantTransfer(application, migratedApplication);
 
-                    LOG.debug("Migrated application organisation address for application : " + application.getId());
+                    migrateFormInputResponse(application, migratedApplication);
 
-                    averageAssessorScoreRepository.findByApplicationId(application.getId()).ifPresent(
-                            averageAssessorScore -> {
-                                averageAssessorScore.setApplication(migratedApplication);
-                                averageAssessorScoreRepository.save(averageAssessorScore);
-                            });
+                    migrateProcessRole(application, migratedApplication);
 
-                    LOG.debug("Migrated average assessor score for application : " + application.getId());
+                    migrateProject(application, migratedApplication);
 
-                    serviceSuccess(euGrantTransferRepository.findByApplicationId(application.getId()))
-                            .andOnSuccessReturnVoid(euGrantTransfer -> {
-                                if (euGrantTransfer != null) {
-                                    euGrantTransfer.setApplication(migratedApplication);
-                                    euGrantTransferRepository.save(euGrantTransfer);
-                                }
-                            });
+                    migrateProjectToBeCreated(application, migratedApplication);
 
-                    LOG.debug("Migrated eu grant transfer for application : " + application.getId());
+                    migrateQuestionStatus(application, migratedApplication);
 
-                    formInputResponseRepository.findByApplicationId(application.getId()).stream()
-                            .forEach(formInputResponse -> {
-                                formInputResponse.setApplication(migratedApplication);
-                                formInputResponseRepository.save(formInputResponse);
-                            });
+                    migrateGrantProcess(application, migratedApplication);
 
-                    LOG.debug("Migrated form input response for application : " + application.getId());
+                    migrateApplicationProcess(application, migratedApplication);
 
-                    processRoleRepository.findByApplicationId(application.getId()).stream()
-                            .forEach(processRole -> {
-                                processRole.setApplicationId(migratedApplication.getId());
-                                processRoleRepository.save(processRole);
-                            });
+                    migrateAssessmentProcess(application, migratedApplication);
 
-                    LOG.debug("Migrated process role for application : " + application.getId());
+                    migrateInterviewProcess(application, migratedApplication);
 
-                    projectRepository.findByApplicationId(application.getId()).ifPresent(
-                            project -> {
-                                project.setApplication(migratedApplication);
-                                projectRepository.save(project);
-                            }
-                    );
+                    migrateInterviewAssignmentProcess(application, migratedApplication);
 
-                    LOG.debug("Migrated project for application : " + application.getId());
+                    migrateReviewProcess(application, migratedApplication);
 
-                    projectToBeCreatedRepository.findByApplicationId(application.getId()).ifPresent(
-                            projectToBeCreated -> {
-                                projectToBeCreated.setApplication(migratedApplication);
-                                projectToBeCreatedRepository.save(projectToBeCreated);
-                            }
-                    );
+                    migrateSupporterAssignment(application, migratedApplication);
 
-                    LOG.debug("Migrated project to be created for application : " + application.getId());
+                    migrateApplicationInvite(application, migratedApplication);
 
-                    questionStatusRepository.findByApplicationId(application.getId()).stream()
-                            .forEach(questionStatus -> {
-                                questionStatus.setApplication(migratedApplication);
-                                questionStatusRepository.save(questionStatus);
-                            });
+                    migrateApplicationKtaInvite(application, migratedApplication);
 
-                    LOG.debug("Migrated question status for application : " + application.getId());
+                    deleteApplicationDependency(application);
 
-                    serviceSuccess(grantProcessRepository.findOneByApplicationId(application.getId()))
-                            .andOnSuccessReturnVoid(grantProcess -> {
-                                if (grantProcess != null) {
-                                    GrantProcess migratedGrantProcess = new GrantProcess(migratedApplication.getId(), grantProcess.isPending());
-                                    migratedGrantProcess.setMessage(grantProcess.getMessage());
-                                    migratedGrantProcess.setLastProcessed(grantProcess.getLastProcessed());
-                                    migratedGrantProcess.setSentRequested(grantProcess.getSentRequested());
-                                    migratedGrantProcess.setSentSucceeded(grantProcess.getSentSucceeded());
-                                    grantProcessRepository.save(migratedGrantProcess);
-                                }
-                            });
+                    if (isDeleteApplication) {
+                        deleteApplication(application);
+                    }
 
-                    LOG.debug("Migrated grant process for application : " + application.getId());
-
-                    applicationProcessRepository.findByTargetId(application.getId()).stream()
-                            .forEach(applicationProcess -> {
-                                applicationProcess.setTarget(migratedApplication);
-                                applicationProcessRepository.save(applicationProcess);
-                            });
-
-                    LOG.debug("Migrated application process for application : " + application.getId());
-
-                    assessmentRepository.findByTargetId(application.getId()).stream()
-                            .forEach(assessmentProcess -> {
-                                assessmentProcess.setTarget(migratedApplication);
-                                assessmentRepository.save(assessmentProcess);
-                            });
-
-                    LOG.debug("Migrated assessment process for application : " + application.getId());
-
-                    interviewRepository.findByTargetId(application.getId()).stream()
-                            .forEach(interviewProcess -> {
-                                interviewProcess.setTarget(migratedApplication);
-                                interviewRepository.save(interviewProcess);
-                            });
-
-                    LOG.debug("Migrated interview process for application : " + application.getId());
-
-                    interviewAssignmentRepository.findByTargetId(application.getId()).stream()
-                            .forEach(interviewAssignmentProcess -> {
-                                interviewAssignmentProcess.setTarget(migratedApplication);
-                                interviewAssignmentRepository.save(interviewAssignmentProcess);
-                            });
-
-                    LOG.debug("Migrated interview assignment process for application : " + application.getId());
-
-                    reviewRepository.findByTargetId(application.getId()).stream()
-                            .forEach(reviewProcess -> {
-                                reviewProcess.setTarget(migratedApplication);
-                                reviewRepository.save(reviewProcess);
-                            });
-
-                    LOG.debug("Migrated review process for application : " + application.getId());
-
-                    supporterAssignmentRepository.findByTargetId(application.getId()).stream()
-                            .forEach(supporterAssignmentProcess -> {
-                                supporterAssignmentProcess.setTarget(migratedApplication);
-                                supporterAssignmentRepository.save(supporterAssignmentProcess);
-                            });
-
-                    LOG.debug("Migrated supporter assignment process for application : " + application.getId());
-
-                    applicationInviteRepository.findByApplicationId(application.getId()).stream()
-                            .forEach(applicationInvite -> {
-                                applicationInvite.setTarget(migratedApplication);
-                                applicationInviteRepository.save(applicationInvite);
-                            });
-
-                    LOG.debug("Migrated application invite for application : " + application.getId());
-
-                    applicationKtaInviteRepository.findByApplicationId(application.getId()).ifPresent(
-                            applicationKtaInvite -> {
-                                applicationKtaInvite.setTarget(migratedApplication);
-                                applicationKtaInviteRepository.save(applicationKtaInvite);
-                            }
-                    );
-
-                    LOG.debug("Migrated application kta invite for application : " + application.getId());
-
-                    deleteApplication(application);
-
-                    return serviceSuccess();
+                    return serviceSuccess(migratedApplication.getId());
                 });
     }
 
     private void deleteApplication(Application application) {
+        applicationRepository.delete(application);
+
+        log.debug("Deleted application : " + application.getId());
+    }
+
+    private void deleteApplicationDependency(Application application) {
         activityLogRepository.deleteByApplicationId(application.getId());
         grantProcessRepository.deleteByApplicationId(application.getId());
         applicationHiddenFromDashboardRepository.deleteByApplicationId(application.getId());
-        applicationRepository.delete(application);
-        LOG.debug("Deleted application : " + application.getId());
+        applicationExpressionOfInterestConfigRepository.deleteByApplicationId(application.getId());
+
+        log.debug("Deleted application dependency for application : " + application.getId());
+    }
+
+    private void migrateApplicationKtaInvite(Application application, Application migratedApplication) {
+        applicationKtaInviteRepository.findByApplicationId(application.getId()).ifPresent(
+                applicationKtaInvite -> {
+                    applicationKtaInvite.setTarget(migratedApplication);
+                    applicationKtaInviteRepository.save(applicationKtaInvite);
+                }
+        );
+
+        log.debug("Migrated application kta invite for application : " + application.getId());
+    }
+
+    private void migrateApplicationInvite(Application application, Application migratedApplication) {
+        applicationInviteRepository.findByApplicationId(application.getId()).stream()
+                .forEach(applicationInvite -> {
+                    applicationInvite.setTarget(migratedApplication);
+                    applicationInviteRepository.save(applicationInvite);
+                });
+
+        log.debug("Migrated application invite for application : " + application.getId());
+    }
+
+    private void migrateSupporterAssignment(Application application, Application migratedApplication) {
+        supporterAssignmentRepository.findByTargetId(application.getId()).stream()
+                .forEach(supporterAssignmentProcess -> {
+                    supporterAssignmentProcess.setTarget(migratedApplication);
+                    supporterAssignmentRepository.save(supporterAssignmentProcess);
+                });
+
+        log.debug("Migrated supporter assignment process for application : " + application.getId());
+    }
+
+    private void migrateReviewProcess(Application application, Application migratedApplication) {
+        reviewRepository.findByTargetId(application.getId()).stream()
+                .forEach(reviewProcess -> {
+                    reviewProcess.setTarget(migratedApplication);
+                    reviewRepository.save(reviewProcess);
+                });
+
+        log.debug("Migrated review process for application : " + application.getId());
+    }
+
+    private void migrateInterviewAssignmentProcess(Application application, Application migratedApplication) {
+        interviewAssignmentRepository.findByTargetId(application.getId()).stream()
+                .forEach(interviewAssignmentProcess -> {
+                    interviewAssignmentProcess.setTarget(migratedApplication);
+                    interviewAssignmentRepository.save(interviewAssignmentProcess);
+                });
+
+        log.debug("Migrated interview assignment process for application : " + application.getId());
+    }
+
+    private void migrateInterviewProcess(Application application, Application migratedApplication) {
+        interviewRepository.findByTargetId(application.getId()).stream()
+                .forEach(interviewProcess -> {
+                    interviewProcess.setTarget(migratedApplication);
+                    interviewRepository.save(interviewProcess);
+                });
+
+        log.debug("Migrated interview process for application : " + application.getId());
+    }
+
+    private void migrateAssessmentProcess(Application application, Application migratedApplication) {
+        assessmentRepository.findByTargetId(application.getId()).stream()
+                .forEach(assessmentProcess -> {
+                    assessmentProcess.setTarget(migratedApplication);
+                    assessmentRepository.save(assessmentProcess);
+                });
+
+        log.debug("Migrated assessment process for application : " + application.getId());
+    }
+
+    private void migrateApplicationProcess(Application application, Application migratedApplication) {
+        applicationProcessRepository.findByTargetId(application.getId()).stream()
+                .forEach(applicationProcess -> {
+                    applicationProcess.setTarget(migratedApplication);
+                    applicationProcessRepository.save(applicationProcess);
+                });
+
+        log.debug("Migrated application process for application : " + application.getId());
+    }
+
+    private void migrateGrantProcess(Application application, Application migratedApplication) {
+        serviceSuccess(grantProcessRepository.findOneByApplicationId(application.getId()))
+                .andOnSuccessReturnVoid(grantProcess -> {
+                    if (grantProcess != null) {
+                        GrantProcess migratedGrantProcess = new GrantProcess(migratedApplication.getId(), grantProcess.isPending());
+                        migratedGrantProcess.setMessage(grantProcess.getMessage());
+                        migratedGrantProcess.setLastProcessed(grantProcess.getLastProcessed());
+                        migratedGrantProcess.setSentRequested(grantProcess.getSentRequested());
+                        migratedGrantProcess.setSentSucceeded(grantProcess.getSentSucceeded());
+                        grantProcessRepository.save(migratedGrantProcess);
+                    }
+                });
+
+        log.debug("Migrated grant process for application : " + application.getId());
+    }
+
+    private void migrateQuestionStatus(Application application, Application migratedApplication) {
+        questionStatusRepository.findByApplicationId(application.getId()).stream()
+                .forEach(questionStatus -> {
+                    questionStatus.setApplication(migratedApplication);
+                    questionStatusRepository.save(questionStatus);
+                });
+
+        log.debug("Migrated question status for application : " + application.getId());
+    }
+
+    private void migrateProjectToBeCreated(Application application, Application migratedApplication) {
+        projectToBeCreatedRepository.findByApplicationId(application.getId()).ifPresent(
+                projectToBeCreated -> {
+                    projectToBeCreated.setApplication(migratedApplication);
+                    projectToBeCreatedRepository.save(projectToBeCreated);
+                }
+        );
+
+        log.debug("Migrated project to be created for application : " + application.getId());
+    }
+
+    private void migrateProject(Application application, Application migratedApplication) {
+        projectRepository.findByApplicationId(application.getId()).ifPresent(
+                project -> {
+                    project.setApplication(migratedApplication);
+                    projectRepository.save(project);
+                }
+        );
+
+        log.debug("Migrated project for application : " + application.getId());
+    }
+
+    private void migrateProcessRole(Application application, Application migratedApplication) {
+        processRoleRepository.findByApplicationId(application.getId()).stream()
+                .forEach(processRole -> {
+                    processRole.setApplicationId(migratedApplication.getId());
+                    processRoleRepository.save(processRole);
+                });
+
+        log.debug("Migrated process role for application : " + application.getId());
+    }
+
+    private void migrateFormInputResponse(Application application, Application migratedApplication) {
+        formInputResponseRepository.findByApplicationId(application.getId()).stream()
+                .forEach(formInputResponse -> {
+                    formInputResponse.setApplication(migratedApplication);
+                    formInputResponseRepository.save(formInputResponse);
+                });
+
+        log.debug("Migrated form input response for application : " + application.getId());
+    }
+
+    private void migrateEuGrantTransfer(Application application, Application migratedApplication) {
+        serviceSuccess(euGrantTransferRepository.findByApplicationId(application.getId()))
+                .andOnSuccessReturnVoid(euGrantTransfer -> {
+                    if (euGrantTransfer != null) {
+                        euGrantTransfer.setApplication(migratedApplication);
+                        euGrantTransferRepository.save(euGrantTransfer);
+                    }
+                });
+
+        log.debug("Migrated eu grant transfer for application : " + application.getId());
+    }
+
+    private void migrateAverageAssessorScore(Application application, Application migratedApplication) {
+        averageAssessorScoreRepository.findByApplicationId(application.getId()).ifPresent(
+                averageAssessorScore -> {
+                    averageAssessorScore.setApplication(migratedApplication);
+                    averageAssessorScoreRepository.save(averageAssessorScore);
+                });
+
+        log.debug("Migrated average assessor score for application : " + application.getId());
+    }
+
+    private void migrateApplicationOrganisationAddress(Application application, Application migratedApplication) {
+        applicationOrganisationAddressRepository.findByApplicationId(application.getId()).stream()
+                .forEach(applicationOrganisationAddress -> {
+                    applicationOrganisationAddress.setApplication(migratedApplication);
+                    applicationOrganisationAddressRepository.save(applicationOrganisationAddress);
+                });
+
+        log.debug("Migrated application organisation address for application : " + application.getId());
+    }
+
+    private void migrateApplicationHiddenFromDashboard(Application application, Application migratedApplication) {
+        applicationHiddenFromDashboardRepository.findByApplicationId(application.getId()).stream()
+                .forEach(applicationHiddenFromDashboard -> {
+                    ApplicationHiddenFromDashboard migratedApplicationHiddenFromDashboard = new ApplicationHiddenFromDashboard(migratedApplication, applicationHiddenFromDashboard.getUser());
+                    migratedApplicationHiddenFromDashboard.setCreatedOn(applicationHiddenFromDashboard.getCreatedOn());
+                    applicationHiddenFromDashboardRepository.save(migratedApplicationHiddenFromDashboard);
+                });
+
+        log.debug("Migrated application hidden from dashboard for application : " + application.getId());
+    }
+
+    private void migrateApplicationFinance(Application application, Application migratedApplication) {
+        applicationFinanceRepository.findByApplicationId(application.getId()).stream()
+                .forEach(applicationFinance -> {
+                    Long applicationFinanceId = applicationFinance.getId();
+                    applicationFinance.setApplication(migratedApplication);
+                    ApplicationFinance migratedApplicationFinance = applicationFinanceRepository.save(applicationFinance);
+
+                    applicationFinanceRowRepository.findByTargetId(applicationFinanceId).stream()
+                            .forEach(applicationFinanceRow -> {
+                                applicationFinanceRow.setTarget(migratedApplicationFinance);
+                                ApplicationFinanceRow savedClonedApplicationFinanceRow = applicationFinanceRowRepository.save(applicationFinanceRow);
+
+                                financeRowMetaValueRepository.financeRowId(applicationFinanceRow.getId()).stream()
+                                        .forEach(financeRowMetaValue -> {
+                                            financeRowMetaValue.setFinanceRowId(savedClonedApplicationFinanceRow.getId());
+                                        });
+                            });
+                });
+
+        log.debug("Migrated application finance for application : " + application.getId());
+    }
+
+    private void migrateActivityLog(Application application, Application migratedApplication) {
+        activityLogRepository.findByApplicationId(application.getId()).stream()
+                .forEach(activityLog -> {
+                    ActivityLog migratedActivityLog = new ActivityLog(migratedApplication, activityLog.getType(),
+                            activityLog.getOrganisation().orElse(null),
+                            activityLog.getCompetitionDocument().orElse(null),
+                            activityLog.getQuery().orElse(null),
+                            activityLog.getCreatedOn(), activityLog.getCreatedBy(), activityLog.getAuthor());
+                    activityLogRepository.save(migratedActivityLog);
+                });
+
+        log.debug("Migrated activity log for application : " + application.getId());
+    }
+
+    private void migrateApplicationHorizonWorkProgramme(Application application, Application migratedApplication) {
+        if (migratedApplication.getCompetition().isHorizonEuropeGuarantee()) {
+            applicationHorizonWorkProgrammeRepository.findByApplicationId(application.getId()).stream()
+                    .forEach(applicationHorizonWorkProgramme -> {
+                        applicationHorizonWorkProgramme.setApplicationId(migratedApplication.getId());
+                        applicationHorizonWorkProgrammeRepository.save(applicationHorizonWorkProgramme);
+                    });
+
+            log.debug("Migrated Horizon Work Programme for application : " + application.getId());
+        }
+    }
+
+    private void migrateApplicationExpressionOfInterestConfig(Application application, Application migratedApplication) {
+        if (application.getApplicationExpressionOfInterestConfig() != null) {
+            Long applicationExpressionOfInterestConfigId =  application.getApplicationExpressionOfInterestConfig().getId();
+            applicationExpressionOfInterestConfigRepository.findById(applicationExpressionOfInterestConfigId).ifPresent(
+                    applicationExpressionOfInterestConfig -> {
+                        ApplicationExpressionOfInterestConfig migratedApplicationExpressionOfInterestConfig = ApplicationExpressionOfInterestConfig.builder()
+                                .application(migratedApplication)
+                                .enabledForExpressionOfInterest(applicationExpressionOfInterestConfig.isEnabledForExpressionOfInterest())
+                                .build();
+                        applicationExpressionOfInterestConfigRepository.save(migratedApplicationExpressionOfInterestConfig);
+                        migratedApplication.setApplicationExpressionOfInterestConfig(migratedApplicationExpressionOfInterestConfig);
+                    });
+
+            log.debug("Migrated application expression of interest config for application : " + application.getId());
+        }
+    }
+
+    private Application migrateApplication(Application application) {
+        Application migratedApplication = applicationRepository.save(new Application(application));
+
+        log.debug("Migrated application : " + application.getId());
+
+        return migratedApplication;
     }
 
     @Override
