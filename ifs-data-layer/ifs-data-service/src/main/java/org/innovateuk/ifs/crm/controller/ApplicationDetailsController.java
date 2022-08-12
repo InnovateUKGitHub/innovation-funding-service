@@ -31,6 +31,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -131,7 +132,8 @@ public class ApplicationDetailsController {
         Long applicationId = applicationResource.getId();
         silIMApplicationLocationInfo.setApplicationID(applicationId.intValue());
         silIMApplicationLocationInfo.setApplicationName(applicationResource.getName());
-        silIMApplicationLocationInfo.setApplicationStartDate(applicationResource.getStartDate().atStartOfDay(ZoneId.systemDefault()));
+        LocalDate appStartDate = Optional.ofNullable(applicationResource.getStartDate()).orElse(null);
+        silIMApplicationLocationInfo.setApplicationStartDate(appStartDate != null ? appStartDate.atStartOfDay(ZoneId.systemDefault()) : null);
 
         CompetitionResource competitionResource = applicationService.
                 getCompetitionByApplicationId(applicationId).getSuccess();
