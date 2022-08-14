@@ -2,7 +2,9 @@ package org.innovateuk.ifs.management.decision.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.Decision;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -25,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 
@@ -43,6 +46,9 @@ public abstract class CompetitionManagementDecisionController extends Competitio
 
     @Autowired
     private CompetitionRestService competitionRestService;
+
+    @Autowired
+    private ApplicationRestService applicationRestService;
 
     @Autowired
     private CompetitionManagementApplicationDecisionModelPopulator competitionManagementApplicationDecisionModelPopulator;
@@ -249,7 +255,8 @@ public abstract class CompetitionManagementDecisionController extends Competitio
             if (!bindingResult.hasErrors()) {
                 Optional<Decision> decision = applicationDecisionService.getDecisionForString(decisionChoiceForm.getDecision());
                 if (decision.isPresent()) {
-                    applicationDecisionService.saveApplicationDecisionData(competitionId, decision.get(), selectionForm.getApplicationIds());
+                    List<Long> applicationIds = getApplicationIds(decisionFilterForm, selectionForm);
+                    applicationDecisionService.saveApplicationDecisionData(competitionId, decision.get(), applicationIds);
                     removeAllApplicationsIds(selectionForm);
                     selectionCookie.setDecisionSelectionForm(selectionForm);
                     saveFormToCookie(response, competitionId, selectionCookie);
@@ -260,6 +267,18 @@ public abstract class CompetitionManagementDecisionController extends Competitio
         model.addAttribute("model", competitionManagementApplicationDecisionModelPopulator.populate(competitionId, decisionPaginationForm, decisionFilterForm, selectionForm, user));
 
         return "comp-mgt-funders-panel";
+    }
+
+    private List<Long> getApplicationIds(DecisionFilterForm decisionFilterForm, DecisionSelectionForm selectionForm) {
+        List<Long> applicationIds =  selectionForm.getApplicationIds().stream()
+                .map(applicationId -> applicationRestService.getApplicationById(applicationId).getSuccess())
+                .filter(application -> decisionFilterForm.isEoi()
+                        ? application.isEnabledForExpressionOfInterest()
+                        : !application.isEnabledForExpressionOfInterest())
+                .map(ApplicationResource::getId)
+                .collect(Collectors.toList());
+
+        return applicationIds;
     }
 
     private CompetitionResource getCompetitionIfExist(long competitionId) {
