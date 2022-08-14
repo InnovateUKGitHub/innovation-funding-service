@@ -91,8 +91,7 @@
                     <dd th:text="'£' + ${#numbers.formatInteger(competitionSetupForm.fundingAmountSought, 0,'DEFAULT')}"></dd>
                 </th:block>
             </dl>
-
-            <p th:unless="${!model.general.editable and !competitionSetupForm.fundingAmountSoughtApplicable}" class="govuk-body govuk-!-font-weight-bold">Click edit to change the funding amount sought.</p>
+            <p th:unless="${(!model.general.editable and !competitionSetupForm.fundingAmountSoughtApplicable) or model.general.state.preventEdit}" class="govuk-body govuk-!-font-weight-bold">Click edit to change the funding amount sought.</p>
             <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button govuk-!-margin-top-6">Edit</button>
         </th:block>
 
