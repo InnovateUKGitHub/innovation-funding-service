@@ -65,6 +65,9 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Mock
     private ApplicationMigrationService applicationMigrationService;
 
+    @Mock
+    private ApplicationEoiService applicationEoiService;
+
     @Override
     protected ApplicationController supplyControllerUnderTest() {
         return new ApplicationController();
@@ -279,6 +282,15 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationMigrationService.migrateApplication(applicationId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/application/migrate-application/{applicationId}", applicationId))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void createFullApplicationFromEoi() throws Exception {
+        long applicationId = 1L;
+        when(applicationEoiService.createFullApplicationFromEoi(applicationId)).thenReturn(serviceSuccess(applicationId));
+
+        mockMvc.perform(post("/application/create-full-application-from-eoi/{applicationId}", applicationId))
                 .andExpect(status().isOk());
     }
 
