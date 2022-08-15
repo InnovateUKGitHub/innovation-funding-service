@@ -2,6 +2,8 @@ package org.innovateuk.ifs.fundingdecision.transactional;
 
 import org.innovateuk.ifs.application.resource.Decision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
+import org.innovateuk.ifs.application.transactional.ApplicationEoiService;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -10,6 +12,7 @@ import org.innovateuk.ifs.project.core.transactional.ProjectToBeCreatedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
@@ -29,6 +32,12 @@ public class ApplicationFundingNotificationBulkServiceImpl implements Applicatio
     @Autowired
     private ProjectToBeCreatedService projectToBeCreatedService;
 
+    @Autowired
+    private ApplicationService applicationService;
+
+    @Autowired
+    private ApplicationEoiService applicationEoiService;
+
     @Override
     public ServiceResult<Void> sendBulkFundingNotifications(FundingNotificationResource fundingNotificationResource) {
         if (!fundingNotificationTriggersProjectSetup(fundingNotificationResource.getDecisions())) {
@@ -36,11 +45,11 @@ public class ApplicationFundingNotificationBulkServiceImpl implements Applicatio
         } else {
             Map<Long, Decision> successfulDecisions = fundingNotificationResource.getDecisions()
                     .entrySet().stream()
-                    .filter(entry -> entry.getValue() == Decision.FUNDED)
+                    .filter(entry -> filterSuccessfulDecisions(entry))
                     .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
             Map<Long, Decision> otherDecisions = fundingNotificationResource.getDecisions()
                     .entrySet().stream()
-                    .filter(entry -> entry.getValue() != Decision.FUNDED)
+                    .filter(entry -> !filterSuccessfulDecisions(entry))
                     .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 
             ServiceResult<Void> result = serviceSuccess();
@@ -54,11 +63,25 @@ public class ApplicationFundingNotificationBulkServiceImpl implements Applicatio
         }
     }
 
+    private boolean filterSuccessfulDecisions(Map.Entry<Long, Decision> entry) {
+        return entry.getValue() == Decision.FUNDED
+                || entry.getValue() == Decision.EOI_APPROVED;
+    }
+
     private ServiceResult<Void> handleSuccessfulNotificationsCreatingProjects(FundingNotificationResource fundingNotificationResource) {
         return aggregate(fundingNotificationResource.getDecisions().keySet().stream()
-                .map(applicationId -> projectToBeCreatedService.markApplicationReadyToBeCreated(applicationId, fundingNotificationResource.getMessageBody()))
+                .map(applicationId -> applicationService.getApplicationById(applicationId).getSuccess())
+                .map(application -> application.isEnabledForExpressionOfInterest()
+                        ? sendEoiNotificationAndCreateFullApplication(application.getId(), fundingNotificationResource.getMessageBody())
+                        : projectToBeCreatedService.markApplicationReadyToBeCreated(application.getId(), fundingNotificationResource.getMessageBody()))
                 .collect(toList()))
                 .andOnSuccessReturnVoid();
+    }
+
+    private ServiceResult<Void> sendEoiNotificationAndCreateFullApplication(long applicationId, String emailBody) {
+        return applicationFundingService.notifyApplicantsOfDecisions(
+                    new FundingNotificationResource(emailBody, Collections.singletonMap(applicationId, Decision.EOI_APPROVED)))
+                .andOnSuccessReturnVoid(() -> applicationEoiService.createFullApplicationFromEoi(applicationId));
     }
 
     private boolean fundingNotificationTriggersProjectSetup(Map<Long, Decision> decisions) {
