@@ -1124,5 +1124,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     public boolean isRejectedApplicationState(ApplicationState applicationState) {
         return applicationState == ApplicationState.REJECTED;
     }
+
 }
 
