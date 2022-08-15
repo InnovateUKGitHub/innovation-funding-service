@@ -133,6 +133,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
 
     public static final String IFS_SYSTEM_MAINTENANCE_USER_EMAIL = "ifs_system_maintenance_user@innovateuk.org";
     public static final String IFS_SYSTEM_REGISTRAR_USER_EMAIL = "ifs_web_user@innovateuk.org";
+    public static final List<Long> EOI_DOCUMENT_FILE_TYPES = asList(1L, 3L, 4L);
 
     protected ServiceLocator serviceLocator;
     protected String compAdminEmail;
@@ -255,6 +256,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected CompetitionApplicationConfigRepository competitionApplicationConfigRepository;
     protected QuestionMapper questionMapper;
     protected SectionMapper sectionMapper;
+    protected CompetitionEoiEvidenceConfigService competitionEoiEvidenceConfigService;
+    protected ApplicationEoiEvidenceResponseService applicationEoiEvidenceResponseService;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 
@@ -397,6 +400,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         competitionApplicationConfigRepository = serviceLocator.getBean(CompetitionApplicationConfigRepository.class);
         questionMapper = serviceLocator.getBean(QuestionMapper.class);
         sectionMapper = serviceLocator.getBean(SectionMapper.class);
+        competitionEoiEvidenceConfigService = serviceLocator.getBean(CompetitionEoiEvidenceConfigService.class);
+        applicationEoiEvidenceResponseService = serviceLocator.getBean(ApplicationEoiEvidenceResponseService.class);
     }
 
     protected UserResource compAdmin() {

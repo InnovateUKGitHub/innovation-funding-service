@@ -568,6 +568,31 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
+    public CompetitionDataBuilder withEoiEvidenceConfig(CompetitionLine line) {
+        return asCompAdmin(data -> {
+            doCompetitionDetailsUpdate(data, competition -> {
+                if (line.isEoiEvidenceRequired()) {
+                    CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource = CompetitionEoiEvidenceConfigResource.builder()
+                            .evidenceRequired(true)
+                            .evidenceTitle("Eoi Evidence")
+                            .evidenceGuidance("Please upload Eoi Evidence file.")
+                            .competitionId(data.getCompetition().getId()).build();
+                    competitionEoiEvidenceConfigService.create(competitionEoiEvidenceConfigResource).getSuccess();
+                }
+            });
+
+            Long competitionEoiEvidenceConfigId = data.getCompetition().getCompetitionEoiEvidenceConfigResource().getId();
+
+            EOI_DOCUMENT_FILE_TYPES.stream()
+                    .forEach(fileTypeId -> {
+                        CompetitionEoiDocumentResource competitionEoiDocumentResource = CompetitionEoiDocumentResource.builder()
+                                .fileTypeId(fileTypeId)
+                                .competitionEoiEvidenceConfigId(competitionEoiEvidenceConfigId).build();
+                        competitionEoiEvidenceConfigService.createDocument(competitionEoiDocumentResource);
+                    });
+        });
+    }
+
     private void updateCompetitionInCompetitionData(CompetitionData competitionData, Long competitionId) {
         CompetitionResource newCompetitionSaved = competitionService.getCompetitionById(competitionId).getSuccess();
         competitionData.setCompetition(newCompetitionSaved);
