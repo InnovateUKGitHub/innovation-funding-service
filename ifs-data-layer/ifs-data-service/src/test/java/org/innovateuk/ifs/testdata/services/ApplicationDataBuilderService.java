@@ -427,6 +427,10 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             }
         }
 
+        if (applicationData.getCompetition().isEnabledForPreRegistration()) {
+            applicationBuilder = applicationBuilder.uploadEoiEvidence();
+        }
+
         applicationBuilder.build();
     }
 

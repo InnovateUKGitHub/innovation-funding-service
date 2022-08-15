@@ -116,6 +116,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean hasBusinessAndFinancialInformationQuestion;
     private CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource;
     private CompetitionApplicationConfigResource competitionApplicationConfigResource;
+    private CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource;
     private boolean enabledForPreRegistration;
 
     public CompetitionResource() {
@@ -881,6 +882,23 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.competitionThirdPartyConfigResource = competitionThirdPartyConfigResource;
     }
 
+    public boolean isHasBusinessAndFinancialInformationQuestion() {
+        return hasBusinessAndFinancialInformationQuestion;
+    }
+
+    public CompetitionResource setHasBusinessAndFinancialInformationQuestion(boolean hasBusinessAndFinancialInformationQuestion) {
+        this.hasBusinessAndFinancialInformationQuestion = hasBusinessAndFinancialInformationQuestion;
+        return this;
+    }
+
+    public boolean isEnabledForPreRegistration() {
+        return enabledForPreRegistration;
+    }
+
+    public void setEnabledForPreRegistration(boolean enabledForPreRegistration) {
+        this.enabledForPreRegistration = enabledForPreRegistration;
+    }
+
     public CompetitionApplicationConfigResource getCompetitionApplicationConfigResource() {
         return competitionApplicationConfigResource;
     }
@@ -889,27 +907,12 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.competitionApplicationConfigResource = competitionApplicationConfigResource;
     }
 
-    @JsonIgnore
-    public boolean isOfGemCompetition() {
-        return isProcurement()
-                && isOfGemFunder()
-                && isProcurementThirdPartyTermsAndConditions();
+    public CompetitionEoiEvidenceConfigResource getCompetitionEoiEvidenceConfigResource() {
+        return competitionEoiEvidenceConfigResource;
     }
 
-    private boolean isOfGemFunder() {
-        return funders
-                .stream()
-                .anyMatch(CompetitionFunderResource::isOfGem);
-    }
-
-    private boolean isProcurementThirdPartyTermsAndConditions() {
-        return termsAndConditions != null
-                && termsAndConditions.isProcurementThirdParty();
-    }
-
-    @JsonIgnore
-    public boolean isDirectAward() {
-        return competitionTypeEnum == CompetitionTypeEnum.DIRECT_AWARD;
+    public void setCompetitionEoiEvidenceConfigResource(CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource) {
+        this.competitionEoiEvidenceConfigResource = competitionEoiEvidenceConfigResource;
     }
 
     @Override
@@ -988,6 +991,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(assessmentPeriods, that.assessmentPeriods)
                 .append(competitionThirdPartyConfigResource, that.competitionThirdPartyConfigResource)
                 .append(competitionApplicationConfigResource, that.competitionApplicationConfigResource)
+                .append(competitionEoiEvidenceConfigResource, that.competitionEoiEvidenceConfigResource)
                 .append(enabledForPreRegistration, that.enabledForPreRegistration)
                 .isEquals();
     }
@@ -1058,8 +1062,32 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(assessmentPeriods)
                 .append(competitionThirdPartyConfigResource)
                 .append(competitionApplicationConfigResource)
+                .append(competitionEoiEvidenceConfigResource)
                 .append(enabledForPreRegistration)
                 .toHashCode();
+    }
+
+    @JsonIgnore
+    public boolean isOfGemCompetition() {
+        return isProcurement()
+                && isOfGemFunder()
+                && isProcurementThirdPartyTermsAndConditions();
+    }
+
+    private boolean isOfGemFunder() {
+        return funders
+                .stream()
+                .anyMatch(CompetitionFunderResource::isOfGem);
+    }
+
+    private boolean isProcurementThirdPartyTermsAndConditions() {
+        return termsAndConditions != null
+                && termsAndConditions.isProcurementThirdParty();
+    }
+
+    @JsonIgnore
+    public boolean isDirectAward() {
+        return competitionTypeEnum == CompetitionTypeEnum.DIRECT_AWARD;
     }
 
     @Override
@@ -1081,16 +1109,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         );
     }
 
-
-    public boolean isHasBusinessAndFinancialInformationQuestion() {
-        return hasBusinessAndFinancialInformationQuestion;
-    }
-
-    public CompetitionResource setHasBusinessAndFinancialInformationQuestion(boolean hasBusinessAndFinancialInformationQuestion) {
-        this.hasBusinessAndFinancialInformationQuestion = hasBusinessAndFinancialInformationQuestion;
-        return this;
-    }
-
     @JsonIgnore
     public boolean isApplicationCreatedOrOpenedCompStatusOpen(ApplicationState applicationState) {
         return (applicationState == ApplicationState.CREATED || applicationState == ApplicationState.OPENED)
@@ -1106,14 +1124,5 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     public boolean isRejectedApplicationState(ApplicationState applicationState) {
         return applicationState == ApplicationState.REJECTED;
     }
-
-    public boolean isEnabledForPreRegistration() {
-        return enabledForPreRegistration;
-    }
-
-    public void setEnabledForPreRegistration(boolean enabledForPreRegistration) {
-        this.enabledForPreRegistration = enabledForPreRegistration;
-    }
-
 }
 
