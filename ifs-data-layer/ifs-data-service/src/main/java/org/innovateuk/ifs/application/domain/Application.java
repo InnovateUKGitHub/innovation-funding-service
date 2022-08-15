@@ -125,6 +125,9 @@ public class Application implements ProcessActivity {
     @OneToOne(mappedBy = "application", fetch = FetchType.LAZY)
     private ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig;
 
+    @OneToOne(mappedBy = "application", fetch = FetchType.LAZY)
+    private ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse;
+
     public Application() {
     }
 
@@ -162,6 +165,7 @@ public class Application implements ProcessActivity {
         this.companyAge = application.getCompanyAge();
         this.companyPrimaryFocus = application.getCompanyPrimaryFocus();
         this.applicationExpressionOfInterestConfig = application.getApplicationExpressionOfInterestConfig();
+        this.applicationEoiEvidenceResponse = application.getApplicationEoiEvidenceResponse();
     }
 
     protected boolean canEqual(Object other) {
@@ -572,5 +576,13 @@ public class Application implements ProcessActivity {
     @Transient
     public boolean isEnabledForExpressionOfInterest() {
         return applicationExpressionOfInterestConfig != null ? applicationExpressionOfInterestConfig.isEnabledForExpressionOfInterest() : false;
+    }
+
+    public ApplicationEoiEvidenceResponse getApplicationEoiEvidenceResponse() {
+        return applicationEoiEvidenceResponse;
+    }
+
+    public void setApplicationEoiEvidenceResponse(ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse) {
+        this.applicationEoiEvidenceResponse = applicationEoiEvidenceResponse;
     }
 }
