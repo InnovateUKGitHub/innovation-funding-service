@@ -1,18 +1,23 @@
 package org.innovateuk.ifs.crm.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.crm.transactional.SilMessageRecordingService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
+import org.innovateuk.ifs.sil.SilPayloadKeyType;
+import org.innovateuk.ifs.sil.SilPayloadType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.UsersRolesService;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -32,14 +37,35 @@ import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuild
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.ArgumentMatchers.any;
-
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<ApplicationDetailsController> {
-
+    public static final String APPLICATION_PAYLOAD = "{\n" +
+            "  \"appID\" : 2,\n" +
+            "  \"appName\" : \"IM Application\",\n" +
+            "  \"appStartDate\" : \"2022-08-14T23:00:00Z\",\n" +
+            "  \"compID\" : \"1\",\n" +
+            "  \"fundingDecision\" : null,\n" +
+            "  \"durationInMonths\" : null,\n" +
+            "  \"completion\" : null,\n" +
+            "  \"manageFundingEmailDate\" : \"2022-08-15T11:40:03.258837Z\",\n" +
+            "  \"inAssessmentReviewPanel\" : false,\n" +
+            "  \"companyAge\" : null,\n" +
+            "  \"companyPrimaryFocus\" : null,\n" +
+            "  \"organisations\" : [ {\n" +
+            "    \"organisationID\" : 1,\n" +
+            "    \"organisationName\" : \"Company name\",\n" +
+            "    \"companiesHouseNo\" : \"0123456789\",\n" +
+            "    \"internationalRegistrationNumber\" : null,\n" +
+            "    \"organisationSize\" : \"Medium\",\n" +
+            "    \"internationalLocation\" : null,\n" +
+            "    \"workPostcode\" : \"RH6 0NT\"\n" +
+            "  } ]\n" +
+            "}";
     @Mock
     private ApplicationService applicationService;
 
@@ -51,10 +77,17 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
 
     @Mock
     private UserAuthenticationService userAuthenticationService;
-
+    @Mock
+    private ObjectMapper objectMapper;
     @Mock
     private UsersRolesService usersRolesService;
-
+    @Mock
+    private SilMessageRecordingService silMessagingService;
+    @Before
+    public void  setup(){
+        when(objectMapper.writer()).thenReturn(new ObjectMapper().writer());
+        doNothing().when(silMessagingService).recordSilMessage(SilPayloadType.APPLICATION_UPDATE, SilPayloadKeyType.APPLICATION_ID,"1", APPLICATION_PAYLOAD, null);
+    }
     @Test
     public void getApplicationDetailsByUnauthorzisedUser() throws Exception {
         long applicationId = 2L;
