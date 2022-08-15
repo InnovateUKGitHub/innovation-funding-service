@@ -13,17 +13,17 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.crm.transactional.SilMessageRecordingService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
-import org.innovateuk.ifs.sil.crm.resource.SilApplicationStatus;
+import org.innovateuk.ifs.sil.SilPayloadKeyType;
+import org.innovateuk.ifs.sil.SilPayloadType;
 import org.innovateuk.ifs.sil.crm.resource.SilIMApplicationLocationInfo;
 import org.innovateuk.ifs.sil.crm.resource.SilOrganisationLocation;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserStatus;
 import org.innovateuk.ifs.user.transactional.UsersRolesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -60,12 +60,18 @@ public class ApplicationDetailsController {
     @Autowired
     private UsersRolesService usersRolesService;
 
+    @Autowired
+    SilMessageRecordingService silMessagingService;
+
+    @Autowired
+    ObjectMapper objectMapper;
+
     @PreAuthorize("permitAll()")
     @GetMapping(value = "/v1/{applicationId}")
     @ResponseBody
     public RestResult<SilIMApplicationLocationInfo> getApplicationLocationInfo(
             @PathVariable("applicationId") final Long applicationId,
-            HttpServletRequest request) throws JsonProcessingException {
+            HttpServletRequest request)  {
 
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         if (user == null) {
@@ -78,7 +84,8 @@ public class ApplicationDetailsController {
                 log.error(String.format("application-details : application %d, not found in the system ", applicationId));
                 return RestResult.restFailure(HttpStatus.BAD_REQUEST);
             } else {
-                log.debug(String.format("GET application-details : ", applicationId));
+                log.debug(String.format("GET application-details : %d", applicationId));
+
                 return getAssociatedApplicationData(user, applicationId, application);
             }
         }
@@ -103,11 +110,15 @@ public class ApplicationDetailsController {
         Set<OrganisationResource> organisations = organisationService.findByApplicationId(applicationId).getSuccess();
         List<SilOrganisationLocation> silOrganisations = setOrganisationData(applicationId, organisations);
         silIMApplicationLocationInfo.setOrganisations(silOrganisations);
+        String silResponseJson = objectMapper.writer().withDefaultPrettyPrinter().writeValueAsString(silIMApplicationLocationInfo);
 
-        return  RestResult.restSuccess(silIMApplicationLocationInfo);
+        silMessagingService.recordSilMessage(SilPayloadType.APPLICATION_LOCATION_INFO, SilPayloadKeyType.APPLICATION_ID, String.valueOf(applicationId),
+                silResponseJson, null);
+        log.info("application-details Json payload: {}",silResponseJson);
+        return RestResult.restSuccess(silIMApplicationLocationInfo);
     }
 
-    private List<SilOrganisationLocation> setOrganisationData (Long applicationId, Set<OrganisationResource> organisations) {
+    private List<SilOrganisationLocation> setOrganisationData(Long applicationId, Set<OrganisationResource> organisations) {
         List<SilOrganisationLocation> silOrganisations = new ArrayList<SilOrganisationLocation>();
         for (OrganisationResource org : organisations) {
             SilOrganisationLocation silOrganisationLocation = new SilOrganisationLocation();
@@ -138,7 +149,7 @@ public class ApplicationDetailsController {
         CompetitionResource competitionResource = applicationService.
                 getCompetitionByApplicationId(applicationId).getSuccess();
         silIMApplicationLocationInfo.setCompetitionID(competitionResource.getId().toString());
-        String fundingDecisionStatus = Optional.ofNullable(applicationResource.getDecision()).map(Decision::getName) .orElse(null);
+        String fundingDecisionStatus = Optional.ofNullable(applicationResource.getDecision()).map(Decision::getName).orElse(null);
         silIMApplicationLocationInfo.setFundingDecisionStatus(fundingDecisionStatus);
 
         silIMApplicationLocationInfo.setDurationInMonths(applicationResource.getDurationInMonths());
@@ -148,9 +159,9 @@ public class ApplicationDetailsController {
         silIMApplicationLocationInfo.setManageFundingEmailDate(mangeFundingEmailDate);
 
         silIMApplicationLocationInfo.setInAssessmentReviewPanel(applicationResource.isInAssessmentReviewPanel());
-        String companyAge = Optional.ofNullable(applicationResource.getCompanyAge()).map(CompanyAge::getName) .orElse(null);
+        String companyAge = Optional.ofNullable(applicationResource.getCompanyAge()).map(CompanyAge::getName).orElse(null);
         silIMApplicationLocationInfo.setCompanyAge(companyAge);
-        String companyPrimaryFocus = Optional.ofNullable(applicationResource.getCompanyPrimaryFocus()).map(CompanyPrimaryFocus::getName) .orElse(null);
+        String companyPrimaryFocus = Optional.ofNullable(applicationResource.getCompanyPrimaryFocus()).map(CompanyPrimaryFocus::getName).orElse(null);
         silIMApplicationLocationInfo.setCompanyPrimaryFocus(companyPrimaryFocus);
         return silIMApplicationLocationInfo;
     }
