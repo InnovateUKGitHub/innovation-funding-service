@@ -211,7 +211,7 @@ Internal user marks the full application as successful and sent a notification
 
 Internal user can view EOI application from full application
     [Documentation]   IFS-12380
-    Given the user navigates to the page     ${server}/project-setup-management/competition/${hecpPreregCompId}/status/all
+    Given the user navigates to the page     ${server}/project-setup-management/competition/${preregCompetitionId}/status/all
     And the user clicks the button/link      link = ${preregApplicationID}
     When the user clicks the button/link     link = Expression of interest
     #Then the user clicks the button/link     jQuery = h1:contains("Expression of interest overview")
