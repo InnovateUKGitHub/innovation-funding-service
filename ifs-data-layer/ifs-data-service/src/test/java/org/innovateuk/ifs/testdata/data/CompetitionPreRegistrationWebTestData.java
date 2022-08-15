@@ -99,6 +99,14 @@ public class CompetitionPreRegistrationWebTestData {
                         .withQuestionName("How much budget is allocated for PhD students employed at your institution on this project?"),
                 aPreRegistrationSectionLine()
                         .withCompetitionName("Horizon Europe Guarantee Pre Registration Competition with Evidence Enabled")
+                        .withSectionName("Project details")
+                        .withQuestionName("Work programme"),
+                aPreRegistrationSectionLine()
+                        .withCompetitionName("Horizon Europe Guarantee Pre Registration Competition with Evidence Enabled")
+                        .withSectionName("Project details")
+                        .withQuestionName("Horizon Europe Guarantee grant agreement"),
+                aPreRegistrationSectionLine()
+                        .withCompetitionName("Horizon Europe Guarantee Pre Registration Competition with Evidence Enabled")
                         .withSectionName("Terms and conditions"),
                 aPreRegistrationSectionLine()
                         .withCompetitionName("Horizon Europe Guarantee Pre Registration Competition with Evidence Enabled")
