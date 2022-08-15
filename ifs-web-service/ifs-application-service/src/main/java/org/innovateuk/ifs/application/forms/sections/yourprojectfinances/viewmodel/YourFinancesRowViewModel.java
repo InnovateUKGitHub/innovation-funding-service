@@ -5,11 +5,13 @@ public class YourFinancesRowViewModel {
     private final String title;
     private final String url;
     private final boolean complete;
+    private final boolean enabledForPreRegistration;
 
-    public YourFinancesRowViewModel(String title, String url, boolean complete) {
+    public YourFinancesRowViewModel(String title, String url, boolean complete, boolean enabledForPreRegistration) {
         this.title = title;
         this.url = url;
         this.complete = complete;
+        this.enabledForPreRegistration = enabledForPreRegistration;
     }
 
     public String getTitle() {
@@ -22,5 +24,9 @@ public class YourFinancesRowViewModel {
 
     public boolean isComplete() {
         return complete;
+    }
+
+    public boolean isEnabledForPreRegistration() {
+        return enabledForPreRegistration;
     }
 }

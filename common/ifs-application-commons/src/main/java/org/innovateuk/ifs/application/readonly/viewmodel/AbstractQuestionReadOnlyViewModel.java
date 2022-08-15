@@ -22,6 +22,7 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
     private final boolean lead;
     private final boolean ktpCompetition;
     private final QuestionSetupType questionType;
+    private final boolean questionEnabledForPreRegistration;
 
     public AbstractQuestionReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource question) {
         this.competitionName = data.getCompetition().getName();
@@ -46,6 +47,7 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
         this.displayActions = lead || assignedToUser;
         this.ktpCompetition = data.getCompetition().isKtp();
         this.questionType = question.getQuestionSetupType();
+        this.questionEnabledForPreRegistration = question.isEnabledForPreRegistration();
     }
 
     private Function<QuestionStatusResource, Boolean> isAssignedToProcessRole(Optional<ProcessRoleResource> processRole) {
@@ -106,5 +108,10 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
     @JsonIgnore
     public QuestionSetupType getLoansBusinessAndFinancialInformation() {
         return QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION;
+    }
+
+    @Override
+    public boolean isEnabledForPreRegistration() {
+        return questionEnabledForPreRegistration;
     }
 }

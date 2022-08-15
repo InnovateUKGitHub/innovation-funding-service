@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.forms.sections.YourProjectFinancesController;
+package org.innovateuk.ifs.application.forms.sections.yourprojectfinances.controller;
 
 import org.innovateuk.ifs.application.forms.sections.yourprojectfinances.controller.YourProjectFinancesController;
 import org.innovateuk.ifs.security.BaseControllerSecurityTest;
