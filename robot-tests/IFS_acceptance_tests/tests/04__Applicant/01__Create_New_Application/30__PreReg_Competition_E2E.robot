@@ -19,6 +19,8 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...
 ...               IFS-12262 Pre-Reg/EOI Send notifications
 ...
+...               IFS-12521 Pre-registration - full application creation (cloning)
+...
 
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -145,7 +147,7 @@ Internal user submit the EOI applications funding decision
     Then the user should see the element                                                    jQuery = td:contains("${preregApplicationID}")+td:contains("${hecpPreregAppName}")+td:contains("Empire Ltd")+td:contains("Successful")
     And the user should see the element                                                     jQuery = td:contains("${unSuccessfulPreRegApplicationID}")+td:contains("${unSuccessPreregAppName}")+td:contains("Empire Ltd")+td:contains("Unsuccessful")
 
-Internal user is able to see Write and email button enabled
+Write and send email button enabled for internal users
     [Documentation]    IFS-12261
     When the user clicks the button/link        Link = Manage notifications
     Then the user should see the element        jQuery = h1:contains("Expression of interest notifications")
@@ -175,14 +177,30 @@ Internal user sends a unsuccessful notification of an EOI application
     And the user clicks the button/link                     jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
     And the user refreshes until element appears on page    jQuery = td:contains("${unSuccessPreregAppName}") ~ td:contains("Sent")
     Then the user reads his email                           steve.smith@empire.com  Notification regarding your expression of interest application '${unSuccessPreregAppName}' for the competition '${hecpPreregCompName}'  ${preRegApplicationUnsuccessfulEmail}
+    And the user navigates to the page                      ${server}/management/competition/${preregCompetitionId}/applications/all
+    And the user should see the element                     jQuery = td:contains("${preregApplicationID}")+td:contains("${hecpPreregAppName}")
 
-#Lead applicant views unsuccessful applications in previous dashboard
-#    [Documentation]  IFS-12265
-#    Given log in as a different user                                              &{lead_applicant_credentials}
-#    When the user clicks the application tile if displayed
-#    Then the user should see the element                                        jQuery = li:contains("${unSuccessPreregAppName}") .status-msg:contains("Unsuccessful")
-#    And the user should see the element                                         jQuery = li:contains("${unSuccessPreregAppName}") .status-msg:contains("Expression of interest")
-#
+Lead applicant views unsuccessful applications in previous dashboard
+    [Documentation]  IFS-12265
+    Given log in as a different user                                            &{lead_applicant_credentials}
+    When the user clicks the application tile if displayed
+    Then the user should see the element                                        jQuery = li:contains("${unSuccessPreregAppName}") .status-msg:contains("Unsuccessful")
+    And the user should see the element                                         jQuery = li:contains("${unSuccessPreregAppName}") .status-msg:contains("Expression of interest")
+
+Lead applicant can view full application details in dashboard
+    [Documentation]  IFS-12521
+    When the user navigates to the page         ${APPLICANT_DASHBOARD_URL}
+    Then the user should see the element        jQuery = .in-progress li:contains("${hecpPreregAppName}") .status:contains("% complete")
+    And the user should not see the element     jQuery = li:contains("${preregApplicationID}") .status-msg:contains("Expression of interest")
+
+Lead applicant can view the answers provided in EOI applications in full application along with new application questions
+    [Documentation]  IFS-12521
+    Given the user clicks the button/link                                   link = ${hecpPreregAppName}
+    When the user clicks the button/link                                    link = Tell us where your organisation is based
+    Then the user should see the element                                    jQuery = p:contains("My organisation is based in the UK or a British Overseas Territory")
+    And Lead applicant should see new questions added in full application
+
+
 #Lead applicant can delete unsubmitted applications from dashboard
 #    [Documentation]  IFS-12265
 #    Given Existing applicant creates a new application with same organisation     ${hecpPreregCompName}
@@ -361,3 +379,10 @@ User should see EOI Related content
     the user should see the element     jQuery = th:contains("Expression of interest decision")
     the user should see the element     jQuery = th:contains("Email status")
     the user should see the element     jQuery = th:contains("Date sent")
+
+Lead applicant should see new questions added in full application
+    the user clicks the button/link     link = Back to application overview
+    the user should see the element     link = Participating Organisation project region
+    the user should see the element     link = Award terms and conditions
+    the user clicks the button/link     link = Your project finances
+    the user should see the element     link = Your project location

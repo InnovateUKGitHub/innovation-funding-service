@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -361,6 +362,13 @@ public class ApplicationResource {
 
     public boolean isEnabledForExpressionOfInterest() {
         return applicationExpressionOfInterestConfigResource != null ? applicationExpressionOfInterestConfigResource.isEnabledForExpressionOfInterest() : false;
+    }
+
+    @JsonIgnore
+    public Long eoiApplicationId() {
+        return Optional.ofNullable(applicationExpressionOfInterestConfigResource)
+                .map(ApplicationExpressionOfInterestConfigResource::getEoiApplicationId)
+                .orElse(null);
     }
 
     @Override

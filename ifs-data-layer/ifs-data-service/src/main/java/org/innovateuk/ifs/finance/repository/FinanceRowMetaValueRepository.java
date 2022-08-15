@@ -14,5 +14,6 @@ public interface FinanceRowMetaValueRepository extends PagingAndSortingRepositor
     @Override
     List<FinanceRowMetaValue> findAll();
     FinanceRowMetaValue financeRowIdAndFinanceRowMetaFieldId(Long financeRowId, Long financeRowMetaFieldId);
+    List<FinanceRowMetaValue> financeRowId(Long financeRowId);
     void deleteByFinanceRowId(Long financeRowId);
 }
