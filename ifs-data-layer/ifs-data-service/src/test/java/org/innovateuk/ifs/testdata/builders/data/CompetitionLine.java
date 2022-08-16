@@ -51,6 +51,7 @@ public class CompetitionLine {
     private boolean preRegistration;
     private boolean imSurveyEnabled;
     private boolean priority;
+    private boolean eoiEvidenceRequired;
 
     public CompetitionLine() {
     }
@@ -389,5 +390,13 @@ public class CompetitionLine {
 
     public void setImSurveyEnabled(boolean imSurveyEnabled) {
         this.imSurveyEnabled = imSurveyEnabled;
+    }
+
+    public boolean isEoiEvidenceRequired() {
+        return eoiEvidenceRequired;
+    }
+
+    public void setEoiEvidenceRequired(boolean eoiEvidenceRequired) {
+        this.eoiEvidenceRequired = eoiEvidenceRequired;
     }
 }

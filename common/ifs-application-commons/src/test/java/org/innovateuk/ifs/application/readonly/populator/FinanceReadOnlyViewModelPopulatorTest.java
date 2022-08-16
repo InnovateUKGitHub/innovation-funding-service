@@ -24,17 +24,20 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import javax.swing.*;
 import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectations;
+import static org.innovateuk.ifs.application.builder.ApplicationExpressionOfInterestConfigResourceBuilder.newApplicationExpressionOfInterestConfigResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
@@ -62,6 +65,8 @@ public class FinanceReadOnlyViewModelPopulatorTest {
 
     @Mock
     private AsyncFuturesGenerator futuresGeneratorMock;
+
+    private final long eoiApplicationId = 3L;
 
     @Before
     public void setupExpectations() {
@@ -103,5 +108,50 @@ public class FinanceReadOnlyViewModelPopulatorTest {
         assertEquals("Finances summary", viewModel.getName());
         assertEquals(application.getId(), (Long) viewModel.getApplicationId());
         assertEquals(false, viewModel.isProcurementMilestones());
+    }
+
+    @Test
+    public void populateEOI() {
+        setField(populator, "asyncFuturesGenerator", futuresGeneratorMock);
+        ApplicationResource application = newApplicationResource()
+                .withApplicationExpressionOfInterestConfigResource(newApplicationExpressionOfInterestConfigResource()
+                        .withEnabledForExpressionOfInterest(false)
+                        .withEoiApplicationId(eoiApplicationId)
+                        .build())
+                .build();
+        CompetitionResource competition = newCompetitionResource()
+                .withEnabledForExpressionOfInterest(true)
+                .build();
+        SectionResource financeSection = newSectionResource()
+                .withEnabledForPreRegistration(true)
+                .build();
+        UserResource user = newUserResource().build();
+        ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel = mock(ApplicationFinanceSummaryViewModel.class);
+        ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel = mock(ApplicationResearchParticipationViewModel.class);
+        ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = mock(ApplicationFundingBreakdownViewModel.class);
+        ApplicationProcurementMilestonesSummaryViewModel applicationProcurementMilestonesSummaryViewModel = mock(ApplicationProcurementMilestonesSummaryViewModel.class);
+
+
+        when(sectionRestService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.FINANCE)).thenReturn(restSuccess(singletonList(financeSection)));
+        when(applicationFinanceSummaryViewModelPopulator.populate(application.getId(), user)).thenReturn(applicationFinanceSummaryViewModel);
+        when(applicationResearchParticipationViewModelPopulator.populate(application.getId())).thenReturn(applicationResearchParticipationViewModel);
+        when(applicationFundingBreakdownViewModelPopulator.populate(application.getId(), user)).thenReturn(applicationFundingBreakdownViewModel);
+        when(applicationProcurementMilestoneSummaryViewModelPopulator.populate(application)).thenReturn(applicationProcurementMilestonesSummaryViewModel);
+
+
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(),
+                emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), Optional.empty());
+
+        FinanceReadOnlyViewModel viewModel = populator.populate(data);
+
+        assertEquals((long) financeSection.getId(), viewModel.getFinanceSectionId());
+        assertEquals(applicationFinanceSummaryViewModel, viewModel.getApplicationFinanceSummaryViewModel());
+        assertEquals(applicationFundingBreakdownViewModel, viewModel.getApplicationFundingBreakdownViewModel());
+        assertEquals(applicationResearchParticipationViewModel, viewModel.getApplicationResearchParticipationViewModel());
+
+        assertEquals("Finances summary", viewModel.getName());
+        assertEquals(application.getId(), (Long) viewModel.getApplicationId());
+        assertEquals(false, viewModel.isProcurementMilestones());
+        assertTrue(viewModel.isEnabledForPreRegistration());
     }
 }

@@ -188,6 +188,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         newCompetition.setCompetitionOrganisationConfig(existingCompetition.getCompetitionOrganisationConfig());
         newCompetition.setCompetitionApplicationConfig(existingCompetition.getCompetitionApplicationConfig());
         newCompetition.setCompetitionThirdPartyConfig(existingCompetition.getCompetitionThirdPartyConfig());
+        newCompetition.setCompetitionEoiEvidenceConfig(existingCompetition.getCompetitionEoiEvidenceConfig());
         return newCompetition;
     }
 
