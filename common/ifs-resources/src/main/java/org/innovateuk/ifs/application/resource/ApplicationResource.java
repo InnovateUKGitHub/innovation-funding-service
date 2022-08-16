@@ -381,6 +381,10 @@ public class ApplicationResource {
                 .orElse(null);
     }
 
+    public boolean isEoiFullApplication() {
+        return !isEnabledForExpressionOfInterest() && eoiApplicationId() != null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

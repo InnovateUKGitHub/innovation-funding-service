@@ -36,7 +36,12 @@ public class ApplicationExpressionOfInterestConfigResourceBuilder extends BaseBu
     public ApplicationExpressionOfInterestConfigResourceBuilder withApplicationId(Long... applicationId) {
         return withArraySetFieldByReflection("applicationId", applicationId);
     }
+
     public ApplicationExpressionOfInterestConfigResourceBuilder withEnabledForExpressionOfInterest(boolean... enabledForExpressionOfInterest) {
         return withArraySetFieldByReflection("enabledForExpressionOfInterest", enabledForExpressionOfInterest);
+    }
+
+    public ApplicationExpressionOfInterestConfigResourceBuilder withEoiApplicationId(Long... eoiApplicationId) {
+        return withArraySetFieldByReflection("eoiApplicationId", eoiApplicationId);
     }
 }
