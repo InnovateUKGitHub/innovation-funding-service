@@ -21,7 +21,8 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...
 ...               IFS-12521 Pre-registration - full application creation (cloning)
 ...
-
+...               IFS-12380 Pre-Registration (Internal Journey) - full application
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -37,6 +38,8 @@ ${unSubmittedPreregAppName}                     unSubmittedPreRegApplication
 ${preRegApplicationUnsuccessfulEmail}           Thank you for submitting your application to Innovate UK for the competition
 ${preRegApplicationSuccessfulEmail}             We are pleased to inform you that your application for the Horizon Europe collaborative competition has been successful and passed the technical assessment phase.
 ${preregApplicationSubmissionEmail}             You have successfully submitted an application for funding to
+${fullApplicationSuccessfulEmail}               We are pleased to inform you that your application for the Horizon Europe collaborative competition has been successful and passed the technical assessment phase.
+
 
 *** Test Cases ***
 Comp Admin creates a prereg competition
@@ -197,6 +200,23 @@ Lead applicant completes the full application and submits
     And the user clicks the button/link                         id = submit-application-button
     Then the user should see the element                        jQuery = h2:contains("Application submitted")
     And the user reads his email                                steve.smith@empire.com  ${preregApplicationID}: Successful submission of application   You have successfully submitted an application for funding to ${hecpPreregCompName}.
+
+Internal user marks the full application as successful and sent a notification
+    [Documentation]  IFS-12380
+    Given Log in as a different user                                &{Comp_admin1_credentials}
+    And The user clicks the button/link                             link = ${hecpPreregCompName}
+    When the internal team mark the application as successful       ${hecpPreregAppName}   FUNDED
+    And the user clicks the button/link                             link = Competition
+    And the internal team notifies all applicants                   ${preregApplicationID}
+    Then the user reads his email                                   steve.smith@empire.com  Important message about your application '${hecpPreregAppName}' for the competition '${hecpPreregCompName}'  ${fullApplicationSuccessfulEmail}
+
+Internal user can view EOI application from full application
+    [Documentation]   IFS-12380
+    Given the user navigates to the page     ${server}/project-setup-management/competition/${preregCompetitionId}/status/all
+    And the user clicks the button/link      link = ${preregApplicationID}
+    When the user clicks the button/link     link = Expression of interest
+    Then the user clicks the button/link     jQuery = h1:contains("Expression of interest overview")
+    And the user should see the element      jQuery = h2:contains("Expression of interest questions")
 
 #Lead applicant views unsuccessful applications in previous dashboard
 #    [Documentation]  IFS-12265
@@ -404,3 +424,10 @@ the user completes the project location
     the user enters the project location
     the user clicks the button/link         link = Back to application overview
     the user should see the element         jQuery = li:contains("Your project finances") > .task-status-complete
+
+the internal team mark the application as successful
+    [Arguments]   ${applicationName}   ${decision}
+    the user navigates to the page      ${server}/management/competition/${preregCompetitionId}
+    the user clicks the button/link     link = Input and review funding decision
+    the user clicks the button/link     jQuery = tr:contains("${applicationName}") label
+    the user clicks the button/link     css = [type="submit"][value="${decision}"]
