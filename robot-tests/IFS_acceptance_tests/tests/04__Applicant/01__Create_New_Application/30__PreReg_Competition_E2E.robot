@@ -240,14 +240,14 @@ Internal user can view EOI application from full application
     Then the user clicks the button/link     jQuery = h1:contains("Expression of interest overview")
     And the user should see the element      jQuery = h2:contains("Expression of interest questions")
 
-Lead applicant can delete unsubmitted applications from dashboard
-    [Documentation]  IFS-12265
-    Given log in as a different user                                            &{lead_applicant_credentials}
-    And Existing applicant creates a new application with same organisation     ${hecpPreregCompName}
-    And the user completes the application details section                      ${unSubmittedPreregAppName}  ${tomorrowday}  ${month}  ${nextyear}   23
-    When internal user closes the competition
-    And Lead applicant deletes the unsubmitted EOI application
-    Then the user should not see the element                                    jQuery = a:contains("${unSubmittedPreregAppName}")
+#Lead applicant can delete unsubmitted applications from dashboard
+#    [Documentation]  IFS-12265
+#    Given log in as a different user                                            &{lead_applicant_credentials}
+#    And Existing applicant creates a new application with same organisation     ${hecpPreregCompName}
+#    And the user completes the application details section                      ${unSubmittedPreregAppName}  ${tomorrowday}  ${month}  ${nextyear}   23
+#    When internal user closes the competition
+#    And Lead applicant deletes the unsubmitted EOI application
+#    Then the user should not see the element                                    jQuery = a:contains("${unSubmittedPreregAppName}")
 
 *** Keywords ***
 Requesting IDs of this hecp pre reg competition
