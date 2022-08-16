@@ -117,6 +117,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource;
     private boolean enabledForPreRegistration;
     private CompetitionApplicationConfigResource competitionApplicationConfigResource;
+    private CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource;
 
     public CompetitionResource() {
     }
@@ -881,27 +882,37 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.competitionThirdPartyConfigResource = competitionThirdPartyConfigResource;
     }
 
-    @JsonIgnore
-    public boolean isOfGemCompetition() {
-        return isProcurement()
-                && isOfGemFunder()
-                && isProcurementThirdPartyTermsAndConditions();
+    public boolean isHasBusinessAndFinancialInformationQuestion() {
+        return hasBusinessAndFinancialInformationQuestion;
     }
 
-    private boolean isOfGemFunder() {
-        return funders
-                .stream()
-                .anyMatch(CompetitionFunderResource::isOfGem);
+    public CompetitionResource setHasBusinessAndFinancialInformationQuestion(boolean hasBusinessAndFinancialInformationQuestion) {
+        this.hasBusinessAndFinancialInformationQuestion = hasBusinessAndFinancialInformationQuestion;
+        return this;
     }
 
-    private boolean isProcurementThirdPartyTermsAndConditions() {
-        return termsAndConditions != null
-                && termsAndConditions.isProcurementThirdParty();
+    public boolean isEnabledForPreRegistration() {
+        return enabledForPreRegistration;
     }
 
-    @JsonIgnore
-    public boolean isDirectAward() {
-        return competitionTypeEnum == CompetitionTypeEnum.DIRECT_AWARD;
+    public void setEnabledForPreRegistration(boolean enabledForPreRegistration) {
+        this.enabledForPreRegistration = enabledForPreRegistration;
+    }
+
+    public CompetitionApplicationConfigResource getCompetitionApplicationConfigResource() {
+        return competitionApplicationConfigResource;
+    }
+
+    public void setCompetitionApplicationConfigResource(CompetitionApplicationConfigResource competitionApplicationConfigResource) {
+        this.competitionApplicationConfigResource = competitionApplicationConfigResource;
+    }
+
+    public CompetitionEoiEvidenceConfigResource getCompetitionEoiEvidenceConfigResource() {
+        return competitionEoiEvidenceConfigResource;
+    }
+
+    public void setCompetitionEoiEvidenceConfigResource(CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource) {
+        this.competitionEoiEvidenceConfigResource = competitionEoiEvidenceConfigResource;
     }
 
     @Override
@@ -980,6 +991,8 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(assessmentPeriods, that.assessmentPeriods)
                 .append(competitionThirdPartyConfigResource, that.competitionThirdPartyConfigResource)
                 .append(enabledForPreRegistration, that.enabledForPreRegistration)
+                .append(competitionApplicationConfigResource, that.competitionApplicationConfigResource)
+                .append(competitionEoiEvidenceConfigResource, that.competitionEoiEvidenceConfigResource)
                 .isEquals();
     }
 
@@ -1049,7 +1062,32 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(assessmentPeriods)
                 .append(competitionThirdPartyConfigResource)
                 .append(enabledForPreRegistration)
+                .append(competitionApplicationConfigResource)
+                .append(competitionEoiEvidenceConfigResource)
                 .toHashCode();
+    }
+
+    @JsonIgnore
+    public boolean isOfGemCompetition() {
+        return isProcurement()
+                && isOfGemFunder()
+                && isProcurementThirdPartyTermsAndConditions();
+    }
+
+    private boolean isOfGemFunder() {
+        return funders
+                .stream()
+                .anyMatch(CompetitionFunderResource::isOfGem);
+    }
+
+    private boolean isProcurementThirdPartyTermsAndConditions() {
+        return termsAndConditions != null
+                && termsAndConditions.isProcurementThirdParty();
+    }
+
+    @JsonIgnore
+    public boolean isDirectAward() {
+        return competitionTypeEnum == CompetitionTypeEnum.DIRECT_AWARD;
     }
 
     @Override
@@ -1071,16 +1109,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         );
     }
 
-
-    public boolean isHasBusinessAndFinancialInformationQuestion() {
-        return hasBusinessAndFinancialInformationQuestion;
-    }
-
-    public CompetitionResource setHasBusinessAndFinancialInformationQuestion(boolean hasBusinessAndFinancialInformationQuestion) {
-        this.hasBusinessAndFinancialInformationQuestion = hasBusinessAndFinancialInformationQuestion;
-        return this;
-    }
-
     @JsonIgnore
     public boolean isApplicationCreatedOrOpenedCompStatusOpen(ApplicationState applicationState) {
         return (applicationState == ApplicationState.CREATED || applicationState == ApplicationState.OPENED)
@@ -1095,21 +1123,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     @JsonIgnore
     public boolean isRejectedApplicationState(ApplicationState applicationState) {
         return applicationState == ApplicationState.REJECTED;
-    }
-
-    public boolean isEnabledForPreRegistration() {
-        return enabledForPreRegistration;
-    }
-
-    public void setEnabledForPreRegistration(boolean enabledForPreRegistration) {
-        this.enabledForPreRegistration = enabledForPreRegistration;
-    }
-    public CompetitionApplicationConfigResource getCompetitionApplicationConfigResource() {
-        return competitionApplicationConfigResource;
-    }
-
-    public void setCompetitionApplicationConfigResource(CompetitionApplicationConfigResource competitionApplicationConfigResource) {
-        this.competitionApplicationConfigResource = competitionApplicationConfigResource;
     }
 
 }
