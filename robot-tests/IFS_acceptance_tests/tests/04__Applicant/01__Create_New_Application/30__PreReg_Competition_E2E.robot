@@ -214,7 +214,7 @@ Internal user can view EOI application from full application
     Given the user navigates to the page     ${server}/project-setup-management/competition/${preregCompetitionId}/status/all
     And the user clicks the button/link      link = ${preregApplicationID}
     When the user clicks the button/link     link = Expression of interest
-    #Then the user clicks the button/link     jQuery = h1:contains("Expression of interest overview")
+    Then the user clicks the button/link     jQuery = h1:contains("Expression of interest overview")
     And the user should see the element      jQuery = h2:contains("Expression of interest questions")
 
 #Lead applicant views unsuccessful applications in previous dashboard
