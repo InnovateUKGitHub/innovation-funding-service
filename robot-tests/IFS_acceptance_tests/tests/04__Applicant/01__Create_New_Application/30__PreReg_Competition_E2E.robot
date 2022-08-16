@@ -21,7 +21,8 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...
 ...               IFS-12521 Pre-registration - full application creation (cloning)
 ...
-
+...               IFS-12380 Pre-Registration (Internal Journey) - full application
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
