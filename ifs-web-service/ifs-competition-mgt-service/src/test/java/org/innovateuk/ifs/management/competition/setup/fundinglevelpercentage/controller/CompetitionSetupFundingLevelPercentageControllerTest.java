@@ -102,7 +102,7 @@ public class CompetitionSetupFundingLevelPercentageControllerTest extends BaseCo
 
         mockMvc.perform(get(URL, COMPETITION_ID))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("/competition/setup/%d/section/funding-amount-sought/funding-rule/%s", COMPETITION_ID, FundingRules.SUBSIDY_CONTROL.toUrl())));
+                .andExpect(redirectedUrl(String.format("/competition/setup/%d/section/funding-level-percentage/funding-rule/%s", COMPETITION_ID, FundingRules.SUBSIDY_CONTROL.toUrl())));
     }
 
     @Test

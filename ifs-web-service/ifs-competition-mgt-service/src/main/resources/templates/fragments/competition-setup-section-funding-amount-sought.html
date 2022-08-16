@@ -48,7 +48,7 @@
                                           th:each="err : ${#fields.errors('fundingAmountSought')}" th:text="${err}"/>
                                     <th:block>
                                         <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
-                                    <input class="govuk-input govuk-input--width-8 govuk-!-margin-right-1"
+                                    <input class="govuk-input govuk-input--width-10 govuk-!-margin-right-1"
                                            th:field="*{__fundingAmountSought__}"
                                            th:errorclass="govuk-input--error"
                                            type="number"
