@@ -2,10 +2,8 @@ package org.innovateuk.ifs.management.competition.inflight.controller;
 
 import org.apache.commons.lang3.CharEncoding;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
-import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
-import org.innovateuk.ifs.application.resource.Decision;
+import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -43,6 +41,7 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.util.CookieTestUtil.encryptor;
 import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
@@ -85,6 +84,9 @@ public class CompetitionManagementDecisionControllerTest extends BaseControllerM
 
     @Mock
     private CompetitionInFlightStatsModelPopulator competitionInFlightStatsModelPopulator;
+
+    @Mock
+    private ApplicationRestService applicationRestService;
 
     private MockMvc mockMvc;
 
@@ -276,6 +278,12 @@ public class CompetitionManagementDecisionControllerTest extends BaseControllerM
         String decision = "ON_HOLD";
         List<Long> applicationIds = asList(1L, 2L);
 
+        ApplicationResource applicationResource = newApplicationResource()
+                .withApplicationExpressionOfInterestConfigResource(ApplicationExpressionOfInterestConfigResource.builder()
+                        .enabledForExpressionOfInterest(true)
+                        .build())
+                .build();
+
         CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
         CompetitionResource competitionResource = newCompetitionResource().withId(COMPETITION_ID).build();
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
@@ -284,6 +292,8 @@ public class CompetitionManagementDecisionControllerTest extends BaseControllerM
         when(applicationDecisionService.getDecisionForString(decision)).thenReturn(Optional.of(Decision.ON_HOLD));
         when(applicationSummaryRestService.getAllSubmittedApplicationIds(COMPETITION_ID, empty(), empty())).thenReturn(restSuccess(applicationIds));
         when(cookieUtil.getCookieValue(any(),any())).thenReturn(getSerializedObject(cookieWithFilterAndSelectionParameters));
+        when(applicationRestService.getApplicationById(1L)).thenReturn(restSuccess(applicationResource));
+        when(applicationRestService.getApplicationById(2L)).thenReturn(restSuccess(applicationResource));
 
         List<ApplicationSummaryResource> expectedSummaries = newApplicationSummaryResource()
                 .build(3);

@@ -50,6 +50,7 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.builder.ApplicationExpressionOfInterestConfigResourceBuilder.newApplicationExpressionOfInterestConfigResource;
 import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATES;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
@@ -449,6 +450,15 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .withName("userOnAppButNotProject")
                 .build();
 
+        Application eoiApp = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withName("eoiApps")
+                .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig.builder()
+                        .enabledForExpressionOfInterest(true)
+                        .build())
+                .build();
+
         Project projectWithoutUser = newProject()
                 .with(id(null))
                 .withName("projectWithoutUser")
@@ -516,6 +526,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         assertFalse(applications.stream().anyMatch(app -> app.getId().equals(userOnAppButNotProject.getId())));
         assertFalse(applications.stream().anyMatch(app -> app.getId().equals(assessorApp.getId())));
+        assertFalse(applications.stream().anyMatch(app -> app.getId().equals(eoiApp.getId())));
     }
 
     @Test
