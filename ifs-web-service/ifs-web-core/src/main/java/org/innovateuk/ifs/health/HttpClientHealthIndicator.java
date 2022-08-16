@@ -38,7 +38,7 @@ public class HttpClientHealthIndicator implements HealthIndicator {
     }
 
     private void logWarning(PoolStats poolStats) {
-        if (poolStats.getPending() > lowPoolWarningCount | poolStats.getLeased() + lowPoolWarningCount > poolStats.getMax()) {
+        if (poolStats.getPending() > lowPoolWarningCount || poolStats.getLeased() + lowPoolWarningCount > poolStats.getMax()) {
             log.warn(poolStats.toString());
         }
         log.trace(poolStats.toString());
