@@ -6,6 +6,9 @@ import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * healthindicator for keeping track of the incoming connection count
  */
@@ -21,10 +24,16 @@ public class IncomingConnectionCountHealthIndicator implements HealthIndicator{
     }
 
     @Override public Health health() {
+        Map<String, Integer> details = new HashMap<>();
+        details.put("Count", countFilter.getCount().get());
+        details.put("Max", countFilter.getMax());
+
         if(countFilter.canAcceptConnection()){
-            return Health.up().build();
+            return Health.up()
+                    .withDetails(details).build();
         } else {
-            return Health.down().build();
+            return Health.down()
+                    .withDetails(details).build();
         }
     }
 }
