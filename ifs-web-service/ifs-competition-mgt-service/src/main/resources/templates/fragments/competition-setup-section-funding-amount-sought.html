@@ -17,7 +17,7 @@
                  th:classappend="${#fields.hasErrors('fundingAmountSoughtApplicable')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingAmountSoughtApplicable">
-                        <h2 class="govuk-fieldset__heading">Is a maximum funding sought?</h2>
+                        <h2 class="govuk-fieldset__heading">Is a maximum funding amount sought?</h2>
                     </legend>
                     <span th:if="${#fields.hasErrors('fundingAmountSoughtApplicable')}" class="govuk-error-message"
                           th:each="err : ${#fields.errors('fundingAmountSoughtApplicable')}" th:text="${err}"/>
@@ -42,7 +42,7 @@
                             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('fundingAmountSought')} ? 'govuk-form-group--error'">
                                 <fieldset class="govuk-fieldset">
                                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingAmountSought">
-                                        <h2 class="govuk-fieldset__heading">Funding sought amount</h2>
+                                        <h2 class="govuk-fieldset__heading">Funding amount sought </h2>
                                     </legend>
                                     <span th:if="${#fields.hasErrors('fundingAmountSought')}" class="govuk-error-message"
                                           th:each="err : ${#fields.errors('fundingAmountSought')}" th:text="${err}"/>
@@ -52,9 +52,11 @@
                                            th:field="*{__fundingAmountSought__}"
                                            th:errorclass="govuk-input--error"
                                            type="number"
+                                           min="1"
                                            required="required"
                                            data-prevent-input-non-number
-                                           th:attr="data-required-errormessage=#{validation.applicationfundingamountsoughtform.application.funding.amount.sought.required}" />
+                                           th:attr="data-required-errormessage=#{validation.applicationfundingamountsoughtform.application.funding.amount.sought.required},
+                                           data-min-errormessage=#{validation.applicationfundingamountsoughtform.application.funding.amount.sought.min}" />
                                     </th:block>
                                 </fieldset>
                             </div>
@@ -84,10 +86,10 @@
         <th:block th:if="${!model.general.editable}">
 
             <dl class="standard-definition-list column-definition-list">
-                <dt>Is a maximum funding sought?</dt>
+                <dt>Is a maximum funding amount sought?</dt>
                 <dd th:text="${competitionSetupForm.fundingAmountSoughtApplicable ? 'Yes' : 'No'}"></dd>
                 <th:block th:if="${competitionSetupForm.fundingAmountSoughtApplicable}">
-                    <dt>Funding sought amount</dt>
+                    <dt>Funding amount sought </dt>
                     <dd th:text="'£' + ${#numbers.formatInteger(competitionSetupForm.fundingAmountSought, 0,'DEFAULT')}"></dd>
                 </th:block>
             </dl>

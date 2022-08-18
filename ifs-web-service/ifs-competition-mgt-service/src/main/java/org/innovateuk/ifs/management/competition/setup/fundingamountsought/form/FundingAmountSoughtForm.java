@@ -3,6 +3,7 @@ package org.innovateuk.ifs.management.competition.setup.fundingamountsought.form
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
@@ -12,8 +13,8 @@ public class FundingAmountSoughtForm extends CompetitionSetupForm {
     @NotNull(message = "{validation.applicationfundingamountsoughtform.application.funding.amount.sought.applicable.required}")
     private Boolean fundingAmountSoughtApplicable;
 
+    @DecimalMin(value = "1", message = "{validation.applicationfundingamountsoughtform.application.funding.amount.sought.min}")
     private BigDecimal fundingAmountSought;
-
 
     public FundingAmountSoughtForm() {
     }
