@@ -71,25 +71,30 @@ public class ApplicationDetailsController {
     @ResponseBody
     public RestResult<SilIMApplicationLocationInfo> getApplicationLocationInfo(
             @PathVariable("applicationId") final Long applicationId,
-            HttpServletRequest request)  {
+            HttpServletRequest request) {
 
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         if (user == null) {
             log.error("application-details : user not found or inactive in the system ");
             return RestResult.restFailure(HttpStatus.UNAUTHORIZED);
         } else {
-            ApplicationResource application = applicationService.getApplicationById(applicationId).getSuccess();
 
-            if (application == null) {
-                log.error(String.format("application-details : application %d, not found in the system ", applicationId));
-                return RestResult.restFailure(HttpStatus.BAD_REQUEST);
-            } else {
-                log.debug(String.format("GET application-details : %d", applicationId));
 
-                return getAssociatedApplicationData(user, applicationId, application);
-            }
+            return applicationService.getApplicationById(applicationId).handleSuccessOrFailure(
+                    failure -> {
+                        log.error(String.format("application-details : application %d, not found in the system ", applicationId));
+                        return RestResult.restFailure(failure.getErrors(), HttpStatus.NOT_FOUND);
+                    },
+                    success -> {
+                        log.debug(String.format("GET application-details : %d", applicationId));
+                        return getAssociatedApplicationData(user, applicationId, success);
+                    }
+            );
+
+
         }
     }
+
 
     private RestResult<SilIMApplicationLocationInfo> getAssociatedApplicationData(UserResource user, Long applicationId, ApplicationResource applicationResource) {
         return usersRolesService.getProcessRoleByUserIdAndApplicationId(user.getId(), applicationId).handleSuccessOrFailure(
@@ -114,7 +119,7 @@ public class ApplicationDetailsController {
 
         silMessagingService.recordSilMessage(SilPayloadType.APPLICATION_LOCATION_INFO, SilPayloadKeyType.APPLICATION_ID, String.valueOf(applicationId),
                 silResponseJson, null);
-        log.info("application-details Json payload: {}",silResponseJson);
+        log.info("application-details Json payload: {}", silResponseJson);
         return RestResult.restSuccess(silIMApplicationLocationInfo);
     }
 
