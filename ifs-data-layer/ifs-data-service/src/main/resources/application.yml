@@ -264,7 +264,7 @@ logging:
     api:
         inbound:
             filter:
-                endpoints: /application-update,/user/v1/edi
+                endpoints: /application-update,/user/v1/edi,/application-details/v1
                 includeHeaders: true
                 includePayload: true
                 includeQueryString: true
