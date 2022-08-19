@@ -182,12 +182,12 @@ the user fills in the CS funding eligibility
     ...                                     AND              the user should see the element     jQuery = p:contains("Click edit to change the maximum funding level percentage.")
     ...  ELSE                                                run keywords                        the user fills funding level percentages     ${compType}
     ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
-    the user selects the radio button                       fundingAmountSoughtApplicable   false
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element    jQuery = button:contains("Done")
-    Run Keyword If  '${status}' == 'PASS'                    run keywords          the user clicks the button/link     jQuery = button:contains("Done")
-    ...                                     AND              the user should see the element         jQuery = button:contains("Edit")
-    the user clicks the button/link         link = Return to setup overview
-    the user should see the element         jQuery = div:contains("Funding eligibility") ~ .task-status-complete
+    Run Keyword If  '${status}' == 'PASS'                   the user clicks the button/link     jQuery = button:contains("Done")
+    the user selects the radio button                       fundingAmountSoughtApplicable   false
+    the user clicks the button/link                         jQuery = button:contains("Done")
+    the user clicks the button/link                         link = Return to setup overview
+    the user should see the element                         jQuery = div:contains("Funding eligibility") ~ .task-status-complete
 
 the user fills funding level percentages
     [Arguments]   ${compType}
