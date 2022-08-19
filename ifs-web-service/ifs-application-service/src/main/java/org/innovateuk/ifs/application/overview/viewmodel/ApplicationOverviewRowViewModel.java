@@ -14,21 +14,25 @@ public class ApplicationOverviewRowViewModel {
     private final boolean complete;
     private final AssignButtonsViewModel assignButtonsViewModel;
     private final boolean showStatus;
+    private final boolean enabledForPreRegistration;
 
-    public ApplicationOverviewRowViewModel(String title, String url, boolean complete, AssignButtonsViewModel assignButtonsViewModel, boolean showStatus) {
+    public ApplicationOverviewRowViewModel(String title, String url, boolean complete, AssignButtonsViewModel assignButtonsViewModel,
+                                           boolean showStatus, boolean enabledForPreRegistration) {
         this.title = title;
         this.url = url;
         this.complete = complete;
         this.assignButtonsViewModel = assignButtonsViewModel;
         this.showStatus = showStatus;
+        this.enabledForPreRegistration = enabledForPreRegistration;
     }
 
-    public ApplicationOverviewRowViewModel(String title, String url, boolean complete, boolean showStatus) {
+    public ApplicationOverviewRowViewModel(String title, String url, boolean complete, boolean showStatus, boolean enabledForPreRegistration) {
         this.title = title;
         this.url = url;
         this.complete = complete;
         this.assignButtonsViewModel = null;
         this.showStatus = showStatus;
+        this.enabledForPreRegistration = enabledForPreRegistration;
     }
 
     public String getTitle() {
@@ -55,5 +59,9 @@ public class ApplicationOverviewRowViewModel {
 
     public boolean isShowStatus() {
         return showStatus;
+    }
+
+    public boolean isEnabledForPreRegistration() {
+        return enabledForPreRegistration;
     }
 }

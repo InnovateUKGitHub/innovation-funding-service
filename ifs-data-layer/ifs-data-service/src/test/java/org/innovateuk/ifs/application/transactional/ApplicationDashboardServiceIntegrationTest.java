@@ -63,19 +63,21 @@ public class ApplicationDashboardServiceIntegrationTest extends BaseAuthenticati
         loginSteveSmith();
         Long userId = getSteveSmith().getId();
 
-
-
-
         Application application = applicationRepository.findById(4L).get();
         application.setManageDecisionEmailDate(ZonedDateTime.now());
-        application.setDecision(DecisionStatus.UNFUNDED);
-        application.setCompetition(newCompetition().withAlwaysOpen(false).build());
+        application.setDecision(DecisionStatus.EOI_REJECTED);
+        application.setCompetition(newCompetition()
+                .withAlwaysOpen(false)
+                .build());
 
         ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig =
                 ApplicationExpressionOfInterestConfig.builder().
-                        application(application).enabledForExpressionOfInterest(true).build();
+                        application(application)
+                        .enabledForExpressionOfInterest(true)
+                        .build();
         application.setApplicationExpressionOfInterestConfig(applicationExpressionOfInterestConfig);
         applicationExpressionOfInterestConfigRepository.save(applicationExpressionOfInterestConfig);
+
         applicationRepository.save(application);
 
         List<Application> collect = applicationRepository.findApplicationsForDashboard(userId).stream()

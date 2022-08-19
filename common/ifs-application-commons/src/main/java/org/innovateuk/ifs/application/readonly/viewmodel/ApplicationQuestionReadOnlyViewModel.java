@@ -7,6 +7,7 @@ public interface ApplicationQuestionReadOnlyViewModel {
     String getFragment();
     boolean isComplete();
     boolean isLead();
+    boolean isEnabledForPreRegistration();
     default boolean shouldDisplayActions()  { return true; }
     default boolean shouldDisplayMarkAsComplete()  {
         return true;
