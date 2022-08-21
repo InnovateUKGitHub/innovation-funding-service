@@ -58,6 +58,7 @@ public class ProgrammeTemplate implements CompetitionTemplate {
                 applicationQuestions()
                         .withQuestions(programmeDefaultQuestions()),
                 finances(),
+                impactManagement(),
                 termsAndConditions()
         );
 

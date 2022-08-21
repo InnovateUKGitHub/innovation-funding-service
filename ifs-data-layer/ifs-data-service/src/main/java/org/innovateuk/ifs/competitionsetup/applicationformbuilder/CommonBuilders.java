@@ -423,4 +423,20 @@ public class CommonBuilders {
         return competition;
 
     }
+
+
+    public static SectionBuilder impactManagement() {
+        return aSection()
+                .withName("Impact Management")
+                .withType(SectionType.SUPPORTING_INFORMATION)
+                .withDescription("This is not a test")
+                .withQuestions(newArrayList(aQuestion()
+                        .withShortName("Impact Management")
+                        .withName("Impact Management")
+                        .withDescription("Impact Management")
+                        .withMarkAsCompletedEnabled(true)
+                        .withMultipleStatuses(true)
+                        .withAssignEnabled(true)
+                        .withQuestionSetupType(QuestionSetupType.IMPACT_MANAGEMENT_SURVEY)));
+    }
 }
