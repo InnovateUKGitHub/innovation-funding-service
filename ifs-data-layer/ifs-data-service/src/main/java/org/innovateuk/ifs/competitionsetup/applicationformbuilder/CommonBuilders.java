@@ -427,13 +427,13 @@ public class CommonBuilders {
 
     public static SectionBuilder impactManagement() {
         return aSection()
-                .withName("Impact Management")
+                .withName("Supporting Information")
                 .withType(SectionType.SUPPORTING_INFORMATION)
                 .withDescription("This is not a test")
                 .withQuestions(newArrayList(aQuestion()
-                        .withShortName("Impact Management")
-                        .withName("Impact Management")
-                        .withDescription("Impact Management")
+                        .withShortName("Project Impact")
+                        .withName("Project Impact")
+                        .withDescription("Understanding the benefits of the project that innovate UK supports")
                         .withMarkAsCompletedEnabled(true)
                         .withMultipleStatuses(true)
                         .withAssignEnabled(true)
