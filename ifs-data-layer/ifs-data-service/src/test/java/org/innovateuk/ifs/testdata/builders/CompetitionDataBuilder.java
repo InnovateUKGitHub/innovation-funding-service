@@ -513,12 +513,19 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                     competitionApplicationConfigRepository.save(applicationConfig);
                     updateCompetitionInCompetitionData(data, competition.getId());
                 });
-            }else{
+            } else {
                 Long compID = data.getCompetition().getId();
+
                 Optional<Section> id = sectionRepository.findByTypeAndCompetitionId(SectionType.SUPPORTING_INFORMATION, compID);
-                Question qid = questionRepository.findFirstByCompetitionIdAndQuestionSetupType(compID, QuestionSetupType.IMPACT_MANAGEMENT_SURVEY);
-                questionRepository.delete(qid);
-                sectionRepository.deleteById(id.get().getId());
+                id.ifPresent(section -> {
+                            Question qid = questionRepository
+                                    .findFirstByCompetitionIdAndQuestionSetupType(compID, QuestionSetupType.IMPACT_MANAGEMENT_SURVEY);
+                            if (qid != null) {
+                                questionRepository.delete(qid);
+                                sectionRepository.deleteById(id.get().getId());
+                            }
+                        }
+                );
             }
         });
     }
