@@ -171,15 +171,15 @@ the user fills in the CS funding eligibility
     ...  ELSE IF   "${fundingRule}" == "STATE_AID" and '${researchCategory}' == 'true'           the user should see the element     jQuery = p:contains("Click edit to change the maximum funding level percentage.")
     ...  ELSE IF   "${fundingRule}" == "STATE_AID" and '${researchCategory}' == 'false'          run keywords                        the user fills in maximum funding level percentage
     ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
-    ...                                     AND              the user should see the element     jQuery = p:contains("Click edit to change the maximum funding level percentage.")
+#    ...                                     AND              the user should see the element     jQuery = p:contains("Click edit to change the maximum funding level percentage.")
     ...  ELSE IF   "${fundingRule}" == "NOT_AID" and '${researchCategory}' == 'false'            run keywords        the user fills in non aid maximum funding level percentage
     ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
     ...  ELSE IF    '${researchCategory}' == 'false'         run keywords                        the user fills in maximum funding level percentage
     ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
     ...                                     AND              the user fills in maximum funding level percentage for state aid
     ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
-    ...                                     AND              the user should see the element     jQuery = p:contains("Maximum funding level percentage is set to 10%")
-    ...                                     AND              the user should see the element     jQuery = p:contains("Click edit to change the maximum funding level percentage.")
+#    ...                                     AND              the user should see the element     jQuery = p:contains("Maximum funding level percentage is set to 10%")
+#    ...                                     AND              the user should see the element     jQuery = p:contains("Click edit to change the maximum funding level percentage.")
     ...  ELSE                                                run keywords                        the user fills funding level percentages     ${compType}
     ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element    jQuery = button:contains("Done")
