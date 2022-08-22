@@ -78,8 +78,6 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     private String hash;
 
-    private final boolean grantCompetition;
-
     public YourProjectCostsViewModel(long applicationId,
                                      String competitionName,
                                      long sectionId,
@@ -110,8 +108,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
                                      boolean ofGemCompetition,
                                      boolean thirdPartyOfgem,
                                      boolean hecpCompetition,
-                                     String hash,
-                                     boolean grantCompetition) {
+                                     String hash) {
         this.internal = false;
         this.organisationId = organisationId;
         this.applicationId = applicationId;
@@ -144,7 +141,6 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.thirdPartyOfgem = thirdPartyOfgem;
         this.hecpCompetition = hecpCompetition;
         this.hash = hash;
-        this.grantCompetition = grantCompetition;
     }
 
     public YourProjectCostsViewModel(long applicationId,
@@ -172,19 +168,18 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
                                      boolean ofGemCompetition,
                                      boolean thirdPartyOfgem,
                                      boolean hecpCompetition,
-                                     String hash,
-                                     boolean grantCompetition) {
+                                     String hash) {
         this(applicationId, competitionName, sectionId, competitionId, organisationId, complete, open,
                 includeVat, applicationName, organisationName, financesUrl, procurementCompetition, thirdPartyProcurementCompetition,
                 ktpCompetition, ktpPhase2Enabled, financeRowTypes, overheadAlwaysTwenty, showCovidGuidance, showJustificationForm, false,
                 false, null, false, null, fecModelEnabled,
-                grantClaimPercentage, thirdPartyProjectCostGuidanceLink, ofGemCompetition, thirdPartyOfgem, hecpCompetition, hash, grantCompetition
+                grantClaimPercentage, thirdPartyProjectCostGuidanceLink, ofGemCompetition, thirdPartyOfgem, hecpCompetition, hash
         );
     }
 
     public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, boolean thirdPartyProcurementCompetition,
                                      boolean ktpCompetition, boolean ktpPhase2Enabled, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty,
-                                     String competitionName, long applicationId, boolean thirdPartyOfgem, boolean hecpCompetition, String hash, boolean grantCompetition) {
+                                     String competitionName, long applicationId, boolean thirdPartyOfgem, boolean hecpCompetition, String hash) {
         this.open = open;
         this.internal = internal;
         this.procurementCompetition = procurementCompetition;
@@ -218,7 +213,6 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.ofGemCompetition = false;
         this.thirdPartyOfgem = thirdPartyOfgem;
         this.hash = hash;
-        this.grantCompetition = grantCompetition;
     }
 
     @Override
@@ -367,10 +361,6 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     public String getHash() {
         return hash;
-    }
-
-    public boolean isGrantCompetition() {
-        return grantCompetition;
     }
 
     @JsonIgnore

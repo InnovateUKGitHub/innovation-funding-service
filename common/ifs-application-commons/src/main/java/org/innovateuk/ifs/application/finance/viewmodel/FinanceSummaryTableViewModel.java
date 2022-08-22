@@ -26,7 +26,6 @@ public class FinanceSummaryTableViewModel implements BaseAnalyticsViewModel {
     private final boolean ktp;
     private final boolean includeOrganisationNames;
     private final boolean isThirdPartyOfgem;
-    private final boolean isGrantCompetition;
 
     public FinanceSummaryTableViewModel(long applicationId,
                                         CompetitionResource competition,
@@ -35,8 +34,7 @@ public class FinanceSummaryTableViewModel implements BaseAnalyticsViewModel {
                                         boolean collaborativeProject,
                                         BigDecimal competitionMaximumFundingSought,
                                         boolean includeOrganisationNames,
-                                        boolean isThirdPartyOfgem,
-                                        boolean isGrantCompetition) {
+                                        boolean isThirdPartyOfgem) {
         this.applicationId = applicationId;
         this.competitionName = competition.getName();
         this.rows = rows;
@@ -47,7 +45,6 @@ public class FinanceSummaryTableViewModel implements BaseAnalyticsViewModel {
         this.ktp = competition.isKtp();
         this.includeOrganisationNames = includeOrganisationNames;
         this.isThirdPartyOfgem = isThirdPartyOfgem;
-        this.isGrantCompetition = isGrantCompetition;
     }
 
     @Override
@@ -94,10 +91,6 @@ public class FinanceSummaryTableViewModel implements BaseAnalyticsViewModel {
 
     public boolean isThirdPartyOfgem() {
         return isThirdPartyOfgem;
-    }
-
-    public boolean isGrantCompetition() {
-        return isGrantCompetition;
     }
 
     public boolean isAllFinancesComplete() {
@@ -158,9 +151,5 @@ public class FinanceSummaryTableViewModel implements BaseAnalyticsViewModel {
     @JsonIgnore
     public SectionType getFinanceSectionType() {
         return SectionType.FINANCE;
-    }
-
-    public boolean isGrantOfgemCompetition() {
-        return isGrantCompetition() && isThirdPartyOfgem();
     }
 }
