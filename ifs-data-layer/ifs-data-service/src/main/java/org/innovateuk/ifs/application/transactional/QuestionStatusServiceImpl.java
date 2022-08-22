@@ -33,11 +33,9 @@ import java.util.stream.Collectors;
 import static java.time.ZonedDateTime.now;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_NOT_UPDATED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSIGNEE_SHOULD_BE_APPLICANT;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -98,11 +96,24 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
 
     @Override
     @Transactional
+    public ServiceResult<Void> markAsCompleteNoValidate(QuestionApplicationCompositeId ids, long markedAsCompleteById, ZonedDateTime markedAsCompleteOn) {
+        return find(processRole(markedAsCompleteById), openApplication(ids.applicationId), getQuestionSupplier(ids.questionId))
+                .andOnSuccess((markedAsCompleteBy, application, question)
+                        -> setCompleteOnFindAndSuccess(markedAsCompleteBy, application, question, true, true,markedAsCompleteOn));
+    }
+
+    @Override
+    @Transactional
     public ServiceResult<List<ValidationMessages>> markAsInComplete(final QuestionApplicationCompositeId ids,
                                                                     final long markedAsInCompleteById) {
         return setComplete(ids.questionId, ids.applicationId, markedAsInCompleteById, false, true, now());
     }
-
+    @Override
+    @Transactional
+    public ServiceResult<List<ValidationMessages>> markAsInComplete(final QuestionApplicationCompositeId ids,
+                                                                    final long markedAsInCompleteById,ZonedDateTime dateTime) {
+        return setComplete(ids.questionId, ids.applicationId, markedAsInCompleteById, false, true, dateTime);
+    }
     @Override
     @Transactional
     public ServiceResult<List<ValidationMessages>> markTeamAsInComplete(final QuestionApplicationCompositeId ids,
