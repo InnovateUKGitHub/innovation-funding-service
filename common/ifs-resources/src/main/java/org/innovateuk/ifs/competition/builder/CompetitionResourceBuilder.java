@@ -300,7 +300,7 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
     }
 
     public CompetitionResourceBuilder withCompetitionApplicationConfig(CompetitionApplicationConfigResource... competitionApplicationConfigResources) {
-        return withArraySetFieldByReflection("competitionApplicationConfig", competitionApplicationConfigResources);
+        return withArraySetFieldByReflection("competitionApplicationConfigResource", competitionApplicationConfigResources);
     }
 
     public CompetitionResourceBuilder withSubsidyControl(Boolean... subsidyControls) {

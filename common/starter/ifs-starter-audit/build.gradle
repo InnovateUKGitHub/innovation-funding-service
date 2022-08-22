@@ -7,14 +7,18 @@ dependencies {
 
     // exported
     api project(":common:api:audit-api")
+    api project(":common:api:messaging-api")
+    api "org.springframework.amqp:spring-amqp"
+    api "org.springframework.amqp:spring-rabbit"
 
     implementation project(":common:starter:ifs-starter-common")
+    implementation project(":common:starter:ifs-starter-messaging")
+
     implementation "org.springframework.boot:spring-boot-starter"
     implementation "org.springframework.boot:spring-boot-starter-amqp"
     implementation "org.springframework.boot:spring-boot-starter-json"
     implementation "org.springframework.boot:spring-boot-starter-validation"
-    implementation "org.springframework.amqp:spring-rabbit"
-    implementation "org.springframework.amqp:spring-amqp"
+
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.amqp:spring-rabbit-test")

@@ -19,7 +19,7 @@ public class ContentEvent {
 
     private ZonedDateTime date;
 
-    @Column(length=5000)
+    @Column(length=5000, columnDefinition = "LONGTEXT")
     private String content;
 
     public Long getId() {

@@ -11,7 +11,7 @@ public class AssessmentResource {
     private AssessmentState assessmentState;
     private LocalDate startDate;
     private LocalDate endDate;
-    private AssessmentFundingDecisionOutcomeResource fundingDecision;
+    private AssessmentDecisionOutcomeResource decision;
     private AssessmentRejectOutcomeResource rejection;
     private Long processRole;
     private Long internalParticipant;
@@ -60,12 +60,12 @@ public class AssessmentResource {
         this.endDate = endDate;
     }
 
-    public AssessmentFundingDecisionOutcomeResource getFundingDecision() {
-        return fundingDecision;
+    public AssessmentDecisionOutcomeResource getDecision() {
+        return decision;
     }
 
-    public void setFundingDecision(AssessmentFundingDecisionOutcomeResource fundingDecision) {
-        this.fundingDecision = fundingDecision;
+    public void setDecision(AssessmentDecisionOutcomeResource decision) {
+        this.decision = decision;
     }
 
     public AssessmentRejectOutcomeResource getRejection() {
@@ -143,7 +143,7 @@ public class AssessmentResource {
                 .append(assessmentState, that.assessmentState)
                 .append(startDate, that.startDate)
                 .append(endDate, that.endDate)
-                .append(fundingDecision, that.fundingDecision)
+                .append(decision, that.decision)
                 .append(rejection, that.rejection)
                 .append(processRole, that.processRole)
                 .append(internalParticipant, that.internalParticipant)
@@ -161,7 +161,7 @@ public class AssessmentResource {
                 .append(assessmentState)
                 .append(startDate)
                 .append(endDate)
-                .append(fundingDecision)
+                .append(decision)
                 .append(rejection)
                 .append(processRole)
                 .append(internalParticipant)

@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.filestorage.storage;
 
+import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
-import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
 import org.innovateuk.ifs.api.filestorage.v1.delete.FileDeletionRequest;
 import org.innovateuk.ifs.api.filestorage.v1.delete.FileDeletionResponse;
+import org.innovateuk.ifs.api.filestorage.v1.download.FileDownloadResponse;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadRequest;
 import org.innovateuk.ifs.api.filestorage.v1.upload.FileUploadResponse;
 import org.innovateuk.ifs.filestorage.cfg.StorageServiceConfigurationProperties;
@@ -17,6 +18,7 @@ import org.innovateuk.ifs.filestorage.storage.validator.TikaFileValidator;
 import org.innovateuk.ifs.filestorage.storage.validator.UploadValidator;
 import org.innovateuk.ifs.filestorage.util.FileUploadResponseMapper;
 import org.innovateuk.ifs.filestorage.virusscan.VirusScanProvider;
+import org.innovateuk.ifs.starters.newrelic.NewRelicEventChannel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.InvalidMimeTypeException;
 import org.springframework.util.StopWatch;
@@ -52,6 +54,9 @@ public class StorageService {
     @Autowired
     private UploadValidator uploadValidator;
 
+    @Autowired
+    private NewRelicEventChannel newRelicEventChannel;
+
     public FileUploadResponse fileUpload(FileUploadRequest fileUploadRequest) throws VirusDetectedException, InvalidMimeTypeException {
         StopWatch stopWatch = new StopWatch(StorageService.class.getSimpleName()
                 + " id: " + fileUploadRequest.getFileId()
@@ -86,6 +91,12 @@ public class StorageService {
             storageServiceHelper.saveErrorResult(fileUploadRequest, responseStatusException);
             stopWatch.stop();
             log.info(stopWatch.prettyPrint());
+            newRelicEventChannel.sendErrorEvent("FILE_UPLOAD_FAILURE",
+                    responseStatusException,
+                    this.getClass(),
+                    ImmutableMap.of("file_uuid", fileUploadRequest.getFileId(),
+                            "file_size", fileUploadRequest.getFileSizeBytes(),
+                            "file_name", fileUploadRequest.getFileName()));
             throw responseStatusException;
         }
 

@@ -16,7 +16,13 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...               IFS-12265 Applicant dashboard: Unsuccessful pre-reg/EOI status update
 ...
 ...               IFS-12177 Pre-reg/EOI next stage decision - input
-
+...
+...               IFS-12382 Pre-Registration (External Journey) - full application
+...
+...               IFS-12521 Pre-registration - full application creation (cloning)
+...
+...               IFS-12380 Pre-Registration (Internal Journey) - full application
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -32,6 +38,8 @@ ${unSubmittedPreregAppName}                     unSubmittedPreRegApplication
 ${preRegApplicationUnsuccessfulEmail}           Thank you for submitting your application to Innovate UK for the competition
 ${preRegApplicationSuccessfulEmail}             We are pleased to inform you that your application for the Horizon Europe collaborative competition has been successful and passed the technical assessment phase.
 ${preregApplicationSubmissionEmail}             You have successfully submitted an application for funding to
+${fullApplicationSuccessfulEmail}               We are pleased to inform you that your application for the Horizon Europe collaborative competition has been successful and passed the technical assessment phase.
+
 
 *** Test Cases ***
 Comp Admin creates a prereg competition
@@ -137,10 +145,78 @@ Internal user submit the EOI applications funding decision
     Given Existing user creates and submits new application for unsuccessful EOI journey
     And Requesting application ID of unsuccessful prereg application
     And Log in as a different user                                                          &{Comp_admin1_credentials}
-    When Internal user marks the EOI as successful/unsuccessful                             ${unSuccessPreregAppName}   UNFUNDED
-    And Internal user marks the EOI as successful/unsuccessful                              ${hecpPreregAppName}   FUNDED
+    When Internal user marks the EOI as successful/unsuccessful                             ${unSuccessPreregAppName}   EOI_REJECTED
+    And Internal user marks the EOI as successful/unsuccessful                              ${hecpPreregAppName}   EOI_APPROVED
     Then the user should see the element                                                    jQuery = td:contains("${preregApplicationID}")+td:contains("${hecpPreregAppName}")+td:contains("Empire Ltd")+td:contains("Successful")
     And the user should see the element                                                     jQuery = td:contains("${unSuccessfulPreRegApplicationID}")+td:contains("${unSuccessPreregAppName}")+td:contains("Empire Ltd")+td:contains("Unsuccessful")
+
+Write and send email button enabled for internal users
+    [Documentation]    IFS-12261
+    When the user clicks the button/link        Link = Manage notifications
+    Then the user should see the element        jQuery = h1:contains("Expression of interest notifications")
+    And User should see EOI Related content
+    And the user selects the checkbox           app-row-${preregApplicationID}
+    And The user should not see the element     css = .govuk-button[disabled]
+
+Full application will be created on successful notification of EOI application by internal user
+    [Documentation]  IFS-12521
+    When the user clicks the button/link                    jQuery = button:contains("Write and send email")
+    And the user enters text to a text field                css=.editor  ${preRegApplicationSuccessfulEmail}
+    And the user clicks the button/link                     jQuery = button:contains("Send notification")[data-js-modal = "send-to-all-applicants-modal"]
+    And the user clicks the button/link                     jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
+    And the user refreshes until element appears on page    jQuery = td:contains("${hecpPreregAppName}") ~ td:contains("Sent")
+    And the user reads his email                            steve.smith@empire.com  Important message about your application '${hecpPreregAppName}' for the competition '${hecpPreregCompName}'  ${preRegApplicationSuccessfulEmail}
+    And the user navigates to the page                      ${server}/management/competition/${preregCompetitionId}/applications/all
+    Then the user should see the element                    jQuery = td:contains("${preregApplicationID}")+td:contains("${hecpPreregAppName}")
+
+Lead applicant can view full application details in dashboard
+    [Documentation]  IFS-12521
+    Given log in as a different user            &{lead_applicant_credentials}
+    When the user navigates to the page         ${APPLICANT_DASHBOARD_URL}
+    Then the user should see the element        jQuery = .in-progress li:contains("${hecpPreregAppName}") .status:contains("% complete")
+    And the user should not see the element     jQuery = li:contains("${preregApplicationID}") .status-msg:contains("Expression of interest")
+
+Lead applicant can view the answers provided in EOI applications in full application along with new application questions
+    [Documentation]  IFS-12521
+    Given the user clicks the button/link                                   link = ${hecpPreregAppName}
+    When the user clicks the button/link                                    link = 1. Tell us where your organisation is based
+    Then the user should see the element                                    jQuery = p:contains("My organisation is based in the UK or a British Overseas Territory")
+    And Lead applicant should see new questions added in full application
+
+Lead applicant can navigate to orginal EOI application from full application
+    [Documentation]  IFS-12382
+    Given the user clicks the button/link       link = Back to application overview
+    When the user clicks the button/link        link = Expression of interest
+    Then the user clicks the button/link        jQuery = h1:contains("Expression of interest overview")
+    And the user should see the element         jQuery = h2:contains("Congratulations, your application has been successful")
+
+Lead applicant completes the full application and submits
+    [Documentation]  IFS-12382
+    Given the user clicks the button/link                       link = Back to application overview
+    When the user completes remaining application questions
+    And the user completes the project location
+    And the user accept the competition terms and conditions    Back to application overview
+    And the user clicks the button/link                         id = application-overview-submit-cta
+    And the user clicks the button/link                         id = submit-application-button
+    Then the user should see the element                        jQuery = h2:contains("Application submitted")
+    And the user reads his email                                steve.smith@empire.com  ${preregApplicationID}: Successful submission of application   You have successfully submitted an application for funding to ${hecpPreregCompName}.
+
+Internal user marks the full application as successful and sent a notification
+    [Documentation]  IFS-12380
+    Given Log in as a different user                                &{Comp_admin1_credentials}
+    And The user clicks the button/link                             link = ${hecpPreregCompName}
+    When the internal team mark the application as successful       ${hecpPreregAppName}   FUNDED
+    And the user clicks the button/link                             link = Competition
+    And the internal team notifies all applicants                   ${preregApplicationID}
+    Then the user reads his email                                   steve.smith@empire.com  Important message about your application '${hecpPreregAppName}' for the competition '${hecpPreregCompName}'  ${fullApplicationSuccessfulEmail}
+
+Internal user can view EOI application from full application
+    [Documentation]   IFS-12380
+    Given the user navigates to the page     ${server}/project-setup-management/competition/${preregCompetitionId}/status/all
+    And the user clicks the button/link      link = ${preregApplicationID}
+    When the user clicks the button/link     link = Expression of interest
+    Then the user clicks the button/link     jQuery = h1:contains("Expression of interest overview")
+    And the user should see the element      jQuery = h2:contains("Expression of interest questions")
 
 #Lead applicant views unsuccessful applications in previous dashboard
 #    [Documentation]  IFS-12265
@@ -285,10 +361,10 @@ Existing user creates and submits new application for unsuccessful EOI journey
     the user clicks the button/link                                           id = submit-application-button
 
 Internal user marks the EOI as successful/unsuccessful
-    [Arguments]  ${applicationName}  ${fundingDecision}
+    [Arguments]  ${applicationName}  ${decision}
     the user navigates to the page                      ${server}/management/competition/${preregCompetitionId}/applications/eoi
     the user clicks the button/link                     jQuery = tr:contains("${applicationName}") label
-    the user clicks the button/link                     css = [type="submit"][value="${fundingDecision}"]
+    the user clicks the button/link                     css = [type="submit"][value="${decision}"]
 
 Internal user sends a decision notifications to applicants
     Requesting application ID of prereg application     ${applicationName}
@@ -327,3 +403,31 @@ User should see EOI Related content
     the user should see the element     jQuery = th:contains("Expression of interest decision")
     the user should see the element     jQuery = th:contains("Email status")
     the user should see the element     jQuery = th:contains("Date sent")
+
+Lead applicant should see new questions added in full application
+    the user clicks the button/link     link = Back to application overview
+    the user should see the element     link = 2. Participating Organisation project region
+    the user should see the element     link = Award terms and conditions
+    the user clicks the button/link     link = Your project finances
+    the user should see the element     link = Your project location
+
+the user completes remaining application questions
+    the user clicks the button/link     link = 2. Participating Organisation project region
+    wait until keyword succeeds without screenshots   10s    200ms     input text       id = multipleChoiceOptionId  London
+    Execute Javascript                  document.evaluate("//li[text()='London']",document.body,null,9,null).singleNodeValue.click();
+    the user clicks the button/link     id = application-question-complete
+    the user clicks the button/link     link = Back to application overview
+    the user should see the element     jQuery = li:contains("2. Participating Organisation project region") > .task-status-complete
+
+the user completes the project location
+    the user clicks the button/link         link = Your project finances
+    the user enters the project location
+    the user clicks the button/link         link = Back to application overview
+    the user should see the element         jQuery = li:contains("Your project finances") > .task-status-complete
+
+the internal team mark the application as successful
+    [Arguments]   ${applicationName}   ${decision}
+    the user navigates to the page      ${server}/management/competition/${preregCompetitionId}
+    the user clicks the button/link     link = Input and review funding decision
+    the user clicks the button/link     jQuery = tr:contains("${applicationName}") label
+    the user clicks the button/link     css = [type="submit"][value="${decision}"]

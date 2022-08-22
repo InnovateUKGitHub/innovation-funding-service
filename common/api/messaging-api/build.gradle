@@ -1,0 +1,9 @@
+apply from: rootProject.file("common/gradle-support/java.gradle")
+apply from: rootProject.file("gradle-support/junit5.gradle")
+
+dependencies {
+
+    api platform(project(":common:bom"))
+
+}
+

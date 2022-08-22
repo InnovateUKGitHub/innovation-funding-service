@@ -26,7 +26,7 @@ public class Section implements Comparable<Section> {
 
     private String name;
 
-    @Column( length = 5000 )
+    @Column(length=5000, columnDefinition="LONGTEXT")
     private String assessorGuidanceDescription;
 
     private Integer priority;

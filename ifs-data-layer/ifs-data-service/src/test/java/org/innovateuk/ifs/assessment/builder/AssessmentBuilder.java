@@ -3,7 +3,7 @@ package org.innovateuk.ifs.assessment.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.domain.Assessment;
-import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
+import org.innovateuk.ifs.assessment.domain.AssessmentDecisionOutcome;
 import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -69,8 +69,8 @@ public class AssessmentBuilder extends BaseBuilder<Assessment, AssessmentBuilder
         return withArray((state, object) -> object.setProcessState(state), activityState);
     }
 
-    public AssessmentBuilder withFundingDecision(AssessmentFundingDecisionOutcome... fundingDecision) {
-        return withArraySetFieldByReflection("fundingDecision", fundingDecision);
+    public AssessmentBuilder withDecision(AssessmentDecisionOutcome... decision) {
+        return withArraySetFieldByReflection("decision", decision);
     }
 
     public AssessmentBuilder withRejection(AssessmentRejectOutcome... rejection) {

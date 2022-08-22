@@ -65,7 +65,7 @@ ATI subsidy control t&c's are correct
     When the user clicks the button/link                 link = ${atiSubsidyControl}
     And select window                                    title = Terms and conditions of an ATI Programme grant - Innovation Funding Service
     Then the user should see the element                 jQuery = h1:contains("Terms and conditions of an ATI Programme grant")
-    And the user should see the element                  jQuery = li:contains("Subsidy Control/State aid obligations")
+    And the user should see the element                  jQuery = li:contains("UK Subsidy obligations")
     [Teardown]   the user closes the last opened tab
 
 ATI State aid t&c's are correct
@@ -295,7 +295,7 @@ Lead applicant gets validation message when submiting the application without al
     When lead review and submits the application
     And the user clicks the button/link               id = accordion-questions-heading-1-1
     Then the user should see the element              jQuery = td:contains("${partnerOrganisationName}") + td:contains("Not determined")
-    And the user should see the element               jQuery = .section-incomplete + button:contains("Subsidy basis")
+    And the user should see the element               jQuery = div:contains("Incomplete") button:contains("Subsidy basis")
 
 Lead applicant submits subsidy control subsidy basis application
     [Documentation]  IFS-9116

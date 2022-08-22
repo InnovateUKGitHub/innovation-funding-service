@@ -14,6 +14,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.condition.NameValueExpression;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import org.springframework.web.util.pattern.PathPattern;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -85,7 +86,7 @@ public abstract class EndpointDocumentationTest extends BaseIntegrationTest {
         String ruleString = (constraint != null) ? constraint : "";
         String ruleName = (rule != null) ? rule[0] : "";
         String ruleDesc = (rule != null) ? rule[1] : "";
-        Set<String> path = requestInfo.getPatternsCondition().getPatterns();
+        Set<PathPattern> path = requestInfo.getPathPatternsCondition().getPatterns();
         path.forEach(p -> {
             requestInfo.getMethodsCondition().getMethods().forEach(httpMethod -> {
                 StringBuilder urlParameters = new StringBuilder();

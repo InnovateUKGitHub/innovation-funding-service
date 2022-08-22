@@ -8,17 +8,17 @@ import org.springframework.core.env.AbstractEnvironment;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-public class ProfileUtilsTest {
+class ProfileUtilsTest {
 
     @Test
-    public void buildSpringActiveProfilesString() {
+    void buildSpringActiveProfilesString() {
         assertThat(ProfileUtils.activeProfilesString("one"),
             equalTo(AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME + "=one"));
 
         assertThat(ProfileUtils.activeProfilesString(
-                ImmutableList.of(IfsProfileConstants.STUBDEV, IfsProfileConstants.AMQP_PROFILE)),
+                ImmutableList.of(IfsProfileConstants.STUBDEV, IfsProfileConstants.LOCAL_STORAGE)),
             equalTo(AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME + "=" +
-                IfsProfileConstants.STUBDEV + "," + IfsProfileConstants.AMQP_PROFILE));
+                IfsProfileConstants.STUBDEV + "," + IfsProfileConstants.LOCAL_STORAGE));
     }
 
 }

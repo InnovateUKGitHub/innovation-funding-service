@@ -18,6 +18,4 @@ public class AuditConfigurationProperties {
     @NotBlank
     private String auditQueueName;
 
-    @NotBlank
-    private String auditExchangeName;
 }

@@ -20,7 +20,14 @@ ifs:
         awsRegion: ${FSS_S3_AWS_REGION}
         fileStoreS3Bucket: ${FSS_S3_AWS_BUCKET}
 
+hibernate:
+  dialect:
+    storage_engine: innodb
+
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   datasource:
     url: ${FSS_DB_URL:jdbc:mysql://ifs-database:3306/ifs_file_storage}
     username: ${FSS_DB_USER:root}
@@ -29,12 +36,15 @@ spring:
     validation-query: SELECT 1
     driver-class-name: org.mariadb.jdbc.Driver
   jpa:
+    open-in-view: false
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        dialect: org.hibernate.dialect.MySQL57Dialect
+        temp:
+          use_jdbc_metadata_defaults: false
     generate-ddl: false
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
 
 management:
   endpoints:

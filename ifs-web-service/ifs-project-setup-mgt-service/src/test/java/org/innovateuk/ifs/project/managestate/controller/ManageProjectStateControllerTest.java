@@ -104,7 +104,7 @@ public class ManageProjectStateControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(view().name("project/manage-project-state"))
                 .andExpect(model().attributeHasFieldErrorCode("form", "confirmationOffline", "validation.field.must.not.be.blank"));
 
-        verifyZeroInteractions(projectStateRestService);
+        verifyNoInteractions(projectStateRestService);
     }
 
     @Test
@@ -141,7 +141,7 @@ public class ManageProjectStateControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(view().name("project/manage-project-state"))
                 .andExpect(model().attributeHasFieldErrorCode("form", "confirmationWithdrawn", "validation.field.must.not.be.blank"));
 
-        verifyZeroInteractions(projectStateRestService);
+        verifyNoInteractions(projectStateRestService);
     }
 
     @Test
@@ -178,7 +178,7 @@ public class ManageProjectStateControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(view().name("project/manage-project-state"))
                 .andExpect(model().attributeHasFieldErrorCode("form", "confirmationCompleteOffline", "validation.field.must.not.be.blank"));
 
-        verifyZeroInteractions(projectStateRestService);
+        verifyNoInteractions(projectStateRestService);
     }
 
     @Test
@@ -217,6 +217,6 @@ public class ManageProjectStateControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(model().attributeHasFieldErrorCode("form", "onHoldReason", "validation.manage.project.on.hold.reason.required"))
                 .andExpect(model().attributeHasFieldErrorCode("form", "onHoldDetails", "validation.manage.project.on.hold.details.required"));
 
-        verifyZeroInteractions(projectStateRestService);
+        verifyNoInteractions(projectStateRestService);
     }
 }

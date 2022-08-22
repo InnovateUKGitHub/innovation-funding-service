@@ -30,6 +30,6 @@ public class SpendProfileValidationUtilTest {
 
         validationUtil.validateSpendProfileTableResource(tableResource);
 
-        Mockito.verify(spendProfileCostValidator).validate(ArgumentMatchers.eq(tableResource), ArgumentMatchers.anyObject());
+        Mockito.verify(spendProfileCostValidator).validate(ArgumentMatchers.eq(tableResource), ArgumentMatchers.any());
     }
 }

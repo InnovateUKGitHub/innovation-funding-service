@@ -328,7 +328,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability"));
 
-        verifyZeroInteractions(projectFinanceService);
+        verifyNoInteractions(projectFinanceService);
         verify(financeCheckRestService).resetViability(projectId, organisationId, "something");
     }
 

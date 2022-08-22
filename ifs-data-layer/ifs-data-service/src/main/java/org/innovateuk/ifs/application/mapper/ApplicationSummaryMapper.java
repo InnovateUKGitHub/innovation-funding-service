@@ -3,12 +3,12 @@ package org.innovateuk.ifs.application.mapper;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.Decision;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.ApplicationSummarisationService;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.fundingdecision.mapper.FundingDecisionMapper;
+import org.innovateuk.ifs.fundingdecision.mapper.DecisionMapper;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -33,7 +33,7 @@ public abstract class ApplicationSummaryMapper {
     private OrganisationRepository organisationRepository;
 
     @Autowired
-    private FundingDecisionMapper fundingDecisionMapper;
+    private DecisionMapper decisionMapper;
 
     public ApplicationSummaryResource mapToResource(Application source) {
 
@@ -44,7 +44,7 @@ public abstract class ApplicationSummaryMapper {
         result.setId(source.getId());
         result.setName(source.getName());
         result.setDuration(source.getDurationInMonths());
-        result.setManageFundingEmailDate(source.getManageFundingEmailDate());
+        result.setManageDecisionEmailDate(source.getManageDecisionEmailDate());
         result.setIneligibleInformed(source.getApplicationProcess().getProcessState() == ApplicationState.INELIGIBLE_INFORMED);
         if (source.getLeadApplicant() != null) {
             result.setLeadApplicant(source.getLeadApplicant().getName());
@@ -56,11 +56,11 @@ public abstract class ApplicationSummaryMapper {
             result.setLead(leadOrganisation.get().getName());
         }
 
-        if (source.getFundingDecision() != null) {
-            result.setFundingDecision(fundingDecisionMapper.mapToResource(source.getFundingDecision()));
+        if (source.getDecision() != null) {
+            result.setDecision(decisionMapper.mapToResource(source.getDecision()));
         }
         if (source.getApplicationProcess().getProcessState() == ApplicationState.APPROVED) {
-            result.setFundingDecision(FundingDecision.FUNDED);
+            result.setDecision(Decision.FUNDED);
         }
         if (source.getProjectToBeCreated() != null && !source.getCompetition().isKtp()) {
             result.setEmailInQueue(source.getProjectToBeCreated().isPending());

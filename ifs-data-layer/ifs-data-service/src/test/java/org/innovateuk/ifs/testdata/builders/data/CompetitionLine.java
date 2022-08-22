@@ -49,7 +49,9 @@ public class CompetitionLine {
     private String termsAndConditionsTemplate;
     private boolean assessmentStage;
     private boolean preRegistration;
+    private boolean imSurveyEnabled;
     private boolean priority;
+    private boolean eoiEvidenceRequired;
 
     public CompetitionLine() {
     }
@@ -380,5 +382,21 @@ public class CompetitionLine {
 
     public void setPreRegistration(boolean preRegistration) {
         this.preRegistration = preRegistration;
+    }
+
+    public boolean isImSurveyEnabled() {
+        return imSurveyEnabled;
+    }
+
+    public void setImSurveyEnabled(boolean imSurveyEnabled) {
+        this.imSurveyEnabled = imSurveyEnabled;
+    }
+
+    public boolean isEoiEvidenceRequired() {
+        return eoiEvidenceRequired;
+    }
+
+    public void setEoiEvidenceRequired(boolean eoiEvidenceRequired) {
+        this.eoiEvidenceRequired = eoiEvidenceRequired;
     }
 }

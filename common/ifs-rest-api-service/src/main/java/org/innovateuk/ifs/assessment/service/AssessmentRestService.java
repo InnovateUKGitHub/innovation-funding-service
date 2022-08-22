@@ -26,7 +26,7 @@ public interface AssessmentRestService {
 
     RestResult<AssessmentTotalScoreResource> getTotalScore(long id);
 
-    RestResult<Void> recommend(long id, AssessmentFundingDecisionOutcomeResource assessmentFundingDecision);
+    RestResult<Void> recommend(long id, AssessmentDecisionOutcomeResource assessmentDecision);
 
     RestResult<ApplicationAssessmentFeedbackResource> getApplicationFeedback(long applicationId);
 

@@ -25,11 +25,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-bootJar {
-    classifier = 'executable'
-    mainClassName = 'org.innovateuk.ifs.Application'
-}
-
 springBoot {
     buildInfo {
         properties {

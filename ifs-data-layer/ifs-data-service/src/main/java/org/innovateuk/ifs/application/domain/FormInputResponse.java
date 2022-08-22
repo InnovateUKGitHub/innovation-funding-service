@@ -27,7 +27,7 @@ public class FormInputResponse {
 
     private ZonedDateTime updateDate;
 
-    @Column(length = 5000)
+    @Column(length = 5000, columnDefinition = "LONGTEXT")
     private String value;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
@@ -84,7 +84,7 @@ public class FormInputResponse {
         return id;
     }
 
-    void setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

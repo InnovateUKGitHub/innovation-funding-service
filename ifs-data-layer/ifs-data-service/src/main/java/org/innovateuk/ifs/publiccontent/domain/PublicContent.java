@@ -38,7 +38,7 @@ public class PublicContent {
     @Column(unique = true)
     private String hash;
 
-    @Column(length = 5000)
+    @Column(length = 5000, columnDefinition = "LONGTEXT")
     private String summary;
 
     @OneToMany(mappedBy="publicContent", cascade = CascadeType.REMOVE, orphanRemoval = true)

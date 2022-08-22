@@ -58,6 +58,9 @@ public class ApplicationController {
     @Autowired
     private ApplicationMigrationService applicationMigrationService;
 
+    @Autowired
+    private ApplicationEoiService applicationEoiService;
+
     @GetMapping("/{id}/has-assessment")
     public RestResult<Boolean> applicationHasAssessment(@PathVariable long id) {
         return assessmentService.existsByTargetId(id).toGetResponse();
@@ -185,5 +188,10 @@ public class ApplicationController {
     @PostMapping("/migrate-application/{applicationId}")
     public RestResult<Void> migrateApplication(@PathVariable("applicationId") final Long applicationId) {
         return applicationMigrationService.migrateApplication(applicationId).toPostResponse();
+    }
+
+    @PostMapping("/create-full-application-from-eoi/{applicationId}")
+    public RestResult<Void> createFullApplicationFromEoi(@PathVariable("applicationId") final Long applicationId) {
+        return applicationEoiService.createFullApplicationFromEoi(applicationId).toPostResponse();
     }
 }

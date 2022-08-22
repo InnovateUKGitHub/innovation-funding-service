@@ -18,6 +18,7 @@ components:
   - ../../../patches/new-relic-env-vars-patch
   - ../../../patches/pull-secrets-patch
   - ../../../patches/spring-profile-patch
+  - ../../../patches/rabbitmq-config-secrets-patch
 
 resources:
   - ../../../config-mgmt/env/aws/custom

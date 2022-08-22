@@ -365,7 +365,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
         assertTrue(result.getFailure().is(forbiddenError(QUERIES_CANNOT_BE_SENT_AS_FINANCE_CONTACT_NOT_SUBMITTED)));
 
-        verifyZeroInteractions(notificationServiceMock);
+        verifyNoInteractions(notificationServiceMock);
     }
 
     @Test
@@ -464,7 +464,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
         assertTrue(result.getFailure().is(notFoundError(ProjectFinance.class, 22L)));
 
-        verifyZeroInteractions(notificationServiceMock);
+        verifyNoInteractions(notificationServiceMock);
     }
 
     @Test

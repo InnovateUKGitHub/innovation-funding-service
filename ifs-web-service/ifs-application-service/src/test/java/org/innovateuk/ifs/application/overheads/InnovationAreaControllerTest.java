@@ -144,7 +144,7 @@ public class InnovationAreaControllerTest extends BaseControllerMockMVCTest<Inno
                 .andReturn();
 
         verify(applicationInnovationAreaPopulator).populate(any(), any());
-        verifyZeroInteractions(cookieFlashMessageFilter);
+        verifyNoInteractions(cookieFlashMessageFilter);
     }
 
    @Test
@@ -168,8 +168,8 @@ public class InnovationAreaControllerTest extends BaseControllerMockMVCTest<Inno
                 .andReturn();
 
         verify(applicationInnovationAreaPopulator).populate(any(), any());
-        verifyZeroInteractions(applicationInnovationAreaRestService);
-        verifyZeroInteractions(cookieFlashMessageFilter);
+        verifyNoInteractions(applicationInnovationAreaRestService);
+        verifyNoInteractions(cookieFlashMessageFilter);
     }
 
     @Test
@@ -189,8 +189,8 @@ public class InnovationAreaControllerTest extends BaseControllerMockMVCTest<Inno
                 .andExpect(status().is4xxClientError())
                 .andReturn();
 
-        verifyZeroInteractions(applicationInnovationAreaPopulator);
-        verifyZeroInteractions(applicationInnovationAreaRestService);
-        verifyZeroInteractions(cookieFlashMessageFilter);
+        verifyNoInteractions(applicationInnovationAreaPopulator);
+        verifyNoInteractions(applicationInnovationAreaRestService);
+        verifyNoInteractions(cookieFlashMessageFilter);
     }
 }

@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -50,10 +51,11 @@ public class ApplicationResource {
     private CompanyPrimaryFocus companyPrimaryFocus;
     private String event;
     private ZonedDateTime lastStateChangeDate;
-    private FundingDecision fundingDecision;
+    private Decision decision;
     private Long assessmentPeriodId;
     private ZonedDateTime feedbackReleased;
     private ApplicationExpressionOfInterestConfigResource applicationExpressionOfInterestConfigResource;
+    private ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource;
 
     public Long getId() {
         return id;
@@ -142,7 +144,7 @@ public class ApplicationResource {
         return applicationState == ApplicationState.OPENED
                 || applicationState == ApplicationState.CREATED
                 || applicationState == ApplicationState.SUBMITTED
-                && fundingDecision == null;
+                && decision == null;
     }
 
     @JsonIgnore
@@ -323,12 +325,12 @@ public class ApplicationResource {
         this.lastStateChangeDate = lastStateChangeDate;
     }
 
-    public FundingDecision getFundingDecision() {
-        return fundingDecision;
+    public Decision getDecision() {
+        return decision;
     }
 
-    public void setFundingDecision(FundingDecision fundingDecision) {
-        this.fundingDecision = fundingDecision;
+    public void setDecision(Decision decision) {
+        this.decision = decision;
     }
 
     public Long getAssessmentPeriodId() {
@@ -361,6 +363,26 @@ public class ApplicationResource {
 
     public boolean isEnabledForExpressionOfInterest() {
         return applicationExpressionOfInterestConfigResource != null ? applicationExpressionOfInterestConfigResource.isEnabledForExpressionOfInterest() : false;
+    }
+
+    public ApplicationEoiEvidenceResponseResource getApplicationEoiEvidenceResponseResource() {
+        return applicationEoiEvidenceResponseResource;
+    }
+
+    public void setApplicationEoiEvidenceResponseResource(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource) {
+        this.applicationEoiEvidenceResponseResource = applicationEoiEvidenceResponseResource;
+
+    }
+
+    @JsonIgnore
+    public Long eoiApplicationId() {
+        return Optional.ofNullable(applicationExpressionOfInterestConfigResource)
+                .map(ApplicationExpressionOfInterestConfigResource::getEoiApplicationId)
+                .orElse(null);
+    }
+
+    public boolean isEoiFullApplication() {
+        return !isEnabledForExpressionOfInterest() && eoiApplicationId() != null;
     }
 
     @Override
@@ -400,6 +422,7 @@ public class ApplicationResource {
                 .append(lastStateChangeDate, that.lastStateChangeDate)
                 .append(assessmentPeriodId, that.assessmentPeriodId)
                 .append(applicationExpressionOfInterestConfigResource, that.applicationExpressionOfInterestConfigResource)
+                .append(applicationEoiEvidenceResponseResource, that.applicationEoiEvidenceResponseResource)
                 .isEquals();
     }
 
@@ -434,6 +457,7 @@ public class ApplicationResource {
                 .append(lastStateChangeDate)
                 .append(assessmentPeriodId)
                 .append(applicationExpressionOfInterestConfigResource)
+                .append(applicationEoiEvidenceResponseResource)
                 .toHashCode();
     }
 }

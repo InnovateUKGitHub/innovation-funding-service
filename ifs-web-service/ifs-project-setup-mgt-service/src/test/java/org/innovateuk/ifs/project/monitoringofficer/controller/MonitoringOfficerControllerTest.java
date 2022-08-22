@@ -286,7 +286,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
                                 .param("phoneNumber", "01142222222"))
                 .andExpect(view().name("project/monitoring-officer/create-new"));  // failure view
 
-        verifyZeroInteractions(monitoringOfficerRegistrationRestServiceMock);
+        verifyNoInteractions(monitoringOfficerRegistrationRestServiceMock);
     }
 
     @Override

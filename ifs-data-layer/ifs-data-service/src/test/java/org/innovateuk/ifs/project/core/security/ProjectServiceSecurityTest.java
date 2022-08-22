@@ -82,15 +82,15 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
-    public void createProjectFromFundingDecisions_allowedIfGlobalCompAdminRole() {
+    public void createProjectFromDecisions_allowedIfGlobalCompAdminRole() {
         setLoggedInUser(newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
-        classUnderTest.createProjectsFromFundingDecisions(new HashMap<>());
+        classUnderTest.createProjectsFromDecisions(new HashMap<>());
     }
 
     @Test
-    public void createProjectFromFundingDecisions_allowedIfNoGlobalRolesAtAll() {
+    public void createProjectFromDecisions_allowedIfNoGlobalRolesAtAll() {
         try {
-            classUnderTest.createProjectsFromFundingDecisions(new HashMap<>());
+            classUnderTest.createProjectsFromDecisions(new HashMap<>());
             Assert.fail("Should not have been able to create project from application without the global Comp Admin " +
                     "role");
         } catch (AccessDeniedException e) {
@@ -99,12 +99,12 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
-    public void createProjectFromFundingDecisions_deniedIfNotCorrectGlobalRoles() {
+    public void createProjectFromDecisions_deniedIfNotCorrectGlobalRoles() {
         NON_COMP_ADMIN_ROLES.forEach(role -> {
             setLoggedInUser(
                     newUserResource().withRoleGlobal(role).build());
             try {
-                classUnderTest.createProjectsFromFundingDecisions(new HashMap<>());
+                classUnderTest.createProjectsFromDecisions(new HashMap<>());
                 Assert.fail("Should not have been able to create project from application without the global Comp " +
                         "Admin role");
             } catch (AccessDeniedException e) {

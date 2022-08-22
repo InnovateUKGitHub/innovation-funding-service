@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.builder;
 
-import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionOutcomeResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentDecisionOutcomeResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentDecisionOutcomeResourceBuilder.newAssessmentDecisionOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.OPEN;
@@ -26,7 +26,7 @@ public class AssessmentResourceBuilderTest {
         ZonedDateTime expectedLastModifiedDate = ZonedDateTime.now();
         LocalDate expectedStartDate = LocalDate.now().minusDays(2);
         LocalDate expectedEndDate = LocalDate.now().minusDays(1);
-        AssessmentFundingDecisionOutcomeResource expectedFundingDecision = newAssessmentFundingDecisionOutcomeResource().build();
+        AssessmentDecisionOutcomeResource expectedDecision = newAssessmentDecisionOutcomeResource().build();
         AssessmentRejectOutcomeResource expectedRejection = newAssessmentRejectOutcomeResource().build();
         Long expectedProcessRole = 2L;
         Long expectedApplication = 3L;
@@ -38,7 +38,7 @@ public class AssessmentResourceBuilderTest {
                 .withActivityState(expectedStatus)
                 .withStartDate(expectedStartDate)
                 .withEndDate(expectedEndDate)
-                .withFundingDecision(expectedFundingDecision)
+                .withDecision(expectedDecision)
                 .withRejection(expectedRejection)
                 .withProcessRole(expectedProcessRole)
                 .withApplication(expectedApplication)
@@ -50,7 +50,7 @@ public class AssessmentResourceBuilderTest {
         assertEquals(expectedStatus, assessment.getAssessmentState());
         assertEquals(expectedStartDate, assessment.getStartDate());
         assertEquals(expectedEndDate, assessment.getEndDate());
-        assertEquals(expectedFundingDecision, assessment.getFundingDecision());
+        assertEquals(expectedDecision, assessment.getDecision());
         assertEquals(expectedRejection, assessment.getRejection());
         assertEquals(expectedProcessRole, assessment.getProcessRole());
         assertEquals(expectedApplication, assessment.getApplication());
@@ -65,8 +65,8 @@ public class AssessmentResourceBuilderTest {
         ZonedDateTime[] expectedLastModifiedDates = {ZonedDateTime.now(), ZonedDateTime.now()};
         LocalDate[] expectedStartDates = {LocalDate.now().minusDays(2), LocalDate.now().minusDays(3)};
         LocalDate[] expectedEndDates = {LocalDate.now().minusDays(1), LocalDate.now().minusDays(2)};
-        AssessmentFundingDecisionOutcomeResource[] expectedFundingDecisions = newAssessmentFundingDecisionOutcomeResource()
-                .buildArray(2, AssessmentFundingDecisionOutcomeResource.class);
+        AssessmentDecisionOutcomeResource[] expectedDecisions = newAssessmentDecisionOutcomeResource()
+                .buildArray(2, AssessmentDecisionOutcomeResource.class);
         AssessmentRejectOutcomeResource[] expectedRejections = newAssessmentRejectOutcomeResource()
                 .buildArray(2, AssessmentRejectOutcomeResource.class);
         Long[] expectedProcessRoles = {1L, 2L};
@@ -79,7 +79,7 @@ public class AssessmentResourceBuilderTest {
                 .withActivityState(expectedStatuss)
                 .withStartDate(expectedStartDates)
                 .withEndDate(expectedEndDates)
-                .withFundingDecision(expectedFundingDecisions)
+                .withDecision(expectedDecisions)
                 .withRejection(expectedRejections)
                 .withProcessRole(expectedProcessRoles)
                 .withApplication(expectedApplications)
@@ -92,7 +92,7 @@ public class AssessmentResourceBuilderTest {
         assertEquals(expectedStatuss[0], first.getAssessmentState());
         assertEquals(expectedStartDates[0], first.getStartDate());
         assertEquals(expectedEndDates[0], first.getEndDate());
-        assertEquals(expectedFundingDecisions[0], first.getFundingDecision());
+        assertEquals(expectedDecisions[0], first.getDecision());
         assertEquals(expectedRejections[0], first.getRejection());
         assertEquals(expectedProcessRoles[0], first.getProcessRole());
         assertEquals(expectedApplications[0], first.getApplication());
@@ -104,7 +104,7 @@ public class AssessmentResourceBuilderTest {
         assertEquals(expectedStatuss[1], second.getAssessmentState());
         assertEquals(expectedStartDates[1], second.getStartDate());
         assertEquals(expectedEndDates[1], second.getEndDate());
-        assertEquals(expectedFundingDecisions[1], second.getFundingDecision());
+        assertEquals(expectedDecisions[1], second.getDecision());
         assertEquals(expectedRejections[1], second.getRejection());
         assertEquals(expectedProcessRoles[1], second.getProcessRole());
         assertEquals(expectedApplications[1], second.getApplication());

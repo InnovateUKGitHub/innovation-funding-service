@@ -404,7 +404,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         service.removeUser(new ProjectUserCompositeId(project.getId(), userToRemove.getId()));
 
         verify(projectRepositoryMock).findById(project.getId());
-        verifyZeroInteractions(projectUserRepositoryMock);
+        verifyNoInteractions(projectUserRepositoryMock);
 
         assertTrue(project.getProjectUsers().contains(projectUserToRemove));
     }
@@ -434,7 +434,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         service.removeUser(new ProjectUserCompositeId(project.getId(), userToRemove.getId()));
 
         verify(projectRepositoryMock).findById(project.getId());
-        verifyZeroInteractions(projectUserRepositoryMock);
+        verifyNoInteractions(projectUserRepositoryMock);
 
         assertTrue(project.getProjectUsers().contains(projectUserToRemove));
     }

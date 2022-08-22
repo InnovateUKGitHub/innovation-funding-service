@@ -50,12 +50,13 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.builder.ApplicationExpressionOfInterestConfigResourceBuilder.newApplicationExpressionOfInterestConfigResource;
 import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATES;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.*;
+import static org.innovateuk.ifs.fundingdecision.domain.DecisionStatus.*;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
@@ -246,7 +247,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
     }
 
     @Test
-    public void findTopByCompetitionIdOrderByManageFundingEmailDateDesc() {
+    public void findTopByCompetitionIdOrderByManageDecisionEmailDateDesc() {
         loginCompAdmin();
 
         List<Competition> competitions = stream(
@@ -264,7 +265,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         List<Application> applications = newApplication()
                 .with(id(null))
                 .withCompetition(competition1, competition1, competition1, competition2, competition2, competition2)
-                .withManageFundingEmailDate(zonedDateTimes)
+                .withManageDecisionEmailDate(zonedDateTimes)
                 .build(6);
 
         List<Application> saved = stream(repository.saveAll(applications).spliterator(), false).collect(toList());
@@ -272,7 +273,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Application expectedApplicationComp2WithMaxDate = saved.get(5);
 
         assertEquals(expectedApplicationComp2WithMaxDate, repository
-                .findTopByCompetitionIdOrderByManageFundingEmailDateDesc(competition2.getId()).get());
+                .findTopByCompetitionIdOrderByManageDecisionEmailDateDesc(competition2.getId()).get());
     }
 
     private Application createApplicationByState(ApplicationState applicationState) {
@@ -449,6 +450,15 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .withName("userOnAppButNotProject")
                 .build();
 
+        Application eoiApp = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withName("eoiApps")
+                .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig.builder()
+                        .enabledForExpressionOfInterest(true)
+                        .build())
+                .build();
+
         Project projectWithoutUser = newProject()
                 .with(id(null))
                 .withName("projectWithoutUser")
@@ -516,6 +526,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         assertFalse(applications.stream().anyMatch(app -> app.getId().equals(userOnAppButNotProject.getId())));
         assertFalse(applications.stream().anyMatch(app -> app.getId().equals(assessorApp.getId())));
+        assertFalse(applications.stream().anyMatch(app -> app.getId().equals(eoiApp.getId())));
     }
 
     @Test
@@ -607,7 +618,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
     }
 
     @Test
-    public void findByApplicationStateAndFundingDecision() {
+    public void findByApplicationStateAndDecision() {
         loginCompAdmin();
         Competition competition = competitionRepository.save(newCompetition().with(id(null)).build());
 
@@ -615,18 +626,18 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .with(id(null))
                 .withCompetition(competition)
                 .withActivityState(SUBMITTED)
-                .withFundingDecision(FUNDED, null, UNFUNDED)
+                .withDecision(FUNDED, null, UNFUNDED)
                 .build(3);
 
         applicationRepository.saveAll(applications);
 
-        List<Application> foundApplications = repository.findByApplicationStateAndFundingDecision(competition.getId(), SUBMITTED_STATES, null, FUNDED, false);
+        List<Application> foundApplications = repository.findByApplicationStateAndDecision(competition.getId(), SUBMITTED_STATES, null, FUNDED, false);
 
         assertEquals(1, foundApplications.size());
     }
 
     @Test
-    public void findByApplicationStateAndFundingDecision_undecided() {
+    public void findByApplicationStateAndDecision_undecided() {
         loginCompAdmin();
         Competition competition = competitionRepository.save(newCompetition().with(id(null)).build());
 
@@ -634,25 +645,25 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .with(id(null))
                 .withCompetition(competition)
                 .withActivityState(SUBMITTED)
-                .withFundingDecision(UNDECIDED, null)
+                .withDecision(UNDECIDED, null)
                 .build(2);
 
         applicationRepository.saveAll(applications);
 
-        List<Application> foundApplications = repository.findByApplicationStateAndFundingDecision(competition.getId(), SUBMITTED_STATES, null, UNDECIDED, false);
+        List<Application> foundApplications = repository.findByApplicationStateAndDecision(competition.getId(), SUBMITTED_STATES, null, UNDECIDED, false);
 
         assertEquals(2, foundApplications.size());
     }
 
     @Test
-    public void findByApplicationStateAndFundingDecision_funded() {
+    public void findByApplicationStateAndDecision_funded() {
         loginCompAdmin();
         Competition competition = competitionRepository.save(newCompetition().with(id(null)).build());
 
         List<Application> applications = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
-                .withFundingDecision(FUNDED, null)
+                .withDecision(FUNDED, null)
                 .withActivityState(SUBMITTED, APPROVED)
                 .build(2);
 
@@ -660,7 +671,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         flushAndClearSession();
 
-        List<Application> foundApplications = repository.findByApplicationStateAndFundingDecision(competition.getId(), SUBMITTED_STATES, null, FUNDED, false);
+        List<Application> foundApplications = repository.findByApplicationStateAndDecision(competition.getId(), SUBMITTED_STATES, null, FUNDED, false);
 
         assertEquals(2, foundApplications.size());
     }
@@ -674,7 +685,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .with(id(null))
                 .withCompetition(competition)
                 .withActivityState(SUBMITTED)
-                .withFundingDecision(FUNDED, null, UNFUNDED)
+                .withDecision(FUNDED, null, UNFUNDED)
                 .build(3);
 
         applicationRepository.saveAll(applications);
@@ -688,7 +699,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                     applicationExpressionOfInterestConfigRepository.save(applicationExpressionOfInterestConfig);
                 });
 
-        List<Application> foundApplications = repository.findEoiByApplicationStateAndFundingDecision(competition.getId(), SUBMITTED_STATES, null, null, false);
+        List<Application> foundApplications = repository.findEoiByApplicationStateAndDecision(competition.getId(), SUBMITTED_STATES, null, null, false);
 
         assertEquals(3, foundApplications.size());
     }
@@ -702,7 +713,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .with(id(null))
                 .withCompetition(competition)
                 .withActivityState(SUBMITTED)
-                .withFundingDecision(UNDECIDED, null)
+                .withDecision(UNDECIDED, null)
                 .build(2);
 
         applicationRepository.saveAll(applications);
@@ -716,7 +727,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                     applicationExpressionOfInterestConfigRepository.save(applicationExpressionOfInterestConfig);
                 });
 
-        List<Application> foundApplications = repository.findEoiByApplicationStateAndFundingDecision(competition.getId(), SUBMITTED_STATES, null, UNDECIDED, false);
+        List<Application> foundApplications = repository.findEoiByApplicationStateAndDecision(competition.getId(), SUBMITTED_STATES, null, UNDECIDED, false);
 
         assertEquals(2, foundApplications.size());
     }
@@ -729,9 +740,9 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         List<Application> applications = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
-                .withFundingDecision(FUNDED, null)
+                .withDecision(FUNDED, null)
                 .withActivityState(SUBMITTED, APPROVED)
-                .withManageFundingEmailDate(ZonedDateTime.now())
+                .withManageDecisionEmailDate(ZonedDateTime.now())
                 .build(2);
 
         applicationRepository.saveAll(applications);
@@ -747,7 +758,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         flushAndClearSession();
 
-        List<Application> foundApplications = repository.findEoiByApplicationStateAndFundingDecision(competition.getId(), SUBMITTED_STATES, null, FUNDED, true);
+        List<Application> foundApplications = repository.findEoiByApplicationStateAndDecision(competition.getId(), SUBMITTED_STATES, null, FUNDED, true);
 
         assertEquals(2, foundApplications.size());
     }

@@ -11,7 +11,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.application.list.controller.CompetitionManagementApplicationsController;
 import org.innovateuk.ifs.management.application.list.populator.*;
 import org.innovateuk.ifs.management.application.list.viewmodel.*;
-import org.innovateuk.ifs.management.decision.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.management.decision.service.ApplicationDecisionService;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.Role;
@@ -66,7 +66,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
     private ApplicationSummaryRestService applicationSummaryRestService;
 
     @Mock
-    private ApplicationFundingDecisionService applicationFundingDecisionService;
+    private ApplicationDecisionService applicationDecisionService;
 
     @Mock
     private ProjectRestService projectRestService;

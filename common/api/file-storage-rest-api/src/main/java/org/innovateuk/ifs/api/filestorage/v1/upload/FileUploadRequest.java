@@ -1,40 +1,44 @@
 package org.innovateuk.ifs.api.filestorage.v1.upload;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public final class FileUploadRequest implements Serializable {
 
     @NotNull
     /** uuid reference for the file */
-    private final String fileId;
+    private String fileId;
 
     /** Originating system or subsystem for the storage request */
-    private final String systemId;
+    private String systemId;
 
     /** The user requesting storage */
-    private final String userId;
+    private String userId;
 
     @NotNull
     /** The file payload */
-    private final byte[] payload;
+    private byte[] payload;
 
     @NotNull
     /** The file type */
-    private final String mimeType;
+    private String mimeType;
 
     /** The file size in bytes */
-    private final long fileSizeBytes;
+    private long fileSizeBytes;
 
     /** The file name */
-    private final String fileName;
+    private String fileName;
 
     /** The file checksum */
-    private final String md5Checksum;
+    private String md5Checksum;
 
 }

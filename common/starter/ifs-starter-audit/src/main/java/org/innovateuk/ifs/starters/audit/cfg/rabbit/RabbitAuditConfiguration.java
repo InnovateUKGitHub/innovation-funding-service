@@ -6,9 +6,6 @@ import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.starters.audit.AuditChannel;
 import org.innovateuk.ifs.starters.audit.cfg.AuditConfigurationProperties;
 import org.innovateuk.ifs.starters.audit.rabbit.RabbitAuditChannel;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 
 @EnableRabbit
-@Profile(IfsProfileConstants.AMQP_PROFILE)
+@Profile(IfsProfileConstants.AMQP_ENABLED)
 @EnableConfigurationProperties(AuditConfigurationProperties.class)
 public class RabbitAuditConfiguration {
 
@@ -26,16 +23,6 @@ public class RabbitAuditConfiguration {
 
     @Autowired
     private AuditConfigurationProperties auditConfigurationProperties;
-
-    @Bean
-    public FanoutExchange exchange() {
-        return new FanoutExchange(auditConfigurationProperties.getAuditExchangeName());
-    }
-
-    @Bean
-    public Binding binding(Queue queue, FanoutExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange);
-    }
 
     @Bean
     public AuditChannel rabbitAuditChannel() {

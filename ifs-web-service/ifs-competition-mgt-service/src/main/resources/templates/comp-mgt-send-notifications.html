@@ -68,7 +68,7 @@
                             <tr class="govuk-table__row">
                                 <th class="govuk-table__header" scope="col">Application number</th>
                                 <th class="govuk-table__header" scope="col">Project title</th>
-                                <th class="govuk-table__header" scope="col">Lead</th>
+                                <th class="govuk-table__header" scope="col">Lead organisation</th>
                                 <th class="govuk-table__header" scope="col">Funding decision</th>
                             </tr>
                             </thead>
@@ -77,7 +77,7 @@
                                 <td class="govuk-table__cell" th:text="${applicationSummary.id}">Application number</td>
                                 <td class="govuk-table__cell" th:text="${applicationSummary.title}">Project title</td>
                                 <td class="govuk-table__cell" th:text="${applicationSummary.lead}">Lead</td>
-                                <td class="govuk-table__cell" th:text="${applicationSummary.fundingDecision?.name}">-</td>
+                                <td class="govuk-table__cell" th:text="${applicationSummary.decision?.name}">-</td>
                             </tr>
                             </tbody>
                         </table>
@@ -164,8 +164,8 @@
                     </p>
                 </div>
 
-                <th:block th:each="entry : ${model.fundingDecisions}" >
-                    <input type="hidden"  th:name="'fundingDecisions[' + ${entry.key} + ']'" th:value="${entry.value}"/>
+                <th:block th:each="entry : ${model.decisions}" >
+                    <input type="hidden"  th:name="'decisions[' + ${entry.key} + ']'" th:value="${entry.value}"/>
                 </th:block>
                 <div class="govuk-body">
                     <button class="govuk-button govuk-!-margin-right-6" id="send-email-to-all-applicants" data-js-modal="send-to-all-applicants-modal">Send notification</button>

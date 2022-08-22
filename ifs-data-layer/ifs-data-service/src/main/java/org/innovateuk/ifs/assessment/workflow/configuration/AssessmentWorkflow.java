@@ -4,7 +4,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentEvent;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.workflow.actions.*;
 import org.innovateuk.ifs.assessment.workflow.guards.AssessmentCompleteGuard;
-import org.innovateuk.ifs.assessment.workflow.guards.AssessmentFundingDecisionOutcomeGuard;
+import org.innovateuk.ifs.assessment.workflow.guards.AssessmentDecisionOutcomeGuard;
 import org.innovateuk.ifs.assessment.workflow.guards.AssessmentRejectOutcomeGuard;
 import org.innovateuk.ifs.assessment.workflow.guards.CompetitionInAssessmentGuard;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
@@ -37,10 +37,10 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
     private WithdrawCreatedAction withdrawCreatedAction;
 
     @Autowired
-    private FundingDecisionAction fundingDecisionAction;
+    private DecisionAction decisionAction;
 
     @Autowired
-    private AssessmentFundingDecisionOutcomeGuard assessmentFundingDecisionOutcomeGuard;
+    private AssessmentDecisionOutcomeGuard assessmentDecisionOutcomeGuard;
 
     @Autowired
     private AssessmentRejectOutcomeGuard assessmentRejectOutcomeGuard;
@@ -74,7 +74,7 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
         configureReject(transitions);
         configureWithdraw(transitions);
         configureFeedback(transitions);
-        configureFundingDecision(transitions);
+        configureDecision(transitions);
         configureSubmit(transitions);
         configureChoice(transitions);
         configureReturnToAssessor(transitions);
@@ -167,23 +167,23 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
                 .event(FEEDBACK);
     }
 
-    private void configureFundingDecision(StateMachineTransitionConfigurer<AssessmentState, AssessmentEvent> transitions) throws Exception {
+    private void configureDecision(StateMachineTransitionConfigurer<AssessmentState, AssessmentEvent> transitions) throws Exception {
         transitions
                 .withExternal()
                 .source(ACCEPTED).target(DECIDE_IF_READY_TO_SUBMIT)
                 .event(FUNDING_DECISION)
-                .action(fundingDecisionAction)
-                .guard(assessmentFundingDecisionOutcomeGuard)
+                .action(decisionAction)
+                .guard(assessmentDecisionOutcomeGuard)
                 .and()
                 .withExternal()
                 .source(OPEN).target(DECIDE_IF_READY_TO_SUBMIT)
                 .event(FUNDING_DECISION)
-                .action(fundingDecisionAction)
+                .action(decisionAction)
                 .and()
                 .withExternal()
                 .source(READY_TO_SUBMIT).target(DECIDE_IF_READY_TO_SUBMIT)
                 .event(FUNDING_DECISION)
-                .action(fundingDecisionAction);
+                .action(decisionAction);
     }
 
     private void configureSubmit(StateMachineTransitionConfigurer<AssessmentState, AssessmentEvent> transitions) throws Exception {

@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.security.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.IfsProfileConstants;
+import org.innovateuk.ifs.rest.IfsAuthenticationEntryPoint;
 import org.innovateuk.ifs.security.StatelessAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +29,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private StatelessAuthenticationFilter statelessAuthenticationFilter;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Value("${management.endpoints.web.base-path}")
     private String monitoringEndpoint;
@@ -57,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(ADDITIONAL_WHITELIST).permitAll()
                 .anyRequest().authenticated()
                 .and()
-            .exceptionHandling().and()
+            .exceptionHandling().authenticationEntryPoint(new IfsAuthenticationEntryPoint(objectMapper)).and()
             .addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .headers()
                 .addHeaderWriter(new StaticHeadersWriter("server","server"))

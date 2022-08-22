@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.Decision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 
 import java.util.List;
@@ -32,8 +32,8 @@ public class FundingNotificationResourceBuilder extends BaseBuilder<FundingNotif
         return withArray((messageBody, object) -> setField("messageBody", messageBody, object), messageBodies);
     }
 
-    public FundingNotificationResourceBuilder withFundingDecisions(Map<Long, FundingDecision> fundingDecisions) {
-        return with(notification -> setField("fundingDecisions", fundingDecisions, notification));
+    public FundingNotificationResourceBuilder withDecisions(Map<Long, Decision> decisions) {
+        return with(notification -> setField("decisions", decisions, notification));
     }
 
     @Override

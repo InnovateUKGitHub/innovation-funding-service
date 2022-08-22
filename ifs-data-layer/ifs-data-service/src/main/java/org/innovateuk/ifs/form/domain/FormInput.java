@@ -27,7 +27,7 @@ public class FormInput {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 5000)
+    @Column(length = 5000, columnDefinition = "LONGTEXT")
     private Integer wordCount;
 
     @Column(name = "form_input_type_id")
@@ -47,10 +47,10 @@ public class FormInput {
             inverseJoinColumns = {@JoinColumn(name = "form_validator_id")})
     private Set<FormValidator> inputValidators;
 
-    @Column(length=5000)
+    @Column(length=5000, columnDefinition = "LONGTEXT")
     private String guidanceTitle;
 
-    @Column(length=5000)
+    @Column(length=5000, columnDefinition = "LONGTEXT")
     private String guidanceAnswer;
 
     private String description;

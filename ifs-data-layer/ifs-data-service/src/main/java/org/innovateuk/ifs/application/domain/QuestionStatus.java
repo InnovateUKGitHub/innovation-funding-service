@@ -64,6 +64,10 @@ public class QuestionStatus {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Boolean getMarkedAsComplete() {
         return markedAsComplete;
     }

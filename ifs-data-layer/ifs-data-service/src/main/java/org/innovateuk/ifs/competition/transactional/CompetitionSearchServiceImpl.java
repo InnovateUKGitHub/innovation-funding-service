@@ -122,8 +122,8 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
                         .map(Category::getName)
                         .collect(Collectors.toCollection(TreeSet::new)),
                 projectRepository.countByApplicationCompetitionId(competition.getId()),
-                applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(competition.getId())
-                        .map(Application::getManageFundingEmailDate).orElse(null)
+                applicationRepository.findTopByCompetitionIdOrderByManageDecisionEmailDateDesc(competition.getId())
+                        .map(Application::getManageDecisionEmailDate).orElse(null)
         );
     }
 

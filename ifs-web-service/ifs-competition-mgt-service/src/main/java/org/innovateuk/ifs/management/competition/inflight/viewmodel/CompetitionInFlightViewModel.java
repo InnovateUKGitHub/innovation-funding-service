@@ -20,7 +20,7 @@ public class CompetitionInFlightViewModel {
     private Long competitionId;
     private String competitionName;
     private CompetitionStatus competitionStatus;
-    private boolean fundingDecisionAllowedBeforeAssessment;
+    private boolean decisionAllowedBeforeAssessment;
     private String competitionType;
     private FundingType competitionFundingType;
     private String innovationSector;
@@ -55,7 +55,7 @@ public class CompetitionInFlightViewModel {
         this.competitionStatus = competitionResource.getCompetitionStatus();
         this.competitionType = competitionResource.getCompetitionTypeName();
         this.competitionFundingType = competitionResource.getFundingType();
-        this.fundingDecisionAllowedBeforeAssessment = !competitionResource.isHasAssessmentStage();
+        this.decisionAllowedBeforeAssessment = !competitionResource.isHasAssessmentStage();
         this.innovationSector = competitionResource.getInnovationSectorName();
         this.innovationArea = StringUtils.join(competitionResource.getInnovationAreaNames(), ", ");
         this.executive = competitionResource.getExecutiveName();
@@ -127,8 +127,8 @@ public class CompetitionInFlightViewModel {
         return keyStatistics;
     }
 
-    public boolean isFundingDecisionAllowedBeforeAssessment() {
-        return fundingDecisionAllowedBeforeAssessment;
+    public boolean isDecisionAllowedBeforeAssessment() {
+        return decisionAllowedBeforeAssessment;
     }
 
     public boolean isReadOnly() {
@@ -159,14 +159,14 @@ public class CompetitionInFlightViewModel {
         return assessorFinanceView;
     }
 
-    public boolean isFundingDecisionEnabled() {
-        return fundingDecisionAllowedBeforeAssessment && !asList(READY_TO_OPEN).contains(competitionStatus)
+    public boolean isDecisionEnabled() {
+        return decisionAllowedBeforeAssessment && !asList(READY_TO_OPEN).contains(competitionStatus)
                 || !asList(READY_TO_OPEN, OPEN, CLOSED, IN_ASSESSMENT).contains(competitionStatus)
                 || (alwaysOpen && hasAClosedAssessmentPeriod());
     }
 
     public boolean isFundingNotificationDisplayed() {
-        return fundingDecisionAllowedBeforeAssessment
+        return decisionAllowedBeforeAssessment
                 || asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK).contains(competitionStatus);
     }
 

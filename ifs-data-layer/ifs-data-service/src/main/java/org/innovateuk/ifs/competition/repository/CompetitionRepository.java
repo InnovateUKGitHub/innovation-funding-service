@@ -65,7 +65,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     /* Filters by innovation lead id or stakeholder id and in project setup state */
     String INNOVATION_LEAD_STAKEHOLDER_EXTERNAL_FINANCE_PROJECT_SETUP_WHERE_CLAUSE = "WHERE cp.user.id = :userId " +
             "AND cp.role in ('INNOVATION_LEAD', 'STAKEHOLDER', 'EXTERNAL_FINANCE') " +
-            "AND EXISTS (SELECT a.manageFundingEmailDate FROM Application a WHERE a.competition.id = cp.competition.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
+            "AND EXISTS (SELECT a.manageDecisionEmailDate FROM Application a WHERE a.competition.id = cp.competition.id AND a.decision = 'FUNDED' AND a.manageDecisionEmailDate IS NOT NULL) " +
             "AND cp.competition.setupComplete = TRUE AND cp.competition.nonIfs = FALSE " +
             "AND cp.competition.completionStage = 'PROJECT_SETUP'";
 

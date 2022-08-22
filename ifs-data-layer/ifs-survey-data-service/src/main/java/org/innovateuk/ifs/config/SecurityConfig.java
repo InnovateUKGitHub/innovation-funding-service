@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.IfsProfileConstants;
+import org.innovateuk.ifs.rest.IfsAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +29,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private WebUserOnlyFilter webUserOnlyFilter;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     public SecurityConfig() {
         super(true);
     }
@@ -44,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(monitoringEndpoint+"/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .exceptionHandling().and()
+                .exceptionHandling().authenticationEntryPoint(new IfsAuthenticationEntryPoint(objectMapper)).and()
                 .addFilterBefore(webUserOnlyFilter, UsernamePasswordAuthenticationFilter.class)
                 .headers()
                 .addHeaderWriter(new StaticHeadersWriter("server","server"))

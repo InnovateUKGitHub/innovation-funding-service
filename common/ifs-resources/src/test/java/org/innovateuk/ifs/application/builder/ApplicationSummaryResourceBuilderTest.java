@@ -1,15 +1,15 @@
 package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.Decision;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
-import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
-import static org.innovateuk.ifs.application.resource.FundingDecision.UNDECIDED;
+import static org.innovateuk.ifs.application.resource.Decision.FUNDED;
+import static org.innovateuk.ifs.application.resource.Decision.UNDECIDED;
 import static org.junit.Assert.assertEquals;
 
 public class ApplicationSummaryResourceBuilderTest {
@@ -24,7 +24,7 @@ public class ApplicationSummaryResourceBuilderTest {
     private BigDecimal[] grantsRequested = {BigDecimal.valueOf(1000), BigDecimal.valueOf(2000)};
     private BigDecimal[] totalProjectCosts = {BigDecimal.valueOf(10000), BigDecimal.valueOf(20000)};
     private Long[] durations = {200L, 400L};
-    private FundingDecision[] fundingDecisions = {FUNDED, UNDECIDED};
+    private Decision[] decisions = {FUNDED, UNDECIDED};
     private String[] innovationAreas = {"Innovation Area 1", "Innovation Area 2"};
     private Boolean[] ineligibleInformeds = { true, false};
 
@@ -41,7 +41,7 @@ public class ApplicationSummaryResourceBuilderTest {
                 .withGrantRequested(grantsRequested[0])
                 .withTotalProjectCost(totalProjectCosts[0])
                 .withDuration(durations[0])
-                .withFundingDecision(fundingDecisions[0])
+                .withDecision(decisions[0])
                 .withInnovationArea(innovationAreas[0])
                 .withIneligibleInformed(ineligibleInformeds[0])
                 .build();
@@ -56,7 +56,7 @@ public class ApplicationSummaryResourceBuilderTest {
         assertEquals(grantsRequested[0], summaryResource.getGrantRequested());
         assertEquals(totalProjectCosts[0], summaryResource.getTotalProjectCost());
         assertEquals(durations[0], summaryResource.getDuration());
-        assertEquals(fundingDecisions[0], summaryResource.getFundingDecision());
+        assertEquals(decisions[0], summaryResource.getDecision());
         assertEquals(innovationAreas[0], summaryResource.getInnovationArea());
         assertEquals(ineligibleInformeds[0], summaryResource.isIneligibleInformed());
     }
@@ -74,7 +74,7 @@ public class ApplicationSummaryResourceBuilderTest {
                 .withGrantRequested(grantsRequested)
                 .withTotalProjectCost(totalProjectCosts)
                 .withDuration(durations)
-                .withFundingDecision(fundingDecisions)
+                .withDecision(decisions)
                 .withInnovationArea(innovationAreas)
                 .withIneligibleInformed(ineligibleInformeds)
                 .build(2);
@@ -89,7 +89,7 @@ public class ApplicationSummaryResourceBuilderTest {
         assertEquals(grantsRequested[0], summaryResources.get(0).getGrantRequested());
         assertEquals(totalProjectCosts[0], summaryResources.get(0).getTotalProjectCost());
         assertEquals(durations[0], summaryResources.get(0).getDuration());
-        assertEquals(fundingDecisions[0], summaryResources.get(0).getFundingDecision());
+        assertEquals(decisions[0], summaryResources.get(0).getDecision());
         assertEquals(innovationAreas[0], summaryResources.get(0).getInnovationArea());
         assertEquals(ineligibleInformeds[0], summaryResources.get(0).isIneligibleInformed());
 
@@ -103,7 +103,7 @@ public class ApplicationSummaryResourceBuilderTest {
         assertEquals(grantsRequested[1], summaryResources.get(1).getGrantRequested());
         assertEquals(totalProjectCosts[1], summaryResources.get(1).getTotalProjectCost());
         assertEquals(durations[1], summaryResources.get(1).getDuration());
-        assertEquals(fundingDecisions[1], summaryResources.get(1).getFundingDecision());
+        assertEquals(decisions[1], summaryResources.get(1).getDecision());
         assertEquals(innovationAreas[1], summaryResources.get(1).getInnovationArea());
         assertEquals(ineligibleInformeds[1], summaryResources.get(1).isIneligibleInformed());
     }

@@ -76,7 +76,7 @@ public class AffiliationServiceImplTest extends BaseServiceUnitTest<AffiliationS
         assertTrue(response.getFailure().is(notFoundError(User.class, userIdNotExists)));
 
         verify(userRepositoryMock, only()).findById(userIdNotExists);
-        verifyZeroInteractions(affiliationMapperMock);
+        verifyNoInteractions(affiliationMapperMock);
     }
 
     @Test
@@ -95,7 +95,7 @@ public class AffiliationServiceImplTest extends BaseServiceUnitTest<AffiliationS
         assertTrue(response.isEmpty());
 
         verify(userRepositoryMock, only()).findById(userId);
-        verifyZeroInteractions(affiliationMapperMock);
+        verifyNoInteractions(affiliationMapperMock);
     }
 
     @Test
@@ -135,7 +135,7 @@ public class AffiliationServiceImplTest extends BaseServiceUnitTest<AffiliationS
         assertTrue(result.getFailure().is(notFoundError(User.class, userIdNotExists)));
 
         verify(userRepositoryMock, only()).findById(userIdNotExists);
-        verifyZeroInteractions(affiliationMapperMock);
+        verifyNoInteractions(affiliationMapperMock);
     }
 
     private User createUserExpectations(Long userId, Profile profile) {

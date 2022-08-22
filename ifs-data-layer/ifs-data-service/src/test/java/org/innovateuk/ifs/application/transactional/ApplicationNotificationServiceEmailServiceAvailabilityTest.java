@@ -59,7 +59,7 @@ public class ApplicationNotificationServiceEmailServiceAvailabilityTest extends 
     @Test
     public void notifyApplicantsByCompetition() {
 
-        long fundingDecisionApplicationCompetition = testService.doWithinTransaction(() -> {
+        long decisionApplicationCompetition = testService.doWithinTransaction(() -> {
             Application approvedApplication = applicationRepository.findByApplicationProcessActivityStateIn(singleton(ApplicationState.APPROVED)).findFirst().get();
             return approvedApplication.getCompetition().getId();
         });
@@ -69,7 +69,7 @@ public class ApplicationNotificationServiceEmailServiceAvailabilityTest extends 
             testService.doWithinTransaction(this::loginCompAdmin);
 
             return databaseTestHelper.assertingNoDatabaseChangesOccur(() ->
-                    applicationNotificationService.notifyApplicantsByCompetition(fundingDecisionApplicationCompetition));
+                    applicationNotificationService.notifyApplicantsByCompetition(decisionApplicationCompetition));
         });
     }
 

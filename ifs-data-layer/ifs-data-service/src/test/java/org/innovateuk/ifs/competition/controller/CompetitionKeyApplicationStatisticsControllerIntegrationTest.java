@@ -95,7 +95,7 @@ public class CompetitionKeyApplicationStatisticsControllerIntegrationTest extend
         CompetitionEoiKeyApplicationStatisticsResource keyStatisticsResource = controller.getEoiKeyStatistics
                 (1L).getSuccess();
 
-        assertEquals(0, keyStatisticsResource.getApplicationsSubmitted());
+        assertEquals(0, keyStatisticsResource.getEOISubmitted());
     }
 
     @Test

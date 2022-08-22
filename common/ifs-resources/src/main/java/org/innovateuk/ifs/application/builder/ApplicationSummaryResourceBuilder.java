@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.Decision;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
@@ -47,8 +47,8 @@ public class ApplicationSummaryResourceBuilder extends BaseBuilder<ApplicationSu
         return withArraySetFieldByReflection("leadApplicant", leadApplicant);
     }
 
-    public ApplicationSummaryResourceBuilder withManageFundingEmailDate(ZonedDateTime... manageFundingEmailDate) {
-        return withArraySetFieldByReflection("manageFundingEmailDate", manageFundingEmailDate);
+    public ApplicationSummaryResourceBuilder withManageDecisionEmailDate(ZonedDateTime... manageDecisionEmailDate) {
+        return withArraySetFieldByReflection("manageDecisionEmailDate", manageDecisionEmailDate);
     }
 
     public ApplicationSummaryResourceBuilder withStatus(String... status) {
@@ -75,8 +75,8 @@ public class ApplicationSummaryResourceBuilder extends BaseBuilder<ApplicationSu
         return withArraySetFieldByReflection("duration", duration);
     }
 
-    public ApplicationSummaryResourceBuilder withFundingDecision(FundingDecision... fundingDecision) {
-        return withArraySetFieldByReflection("fundingDecision", fundingDecision);
+    public ApplicationSummaryResourceBuilder withDecision(Decision... decision) {
+        return withArraySetFieldByReflection("decision", decision);
     }
 
     public ApplicationSummaryResourceBuilder withInnovationArea(String... innovationArea) {

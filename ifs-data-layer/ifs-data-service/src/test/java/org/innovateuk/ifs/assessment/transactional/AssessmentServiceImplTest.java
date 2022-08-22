@@ -5,9 +5,9 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.assessment.domain.Assessment;
-import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
+import org.innovateuk.ifs.assessment.domain.AssessmentDecisionOutcome;
 import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
-import org.innovateuk.ifs.assessment.mapper.AssessmentFundingDecisionOutcomeMapper;
+import org.innovateuk.ifs.assessment.mapper.AssessmentDecisionOutcomeMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessmentRejectOutcomeMapper;
 import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
@@ -43,8 +43,8 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentFeedbackResourceBuilder.newApplicationAssessmentFeedbackResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
-import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeBuilder.newAssessmentFundingDecisionOutcome;
-import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentDecisionOutcomeBuilder.newAssessmentDecisionOutcome;
+import static org.innovateuk.ifs.assessment.builder.AssessmentDecisionOutcomeResourceBuilder.newAssessmentDecisionOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeBuilder.newAssessmentRejectOutcome;
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
@@ -81,7 +81,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     private AssessmentMapper assessmentMapper;
 
     @Mock
-    private AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapper;
+    private AssessmentDecisionOutcomeMapper assessmentDecisionOutcomeMapper;
 
     @Mock
     private AssessmentWorkflowHandler assessmentWorkflowHandler;
@@ -268,20 +268,20 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withProcessState(OPEN)
                 .build();
 
-        AssessmentFundingDecisionOutcome assessmentFundingDecisionOutcome = newAssessmentFundingDecisionOutcome().build();
-        AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource = newAssessmentFundingDecisionOutcomeResource().build();
+        AssessmentDecisionOutcome assessmentDecisionOutcome = newAssessmentDecisionOutcome().build();
+        AssessmentDecisionOutcomeResource assessmentDecisionOutcomeResource = newAssessmentDecisionOutcomeResource().build();
 
         when(assessmentRepository.findById(assessmentId)).thenReturn(Optional.of(assessment));
-        when(assessmentFundingDecisionOutcomeMapper.mapToDomain(assessmentFundingDecisionOutcomeResource)).thenReturn(assessmentFundingDecisionOutcome);
-        when(assessmentWorkflowHandler.fundingDecision(assessment, assessmentFundingDecisionOutcome)).thenReturn(true);
+        when(assessmentDecisionOutcomeMapper.mapToDomain(assessmentDecisionOutcomeResource)).thenReturn(assessmentDecisionOutcome);
+        when(assessmentWorkflowHandler.decision(assessment, assessmentDecisionOutcome)).thenReturn(true);
 
-        ServiceResult<Void> result = assessmentService.recommend(assessmentId, assessmentFundingDecisionOutcomeResource);
+        ServiceResult<Void> result = assessmentService.recommend(assessmentId, assessmentDecisionOutcomeResource);
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(assessmentRepository, assessmentFundingDecisionOutcomeMapper, assessmentWorkflowHandler);
+        InOrder inOrder = inOrder(assessmentRepository, assessmentDecisionOutcomeMapper, assessmentWorkflowHandler);
         inOrder.verify(assessmentRepository).findById(assessmentId);
-        inOrder.verify(assessmentFundingDecisionOutcomeMapper).mapToDomain(assessmentFundingDecisionOutcomeResource);
-        inOrder.verify(assessmentWorkflowHandler).fundingDecision(assessment, assessmentFundingDecisionOutcome);
+        inOrder.verify(assessmentDecisionOutcomeMapper).mapToDomain(assessmentDecisionOutcomeResource);
+        inOrder.verify(assessmentWorkflowHandler).decision(assessment, assessmentDecisionOutcome);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -294,21 +294,21 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withProcessState(OPEN)
                 .build();
 
-        AssessmentFundingDecisionOutcome assessmentFundingDecisionOutcome = newAssessmentFundingDecisionOutcome().build();
-        AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource = newAssessmentFundingDecisionOutcomeResource().build();
+        AssessmentDecisionOutcome assessmentDecisionOutcome = newAssessmentDecisionOutcome().build();
+        AssessmentDecisionOutcomeResource assessmentDecisionOutcomeResource = newAssessmentDecisionOutcomeResource().build();
 
         when(assessmentRepository.findById(assessmentId)).thenReturn(Optional.of(assessment));
-        when(assessmentFundingDecisionOutcomeMapper.mapToDomain(assessmentFundingDecisionOutcomeResource)).thenReturn(assessmentFundingDecisionOutcome);
-        when(assessmentWorkflowHandler.fundingDecision(assessment, assessmentFundingDecisionOutcome)).thenReturn(false);
+        when(assessmentDecisionOutcomeMapper.mapToDomain(assessmentDecisionOutcomeResource)).thenReturn(assessmentDecisionOutcome);
+        when(assessmentWorkflowHandler.decision(assessment, assessmentDecisionOutcome)).thenReturn(false);
 
-        ServiceResult<Void> result = assessmentService.recommend(assessmentId, assessmentFundingDecisionOutcomeResource);
+        ServiceResult<Void> result = assessmentService.recommend(assessmentId, assessmentDecisionOutcomeResource);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(ASSESSMENT_RECOMMENDATION_FAILED));
 
-        InOrder inOrder = inOrder(assessmentRepository, assessmentFundingDecisionOutcomeMapper, assessmentWorkflowHandler);
+        InOrder inOrder = inOrder(assessmentRepository, assessmentDecisionOutcomeMapper, assessmentWorkflowHandler);
         inOrder.verify(assessmentRepository).findById(assessmentId);
-        inOrder.verify(assessmentFundingDecisionOutcomeMapper).mapToDomain(assessmentFundingDecisionOutcomeResource);
-        inOrder.verify(assessmentWorkflowHandler).fundingDecision(assessment, assessmentFundingDecisionOutcome);
+        inOrder.verify(assessmentDecisionOutcomeMapper).mapToDomain(assessmentDecisionOutcomeResource);
+        inOrder.verify(assessmentWorkflowHandler).decision(assessment, assessmentDecisionOutcome);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -317,10 +317,10 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         long applicationId = 1L;
 
         List<Assessment> expectedAssessments = newAssessment()
-                .withFundingDecision(
-                        newAssessmentFundingDecisionOutcome().withFeedback("Feedback 1").build(),
-                        newAssessmentFundingDecisionOutcome().withFeedback("Feedback 2").build(),
-                        newAssessmentFundingDecisionOutcome().withFeedback("Feedback 3").build()
+                .withDecision(
+                        newAssessmentDecisionOutcome().withFeedback("Feedback 1").build(),
+                        newAssessmentDecisionOutcome().withFeedback("Feedback 2").build(),
+                        newAssessmentDecisionOutcome().withFeedback("Feedback 3").build()
                 )
                 .build(3);
 

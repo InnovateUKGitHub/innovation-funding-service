@@ -30,7 +30,7 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
     private List<AssessorFormInputResponse> responses;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "process", fetch = FetchType.LAZY)
-    private AssessmentFundingDecisionOutcome fundingDecision;
+    private AssessmentDecisionOutcome decision;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "process", fetch = FetchType.LAZY)
     private AssessmentRejectOutcome rejection;
@@ -48,15 +48,15 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
         this.activityState = AssessmentState.CREATED;
     }
 
-    public AssessmentFundingDecisionOutcome getFundingDecision() {
-        return fundingDecision;
+    public AssessmentDecisionOutcome getDecision() {
+        return decision;
     }
 
-    public void setFundingDecision(AssessmentFundingDecisionOutcome fundingDecision) {
-        if (fundingDecision != null) {
-            fundingDecision.setAssessment(this);
+    public void setDecision(AssessmentDecisionOutcome decision) {
+        if (decision != null) {
+            decision.setAssessment(this);
         }
-        this.fundingDecision = fundingDecision;
+        this.decision = decision;
     }
 
     public AssessmentRejectOutcome getRejection() {

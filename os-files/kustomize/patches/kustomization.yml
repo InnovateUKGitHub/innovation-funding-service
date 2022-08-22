@@ -4,3 +4,4 @@ components:
   - new-relic-env-vars-patch
   - pull-secrets-patch
   - spring-profile-patch
+  - rabbitmq-config-secrets-patch

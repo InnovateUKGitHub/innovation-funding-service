@@ -8,21 +8,21 @@ import java.util.Set;
 public class ProjectSetupCompetitionSearchResultItem extends AbstractCompetitionSearchResultItem {
 
     private Integer projectsCount;
-    private ZonedDateTime manageFundingEmailDate;
+    private ZonedDateTime manageDecisionEmailDate;
 
     private ProjectSetupCompetitionSearchResultItem() {} //for jackson
 
-    public ProjectSetupCompetitionSearchResultItem(long id, String name, CompetitionStatus competitionStatus, String competitionTypeName, Set<String> innovationAreaNames, Integer projectsCount, ZonedDateTime manageFundingEmailDate) {
+    public ProjectSetupCompetitionSearchResultItem(long id, String name, CompetitionStatus competitionStatus, String competitionTypeName, Set<String> innovationAreaNames, Integer projectsCount, ZonedDateTime manageDecisionEmailDate) {
         super(id, name, competitionStatus, competitionTypeName, innovationAreaNames);
         this.projectsCount = projectsCount;
-        this.manageFundingEmailDate = manageFundingEmailDate;
+        this.manageDecisionEmailDate = manageDecisionEmailDate;
     }
 
     public Integer getProjectsCount() {
         return projectsCount;
     }
 
-    public ZonedDateTime getManageFundingEmailDate() {
-        return manageFundingEmailDate;
+    public ZonedDateTime getManageDecisionEmailDate() {
+        return manageDecisionEmailDate;
     }
 }

@@ -3,10 +3,10 @@ package org.innovateuk.ifs.management.decision.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.management.decision.form.FundingDecisionChoiceForm;
-import org.innovateuk.ifs.management.decision.form.FundingDecisionFilterForm;
-import org.innovateuk.ifs.management.decision.form.FundingDecisionPaginationForm;
-import org.innovateuk.ifs.management.decision.form.FundingDecisionSelectionForm;
+import org.innovateuk.ifs.management.decision.form.DecisionChoiceForm;
+import org.innovateuk.ifs.management.decision.form.DecisionFilterForm;
+import org.innovateuk.ifs.management.decision.form.DecisionPaginationForm;
+import org.innovateuk.ifs.management.decision.form.DecisionSelectionForm;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -38,9 +38,9 @@ public class CompetitionManagementEOIDecisionController extends CompetitionManag
     public String applications(Model model,
                                @PathVariable("competitionId") long competitionId,
                                @RequestParam(name = "filterChanged", required = false) boolean filterChanged,
-                               @ModelAttribute @Valid FundingDecisionPaginationForm paginationForm,
-                               @ModelAttribute FundingDecisionFilterForm filterForm,
-                               @ModelAttribute FundingDecisionSelectionForm selectionForm,
+                               @ModelAttribute @Valid DecisionPaginationForm paginationForm,
+                               @ModelAttribute DecisionFilterForm filterForm,
+                               @ModelAttribute DecisionSelectionForm selectionForm,
                                UserResource user,
                                BindingResult bindingResult,
                                HttpServletRequest request,
@@ -61,10 +61,10 @@ public class CompetitionManagementEOIDecisionController extends CompetitionManag
     @PostMapping(value = {""})
     public String makeDecision(Model model,
                                @PathVariable("competitionId") long competitionId,
-                               @ModelAttribute FundingDecisionPaginationForm paginationForm,
-                               @ModelAttribute FundingDecisionSelectionForm fundingDecisionSelectionForm,
-                               @ModelAttribute @Valid FundingDecisionChoiceForm fundingDecisionChoiceForm,
-                               @ModelAttribute FundingDecisionFilterForm filterForm,
+                               @ModelAttribute DecisionPaginationForm paginationForm,
+                               @ModelAttribute DecisionSelectionForm decisionSelectionForm,
+                               @ModelAttribute @Valid DecisionChoiceForm decisionChoiceForm,
+                               @ModelAttribute DecisionFilterForm filterForm,
                                UserResource user,
                                BindingResult bindingResult,
                                HttpServletRequest request,
@@ -73,8 +73,8 @@ public class CompetitionManagementEOIDecisionController extends CompetitionManag
                 model,
                 competitionId,
                 paginationForm,
-                fundingDecisionSelectionForm,
-                fundingDecisionChoiceForm,
+                decisionSelectionForm,
+                decisionChoiceForm,
                 filterForm,
                 user,
                 bindingResult,
@@ -83,11 +83,11 @@ public class CompetitionManagementEOIDecisionController extends CompetitionManag
     }
 
     @PostMapping(value = {""}, params = {"addAll"})
-    public @ResponseBody JsonNode addAllApplicationsToFundingDecisionSelectionList(@PathVariable("competitionId") long competitionId,
+    public @ResponseBody JsonNode addAllApplicationsToDecisionSelectionList(@PathVariable("competitionId") long competitionId,
                                                                                    @RequestParam("addAll") boolean addAll,
                                                                                    HttpServletRequest request,
                                                                                    HttpServletResponse response) {
-        return super.addAllApplicationsToFundingDecisionSelectionList(
+        return super.addAllApplicationsToDecisionSelectionList(
                 competitionId,
                 addAll,
                 request,
@@ -95,12 +95,12 @@ public class CompetitionManagementEOIDecisionController extends CompetitionManag
     }
 
     @PostMapping(value = {""}, params = {"selectionId", "isSelected"})
-    public @ResponseBody JsonNode addSelectedApplicationsToFundingDecisionList(@PathVariable("competitionId") long competitionId,
+    public @ResponseBody JsonNode addSelectedApplicationsToDecisionList(@PathVariable("competitionId") long competitionId,
                                                                                @RequestParam("selectionId") long applicationId,
                                                                                @RequestParam("isSelected") boolean isSelected,
                                                                                HttpServletRequest request,
                                                                                HttpServletResponse response) {
-        return super.addSelectedApplicationsToFundingDecisionList(
+        return super.addSelectedApplicationsToDecisionList(
                 competitionId,
                 applicationId,
                 isSelected,

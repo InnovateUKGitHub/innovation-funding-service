@@ -113,7 +113,7 @@ public class ScheduledJesOrganisationListImporterTest extends BaseUnitTestMocksT
         assertThat(result.isSuccess()).isTrue();
         assertThat(result.getSuccess()).isEqualTo(emptyList());
 
-        verifyZeroInteractions(fileDownloaderMock, organisationExtractorMock, academicRepositoryMock);
+        verifyNoInteractions(fileDownloaderMock, organisationExtractorMock, academicRepositoryMock);
     }
 
     @Test
@@ -142,7 +142,7 @@ public class ScheduledJesOrganisationListImporterTest extends BaseUnitTestMocksT
         verify(fileDownloaderMock, times(1)).jesSourceFileExists(JES_FILE_URL);
         verify(fileDownloaderMock, times(1)).copyJesSourceFile(JES_FILE_URL, CONNECTION_TIMEOUT, READ_TIMEOUT);
         verify(fileDownloaderMock, never()).archiveSourceFile(JES_FILE_URL, ARCHIVE_FILE_URL);
-        verifyZeroInteractions(organisationExtractorMock, academicRepositoryMock);
+        verifyNoInteractions(organisationExtractorMock, academicRepositoryMock);
     }
 
     @Test
@@ -176,6 +176,6 @@ public class ScheduledJesOrganisationListImporterTest extends BaseUnitTestMocksT
         verify(fileDownloaderMock, times(1)).archiveSourceFile(JES_FILE_URL, ARCHIVE_FILE_URL);
         verify(organisationExtractorMock, times(1)).extractOrganisationsFromFile(downloadedFile);
 
-        verifyZeroInteractions(academicRepositoryMock);
+        verifyNoInteractions(academicRepositoryMock);
     }
 }

@@ -3,7 +3,7 @@ package org.innovateuk.ifs.assessment.workflow.configuration;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.domain.Assessment;
-import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
+import org.innovateuk.ifs.assessment.domain.AssessmentDecisionOutcome;
 import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentEvent;
@@ -60,8 +60,8 @@ public class AssessmentWorkflowHandler extends BaseWorkflowEventHandler<Assessme
         return fireEvent(assessmentMessage(assessment, FEEDBACK), assessment);
     }
 
-    public boolean fundingDecision(Assessment assessment, AssessmentFundingDecisionOutcome fundingDecision) {
-        return fireEvent(fundingDecisionMessage(assessment, fundingDecision), assessment);
+    public boolean decision(Assessment assessment, AssessmentDecisionOutcome decision) {
+        return fireEvent(decisionMessage(assessment, decision), assessment);
     }
 
     public boolean withdraw(Assessment assessment) {
@@ -105,9 +105,9 @@ public class AssessmentWorkflowHandler extends BaseWorkflowEventHandler<Assessme
         return (Assessment) message.getHeaders().get("target");
     }
 
-    private MessageBuilder<AssessmentEvent> fundingDecisionMessage(Assessment assessment, AssessmentFundingDecisionOutcome fundingDecision) {
+    private MessageBuilder<AssessmentEvent> decisionMessage(Assessment assessment, AssessmentDecisionOutcome decision) {
         return assessmentMessage(assessment, FUNDING_DECISION)
-                .setHeader("fundingDecision", fundingDecision);
+                .setHeader("decision", decision);
     }
 
     private MessageBuilder<AssessmentEvent> rejectMessage(Assessment assessment, AssessmentRejectOutcome rejection) {

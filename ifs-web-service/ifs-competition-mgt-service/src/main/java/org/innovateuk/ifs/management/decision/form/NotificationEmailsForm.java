@@ -2,7 +2,7 @@ package org.innovateuk.ifs.management.decision.form;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.Decision;
 import java.util.*;
 
 public class NotificationEmailsForm {
@@ -11,7 +11,7 @@ public class NotificationEmailsForm {
     private String message;
 
     @NotEmpty(message="{validation.manage.funding.applications.no.application.selected}")
-    private Map<Long, FundingDecision> fundingDecisions;
+    private Map<Long, Decision> decisions;
 
     public String getMessage() {
         return message;
@@ -22,14 +22,14 @@ public class NotificationEmailsForm {
     }
 
     public List<Long> getApplicationIds() {
-        return getFundingDecisions() != null ? new ArrayList<>(getFundingDecisions().keySet()) : Collections.EMPTY_LIST;
+        return getDecisions() != null ? new ArrayList<>(getDecisions().keySet()) : Collections.EMPTY_LIST;
     }
 
-    public Map<Long, FundingDecision> getFundingDecisions() {
-        return fundingDecisions;
+    public Map<Long, Decision> getDecisions() {
+        return decisions;
     }
 
-    public void setFundingDecisions(Map<Long, FundingDecision> fundingDecisions) {
-        this.fundingDecisions = fundingDecisions;
+    public void setDecisions(Map<Long, Decision> decisions) {
+        this.decisions = decisions;
     }
 }

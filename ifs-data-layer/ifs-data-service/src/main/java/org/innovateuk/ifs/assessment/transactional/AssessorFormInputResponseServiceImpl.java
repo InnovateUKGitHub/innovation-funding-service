@@ -215,7 +215,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
                     scores,
                     feedback,
                     getAveragePercentage(responses),
-                    assessment.getFundingDecision().getFeedback()
+                    assessment.getDecision().getFeedback()
             );
 
         });

@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.IfsProfileConstants;
+import org.innovateuk.ifs.rest.IfsAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -29,6 +31,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private StatelessAuthenticationFilter statelessAuthenticationFilter;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     public SecurityConfig() {
         super(true);
     }
@@ -42,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .addFilterAfter(csrfStatelessFilter, StatelessAuthenticationFilter.class)
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .anonymous().and()
-            .exceptionHandling().and()
+            .exceptionHandling().authenticationEntryPoint(new IfsAuthenticationEntryPoint(objectMapper)).and()
             .headers()
                 .addHeaderWriter(new StaticHeadersWriter("server","server"))
                     .cacheControl().disable();

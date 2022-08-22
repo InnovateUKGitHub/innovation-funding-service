@@ -69,8 +69,8 @@ public class AssessmentController {
     }
 
     @PutMapping("/{id}/recommend")
-    public RestResult<Void> recommend(@PathVariable("id") long id, @RequestBody @Valid AssessmentFundingDecisionOutcomeResource assessmentFundingDecision) {
-        return assessmentService.recommend(id, assessmentFundingDecision).toPutResponse();
+    public RestResult<Void> recommend(@PathVariable("id") long id, @RequestBody @Valid AssessmentDecisionOutcomeResource assessmentDecision) {
+        return assessmentService.recommend(id, assessmentDecision).toPutResponse();
     }
 
     @GetMapping("/application/{applicationId}/feedback")

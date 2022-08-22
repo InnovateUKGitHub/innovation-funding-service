@@ -138,6 +138,6 @@ public class ProjectSetupCompleteControllerTest extends BaseControllerMockMVCTes
                 .andExpect(view().name("project/setup-complete"))
                 .andExpect(model().attributeHasFieldErrorCode("form", "successfulConfirmation", "validation.field.must.not.be.blank"));
 
-        verifyZeroInteractions(projectStateRestService);
+        verifyNoInteractions(projectStateRestService);
     }
 }

@@ -220,7 +220,7 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
 
         assertEquals(expectedDataLayer, mav.getModel().get(ANALYTICS_DATA_LAYER_NAME));
 
-        verifyZeroInteractions(googleAnalyticsDataLayerRestServiceMock);
+        verifyNoInteractions(googleAnalyticsDataLayerRestServiceMock);
     }
 
     @Test

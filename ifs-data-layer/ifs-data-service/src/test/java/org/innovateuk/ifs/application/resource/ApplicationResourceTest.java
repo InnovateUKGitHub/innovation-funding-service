@@ -10,10 +10,13 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.innovateuk.ifs.application.builder.ApplicationExpressionOfInterestConfigResourceBuilder.newApplicationExpressionOfInterestConfigResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 
 public class ApplicationResourceTest {
+    private final long eoiApplicationId = 3L;
+
     private ApplicationResource applicationResource;
 
     private Competition competition;
@@ -57,5 +60,23 @@ public class ApplicationResourceTest {
     @Test
     public void equalsShouldReturnFalseOnNull() throws Exception {
         Assert.assertFalse(applicationResource.equals(null));
+    }
+
+    @Test
+    public void isEoiFullApplication() {
+        Assert.assertFalse(applicationResource.isEoiFullApplication());
+
+        applicationResource = newApplicationResource()
+                .withCompetition(competition.getId())
+                .withName(name)
+                .withApplicationState(applicationState)
+                .withId(id)
+                .withApplicationExpressionOfInterestConfigResource(newApplicationExpressionOfInterestConfigResource()
+                        .withEnabledForExpressionOfInterest(false)
+                        .withEoiApplicationId(eoiApplicationId)
+                        .build())
+                .build();
+
+        Assert.assertTrue(applicationResource.isEoiFullApplication());
     }
 }

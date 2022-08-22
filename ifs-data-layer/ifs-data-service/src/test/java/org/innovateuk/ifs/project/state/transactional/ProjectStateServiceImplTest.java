@@ -93,7 +93,7 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
         verify(projectRepositoryMock).findById(projectId);
         verify(userRepositoryMock).findById(userId);
         verify(projectWorkflowHandlerMock).projectWithdrawn(eq(project), any());
-        verifyZeroInteractions(projectStateCommentsService);
+        verifyNoInteractions(projectStateCommentsService);
     }
 
     @Test
@@ -110,8 +110,8 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
         ServiceResult<Void> result = service.withdrawProject(projectId);
         assertTrue(result.isFailure());
         verify(projectRepositoryMock).findById(projectId);
-        verifyZeroInteractions(projectWorkflowHandlerMock);
-        verifyZeroInteractions(projectStateCommentsService);
+        verifyNoInteractions(projectWorkflowHandlerMock);
+        verifyNoInteractions(projectStateCommentsService);
     }
 
     @Test

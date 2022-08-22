@@ -25,7 +25,6 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_DOCUMEN
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 /**

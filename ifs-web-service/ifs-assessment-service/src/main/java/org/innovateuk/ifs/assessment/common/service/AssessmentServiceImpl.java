@@ -45,11 +45,11 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     public ServiceResult<Void> recommend(Long assessmentId, Boolean fundingConfirmation, String feedback, String comment) {
-        return assessmentRestService.recommend(assessmentId, new AssessmentFundingDecisionOutcomeResourceBuilder()
+        return assessmentRestService.recommend(assessmentId, new AssessmentDecisionOutcomeResourceBuilder()
                 .setFundingConfirmation(fundingConfirmation)
                 .setFeedback(feedback)
                 .setComment(comment)
-                .createAssessmentFundingDecisionResource()).toServiceResult();
+                .createAssessmentDecisionResource()).toServiceResult();
     }
 
     @Override

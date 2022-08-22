@@ -4,7 +4,7 @@ import com.newrelic.api.agent.Trace;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationMigration;
 import org.innovateuk.ifs.application.domain.MigrationStatus;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.Decision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationMigrationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -114,13 +114,13 @@ public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService impl
                     .andOnSuccess(() -> ktpProjectNotificationService.sendProjectSetupNotification(application.getId()));
         } else {
             return projectService.createProjectFromApplication(application.getId())
-                    .andOnSuccess(() -> applicationFundingService.notifyApplicantsOfFundingDecisions(
-                                    new FundingNotificationResource(emailBody, singleMap(application.getId(), FundingDecision.FUNDED))));
+                    .andOnSuccess(() -> applicationFundingService.notifyApplicantsOfDecisions(
+                                    new FundingNotificationResource(emailBody, singleMap(application.getId(), Decision.FUNDED))));
         }
     }
 
-    private Map<Long, FundingDecision> singleMap(long applicationId, FundingDecision decision) {
-        Map<Long, FundingDecision> map = new HashMap<>();
+    private Map<Long, Decision> singleMap(long applicationId, Decision decision) {
+        Map<Long, Decision> map = new HashMap<>();
         map.put(applicationId, decision);
         return map;
     }

@@ -61,11 +61,12 @@ public class YourProjectFinancesModelPopulator {
                 .map(subSection ->
                         new YourFinancesRowViewModel(sectionName(competition, application, organisation, subSection),
                                 applicationUrlHelper.getSectionUrl(subSection.getType(), subSection.getId(), applicationId, organisationId, application.getCompetition()).get(),
-                                completedSections.contains(subSection.getId()))
+                                completedSections.contains(subSection.getId()),
+                                subSection.isEnabledForPreRegistration())
                 ).collect(toList());
         return new YourProjectFinancesViewModel(applicationId, application.getName(), competition,
                 financeSummaryTableViewModelPopulator.populateSingleOrganisation(application, competition, organisation),
-                rows, competition.isThirdPartyOfgem());
+                rows, competition.isThirdPartyOfgem(), application.isEoiFullApplication());
     }
 
     private String sectionName(CompetitionResource competition, ApplicationResource application, OrganisationResource organisation, SectionResource subSection) {

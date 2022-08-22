@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.transactional.ApplicationSummaryService;
-import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.fundingdecision.domain.DecisionStatus;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -13,7 +13,7 @@ import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.FUNDED;
+import static org.innovateuk.ifs.fundingdecision.domain.DecisionStatus.FUNDED;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -125,7 +125,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
         long competitionId = 3L;
         int page = 6;
         String strFilter = "filter";
-        FundingDecisionStatus fundingFilter = FUNDED;
+        DecisionStatus fundingFilter = FUNDED;
 
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
@@ -182,7 +182,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
         long competitionId = 3L;
         int page = 6;
         String strFilter = "filter";
-        FundingDecisionStatus fundingFilter = FUNDED;
+        DecisionStatus fundingFilter = FUNDED;
         Boolean sendFilter = true;
 
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
@@ -237,31 +237,31 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void searchWithFundingDecisionByCompetitionId() throws Exception {
+    public void searchWithDecisionByCompetitionId() throws Exception {
         long competitionId = 3L;
         int page = 6;
 
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
-        when(applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, empty(), empty(), empty())).thenReturn(serviceSuccess(resource));
+        when(applicationSummaryService.getWithDecisionApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, empty(), empty(), empty(), empty())).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(get("/application-summary/find-by-competition/{compId}/with-funding-decision",competitionId)
                 .param("page",Integer.toString(page)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(resource)));
 
-        verify(applicationSummaryService).getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, empty(), empty(), empty());
+        verify(applicationSummaryService).getWithDecisionApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, empty(), empty(), empty(), empty());
     }
 
     @Test
-    public void searchWithFundingDecisionByCompetitionIdWithSortField() throws Exception {
+    public void searchWithDecisionByCompetitionIdWithSortField() throws Exception {
         long competitionId = 3L;
         int page = 6;
         String sort = "id";
 
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
-        when(applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, sort, page, PAGE_SIZE, empty(), empty(), empty())).thenReturn(serviceSuccess(resource));
+        when(applicationSummaryService.getWithDecisionApplicationSummariesByCompetitionId(competitionId, sort, page, PAGE_SIZE, empty(), empty(), empty(), empty())).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(get("/application-summary/find-by-competition/{compId}/with-funding-decision",competitionId)
                 .param("page",Integer.toString(page))
@@ -269,59 +269,63 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(resource)));
 
-        verify(applicationSummaryService).getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, sort, page, PAGE_SIZE, empty(), empty(), empty());
+        verify(applicationSummaryService).getWithDecisionApplicationSummariesByCompetitionId(competitionId, sort, page, PAGE_SIZE, empty(), empty(), empty(), empty());
     }
 
     @Test
-    public void searchWithFundingDecisionByCompetitionIdWithFiltering() throws Exception {
+    public void searchWithDecisionByCompetitionIdWithFiltering() throws Exception {
         long competitionId = 3L;
         int page = 6;
         String strFilter = "filter";
-        FundingDecisionStatus fundingFilter = FUNDED;
+        DecisionStatus fundingFilter = FUNDED;
         boolean sendFilter = true;
+        boolean eoiFilter = false;
 
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
-        when(applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, of(strFilter), of(sendFilter), of(fundingFilter))).thenReturn(serviceSuccess(resource));
+        when(applicationSummaryService.getWithDecisionApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, of(strFilter), of(sendFilter), of(fundingFilter), of(eoiFilter))).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(get("/application-summary/find-by-competition/{compId}/with-funding-decision",competitionId)
                 .param("page",Integer.toString(page))
                 .param("filter", strFilter)
                 .param("sendFilter", Boolean.toString(sendFilter))
-                .param("fundingFilter", fundingFilter.toString()))
+                .param("fundingFilter", fundingFilter.toString())
+                .param("eoiFilter", Boolean.toString(eoiFilter)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(resource)));
 
-        verify(applicationSummaryService).getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, of(strFilter), of(sendFilter), of(fundingFilter));
+        verify(applicationSummaryService).getWithDecisionApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, of(strFilter), of(sendFilter), of(fundingFilter), of(eoiFilter));
     }
 
     @Test
-    public void searchAllWithChangeAbleFundingDecisionByCompetitionIdWithFiltering() throws Exception {
+    public void searchAllWithChangeAbleDecisionByCompetitionIdWithFiltering() throws Exception {
         long competitionId = 3L;
         String strFilter = "filter";
-        FundingDecisionStatus fundingFilter = FUNDED;
+        DecisionStatus fundingFilter = FUNDED;
         boolean sendFilter = true;
+        boolean eoiFilter = false;
 
         List<Long> applicationIds = asList(1L, 2L);
 
-        when(applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(competitionId, of(strFilter), of(sendFilter), of(fundingFilter))).thenReturn(serviceSuccess(applicationIds));
+        when(applicationSummaryService.getWithDecisionIsChangeableApplicationIdsByCompetitionId(competitionId, of(strFilter), of(sendFilter), of(fundingFilter), of(eoiFilter))).thenReturn(serviceSuccess(applicationIds));
 
         mockMvc.perform(get("/application-summary/find-by-competition/{compId}/with-funding-decision",competitionId)
                 .param("all", "")
                 .param("filter", strFilter)
                 .param("sendFilter", Boolean.toString(sendFilter))
-                .param("fundingFilter", fundingFilter.toString()))
+                .param("fundingFilter", fundingFilter.toString())
+                .param("eoiFilter", Boolean.toString(eoiFilter)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(applicationIds)));
 
-        verify(applicationSummaryService).getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(competitionId, of(strFilter), of(sendFilter), of(fundingFilter));
+        verify(applicationSummaryService).getWithDecisionIsChangeableApplicationIdsByCompetitionId(competitionId, of(strFilter), of(sendFilter), of(fundingFilter), of(eoiFilter));
     }
 
     @Test
     public void searchAllSubmittedApplicationIdsByCompetitionId() throws Exception {
         long competitionId = 3L;
         String strFilter = "filter";
-        FundingDecisionStatus fundingFilter = FUNDED;
+        DecisionStatus fundingFilter = FUNDED;
 
         List<Long> applicationIds = asList(1L, 2L);
 
@@ -341,7 +345,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
     public void searchAllSubmittedEoiApplicationIdsByCompetitionId() throws Exception {
         long competitionId = 3L;
         String strFilter = "filter";
-        FundingDecisionStatus fundingFilter = FUNDED;
+        DecisionStatus fundingFilter = FUNDED;
         Boolean sendFilter = true;
 
         List<Long> applicationIds = asList(1L, 2L);
@@ -420,7 +424,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
     public void getAllAssessedApplicationIdsByAssessmentPeriodId() throws Exception {
         long competitionId = 3L;
         String strFilter = "filter";
-        FundingDecisionStatus fundingFilter = FUNDED;
+        DecisionStatus fundingFilter = FUNDED;
 
         List<Long> applicationIds = asList(1L, 2L);
 

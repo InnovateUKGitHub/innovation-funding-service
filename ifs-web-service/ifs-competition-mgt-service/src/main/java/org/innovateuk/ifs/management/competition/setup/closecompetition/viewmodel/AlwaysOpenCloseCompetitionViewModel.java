@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.management.competition.setup.closecompetition.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.Decision;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -58,7 +58,7 @@ public class AlwaysOpenCloseCompetitionViewModel {
     }
 
     public boolean competitionHasNoApplicationsOnHold() {
-        return submittedApplications.stream().noneMatch(application -> application.getFundingDecision().equals(FundingDecision.ON_HOLD));
+        return submittedApplications.stream().noneMatch(application -> application.getDecision().equals(Decision.ON_HOLD));
     }
 
     public boolean closeCompetitionButtonEnabled() {

@@ -9,7 +9,7 @@ import org.innovateuk.ifs.application.repository.ApplicationExpressionOfInterest
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.fundingdecision.domain.DecisionStatus;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -63,19 +63,21 @@ public class ApplicationDashboardServiceIntegrationTest extends BaseAuthenticati
         loginSteveSmith();
         Long userId = getSteveSmith().getId();
 
-
-
-
         Application application = applicationRepository.findById(4L).get();
-        application.setManageFundingEmailDate(ZonedDateTime.now());
-        application.setFundingDecision(FundingDecisionStatus.UNFUNDED);
-        application.setCompetition(newCompetition().withAlwaysOpen(false).build());
+        application.setManageDecisionEmailDate(ZonedDateTime.now());
+        application.setDecision(DecisionStatus.EOI_REJECTED);
+        application.setCompetition(newCompetition()
+                .withAlwaysOpen(false)
+                .build());
 
         ApplicationExpressionOfInterestConfig applicationExpressionOfInterestConfig =
                 ApplicationExpressionOfInterestConfig.builder().
-                        application(application).enabledForExpressionOfInterest(true).build();
+                        application(application)
+                        .enabledForExpressionOfInterest(true)
+                        .build();
         application.setApplicationExpressionOfInterestConfig(applicationExpressionOfInterestConfig);
         applicationExpressionOfInterestConfigRepository.save(applicationExpressionOfInterestConfig);
+
         applicationRepository.save(application);
 
         List<Application> collect = applicationRepository.findApplicationsForDashboard(userId).stream()

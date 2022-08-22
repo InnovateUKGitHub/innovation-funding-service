@@ -516,7 +516,7 @@ public class AssessorProfileDeclarationEditControllerTest extends BaseController
         assertTrue(bindingResult.hasFieldErrors("appointments"));
         assertEquals("Please enter your appointments, directorships or consultancies.", bindingResult.getFieldError("appointments").getDefaultMessage());
 
-        verifyZeroInteractions(userService);
+        verifyNoInteractions(userService);
     }
 
     @Test
@@ -572,7 +572,7 @@ public class AssessorProfileDeclarationEditControllerTest extends BaseController
         assertTrue(bindingResult.hasFieldErrors("appointments[0].position"));
         assertEquals("Please enter a position.", bindingResult.getFieldError("appointments[0].position").getDefaultMessage());
 
-        verifyZeroInteractions(userService);
+        verifyNoInteractions(userService);
     }
 
     @Test
@@ -706,7 +706,7 @@ public class AssessorProfileDeclarationEditControllerTest extends BaseController
         assertTrue(bindingResult.hasFieldErrors("financialInterests"));
         assertEquals("Please enter your financial interests.", bindingResult.getFieldError("financialInterests").getDefaultMessage());
 
-        verifyZeroInteractions(userService);
+        verifyNoInteractions(userService);
     }
 
     @Test
@@ -765,7 +765,7 @@ public class AssessorProfileDeclarationEditControllerTest extends BaseController
         assertTrue(bindingResult.hasFieldErrors("familyAffiliations"));
         assertEquals("Please enter the appointments, directorships or consultancies of your close family members.", bindingResult.getFieldError("familyAffiliations").getDefaultMessage());
 
-        verifyZeroInteractions(userService);
+        verifyNoInteractions(userService);
     }
 
     @Test
@@ -824,7 +824,7 @@ public class AssessorProfileDeclarationEditControllerTest extends BaseController
         assertTrue(bindingResult.hasFieldErrors("familyAffiliations[0].position"));
         assertEquals("Please enter a position.", bindingResult.getFieldError("familyAffiliations[0].position").getDefaultMessage());
 
-        verifyZeroInteractions(userService);
+        verifyNoInteractions(userService);
     }
 
     @Test
@@ -958,7 +958,7 @@ public class AssessorProfileDeclarationEditControllerTest extends BaseController
         assertTrue(bindingResult.hasFieldErrors("familyFinancialInterests"));
         assertEquals("Please enter your family''s financial interests.", bindingResult.getFieldError("familyFinancialInterests").getDefaultMessage());
 
-        verifyZeroInteractions(userService);
+        verifyNoInteractions(userService);
     }
 
     @Test
@@ -1004,7 +1004,7 @@ public class AssessorProfileDeclarationEditControllerTest extends BaseController
         assertTrue(bindingResult.hasFieldErrors("accurateAccount"));
         assertEquals("You must agree that your account is accurate.", bindingResult.getFieldError("accurateAccount").getDefaultMessage());
 
-        verifyZeroInteractions(userService);
+        verifyNoInteractions(userService);
     }
 
     @Test
@@ -1056,7 +1056,7 @@ public class AssessorProfileDeclarationEditControllerTest extends BaseController
         assertTrue(form.getHasFamilyFinancialInterests());
         assertEquals(familyFinancialInterests, form.getFamilyFinancialInterests());
 
-        verifyZeroInteractions(userService);
+        verifyNoInteractions(userService);
     }
 
     @Test
@@ -1109,7 +1109,7 @@ public class AssessorProfileDeclarationEditControllerTest extends BaseController
         assertTrue(form.getHasFamilyFinancialInterests());
         assertEquals(familyFinancialInterests, form.getFamilyFinancialInterests());
 
-        verifyZeroInteractions(userService);
+        verifyNoInteractions(userService);
     }
 
     @Test
@@ -1162,7 +1162,7 @@ public class AssessorProfileDeclarationEditControllerTest extends BaseController
         assertTrue(form.getHasFamilyFinancialInterests());
         assertEquals(familyFinancialInterests, form.getFamilyFinancialInterests());
 
-        verifyZeroInteractions(userService);
+        verifyNoInteractions(userService);
     }
 
     @Test
@@ -1215,6 +1215,6 @@ public class AssessorProfileDeclarationEditControllerTest extends BaseController
         assertTrue(form.getHasFamilyFinancialInterests());
         assertEquals(familyFinancialInterests, form.getFamilyFinancialInterests());
 
-        verifyZeroInteractions(userService);
+        verifyNoInteractions(userService);
     }
 }

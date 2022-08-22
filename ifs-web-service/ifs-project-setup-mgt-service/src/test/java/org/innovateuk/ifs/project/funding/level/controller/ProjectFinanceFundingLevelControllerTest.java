@@ -182,7 +182,7 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
                 .andExpect(model().attributeHasFieldErrorCode("form", format("partners[%d].fundingLevel", industrialOrganisation),"validation.finance.grant.claim.percentage.max"))
                 .andReturn();
 
-        verifyZeroInteractions(financeRowRestService);
+        verifyNoInteractions(financeRowRestService);
     }
 
     @Test

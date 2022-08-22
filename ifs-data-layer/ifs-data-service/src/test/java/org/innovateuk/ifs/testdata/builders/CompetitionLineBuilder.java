@@ -50,6 +50,8 @@ public final class CompetitionLineBuilder {
     private String termsAndConditionsTemplate;
     private boolean assessmentStage;
     private boolean preRegistration;
+    private boolean imSurveyEnabled;
+    private boolean eoiEvidenceRequired;
     private BuilderOrder builderOrder = BuilderOrder.ANYWHERE;
 
     private CompetitionLineBuilder() {
@@ -269,6 +271,16 @@ public final class CompetitionLineBuilder {
         return this;
     }
 
+    public CompetitionLineBuilder withImSurveyEnabled(boolean imSurveyEnabled) {
+        this.imSurveyEnabled = imSurveyEnabled;
+        return this;
+    }
+
+    public CompetitionLineBuilder withEoiEvidenceRequired(boolean eoiEvidenceRequired) {
+        this.eoiEvidenceRequired = eoiEvidenceRequired;
+        return this;
+    }
+
     public CompetitionLine build() {
         CompetitionLine competitionLine = new CompetitionLine();
         competitionLine.setId(id);
@@ -312,6 +324,8 @@ public final class CompetitionLineBuilder {
         competitionLine.setTermsAndConditionsTemplate(termsAndConditionsTemplate);
         competitionLine.setAssessmentStage(assessmentStage);
         competitionLine.setPreRegistration(preRegistration);
+        competitionLine.setImSurveyEnabled(imSurveyEnabled);
+        competitionLine.setEoiEvidenceRequired(eoiEvidenceRequired);
 
         return competitionLine;
     }

@@ -44,7 +44,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
     webEnvironment =  SpringBootTest.WebEnvironment.DEFINED_PORT,
     properties = "FILE_STORAGE_SERVICE_SERVICE_PORT=8888")
 @EnableScheduling
-@ActiveProfiles({IfsProfileConstants.TEST, IfsProfileConstants.STUB_AV_SCAN, IfsProfileConstants.LOCAL_STORAGE})
+@ActiveProfiles({IfsProfileConstants.TEST, IfsProfileConstants.DISABLE_AMQP, IfsProfileConstants.STUB_AV_SCAN, IfsProfileConstants.LOCAL_STORAGE})
 @EnableFeignClients(basePackageClasses = {FileDownloadFeign.class, FileUploadFeign.class})
 @EnableJpaRepositories(repositoryBaseClass = FileStorageRecord.class)
 @Execution(ExecutionMode.CONCURRENT)

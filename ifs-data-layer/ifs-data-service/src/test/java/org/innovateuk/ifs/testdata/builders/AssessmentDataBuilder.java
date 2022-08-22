@@ -99,13 +99,13 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
                     return;
                 }
 
-                AssessmentFundingDecisionOutcomeResource fundingDecision = new AssessmentFundingDecisionOutcomeResource(
+                AssessmentDecisionOutcomeResource decision = new AssessmentDecisionOutcomeResource(
                         true,
                         feedback,
                         recommendComment
                 );
 
-                assessmentService.recommend(assessmentResource.getId(), fundingDecision).getSuccess();
+                assessmentService.recommend(assessmentResource.getId(), decision).getSuccess();
             });
         });
     }

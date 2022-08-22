@@ -19,7 +19,7 @@ public class GuidanceRow {
 
     private String subject;
 
-    @Column(length=5000)
+    @Column(length=5000, columnDefinition = "LONGTEXT")
     private String justification;
 
     @NotNull

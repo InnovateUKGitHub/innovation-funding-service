@@ -9,8 +9,8 @@ targetCompatibility = JavaVersion.VERSION_11
 
 dependencies {
     // version must match here and in common module
-    annotationProcessor "org.projectlombok:lombok:1.18.22"
-    testAnnotationProcessor  "org.projectlombok:lombok:1.18.22"
+    annotationProcessor "org.projectlombok:lombok:1.18.24"
+    testAnnotationProcessor  "org.projectlombok:lombok:1.18.24"
 }
 
 tasks.withType(JavaCompile) {

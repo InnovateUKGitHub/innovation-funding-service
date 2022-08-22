@@ -161,7 +161,7 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
 
         assertFalse(result.isPresent());
 
-        verifyZeroInteractions(organisationPatternMatcher);
+        verifyNoInteractions(organisationPatternMatcher);
     }
 
     @Test

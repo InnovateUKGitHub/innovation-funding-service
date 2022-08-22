@@ -26,7 +26,8 @@ import org.mapstruct.Mappings;
                 InnovationAreaMapper.class,
                 IneligibleOutcomeMapper.class,
                 AssessmentPeriodMapper.class,
-                ApplicationExpressionOfInterestConfigMapper.class
+                ApplicationExpressionOfInterestConfigMapper.class,
+                ApplicationEoiEvidenceResponseMapper.class
         }
 )
 public abstract class ApplicationMapper extends BaseMapper<Application, ApplicationResource, Long> {
@@ -49,25 +50,27 @@ public abstract class ApplicationMapper extends BaseMapper<Application, Applicat
             @Mapping(source = "applicationProcess.lastModified", target = "lastStateChangeDate"),
             @Mapping(source = "assessmentPeriod.id", target = "assessmentPeriodId"),
             @Mapping(target = "stateAidAgreed", ignore = true),
-            @Mapping(source = "applicationExpressionOfInterestConfig", target = "applicationExpressionOfInterestConfigResource")
+            @Mapping(source = "applicationExpressionOfInterestConfig", target = "applicationExpressionOfInterestConfigResource"),
+            @Mapping(source = "applicationEoiEvidenceResponse", target = "applicationEoiEvidenceResponseResource"),
     })
     @Override
     public abstract ApplicationResource mapToResource(Application domain);
 
     @Mappings({
-            @Mapping(target = "fundingDecision", ignore = true),
+            @Mapping(target = "decision", ignore = true),
             @Mapping(target = "formInputResponses", ignore = true),
             @Mapping(target = "invites", ignore = true),
             @Mapping(target = "applicationFinances", ignore = true),
             @Mapping(target = "processRoles", ignore = true),
-            @Mapping(target = "manageFundingEmailDate", ignore = true),
+            @Mapping(target = "manageDecisionEmailDate", ignore = true),
             @Mapping(target = "project", ignore = true),
             @Mapping(target = "assessmentPeriod", ignore = true),
             @Mapping(target = "previousApplicationId", ignore = true),
             @Mapping(target = "projectToBeCreated", ignore = true),
             @Mapping(target = "applicantProcessRoles", ignore = true),
             @Mapping(target = "applicationExternalConfig", ignore = true),
-            @Mapping(source = "applicationExpressionOfInterestConfigResource", target = "applicationExpressionOfInterestConfig")
+            @Mapping(source = "applicationExpressionOfInterestConfigResource", target = "applicationExpressionOfInterestConfig"),
+            @Mapping(source = "applicationEoiEvidenceResponseResource", target = "applicationEoiEvidenceResponse")
     })
     @Override
     public abstract Application mapToDomain(ApplicationResource resource);

@@ -11,7 +11,7 @@ import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
-import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.fundingdecision.domain.DecisionStatus;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 
@@ -92,16 +92,16 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
         return withArray((applicationFinancesList, application) -> application.setApplicationFinances(applicationFinancesList), applicationFinancesLists);
     }
 
-    public ApplicationBuilder withFundingDecision(FundingDecisionStatus... fundingDecisionStatus) {
-        return withArray((fundingDecision, application) -> application.setFundingDecision(fundingDecision), fundingDecisionStatus);
+    public ApplicationBuilder withDecision(DecisionStatus... decisionStatus) {
+        return withArray((decision, application) -> application.setDecision(decision), decisionStatus);
     }
 
     public ApplicationBuilder withDurationInMonths(Long... durationInMonths) {
         return withArray((duration, application) -> application.setDurationInMonths(duration), durationInMonths);
     }
 
-    public ApplicationBuilder withManageFundingEmailDate(ZonedDateTime... manageFundingEmailDates) {
-        return withArray((fundingEmailDate, application) -> application.setManageFundingEmailDate(fundingEmailDate), manageFundingEmailDates);
+    public ApplicationBuilder withManageDecisionEmailDate(ZonedDateTime... manageDecisionEmailDates) {
+        return withArray((fundingEmailDate, application) -> application.setManageDecisionEmailDate(fundingEmailDate), manageDecisionEmailDates);
     }
 
     public ApplicationBuilder withAssessmentReviewPanelStatus(Boolean... inAssessmentReviewPanel) {

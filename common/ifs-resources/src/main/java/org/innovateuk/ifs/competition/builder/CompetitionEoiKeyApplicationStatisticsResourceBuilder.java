@@ -29,7 +29,7 @@ public class CompetitionEoiKeyApplicationStatisticsResourceBuilder extends
         super(newMultiActions);
     }
 
-    public CompetitionEoiKeyApplicationStatisticsResourceBuilder withApplicationsSubmitted(Integer... applicationsSubmitted) {
-        return withArraySetFieldByReflection("applicationsSubmitted", applicationsSubmitted);
+    public CompetitionEoiKeyApplicationStatisticsResourceBuilder withEOISubmitted(Integer... EOISubmitted) {
+        return withArraySetFieldByReflection("EOISubmitted", EOISubmitted);
     }
 }

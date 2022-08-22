@@ -62,7 +62,7 @@ public class AgreementServiceImplTest extends BaseServiceUnitTest<AgreementServi
         assertTrue(result.getFailure().is(notFoundError(Agreement.class)));
 
         verify(agreementRepositoryMock, only()).findByCurrentTrue();
-        verifyZeroInteractions(agreementMapperMock);
+        verifyNoInteractions(agreementMapperMock);
     }
 
 }

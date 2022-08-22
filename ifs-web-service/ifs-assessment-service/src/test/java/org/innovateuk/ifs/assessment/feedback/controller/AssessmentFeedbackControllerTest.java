@@ -442,7 +442,7 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
         inOrder.verify(sectionService).getById(nextQuestionResource.getSection());
         inOrder.verifyNoMoreInteractions();
 
-        verifyZeroInteractions(formInputResponseService, assessorFormInputResponseRestService);
+        verifyNoInteractions(formInputResponseService, assessorFormInputResponseRestService);
     }
 
     @Test
@@ -514,7 +514,7 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
         inOrder.verify(sectionService).getById(nextQuestionResource.getSection());
         inOrder.verifyNoMoreInteractions();
 
-        verifyZeroInteractions(formInputResponseService, assessorFormInputResponseRestService);
+        verifyNoInteractions(formInputResponseService, assessorFormInputResponseRestService);
     }
 
     @Test

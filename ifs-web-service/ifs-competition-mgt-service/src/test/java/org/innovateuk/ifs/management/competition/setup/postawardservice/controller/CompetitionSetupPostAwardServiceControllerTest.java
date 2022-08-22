@@ -114,6 +114,6 @@ public class CompetitionSetupPostAwardServiceControllerTest extends BaseControll
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(model().attribute("form", expectedForm));
 
-        verifyZeroInteractions(competitionSetupPostAwardServiceRestService);
+        verifyNoInteractions(competitionSetupPostAwardServiceRestService);
     }
 }

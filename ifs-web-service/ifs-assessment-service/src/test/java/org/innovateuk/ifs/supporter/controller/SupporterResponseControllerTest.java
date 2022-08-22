@@ -106,7 +106,7 @@ public class SupporterResponseControllerTest extends BaseControllerMockMVCTest<S
         assertThat(form.getComments(), equalTo(previous.getComments()));
         assertThat(form.getDecision(), equalTo(true));
         assertThat(form.getAssignmentId(), equalTo(previous.getAssignmentId()));
-        verifyZeroInteractions(supporterAssignmentRestService);
+        verifyNoInteractions(supporterAssignmentRestService);
 
         verify(supporterCookieService, times(1)).getSupporterPreviousResponseCookie(any(HttpServletRequest.class));
         verify(supporterCookieService, times(1)).removeSupporterPreviousResponseCookie(any(HttpServletResponse.class));
@@ -266,6 +266,6 @@ public class SupporterResponseControllerTest extends BaseControllerMockMVCTest<S
                 .andExpect(model().attributeHasFieldErrorCode("form", "comments", "NotBlank"))
                 .andExpect(view().name("supporter/response"));
 
-        verifyZeroInteractions(supporterAssignmentRestService);
+        verifyNoInteractions(supporterAssignmentRestService);
     }
 }

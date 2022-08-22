@@ -172,7 +172,7 @@ public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<
                 () -> classUnderTest.acceptInvite("hash"),
                 () -> {
                     verify(interviewParticipantLookupStrategy, only()).getInterviewParticipantResource("hash");
-                    verifyZeroInteractions(interviewParticipantPermissionRules);
+                    verifyNoInteractions(interviewParticipantPermissionRules);
                 }
         );
     }
@@ -213,7 +213,7 @@ public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<
                 () -> {
                     verify(interviewParticipantLookupStrategy, only()).getInterviewParticipantResource("hash not " +
                             "exists");
-                    verifyZeroInteractions(interviewParticipantPermissionRules);
+                    verifyNoInteractions(interviewParticipantPermissionRules);
                 }
         );
     }

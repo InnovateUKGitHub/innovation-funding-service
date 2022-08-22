@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.builder;
 
 import org.innovateuk.ifs.assessment.domain.Assessment;
-import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
+import org.innovateuk.ifs.assessment.domain.AssessmentDecisionOutcome;
 import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -13,7 +13,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
-import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeBuilder.newAssessmentFundingDecisionOutcome;
+import static org.innovateuk.ifs.assessment.builder.AssessmentDecisionOutcomeBuilder.newAssessmentDecisionOutcome;
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeBuilder.newAssessmentRejectOutcome;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.OPEN;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.READY_TO_SUBMIT;
@@ -30,7 +30,7 @@ public class AssessmentBuilderTest {
         LocalDate expectedStartDate = LocalDate.now().minusDays(2);
         LocalDate expectedEndDate = LocalDate.now().minusDays(1);
         ProcessRole expectedProcessRole = newProcessRole().build();
-        AssessmentFundingDecisionOutcome expectedFundingDecision = newAssessmentFundingDecisionOutcome().build();
+        AssessmentDecisionOutcome expectedDecision = newAssessmentDecisionOutcome().build();
         AssessmentRejectOutcome expectedRejection = newAssessmentRejectOutcome().build();
 
         Assessment assessment = newAssessment()
@@ -40,7 +40,7 @@ public class AssessmentBuilderTest {
                 .withStartDate(expectedStartDate)
                 .withEndDate(expectedEndDate)
                 .withParticipant(expectedProcessRole)
-                .withFundingDecision(expectedFundingDecision)
+                .withDecision(expectedDecision)
                 .withRejection(expectedRejection)
                 .build();
 
@@ -50,7 +50,7 @@ public class AssessmentBuilderTest {
         assertEquals(expectedStartDate, assessment.getStartDate());
         assertEquals(expectedEndDate, assessment.getEndDate());
         assertEquals(expectedProcessRole, assessment.getParticipant());
-        assertEquals(expectedFundingDecision, assessment.getFundingDecision());
+        assertEquals(expectedDecision, assessment.getDecision());
         assertEquals(expectedRejection, assessment.getRejection());
     }
 
@@ -62,8 +62,8 @@ public class AssessmentBuilderTest {
         LocalDate[] expectedStartDates = {LocalDate.now().minusDays(2), LocalDate.now().minusDays(3)};
         LocalDate[] expectedEndDates = {LocalDate.now().minusDays(1), LocalDate.now().minusDays(2)};
         ProcessRole[] expectedProcessRoles = newProcessRole().buildArray(2, ProcessRole.class);
-        AssessmentFundingDecisionOutcome[] expectedFundingDecision = newAssessmentFundingDecisionOutcome()
-                .buildArray(2, AssessmentFundingDecisionOutcome.class);
+        AssessmentDecisionOutcome[] expectedDecision = newAssessmentDecisionOutcome()
+                .buildArray(2, AssessmentDecisionOutcome.class);
         AssessmentRejectOutcome[] expectedRejection = newAssessmentRejectOutcome()
                 .buildArray(2, AssessmentRejectOutcome.class);
 
@@ -74,7 +74,7 @@ public class AssessmentBuilderTest {
                 .withStartDate(expectedStartDates)
                 .withEndDate(expectedEndDates)
                 .withParticipant(expectedProcessRoles)
-                .withFundingDecision(expectedFundingDecision)
+                .withDecision(expectedDecision)
                 .withRejection(expectedRejection)
                 .build(2);
 
@@ -85,7 +85,7 @@ public class AssessmentBuilderTest {
         assertEquals(expectedStartDates[0], first.getStartDate());
         assertEquals(expectedEndDates[0], first.getEndDate());
         assertEquals(expectedProcessRoles[0], first.getParticipant());
-        assertEquals(expectedFundingDecision[0], first.getFundingDecision());
+        assertEquals(expectedDecision[0], first.getDecision());
         assertEquals(expectedRejection[0], first.getRejection());
 
         Assessment second = assessments.get(1);
@@ -95,7 +95,7 @@ public class AssessmentBuilderTest {
         assertEquals(expectedStartDates[1], second.getStartDate());
         assertEquals(expectedEndDates[1], second.getEndDate());
         assertEquals(expectedProcessRoles[1], second.getParticipant());
-        assertEquals(expectedFundingDecision[1], second.getFundingDecision());
+        assertEquals(expectedDecision[1], second.getDecision());
         assertEquals(expectedRejection[1], second.getRejection());
     }
 

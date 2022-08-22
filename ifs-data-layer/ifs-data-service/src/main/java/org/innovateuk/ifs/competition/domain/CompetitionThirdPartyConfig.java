@@ -15,7 +15,7 @@ public class CompetitionThirdPartyConfig {
 
     private String termsAndConditionsLabel;
 
-    @Column(length = 5000)
+    @Column(length = 5000, columnDefinition = "LONGTEXT")
     private String termsAndConditionsGuidance;
 
     private String projectCostGuidanceUrl;

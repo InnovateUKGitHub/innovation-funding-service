@@ -52,10 +52,12 @@ public class FinanceReadOnlyViewModelPopulator extends AsyncAdaptor {
         Future<ApplicationResearchParticipationViewModel> applicationResearchParticipationViewModel = async(() -> applicationResearchParticipationViewModelPopulator.populate(application.getId()));
         Future<ApplicationFundingBreakdownViewModel> applicationFundingBreakdownViewModel = async(() -> applicationFundingBreakdownViewModelPopulator.populate(application.getId(), data.getUser()));
 
+        SectionResource sectionResource = resolve(financeSection);
+
         return new FinanceReadOnlyViewModel(
                 application.getId(),
                 competition.isFullyFunded(),
-                resolve(financeSection).getId(),
+                sectionResource.getId(),
                 resolve(applicationProcurementMilestonesSummaryViewModel),
                 resolve(applicationFinanceSummaryViewModel),
                 resolve(applicationResearchParticipationViewModel),
@@ -63,6 +65,7 @@ public class FinanceReadOnlyViewModelPopulator extends AsyncAdaptor {
                 application.isCollaborativeProject(),
                 competition.isKtp(),
                 competition.isProcurementMilestones(),
-                competition.isHorizonEuropeGuarantee());
+                competition.isHorizonEuropeGuarantee(),
+                sectionResource.isEnabledForPreRegistration());
     }
 }

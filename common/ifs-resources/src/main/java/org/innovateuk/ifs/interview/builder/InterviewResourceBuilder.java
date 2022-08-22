@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.interview.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionOutcomeResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentDecisionOutcomeResource;
 import org.innovateuk.ifs.interview.resource.InterviewResource;
 import org.innovateuk.ifs.interview.resource.InterviewState;
 
@@ -44,8 +44,8 @@ public class InterviewResourceBuilder extends BaseBuilder<InterviewResource, Int
         return withArraySetFieldByReflection("endDate", value);
     }
 
-    public InterviewResourceBuilder withFundingDecision(AssessmentFundingDecisionOutcomeResource... value) {
-        return withArraySetFieldByReflection("fundingDecision", value);
+    public InterviewResourceBuilder withDecision(AssessmentDecisionOutcomeResource... value) {
+        return withArraySetFieldByReflection("decision", value);
     }
 
     public InterviewResourceBuilder withProcessRole(Long... value) {

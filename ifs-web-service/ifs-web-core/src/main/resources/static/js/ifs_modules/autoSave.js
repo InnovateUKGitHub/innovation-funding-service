@@ -99,10 +99,10 @@ IFS.core.autoSave = (function () {
             }
           }
           break
-        case 'fundingDecision':
+        case 'decision':
           jsonObj = {
             applicationId: field.prop('name'),
-            fundingDecision: field.val()
+            decision: field.val()
           }
           break
         case 'compSetup':
@@ -160,7 +160,7 @@ IFS.core.autoSave = (function () {
           competitionId = jQuery('#competition_id').val()
           url = '/application/' + applicationId + '/form/' + competitionId + '/saveFormElement'
           break
-        case 'fundingDecision':
+        case 'decision':
           competitionId = field.attr('data-competition')
           url = '/management/funding/' + competitionId
           break

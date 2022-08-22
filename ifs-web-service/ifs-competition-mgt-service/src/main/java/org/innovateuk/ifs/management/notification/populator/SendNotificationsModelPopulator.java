@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.management.notification.populator;
 
-import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.application.resource.FundingDecisionToSendApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationFundingDecisionRestService;
+import org.innovateuk.ifs.application.resource.Decision;
+import org.innovateuk.ifs.application.resource.ApplicationDecisionToSendApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationDecisionRestService;
 import org.innovateuk.ifs.application.service.ApplicationNotificationTemplateRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -28,18 +28,18 @@ public class SendNotificationsModelPopulator {
     private CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
 
     @Autowired
-    private ApplicationFundingDecisionRestService applicationFundingDecisionRestService;
+    private ApplicationDecisionRestService applicationDecisionRestService;
 
 
     public SendNotificationsViewModel populate(long competitionId, List<Long> applicationIds, NotificationEmailsForm form) {
-        List<FundingDecisionToSendApplicationResource> filteredApplications = applicationFundingDecisionRestService.getNotificationResourceForApplications(applicationIds).getSuccess();
+        List<ApplicationDecisionToSendApplicationResource> filteredApplications = applicationDecisionRestService.getNotificationResourceForApplications(applicationIds).getSuccess();
 
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
         CompetitionAssessmentConfigResource competitionAssessmentConfigResource = competitionAssessmentConfigRestService.findOneByCompetitionId(competitionId).getSuccess();
 
-        long successfulCount = getApplicationCountByFundingDecision(filteredApplications, FundingDecision.FUNDED);
-        long unsuccessfulCount = getApplicationCountByFundingDecision(filteredApplications, FundingDecision.UNFUNDED);
-        long onHoldCount = getApplicationCountByFundingDecision(filteredApplications, FundingDecision.ON_HOLD);
+        long successfulCount = getApplicationCountByDecision(filteredApplications, Decision.FUNDED);
+        long unsuccessfulCount = getApplicationCountByDecision(filteredApplications, Decision.UNFUNDED);
+        long onHoldCount = getApplicationCountByDecision(filteredApplications, Decision.ON_HOLD);
 
         if (form.getMessage() == null) {
             tryToPrePopulateMessage(competitionResource, successfulCount, unsuccessfulCount, onHoldCount, form);
@@ -54,9 +54,9 @@ public class SendNotificationsModelPopulator {
                                               competitionResource.isHorizonEuropeGuarantee());
     }
 
-    private long getApplicationCountByFundingDecision(List<FundingDecisionToSendApplicationResource> filteredApplications, FundingDecision fundingDecision) {
+    private long getApplicationCountByDecision(List<ApplicationDecisionToSendApplicationResource> filteredApplications, Decision decision) {
         return filteredApplications.stream()
-                .filter(application -> application.getFundingDecision() == fundingDecision)
+                .filter(application -> application.getDecision() == decision)
                 .count();
     }
 

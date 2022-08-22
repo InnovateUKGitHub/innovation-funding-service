@@ -482,7 +482,7 @@ the project finance user post a payment milestone query
 the user should only see application related key statistics
     the user should not see the element     jQuery = small:contains("Assessors invited")
     the user should not see the element     jQuery = small:contains("Invitations accepted")
-    the user should not see the element     jQuery = small:contains("Applications per assessor")
+    the user should not see the element     jQuery = small:contains("Assessors per application")
     the user should see the element         jQuery = small:contains("Applications started")
     the user should see the element         jQuery = small:contains("Applications beyond 50%")
     the user should see the element         jQuery = small:contains("Applications submitted")

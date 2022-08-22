@@ -14,7 +14,7 @@ import org.junit.Test;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
-import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentDecisionOutcomeResourceBuilder.newAssessmentDecisionOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
@@ -157,15 +157,15 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     @Test
     public void recommend() {
         Long assessmentId = 1L;
-        AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource =
-                newAssessmentFundingDecisionOutcomeResource().build();
+        AssessmentDecisionOutcomeResource assessmentDecisionOutcomeResource =
+                newAssessmentDecisionOutcomeResource().build();
 
         when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource()
                 .withId(assessmentId)
                 .build());
 
         assertAccessDenied(
-                () -> classUnderTest.recommend(assessmentId, assessmentFundingDecisionOutcomeResource),
+                () -> classUnderTest.recommend(assessmentId, assessmentDecisionOutcomeResource),
                 () -> verify(assessmentPermissionRules)
                         .userCanUpdateAssessment(isA(AssessmentResource.class), isA(UserResource.class))
         );

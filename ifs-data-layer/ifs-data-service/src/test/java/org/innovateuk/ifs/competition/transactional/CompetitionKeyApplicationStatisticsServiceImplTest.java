@@ -14,7 +14,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyApplicationSt
 import org.innovateuk.ifs.competition.resource.CompetitionEoiKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyApplicationStatisticsResource;
-import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.fundingdecision.domain.DecisionStatus;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -132,13 +132,13 @@ public class CompetitionKeyApplicationStatisticsServiceImplTest extends
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(competition));
 
         when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATES)).thenReturn(3);
-        when(applicationRepositoryMock.countByCompetitionIdAndFundingDecision(competitionId, FundingDecisionStatus.FUNDED)).thenReturn(1);
-        when(applicationRepositoryMock.countByCompetitionIdAndFundingDecision(competitionId, FundingDecisionStatus.UNFUNDED)).thenReturn(1);
-        when(applicationRepositoryMock.countByCompetitionIdAndFundingDecision(competitionId, FundingDecisionStatus.ON_HOLD)).thenReturn(1);
+        when(applicationRepositoryMock.countByCompetitionIdAndDecision(competitionId, DecisionStatus.FUNDED)).thenReturn(1);
+        when(applicationRepositoryMock.countByCompetitionIdAndDecision(competitionId, DecisionStatus.UNFUNDED)).thenReturn(1);
+        when(applicationRepositoryMock.countByCompetitionIdAndDecision(competitionId, DecisionStatus.ON_HOLD)).thenReturn(1);
         when(applicationRepositoryMock
-                .countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNotNull(competitionId))
+                .countByDecidedAndSentApplications(competitionId))
                 .thenReturn(applicationsNotifiedOfDecision);
-        when(applicationRepositoryMock.countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNull
+        when(applicationRepositoryMock.countByDecidedAndAwaitSendApplications
                 (competitionId)).thenReturn(applicationsAwaitingDecision);
 
         CompetitionFundedKeyApplicationStatisticsResource response = service.getFundedKeyStatisticsByCompetition
@@ -160,6 +160,6 @@ public class CompetitionKeyApplicationStatisticsServiceImplTest extends
 
         CompetitionEoiKeyApplicationStatisticsResource response = service.getEoiKeyStatisticsByCompetition(competitionId).getSuccess();
 
-        assertEquals(3, response.getApplicationsSubmitted());
+        assertEquals(3, response.getEOISubmitted());
     }
 }

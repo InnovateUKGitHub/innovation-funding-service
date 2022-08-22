@@ -9,6 +9,7 @@ components:
   - ../../../patches/new-relic-env-vars-patch
   - ../../../patches/pull-secrets-patch
   - ../../../patches/spring-profile-patch
+  - ../../../patches/rabbitmq-config-secrets-patch
 
 patchesStrategicMerge:
   - data-layer/data-service/data-service-deployment.yml

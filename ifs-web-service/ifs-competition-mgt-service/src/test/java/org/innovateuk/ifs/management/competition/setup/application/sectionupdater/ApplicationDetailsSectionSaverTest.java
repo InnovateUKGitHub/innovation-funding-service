@@ -100,7 +100,7 @@ public class ApplicationDetailsSectionSaverTest {
                         error.getErrorKey().equals("validation.application.must.indicate.resubmission.or.not"))
                 .isNotEmpty();
 
-        verifyZeroInteractions(competitionSetupRestService);
+        verifyNoInteractions(competitionSetupRestService);
     }
 
     @Test
@@ -126,7 +126,7 @@ public class ApplicationDetailsSectionSaverTest {
                         error.getErrorKey().equals("competition.setup.applicationdetails.projectduration.min"))
                 .isNotEmpty();
 
-        verifyZeroInteractions(competitionSetupRestService);
+        verifyNoInteractions(competitionSetupRestService);
     }
 
     @Test
@@ -152,7 +152,7 @@ public class ApplicationDetailsSectionSaverTest {
                         error.getErrorKey().equals("competition.setup.applicationdetails.projectduration.min"))
                 .isNotEmpty();
 
-        verifyZeroInteractions(competitionSetupRestService);
+        verifyNoInteractions(competitionSetupRestService);
     }
 
     @Test
@@ -178,7 +178,7 @@ public class ApplicationDetailsSectionSaverTest {
                         error.getErrorKey().equals("validation.standard.integer.non.decimal.format"))
                 .isNotEmpty();
 
-        verifyZeroInteractions(competitionSetupRestService);
+        verifyNoInteractions(competitionSetupRestService);
     }
 
     @Test
@@ -225,7 +225,7 @@ public class ApplicationDetailsSectionSaverTest {
                         error.getErrorKey().equals("competition.setup.applicationdetails.max.projectduration.beneathmin"))
                 .isNotEmpty();
 
-        verifyZeroInteractions(competitionSetupRestService);
+        verifyNoInteractions(competitionSetupRestService);
     }
 
     @Test
@@ -251,6 +251,6 @@ public class ApplicationDetailsSectionSaverTest {
                         error.getErrorKey().equals("competition.setup.applicationdetails.projectduration.max"))
                 .isNotEmpty();
 
-        verifyZeroInteractions(competitionSetupRestService);
+        verifyNoInteractions(competitionSetupRestService);
     }
 }

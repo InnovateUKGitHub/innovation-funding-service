@@ -60,7 +60,7 @@ public class SupporterAssignmentBuilder extends BaseBuilder<SupporterAssignment,
         return withArray((state, object) -> object.setProcessState(state), activityState);
     }
 
-    public SupporterAssignmentBuilder withSupporterOutcome(SupporterOutcome... fundingDecision) {
-        return withArraySetFieldByReflection("supporterOutcome", fundingDecision);
+    public SupporterAssignmentBuilder withSupporterOutcome(SupporterOutcome... decision) {
+        return withArraySetFieldByReflection("supporterOutcome", decision);
     }
 }

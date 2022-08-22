@@ -30,9 +30,9 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
     }
 
     @Test
-    public void getWithFundingDecisionApplicationSummariesByCompetitionId() {
+    public void getWithDecisionApplicationSummariesByCompetitionId() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
-                () -> classUnderTest.getWithFundingDecisionApplicationSummariesByCompetitionId(1L, null, 0, 20, empty(), empty(), empty()),
+                () -> classUnderTest.getWithDecisionApplicationSummariesByCompetitionId(1L, null, 0, 20, empty(), empty(), empty(), empty()),
                 PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD, STAKEHOLDER, AUDITOR);
     }
 
@@ -51,9 +51,9 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
     }
 
     @Test
-    public void getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId() {
+    public void getWithDecisionIsChangeableApplicationIdsByCompetitionId() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
-                () -> classUnderTest.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(1L, empty(), empty(), empty()),
+                () -> classUnderTest.getWithDecisionIsChangeableApplicationIdsByCompetitionId(1L, empty(), empty(), empty(), empty()),
                 PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD, STAKEHOLDER, AUDITOR);
     }
 

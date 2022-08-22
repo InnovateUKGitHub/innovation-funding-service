@@ -11,7 +11,7 @@ import java.util.List;
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentFeedbackResourceBuilder.newApplicationAssessmentFeedbackResource;
-import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentDecisionOutcomeResourceBuilder.newAssessmentDecisionOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
@@ -107,10 +107,10 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     public void recommend() {
         long assessmentId = 1L;
 
-        AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource =
-                newAssessmentFundingDecisionOutcomeResource().build();
-        setupPutWithRestResultExpectations(format("%s/%s/recommend", assessmentRestURL, assessmentId), assessmentFundingDecisionOutcomeResource, OK);
-        RestResult<Void> response = service.recommend(assessmentId, assessmentFundingDecisionOutcomeResource);
+        AssessmentDecisionOutcomeResource assessmentDecisionOutcomeResource =
+                newAssessmentDecisionOutcomeResource().build();
+        setupPutWithRestResultExpectations(format("%s/%s/recommend", assessmentRestURL, assessmentId), assessmentDecisionOutcomeResource, OK);
+        RestResult<Void> response = service.recommend(assessmentId, assessmentDecisionOutcomeResource);
         assertTrue(response.isSuccess());
     }
 

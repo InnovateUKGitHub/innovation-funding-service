@@ -122,7 +122,11 @@ public class CompetitionInFlightStatsViewModel {
     }
 
     public CompetitionInFlightStatsViewModel(CompetitionEoiKeyApplicationStatisticsResource keyStatisticsResource) {
-        this.statOne = keyStatisticsResource.getApplicationsSubmitted();
+        this.statOne = keyStatisticsResource.getEOISubmitted();
+        this.statTwo = keyStatisticsResource.getEOISuccessful();
+        this.statThree = keyStatisticsResource.getEOIUnsuccessful();
+        this.statFour = keyStatisticsResource.getEOINotifiedOfDecision();
+        this.statFive = keyStatisticsResource.getEOIAwaitingDecision();
     }
 
     public CompetitionStatus getStatus() {

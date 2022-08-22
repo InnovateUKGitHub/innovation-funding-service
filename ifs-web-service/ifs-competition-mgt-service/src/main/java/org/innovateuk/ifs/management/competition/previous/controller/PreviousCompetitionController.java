@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.competition.previous.controller;
 
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.Decision;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -8,7 +8,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.internal.InternalProjectSetupRow;
 import org.innovateuk.ifs.internal.populator.InternalProjectSetupRowPopulator;
 import org.innovateuk.ifs.management.competition.previous.viewmodel.PreviousCompetitionViewModel;
-import org.innovateuk.ifs.management.decision.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.management.decision.service.ApplicationDecisionService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.service.StatusRestService;
@@ -41,7 +41,7 @@ public class PreviousCompetitionController {
     private CompetitionRestService competitionRestService;
 
     @Autowired
-    private ApplicationFundingDecisionService applicationFundingDecisionService;
+    private ApplicationDecisionService applicationDecisionService;
 
     @Autowired
     private ProjectRestService projectRestService;
@@ -78,7 +78,10 @@ public class PreviousCompetitionController {
     public String markApplicationAsSuccessful(
             @PathVariable("competitionId") long competitionId,
             @PathVariable("applicationId") long applicationId) {
-        applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, FundingDecision.FUNDED, singletonList(applicationId)).getSuccess();
+        applicationDecisionService.saveApplicationDecisionData(
+                competitionId,
+                Decision.FUNDED,
+                singletonList(applicationId)).getSuccess();
         projectRestService.createProjectFromApplicationId(applicationId).getSuccess();
 
         return "redirect:/competition/{competitionId}/previous";
