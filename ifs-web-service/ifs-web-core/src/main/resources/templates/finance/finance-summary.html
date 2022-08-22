@@ -45,7 +45,7 @@
         <div class="govuk-form-group finance-summary table-overflow">
         <table class="govuk-table">
             <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
+            <tr th:unless="${table.isGrantOfgemCompetition()}"  class="govuk-table__row">
                 <th th:if="${table.includeOrganisationNames}" class="govuk-table__header">
                     <span class="govuk-visually-hidden">Organisation name</span>
                 </th>
@@ -64,6 +64,17 @@
                 <th th:if="${table.ktp}" scope="col" class="govuk-table__header govuk-table__header--numeric width-100">Company contribution (%)</th>
                 <th scope="col" class="govuk-table__header govuk-table__header--numeric width-100"
                     th:text="${table.ktp ? 'Company contribution (£)' : 'Contribution to project (£)'}">Contribution to project (&pound;)</th>
+            </tr>
+            <tr th:if="${table.isGrantOfgemCompetition()}"  class="govuk-table__row">
+                <th th:if="${table.includeOrganisationNames}" class="govuk-table__header">
+                    <span class="govuk-visually-hidden">Organisation name</span>
+                </th>
+                <th class="govuk-table__header govuk-table__header--numeric" scope="col"
+                    th:classappend="${table.includeOrganisationNames} ? null : 'width-150'">Total costs (&pound;)</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric width-150">Funding sought (&pound;)</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric width-150">Contribution to costs(%)</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric width-150">Other funding (&pound;)</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric width-150">Contribution to project (&pound;)</th>
             </tr>
             </thead>
             <tbody class="govuk-table__body">
@@ -96,13 +107,21 @@
                 <td class="govuk-table__cell govuk-table__cell--numeric">
                     <strong><th:block th:text="${#numbers.formatInteger(row.costs, 0, 'DEFAULT')}" /></strong>
                 </td>
-                <th:block th:with="fundingLevel=|${#numbers.formatDecimal(row.claimPercentage,1,'DEFAULT',2,'DEFAULT')}%|, fundingSought=${#numbers.formatInteger(row.fundingSought, 0, 'DEFAULT')}">
-                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${table.fundingLevelFirst} ? ${fundingLevel} : ${fundingSought}"/>
-                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${table.fundingSoughtFirst} ? ${fundingLevel} : ${fundingSought}"/>
+                <th:block th:unless="${table.isGrantOfgemCompetition()}">
+                    <th:block th:with="fundingLevel=|${#numbers.formatDecimal(row.claimPercentage,1,'DEFAULT',2,'DEFAULT')}%|, fundingSought=${#numbers.formatInteger(row.fundingSought, 0, 'DEFAULT')}">
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${table.fundingLevelFirst} ? ${fundingLevel} : ${fundingSought}"/>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${table.fundingSoughtFirst} ? ${fundingLevel} : ${fundingSought}"/>
+                    </th:block>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.otherFunding, 0, 'DEFAULT')}"/>
+                    <td th:if="${table.ktp}" class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.contributionPercentage, 0, 'DEFAULT')}"/>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.contribution, 0, 'DEFAULT')}"/>
                 </th:block>
-                <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.otherFunding, 0, 'DEFAULT')}"/>
-                <td th:if="${table.ktp}" class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.contributionPercentage, 0, 'DEFAULT')}"/>
-                <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.contribution, 0, 'DEFAULT')}"/>
+                <th:block th:if="${table.isGrantOfgemCompetition()}">
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.fundingSought, 0, 'DEFAULT')}"/>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatDecimal(row.contributionPercentage,1,'DEFAULT',2,'DEFAULT')}"/>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.otherFunding, 0, 'DEFAULT')}"/>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.contribution, 0, 'DEFAULT')}"/>
+                </th:block>
             </tr>
             <tr class="govuk-table__row" th:if="${table.rows.size() > 1}">
                 <th class="govuk-table__header" scope="row">Total

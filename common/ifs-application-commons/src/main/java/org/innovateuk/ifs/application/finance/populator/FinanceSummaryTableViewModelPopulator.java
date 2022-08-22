@@ -36,6 +36,7 @@ import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
 import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.user.resource.ProcessRoleType.applicantProcessRoles;
 
@@ -94,7 +95,6 @@ public class FinanceSummaryTableViewModelPopulator {
                 .map(org -> toFinanceTableRow(org, financeMap, emptyMap(), application.getLeadOrganisationId(), financeSection, application, competition, empty()))
                 .collect(toList());
 
-
         return new FinanceSummaryTableViewModel(application.getId(),
                 competition,
                 rows,
@@ -102,7 +102,8 @@ public class FinanceSummaryTableViewModelPopulator {
                 application.isCollaborativeProject(),
                 null,
                 includeOrganisationNames,
-                competition.isThirdPartyOfgem());
+                competition.isThirdPartyOfgem(),
+                competition.getFundingType().equals(GRANT));
     }
 
     public FinanceSummaryTableViewModel populateAllOrganisations(ApplicationResource application, CompetitionResource competition, List<ProcessRoleResource> processRoles, UserResource user) {
@@ -150,7 +151,8 @@ public class FinanceSummaryTableViewModelPopulator {
                 application.isCollaborativeProject(),
                 maximumFundingSought,
                 true,
-                competition.isThirdPartyOfgem());
+                competition.isThirdPartyOfgem(),
+                competition.getFundingType().equals(GRANT));
     }
 
     private Optional<ProcessRoleResource> getCurrentUsersRole(List<ProcessRoleResource> processRoles, UserResource user) {
