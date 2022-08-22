@@ -58,7 +58,7 @@ Comp admin can view read only view of Expression of interest
     [Documentation]  IFS-12177
     Given the user clicks the button/link       link = ${openCompetitionPreRegApplicationId}
     Then the user should see the element        jQuery = h1:contains(${openCompetitionPreRegApplicationName})
-    And the user should see the element         jQuery = h1:contains("Application overview")
+    And the user should see the element         jQuery = h1:contains("Expression of interest overview")
 
 Admin can view Expression of Interest notifications page
     [Documentation]    IFS-12261
