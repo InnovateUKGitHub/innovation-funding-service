@@ -860,7 +860,8 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public boolean isKtp() {
-        return FundingType.KTP == fundingType;
+        return FundingType.KTP == fundingType
+                || FundingType.KTP_AKT == fundingType;
     }
 
     public boolean isThirdPartyOfgem() {
