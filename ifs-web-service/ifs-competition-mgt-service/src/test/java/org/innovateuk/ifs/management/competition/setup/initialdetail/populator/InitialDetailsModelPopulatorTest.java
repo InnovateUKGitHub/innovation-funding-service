@@ -74,11 +74,11 @@ public class InitialDetailsModelPopulatorTest {
                         FundingType.INVESTOR_PARTNERSHIPS,
                         FundingType.KTP,
                         FundingType.LOAN,
-                        FundingType.PROCUREMENT,
-                        FundingType.KTP_AKT);
+                        FundingType.PROCUREMENT);
 
         ReflectionTestUtils.setField(populator, "thirdPartyOfgemEnabled", false);
         ReflectionTestUtils.setField(populator, "hecpTcpEnabled", false);
+        ReflectionTestUtils.setField(populator, "ktpAktEnabled", false);
 
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionCode("code")
@@ -138,6 +138,7 @@ public class InitialDetailsModelPopulatorTest {
 
         ReflectionTestUtils.setField(populator, "thirdPartyOfgemEnabled", true);
         ReflectionTestUtils.setField(populator, "hecpTcpEnabled", true);
+        ReflectionTestUtils.setField(populator, "ktpAktEnabled", true);
 
         CompetitionResource competition = newCompetitionResource()
                 .withName("Thirdparty ofgem")
@@ -188,6 +189,7 @@ public class InitialDetailsModelPopulatorTest {
 
         ReflectionTestUtils.setField(populator, "thirdPartyOfgemEnabled", true);
         ReflectionTestUtils.setField(populator, "hecpTcpEnabled", true);
+        ReflectionTestUtils.setField(populator, "ktpAktEnabled", true);
 
         CompetitionResource competition = newCompetitionResource()
                 .withName("Horizon Europe")
