@@ -1,0 +1,26 @@
+ifs:
+    edi:
+        update:
+            enabled: true
+    ktp:
+        phase2:
+            enabled: true
+    loan:
+        partb:
+            enabled: true
+    subsidy:
+        control:
+            northern:
+                ireland:
+                    enabled: true
+    thirdparty:
+        ofgem:
+            enabled: true
+spring:
+    application:
+        name: Front Door Service
+    boot:
+        admin:
+            client:
+                name: IFS Front Door Service
+                service-url: http://front-door-svc:8080
