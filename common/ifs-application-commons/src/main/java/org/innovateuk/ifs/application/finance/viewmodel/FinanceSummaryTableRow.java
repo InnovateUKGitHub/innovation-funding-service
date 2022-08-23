@@ -2,6 +2,8 @@ package org.innovateuk.ifs.application.finance.viewmodel;
 
 import java.math.BigDecimal;
 
+import static java.math.BigDecimal.ZERO;
+
 public class FinanceSummaryTableRow {
 
     private final Long organisationId;
@@ -18,6 +20,7 @@ public class FinanceSummaryTableRow {
     private final boolean complete;
     private final boolean showViewFinancesLink;
     private final String url;
+    private final BigDecimal contributionToProjectPercentage;
 
     public FinanceSummaryTableRow(Long organisationId,
                                   String organisationName,
@@ -30,7 +33,8 @@ public class FinanceSummaryTableRow {
                                   BigDecimal contributionPercentage,
                                   boolean complete,
                                   boolean showViewFinancesLink,
-                                  String url) {
+                                  String url,
+                                  BigDecimal contributionToProjectPercentage) {
         this.organisationId = organisationId;
         this.organisationName = organisationName;
         this.status = status;
@@ -43,6 +47,7 @@ public class FinanceSummaryTableRow {
         this.complete = complete;
         this.showViewFinancesLink = showViewFinancesLink;
         this.url = url;
+        this.contributionToProjectPercentage = contributionToProjectPercentage;
     }
 
     public Long getOrganisationId() {
@@ -98,20 +103,25 @@ public class FinanceSummaryTableRow {
         return organisationId == null;
     }
 
+    public BigDecimal getContributionToProjectPercentage() {
+        return contributionToProjectPercentage;
+    }
+
     public static FinanceSummaryTableRow pendingOrganisation(String organisationName) {
         return new FinanceSummaryTableRow(
                 null,
                 organisationName,
                 "(pending)",
-                BigDecimal.ZERO,
-                BigDecimal.ZERO,
-                BigDecimal.ZERO,
-                BigDecimal.ZERO,
-                BigDecimal.ZERO,
-                BigDecimal.ZERO,
+                ZERO,
+                ZERO,
+                ZERO,
+                ZERO,
+                ZERO,
+                ZERO,
                 false,
                 false,
-                null
+                null,
+                ZERO
         );
     }
 }

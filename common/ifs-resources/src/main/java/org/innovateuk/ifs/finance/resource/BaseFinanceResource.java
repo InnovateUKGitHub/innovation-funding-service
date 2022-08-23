@@ -6,11 +6,13 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.math.BigDecimal.ZERO;
 import static java.util.Optional.ofNullable;
 
 /**
@@ -202,20 +204,20 @@ public abstract class BaseFinanceResource {
     @JsonIgnore
     public BigDecimal getGrantClaimPercentage() {
         GrantClaim grantClaim = getGrantClaim();
-        return grantClaim == null ? BigDecimal.ZERO : grantClaim.calculateClaimPercentage(getTotal(), getTotalOtherFunding());
+        return grantClaim == null ? ZERO : grantClaim.calculateClaimPercentage(getTotal(), getTotalOtherFunding());
     }
 
     @JsonIgnore
     public BigDecimal getTotalFundingSought() {
         GrantClaim grantClaim = getGrantClaim();
         if (fecModelEnabled != null && !fecModelEnabled && financeOrganisationDetails.containsKey(FinanceRowType.INDIRECT_COSTS)) {
-            BigDecimal indirectCostsTotal = Optional.of(financeOrganisationDetails.get(FinanceRowType.INDIRECT_COSTS).getTotal()).orElse(BigDecimal.ZERO);
-            BigDecimal fundingSought = grantClaim == null ? BigDecimal.ZERO : grantClaim.calculateFundingSought(getTotal().subtract(indirectCostsTotal),
-                    getTotalOtherFunding()).max(BigDecimal.ZERO);
+            BigDecimal indirectCostsTotal = Optional.of(financeOrganisationDetails.get(FinanceRowType.INDIRECT_COSTS).getTotal()).orElse(ZERO);
+            BigDecimal fundingSought = grantClaim == null ? ZERO : grantClaim.calculateFundingSought(getTotal().subtract(indirectCostsTotal),
+                    getTotalOtherFunding()).max(ZERO);
             return fundingSought.add(indirectCostsTotal);
         }
-        return grantClaim == null ? BigDecimal.ZERO : grantClaim.calculateFundingSought(getTotal(), getTotalOtherFunding())
-                .max(BigDecimal.ZERO);
+        return grantClaim == null ? ZERO : grantClaim.calculateFundingSought(getTotal(), getTotalOtherFunding())
+                .max(ZERO);
     }
 
     @JsonIgnore
@@ -223,25 +225,30 @@ public abstract class BaseFinanceResource {
         BigDecimal totalFunding = getTotalOtherFunding()
                 .add(getTotalFundingSought());
         return getTotal().subtract(totalFunding)
-                .max(BigDecimal.ZERO);
+                .max(ZERO);
+    }
+
+    @JsonIgnore
+    public BigDecimal getContributionToProjectPercentage() {
+        return !getTotalContribution().equals(ZERO) ? getTotalContribution().multiply(new BigDecimal(100)).divide(getTotal(), 2, RoundingMode.HALF_UP) : ZERO;
     }
 
     @JsonIgnore
     public BigDecimal getTotalOtherFunding() {
         FinanceRowCostCategory otherFundingCategory = getFinanceOrganisationDetails(FinanceRowType.OTHER_FUNDING);
-        return otherFundingCategory != null ? otherFundingCategory.getTotal() : BigDecimal.ZERO;
+        return otherFundingCategory != null ? otherFundingCategory.getTotal() : ZERO;
     }
 
     @JsonIgnore
     public BigDecimal getTotalPreviousFunding() {
         FinanceRowCostCategory otherFundingCategory = getFinanceOrganisationDetails(FinanceRowType.PREVIOUS_FUNDING);
-        return otherFundingCategory != null ? otherFundingCategory.getTotal() : BigDecimal.ZERO;
+        return otherFundingCategory != null ? otherFundingCategory.getTotal() : ZERO;
     }
 
     @JsonIgnore
     public BigDecimal getTotal() {
         if (financeOrganisationDetails == null) {
-            return BigDecimal.ZERO;
+            return ZERO;
         }
 
         BigDecimal total = financeOrganisationDetails.entrySet().stream()
@@ -250,10 +257,10 @@ public abstract class BaseFinanceResource {
                         cat.getValue().getTotal() != null)
                 .filter(cat -> !cat.getValue().excludeFromTotalCost())
                 .map(cat -> cat.getValue().getTotal())
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .reduce(ZERO, BigDecimal::add);
 
         if (total == null) {
-            return BigDecimal.ZERO;
+            return ZERO;
         }
 
         return total;
@@ -284,7 +291,7 @@ public abstract class BaseFinanceResource {
                 .filter(vat -> vat.getRegistered() != null)
                 .filter(Vat::getRegistered)
                 .flatMap(vat -> ofNullable(vat.getRate()))
-                .orElse(BigDecimal.ZERO);
+                .orElse(ZERO);
     }
 
     public boolean isFixedFundingLevel() {
