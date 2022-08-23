@@ -1,0 +1,41 @@
+ifs:
+    data:
+        service:
+            file:
+                storage:
+                    base: tmp
+                    virus:
+                        scanning:
+                            holding:
+                                folder: virus-scan-holding
+    edi:
+        update:
+            enabled: true
+    ktp:
+        phase2:
+            enabled: true
+    loan:
+        partb:
+            enabled: true
+    thirdparty:
+        ofgem:
+            enabled: true
+server:
+    port: 34567
+spring:
+    datasource:
+        password: password
+        url: jdbc:mysql://ifs-database:3306/ifs?useLegacyDatetimeCode=false&serverTimezone=UTC
+        username: root
+    flyway:
+        enabled: false
+        locations: db/migration,db/reference,db/setup,db/webtestsupport
+        password: password
+        placeholders:
+            ifs:
+                system:
+                    user:
+                        uuid: c0d02979-e66e-11e7-ac43-0242ac120002
+        table: schema_version
+        url: jdbc:mysql://ifs-database:3306/ifs?useMysqlMetadata=true
+        user: root
