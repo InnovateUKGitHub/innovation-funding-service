@@ -64,22 +64,7 @@ public class ProgrammeTemplate implements CompetitionTemplate {
     }
 
     public List<SectionBuilder> sections(Competition competition) {
-        List<SectionBuilder> sectionBuilderList =  newArrayList(
-                projectDetails()
-                        .withQuestions(newArrayList(
-                                applicationTeam(),
-                                applicationDetails(),
-                                researchCategory(),
-                                equalityDiversityAndInclusion(),
-                                projectSummary(),
-                                publicDescription(),
-                                scope()
-                        )),
-                applicationQuestions()
-                        .withQuestions(programmeDefaultQuestions()),
-                finances(),
-                termsAndConditions()
-        );
+        List<SectionBuilder> sectionBuilderList =  sections();
 
         if(competition.getCompetitionApplicationConfig()!=null &&
                 competition.getCompetitionApplicationConfig().isImSurveyRequired()){

@@ -16,7 +16,8 @@ public interface CompetitionTemplate {
     List<SectionBuilder> sections();
 
     default List<SectionBuilder> sections(Competition competition){
-        throw new RuntimeException("Not yest supported ");
+        System.out.println("Unsupported....");
+        throw new IllegalArgumentException("Not yet supported ");
     }
 
     Competition copyTemplatePropertiesToCompetition(Competition competition);
