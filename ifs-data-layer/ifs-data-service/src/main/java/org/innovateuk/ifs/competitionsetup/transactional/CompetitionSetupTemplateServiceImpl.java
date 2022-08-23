@@ -132,7 +132,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         }else{
             sectionBuilders = template.sections();
         }
-        template.sections(competition);
+
 
         sectionBuilders = fundingTypeTemplate.sections(sectionBuilders);
         competition = fundingTypeTemplate.initialiseFinanceTypes(competition);
