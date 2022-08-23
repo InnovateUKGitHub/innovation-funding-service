@@ -41,4 +41,12 @@ public class ConnectionCountFilter extends OncePerRequestFilter {
 
         return healthy;
     }
+
+    public AtomicInteger getCount() {
+        return count;
+    }
+
+    public int getMax() {
+        return max;
+    }
 }

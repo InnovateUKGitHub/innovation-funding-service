@@ -5,8 +5,8 @@ public enum SilPayloadType {
     CONTACT("Contact sync created / update"),
     ASSESSMENT_COMPLETE("Assessment complete"),
     APPLICATION_UPDATE("Update application state"),
-    USER_UPDATE("User profile update");
-
+    USER_UPDATE("User profile update"),
+    APPLICATION_LOCATION_INFO("application location info");
 
     private final String displayName;
 

@@ -3,15 +3,15 @@ package org.innovateuk.ifs.crm.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
-import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResource;
-import org.innovateuk.ifs.crm.transactional.SilMessageRecordingService;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.QuestionStatus;
 import org.innovateuk.ifs.application.transactional.QuestionStatusService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
+import org.innovateuk.ifs.crm.transactional.SilMessageRecordingService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.sil.SilPayloadKeyType;
@@ -34,6 +34,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.*;
+import static org.innovateuk.ifs.sil.common.json.Constants.LOANS_DATETIME_FORMAT;
+import static org.innovateuk.ifs.sil.common.json.Constants.UTC;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -72,15 +74,17 @@ public class ApplicationUpdateControllerTest extends BaseControllerMockMVCTest<A
     }
 
     @Before
-   public void  setup(){
+    public void setup() {
         when(objectMapper.writer()).thenReturn(new ObjectMapper().writer());
-        doNothing().when(silMessagingService).recordSilMessage(SilPayloadType.APPLICATION_UPDATE, SilPayloadKeyType.APPLICATION_ID,"1", APPLICATION_PAYLOAD, null);
-
+        doNothing().when(silMessagingService).recordSilMessage(SilPayloadType.APPLICATION_UPDATE, SilPayloadKeyType.APPLICATION_ID, "1", APPLICATION_PAYLOAD, null);
     }
 
     @Test
     public void updateLoanApplicationSuccess() throws Exception {
         long applicationId = 1L;
+        ZonedDateTime fixedClock = ZonedDateTime.parse("2021-10-12T09:38:12.850Z",
+                LOANS_DATETIME_FORMAT
+                        .withZone(UTC));
         UserResource user = newUserResource().withId(1L).build();
         ProcessRoleResource processRole = newProcessRoleResource().withId(1L).build();
         CompetitionResource competition = newCompetitionResource().withId(1L).withFundingType(FundingType.LOAN).build();
@@ -90,7 +94,7 @@ public class ApplicationUpdateControllerTest extends BaseControllerMockMVCTest<A
         SilApplicationStatus silStatus = new SilApplicationStatus();
         silStatus.setCompletionStatus(QuestionStatus.COMPLETE);
         silStatus.setQuestionSetupType(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION);
-        silStatus.setCompletionDate(ZonedDateTime.now(ZoneId.of("UTC")));
+        silStatus.setCompletionDate(fixedClock);
 
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
         when(usersRolesService.getProcessRoleByUserIdAndApplicationId(user.getId(), applicationId))
@@ -100,7 +104,7 @@ public class ApplicationUpdateControllerTest extends BaseControllerMockMVCTest<A
         when(questionService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), silStatus.getQuestionSetupType()))
                 .thenReturn(serviceSuccess(question));
         when(questionService.getQuestionById(ids.questionId)).thenReturn(serviceSuccess(question));
-        when(questionStatusService.markAsCompleteNoValidate(ids,processRole.getId())).thenReturn(serviceSuccess());
+        when(questionStatusService.markAsCompleteNoValidate(ids, processRole.getId(), silStatus.getCompletionDate())).thenReturn(serviceSuccess());
         when(questionStatusService.markAsComplete(ids, processRole.getId(), silStatus.getCompletionDate()))
                 .thenReturn(serviceSuccess(Collections.emptyList()));
 
@@ -112,6 +116,9 @@ public class ApplicationUpdateControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void updateIMApplicationSuccess() throws Exception {
         long applicationId = 1L;
+        ZonedDateTime fixedClock = ZonedDateTime.parse("2021-10-12T09:38:12.850Z",
+                LOANS_DATETIME_FORMAT
+                        .withZone(UTC));
         UserResource user = newUserResource().withId(1L).build();
         ProcessRoleResource processRole = newProcessRoleResource().withId(1L).build();
 
@@ -129,7 +136,7 @@ public class ApplicationUpdateControllerTest extends BaseControllerMockMVCTest<A
         SilApplicationStatus silStatus = new SilApplicationStatus();
         silStatus.setCompletionStatus(QuestionStatus.COMPLETE);
         silStatus.setQuestionSetupType(IMPACT_MANAGEMENT_SURVEY);
-        silStatus.setCompletionDate(ZonedDateTime.now(ZoneId.of("UTC")));
+        silStatus.setCompletionDate(fixedClock);
 
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
         when(usersRolesService.getProcessRoleByUserIdAndApplicationId(user.getId(), applicationId))
@@ -139,7 +146,7 @@ public class ApplicationUpdateControllerTest extends BaseControllerMockMVCTest<A
         when(questionService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), silStatus.getQuestionSetupType()))
                 .thenReturn(serviceSuccess(question));
         when(questionService.getQuestionById(ids.questionId)).thenReturn(serviceSuccess(question));
-        when(questionStatusService.markAsCompleteNoValidate(ids,processRole.getId())).thenReturn(serviceSuccess());
+        when(questionStatusService.markAsCompleteNoValidate(ids, processRole.getId(),silStatus.getCompletionDate())).thenReturn(serviceSuccess());
         when(questionStatusService.markAsComplete(ids, processRole.getId(), silStatus.getCompletionDate()))
                 .thenReturn(serviceSuccess(Collections.emptyList()));
 
@@ -150,7 +157,9 @@ public class ApplicationUpdateControllerTest extends BaseControllerMockMVCTest<A
 
     @Test
     public void updateApplicationFailWhenIncorrectProcessRoleIdIsPassed() throws Exception {
-
+        ZonedDateTime fixedClock = ZonedDateTime.parse("2021-10-12T09:38:12.850Z",
+                LOANS_DATETIME_FORMAT
+                        .withZone(UTC));
         long applicationId = 1L;
         UserResource user = newUserResource().withId(1L).build();
         ProcessRoleResource processRole = newProcessRoleResource().withId(5L).build();
@@ -161,10 +170,9 @@ public class ApplicationUpdateControllerTest extends BaseControllerMockMVCTest<A
         SilApplicationStatus silStatus = new SilApplicationStatus();
         silStatus.setCompletionStatus(QuestionStatus.COMPLETE);
         silStatus.setQuestionSetupType(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION);
-        silStatus.setCompletionDate(ZonedDateTime.now(ZoneId.of("UTC")));
+        silStatus.setCompletionDate(fixedClock);
 
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
-
 
 
         when(usersRolesService.getProcessRoleByUserIdAndApplicationId(user.getId(), applicationId))
@@ -174,7 +182,7 @@ public class ApplicationUpdateControllerTest extends BaseControllerMockMVCTest<A
         when(questionService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), silStatus.getQuestionSetupType()))
                 .thenReturn(serviceSuccess(question));
         when(questionService.getQuestionById(ids.questionId)).thenReturn(serviceSuccess(question));
-        when(questionStatusService.markAsCompleteNoValidate(ids, processRole.getId())).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
+        when(questionStatusService.markAsCompleteNoValidate(ids, processRole.getId(),silStatus.getCompletionDate())).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
         when(questionStatusService.markAsComplete(ids, processRole.getId(), silStatus.getCompletionDate()))
                 .thenReturn(serviceSuccess(Collections.emptyList()));
 
@@ -188,7 +196,9 @@ public class ApplicationUpdateControllerTest extends BaseControllerMockMVCTest<A
         long applicationId = 1L;
         UserResource user = newUserResource().withId(1L).build();
         ProcessRoleResource processRole = newProcessRoleResource().withId(1L).build();
-
+        ZonedDateTime fixedClock = ZonedDateTime.parse("2021-10-12T09:38:12.850Z",
+                LOANS_DATETIME_FORMAT
+                        .withZone(UTC));
         CompetitionApplicationConfigResource competitionApplicationConfigResource = new CompetitionApplicationConfigResource();
         competitionApplicationConfigResource.setImSurveyRequired(true);
         CompetitionResource competition = newCompetitionResource()
@@ -203,7 +213,7 @@ public class ApplicationUpdateControllerTest extends BaseControllerMockMVCTest<A
         SilApplicationStatus silStatus = new SilApplicationStatus();
         silStatus.setCompletionStatus(QuestionStatus.INCOMPLETE);
         silStatus.setQuestionSetupType(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION);
-        silStatus.setCompletionDate(ZonedDateTime.now(ZoneId.of("UTC")));
+        silStatus.setCompletionDate(fixedClock);
 
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
         when(usersRolesService.getProcessRoleByUserIdAndApplicationId(user.getId(), applicationId))
@@ -213,17 +223,22 @@ public class ApplicationUpdateControllerTest extends BaseControllerMockMVCTest<A
         when(questionService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), silStatus.getQuestionSetupType()))
                 .thenReturn(serviceSuccess(question));
         when(questionService.getQuestionById(ids.questionId)).thenReturn(serviceSuccess(question));
-        when(questionStatusService.markAsCompleteNoValidate(ids, user.getId())).thenReturn(serviceSuccess());
-        when(questionStatusService.markAsInComplete(ids, processRole.getId()))
+        when(questionStatusService.markAsCompleteNoValidate(ids, user.getId(), silStatus.getCompletionDate())).thenReturn(serviceSuccess());
+        when(questionStatusService.markAsInComplete(ids, processRole.getId(), silStatus.getCompletionDate()))
                 .thenReturn(serviceSuccess(Collections.emptyList()));
 
         mockMvc.perform(patch("/application-update/{applicationId}", applicationId).contentType(APPLICATION_JSON).content(toJson(silStatus)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
     }
+
     @Test
     public void updateIMApplicationIncomplete() throws Exception {
         long applicationId = 1L;
+        ZonedDateTime fixedClock = ZonedDateTime.parse("2021-10-12T09:38:12.850Z",
+                LOANS_DATETIME_FORMAT
+                        .withZone(UTC));
+
         UserResource user = newUserResource().withId(1L).build();
         ProcessRoleResource processRole = newProcessRoleResource().withId(1L).build();
 
@@ -241,7 +256,7 @@ public class ApplicationUpdateControllerTest extends BaseControllerMockMVCTest<A
         SilApplicationStatus silStatus = new SilApplicationStatus();
         silStatus.setCompletionStatus(QuestionStatus.INCOMPLETE);
         silStatus.setQuestionSetupType(IMPACT_MANAGEMENT_SURVEY);
-        silStatus.setCompletionDate(ZonedDateTime.now(ZoneId.of("UTC")));
+        silStatus.setCompletionDate(fixedClock);
 
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
         when(usersRolesService.getProcessRoleByUserIdAndApplicationId(user.getId(), applicationId))
@@ -251,8 +266,7 @@ public class ApplicationUpdateControllerTest extends BaseControllerMockMVCTest<A
         when(questionService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), silStatus.getQuestionSetupType()))
                 .thenReturn(serviceSuccess(question));
         when(questionService.getQuestionById(ids.questionId)).thenReturn(serviceSuccess(question));
-        when(questionStatusService.markAsCompleteNoValidate(ids, user.getId())).thenReturn(serviceSuccess());
-        when(questionStatusService.markAsInComplete(ids, processRole.getId()))
+        when(questionStatusService.markAsInComplete(ids, processRole.getId(), silStatus.getCompletionDate()))
                 .thenReturn(serviceSuccess(Collections.emptyList()));
 
         mockMvc.perform(patch("/application-update/{applicationId}", applicationId).contentType(APPLICATION_JSON).content(toJson(silStatus)))
