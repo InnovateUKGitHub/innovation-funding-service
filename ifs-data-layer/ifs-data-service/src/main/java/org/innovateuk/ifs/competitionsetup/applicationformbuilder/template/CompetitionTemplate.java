@@ -15,6 +15,10 @@ public interface CompetitionTemplate {
 
     List<SectionBuilder> sections();
 
+    default List<SectionBuilder> sections(Competition competition){
+        throw new RuntimeException("Not yest supported ");
+    }
+
     Competition copyTemplatePropertiesToCompetition(Competition competition);
 
     default Competition initialiseOrganisationConfig(Competition competition) {

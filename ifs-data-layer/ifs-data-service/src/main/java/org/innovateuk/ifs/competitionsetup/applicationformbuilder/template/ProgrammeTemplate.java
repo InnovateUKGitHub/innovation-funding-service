@@ -58,9 +58,35 @@ public class ProgrammeTemplate implements CompetitionTemplate {
                 applicationQuestions()
                         .withQuestions(programmeDefaultQuestions()),
                 finances(),
-                impactManagement(),
                 termsAndConditions()
         );
+
+    }
+
+    public List<SectionBuilder> sections(Competition competition) {
+        List<SectionBuilder> sectionBuilderList =  newArrayList(
+                projectDetails()
+                        .withQuestions(newArrayList(
+                                applicationTeam(),
+                                applicationDetails(),
+                                researchCategory(),
+                                equalityDiversityAndInclusion(),
+                                projectSummary(),
+                                publicDescription(),
+                                scope()
+                        )),
+                applicationQuestions()
+                        .withQuestions(programmeDefaultQuestions()),
+                finances(),
+                termsAndConditions()
+        );
+
+        if(competition.getCompetitionApplicationConfig()!=null &&
+                competition.getCompetitionApplicationConfig().isImSurveyRequired()){
+            sectionBuilderList.add( impactManagement());
+        }
+
+        return sectionBuilderList;
 
     }
 
