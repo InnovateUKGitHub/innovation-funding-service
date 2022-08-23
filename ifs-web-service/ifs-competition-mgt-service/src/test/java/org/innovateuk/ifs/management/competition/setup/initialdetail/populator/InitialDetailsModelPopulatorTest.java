@@ -74,7 +74,8 @@ public class InitialDetailsModelPopulatorTest {
                         FundingType.INVESTOR_PARTNERSHIPS,
                         FundingType.KTP,
                         FundingType.LOAN,
-                        FundingType.PROCUREMENT);
+                        FundingType.PROCUREMENT,
+                        FundingType.KTP_AKT);
 
         ReflectionTestUtils.setField(populator, "thirdPartyOfgemEnabled", false);
         ReflectionTestUtils.setField(populator, "hecpTcpEnabled", false);
@@ -132,7 +133,8 @@ public class InitialDetailsModelPopulatorTest {
                         FundingType.LOAN,
                         FundingType.PROCUREMENT,
                         FundingType.THIRDPARTY,
-                        FundingType.HECP);
+                        FundingType.HECP,
+                        FundingType.KTP_AKT);
 
         ReflectionTestUtils.setField(populator, "thirdPartyOfgemEnabled", true);
         ReflectionTestUtils.setField(populator, "hecpTcpEnabled", true);
@@ -181,7 +183,8 @@ public class InitialDetailsModelPopulatorTest {
                         FundingType.LOAN,
                         FundingType.PROCUREMENT,
                         FundingType.THIRDPARTY,
-                        FundingType.HECP);
+                        FundingType.HECP,
+                        FundingType.KTP_AKT);
 
         ReflectionTestUtils.setField(populator, "thirdPartyOfgemEnabled", true);
         ReflectionTestUtils.setField(populator, "hecpTcpEnabled", true);
