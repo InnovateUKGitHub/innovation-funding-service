@@ -201,4 +201,8 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
             return "Knowledge transfer adviser";
         }
     }
+
+    public boolean ktpAktApplicationHasNoKtaAndIsReadOnly() {
+        return isKtpAktCompetition() && hasNoKta() && isReadOnly();
+    }
 }
