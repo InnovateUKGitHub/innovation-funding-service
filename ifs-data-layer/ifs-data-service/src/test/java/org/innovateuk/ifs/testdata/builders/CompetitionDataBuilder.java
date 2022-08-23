@@ -10,14 +10,15 @@ import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
+import org.innovateuk.ifs.form.builder.SectionResourceBuilder;
 import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
-import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.form.resource.SectionResource;
-import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionLine;
 import org.innovateuk.ifs.testdata.builders.data.PreRegistrationSectionLine;
@@ -165,7 +166,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         updateCompetitionInCompetitionData(data, competition.getId());
     }
 
-    public CompetitionDataBuilder withApplicationFormFromTemplate() {
+    public CompetitionDataBuilder withApplicationFormFromTemplate(CompetitionLine line) {
 
         return asCompAdmin(data -> {
 
@@ -173,6 +174,36 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
             competitionSetupService.copyFromCompetitionTypeTemplate(competition.getId(), competition.getCompetitionType()).
                     getSuccess();
+
+            if (line != null &&
+                    line.isImSurveyEnabled()) {
+
+
+                //List<Question> questions = questionRepository.findByCompetitionIdAndSectionTypeOrderByPriorityAsc(competition.getId(), SectionType.APPLICATION_QUESTIONS);
+                Question question = QuestionBuilder.aQuestion()
+                        .withName("Project Impact")
+                        .withShortName("Project Impact")
+                        .withDescription("Project Impact")
+                        .withType(QuestionType.GENERAL)
+                        .withMarkAsCompletedEnabled(true)
+                        .withMultipleStatuses(true)
+                        .withAssignEnabled(true)
+                        .withQuestionSetupType(QuestionSetupType.IMPACT_MANAGEMENT_SURVEY)
+                        .build();
+
+                Question q = questionRepository.save(question);
+
+                SectionResource sectionResource = SectionResourceBuilder.newSectionResource()
+                        .withName("Supporting Information")
+                        .withType(SectionType.SUPPORTING_INFORMATION)
+                        .withQuestions(newArrayList(q.getId()))
+                        .build();
+
+             Section section = sectionMapper.mapToDomain(sectionResource);
+
+             Section s =  sectionRepository.save(section);
+                System.out.println(s);
+            }
 
             updateCompetitionInCompetitionData(data, competition.getId());
 
@@ -220,9 +251,9 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
         List<GrantClaimMaximumResource> maximumsNeedingALevel = grantClaimMaximumService.getGrantClaimMaximumByCompetitionId(competition.getId()).toOptionalIfNotFound().getSuccess()
                 .map(list ->
-                list.stream()
-                .filter(max -> max.getMaximum() == null)
-                .collect(Collectors.toList()))
+                        list.stream()
+                                .filter(max -> max.getMaximum() == null)
+                                .collect(Collectors.toList()))
                 .orElse(emptyList());
         IntStream.range(0, maximumsNeedingALevel.size()).forEach(i -> {
             GrantClaimMaximumResource maximum = maximumsNeedingALevel.get(i);
@@ -531,7 +562,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     public CompetitionDataBuilder withCompetitionTermsAndConditions(CompetitionLine line) {
         CompetitionDataBuilder competitionDataBuilder = asCompAdmin(data -> {
             if (line.getTermsAndConditionsTemplate() != null) {
-                GrantTermsAndConditions termsAndConditions =termsAndConditionsRepository.findOneByTemplate(line.getTermsAndConditionsTemplate());
+                GrantTermsAndConditions termsAndConditions = termsAndConditionsRepository.findOneByTemplate(line.getTermsAndConditionsTemplate());
                 competitionService.updateTermsAndConditionsForCompetition(data.getCompetition().getId(), termsAndConditions.getId());
             }
         });
@@ -604,7 +635,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             doCompetitionDetailsUpdate(data, competition -> {
 
                 List<PreRegistrationSectionLine> sectionLines = simpleFilter(preRegistrationSectionLines, l ->
-                       line.getName().equals(l.competitionName));
+                        line.getName().equals(l.competitionName));
 
                 sectionLines.forEach(sectionLine -> {
                     List<SectionResource> competitionSections = sectionService.getByCompetitionId(competition.getId()).getSuccess();
@@ -626,7 +657,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    private void  markSectionForPreRegistration(SectionResource section, String subSectionName, String questionName) {
+    private void markSectionForPreRegistration(SectionResource section, String subSectionName, String questionName) {
         section.setEnabledForPreRegistration(false);
         sectionService.save(section);
 

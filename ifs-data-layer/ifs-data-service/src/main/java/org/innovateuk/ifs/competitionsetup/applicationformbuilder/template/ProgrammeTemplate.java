@@ -63,18 +63,6 @@ public class ProgrammeTemplate implements CompetitionTemplate {
 
     }
 
-    public List<SectionBuilder> sections(Competition competition) {
-        List<SectionBuilder> sectionBuilderList =  sections();
-
-        if(competition.getCompetitionApplicationConfig()!=null &&
-                competition.getCompetitionApplicationConfig().isImSurveyRequired()){
-            sectionBuilderList.add( impactManagement());
-        }
-
-        return sectionBuilderList;
-
-    }
-
     public static List<QuestionBuilder> programmeDefaultQuestions() {
         return newArrayList(
                 businessOpportunity(),
