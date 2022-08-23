@@ -66,16 +66,25 @@ public class ApplicationTeamMarkAsCompleteValidator implements Validator {
             maybeInvite.ifPresent(applicationInviteResource -> reject(errors, "validation.applicationteam.pending.invites", applicationInviteResource.getName(), organisation.getId()));
         }
 
-        if (application.getCompetition().isKtp() &&
+        if (application.getCompetition().isKtpOnly() &&
                 application.getProcessRoles().stream().noneMatch(pr -> pr.getRole().isKta())) {
 
-            ApplicationKtaInviteResource ktaInvite = applicationKtaInviteService.getKtaInviteByApplication(application.getId()).getSuccess();
+            ApplicationKtaInviteResource ktaInvite = getKtpInviteByApplication(application);
+
             if (ktaInvite == null) {
                 reject(errors, "validation.kta.missing.invite");
             } else {
-                if (ktaInvite.getStatus() != InviteStatus.OPENED) {
-                    reject(errors, "validation.kta.pending.invite");
-                }
+                ktpInviteStatusIsNotOpened(errors, ktaInvite);
+            }
+        }
+
+        if (application.getCompetition().isKtpAkt() &&
+                application.getProcessRoles().stream().noneMatch(pr -> pr.getRole().isKta())) {
+
+            ApplicationKtaInviteResource ktaInvite = getKtpInviteByApplication(application);
+
+            if (ktaInvite != null) {
+                ktpInviteStatusIsNotOpened(errors, ktaInvite);
             }
         }
 
@@ -85,6 +94,16 @@ public class ApplicationTeamMarkAsCompleteValidator implements Validator {
             validateLeadEDIStatus(errors, application);
         }
 
+    }
+
+    private void ktpInviteStatusIsNotOpened(Errors errors, ApplicationKtaInviteResource ktaInvite) {
+        if (ktaInvite.getStatus() != InviteStatus.OPENED) {
+            reject(errors, "validation.kta.pending.invite");
+        }
+    }
+
+    private ApplicationKtaInviteResource getKtpInviteByApplication(Application application) {
+        return applicationKtaInviteService.getKtaInviteByApplication(application.getId()).getSuccess();
     }
 
     private void validateLeadEDIStatus(Errors errors, Application application) {
