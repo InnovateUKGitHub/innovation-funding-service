@@ -108,8 +108,8 @@ IFS.assessment.repeatableDeclarationRows = (function () {
           var newName = jQuery(this).attr('name').replace(/\d+/g, rowIndex)
 
           jQuery(this).attr({
-            'id': newId,
-            'name': newName
+            id: newId,
+            name: newName
           })
         })
       })

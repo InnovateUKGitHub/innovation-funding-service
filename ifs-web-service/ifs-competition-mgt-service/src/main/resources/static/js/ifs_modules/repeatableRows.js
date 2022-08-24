@@ -71,8 +71,8 @@ IFS.competitionManagement.repeatableRows = (function () {
           var newName = $rowInput.attr('name').replace(/\d+/g, rowIndex)
 
           $rowInput.attr({
-            'id': newId,
-            'name': newName
+            id: newId,
+            name: newName
           })
         })
       })
