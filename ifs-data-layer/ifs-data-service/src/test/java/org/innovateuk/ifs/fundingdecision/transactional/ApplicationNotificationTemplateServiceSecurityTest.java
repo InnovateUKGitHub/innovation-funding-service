@@ -26,6 +26,18 @@ public class ApplicationNotificationTemplateServiceSecurityTest extends BaseServ
                 COMP_ADMIN, PROJECT_FINANCE);
     }
 
+    @Test
+    public void getEoiApprovedNotificationTemplate() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getEoiApprovedNotificationTemplate(1L),
+                COMP_ADMIN);
+    }
+
+    @Test
+    public void getEoiRejectedNotificationTemplate() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getEoiRejectedNotificationTemplate(1L),
+                COMP_ADMIN);
+    }
+
     @Override
     protected Class<? extends ApplicationNotificationTemplateService> getClassUnderTest() {
         return ApplicationNotificationTemplateServiceImpl.class;

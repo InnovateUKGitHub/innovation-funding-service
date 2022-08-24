@@ -60,4 +60,28 @@ public class ApplicationNotificationTemplateControllerTest extends BaseControlle
                 .andExpect(status().isOk())
                 .andExpect(content().string(toJson(resource)));
     }
+
+    @Test
+    public void getEoiApprovedNotificationTemplate() throws Exception {
+        Long competitionId = 1L;
+        ApplicationNotificationTemplateResource resource = new ApplicationNotificationTemplateResource();
+        when(applicationNotificationTemplateService.getEoiApprovedNotificationTemplate(competitionId)).thenReturn(serviceSuccess(resource));
+
+        mockMvc.perform(get("/application-notification-template/eoi/approved/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(toJson(resource)));
+    }
+
+    @Test
+    public void getEoiRejectedNotificationTemplate() throws Exception {
+        Long competitionId = 1L;
+        ApplicationNotificationTemplateResource resource = new ApplicationNotificationTemplateResource();
+        when(applicationNotificationTemplateService.getEoiRejectedNotificationTemplate(competitionId)).thenReturn(serviceSuccess(resource));
+
+        mockMvc.perform(get("/application-notification-template/eoi/rejected/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(toJson(resource)));
+    }
 }

@@ -29,6 +29,16 @@ public class ApplicationNotificationTemplateController {
         return applicationNotificationTemplateService.getUnsuccessfulNotificationTemplate(competitionId).toGetResponse();
     }
 
+    @GetMapping("/eoi/approved/{competitionId}")
+    public RestResult<ApplicationNotificationTemplateResource> getEoiApprovedNotificationTemplate(@PathVariable("competitionId") long competitionId) {
+        return applicationNotificationTemplateService.getEoiApprovedNotificationTemplate(competitionId).toGetResponse();
+    }
+
+    @GetMapping("/eoi/rejected/{competitionId}")
+    public RestResult<ApplicationNotificationTemplateResource> getEoiRejectedNotificationTemplate(@PathVariable("competitionId") long competitionId) {
+        return applicationNotificationTemplateService.getEoiRejectedNotificationTemplate(competitionId).toGetResponse();
+    }
+
     @GetMapping("/ineligible/{competitionId}")
     public RestResult<ApplicationNotificationTemplateResource> getIneligibleNotificationTemplate(@PathVariable("competitionId") long competitionId) {
         return applicationNotificationTemplateService.getIneligibleNotificationTemplate(competitionId).toGetResponse();
