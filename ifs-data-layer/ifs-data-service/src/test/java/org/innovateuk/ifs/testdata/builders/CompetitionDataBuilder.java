@@ -217,7 +217,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
 
-    public CompetitionDataBuilder withIMStuff(CompetitionLine line) {
+    public CompetitionDataBuilder withImpactManagement(CompetitionLine line) {
 
         return asCompAdmin(data -> {
 
