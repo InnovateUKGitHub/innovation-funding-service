@@ -154,7 +154,7 @@ IFS.core.formValidation = (function () {
       // set data attribute on date fields
       // which has the combined value of the dates
       // and also makes sure that other vaidation doesn't get triggered
-      jQuery(s.date.fields).attr({'data-date': '', 'data-autosave-disabled': ''})
+      jQuery(s.date.fields).attr({ 'data-date': '', 'data-autosave-disabled': '' })
 
       // will only work on html5 validation browsers
       jQuery('form:not([novalidate]) input').on('invalid', function () {
@@ -674,7 +674,7 @@ IFS.core.formValidation = (function () {
         } else {
           if (enabled) {
             IFS.core.formValidation.setInvalid(allFields, invalidErrorMessage, displayValidationMessages)
-            allFields.attr({'data-date': ''})
+            allFields.attr({ 'data-date': '' })
             valid = false
           }
         }
@@ -689,7 +689,7 @@ IFS.core.formValidation = (function () {
         }
       } else if ((filledOut || fieldsVisited) && enabled) {
         IFS.core.formValidation.setInvalid(allFields, invalidErrorMessage, displayValidationMessages)
-        allFields.attr({'data-date': ''})
+        allFields.attr({ 'data-date': '' })
         valid = false
       } else {
         valid = false
