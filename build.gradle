@@ -5,14 +5,14 @@ buildscript {
         mavenCentral()
     }
     ext {
-        springBootVersion = '2.6.8'
+        springBootVersion = '2.6.11'
     }
 }
 
 plugins {
     id 'com.google.cloud.tools.jib' version '3.2.1' apply false
     id "org.sonarqube" version "3.1.1"
-    id "io.spring.dependency-management" version "1.0.11.RELEASE" apply false
+    id "io.spring.dependency-management" version "1.0.13.RELEASE" apply false
     id "org.springframework.boot" version "${springBootVersion}" apply false
     id "com.github.node-gradle.gulp" version "1.5.3" apply false
 }

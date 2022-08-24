@@ -26,4 +26,14 @@ public class ApplicationNotificationTemplateRestServiceImpl extends BaseRestServ
     public RestResult<ApplicationNotificationTemplateResource> getIneligibleNotificationTemplate(long competitionId) {
         return getWithRestResult(String.format("%s/%s/%s", baseUrl, "ineligible", competitionId), ApplicationNotificationTemplateResource.class);
     }
+
+    @Override
+    public RestResult<ApplicationNotificationTemplateResource> getEoiApprovedNotificationTemplate(long competitionId) {
+        return getWithRestResult(String.format("%s/eoi/%s/%s", baseUrl, "approved", competitionId), ApplicationNotificationTemplateResource.class);
+    }
+
+    @Override
+    public RestResult<ApplicationNotificationTemplateResource> getEoiRejectedNotificationTemplate(long competitionId) {
+        return getWithRestResult(String.format("%s/eoi/%s/%s", baseUrl, "rejected", competitionId), ApplicationNotificationTemplateResource.class);
+    }
 }

@@ -79,7 +79,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     private String webBaseUrl;
 
     public enum Notifications {
-        APPLICATION_FUNDING, HORIZON_2020_FUNDING, HORIZON_EUROPE_FUNDING
+        APPLICATION_FUNDING, HORIZON_2020_FUNDING, HORIZON_EUROPE_FUNDING, EOI_DECISION
     }
 
     @Override
@@ -279,7 +279,9 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     private Notifications getNotificationType(List<Application> applications, Competition competition) {
         Notifications notificationType;
 
-        if(isH2020Competition(applications)){
+        if (isEoiDecision(applications, competition)) {
+            notificationType = EOI_DECISION;
+        } else if(isH2020Competition(applications)){
             notificationType = HORIZON_2020_FUNDING;
         } else if (competition.isHorizonEuropeGuarantee()){
             notificationType = HORIZON_EUROPE_FUNDING;
@@ -304,6 +306,11 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
             applicationNotificationTargets.add(getProcessRoles(applicationId, LEADAPPLICANT).andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail).andOnSuccessReturn(pr -> Pair.of(applicationId, new UserNotificationTarget(pr.getUser().getName(), pr.getUser().getEmail()))));
         });
         return applicationNotificationTargets;
+    }
+
+    private boolean isEoiDecision(List<Application> applications, Competition competition) {
+        return competition.isEnabledForPreRegistration()
+                && applications.stream().anyMatch(Application::isEnabledForExpressionOfInterest);
     }
 
     private boolean isH2020Competition(List<Application> applications) {

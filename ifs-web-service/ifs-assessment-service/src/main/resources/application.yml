@@ -1,0 +1,32 @@
+ifs:
+    edi:
+        salesforce:
+            page:
+                url: https://loans-innovateuk.cs80.force.com/EDI/s
+        update:
+            enabled: true
+    ktp:
+        phase2:
+            enabled: true
+    loan:
+        partb:
+            enabled: true
+    subsidy:
+        control:
+            northern:
+                ireland:
+                    enabled: true
+    thirdparty:
+        ofgem:
+            enabled: true
+server:
+    servlet:
+        context-path: /assessment
+spring:
+    application:
+        name: Assessment Service
+    boot:
+        admin:
+            client:
+                name: IFS Assessment Service
+                service-url: http://assessment-svc:8080/assessment

@@ -27,8 +27,7 @@ import java.util.Map;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.innovateuk.ifs.application.resource.Decision.ON_HOLD;
-import static org.innovateuk.ifs.application.resource.Decision.UNFUNDED;
+import static org.innovateuk.ifs.application.resource.Decision.*;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionAssessmentConfigResourceBuilder.newCompetitionAssessmentConfigResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -120,5 +119,69 @@ public class SendNotificationsModelPopulatorTest {
 
         assertTrue(viewModel.isHorizonEurope());
         assertEquals("horizonEurope_unsuccessful_template.html", notificationEmailsForm.getMessage());
+    }
+
+    @Test
+    public void populateModel_eoiApproved() {
+
+        NotificationEmailsForm notificationEmailsForm = new NotificationEmailsForm();
+
+        CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .withName(COMPETITION_NAME)
+                .withCompetitionTypeEnum(CompetitionTypeEnum.HORIZON_EUROPE_GUARANTEE)
+                .build();
+
+        ApplicationNotificationTemplateResource notificationTemplateResource = new ApplicationNotificationTemplateResource("eoi_approved_decision.html");
+
+        ApplicationDecisionToSendApplicationResource application
+                = new ApplicationDecisionToSendApplicationResource(3L, "", "", EOI_APPROVED);
+
+        List<ApplicationDecisionToSendApplicationResource> applicationResults = Collections.singletonList(application);
+
+        List<Long> requestedIds =  Collections.singletonList(application.getId());
+
+        when(applicationDecisionRestService.getNotificationResourceForApplications(requestedIds)).thenReturn(restSuccess(applicationResults));
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+        when(applicationNotificationTemplateRestService.getEoiApprovedNotificationTemplate(COMPETITION_ID)).thenReturn(restSuccess(notificationTemplateResource));
+
+        SendNotificationsViewModel viewModel = sendNotificationsModelPopulator.populate(COMPETITION_ID, requestedIds, notificationEmailsForm, true);
+
+        assertNotNull(viewModel);
+        assertTrue(viewModel.isEoi());
+        assertEquals("Send an expression of interest notification", viewModel.getPageTitle());
+        assertEquals("eoi_approved_decision.html", notificationEmailsForm.getMessage());
+    }
+
+    @Test
+    public void populateModel_eoiRejected() {
+
+        NotificationEmailsForm notificationEmailsForm = new NotificationEmailsForm();
+
+        CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .withName(COMPETITION_NAME)
+                .withCompetitionTypeEnum(CompetitionTypeEnum.HORIZON_EUROPE_GUARANTEE)
+                .build();
+
+        ApplicationNotificationTemplateResource notificationTemplateResource = new ApplicationNotificationTemplateResource("eoi_rejected_decision.html");
+
+        ApplicationDecisionToSendApplicationResource application
+                = new ApplicationDecisionToSendApplicationResource(3L, "", "", EOI_REJECTED);
+
+        List<ApplicationDecisionToSendApplicationResource> applicationResults = Collections.singletonList(application);
+
+        List<Long> requestedIds =  Collections.singletonList(application.getId());
+
+        when(applicationDecisionRestService.getNotificationResourceForApplications(requestedIds)).thenReturn(restSuccess(applicationResults));
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+        when(applicationNotificationTemplateRestService.getEoiRejectedNotificationTemplate(COMPETITION_ID)).thenReturn(restSuccess(notificationTemplateResource));
+
+        SendNotificationsViewModel viewModel = sendNotificationsModelPopulator.populate(COMPETITION_ID, requestedIds, notificationEmailsForm, true);
+
+        assertNotNull(viewModel);
+        assertTrue(viewModel.isEoi());
+        assertEquals("Send an expression of interest notification", viewModel.getPageTitle());
+        assertEquals("eoi_rejected_decision.html", notificationEmailsForm.getMessage());
     }
 }

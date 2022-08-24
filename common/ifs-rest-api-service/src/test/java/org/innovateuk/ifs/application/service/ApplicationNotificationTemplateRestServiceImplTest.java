@@ -57,4 +57,32 @@ public class ApplicationNotificationTemplateRestServiceImplTest extends BaseRest
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(applicationNotificationTemplateResource, result.getSuccess());
     }
+
+    @Test
+    public void getEoiApprovedNotificationTemplate() {
+        Long competitionId = 123L;
+        String expectedUrl = baseUrl + "/eoi/approved/" + competitionId;
+
+        ApplicationNotificationTemplateResource applicationNotificationTemplateResource = new ApplicationNotificationTemplateResource();
+
+        setupGetWithRestResultExpectations(expectedUrl, ApplicationNotificationTemplateResource.class, applicationNotificationTemplateResource);
+
+        RestResult<ApplicationNotificationTemplateResource> result = service.getEoiApprovedNotificationTemplate(competitionId);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(applicationNotificationTemplateResource, result.getSuccess());
+    }
+
+    @Test
+    public void getEoiRejectedNotificationTemplate() {
+        Long competitionId = 123L;
+        String expectedUrl = baseUrl + "/eoi/rejected/" + competitionId;
+
+        ApplicationNotificationTemplateResource applicationNotificationTemplateResource = new ApplicationNotificationTemplateResource();
+
+        setupGetWithRestResultExpectations(expectedUrl, ApplicationNotificationTemplateResource.class, applicationNotificationTemplateResource);
+
+        RestResult<ApplicationNotificationTemplateResource> result = service.getEoiRejectedNotificationTemplate(competitionId);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(applicationNotificationTemplateResource, result.getSuccess());
+    }
 }
