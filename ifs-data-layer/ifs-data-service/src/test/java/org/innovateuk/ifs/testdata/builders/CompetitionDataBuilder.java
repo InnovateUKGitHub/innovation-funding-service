@@ -180,17 +180,10 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                     line.isImSurveyEnabled()) {
                 Optional<Competition> competition1 = competitionRepository.findById(competition.getId());
 
-                //List<Question> questions = questionRepository.findByCompetitionIdAndSectionTypeOrderByPriorityAsc(competition.getId(), SectionType.APPLICATION_QUESTIONS);
-
-                // Create Question
-                Question q = populateQuestion(competition1);
-
-                Question q2 = questionRepository.save(q);
-
                 SectionResource sectionResource = SectionResourceBuilder.newSectionResource()
                         .withName("Supporting Information")
                         .withType(SectionType.SUPPORTING_INFORMATION)
-                        .withQuestions(newArrayList(q.getId()))
+                        //.withQuestions(newArrayList(q.getId()))
                         .build();
 
                 // Create Section
@@ -200,23 +193,12 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 section.setEnabledForPreRegistration(true);
                 Section s = sectionRepository.save(section);
 
-                //Get Section
+                // Create Question
+                Question q = populateQuestion(competition1);
                 Optional<Section> getSection = sectionRepository.findById(s.getId());
-
-
-                // Find and delete existing question
-                Optional<Question> questions = questionRepository
-                        .findById(q2.getId());
-
-
-                questionRepository.deleteById(questions.get().getId());
-
-
-                // Populate New question
-                Question q3 = populateQuestion(competition1);
-                q3.setSection(getSection.get());
-                q3.setPriority(0);
-                questionRepository.save(q3);
+                q.setSection(getSection.get());
+                q.setPriority(0);
+                questionRepository.save(q);
 
             }
 
