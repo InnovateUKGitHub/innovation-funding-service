@@ -14,7 +14,6 @@ import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
-import org.innovateuk.ifs.form.builder.SectionResourceBuilder;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.*;
@@ -171,44 +170,53 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
         return asCompAdmin(data -> {
 
-            CompetitionResource competition = data.getCompetition();
+            CompetitionResource competitionResource = data.getCompetition();
 
-            competitionSetupService.copyFromCompetitionTypeTemplate(competition.getId(), competition.getCompetitionType()).
+            competitionSetupService.copyFromCompetitionTypeTemplate(competitionResource.getId(), competitionResource.getCompetitionType()).
                     getSuccess();
 
             if (line != null &&
                     line.isImSurveyEnabled()) {
-                Optional<Competition> competition1 = competitionRepository.findById(competition.getId());
+                Optional<Competition> competition = competitionRepository.findById(competitionResource.getId());
+                competition.ifPresentOrElse(comp -> {
 
-                SectionResource sectionResource = SectionResourceBuilder.newSectionResource()
-                        .withName("Supporting Information")
-                        .withType(SectionType.SUPPORTING_INFORMATION)
-                        //.withQuestions(newArrayList(q.getId()))
-                        .build();
+                            // Create Section
+                            Section section = new Section();
+                            section.setCompetition(comp);
+                            section.setName("Supporting Information");
+                            section.setType(SectionType.SUPPORTING_INFORMATION);
+                            section.setPriority(1);
+                            section.setEnabledForPreRegistration(true);
+                            Section s = sectionRepository.save(section);
 
-                // Create Section
-                Section section = sectionMapper.mapToDomain(sectionResource);
-                section.setCompetition(competition1.get());
-                section.setPriority(1);
-                section.setEnabledForPreRegistration(true);
-                Section s = sectionRepository.save(section);
+                            // Create Question
+                            Question q = populateQuestion(competition);
+                            Optional<Section> getSection = sectionRepository.findById(s.getId());
 
-                // Create Question
-                Question q = populateQuestion(competition1);
-                Optional<Section> getSection = sectionRepository.findById(s.getId());
-                q.setSection(getSection.get());
-                q.setPriority(0);
-                questionRepository.save(q);
+                            getSection.ifPresentOrElse(ss -> {
+                                        q.setSection(getSection.get());
+                                        q.setPriority(0);
+                                        questionRepository.save(q);
+                                    },
+                                    () -> {
+                                        throw new RuntimeException("Section not found for id" + s.getId());
+                                    });
 
+                        },
+                        () -> {
+                            throw new RuntimeException("Competition not found for id" + competitionResource.getId());
+                        }
+
+                );
             }
 
-            updateCompetitionInCompetitionData(data, competition.getId());
+            updateCompetitionInCompetitionData(data, competitionResource.getId());
 
-            setGrantClaimMaximums(competition);
+            setGrantClaimMaximums(competitionResource);
 
             if (data.getCompetition().getCompetitionTypeName().equals("Generic")) {
 
-                List<Question> questions = questionRepository.findByCompetitionIdAndSectionTypeOrderByPriorityAsc(competition.getId(), SectionType.APPLICATION_QUESTIONS);
+                List<Question> questions = questionRepository.findByCompetitionIdAndSectionTypeOrderByPriorityAsc(competitionResource.getId(), SectionType.APPLICATION_QUESTIONS);
                 Question question = questions.get(0);
                 question.setName("Generic question heading");
                 question.setShortName("Generic question title");

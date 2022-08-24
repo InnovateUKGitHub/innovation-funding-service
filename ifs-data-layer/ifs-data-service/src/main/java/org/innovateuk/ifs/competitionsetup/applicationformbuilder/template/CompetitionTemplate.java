@@ -15,11 +15,6 @@ public interface CompetitionTemplate {
 
     List<SectionBuilder> sections();
 
-    default List<SectionBuilder> sections(Competition competition){
-        System.out.println("Unsupported....");
-        throw new IllegalArgumentException("Not yet supported ");
-    }
-
     Competition copyTemplatePropertiesToCompetition(Competition competition);
 
     default Competition initialiseOrganisationConfig(Competition competition) {
