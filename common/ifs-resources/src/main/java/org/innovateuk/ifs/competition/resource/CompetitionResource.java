@@ -198,6 +198,11 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     }
 
     @JsonIgnore
+    public boolean isKtpAkt() {
+        return KTP_AKT.equals(fundingType);
+    }
+
+    @JsonIgnore
     public boolean isLoan() {
         return LOAN.equals(fundingType);
     }
