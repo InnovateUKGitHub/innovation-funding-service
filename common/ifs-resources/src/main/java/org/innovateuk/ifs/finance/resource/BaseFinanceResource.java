@@ -225,17 +225,15 @@ public abstract class BaseFinanceResource {
         BigDecimal totalFunding = getTotalOtherFunding()
                 .add(getTotalFundingSought());
         return getTotal().subtract(totalFunding)
-                .max(BigDecimal.ZERO);
+                .max(ZERO);
     }
 
     @JsonIgnore
     public BigDecimal getContributionToProjectPercentage() {
-
-        if (ZERO.compareTo(getTotalContribution()) == 0 || getTotalContribution() == null) {
-            return BigDecimal.ZERO;
+        if (ZERO.equals(getTotalContribution()) || getTotalContribution() == null) {
+            return ZERO;
         }
-
-        return getTotalContribution().multiply(new BigDecimal(100)).divide(getTotal(), 2, RoundingMode.HALF_UP);
+        return getTotalContribution().multiply(new BigDecimal("100")).divide(getTotal(), 2, RoundingMode.HALF_UP);
     }
 
     @JsonIgnore
