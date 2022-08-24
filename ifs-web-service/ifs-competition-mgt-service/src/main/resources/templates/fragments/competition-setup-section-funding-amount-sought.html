@@ -28,7 +28,7 @@
                                    class="govuk-radios__input"
                                    id="comp-fundingAmountSoughtApplicable-yes"
                                    name="fundingAmountSoughtApplicable"
-                                   th:checked="${!unchecked && competitionSetupForm.fundingAmountSoughtApplicable == true}"
+                                   th:checked="${competitionSetupForm.fundingAmountSoughtApplicable == true}"
                                    value="true"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.applicationfundingamountsoughtform.application.funding.amount.sought.applicable.required}"/>
@@ -68,7 +68,7 @@
                                    class="govuk-radios__input"
                                    id="comp-fundingAmountSoughtApplicable-no"
                                    name="fundingAmountSoughtApplicable"
-                                   th:checked="${!unchecked && competitionSetupForm.fundingAmountSoughtApplicable == false}"
+                                   th:checked="${competitionSetupForm.fundingAmountSoughtApplicable == false}"
                                    value="false"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.applicationfundingamountsoughtform.application.funding.amount.sought.applicable.required}"/>
