@@ -55,12 +55,12 @@ IFS.core.loadOrder = {
       IFS.core.financeRowForm.init()
     }
   },
-  'overheads': {
+  overheads: {
     finalize: function () {
       IFS.core.overheads.init()
     }
   },
-  'team': {
+  team: {
     init: function () {
       IFS.core.team.init()
     }

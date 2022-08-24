@@ -17,6 +17,8 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...
 ...               IFS-12177 Pre-reg/EOI next stage decision - input
 ...
+...               IFS-12262 Pre-Reg/EOI Send notifications
+...
 ...               IFS-12382 Pre-Registration (External Journey) - full application
 ...
 ...               IFS-12521 Pre-registration - full application creation (cloning)
@@ -35,8 +37,8 @@ ${hecpPreregCompName}                           Hecp Pre Registration Competitio
 ${hecpPreregAppName}                            preRegApplication
 ${unSuccessPreregAppName}                       unSuccessfulPreRegApplication
 ${unSubmittedPreregAppName}                     unSubmittedPreRegApplication
-${preRegApplicationUnsuccessfulEmail}           Thank you for submitting your application to Innovate UK for the competition
-${preRegApplicationSuccessfulEmail}             We are pleased to inform you that your application for the Horizon Europe collaborative competition has been successful and passed the technical assessment phase.
+${preRegApplicationUnsuccessfulEmail}           You have been unsuccessful in the expression of interest stage for funding to Innovate UK's ${hecpPreregCompName} competition.
+${preRegApplicationSuccessfulEmail}             We are pleased to inform you that your expression of interest application has been successful.
 ${preregApplicationSubmissionEmail}             You have successfully submitted an application for funding to
 ${fullApplicationSuccessfulEmail}               We are pleased to inform you that your application for the Horizon Europe collaborative competition has been successful and passed the technical assessment phase.
 
@@ -158,20 +160,40 @@ Write and send email button enabled for internal users
     And the user selects the checkbox           app-row-${preregApplicationID}
     And The user should not see the element     css = .govuk-button[disabled]
 
-Full application will be created on successful notification of EOI application by internal user
-    [Documentation]  IFS-12521
-    When the user clicks the button/link                    jQuery = button:contains("Write and send email")
-    And the user enters text to a text field                css=.editor  ${preRegApplicationSuccessfulEmail}
-    And the user clicks the button/link                     jQuery = button:contains("Send notification")[data-js-modal = "send-to-all-applicants-modal"]
+Internal user should view EOI related content in the notification template
+    [Documentation]  IFS-12262
+    When the user clicks the button/link    jQuery = button:contains("Write and send email")
+    Then the user should see the element    jQuery = h1:contains("Send an expression of interest notification")
+    And the user should see the element     css = [value="Notification regarding your expression of interest application '[application name]' for the competition '[competition name]'"]
+    And the user should see the element     jQuery = th:contains("Expression of interest decision")
+
+Internal user sends a successful notification of an EOI application
+    [Documentation]    IFS-12262
+    When the user clicks the button/link                    jQuery = button:contains("Send notification")[data-js-modal = "send-to-all-applicants-modal"]
     And the user clicks the button/link                     jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
     And the user refreshes until element appears on page    jQuery = td:contains("${hecpPreregAppName}") ~ td:contains("Sent")
-    And the user reads his email                            steve.smith@empire.com  Important message about your application '${hecpPreregAppName}' for the competition '${hecpPreregCompName}'  ${preRegApplicationSuccessfulEmail}
+    Then the user reads his email                           steve.smith@empire.com  Notification regarding your expression of interest application '${hecpPreregAppName}' for the competition '${hecpPreregCompName}'  ${preRegApplicationSuccessfulEmail}
+
+Internal user sends a unsuccessful notification of an EOI application
+    [Documentation]    IFS-12262
+    Given the user selects the checkbox                     app-row-${unSuccessfulPreRegApplicationID}
+    When the user clicks the button/link                    jQuery = button:contains("Write and send email")
+    And the user clicks the button/link                     jQuery = button:contains("Send notification")[data-js-modal = "send-to-all-applicants-modal"]
+    And the user clicks the button/link                     jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
+    And the user refreshes until element appears on page    jQuery = td:contains("${unSuccessPreregAppName}") ~ td:contains("Sent")
+    Then the user reads his email                           steve.smith@empire.com  Notification regarding your expression of interest application '${unSuccessPreregAppName}' for the competition '${hecpPreregCompName}'  ${preRegApplicationUnsuccessfulEmail}
     And the user navigates to the page                      ${server}/management/competition/${preregCompetitionId}/applications/all
-    Then the user should see the element                    jQuery = td:contains("${preregApplicationID}")+td:contains("${hecpPreregAppName}")
+    And the user should see the element                     jQuery = td:contains("${preregApplicationID}")+td:contains("${hecpPreregAppName}")
+
+Lead applicant views unsuccessful applications in previous dashboard
+    [Documentation]  IFS-12265
+    Given log in as a different user                                            &{lead_applicant_credentials}
+    When the user clicks the application tile if displayed
+    Then the user should see the element                                        jQuery = li:contains("${unSuccessPreregAppName}") .status-msg:contains("Unsuccessful")
+    And the user should see the element                                         jQuery = li:contains("${unSuccessPreregAppName}") .status-msg:contains("Expression of interest")
 
 Lead applicant can view full application details in dashboard
     [Documentation]  IFS-12521
-    Given log in as a different user            &{lead_applicant_credentials}
     When the user navigates to the page         ${APPLICANT_DASHBOARD_URL}
     Then the user should see the element        jQuery = .in-progress li:contains("${hecpPreregAppName}") .status:contains("% complete")
     And the user should not see the element     jQuery = li:contains("${preregApplicationID}") .status-msg:contains("Expression of interest")
@@ -218,20 +240,14 @@ Internal user can view EOI application from full application
     Then the user clicks the button/link     jQuery = h1:contains("Expression of interest overview")
     And the user should see the element      jQuery = h2:contains("Expression of interest questions")
 
-#Lead applicant views unsuccessful applications in previous dashboard
-#    [Documentation]  IFS-12265
-#    Given log in as a different user                                              &{lead_applicant_credentials}
-#    When the user clicks the application tile if displayed
-#    Then the user should see the element                                        jQuery = li:contains("${unSuccessPreregAppName}") .status-msg:contains("Unsuccessful")
-#    And the user should see the element                                         jQuery = li:contains("${unSuccessPreregAppName}") .status-msg:contains("Expression of interest")
-#
 #Lead applicant can delete unsubmitted applications from dashboard
 #    [Documentation]  IFS-12265
-#    Given Existing applicant creates a new application with same organisation     ${hecpPreregCompName}
-#    And the user completes the application details section                        ${unSubmittedPreregAppName}  ${tomorrowday}  ${month}  ${nextyear}   23
+#    Given log in as a different user                                            &{lead_applicant_credentials}
+#    And Existing applicant creates a new application with same organisation     ${hecpPreregCompName}
+#    And the user completes the application details section                      ${unSubmittedPreregAppName}  ${tomorrowday}  ${month}  ${nextyear}   23
 #    When internal user closes the competition
 #    And Lead applicant deletes the unsubmitted EOI application
-#    Then the user should not see the element                                      jQuery = a:contains("${unSubmittedPreregAppName}")
+#    Then the user should not see the element                                    jQuery = a:contains("${unSubmittedPreregAppName}")
 
 *** Keywords ***
 Requesting IDs of this hecp pre reg competition
