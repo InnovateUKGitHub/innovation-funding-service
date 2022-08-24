@@ -182,8 +182,9 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
                 //List<Question> questions = questionRepository.findByCompetitionIdAndSectionTypeOrderByPriorityAsc(competition.getId(), SectionType.APPLICATION_QUESTIONS);
 
-               // Create Question
+                // Create Question
                 Question q = populateQuestion(competition1);
+
                 Question q2 = questionRepository.save(q);
 
                 SectionResource sectionResource = SectionResourceBuilder.newSectionResource()
@@ -195,7 +196,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 // Create Section
                 Section section = sectionMapper.mapToDomain(sectionResource);
                 section.setCompetition(competition1.get());
-                section.setPriority(0);
+                section.setPriority(1);
+                section.setEnabledForPreRegistration(true);
                 Section s = sectionRepository.save(section);
 
                 //Get Section
@@ -204,7 +206,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
                 // Find and delete existing question
                 Optional<Question> questions = questionRepository
-                        .findById( q2.getId());
+                        .findById(q2.getId());
 
 
                 questionRepository.deleteById(questions.get().getId());
@@ -270,6 +272,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 .withAssignEnabled(true)
                 .withQuestionSetupType(QuestionSetupType.IMPACT_MANAGEMENT_SURVEY)
                 .build();
+        question.setEnabledForPreRegistration(true);
         question.setCompetition(competition1.get());
         return question;
 
