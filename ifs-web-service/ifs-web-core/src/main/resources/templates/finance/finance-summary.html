@@ -66,7 +66,7 @@
                     <th class="govuk-table__header govuk-table__header--numeric width-100">Contribution to project (%)</th>
                 </th:block>
 
-                <th scope="col" class="govuk-table__header govuk-table__header--numeric width-100">
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric width-150">
                     <th:block th:if="${table.ktp or table.isThirdPartyOfgem}">Other funding (&pound;)</th:block>
                     <th:block th:unless="${table.ktp or table.isThirdPartyOfgem}">Other public sector funding (&pound;)</th:block>
                 </th>
