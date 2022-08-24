@@ -175,41 +175,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             competitionSetupService.copyFromCompetitionTypeTemplate(competitionResource.getId(), competitionResource.getCompetitionType()).
                     getSuccess();
 
-            if (line != null &&
-                    line.isImSurveyEnabled()) {
-                Optional<Competition> competition = competitionRepository.findById(competitionResource.getId());
-                competition.ifPresentOrElse(comp -> {
-
-                            // Create Section
-                            Section section = new Section();
-                            section.setCompetition(comp);
-                            section.setName("Supporting Information");
-                            section.setType(SectionType.SUPPORTING_INFORMATION);
-                            section.setPriority(1);
-                            section.setEnabledForPreRegistration(true);
-                            Section s = sectionRepository.save(section);
-
-                            // Create Question
-                            Question q = populateQuestion(competition);
-                            Optional<Section> getSection = sectionRepository.findById(s.getId());
-
-                            getSection.ifPresentOrElse(ss -> {
-                                        q.setSection(getSection.get());
-                                        q.setPriority(0);
-                                        questionRepository.save(q);
-                                    },
-                                    () -> {
-                                        throw new RuntimeException("Section not found for id" + s.getId());
-                                    });
-
-                        },
-                        () -> {
-                            throw new RuntimeException("Competition not found for id" + competitionResource.getId());
-                        }
-
-                );
-            }
-
             updateCompetitionInCompetitionData(data, competitionResource.getId());
 
             setGrantClaimMaximums(competitionResource);
@@ -251,6 +216,50 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
+
+    public CompetitionDataBuilder withIMStuff(CompetitionLine line) {
+
+        return asCompAdmin(data -> {
+
+            CompetitionResource competitionResource = data.getCompetition();
+
+
+            if (line != null &&
+                    line.isImSurveyEnabled()) {
+                Optional<Competition> competition = competitionRepository.findById(competitionResource.getId());
+                competition.ifPresentOrElse(comp -> {
+
+                            // Create Section
+                            Section section = new Section();
+                            section.setCompetition(comp);
+                            section.setName("Supporting Information");
+                            section.setType(SectionType.SUPPORTING_INFORMATION);
+                            section.setPriority(1);
+                            section.setEnabledForPreRegistration(true);
+                            Section s = sectionRepository.save(section);
+
+                            // Create Question
+                            Question q = populateQuestion(competition);
+                            Optional<Section> getSection = sectionRepository.findById(s.getId());
+
+                            getSection.ifPresentOrElse(ss -> {
+                                        q.setSection(getSection.get());
+                                        q.setPriority(0);
+                                        questionRepository.save(q);
+                                    },
+                                    () -> {
+                                        throw new RuntimeException("Section not found for id" + s.getId());
+                                    });
+
+                        },
+                        () -> {
+                            throw new RuntimeException("Competition not found for id" + competitionResource.getId());
+                        }
+
+                );
+            }
+        });
+    }
     private Question populateQuestion(Optional<Competition> competition1) {
         Question question = QuestionBuilder.aQuestion()
                 .withName("Project Impact")
