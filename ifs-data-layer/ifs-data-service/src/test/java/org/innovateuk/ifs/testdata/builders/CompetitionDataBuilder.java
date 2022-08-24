@@ -5,6 +5,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.Decision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionApplicationConfig;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
@@ -177,21 +178,13 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
             if (line != null &&
                     line.isImSurveyEnabled()) {
-
+                Optional<Competition> competition1 = competitionRepository.findById(competition.getId());
 
                 //List<Question> questions = questionRepository.findByCompetitionIdAndSectionTypeOrderByPriorityAsc(competition.getId(), SectionType.APPLICATION_QUESTIONS);
-                Question question = QuestionBuilder.aQuestion()
-                        .withName("Project Impact")
-                        .withShortName("Project Impact")
-                        .withDescription("Project Impact")
-                        .withType(QuestionType.GENERAL)
-                        .withMarkAsCompletedEnabled(true)
-                        .withMultipleStatuses(true)
-                        .withAssignEnabled(true)
-                        .withQuestionSetupType(QuestionSetupType.IMPACT_MANAGEMENT_SURVEY)
-                        .build();
 
-                Question q = questionRepository.save(question);
+               // Create Question
+                Question q = populateQuestion(competition1);
+                Question q2 = questionRepository.save(q);
 
                 SectionResource sectionResource = SectionResourceBuilder.newSectionResource()
                         .withName("Supporting Information")
@@ -199,10 +192,30 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                         .withQuestions(newArrayList(q.getId()))
                         .build();
 
-             Section section = sectionMapper.mapToDomain(sectionResource);
+                // Create Section
+                Section section = sectionMapper.mapToDomain(sectionResource);
+                section.setCompetition(competition1.get());
+                section.setPriority(0);
+                Section s = sectionRepository.save(section);
 
-             Section s =  sectionRepository.save(section);
-                System.out.println(s);
+                //Get Section
+                Optional<Section> getSection = sectionRepository.findById(s.getId());
+
+
+                // Find and delete existing question
+                Optional<Question> questions = questionRepository
+                        .findById( q2.getId());
+
+
+                questionRepository.deleteById(questions.get().getId());
+
+
+                // Populate New question
+                Question q3 = populateQuestion(competition1);
+                q3.setSection(getSection.get());
+                q3.setPriority(0);
+                questionRepository.save(q3);
+
             }
 
             updateCompetitionInCompetitionData(data, competition.getId());
@@ -244,6 +257,22 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 questionSetupCompetitionService.update(manyAnswers);
             }
         });
+    }
+
+    private Question populateQuestion(Optional<Competition> competition1) {
+        Question question = QuestionBuilder.aQuestion()
+                .withName("Project Impact")
+                .withShortName("Project Impact")
+                .withDescription("Project Impact")
+                .withType(QuestionType.GENERAL)
+                .withMarkAsCompletedEnabled(true)
+                .withMultipleStatuses(true)
+                .withAssignEnabled(true)
+                .withQuestionSetupType(QuestionSetupType.IMPACT_MANAGEMENT_SURVEY)
+                .build();
+        question.setCompetition(competition1.get());
+        return question;
+
     }
 
     private void setGrantClaimMaximums(CompetitionResource competition) {
