@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesVie
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
@@ -21,7 +20,6 @@ import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.eligibility.populator.ProjectFinanceChangesViewModelPopulator;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
@@ -32,24 +30,19 @@ import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.financechecks.populator.FinanceChecksEligibilityProjectCostsFormPopulator;
 import org.innovateuk.ifs.project.financechecks.populator.ProjectFinanceChecksReadOnlyPopulator;
 import org.innovateuk.ifs.project.financechecks.viewmodel.FinanceChecksProjectCostsViewModel;
-import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksReadOnlyViewModel;
-import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksViewModel;
-import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
-import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -63,14 +56,14 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP_AKT;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.form.resource.SectionType.PROJECT_COST_FINANCES;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
@@ -78,14 +71,18 @@ import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuil
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
-@SuppressWarnings("unchecked")
-public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockMVCTest<ProjectFinanceChecksController> {
+@RunWith(Parameterized.class)
+public class KtpProjectFinanceChecksControllerTest extends AbstractApplicationMockMVCTest<ProjectFinanceChecksController> {
+
+    private final FundingType fundingType;
 
     @Mock
     private ApplicantRestService applicantRestService;
@@ -134,6 +131,22 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
             .build();
 
     private final FinanceCheckEligibilityResource eligibilityOverview = newFinanceCheckEligibilityResource().build();
+
+    @Parameterized.Parameters(name = "{index}: FundingType->{0}")
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[] [] {
+                {KTP}, {KTP_AKT}
+        });
+    }
+
+    @Override
+    protected ProjectFinanceChecksController supplyControllerUnderTest() {
+        return new ProjectFinanceChecksController();
+    }
+
+    public KtpProjectFinanceChecksControllerTest(FundingType fundingType) {
+        this.fundingType = fundingType;
+    }
 
     @Before
     public void setUpData() {
@@ -195,102 +208,50 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
     }
 
     @Test
-    public void viewFinanceChecksLandingPage() throws Exception {
+    public void viewKtpFecExternalEligibilityPage() throws Exception {
+        List<FinanceRowType> expectedFinanceRowTypes = FinanceRowType.getKtpFinanceRowTypes().stream()
+                .filter(financeRowType -> financeRowType.isCost()
+                        && !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
+                .collect(Collectors.toList());
 
-        long projectId = 123L;
-        long organisationId = 234L;
-        String projectName = "Name";
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withFundingType(fundingType)
+                .withFinanceRowTypes(FinanceRowType.getKtpFinanceRowTypes())
+                .build();
 
-        ProjectPartnerStatusResource statusResource = newProjectPartnerStatusResource().withProjectDetailsStatus(ProjectActivityStates.COMPLETE)
-                .withFinanceContactStatus(ProjectActivityStates.COMPLETE).withOrganisationId(organisationId).build();
-        ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().withPartnerStatuses(Collections.singletonList(statusResource)).build();
-        ProjectResource project = newProjectResource().withId(projectId).withName(projectName).withApplication(application).withCompetition(competitionId).build();
-        OrganisationResource partnerOrganisation = newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
-        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
+        project.setCompetition(competitionResource.getId());
 
-        when(projectService.getById(projectId)).thenReturn(project);
-        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
-        when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceRestService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
-        when(financeCheckServiceMock.getQueries(any())).thenReturn(ServiceResult.serviceSuccess(emptyList()));
-        when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(organisationId);
-        when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
-
-        MvcResult result = mockMvc.perform(get("/project/123/finance-check")).
-                andExpect(view().name("project/finance-checks")).
-                andReturn();
-
-        ProjectFinanceChecksViewModel model = (ProjectFinanceChecksViewModel) result.getModelAndView().getModel().get("model");
-
-        assertEquals(model.getProjectId(), project.getId());
-        assertEquals(model.getOrganisationId(), partnerOrganisation.getId());
-        assertEquals(model.getProjectName(), projectName);
-        assertFalse(model.isApproved());
-    }
-
-    @Test
-    public void viewFinanceChecksReadOnly() throws Exception {
-
-        ProjectFinanceChecksReadOnlyViewModel projectFinanceChecksReadOnlyViewModel = Mockito.mock(ProjectFinanceChecksReadOnlyViewModel.class);
-        when(projectFinanceChecksReadOnlyPopulator.populate(project.getId())).thenReturn(projectFinanceChecksReadOnlyViewModel);
-
-        mockMvc.perform(get("/project/123/finance-check/read-only"))
-                .andExpect(view().name("project/finance-checks-read-only"))
-                .andReturn();
-    }
-
-    private QueryResource sampleQuery() {
-        return new QueryResource(null, null, emptyList(), null, null, false, ZonedDateTime.now(), null, null);
-    }
-
-    @Test
-    public void viewFinanceChecksLandingPageApproved() throws Exception {
-
-        long projectId = 123L;
-        long organisationId = 234L;
-        String projectName = "Name";
-
-        ProjectPartnerStatusResource statusResource = newProjectPartnerStatusResource().withProjectDetailsStatus(ProjectActivityStates.COMPLETE)
-                .withFinanceContactStatus(ProjectActivityStates.COMPLETE).withFinanceChecksStatus(ProjectActivityStates.COMPLETE).withOrganisationId(organisationId).build();
-        ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().withPartnerStatuses(Collections.singletonList(statusResource)).build();
-        ProjectResource project = newProjectResource().withId(projectId).withName(projectName).withApplication(application).withCompetition(competitionId).build();
-        OrganisationResource partnerOrganisation = newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
-        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
-
-        when(projectService.getById(projectId)).thenReturn(project);
-        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
-        when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceRestService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
-        when(financeCheckServiceMock.getQueries(projectFinanceResource.getId())).thenReturn(ServiceResult.serviceSuccess(Collections.singletonList(sampleQuery())));
-        when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(organisationId);
-        when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
-
-        MvcResult result = mockMvc.perform(get("/project/123/finance-check")).
-                andExpect(view().name("project/finance-checks")).
-                andReturn();
-
-        ProjectFinanceChecksViewModel model = (ProjectFinanceChecksViewModel) result.getModelAndView().getModel().get("model");
-
-        assertEquals(model.getProjectId(), project.getId());
-        assertEquals(model.getOrganisationId(), partnerOrganisation.getId());
-        assertEquals(model.getProjectName(), projectName);
-        assertTrue(model.isApproved());
-    }
-
-    @Test
-    public void viewExternalEligibilityPage() throws Exception {
         EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility);
+
+        ProjectFinanceResource projectFinance = newProjectFinanceResource()
+                .withFecEnabled(true)
+                .withOrganisation(kbOrganisation.getId())
+                .withGrantClaimPercentage(BigDecimal.valueOf(100))
+                .withFinanceOrganisationDetails(asMap(
+                        FinanceRowType.OTHER_COSTS, newDefaultCostCategory().build(),
+                        FinanceRowType.ASSOCIATE_SALARY_COSTS, newDefaultCostCategory().build(),
+                        FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS, newDefaultCostCategory().build(),
+                        FinanceRowType.CONSUMABLES, newDefaultCostCategory().build(),
+                        FinanceRowType.ASSOCIATE_SUPPORT, newDefaultCostCategory().build(),
+                        FinanceRowType.KNOWLEDGE_BASE, newDefaultCostCategory().build(),
+                        FinanceRowType.ESTATE_COSTS, newDefaultCostCategory().build(),
+                        FinanceRowType.KTP_TRAVEL, newDefaultCostCategory().build()))
+                .build();
 
         PublicContentResource publicContentResource = newPublicContentResource().build();
         PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
 
-        when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
-        when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(industrialOrganisation.getId());
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.getByApplicationId(application.getId())).thenReturn(project);
+        when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), kbOrganisation.getId())).thenReturn(eligibilityOverview);
+        when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(kbOrganisation);
+        when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(kbOrganisation.getId());
         when(projectFinanceRestService.getFinanceTotals(project.getId())).thenReturn(restSuccess(emptyList()));
-        when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
+        when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(Collections.singletonList(projectFinance)));
         when(publicContentItemRestService.getItemByCompetitionId(project.getCompetition())).thenReturn(restSuccess(publicContentItemResource));
-        when(formPopulator.populateForm(project.getId(), industrialOrganisation.getId(), false)).thenReturn(new YourProjectCostsForm());
+        when(formPopulator.populateForm(project.getId(), kbOrganisation.getId(), false)).thenReturn(new YourProjectCostsForm());
         when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(anyBoolean(), any(), any())).thenReturn(new ProjectFinanceChangesViewModel());
 
         MvcResult result = mockMvc.perform(get("/project/" + project.getId() + "/finance-check/eligibility")).
@@ -305,8 +266,84 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
 
         FinanceChecksEligibilityViewModel viewModel = (FinanceChecksEligibilityViewModel) model.get("summaryModel");
 
-        assertNull(viewModel.getFecModelEnabled());
-        assertFalse(viewModel.isCanEditProjectCosts());
+        assertTrue(viewModel.getFecModelEnabled());
+
+        FinanceChecksProjectCostsViewModel projectCostViewModel = (FinanceChecksProjectCostsViewModel) model.get("model");
+
+        assertNotNull(projectCostViewModel);
+        assertFalse(projectCostViewModel.isCanEditProjectCosts());
+
+        assertThat(projectCostViewModel.getOrderedAccordionFinanceRowTypes(), containsInAnyOrder(expectedFinanceRowTypes.toArray()));
+    }
+
+    @Test
+    public void viewKtpNonFecExternalEligibilityPage() throws Exception {
+        List<FinanceRowType> expectedFinanceRowTypes = FinanceRowType.getKtpFinanceRowTypes().stream()
+                .filter(financeRowType -> financeRowType.isCost()
+                        && !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType))
+                .collect(Collectors.toList());
+
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withFundingType(fundingType)
+                .withFinanceRowTypes(FinanceRowType.getKtpFinanceRowTypes())
+                .build();
+
+        project.setCompetition(competitionResource.getId());
+
+        EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
+        setUpViewEligibilityMocking(eligibility);
+
+        ProjectFinanceResource projectFinance = newProjectFinanceResource()
+                .withFecEnabled(false)
+                .withOrganisation(kbOrganisation.getId())
+                .withGrantClaimPercentage(BigDecimal.valueOf(100))
+                .withFinanceOrganisationDetails(asMap(
+                        FinanceRowType.OTHER_COSTS, newDefaultCostCategory().build(),
+                        FinanceRowType.ASSOCIATE_SALARY_COSTS, newDefaultCostCategory().build(),
+                        FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS, newDefaultCostCategory().build(),
+                        FinanceRowType.CONSUMABLES, newDefaultCostCategory().build(),
+                        FinanceRowType.ASSOCIATE_SUPPORT, newDefaultCostCategory().build(),
+                        FinanceRowType.KNOWLEDGE_BASE, newDefaultCostCategory().build(),
+                        FinanceRowType.ESTATE_COSTS, newDefaultCostCategory().build(),
+                        FinanceRowType.KTP_TRAVEL, newDefaultCostCategory().build(),
+                        FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT, newDefaultCostCategory().build(),
+                        FinanceRowType.INDIRECT_COSTS, newDefaultCostCategory().build()))
+                .build();
+
+        PublicContentResource publicContentResource = newPublicContentResource().build();
+        PublicContentItemResource publicContentItemResource = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
+
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.getByApplicationId(application.getId())).thenReturn(project);
+        when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), kbOrganisation.getId())).thenReturn(eligibilityOverview);
+        when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(kbOrganisation);
+        when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(kbOrganisation.getId());
+        when(projectFinanceRestService.getFinanceTotals(project.getId())).thenReturn(restSuccess(emptyList()));
+        when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(Collections.singletonList(projectFinance)));
+        when(publicContentItemRestService.getItemByCompetitionId(project.getCompetition())).thenReturn(restSuccess(publicContentItemResource));
+        when(formPopulator.populateForm(project.getId(), kbOrganisation.getId(), false)).thenReturn(new YourProjectCostsForm());
+        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(anyBoolean(), any(), any())).thenReturn(new ProjectFinanceChangesViewModel());
+
+        MvcResult result = mockMvc.perform(get("/project/" + project.getId() + "/finance-check/eligibility")).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/financecheck/eligibility")).
+                andExpect(model().attribute("model", instanceOf(FinanceChecksProjectCostsViewModel.class))).
+                andReturn();
+
+        assertReadOnlyViewEligibilityDetails(result);
+
+        Map<String, Object> model = result.getModelAndView().getModel();
+
+        FinanceChecksEligibilityViewModel viewModel = (FinanceChecksEligibilityViewModel) model.get("summaryModel");
+
+        assertFalse(viewModel.getFecModelEnabled());
+
+        FinanceChecksProjectCostsViewModel projectCostViewModel = (FinanceChecksProjectCostsViewModel) model.get("model");
+
+        assertNotNull(projectCostViewModel);
+
+        assertThat(projectCostViewModel.getOrderedAccordionFinanceRowTypes(), containsInAnyOrder(expectedFinanceRowTypes.toArray()));
     }
 
     private void assertReadOnlyViewEligibilityDetails(MvcResult result) {
@@ -331,6 +368,14 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
 
     @Test
     public void eligibilityChanges() throws Exception {
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withFundingType(fundingType)
+                .withFinanceRowTypes(FinanceRowType.getKtpFinanceRowTypes())
+                .build();
+
+        project.setCompetition(competitionResource.getId());
+
+        when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(industrialOrganisation.getId());
         ProjectFinanceChangesViewModel viewModel = mock(ProjectFinanceChangesViewModel.class);
@@ -344,6 +389,14 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
 
     @Test
     public void eligibilityChangesForOrganisation() throws Exception {
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withFundingType(fundingType)
+                .withFinanceRowTypes(FinanceRowType.getKtpFinanceRowTypes())
+                .build();
+
+        project.setCompetition(competitionResource.getId());
+
+        when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         ProjectFinanceChangesViewModel viewModel = mock(ProjectFinanceChangesViewModel.class);
         when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(false, project, industrialOrganisation)).thenReturn(viewModel);
@@ -352,10 +405,5 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
                 .andExpect(view().name("project/financecheck/eligibility-changes"))
                 .andExpect(model().attribute("model", viewModel))
                 .andReturn();
-    }
-
-    @Override
-    protected ProjectFinanceChecksController supplyControllerUnderTest() {
-        return new ProjectFinanceChecksController();
     }
 }
