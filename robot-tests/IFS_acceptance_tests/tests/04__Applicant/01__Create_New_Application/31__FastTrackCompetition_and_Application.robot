@@ -17,7 +17,7 @@ ${fastTrackCompName}            Fast Track Competition for fixed amount of fundi
 ${fastTrackApplicationName}     Fast Track Application
 
 *** Test Cases ***
-Maximun funding amount sought validation
+Maximun funding amount sought default selection as No
     [Documentation]  IFS-12292
     Given The user logs-in in new browser                   &{Comp_admin1_credentials}
     And the user navigates to the page                      ${CA_UpcomingComp}
@@ -28,15 +28,13 @@ Maximun funding amount sought validation
     And the user selects the checkbox                       research-categories-33  #Feasibility
     And the user clicks the button/link                     jQuery = button:contains("Done")
     And the user clicks the button/link                     jQuery = span:contains("Funding amount sought")
-    And the user clicks the button/link                     jQuery = button:contains("Done")
-    Then the user should see a field and summary error      Select an option.
+    Then the user should see the element                    css = [name="fundingAmountSoughtApplicable"][checked="checked"]
     And the user should see the element                     jQuery = h1:contains("Funding amount sought")
     And the user should see the element                     jQuery = h2:contains("Is a maximum funding amount sought?")
 
 The user can choose no maximum funding amount sought required
     [Documentation]  IFS-12292
-    When the user selects the radio button      fundingAmountSoughtApplicable   false
-    And the user clicks the button/link         jQuery = button:contains("Done")
+    When the user clicks the button/link        jQuery = button:contains("Done")
     Then the user should see the element        jQuery = dt:contains("Is a maximum funding amount sought?")+dd:contains("No")
 
 Funding amount sought field validation
