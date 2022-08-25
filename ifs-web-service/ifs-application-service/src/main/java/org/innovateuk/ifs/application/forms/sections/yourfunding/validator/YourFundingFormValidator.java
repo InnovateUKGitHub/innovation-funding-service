@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResource;
 import org.innovateuk.ifs.competition.service.CompetitionApplicationConfigRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -33,6 +34,9 @@ public class YourFundingFormValidator extends AbstractYourFundingFormValidator {
     @Autowired
     private ApplicationRestService applicationRestService;
 
+    @Autowired
+    private CompetitionRestService competitionRestService;
+
     public void validate(AbstractYourFundingForm form, Errors errors, UserResource user, long applicationId) {
 
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
@@ -43,7 +47,8 @@ public class YourFundingFormValidator extends AbstractYourFundingFormValidator {
             OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
             return applicationFinanceRestService.getFinanceDetails(applicationId, organisation.getId()).getSuccess();
         };
-        validate(form, errors, financeSupplier, competitionApplicationConfigResource.getMaximumFundingSought());
+        boolean isThirdPartyOfgemCompetition = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess().isThirdPartyOfgem();
+        validate(form, errors, financeSupplier, competitionApplicationConfigResource.getMaximumFundingSought(), isThirdPartyOfgemCompetition);
 
         if (form instanceof YourFundingAmountForm ) {
             validateLessThanCosts((YourFundingAmountForm) form, errors, financeSupplier);

@@ -156,12 +156,12 @@
                     <div class="govuk-radios__item" data-target="other-funding-table">
                         <input type="radio"
                                class="govuk-radios__input"
-                               id="other-funding-yes"
+                               id="contribution-in-kind-yes"
                                value="true"
                                required="required"
                                th:attr="data-required-errormessage=#{validation.finance.contribution.in.kind.required}"
                                th:field="*{otherFunding}"/>
-                        <label for="other-funding-yes"
+                        <label for="contribution-in-kind-yes"
                                class="govuk-label govuk-radios__label">
                             Yes
                         </label>
@@ -170,12 +170,12 @@
                     <div class="govuk-radios__item">
                         <input type="radio"
                                class="govuk-radios__input"
-                               id="other-funding-no"
+                               id="contribution-in-kind-no"
                                value="false"
                                required="required"
                                th:attr="data-required-errormessage=#{validation.finance.contribution.in.kind.required}"
                                th:field="*{otherFunding}"/>
-                        <label for="other-funding-no"
+                        <label for="contribution-in-kind-no"
                                class="govuk-label govuk-radios__label">
                             No
                         </label>
@@ -386,7 +386,7 @@
                    maxlength="255"
                    th:attr="data-required-errormessage=#{validation.finance.funding.source.blank}"/>
         </td>
-        <td class="govuk-table__cell govuk-form-group"
+        <td th:unless="${isThirdPartyOfgem}" class="govuk-table__cell govuk-form-group"
             th:classappend="${#fields.hasErrors('__${path}__.date')} ? 'govuk-form-group--error'">
             <label th:for="__${path}__.date" class="govuk-visually-hidden">
                 Date secured
@@ -402,6 +402,22 @@
                    maxlength="7"
                    th:errorclass="govuk-input--error"
                    required="required"/>
+        </td>
+        <td th:if="${isThirdPartyOfgem}" class="govuk-table__cell govuk-form-group"
+            th:classappend="${#fields.hasErrors('__${path}__.date')} ? 'govuk-form-group--error'">
+            <label th:for="__${path}__.date" class="govuk-visually-hidden">
+                Date secured
+            </label>
+            <span class="govuk-error-message" th:each="err : ${#fields.errors('__${path}__.date')}" th:text="${err}"/>
+            <input type="text"
+                   th:field="*{__${path}__.date}"
+                   class="govuk-input"
+                   th:id="__${path}__.date"
+                   placeholder="MM-YYYY"
+                   pattern="(0[1-9]|1[012])-[0-9]{4}"
+                   th:attr="data-pattern-errormessage=#{validation.finance.funding.date.invalid}"
+                   maxlength="7"
+                   th:errorclass="govuk-input--error"/>
         </td>
         <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group"
             th:classappend="${#fields.hasErrors('__${path}__.fundingAmount')} ? 'govuk-form-group--error'">
