@@ -423,20 +423,4 @@ public class CommonBuilders {
         return competition;
 
     }
-
-
-    public static SectionBuilder impactManagement() {
-        return aSection()
-                .withName("Supporting Information")
-                .withType(SectionType.SUPPORTING_INFORMATION)
-                .withDescription("This is not a test")
-                .withQuestions(newArrayList(aQuestion()
-                        .withShortName("Project Impact")
-                        .withName("Project Impact")
-                        .withDescription("Understanding the benefits of the project that innovate UK supports")
-                        .withMarkAsCompletedEnabled(true)
-                        .withMultipleStatuses(true)
-                        .withAssignEnabled(true)
-                        .withQuestionSetupType(QuestionSetupType.IMPACT_MANAGEMENT_SURVEY)));
-    }
 }
