@@ -184,6 +184,7 @@ the user fills in the CS funding eligibility
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element    jQuery = h1:contains("Funding amount sought")
     Run Keyword If  '${status}' == 'FAIL'   run keywords    the user clicks the button/link     jQuery = span:contains("Funding amount sought")
     ...                                     AND             the user clicks the button/link     jQuery = button:contains("Done")
+    ...                                     ELSE            the user clicks the button/link     jQuery = button:contains("Done")
     #the user clicks the button/link                         jQuery = button:contains("Done")
     the user clicks the button/link                         link = Return to setup overview
     the user should see the element                         jQuery = div:contains("Funding eligibility") ~ .task-status-complete
