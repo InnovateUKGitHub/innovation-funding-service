@@ -28,7 +28,7 @@ Maximun funding amount sought default selection as No
     And the user selects the checkbox                       research-categories-33  #Feasibility
     And the user clicks the button/link                     jQuery = button:contains("Done")
     And the user clicks the button/link                     jQuery = span:contains("Funding amount sought")
-    Then the user should see the element                    css = [name="fundingAmountSoughtApplicable"][checked="checked"]
+    Then the user should see the element                    css = [name="fundingAmountSoughtApplicable"]:checked ~ label
     And the user should see the element                     jQuery = h1:contains("Funding amount sought")
     And the user should see the element                     jQuery = h2:contains("Is a maximum funding amount sought?")
 
