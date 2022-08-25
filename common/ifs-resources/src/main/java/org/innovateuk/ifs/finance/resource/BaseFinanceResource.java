@@ -230,8 +230,8 @@ public abstract class BaseFinanceResource {
 
     @JsonIgnore
     public BigDecimal getContributionToProjectPercentage() {
-        if (ZERO.equals(getTotalContribution()) || getTotalContribution() == null) {
-            return ZERO;
+        if (ZERO.compareTo(getTotalContribution()) == 0 || getTotalContribution() == null) {
+            return BigDecimal.ZERO;
         }
         return getTotalContribution().multiply(new BigDecimal("100")).divide(getTotal(), 2, RoundingMode.HALF_UP);
     }
