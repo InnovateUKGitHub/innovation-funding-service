@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -29,8 +30,12 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import org.mockito.Mock;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 
 import static java.lang.String.format;
@@ -41,6 +46,8 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP_AKT;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
@@ -53,9 +60,13 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProc
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.when;
 
-public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourFundingViewModelPopulator> {
+@RunWith(Parameterized.class)
+public class KtpYourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourFundingViewModelPopulator> {
+
+    private final FundingType fundingType;
 
     private static final Long APPLICATION_ID = 1L;
     private static final long SECTION_ID = 2L;
@@ -100,9 +111,22 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         return new YourFundingViewModelPopulator();
     }
 
+    @Parameterized.Parameters(name = "{index}: FundingType->{0}")
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[] [] {
+                {KTP}, {KTP_AKT}
+        });
+    }
+
+    public KtpYourFundingViewModelPopulatorTest(FundingType fundingType) {
+        this.fundingType = fundingType;
+    }
+
     @Test
     public void populate() {
-        CompetitionResource competition = newCompetitionResource().build();
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(fundingType)
+                .build();
         SectionResource sectionResource = newSectionResource()
                 .withId(SECTION_ID)
                 .withChildSections(Collections.emptyList())
@@ -162,7 +186,7 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         when(questionService
                 .getQuestionStatusesForApplicationAndOrganisation(APPLICATION_ID, section.getCurrentApplicant().getOrganisation().getId()))
                 .thenReturn(asMap(researchCategoryQuestion.getId(), newQuestionStatusResource().withMarkedAsComplete(true).build(),
-                                  subsidyBasisQuestion.getId(), newQuestionStatusResource().withMarkedAsComplete(true).build()));
+                        subsidyBasisQuestion.getId(), newQuestionStatusResource().withMarkedAsComplete(true).build()));
 
         SectionResource yourOrgSection = newSectionResource().build();
         when(sectionService.getOrganisationFinanceSection(section.getCompetition().getId())).thenReturn(yourOrgSection);
@@ -184,35 +208,6 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         assertEquals(format("/application/%d/form/FINANCE/%d", APPLICATION_ID, organisation.getId()), viewModel.getFinancesUrl());
         assertTrue(viewModel.isOverridingFundingRules());
         assertFalse(viewModel.isFixedFundingLevel());
-        assertFalse(viewModel.isKtpFundingType());
-    }
-
-    @Test
-    public void populateManagement() {
-
-        CompetitionResource competition = newCompetitionResource().build();
-        OrganisationResource organisation = newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
-        PublicContentResource publicContent = newPublicContentResource().build();
-        PublicContentItemResource publicContentItem = newPublicContentItemResource().withPublicContentResource(publicContent).build();
-
-        when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(newApplicationResource()
-                .withId(APPLICATION_ID)
-                .withName("name")
-                .withCompetition(COMPETITION_ID)
-                .build()));
-
-        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
-        when(publicContentItemRestService.getItemByCompetitionId(COMPETITION_ID)).thenReturn(restSuccess(publicContentItem));
-        when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));
-
-        YourFundingViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
-
-        assertEquals(APPLICATION_ID, viewModel.getApplicationId());
-        assertEquals(COMPETITION_ID, viewModel.getCompetitionId());
-        assertEquals("name", viewModel.getApplicationName());
-        assertEquals(OrganisationTypeEnum.BUSINESS, viewModel.getOrganisationType());
-        assertFalse(viewModel.isFundingSectionLocked());
-        assertFalse(viewModel.isFundingSectionLocked());
-        assertEquals(format("/application/%d/form/FINANCE/%d", APPLICATION_ID, ORGANISATION_ID), viewModel.getFinancesUrl());
+        assertTrue(viewModel.isKtpFundingType());
     }
 }
