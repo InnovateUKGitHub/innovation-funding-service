@@ -85,7 +85,7 @@ public class SelectOrganisationController {
     private String redirectToSelectedOrganisationPage(long competitionId, long projectId, long organisationId) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         String urlPart;
-        if (competition.getFundingType() == FundingType.KTP) {
+        if (competition.isKtp()) {
             urlPart = "ktp-financial-years";
         } else if (competition.getIncludeProjectGrowthTable()) {
             urlPart = "with-growth-table";

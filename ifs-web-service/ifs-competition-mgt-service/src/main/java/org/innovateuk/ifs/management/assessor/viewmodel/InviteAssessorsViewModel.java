@@ -101,6 +101,7 @@ public abstract class InviteAssessorsViewModel<ViewModelRowType extends InviteAs
     }
 
     public boolean isKtp() {
-        return fundingType == FundingType.KTP;
+        return fundingType == FundingType.KTP
+                || fundingType == FundingType.KTP_AKT;
     }
 }

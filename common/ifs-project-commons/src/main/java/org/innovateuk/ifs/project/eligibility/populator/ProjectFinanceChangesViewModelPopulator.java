@@ -106,7 +106,7 @@ public class ProjectFinanceChangesViewModelPopulator {
 
         for (Map.Entry<FinanceRowType, FinanceRowCostCategory> entry : projectFinance.getFinanceOrganisationDetails().entrySet()) {
             FinanceRowType rowType = entry.getKey();
-            if (shouldSkipRow(rowType, competition.getFundingType())) {
+            if (shouldSkipRow(rowType, competition)) {
                 continue;
             }
             if (rowType == FinanceRowType.YOUR_FINANCE && !OrganisationTypeEnum.isResearch(organisation.getOrganisationType())) {
@@ -143,8 +143,10 @@ public class ProjectFinanceChangesViewModelPopulator {
         return projectFinanceChangesProjectFinancesViewModel;
     }
 
-    private boolean shouldSkipRow(FinanceRowType rowType, FundingType fundingType) {
-        if (FundingType.KTP == fundingType) {
+    private boolean shouldSkipRow(FinanceRowType rowType, CompetitionResource competition) {
+        FundingType fundingType = competition.getFundingType();
+
+        if (competition.isKtp()) {
             return Arrays.asList(FinanceRowType.FINANCE, FinanceRowType.PREVIOUS_FUNDING, FinanceRowType.ADDITIONAL_COMPANY_COSTS).contains(rowType);
         }
         if (FundingType.PROCUREMENT == fundingType) {
@@ -153,6 +155,7 @@ public class ProjectFinanceChangesViewModelPopulator {
         if (FundingType.LOAN == fundingType) {
             return FinanceRowType.GRANT_CLAIM_AMOUNT == rowType;
         }
+
         return Arrays.asList(FinanceRowType.FINANCE, FinanceRowType.OTHER_FUNDING).contains(rowType);
     }
 

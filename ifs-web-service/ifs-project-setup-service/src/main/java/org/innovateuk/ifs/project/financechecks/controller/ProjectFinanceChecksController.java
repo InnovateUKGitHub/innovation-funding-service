@@ -528,7 +528,7 @@ public class ProjectFinanceChecksController {
                     competition.getFinanceRowTypesByFinance(organisationProjectFinance),
                     competition.isOverheadsAlwaysTwenty(),
                     competition.getName(),
-                    competition.getFundingType() == FundingType.KTP,
+                    competition.isKtp(),
                     ktpPhase2Enabled,
                     canEditProjectCosts,
                     competition.isThirdPartyOfgem(),

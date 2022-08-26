@@ -303,6 +303,7 @@ public class FinanceCheckSummaryResource {
 
     @JsonIgnore
     public boolean isKtp(){
-        return this.fundingType.equals(KTP);
+        return this.fundingType.equals(KTP)
+                || this.fundingType.equals(KTP_AKT);
     }
 }

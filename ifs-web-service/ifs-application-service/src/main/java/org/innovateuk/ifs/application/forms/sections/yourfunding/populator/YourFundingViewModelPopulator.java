@@ -33,8 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP;
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.*;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.SUBSIDY_BASIS;
 
@@ -202,7 +201,8 @@ public class YourFundingViewModelPopulator {
     }
 
     private boolean competitionIsKtp(ApplicantSectionResource section) {
-        return KTP.equals(section.getCompetition().getFundingType());
+        return KTP.equals(section.getCompetition().getFundingType())
+                || KTP_AKT.equals(section.getCompetition().getFundingType());
     }
 
     private boolean competitionIsLoanType(ApplicantSectionResource section) {

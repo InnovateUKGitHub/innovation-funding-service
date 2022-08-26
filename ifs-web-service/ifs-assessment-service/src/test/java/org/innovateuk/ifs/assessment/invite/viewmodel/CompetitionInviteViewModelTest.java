@@ -25,20 +25,6 @@ public class CompetitionInviteViewModelTest {
     }
 
     @Test
-    public void testKtpCompetition() {
-        String inviteHash = "invite-hash";
-
-        CompetitionInviteResource competitionInviteResource = CompetitionInviteResourceBuilder.newCompetitionInviteResource()
-                .withCompetitionFundingType(FundingType.KTP)
-                .build();
-
-        CompetitionInviteViewModel viewModel = new CompetitionInviteViewModel(inviteHash, competitionInviteResource, false, null);
-
-        assertTrue(viewModel.isKtpCompetition());
-        assertFalse(viewModel.isAlwaysOpenCompetition());
-    }
-
-    @Test
     public void testAlwaysOpenCompetition() {
         String inviteHash = "invite-hash";
 
