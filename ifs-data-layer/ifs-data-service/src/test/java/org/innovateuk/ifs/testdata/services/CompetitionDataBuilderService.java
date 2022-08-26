@@ -175,7 +175,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         CompetitionDataBuilder competitionBeforeMilestones = this.competitionDataBuilder.
                 createCompetition()
                 .withBasicData(line)
-                .withApplicationFormFromTemplate(line)
+                .withApplicationFormFromTemplate()
                 .withApplicationFinances(line)
                 .withAssessmentConfig(line)
                 .withCompetitionTermsAndConditions(line)

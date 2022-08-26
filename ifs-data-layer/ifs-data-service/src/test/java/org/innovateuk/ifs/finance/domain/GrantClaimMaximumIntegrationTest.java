@@ -241,7 +241,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
         CompetitionData competition = competitionDataBuilder.
                 withExistingCompetition(competitionCreation).
                 withBasicData(competitionLine).
-                withApplicationFormFromTemplate(null).
+                withApplicationFormFromTemplate().
                 withNewMilestones(competitionLine).
                 withOpenDate(ZonedDateTime.now().minus(1, ChronoUnit.DAYS)).
                 withBriefingDate(addDays(1)).

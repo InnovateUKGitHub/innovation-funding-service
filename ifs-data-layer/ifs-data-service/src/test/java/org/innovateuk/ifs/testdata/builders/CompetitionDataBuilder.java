@@ -166,7 +166,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         updateCompetitionInCompetitionData(data, competition.getId());
     }
 
-    public CompetitionDataBuilder withApplicationFormFromTemplate(CompetitionLine line) {
+    public CompetitionDataBuilder withApplicationFormFromTemplate() {
 
         return asCompAdmin(data -> {
 
