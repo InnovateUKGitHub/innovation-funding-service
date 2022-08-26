@@ -3,12 +3,15 @@ package org.innovateuk.ifs.application.finance.viewmodel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.SectionType;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.THIRDPARTY;
 import static org.innovateuk.ifs.util.CollectionFunctions.negate;
 
 /**
@@ -26,6 +29,7 @@ public class FinanceSummaryTableViewModel implements BaseAnalyticsViewModel {
     private final boolean ktp;
     private final boolean includeOrganisationNames;
     private final boolean isThirdPartyOfgem;
+    private final String financeSummaryOtherCostLabel;
 
     public FinanceSummaryTableViewModel(long applicationId,
                                         CompetitionResource competition,
@@ -45,6 +49,19 @@ public class FinanceSummaryTableViewModel implements BaseAnalyticsViewModel {
         this.ktp = competition.isKtp();
         this.includeOrganisationNames = includeOrganisationNames;
         this.isThirdPartyOfgem = isThirdPartyOfgem;
+        this.financeSummaryOtherCostLabel = computeFinanceSummaryOtherCostLabel(competition);
+    }
+
+    private String computeFinanceSummaryOtherCostLabel(CompetitionResource competition) {
+        if (competition.getCompetitionTypeEnum() == CompetitionTypeEnum.OFGEM &&
+                THIRDPARTY.equals(competition.getFundingType()))
+            return "Contribution in Kind (£)";
+        else if (KTP.equals(competition.getFundingType()) ||
+                CompetitionTypeEnum.OFGEM.equals(competition.getCompetitionTypeEnum()))
+            return "Other funding (£)";
+        else
+            return "Other public sector funding (£)";
+
     }
 
     @Override
@@ -92,6 +109,11 @@ public class FinanceSummaryTableViewModel implements BaseAnalyticsViewModel {
     public boolean isThirdPartyOfgem() {
         return isThirdPartyOfgem;
     }
+
+    public String financeSummmaryCostLabel() {
+        return financeSummaryOtherCostLabel;
+    }
+
 
     public boolean isAllFinancesComplete() {
         return rows.stream()
@@ -148,6 +170,7 @@ public class FinanceSummaryTableViewModel implements BaseAnalyticsViewModel {
         return rows.stream().filter(FinanceSummaryTableRow::isComplete)
                 .count() > 1;
     }
+
     @JsonIgnore
     public SectionType getFinanceSectionType() {
         return SectionType.FINANCE;
