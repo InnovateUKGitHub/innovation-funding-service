@@ -20,7 +20,7 @@ import static org.innovateuk.ifs.util.NumberUtils.getBigDecimalFormatted;
 @SuppressWarnings("unchecked")
 public class AbstractYourFundingFormValidator {
 
-    protected void validate(AbstractYourFundingForm form, Errors errors, Supplier<BaseFinanceResource> financeSupplier, BigDecimal maximumFundingSought, Boolean isThirdPartyOfgemCompetition) {
+    protected void validate(AbstractYourFundingForm form, Errors errors, Supplier<BaseFinanceResource> financeSupplier, BigDecimal maximumFundingSought, Boolean isThirdPartyFundingType) {
 
         if (form instanceof AbstractYourFundingPercentageForm) {
             validateYourFundingPercentageForm((AbstractYourFundingPercentageForm) form, errors, financeSupplier, maximumFundingSought);
@@ -29,7 +29,7 @@ public class AbstractYourFundingFormValidator {
             validateYourFundingAmountForm((AbstractYourFundingAmountForm) form, errors, financeSupplier, maximumFundingSought);
         }
 
-        if (isThirdPartyOfgemCompetition) {
+        if (isThirdPartyFundingType) {
             ValidationUtils.rejectIfEmpty(errors, "otherFunding", "validation.finance.contribution.in.kind.required");
         } else {
             ValidationUtils.rejectIfEmpty(errors, "otherFunding", "validation.finance.other.funding.required");
