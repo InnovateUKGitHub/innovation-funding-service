@@ -36,17 +36,17 @@ public class AbstractYourFundingFormValidator {
         }
 
         if (TRUE.equals(form.getOtherFunding())) {
-            validateOtherFundingRows(form.getOtherFundingRows(), errors, isThirdPartyOfgemCompetition);
+            validateOtherFundingRows(form.getOtherFundingRows(), errors);
         }
     }
 
-    private void validateOtherFundingRows(Map<String, BaseOtherFundingRowForm> rows, Errors errors, Boolean isThirdPartyOfgemCompetition) {
+    private void validateOtherFundingRows(Map<String, BaseOtherFundingRowForm> rows, Errors errors) {
         if (rows == null || rows.isEmpty()) {
             errors.rejectValue("otherFunding", "validation.finance.min.row.other.funding.single");
         } else {
             rows.forEach((id, row) -> {
                 if (!isBlankButNotOnlyRow(row, rows)) {
-                    validateOtherFundingDate(id, row, errors, isThirdPartyOfgemCompetition);
+                    validateOtherFundingDate(id, row, errors);
                     validateOtherFundingSource(id, row, errors);
                     validateOtherFundingAmount(id, row, errors);
                 }
@@ -78,16 +78,14 @@ public class AbstractYourFundingFormValidator {
         }
     }
 
-    private void validateOtherFundingDate(String id, BaseOtherFundingRowForm row, Errors errors, Boolean isThirdPartyOfgemCompetition) {
-        if (!isThirdPartyOfgemCompetition) {
-            if (isNullOrEmpty(row.getDate())) {
-                errors.rejectValue(String.format("otherFundingRows[%s].date", id), "validation.finance.funding.date.invalid");
-            }
-            Pattern pattern = Pattern.compile("^(?:((0[1-9]|1[012])-[0-9]{4})|)$");
-            Matcher m = pattern.matcher(row.getDate());
-            if (!m.matches()) {
-                errors.rejectValue(String.format("otherFundingRows[%s].date", id), "validation.finance.funding.date.invalid");
-            }
+    private void validateOtherFundingDate(String id, BaseOtherFundingRowForm row, Errors errors) {
+        if (isNullOrEmpty(row.getDate())) {
+            errors.rejectValue(String.format("otherFundingRows[%s].date", id), "validation.finance.funding.date.invalid");
+        }
+        Pattern pattern = Pattern.compile("^(?:((0[1-9]|1[012])-[0-9]{4})|)$");
+        Matcher m = pattern.matcher(row.getDate());
+        if (!m.matches()) {
+            errors.rejectValue(String.format("otherFundingRows[%s].date", id), "validation.finance.funding.date.invalid");
         }
     }
 
