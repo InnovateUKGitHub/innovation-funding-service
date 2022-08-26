@@ -37,7 +37,7 @@ public class CompetitionSetupApplicationQuestionValidator {
     private QuestionSetupCompetitionRestService questionSetupCompetitionRestService;
 
     public void validate(QuestionForm form, BindingResult bindingResult, long questionId, CompetitionResource competitionResource) {
-        if (!competitionResource.isKtp()) {
+        if (!competitionResource.isKtpOnly()) {
             validateRadioButtons(form, bindingResult, competitionResource);
             validateFileUploaded(form, bindingResult, questionId);
             validateTypeOfQuestion(form, bindingResult);
