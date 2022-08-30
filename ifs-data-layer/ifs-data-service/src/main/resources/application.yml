@@ -201,6 +201,8 @@ ifs:
     finance-totals:
         authSecretKey: supersecretkey
         baseURL: http://finance-data-service:8080
+    flyway:
+        repair: ${IFS_FLYWAY_REPAIR:false}
     ktp:
         fec:
             finance:

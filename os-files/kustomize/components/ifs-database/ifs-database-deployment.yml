@@ -18,7 +18,7 @@ spec:
         - env:
             - name: MYSQL_ROOT_PASSWORD
               value: password
-          image: mysql:5.7.34
+          image: mysql:8
           name: mysql
           args: []
           imagePullPolicy: IfNotPresent
