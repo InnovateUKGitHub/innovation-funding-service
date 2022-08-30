@@ -113,8 +113,10 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-8847 Always open competitions: new comp setup configuration
 ...
 ...               IFS-10165 Users can not edit completion stage from release feedback to project setup
-
+...
 ...               IFS-10693 Hesta - Increase project duration in months
+...
+...               IFS-12292 Maximum funding amount - comp setup
 ...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -332,7 +334,7 @@ Project eligibility: Should have a Green Check
     And the user should see the element     css = #compCTA[disabled]
 
 Funding eligibility: Mark as Done
-    [Documentation]  IFS-8791
+    [Documentation]  IFS-8791  IFS-12292
     Given the user clicks the button/link         link = Funding eligibility
     And the user should see the element           jQuery = h2:contains("Are research categories applicable?")
     And the user selects the radio button         researchCategoriesApplicable  true
@@ -354,6 +356,9 @@ Funding eligibility: Mark as Done
     And the user enters text to a text field      maximums[1][1].maximum  75
     And the user enters text to a text field      maximums[2][0].maximum  75
     And the user enters text to a text field      maximums[2][1].maximum  75
+    And the user clicks the button/link           jQuery = button:contains("Done")
+    And the user clicks the button/link           jQuery = button:contains("Done")
+    And the user selects the radio button         fundingAmountSoughtApplicable   false
     And the user clicks the button/link           jQuery = button:contains("Done")
     Then The user clicks the button/link          link = Return to setup overview
 
