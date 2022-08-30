@@ -23,6 +23,8 @@ Documentation   IFS-11442 OFGEM: Create a "ThirdParty" generic template
 ...
 ...             IFS-12765 Ofgem - Discovery 2 - Finance summary changes - Applicant journey
 ...
+...             IFS-12795 Ofgem - Third party finances - Contributions in kind
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -141,18 +143,28 @@ Max funding sought validation - ofgem
     Then the user should see a field and summary error           Funding sought cannot be higher than your project costs.
 
 Ofgem application Your funding - empty validation
-    [Documentation]  IFS-11481
+    [Documentation]  IFS-11481  IFS-12795
     When the user enters empty funding amount
     Then the user should see a field and summary error   Enter the amount of funding sought.
     And the user should see the element                  jQuery = span:contains("The amount you apply for must reflect the funding amount available for this competition.")
+    And the user should see the element                  jQuery = h1:contains("Contributions in kind")
+    And the user should see the element                  jQuery = span:contains("Are you making any contributions in kind for this project?")
 
-the user marks the your funding section as complete
+the user marks your funding section as complete without contributions in kind
+    [Documentation]  IFS-12795
+    Given the user enters text to a text field      id = amount   25678
+    When the user selects the radio button          otherFunding  false
+    And the user clicks the button/link             id = mark-all-as-complete
+    And the user clicks the button/link             link = Your funding
+    Then the user should see the element            jQuery = p:contains("No contributions in kind")
+
+the user marks the your funding section as complete with contributions in kind
     [Documentation]  IFS-11481  IFS-12765
-    When the user enters text to a text field                   id = amount   25678
-    And the user fills thirdparty other funding information
-    And the user clicks the button/link                         id = mark-all-as-complete
-    Then the user should see the element                        jQuery = td:contains("53,220") ~ td:contains("25,678") ~ td:contains("14.17%") ~ td:contains("20,000") ~ td:contains("7,542")
-    And the user should see the element                         jQuery = th:contains("Contribution to project (%)")
+    Given the user clicks the button/link                               jQuery = button:contains("Edit your funding")
+    And the user fills thirdparty contributions in kind information
+    And the user clicks the button/link                                 id = mark-all-as-complete
+    Then the user should see the element                                jQuery = td:contains("53,220") ~ td:contains("25,678") ~ td:contains("14.17%") ~ td:contains("20,000") ~ td:contains("7,542")
+    And the user should see the element                                 jQuery = th:contains("Contribution to project (%)")
 
 Ofgem application finance overview
     [Documentation]  IFS-11481  IFS-12765
@@ -218,14 +230,14 @@ New applicant added via project setup should not view any references to terms an
 
 New partner can join the ofgem project via project setup
     [Documentation]  IFS-11595
-    Given the user clicks the button/link                        link = Back to join project
+    Given the user clicks the button/link                               link = Back to join project
     And the user completes ofgem project organisation details
-    When the user clicks the button/link                         link = Your funding
-    When the user enters text to a text field                    id = amount   250
-    And the user fills thirdparty other funding information
-    And the user clicks the button/link                          id = mark-all-as-complete
-    When the user clicks the button/link                         id = submit-join-project-button
-    Then the user should see the element                         jQuery = h1:contains("Set up your project") span:contains("${thirdPartyOfgemApplicationName}")
+    When the user clicks the button/link                                link = Your funding
+    When the user enters text to a text field                           id = amount   250
+    And the user fills thirdparty contributions in kind information
+    And the user clicks the button/link                                 id = mark-all-as-complete
+    When the user clicks the button/link                                id = submit-join-project-button
+    Then the user should see the element                                jQuery = h1:contains("Set up your project") span:contains("${thirdPartyOfgemApplicationName}")
 
 *** Keywords ***
 Custom suite setup
@@ -281,8 +293,12 @@ the user fills the third party project costs
     the user fills in Travel and subsistence
     the user fills in Other costs
 
-the user fills thirdparty other funding information
+the user fills thirdparty contributions in kind information
     the user selects the radio button       otherFunding  true
+    the user should see the element         jQuery = th:contains("Description and breakdown of contribution in kind")
+    the user should see the element         jQuery = th:contains("Contributions in kind value (£)")
+    the user should see the element         jQuery = button:contains("Add another contribution in kind")
+    the user should see the element         jQuery = label:contains("Total contributions in kind") + input[value="£20,000"]
     the user enters text to a text field    css = [name*=source]  Lottery funding
     the user enters text to a text field    css = [name*=date]  12-${nextyear}
     the user enters text to a text field    css = [name*=fundingAmount]  20000
