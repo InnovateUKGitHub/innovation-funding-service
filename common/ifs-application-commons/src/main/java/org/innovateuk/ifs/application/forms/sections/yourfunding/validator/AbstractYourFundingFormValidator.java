@@ -36,13 +36,15 @@ public class AbstractYourFundingFormValidator {
         }
 
         if (TRUE.equals(form.getOtherFunding())) {
-            validateOtherFundingRows(form.getOtherFundingRows(), errors);
+            validateOtherFundingRows(form.getOtherFundingRows(), errors, isThirdPartyFundingType);
         }
     }
 
-    private void validateOtherFundingRows(Map<String, BaseOtherFundingRowForm> rows, Errors errors) {
+    private void validateOtherFundingRows(Map<String, BaseOtherFundingRowForm> rows, Errors errors, Boolean isThirdPartyFundingType) {
         if (rows == null || rows.isEmpty()) {
-            errors.rejectValue("otherFunding", "validation.finance.min.row.other.funding.single");
+
+                errors.rejectValue("otherFunding","validation.finance.min.row.contributions.in.kind.single");
+
         } else {
             rows.forEach((id, row) -> {
                 if (!isBlankButNotOnlyRow(row, rows)) {

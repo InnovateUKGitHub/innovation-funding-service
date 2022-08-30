@@ -287,7 +287,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
         when(processRoleRepository.findById(markedAsCompleteById)).thenReturn(Optional.of(processRole));
         when(financeService.financeDetails(applicationId, organisationId)).thenReturn(serviceSuccess(expectedFinances));
-        when(financeValidationUtil.validateCostItem(TRAVEL, costCategory)).thenReturn(validationMessages);
+        when(financeValidationUtil.validateCostItem(TRAVEL, costCategory, false)).thenReturn(validationMessages);
 
         List<ValidationMessages> result = service.validateCostItem(applicationId, FinanceRowType.TRAVEL, markedAsCompleteById);
 
@@ -295,7 +295,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
         verify(processRoleRepository).findById(markedAsCompleteById);
         verify(financeService).financeDetails(applicationId, organisationId);
-        verify(financeValidationUtil).validateCostItem(TRAVEL, costCategory);
+        verify(financeValidationUtil).validateCostItem(TRAVEL, costCategory, false);
 
     }
 
@@ -328,7 +328,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
         when(processRoleRepository.findById(markedAsCompleteById)).thenReturn(Optional.of(processRole));
         when(financeService.financeDetails(applicationId, organisationId)).thenReturn(serviceSuccess(expectedFinances));
-        when(financeValidationUtil.validateCostItem(TRAVEL, costCategory)).thenReturn(validationMessages);
+        when(financeValidationUtil.validateCostItem(TRAVEL, costCategory, false)).thenReturn(validationMessages);
 
         List<ValidationMessages> result = service.validateCostItem(applicationId, FinanceRowType.TRAVEL, markedAsCompleteById);
 
@@ -336,7 +336,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
         verify(processRoleRepository).findById(markedAsCompleteById);
         verify(financeService).financeDetails(applicationId, organisationId);
-        verify(financeValidationUtil).validateCostItem(TRAVEL, costCategory);
+        verify(financeValidationUtil).validateCostItem(TRAVEL, costCategory, false);
     }
 
     @Test

@@ -26,14 +26,14 @@ public class FinanceValidationUtil {
     @Autowired
     private ApplicationValidatorService applicationValidatorService;
 
-    public List<ValidationMessages> validateCostItem(FinanceRowType type, FinanceRowCostCategory costCategory) {
+    public List<ValidationMessages> validateCostItem(FinanceRowType type, FinanceRowCostCategory costCategory, boolean isThirdPartyFundingType) {
         List<FinanceRowItem> costItems = costCategory.getCosts();
         List<ValidationMessages> results = costItems.stream()
                 .map(this::validateCostItem)
                 .filter(this::nonEmpty)
                 .collect(toList());
 
-        ValidationMessages emptyRowMessages = invokeEmptyRowValidator(type, costCategory);
+        ValidationMessages emptyRowMessages = invokeEmptyRowValidator(type, costCategory, isThirdPartyFundingType);
         results.add(emptyRowMessages);
 
         return results;
@@ -82,7 +82,7 @@ public class FinanceValidationUtil {
         return validationMessages != null && validationMessages.hasErrors();
     }
 
-    private ValidationMessages invokeEmptyRowValidator(FinanceRowType type, FinanceRowCostCategory costCategory) {
+    private ValidationMessages invokeEmptyRowValidator(FinanceRowType type, FinanceRowCostCategory costCategory, boolean isThirdPartyFundingType) {
         List<FinanceRowItem> costItems = costCategory.getCosts();
         ValidationMessages validationMessages = new ValidationMessages();
         switch (type) {
@@ -90,7 +90,11 @@ public class FinanceValidationUtil {
                 OtherFundingCostCategory otherFundingCostCategory = (OtherFundingCostCategory) costCategory;
                 if ("Yes".equals(otherFundingCostCategory.getOtherFunding().getOtherPublicFunding())) {
                     if (costItems.isEmpty()) {
-                        validationMessages.addError(globalError("validation.finance.min.row.other.funding.single"));
+                        if (isThirdPartyFundingType) {
+                            validationMessages.addError(globalError("validation.finance.min.row.contributions.in.kind.single"));
+                        } else {
+                            validationMessages.addError(globalError("validation.finance.min.row.other.funding.single"));
+                        }
                     }
                 }
                 break;

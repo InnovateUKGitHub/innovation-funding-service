@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.validator.ApplicationDetailsMarkAsCompleteValidator;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -85,6 +86,9 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
 
+    @Autowired
+    private ApplicationService applicationService;
+
     @Override
     public List<BindingResult> validateFormInputResponse(Long applicationId, Long formInputId) {
         List<BindingResult> results = new ArrayList<>();
@@ -117,10 +121,12 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
 
     @Override
     public List<ValidationMessages> validateCostItem(Long applicationId, FinanceRowType type, Long markedAsCompleteById) {
+        boolean isThirdPartyFundingType = applicationService.getCompetitionByApplicationId(applicationId).getSuccess().isThirdPartyFundingType();
         return getProcessRole(markedAsCompleteById).andOnSuccess(role ->
                 financeService.financeDetails(applicationId, role.getOrganisationId()).andOnSuccessReturn(financeDetails ->
                         financeValidationUtil.validateCostItem(type,
-                                financeDetails.getFinanceOrganisationDetails().get(type)
+                                financeDetails.getFinanceOrganisationDetails().get(type),
+                                isThirdPartyFundingType
                         )
                 )
         ).getSuccess();
