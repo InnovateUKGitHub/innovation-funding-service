@@ -298,10 +298,10 @@ the user fills thirdparty contributions in kind information
     the user should see the element         jQuery = th:contains("Description and breakdown of contribution in kind")
     the user should see the element         jQuery = th:contains("Contributions in kind value (£)")
     the user should see the element         jQuery = button:contains("Add another contribution in kind")
-    the user should see the element         jQuery = label:contains("Total contributions in kind") + input[value="£20,000"]
     the user enters text to a text field    css = [name*=source]  Lottery funding
     the user enters text to a text field    css = [name*=date]  12-${nextyear}
     the user enters text to a text field    css = [name*=fundingAmount]  20000
+    the user should see the element         jQuery = label:contains("Total contributions in kind")
 
 the user accept the thirdpary terms and conditions
     [Arguments]  ${returnLink}
