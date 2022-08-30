@@ -222,7 +222,7 @@ public class FinanceSummaryTableViewModelPopulator {
             } else {
                 return BigDecimal.ZERO;
             }
-        } else   if (competition.isThirdPartyOfgem()) {
+        } else   if (competition.isCompTypeOfgemAndFundingTypeThirdParty()) {
             return  finance.map(appRes->appRes.getTotal().subtract(appRes.getTotalFundingSought())).orElse(BigDecimal.ZERO);
         }{
             return finance.map(ApplicationFinanceResource::getTotalContribution).orElse(BigDecimal.ZERO);
