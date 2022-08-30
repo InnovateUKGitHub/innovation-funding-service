@@ -159,7 +159,7 @@ the user marks your funding section as complete without contributions in kind
     Then the user should see the element            jQuery = p:contains("No contributions in kind")
 
 the user marks the your funding section as complete with contributions in kind
-    [Documentation]  IFS-11481  IFS-12765
+    [Documentation]  IFS-11481  IFS-12765  IFS-12795
     Given the user clicks the button/link                               jQuery = button:contains("Edit your funding")
     And the user fills thirdparty contributions in kind information
     And the user clicks the button/link                                 id = mark-all-as-complete
@@ -229,7 +229,7 @@ New applicant added via project setup should not view any references to terms an
     Then the user should see the element    jQuery = .form-footer:contains("Innovation Fund governance document accepted")
 
 New partner can join the ofgem project via project setup
-    [Documentation]  IFS-11595
+    [Documentation]  IFS-11595  IFS-12795
     Given the user clicks the button/link                               link = Back to join project
     And the user completes ofgem project organisation details
     When the user clicks the button/link                                link = Your funding
