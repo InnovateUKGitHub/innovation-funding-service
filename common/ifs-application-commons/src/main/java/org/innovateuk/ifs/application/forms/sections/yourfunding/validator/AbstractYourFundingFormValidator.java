@@ -20,7 +20,7 @@ import static org.innovateuk.ifs.util.NumberUtils.getBigDecimalFormatted;
 @SuppressWarnings("unchecked")
 public class AbstractYourFundingFormValidator {
 
-    protected void validate(AbstractYourFundingForm form, Errors errors, Supplier<BaseFinanceResource> financeSupplier, BigDecimal maximumFundingSought, Boolean isThirdPartyFundingType) {
+    protected void validate(AbstractYourFundingForm form, Errors errors, Supplier<BaseFinanceResource> financeSupplier, BigDecimal maximumFundingSought, Boolean isCompTypeOfgemAndFundingTypeThirdParty) {
 
         if (form instanceof AbstractYourFundingPercentageForm) {
             validateYourFundingPercentageForm((AbstractYourFundingPercentageForm) form, errors, financeSupplier, maximumFundingSought);
@@ -29,18 +29,18 @@ public class AbstractYourFundingFormValidator {
             validateYourFundingAmountForm((AbstractYourFundingAmountForm) form, errors, financeSupplier, maximumFundingSought);
         }
 
-        if (isThirdPartyFundingType) {
+        if (isCompTypeOfgemAndFundingTypeThirdParty) {
             ValidationUtils.rejectIfEmpty(errors, "otherFunding", "validation.finance.contribution.in.kind.required");
         } else {
             ValidationUtils.rejectIfEmpty(errors, "otherFunding", "validation.finance.other.funding.required");
         }
 
         if (TRUE.equals(form.getOtherFunding())) {
-            validateOtherFundingRows(form.getOtherFundingRows(), errors, isThirdPartyFundingType);
+            validateOtherFundingRows(form.getOtherFundingRows(), errors, isCompTypeOfgemAndFundingTypeThirdParty);
         }
     }
 
-    private void validateOtherFundingRows(Map<String, BaseOtherFundingRowForm> rows, Errors errors, Boolean isThirdPartyFundingType) {
+    private void validateOtherFundingRows(Map<String, BaseOtherFundingRowForm> rows, Errors errors, Boolean isCompTypeOfgemAndFundingTypeThirdParty) {
         if (rows == null || rows.isEmpty()) {
 
                 errors.rejectValue("otherFunding","validation.finance.min.row.contributions.in.kind.single");

@@ -26,14 +26,14 @@ public class FinanceValidationUtil {
     @Autowired
     private ApplicationValidatorService applicationValidatorService;
 
-    public List<ValidationMessages> validateCostItem(FinanceRowType type, FinanceRowCostCategory costCategory, boolean isThirdPartyFundingType) {
+    public List<ValidationMessages> validateCostItem(FinanceRowType type, FinanceRowCostCategory costCategory, boolean isCompTypeOfgemAndFundingTypeThirdParty) {
         List<FinanceRowItem> costItems = costCategory.getCosts();
         List<ValidationMessages> results = costItems.stream()
                 .map(this::validateCostItem)
                 .filter(this::nonEmpty)
                 .collect(toList());
 
-        ValidationMessages emptyRowMessages = invokeEmptyRowValidator(type, costCategory, isThirdPartyFundingType);
+        ValidationMessages emptyRowMessages = invokeEmptyRowValidator(type, costCategory, isCompTypeOfgemAndFundingTypeThirdParty);
         results.add(emptyRowMessages);
 
         return results;
@@ -82,7 +82,7 @@ public class FinanceValidationUtil {
         return validationMessages != null && validationMessages.hasErrors();
     }
 
-    private ValidationMessages invokeEmptyRowValidator(FinanceRowType type, FinanceRowCostCategory costCategory, boolean isThirdPartyFundingType) {
+    private ValidationMessages invokeEmptyRowValidator(FinanceRowType type, FinanceRowCostCategory costCategory, boolean isCompTypeOfgemAndFundingTypeThirdParty) {
         List<FinanceRowItem> costItems = costCategory.getCosts();
         ValidationMessages validationMessages = new ValidationMessages();
         switch (type) {
@@ -90,7 +90,7 @@ public class FinanceValidationUtil {
                 OtherFundingCostCategory otherFundingCostCategory = (OtherFundingCostCategory) costCategory;
                 if ("Yes".equals(otherFundingCostCategory.getOtherFunding().getOtherPublicFunding())) {
                     if (costItems.isEmpty()) {
-                        if (isThirdPartyFundingType) {
+                        if (isCompTypeOfgemAndFundingTypeThirdParty) {
                             validationMessages.addError(globalError("validation.finance.min.row.contributions.in.kind.single"));
                         } else {
                             validationMessages.addError(globalError("validation.finance.min.row.other.funding.single"));

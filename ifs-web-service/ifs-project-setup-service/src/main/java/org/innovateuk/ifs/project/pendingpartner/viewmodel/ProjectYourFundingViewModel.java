@@ -24,7 +24,7 @@ public class ProjectYourFundingViewModel {
     private final boolean isThirdPartyOfgem;
     private String hash;
     private final boolean isFixedFundingLevel;
-    private final boolean isThirdPartyFundingType;
+    private final boolean isCompTypeOfgemAndFundingTypeThirdParty;
 
     public ProjectYourFundingViewModel(ProjectResource project,
                                        long organisationId,
@@ -41,7 +41,7 @@ public class ProjectYourFundingViewModel {
                                        boolean isThirdPartyOfgem,
                                        String hash,
                                        boolean isFixedFundingLevel,
-                                       boolean isThirdPartyFundingType) {
+                                       boolean isCompTypeOfgemAndFundingTypeThirdParty) {
         this.projectName = project.getName();
         this.projectId = project.getId();
         this.organisationId = organisationId;
@@ -58,7 +58,7 @@ public class ProjectYourFundingViewModel {
         this.isThirdPartyOfgem = isThirdPartyOfgem;
         this.hash = hash;
         this.isFixedFundingLevel = isFixedFundingLevel;
-        this.isThirdPartyFundingType = isThirdPartyFundingType;
+        this.isCompTypeOfgemAndFundingTypeThirdParty = isCompTypeOfgemAndFundingTypeThirdParty;
     }
 
     public String getProjectName() {
@@ -146,7 +146,7 @@ public class ProjectYourFundingViewModel {
         return isFixedFundingLevel;
     }
 
-    public boolean isThirdPartyFundingType() {
-        return isThirdPartyFundingType;
+    public boolean isCompTypeOfgemAndFundingTypeThirdParty() {
+        return isCompTypeOfgemAndFundingTypeThirdParty;
     }
 }

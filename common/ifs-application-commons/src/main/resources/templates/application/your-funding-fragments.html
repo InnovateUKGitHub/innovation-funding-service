@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<th:block th:fragment="form(form, readOnly, guidanceFragment, maximumFundingLevel, hideAreYouRequestingFunding, ktpFundingType, lead, isThirdPartyOfgem, isFixedFundingLevel, isThirdPartyFundingType)">
+<th:block th:fragment="form(form, readOnly, guidanceFragment, maximumFundingLevel, hideAreYouRequestingFunding, ktpFundingType, lead, isThirdPartyOfgem, isFixedFundingLevel, isCompTypeOfgemAndFundingTypeThirdParty, isThirdPartyFundingType)">
     <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
     <input type="hidden" id="cacheTest" value=""/>
     <th:block th:unless="${readOnly}">
@@ -89,12 +89,13 @@
             </fieldset>
         </div>
 
-        <div th:unless="${isThirdPartyFundingType}" class="govuk-form-group govuk-!-margin-bottom-9"
+        <div class="govuk-form-group govuk-!-margin-bottom-9"
              th:classappend="${#fields.hasErrors('otherFunding')} ? 'govuk-form-group--error'">
             <fieldset class="govuk-fieldset" id="otherFundingShowHideToggle">
                 <th:block th:unless="${ktpFundingType}">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                        <h1 class="govuk-fieldset__heading">Other funding</h1>
+                        <h1 th:unless="${isCompTypeOfgemAndFundingTypeThirdParty}" class="govuk-fieldset__heading">Other funding</h1>
+                        <h1 th:if="${isCompTypeOfgemAndFundingTypeThirdParty}" class="govuk-fieldset__heading">Contributions in kind</h1>
                     </legend>
                 </th:block>
                 <th:block th:if="${ktpFundingType}">
@@ -108,8 +109,9 @@
                 <span class="govuk-error-message" th:each="err : ${#fields.errors('otherFunding')}"
                       th:text="${err}"></span>
                 <th:block th:unless="${ktpFundingType}">
-                    <span class="govuk-hint" th:if="${isThirdPartyOfgem}">Have you received any aligned or third party funding for this project?</span>
-                    <span class="govuk-hint" th:unless="${isThirdPartyOfgem}">Have you received any other public sector funding for this project?
+                    <span class="govuk-hint" th:if="${isCompTypeOfgemAndFundingTypeThirdParty}">Are you making any contributions in kind for this project?</span>
+                    <span class="govuk-hint" th:if="${isThirdPartyOfgem and !isThirdPartyFundingType}">Have you received any aligned or third party funding for this project?</span>
+                    <span class="govuk-hint" th:unless="${isThirdPartyOfgem or isCompTypeOfgemAndFundingTypeThirdParty}">Have you received any other public sector funding for this project?
                         This is important as other public sector support counts as part of the funding you can receive.
                     </span>
                 </th:block>
@@ -120,7 +122,7 @@
                                id="other-funding-yes"
                                value="true"
                                required="required"
-                               th:attr="data-required-errormessage=#{validation.finance.other.funding.required}"
+                               th:attr="data-required-errormessage=${isCompTypeOfgemAndFundingTypeThirdParty} ? #{validation.finance.contribution.in.kind.required} : #{validation.finance.other.funding.required}"
                                th:field="*{otherFunding}"/>
                         <label for="other-funding-yes"
                                class="govuk-label govuk-radios__label">
@@ -134,49 +136,9 @@
                                id="other-funding-no"
                                value="false"
                                required="required"
-                               th:attr="data-required-errormessage=#{validation.finance.other.funding.required}"
+                               th:attr="data-required-errormessage=${isCompTypeOfgemAndFundingTypeThirdParty} ? #{validation.finance.contribution.in.kind.required} : #{validation.finance.other.funding.required}"
                                th:field="*{otherFunding}"/>
                         <label for="other-funding-no"
-                               class="govuk-label govuk-radios__label">
-                            No
-                        </label>
-                    </div>
-                </div>
-            </fieldset>
-        </div>
-        <div th:if="${isThirdPartyFundingType}" class="govuk-form-group govuk-!-margin-bottom-9"
-             th:classappend="${#fields.hasErrors('otherFunding')} ? 'govuk-form-group--error'">
-            <fieldset class="govuk-fieldset" id="otherFundingShowHideToggle">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                        <h1 class="govuk-fieldset__heading">Contributions in kind</h1>
-                    </legend>
-                <span class="govuk-error-message" th:each="err : ${#fields.errors('otherFunding')}"
-                      th:text="${err}"></span>
-                <span class="govuk-hint">Are you making any contributions in kind for this project?</span>
-                <div id="otherFunding" class="govuk-radios">
-                    <div class="govuk-radios__item" data-target="other-funding-table">
-                        <input type="radio"
-                               class="govuk-radios__input"
-                               id="contribution-in-kind-yes"
-                               value="true"
-                               required="required"
-                               th:attr="data-required-errormessage=#{validation.finance.contribution.in.kind.required}"
-                               th:field="*{otherFunding}"/>
-                        <label for="contribution-in-kind-yes"
-                               class="govuk-label govuk-radios__label">
-                            Yes
-                        </label>
-                    </div>
-                    <th:block th:insert="application/your-funding-fragments :: contribution_in_kind"/>
-                    <div class="govuk-radios__item">
-                        <input type="radio"
-                               class="govuk-radios__input"
-                               id="contribution-in-kind-no"
-                               value="false"
-                               required="required"
-                               th:attr="data-required-errormessage=#{validation.finance.contribution.in.kind.required}"
-                               th:field="*{otherFunding}"/>
-                        <label for="contribution-in-kind-no"
                                class="govuk-label govuk-radios__label">
                             No
                         </label>
@@ -199,26 +161,26 @@
             <dd th:text="|£${form.amount == null ? 0 : form.amount}|">10</dd>
         </dl>
         <th:block th:unless="${form.otherFunding}">
-            <p th:unless="${isThirdPartyFundingType}" class="govuk-body">No other funding</p>
-            <p th:if="${isThirdPartyFundingType}" class="govuk-body">No contributions in kind</p>
+            <p th:unless="${isCompTypeOfgemAndFundingTypeThirdParty}" class="govuk-body">No other funding</p>
+            <p th:if="${isCompTypeOfgemAndFundingTypeThirdParty}" class="govuk-body">No contributions in kind</p>
         </th:block>
         <th:block th:if="${form.otherFunding}">
             <div class="table-overflow">
                 <table class="govuk-table">
                     <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th th:unless="${isThirdPartyFundingType}" id="other-funding-source" class="govuk-table__header" scope="col">Source of funding</th>
-                        <th th:if="${isThirdPartyFundingType}" id="other-funding-source" class="govuk-table__header" scope="col">Description and breakdown of contributions in kind</th>
+                        <th th:unless="${isCompTypeOfgemAndFundingTypeThirdParty}" id="other-funding-source" class="govuk-table__header" scope="col">Source of funding</th>
+                        <th th:if="${isCompTypeOfgemAndFundingTypeThirdParty}" id="other-funding-source" class="govuk-table__header" scope="col">Description and breakdown of contributions in kind</th>
                         <th id="other-funding-date" class="width-150 govuk-table__header" scope="col">Date secured</th>
-                        <th th:unless="${isThirdPartyFundingType}" id="other-funding-amount" class="width-150 govuk-table__header" scope="col">Funding amount</th>
-                        <th th:if="${isThirdPartyFundingType}" id="other-funding-amount" class="width-250 govuk-table__header alignright" scope="col">Contributions in kind value</th>
+                        <th th:unless="${isCompTypeOfgemAndFundingTypeThirdParty}" id="other-funding-amount" class="width-150 govuk-table__header" scope="col">Funding amount</th>
+                        <th th:if="${isCompTypeOfgemAndFundingTypeThirdParty}" id="other-funding-amount" class="width-250 govuk-table__header alignright" scope="col">Contributions in kind value</th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
                     <tr class="govuk-table__row" th:each="entry : ${form.otherFundingRows}"
                         th:unless="${entry.value.blank}">
-                        <th th:unless="${isThirdPartyFundingType}" class="govuk-table__header" scope="row" th:text="${entry.value.source}">National rail</th>
-                        <td th:if="${isThirdPartyFundingType}" class="govuk-table__cell" th:text="${entry.value.source}">National rail</td>
+                        <th th:unless="${isCompTypeOfgemAndFundingTypeThirdParty}" class="govuk-table__header" scope="row" th:text="${entry.value.source}">National rail</th>
+                        <td th:if="${isCompTypeOfgemAndFundingTypeThirdParty}" class="govuk-table__cell" th:text="${entry.value.source}">National rail</td>
                         <td class="govuk-table__cell" th:text="${entry.value.date}">17 April 2016</td>
                         <td class="govuk-table__cell govuk-table__cell--numeric"
                             th:text="'£' + ${entry.value.fundingAmount != null ? #numbers.formatInteger(entry.value.fundingAmount,0,'DEFAULT') : '0'}"></td>
@@ -226,8 +188,8 @@
                     </tbody>
                     <tfoot>
                     <tr class="govuk-table__row">
-                        <th th:unless="${isThirdPartyFundingType}" class="govuk-table__header" scope="row" colspan="2">Total other funding</th>
-                        <th th:if="${isThirdPartyFundingType}" class="govuk-table__header" scope="row" colspan="2">Total contributions in kind</th>
+                        <th th:unless="${isCompTypeOfgemAndFundingTypeThirdParty}" class="govuk-table__header" scope="row" colspan="2">Total other funding</th>
+                        <th th:if="${isCompTypeOfgemAndFundingTypeThirdParty}" class="govuk-table__header" scope="row" colspan="2">Total contributions in kind</th>
                         <td class="govuk-table__cell govuk-table__cell--numeric"
                             th:text="'£' + ${#numbers.formatInteger(form.otherFundingTotal, 0, 'DEFAULT')}"></td>
                     </tr>
@@ -276,10 +238,14 @@
                 <table class="govuk-table">
                     <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col" id="other-funding-source">Source of funding</th>
+                        <th th:unless="${isCompTypeOfgemAndFundingTypeThirdParty}" class="govuk-table__header" scope="col" id="other-funding-source">Source of funding</th>
+                        <th th:if="${isCompTypeOfgemAndFundingTypeThirdParty}" class="govuk-table__header width-40-percent" scope="col" id="other-funding-source">Description and breakdown of contribution in kind</th>
                         <th scope="col" id="other-funding-date" class="govuk-table__header width-150">Date secured</th>
-                        <th scope="col" id="other-funding-amount"
+                        <th th:unless="${isCompTypeOfgemAndFundingTypeThirdParty}" scope="col" id="other-funding-amount"
                             class="govuk-table__header govuk-table__header--numeric width-200">Funding amount (&pound;)
+                        </th>
+                        <th th:if="${isCompTypeOfgemAndFundingTypeThirdParty}" scope="col" id="other-funding-amount"
+                            class="govuk-table__header govuk-table__header--numeric width-200">Contributions in kind value (&pound;)
                         </th>
                         <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Actions</span>
                         </th>
@@ -293,7 +259,7 @@
                     </tbody>
                 </table>
             </div>
-            <p class="alignright">
+            <p th:unless="${isCompTypeOfgemAndFundingTypeThirdParty}" class="alignright">
                 <button type="submit"
                         name="add_row"
                         class="button-clear"
@@ -301,46 +267,7 @@
                 >Add another source of funding
                 </button>
             </p>
-        </div>
-        <div class="govuk-form-group alignright inline">
-            <label class="govuk-label"
-                   for="other-funding-total">Total other funding</label>
-            <input class="govuk-input govuk-input--width-10 alignright"
-                   data-calculation-fields="[id*=fundingAmount]"
-                   data-calculation-operations="+"
-                   id="other-funding-total"
-                   th:attr="data-calculation-rawvalue=${#numbers.formatInteger(form.otherFundingTotal, 0, 'DEFAULT')}"
-                   readonly="readonly"
-                   type="text" th:value="'£' + ${#numbers.formatInteger(form.otherFundingTotal, 0, 'DEFAULT')}"/>
-        </div>
-    </div>
-</th:block>
-
-<th:block th:fragment="contribution_in_kind">
-    <div class="govuk-checkboxes__conditional" id="other-funding-table">
-        <div class="govuk-form-group form-in-table">
-            <div class="table-overflow">
-                <table class="govuk-table">
-                    <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header width-40-percent" scope="col" id="other-funding-source">Description and breakdown of contribution in kind</th>
-                        <th scope="col" id="other-funding-date" class="govuk-table__header width-150">Date secured</th>
-                        <th scope="col" id="other-funding-amount"
-                            class="govuk-table__header govuk-table__header--numeric width-200">Contributions in kind value (&pound;)
-                        </th>
-                        <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Actions</span>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody class="govuk-table__body">
-                    <th:block th:each="entry : *{otherFundingRows}">
-                        <th:block
-                                th:insert="application/your-funding-fragments :: other_funding_row (${entry.key}, ${entry.value})"/>
-                    </th:block>
-                    </tbody>
-                </table>
-            </div>
-            <p class="alignright">
+            <p th:if="${isCompTypeOfgemAndFundingTypeThirdParty}" class="alignright">
                 <button type="submit"
                         name="add_row"
                         class="button-clear"
@@ -350,12 +277,14 @@
             </p>
         </div>
         <div class="govuk-form-group alignright inline">
-            <label class="govuk-label"
+            <label th:unless="${isCompTypeOfgemAndFundingTypeThirdParty}" class="govuk-label"
+                   for="other-funding-total">Total other funding</label>
+            <label th:if="${isCompTypeOfgemAndFundingTypeThirdParty}" class="govuk-label"
                    for="other-funding-total">Total contributions in kind</label>
             <input class="govuk-input govuk-input--width-10 alignright"
                    data-calculation-fields="[id*=fundingAmount]"
                    data-calculation-operations="+"
-                   id="contributions-in-kind-total"
+                   id="other-funding-total"
                    th:attr="data-calculation-rawvalue=${#numbers.formatInteger(form.otherFundingTotal, 0, 'DEFAULT')}"
                    readonly="readonly"
                    type="text" th:value="'£' + ${#numbers.formatInteger(form.otherFundingTotal, 0, 'DEFAULT')}"/>
@@ -388,7 +317,7 @@
                    maxlength="255"
                    th:attr="data-required-errormessage=#{validation.finance.funding.source.blank}"/>
         </td>
-        <td th:unless="${isThirdPartyFundingType}" class="govuk-table__cell govuk-form-group"
+        <td class="govuk-table__cell govuk-form-group"
             th:classappend="${#fields.hasErrors('__${path}__.date')} ? 'govuk-form-group--error'">
             <label th:for="__${path}__.date" class="govuk-visually-hidden">
                 Date secured
@@ -404,22 +333,6 @@
                    maxlength="7"
                    th:errorclass="govuk-input--error"
                    required="required"/>
-        </td>
-        <td th:if="${isThirdPartyFundingType}" class="govuk-table__cell govuk-form-group"
-            th:classappend="${#fields.hasErrors('__${path}__.date')} ? 'govuk-form-group--error'">
-            <label th:for="__${path}__.date" class="govuk-visually-hidden">
-                Date secured
-            </label>
-            <span class="govuk-error-message" th:each="err : ${#fields.errors('__${path}__.date')}" th:text="${err}"/>
-            <input type="text"
-                   th:field="*{__${path}__.date}"
-                   class="govuk-input"
-                   th:id="__${path}__.date"
-                   placeholder="MM-YYYY"
-                   pattern="(0[1-9]|1[012])-[0-9]{4}"
-                   th:attr="data-pattern-errormessage=#{validation.finance.funding.date.invalid}"
-                   maxlength="7"
-                   th:errorclass="govuk-input--error"/>
         </td>
         <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group"
             th:classappend="${#fields.hasErrors('__${path}__.fundingAmount')} ? 'govuk-form-group--error'">

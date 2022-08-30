@@ -47,8 +47,8 @@ public class YourFundingFormValidator extends AbstractYourFundingFormValidator {
             OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
             return applicationFinanceRestService.getFinanceDetails(applicationId, organisation.getId()).getSuccess();
         };
-        boolean isThirdPartyFundingType = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess().isThirdPartyFundingType();
-        validate(form, errors, financeSupplier, competitionApplicationConfigResource.getMaximumFundingSought(), isThirdPartyFundingType);
+        boolean isCompTypeOfgemAndFundingTypeThirdParty = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess().isCompTypeOfgemAndFundingTypeThirdParty();
+        validate(form, errors, financeSupplier, competitionApplicationConfigResource.getMaximumFundingSought(), isCompTypeOfgemAndFundingTypeThirdParty);
 
         if (form instanceof YourFundingAmountForm ) {
             validateLessThanCosts((YourFundingAmountForm) form, errors, financeSupplier);

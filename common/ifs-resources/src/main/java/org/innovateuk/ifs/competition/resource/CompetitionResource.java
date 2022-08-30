@@ -210,6 +210,10 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         return competitionTypeEnum == CompetitionTypeEnum.OFGEM;
     }
 
+    public boolean isCompTypeOfgemAndFundingTypeThirdParty() {
+        return isThirdPartyOfgem() && isThirdPartyFundingType();
+    }
+
     @JsonIgnore
     public boolean onlyOneOrgAllowedPerApplication() {
         return isH2020() || isProcurement();

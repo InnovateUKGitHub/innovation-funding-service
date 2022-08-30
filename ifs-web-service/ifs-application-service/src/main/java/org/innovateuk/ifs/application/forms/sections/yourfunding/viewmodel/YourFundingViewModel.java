@@ -57,6 +57,8 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
 
     private final boolean isThirdPartyFundingType;
 
+    private final boolean isCompTypeOfgemAndFundingTypeThirdParty;
+
     public YourFundingViewModel(long applicationId,
                                 String competitionName,
                                 long sectionId,
@@ -82,7 +84,8 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
                                 boolean isThirdPartyOfgem,
                                 String hash,
                                 boolean isFixedFundingLevel,
-                                boolean isThirdPartyFundingType) {
+                                boolean isThirdPartyFundingType,
+                                boolean isCompTypeOfgemAndFundingTypeThirdParty) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.sectionId = sectionId;
@@ -109,6 +112,7 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
         this.hash = hash;
         this.isFixedFundingLevel = isFixedFundingLevel;
         this.isThirdPartyFundingType = isThirdPartyFundingType;
+        this.isCompTypeOfgemAndFundingTypeThirdParty = isCompTypeOfgemAndFundingTypeThirdParty;
     }
 
     @Override
@@ -215,6 +219,10 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
 
     public boolean isThirdPartyFundingType() {
         return isThirdPartyFundingType;
+    }
+
+    public boolean isCompTypeOfgemAndFundingTypeThirdParty() {
+        return isCompTypeOfgemAndFundingTypeThirdParty;
     }
 
     /* view logic */
