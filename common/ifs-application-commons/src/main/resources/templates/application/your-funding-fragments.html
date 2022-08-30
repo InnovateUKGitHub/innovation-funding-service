@@ -199,7 +199,8 @@
             <dd th:text="|£${form.amount == null ? 0 : form.amount}|">10</dd>
         </dl>
         <th:block th:unless="${form.otherFunding}">
-            <p class="govuk-body">No other funding</p>
+            <p th:unless="${isThirdPartyFundingType}" class="govuk-body">No other funding</p>
+            <p th:if="${isThirdPartyFundingType}" class="govuk-body">No contributions in kind</p>
         </th:block>
         <th:block th:if="${form.otherFunding}">
             <div class="table-overflow">
