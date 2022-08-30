@@ -50,6 +50,7 @@
                   method="POST">
 
                 <th:block th:insert="application/your-funding-fragments :: form(
+                               model=${model},
                                form=${form},
                                readOnly=${model.readOnly},
                                guidanceFragment=${model.business ? 'project-business' : 'project-non-business'},
