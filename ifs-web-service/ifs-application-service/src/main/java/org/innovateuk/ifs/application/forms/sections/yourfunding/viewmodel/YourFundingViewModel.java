@@ -55,6 +55,8 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
 
     private final boolean isFixedFundingLevel;
 
+    private final boolean ktpFundingType;
+
     public YourFundingViewModel(long applicationId,
                                 String competitionName,
                                 long sectionId,
@@ -79,7 +81,8 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
                                 OrganisationTypeEnum organisationType,
                                 boolean isThirdPartyOfgem,
                                 String hash,
-                                boolean isFixedFundingLevel) {
+                                boolean isFixedFundingLevel,
+                                boolean ktpFundingType) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.sectionId = sectionId;
@@ -105,6 +108,7 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
         this.isThirdPartyOfgem = isThirdPartyOfgem;
         this.hash = hash;
         this.isFixedFundingLevel = isFixedFundingLevel;
+        this.ktpFundingType = ktpFundingType;
     }
 
     @Override
@@ -194,8 +198,7 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
     }
 
     public boolean isKtpFundingType() {
-        return (FundingType.KTP == fundingType)
-                || (FundingType.KTP_AKT == fundingType);
+        return ktpFundingType;
     }
 
     public OrganisationTypeEnum getOrganisationType() {

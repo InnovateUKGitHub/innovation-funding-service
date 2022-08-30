@@ -136,7 +136,8 @@ public class YourFundingViewModelPopulator {
                 section.getCurrentApplicant().getOrganisation().getOrganisationTypeEnum(),
                 competition.isThirdPartyOfgem(),
                 hash,
-                applicationFinance.isFixedFundingLevel());
+                applicationFinance.isFixedFundingLevel(),
+                competition.isKtp());
     }
 
 
@@ -201,8 +202,7 @@ public class YourFundingViewModelPopulator {
     }
 
     private boolean competitionIsKtp(ApplicantSectionResource section) {
-        return KTP.equals(section.getCompetition().getFundingType())
-                || KTP_AKT.equals(section.getCompetition().getFundingType());
+        return section.getCompetition().isKtp();
     }
 
     private boolean competitionIsLoanType(ApplicantSectionResource section) {
