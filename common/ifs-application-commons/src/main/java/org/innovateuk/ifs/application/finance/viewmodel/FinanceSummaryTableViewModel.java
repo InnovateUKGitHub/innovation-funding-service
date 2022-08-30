@@ -29,7 +29,13 @@ public class FinanceSummaryTableViewModel implements BaseAnalyticsViewModel {
     private final boolean ktp;
     private final boolean includeOrganisationNames;
     private final boolean isThirdPartyOfgem;
+
+    private final boolean isCompTypeOfgemAndFundingTypeThirdParty;
     private final String financeSummaryOtherCostLabel;
+
+    public boolean isCompTypeOfgemAndFundingTypeThirdParty() {
+        return isCompTypeOfgemAndFundingTypeThirdParty;
+    }
 
     public FinanceSummaryTableViewModel(long applicationId,
                                         CompetitionResource competition,
@@ -38,7 +44,8 @@ public class FinanceSummaryTableViewModel implements BaseAnalyticsViewModel {
                                         boolean collaborativeProject,
                                         BigDecimal competitionMaximumFundingSought,
                                         boolean includeOrganisationNames,
-                                        boolean isThirdPartyOfgem) {
+                                        boolean isThirdPartyOfgem,
+                                        boolean isCompTypeOfgemAndFundingTypeThirdParty) {
         this.applicationId = applicationId;
         this.competitionName = competition.getName();
         this.rows = rows;
@@ -50,6 +57,7 @@ public class FinanceSummaryTableViewModel implements BaseAnalyticsViewModel {
         this.includeOrganisationNames = includeOrganisationNames;
         this.isThirdPartyOfgem = isThirdPartyOfgem;
         this.financeSummaryOtherCostLabel = computeFinanceSummaryOtherCostLabel(competition);
+        this.isCompTypeOfgemAndFundingTypeThirdParty = isCompTypeOfgemAndFundingTypeThirdParty;
     }
 
     private String computeFinanceSummaryOtherCostLabel(CompetitionResource competition) {
