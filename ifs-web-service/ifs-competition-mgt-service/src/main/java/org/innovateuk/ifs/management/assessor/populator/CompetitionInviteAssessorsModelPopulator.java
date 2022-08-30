@@ -41,6 +41,7 @@ abstract class CompetitionInviteAssessorsModelPopulator<ViewModelType extends In
         model.setCompetitionId(competition.getId());
         model.setCompetitionName(competition.getName());
         model.setFundingType(competition.getFundingType());
+        model.setKtp(competition.isKtp());
         return model;
     }
 

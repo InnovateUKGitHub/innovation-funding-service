@@ -136,7 +136,8 @@ public class YourFundingViewModelPopulator {
                 section.getCurrentApplicant().getOrganisation().getOrganisationTypeEnum(),
                 competition.isThirdPartyOfgem(),
                 hash,
-                applicationFinance.isFixedFundingLevel());
+                applicationFinance.isFixedFundingLevel(),
+                competition.isKtp());
     }
 
 
