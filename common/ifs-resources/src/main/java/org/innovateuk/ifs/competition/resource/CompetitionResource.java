@@ -115,9 +115,9 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean subsidyControl;
     private boolean hasBusinessAndFinancialInformationQuestion;
     private CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource;
-    private boolean enabledForPreRegistration;
     private CompetitionApplicationConfigResource competitionApplicationConfigResource;
     private CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource;
+    private boolean enabledForPreRegistration;
 
     public CompetitionResource() {
     }
@@ -990,9 +990,9 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(subsidyControl, that.subsidyControl)
                 .append(assessmentPeriods, that.assessmentPeriods)
                 .append(competitionThirdPartyConfigResource, that.competitionThirdPartyConfigResource)
-                .append(enabledForPreRegistration, that.enabledForPreRegistration)
                 .append(competitionApplicationConfigResource, that.competitionApplicationConfigResource)
                 .append(competitionEoiEvidenceConfigResource, that.competitionEoiEvidenceConfigResource)
+                .append(enabledForPreRegistration, that.enabledForPreRegistration)
                 .isEquals();
     }
 
@@ -1061,9 +1061,9 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(subsidyControl)
                 .append(assessmentPeriods)
                 .append(competitionThirdPartyConfigResource)
-                .append(enabledForPreRegistration)
                 .append(competitionApplicationConfigResource)
                 .append(competitionEoiEvidenceConfigResource)
+                .append(enabledForPreRegistration)
                 .toHashCode();
     }
 

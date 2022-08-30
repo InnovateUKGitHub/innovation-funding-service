@@ -8,4 +8,7 @@ public interface CompetitionApplicationConfigService {
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<CompetitionApplicationConfigResource> findOneByCompetitionId(long competitionId);
+
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    ServiceResult<Void> update(long competitionId, CompetitionApplicationConfigResource competitionApplicationConfigResource);
 }
