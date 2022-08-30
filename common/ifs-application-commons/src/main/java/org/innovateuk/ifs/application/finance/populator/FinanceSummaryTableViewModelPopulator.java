@@ -206,8 +206,7 @@ public class FinanceSummaryTableViewModelPopulator {
     private BigDecimal calculateOtherFundingColumn(CompetitionResource competition, Optional<ApplicationFinanceResource> finance) {
         if (competition.isKtp()) {
             return finance.map(ApplicationFinanceResource::getTotalPreviousFunding).orElse(BigDecimal.ZERO);
-        }
-        else{
+        } else {
             return finance.map(ApplicationFinanceResource::getTotalOtherFunding).orElse(BigDecimal.ZERO);
         }
     }
