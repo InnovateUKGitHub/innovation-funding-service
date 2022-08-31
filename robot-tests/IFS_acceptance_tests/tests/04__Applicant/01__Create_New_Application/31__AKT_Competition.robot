@@ -89,8 +89,7 @@ Lead applicant can not view KTA details in application summary
 Invite the KTA to assess the KTP competition
     [Documentation]   IFS-8260
     Given log in as a different user                    &{ifs_admin_user_credentials}
-    Get competitions id and set it as suite variable    ${AKT2ICompName}
-    When the user navigates to the page                 ${server}/management/competition/${AKT2IAssessmentCompetitionID}/assessors/find
+    When the user navigates to the page                 ${server}/management/competition/${competitionId}/assessors/find
     And the user clicks the button/link                 jQuery = tr:contains("Hermen Mermen") label
     And the user clicks the button/link                 id = add-selected-assessors-to-invite-list-button
     When the user clicks the button/link                id = review-and-send-assessor-invites-button
@@ -101,7 +100,7 @@ Assessor accept the inviation to assess the KTP competition
     [Documentation]   IFS-8260
     Given KTA accepts the invitation to assess the application      ${AKT2ICompName}   ${ktaEmail}   ${short_password}
     When log in as a different user                                 &{ifs_admin_user_credentials}
-    And the user navigates to the page                              ${server}/management/competition/${AKT2IAssessmentCompetitionID}/assessors/accepted
+    And the user navigates to the page                              ${server}/management/competition/${competitionId}/assessors/accepted
     Then the user should see the element                            link = Hermen Mermen
 
 Allocated KTA to assess the KTP application
@@ -114,9 +113,9 @@ Allocated KTA to assess the KTP application
 
 Assessor accept the inviation to assess the KTP application
     [Documentation]   IFS-8260
-    Given the user navigates to the page               ${server}/management/competition/${AKT2IAssessmentCompetitionID}
+    Given the user navigates to the page               ${server}/management/competition/${CompetitionID}
     And the user clicks the button/link                id = notify-assessors-changes-since-last-notify-button
-    When KTA accepts to assess the KTP application     ${AKT2IAssessmentCompetitionID}   ${ktaEmail}  ${short_password}
+    When KTA accepts to assess the KTP application     ${CompetitionID}   ${ktaEmail}  ${short_password}
     And the user clicks the button/link                link = Access Knowledge Transfer to Innovate Competition
     Then the user should see the element               jQuery = h1:contains("Assessment overview") span:contains("KTP assessment application")
 
