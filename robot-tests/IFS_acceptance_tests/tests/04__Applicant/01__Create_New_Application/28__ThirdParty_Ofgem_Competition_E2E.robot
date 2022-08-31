@@ -295,7 +295,7 @@ the user fills the third party project costs
 
 the user fills thirdparty contributions in kind information
     the user selects the radio button       otherFunding  true
-    the user should see the element         jQuery = th:contains("Description and breakdown of contribution in kind")
+    the user should see the element         jQuery = th:contains("Description and breakdown of contributions in kind")
     the user should see the element         jQuery = th:contains("Contributions in kind value (£)")
     the user should see the element         jQuery = button:contains("Add another contribution in kind")
     the user enters text to a text field    css = [name*=source]  Lottery funding
