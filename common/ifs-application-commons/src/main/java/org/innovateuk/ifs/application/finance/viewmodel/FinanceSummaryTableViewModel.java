@@ -33,10 +33,6 @@ public class FinanceSummaryTableViewModel implements BaseAnalyticsViewModel {
     private final boolean isCompTypeOfgemAndFundingTypeThirdParty;
     private final String financeSummaryOtherCostLabel;
 
-    public boolean isCompTypeOfgemAndFundingTypeThirdParty() {
-        return isCompTypeOfgemAndFundingTypeThirdParty;
-    }
-
     public FinanceSummaryTableViewModel(long applicationId,
                                         CompetitionResource competition,
                                         List<FinanceSummaryTableRow> rows,
@@ -71,7 +67,9 @@ public class FinanceSummaryTableViewModel implements BaseAnalyticsViewModel {
             return "Other public sector funding (£)";
 
     }
-
+    public boolean isCompTypeOfgemAndFundingTypeThirdParty() {
+        return isCompTypeOfgemAndFundingTypeThirdParty;
+    }
     @Override
     public Long getApplicationId() {
         return applicationId;
