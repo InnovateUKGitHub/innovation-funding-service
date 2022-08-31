@@ -25,6 +25,7 @@ public class ProjectYourFundingViewModel {
     private String hash;
     private final boolean isFixedFundingLevel;
     private final boolean isCompTypeOfgemAndFundingTypeThirdParty;
+    private final boolean isThirdPartyFundingType;
 
     public ProjectYourFundingViewModel(ProjectResource project,
                                        long organisationId,
@@ -41,7 +42,8 @@ public class ProjectYourFundingViewModel {
                                        boolean isThirdPartyOfgem,
                                        String hash,
                                        boolean isFixedFundingLevel,
-                                       boolean isCompTypeOfgemAndFundingTypeThirdParty) {
+                                       boolean isCompTypeOfgemAndFundingTypeThirdParty,
+                                       boolean isThirdPartyFundingType) {
         this.projectName = project.getName();
         this.projectId = project.getId();
         this.organisationId = organisationId;
@@ -59,6 +61,7 @@ public class ProjectYourFundingViewModel {
         this.hash = hash;
         this.isFixedFundingLevel = isFixedFundingLevel;
         this.isCompTypeOfgemAndFundingTypeThirdParty = isCompTypeOfgemAndFundingTypeThirdParty;
+        this.isThirdPartyFundingType = isThirdPartyFundingType;
     }
 
     public String getProjectName() {
@@ -149,5 +152,47 @@ public class ProjectYourFundingViewModel {
 
     public boolean isCompTypeOfgemAndFundingTypeThirdParty() {
         return isCompTypeOfgemAndFundingTypeThirdParty;
+    }
+
+    public boolean isThirdPartyFundingType() {
+        return isThirdPartyFundingType;
+    }
+
+    public String getFundingHeading() {
+        return isCompTypeOfgemAndFundingTypeThirdParty ? "Contributions in kind" : "Other funding";
+    }
+
+    public String getHeadingHint() {
+        return isCompTypeOfgemAndFundingTypeThirdParty ? "Are you making any contributions in kind for this project?" :
+                (isThirdPartyOfgem && !isThirdPartyFundingType) ? "Have you received any aligned or third party funding for this project?" :
+                        "Have you received any other public sector funding for this project? This is important as other public sector support counts as part of the funding you can receive.";
+    }
+
+    public String getNoOtherFundingText() {
+        return isCompTypeOfgemAndFundingTypeThirdParty ? "No contributions in kind" : "No other funding";
+    }
+
+    public String getSourceOfFundingText() {
+        return isCompTypeOfgemAndFundingTypeThirdParty ? "Description and breakdown of contributions in kind" : "Source of funding";
+    }
+
+    public String getFundingAmountText() {
+        return isCompTypeOfgemAndFundingTypeThirdParty ? "Contributions in kind value" : "Funding amount";
+    }
+
+    public String getFundingAmountWidth() {
+        return isCompTypeOfgemAndFundingTypeThirdParty ? "width-250 govuk-table__header alignright" :"width-150 govuk-table__header";
+    }
+
+    public String getTableClass() {
+        return isCompTypeOfgemAndFundingTypeThirdParty ? "govuk-table__cell" : "govuk-table__header";
+    }
+
+    public String getTotalText() {
+        return isCompTypeOfgemAndFundingTypeThirdParty ? "Total contributions in kind" : "Total other funding";
+    }
+
+    public String addAnotherSourceText() {
+        return isCompTypeOfgemAndFundingTypeThirdParty ? "Add another contribution in kind" : "Add another source of funding";
     }
 }
