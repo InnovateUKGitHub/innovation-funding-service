@@ -86,6 +86,7 @@
                 <th:block th:insert="application/your-funding-fragments :: form(
                                model=${model},
                                form=${form},
+                               readOnly=${model.readOnly},
                                guidanceFragment=${model.business ? 'applicant-business' : 'applicant-non-business'},
                                maximumFundingLevel=${model.maximumFundingLevel},
                                hideAreYouRequestingFunding=${model.hideAreYouRequestingFunding()},
