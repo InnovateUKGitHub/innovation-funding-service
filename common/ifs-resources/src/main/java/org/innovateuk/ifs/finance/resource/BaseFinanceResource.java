@@ -235,8 +235,9 @@ public abstract class BaseFinanceResource {
         }
          return
                  getTotal().subtract(getTotalFundingSought())
-                         .divide(getTotal(), 4, RoundingMode.HALF_UP)
-                         .multiply(new BigDecimal(100));
+                         .multiply(new BigDecimal(100))
+                         .divide(getTotal(), 2, RoundingMode.HALF_UP);
+
     }
 
     @JsonIgnore
