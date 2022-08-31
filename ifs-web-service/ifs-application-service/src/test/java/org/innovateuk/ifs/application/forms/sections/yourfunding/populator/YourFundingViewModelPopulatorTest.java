@@ -184,6 +184,7 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         assertEquals(format("/application/%d/form/FINANCE/%d", APPLICATION_ID, organisation.getId()), viewModel.getFinancesUrl());
         assertTrue(viewModel.isOverridingFundingRules());
         assertFalse(viewModel.isFixedFundingLevel());
+        assertFalse(viewModel.isKtpFundingType());
     }
 
     @Test

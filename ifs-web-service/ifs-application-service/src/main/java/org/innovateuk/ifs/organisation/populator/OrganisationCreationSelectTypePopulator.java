@@ -40,7 +40,7 @@ public class OrganisationCreationSelectTypePopulator {
         if (registrationCookieService.isInternationalJourney(request)) {
             allowedTypes.remove(RESEARCH);
         }
-        if (competitionResource.getFundingType() == FundingType.KTP) {
+        if (competitionResource.isKtp()) {
             allowedTypes.removeAll(asList(RESEARCH, RTO, KNOWLEDGE_BASE));
         } else {
             allowedTypes.remove(KNOWLEDGE_BASE);

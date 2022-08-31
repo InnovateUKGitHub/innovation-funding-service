@@ -69,7 +69,8 @@ public class AssessmentFinancesSummaryViewModel {
     }
 
     public boolean isKtpCompetition() {
-        return FundingType.KTP.equals(fundingType);
+        return FundingType.KTP.equals(fundingType)
+                || FundingType.KTP_AKT.equals(fundingType);
     }
 
     public boolean isHecpCompetition() {
