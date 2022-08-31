@@ -8,12 +8,13 @@ Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/Competition_Commons.robot
 Resource          ../../../resources/common/Assessor_Commons.robot
+Resource          ../../../resources/keywords/MYSQL_AND_DATE_KEYWORDS.robot
 
 *** Variables ***
-${AKT2ICompName}                Access Knowledge Transfer to Innovate Competition
-${aktLeadEmail}                 akt.ktp@gmail.com
-&{aktLeadCredentials}           email=${aktLeadEmail}  password=${short_password}
-${AKT2IAssessmentCompetitionID}               ${competition_ids['${AKT2ICompName}']}
+${AKT2ICompName}                            Access Knowledge Transfer to Innovate Competition
+${aktLeadEmail}                             akt.ktp@gmail.com
+&{aktLeadCredentials}                       email=${aktLeadEmail}  password=${short_password}
+${AKT2IAssessmentCompetitionID}             ${competition_ids['${AKT2ICompName}']}
 ${ktpAssessmentApplicationName}             KTP assessment application
 ${ktpAssessmentApplicationID}               ${application_ids['${ktpAssessmentApplicationName}']}
 ${ktpDetailsFinanceCompetitionName}         KTP assessment Detailed Finances
@@ -87,13 +88,14 @@ Lead applicant can not view KTA details in application summary
 
 Invite the KTA to assess the KTP competition
     [Documentation]   IFS-8260
-    Given log in as a different user          &{ifs_admin_user_credentials}
-    When the user navigates to the page       ${server}/management/competition/${AKT2IAssessmentCompetitionID}/assessors/find
-    And the user clicks the button/link       jQuery = tr:contains("Hermen Mermen") label
-    And the user clicks the button/link       id = add-selected-assessors-to-invite-list-button
-    When the user clicks the button/link      id = review-and-send-assessor-invites-button
-    And the user clicks the button/link       jQuery = button:contains("Send invitation")
-    Then the user should see the element      link = Hermen Mermen
+    Given log in as a different user                    &{ifs_admin_user_credentials}
+    Get competitions id and set it as suite variable    ${AKT2ICompName}
+    When the user navigates to the page                 ${server}/management/competition/${AKT2IAssessmentCompetitionID}/assessors/find
+    And the user clicks the button/link                 jQuery = tr:contains("Hermen Mermen") label
+    And the user clicks the button/link                 id = add-selected-assessors-to-invite-list-button
+    When the user clicks the button/link                id = review-and-send-assessor-invites-button
+    And the user clicks the button/link                 jQuery = button:contains("Send invitation")
+    Then the user should see the element                link = Hermen Mermen
 
 Assessor accept the inviation to assess the KTP competition
     [Documentation]   IFS-8260
@@ -615,6 +617,11 @@ the user should see read only view for FEC declaration
     the user should not see the element                     jQuery = button:contains("Edit your fEC Model")
     the user checks the read-only page
 
+Get competitions id and set it as suite variable
+    [Arguments]  ${AKT2ICompName}
+    ${AKT2IAssessmentCompetitionID} =  get comp id from comp title  ${AKT2ICompName}
+    Set suite variable  ${AKT2IAssessmentCompetitionID}
+
 the user checks the read-only page
     # Due to us testing webtest data here, the file does not exist so we check for only no internal server errors. Page not found is OK in this case.
     the user should see the element     jQuery = h3:contains("Will you be using the full economic costing (fEC) funding model?") ~ div p:contains("Yes")
@@ -622,3 +629,5 @@ the user checks the read-only page
     Select Window                       NEW
     the user should not see internal server and forbidden errors
     the user closes the last opened tab
+
+
