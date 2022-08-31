@@ -196,13 +196,13 @@ Loan application Your funding
     Given the user enters empty funding amount
     When the user enters text to a text field  id = amount   57,803
     And the user clicks the button/link        id = mark-all-as-complete
-    Then the user should see the element       jQuery = td:contains("200,903") ~ td:contains("57,803") ~ td:contains("30.00%") ~ td:contains("2,468") ~ td:contains("140,632")
+    Then the user should see the element       jQuery = td:contains("200,903") ~ td:contains("57,803") ~ td:contains("30.00") ~ td:contains("2,468") ~ td:contains("140,632")
 
 Loan application finance overview
     [Documentation]  IFS-6208
     Given the user clicks the button/link  link = Back to application overview
     When the user clicks the button/link   link = Finances overview
-    Then the user should see the element   jQuery = td:contains("200,903") ~ td:contains("57,803") ~ td:contains("30.00%") ~ td:contains("2,468") ~ td:contains("140,632")
+    Then the user should see the element   jQuery = td:contains("200,903") ~ td:contains("57,803") ~ td:contains("30.00") ~ td:contains("2,468") ~ td:contains("140,632")
 
 Loan application submission
     [Documentation]  IFS-6237  IFS-6238  IFS-9483 IFS-10825 IFS-10869 IFS-11137
@@ -252,7 +252,7 @@ Fund sought changes
     [Documentation]  IFS-6293  IFS-6298  IFS-8944
     Given the user enters text to a text field     id = partners[${EMPIRE_LTD_ID}].funding  6000
     When the user clicks the button/link           jQuery = button:contains("Save and return to project finances")
-    Then the user should see the element           jQuery = h3:contains("Finance summary") ~ div td:contains("£200,903") ~ td:contains("4.21%") ~ td:contains("6,000") ~ td:contains("2,468") ~ td:contains("192,435")
+    Then the user should see the element           jQuery = h3:contains("Finance summary") ~ div td:contains("£200,903") ~ td:contains("4.21") ~ td:contains("6,000") ~ td:contains("2,468") ~ td:contains("192,435")
 
 Project finance completes all project setup steps
     [Documentation]  IFS-6369  IFS-6292  IFS-6307  IFS-6298  IFS-6368

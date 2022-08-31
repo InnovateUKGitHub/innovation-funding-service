@@ -23,6 +23,8 @@ Documentation   IFS-11442 OFGEM: Create a "ThirdParty" generic template
 ...
 ...             IFS-12765 Ofgem - Discovery 2 - Finance summary changes - Applicant journey
 ...
+...             IFS-12796 Ofgem - Discovery 2 - Third party - Finance summary: 'Contributions in kind'
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -147,19 +149,21 @@ Ofgem application Your funding - empty validation
     And the user should see the element                  jQuery = span:contains("The amount you apply for must reflect the funding amount available for this competition.")
 
 the user marks the your funding section as complete
-    [Documentation]  IFS-11481  IFS-12765
+    [Documentation]  IFS-11481  IFS-12765  IFS-12796
     When the user enters text to a text field                   id = amount   25678
     And the user fills thirdparty other funding information
     And the user clicks the button/link                         id = mark-all-as-complete
-    Then the user should see the element                        jQuery = td:contains("53,220") ~ td:contains("25,678") ~ td:contains("14.17%") ~ td:contains("20,000") ~ td:contains("7,542")
+    Then the user should see the element                        jQuery = td:contains("53,220") ~ td:contains("25,678") ~ td:contains("51.75") ~ td:contains("27,542") ~ td:contains("20,000")
     And the user should see the element                         jQuery = th:contains("Contribution to project (%)")
+    And the user should see the element                         jQuery = th:contains("Contributions in kind (£)")
 
 Ofgem application finance overview
-    [Documentation]  IFS-11481  IFS-12765
+    [Documentation]  IFS-11481  IFS-12765  IFS-12796
     Given the user clicks the button/link  link = Back to application overview
     When the user clicks the button/link   link = Finances overview
-    Then the user should see the element   jQuery = td:contains("53,220") ~ td:contains("25,678") ~ td:contains("14.17%") ~ td:contains("20,000") ~ td:contains("7,542")
+    Then the user should see the element   jQuery = td:contains("53,220") ~ td:contains("25,678") ~ td:contains("51.75") ~ td:contains("27,542") ~ td:contains("20,000")
     And the user should see the element    jQuery = th:contains("Contribution to project (%)")
+    And the user should see the element    jQuery = th:contains("Contributions in kind (£)")
 
 the user submits the third party ofgem application
     [Documentation]   IFS-11475  IFS-11476  IFS-11480
@@ -173,12 +177,12 @@ the user submits the third party ofgem application
     [Teardown]  update milestone to yesterday                   ${competitionId}  SUBMISSION_DATE
 
 the applicant should not view overhead and capital usage costs in application summary
-    [Documentation]   IFS-11475  IFS-11476
+    [Documentation]   IFS-11475  IFS-11476  IFS-12796
     Given the user clicks the button/link      link = View application
     When the user clicks the button/link       jQuery = button:contains("Finances summary")
     Then the user should not see the element   jQuery = th:contains("Overheads (£)")
     And the user should not see the element    jQuery = th:contains("Capital usage (£)")
-    And the user should see the element        jQuery = th:contains("Other funding (£)")
+    And the user should see the element        jQuery = th:contains("Contributions in kind (£)")
 
 The lead applicant can not view general guidenece reference
     [Documentation]  IFS-11483
