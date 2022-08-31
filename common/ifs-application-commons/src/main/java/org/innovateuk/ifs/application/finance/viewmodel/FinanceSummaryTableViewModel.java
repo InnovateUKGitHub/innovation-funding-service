@@ -63,7 +63,7 @@ public class FinanceSummaryTableViewModel implements BaseAnalyticsViewModel {
     private String computeFinanceSummaryOtherCostLabel(CompetitionResource competition) {
         if (competition.getCompetitionTypeEnum() == CompetitionTypeEnum.OFGEM &&
                 THIRDPARTY.equals(competition.getFundingType()))
-            return "Contributions in Kind (£)";
+            return "Contributions in kind (£)";
         else if (KTP.equals(competition.getFundingType()) ||
                 CompetitionTypeEnum.OFGEM.equals(competition.getCompetitionTypeEnum()))
             return "Other funding (£)";
