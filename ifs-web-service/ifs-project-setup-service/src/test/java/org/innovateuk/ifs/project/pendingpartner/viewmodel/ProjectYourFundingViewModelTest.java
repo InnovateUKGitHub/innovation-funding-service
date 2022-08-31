@@ -44,7 +44,7 @@ public class ProjectYourFundingViewModelTest {
         ProjectYourFundingViewModel viewModel = new ProjectYourFundingViewModel(project, organisationId, false,
                 maximumFundingLevel, competitionId, false, fundingType, OrganisationTypeEnum.BUSINESS,
                 false, false, false,
-                Optional.empty(), false, hash, false);
+                Optional.empty(), false, hash, false, false);
 
         assertTrue(viewModel.isKtpFundingType());
     }
