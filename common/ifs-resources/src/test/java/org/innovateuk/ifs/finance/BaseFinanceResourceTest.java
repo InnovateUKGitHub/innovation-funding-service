@@ -3,10 +3,7 @@ package org.innovateuk.ifs.finance;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.VatCostCategory;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
-import org.innovateuk.ifs.finance.resource.cost.IndirectCost;
-import org.innovateuk.ifs.finance.resource.cost.Vat;
+import org.innovateuk.ifs.finance.resource.cost.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -142,6 +139,30 @@ public class BaseFinanceResourceTest {
         baseFinanceResource.setFinanceOrganisationDetails(financeOrganisationDetails);
 
         assertEquals(baseFinanceResource.getTotalContribution(), BigDecimal.valueOf(50));
+    }
+
+    @Test
+    public void getContributionToProjectPercentage() {
+
+        Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = asMap(
+                FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
+                                newLabourCost().
+                                        withGrossEmployeeCost(new BigDecimal("100000"), new BigDecimal("200000")).
+                                        withDescription("Developers", WORKING_DAYS_PER_YEAR).
+                                        withLabourDays(100, 200).
+                                        withTotal(BigDecimal.valueOf(30000)).
+                                        build(2)).
+                        withTotal(BigDecimal.valueOf(30000)).
+                        build(),
+                FinanceRowType.FINANCE, newExcludedCostCategory().withCosts(
+                                newGrantClaimPercentage().
+                                        withGrantClaimPercentage(BigDecimal.valueOf(85)).
+                                        build(1)).
+                        withTotal(BigDecimal.valueOf(85)).
+                        build());
+
+        baseFinanceResource.setFinanceOrganisationDetails(financeOrganisationDetails);
+        assertEquals(new BigDecimal ("15.00"), baseFinanceResource.getContributionToProjectPercentage());
     }
 
     @Test

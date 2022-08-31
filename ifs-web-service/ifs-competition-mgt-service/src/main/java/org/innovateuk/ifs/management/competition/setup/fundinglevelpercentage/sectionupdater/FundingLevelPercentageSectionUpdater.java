@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
+import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.commons.service.ServiceResult.aggregate;
@@ -112,5 +113,11 @@ public class FundingLevelPercentageSectionUpdater extends AbstractSectionUpdater
     @Override
     public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
         return FundingLevelPercentageForm.class.equals(clazz);
+    }
+
+    @Override
+    public String getNextSection(CompetitionSetupForm competitionSetupForm, CompetitionResource competition, CompetitionSetupSection section) {
+        String sectionPath = CompetitionSetupSection.FUNDING_AMOUNT_SOUGHT.getPath();
+        return format("redirect:/competition/setup/%d/section/%s", competition.getId(), sectionPath);
     }
 }
