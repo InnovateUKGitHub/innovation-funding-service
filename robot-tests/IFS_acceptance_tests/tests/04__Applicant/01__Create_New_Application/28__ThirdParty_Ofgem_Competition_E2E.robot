@@ -21,6 +21,8 @@ Documentation   IFS-11442 OFGEM: Create a "ThirdParty" generic template
 ...
 ...             IFS-11595 Modify application view in application journey, assessment & project setup for T & C changes
 ...
+...             IFS-12819 Ofgem - Discovery 2 - Confirmation of submission page amendments
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -158,7 +160,7 @@ Ofgem application finance overview
     Then the user should see the element   jQuery = td:contains("53,220") ~ td:contains("25,678") ~ td:contains("85.83%") ~ td:contains("20,000") ~ td:contains("7,542")
 
 the user submits the third party ofgem application
-    [Documentation]   IFS-11475  IFS-11476  IFS-11480
+    [Documentation]   IFS-11475  IFS-11476  IFS-11480  IFS-12819
     [Setup]  Get competitions id and set it as suite variable   ${thirdPartyOfgemCompetitionName}
     Given the user clicks the button/link                       link = Application overview
     And the user accept the thirdpary terms and conditions      Back to application overview
@@ -297,11 +299,15 @@ the user enters empty funding amount
     the user should see a field and summary error  Enter the amount of funding sought.
 
 the user should see ofgem submitted application amendments
-    the user should see the element     jQuery = h3:contains("Assessment process")
-    the user should see the element     jQuery = h3:contains("Decision notification")
-    the user should see the element     jQuery = h3:contains("If your application is successful")
-    the user should see the element     jQuery = h3:contains("If your application is unsuccessful")
-    the user should see the element     jQuery = h3:contains("Application feedback")
+    the user should see the element         jQuery = h3:contains("Assessment process")
+    the user should see the element         jQuery = h3:contains("Decision notification")
+    the user should see the element         jQuery = h3:contains("If your application is successful")
+    the user should see the element         jQuery = h3:contains("If your application is unsuccessful")
+    the user should see the element         jQuery = h3:contains("Application feedback")
+    the user should not see the element     jQuery = li:contains("the assessor will score each question and provide feedback to justify those scores")
+    the user should not see the element     jQuery = li:contains("a panel process is held to moderate and ratify the outcome of the decision")
+    the user should see the element         jQuery = li:contains("eligible applications will be independently evaluated by assessors")
+    the user should see the element         jQuery = li:contains("each application is evaluated by up to 3 assessors by the same set criteria")
 
 the user fills in ofgem labour costs
     [Arguments]  ${roleName}  ${rate}  ${days}
