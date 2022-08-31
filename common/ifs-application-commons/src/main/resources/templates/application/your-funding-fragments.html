@@ -231,11 +231,8 @@
                     <tr class="govuk-table__row">
                         <th th:text="${model.getSourceOfFundingText()}" class="govuk-table__header" th:classappend="${isCompTypeOfgemAndFundingTypeThirdParty} ? 'width-40-percent' : ''" scope="col" id="other-funding-source">Source of funding</th>
                         <th scope="col" id="other-funding-date" class="govuk-table__header width-150">Date secured</th>
-                        <th th:unless="${isCompTypeOfgemAndFundingTypeThirdParty}" scope="col" id="other-funding-amount"
+                        <th th:text="${isCompTypeOfgemAndFundingTypeThirdParty ? 'Contributions in kind value (&pound;)' : 'Funding amount (&pound;)'}" scope="col" id="other-funding-amount"
                             class="govuk-table__header govuk-table__header--numeric width-200">Funding amount (&pound;)
-                        </th>
-                        <th th:if="${isCompTypeOfgemAndFundingTypeThirdParty}" scope="col" id="other-funding-amount"
-                            class="govuk-table__header govuk-table__header--numeric width-200">Contributions in kind value (&pound;)
                         </th>
                         <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Actions</span>
                         </th>
