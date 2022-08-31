@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP_AKT;
 
 /**
  * ViewModel of a CompetitionInvite.
@@ -42,7 +43,8 @@ public class CompetitionInviteViewModel extends BaseInviteViewModel {
     }
 
     public Boolean isKtpCompetition() {
-        return KTP.equals(competitionFundingType);
+        return KTP.equals(competitionFundingType)
+                || KTP_AKT.equals(competitionFundingType);
     }
 
     public boolean isAlwaysOpenCompetition() {

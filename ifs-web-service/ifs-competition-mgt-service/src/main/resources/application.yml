@@ -25,6 +25,8 @@ ifs:
     ktp:
         phase2:
             enabled: true
+        akt:
+            enabled: true
     loan:
         partb:
             enabled: true

@@ -202,7 +202,8 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
     }
 
     public boolean isKtpFundingType() {
-        return FundingType.KTP == fundingType;
+        return (FundingType.KTP == fundingType)
+                || (FundingType.KTP_AKT == fundingType);
     }
 
     public OrganisationTypeEnum getOrganisationType() {

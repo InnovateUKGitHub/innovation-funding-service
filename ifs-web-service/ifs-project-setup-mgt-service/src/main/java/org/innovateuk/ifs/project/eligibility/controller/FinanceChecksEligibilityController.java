@@ -183,7 +183,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                         open,
                         competition.get().getFinanceRowTypesByFinance(organisationProjectFinance),
                         competition.get().isOverheadsAlwaysTwenty(),
-                        competition.get().getFundingType() == FundingType.KTP,
+                        competition.get().isKtp(),
                         ktpPhase2Enabled,
                         canEditProjectCosts,
                         competition.get().isThirdPartyOfgem(),
