@@ -450,3 +450,8 @@ the user fills in ktp project costs
     the user clicks the button/link             css = label[for="stateAidAgreed"]
     the user clicks the button/link             jQuery = button:contains("Mark as complete")
 
+the user enters empty data into date fields
+    [Arguments]  ${date}  ${month}  ${year}
+    the user enters text to a text field   id = fecCertExpiryDay  ${date}
+    the user enters text to a text field   id = fecCertExpiryMonth   ${month}
+    the user enters text to a text field   id = fecCertExpiryYear  ${year}
