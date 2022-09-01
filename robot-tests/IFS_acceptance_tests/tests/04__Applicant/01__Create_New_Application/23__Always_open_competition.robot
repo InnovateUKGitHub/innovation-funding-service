@@ -131,8 +131,9 @@ Send the email invite to the assessor for the competition using new content
 Lead applicant creates an application and checks the dashboard content when the application is incomplete
     [Documentation]  IFS-8850
     Given the user logs out if they are logged in
-    And the lead user creates an always open application                                         Test   User   test.user1@gmail.com   ${applicationName}
-    When the lead user completes project details, application questions and finances sections    COMPLETE   test.user1@gmail.com
+    And the lead user creates an always open application                            Test   User   test.user1@gmail.com   ${applicationName}
+    When the lead user completes project details, application questions sections    ${applicationName}  COMPLETE   test.user1@gmail.com
+    And the user marks the finances as complete                                     ${applicationName}  labour costs  54,000  yes
     Then the user checks the status of the application before completion
 
 Lead applicant completes the application and checks the dashboard content before the application is submitted

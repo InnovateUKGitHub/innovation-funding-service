@@ -23,6 +23,8 @@ Documentation   IFS-11442 OFGEM: Create a "ThirdParty" generic template
 ...
 ...             IFS-12819 Ofgem - Discovery 2 - Confirmation of submission page amendments
 ...
+...             IFS-12765 Ofgem - Discovery 2 - Finance summary changes - Applicant journey
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -147,17 +149,19 @@ Ofgem application Your funding - empty validation
     And the user should see the element                  jQuery = span:contains("The amount you apply for must reflect the funding amount available for this competition.")
 
 the user marks the your funding section as complete
-    [Documentation]  IFS-11481
+    [Documentation]  IFS-11481  IFS-12765
     When the user enters text to a text field                   id = amount   25678
     And the user fills thirdparty other funding information
     And the user clicks the button/link                         id = mark-all-as-complete
-    Then the user should see the element                        jQuery = td:contains("53,220") ~ td:contains("25,678") ~ td:contains("85.83%") ~ td:contains("20,000") ~ td:contains("7,542")
+    Then the user should see the element                        jQuery = td:contains("53,220") ~ td:contains("25,678") ~ td:contains("14.17%") ~ td:contains("20,000") ~ td:contains("7,542")
+    And the user should see the element                         jQuery = th:contains("Contribution to project (%)")
 
 Ofgem application finance overview
-    [Documentation]  IFS-11481
+    [Documentation]  IFS-11481  IFS-12765
     Given the user clicks the button/link  link = Back to application overview
     When the user clicks the button/link   link = Finances overview
-    Then the user should see the element   jQuery = td:contains("53,220") ~ td:contains("25,678") ~ td:contains("85.83%") ~ td:contains("20,000") ~ td:contains("7,542")
+    Then the user should see the element   jQuery = td:contains("53,220") ~ td:contains("25,678") ~ td:contains("14.17%") ~ td:contains("20,000") ~ td:contains("7,542")
+    And the user should see the element    jQuery = th:contains("Contribution to project (%)")
 
 the user submits the third party ofgem application
     [Documentation]   IFS-11475  IFS-11476  IFS-11480  IFS-12819

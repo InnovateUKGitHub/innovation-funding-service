@@ -27,7 +27,7 @@ public abstract class AbstractFinanceService<D extends Finance, F extends BaseFi
     private KtpFinancialYearsRepository ktpFinancialYearsRepository;
 
     protected void initialiseFinancialYearData(D finance) {
-        if (finance.getCompetition().getFundingType() == FundingType.KTP) {
+        if (finance.getCompetition().isKtp()) {
             KtpFinancialYears ktpFinancialYears = new KtpFinancialYears();
             ktpFinancialYears.setYears(newArrayList(
                     new KtpFinancialYear(0, ktpFinancialYears),
@@ -49,7 +49,7 @@ public abstract class AbstractFinanceService<D extends Finance, F extends BaseFi
         if (financeResource.getOrganisationSize() != null) {
             dbFinance.setOrganisationSize(financeResource.getOrganisationSize());
         }
-        if (dbFinance.getCompetition().getFundingType() == FundingType.KTP) {
+        if (dbFinance.getCompetition().isKtp()) {
             updateKtpYears(financeResource, dbFinance);
         } else if (TRUE.equals(dbFinance.getCompetition().getIncludeProjectGrowthTable())) {
             updateGrowthTable(financeResource, dbFinance);

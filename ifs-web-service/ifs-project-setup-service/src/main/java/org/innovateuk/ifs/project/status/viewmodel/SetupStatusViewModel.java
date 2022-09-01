@@ -105,7 +105,8 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     }
 
     public boolean isKtpCompetition() {
-        return this.fundingType == FundingType.KTP;
+        return this.fundingType == FundingType.KTP
+                || this.fundingType == FundingType.KTP_AKT;
     }
 
     public List<SetupStatusStageViewModel> getStages() {

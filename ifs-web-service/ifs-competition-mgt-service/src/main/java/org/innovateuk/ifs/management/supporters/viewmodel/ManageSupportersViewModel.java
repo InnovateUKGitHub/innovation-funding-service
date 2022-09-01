@@ -30,7 +30,7 @@ public class ManageSupportersViewModel {
     }
 
     public boolean isAllocateLinkEnabled() {
-        return competitionFundingType == FundingType.KTP
+        return (competitionFundingType == FundingType.KTP || competitionFundingType == FundingType.KTP_AKT)
                 && competitionStatus.isLaterThan(READY_TO_OPEN)
                 && !competitionStatus.isLaterThan(IN_ASSESSMENT);
     }

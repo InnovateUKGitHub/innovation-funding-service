@@ -25,8 +25,8 @@ import org.springframework.validation.Errors;
 
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.assertj.core.util.Lists.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -54,7 +54,6 @@ public class ApplicationTeamMarkAsCompleteValidatorTest {
     private ApplicationKtaInviteService applicationKtaInviteService;
         @Mock
         private CompetitionService competitionServiceMock;
-    @Test
 
     @Before
     public void setup(){
@@ -132,9 +131,46 @@ public class ApplicationTeamMarkAsCompleteValidatorTest {
     }
 
     @Test
+    public void acceptWithKtpAktCompetitionNoKtaProcessRoleAndNoInvite() {
+        // given
+        Application application = ApplicationBuilder.newApplication().withCompetition(newCompetition().withFundingType(FundingType.KTP_AKT).build()).build();
+
+        given(applicationInviteService.getInvitesByApplication(application.getId())).willReturn(serviceSuccess(emptyList()));
+
+        given(applicationKtaInviteService.getKtaInviteByApplication(application.getId())).willReturn(serviceSuccess(null));
+
+        Errors errors = mock(Errors.class);
+
+        // when
+        validator.validate(application, errors);
+
+        // then
+        verifyNoInteractions(errors);
+    }
+
+    @Test
     public void rejectWithKtpCompetitionNoKtaProcessRoleAndUnopenedKtaInvite() {
         // given
         Application application = ApplicationBuilder.newApplication().withCompetition(newCompetition().withFundingType(FundingType.KTP).build()).build();
+
+        given(applicationInviteService.getInvitesByApplication(application.getId())).willReturn(serviceSuccess(emptyList()));
+
+        ApplicationKtaInviteResource ktaInvite = newApplicationKtaInviteResource().withStatus(InviteStatus.SENT).build();
+        given(applicationKtaInviteService.getKtaInviteByApplication(application.getId())).willReturn(serviceSuccess(ktaInvite));
+
+        Errors errors = mock(Errors.class);
+
+        // when
+        validator.validate(application, errors);
+
+        // then
+        verify(errors).reject(eq("validation.kta.pending.invite"), any(), eq("validation.kta.pending.invite"));
+    }
+
+    @Test
+    public void rejectWithKtpAktCompetitionNoKtaProcessRoleAndUnopenedKtaInvite() {
+        // given
+        Application application = ApplicationBuilder.newApplication().withCompetition(newCompetition().withFundingType(FundingType.KTP_AKT).build()).build();
 
         given(applicationInviteService.getInvitesByApplication(application.getId())).willReturn(serviceSuccess(emptyList()));
 

@@ -104,6 +104,10 @@ public final class FormInputBuilder {
         return this;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
     public FormInputBuilder withMultipleChoiceOptions(List<MultipleChoiceOptionBuilder> multipleChoiceOptions) {
         this.multipleChoiceOptions = multipleChoiceOptions;
         return this;

@@ -51,13 +51,22 @@
                 </th>
                 <th class="govuk-table__header govuk-table__header--numeric" scope="col"
                     th:classappend="${table.includeOrganisationNames} ? null : 'width-80'">Total costs (&pound;)</th>
-                <th scope="col" class="govuk-table__header govuk-table__header--numeric "
-                    th:classappend="${table.fundingLevelFirst} ? 'width-80' : 'width-100'"
-                    th:text="${table.fundingLevelFirst} ? 'Funding level (%)' : 'Funding sought (£)'">Funding level (%)</th>
-                <th scope="col" class="govuk-table__header govuk-table__header--numeric "
-                    th:classappend="${table.fundingSoughtFirst} ? 'width-80' : 'width-100'"
-                    th:text="${table.fundingSoughtFirst} ? 'Funding level (%)' : 'Funding sought (£)'">Funding sought (&pound;)</th>
-                <th scope="col" class="govuk-table__header govuk-table__header--numeric width-150">
+                <th:block th:unless="${table.isThirdPartyOfgem}">
+                    <th scope="col" class="govuk-table__header govuk-table__header--numeric "
+                        th:classappend="${table.fundingLevelFirst} ? 'width-80' : 'width-100'"
+                        th:text="${table.fundingLevelFirst} ? 'Funding level (%)' : 'Funding sought (£)'">Funding level (%)
+                    </th>
+                    <th scope="col" class="govuk-table__header govuk-table__header--numeric "
+                        th:classappend="${table.fundingSoughtFirst} ? 'width-80' : 'width-100'"
+                        th:text="${table.fundingSoughtFirst} ? 'Funding level (%)' : 'Funding sought (£)'">Funding sought (&pound;)
+                    </th>
+                </th:block>
+                <th:block th:if="${table.isThirdPartyOfgem}">
+                    <th class="govuk-table__header govuk-table__header--numeric width-100">Funding sought (&pound;)</th>
+                    <th class="govuk-table__header govuk-table__header--numeric width-100">Contribution to project (%)</th>
+                </th:block>
+
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric width-100">
                     <th:block th:if="${table.ktp or table.isThirdPartyOfgem}">Other funding (&pound;)</th:block>
                     <th:block th:unless="${table.ktp or table.isThirdPartyOfgem}">Other public sector funding (&pound;)</th:block>
                 </th>
@@ -96,9 +105,13 @@
                 <td class="govuk-table__cell govuk-table__cell--numeric">
                     <strong><th:block th:text="${#numbers.formatInteger(row.costs, 0, 'DEFAULT')}" /></strong>
                 </td>
-                <th:block th:with="fundingLevel=|${#numbers.formatDecimal(row.claimPercentage,1,'DEFAULT',2,'DEFAULT')}%|, fundingSought=${#numbers.formatInteger(row.fundingSought, 0, 'DEFAULT')}">
+                <th:block th:unless="${table.isThirdPartyOfgem}" th:with="fundingLevel=|${#numbers.formatDecimal(row.claimPercentage,1,'DEFAULT',2,'DEFAULT')}%|, fundingSought=${#numbers.formatInteger(row.fundingSought, 0, 'DEFAULT')}">
                     <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${table.fundingLevelFirst} ? ${fundingLevel} : ${fundingSought}"/>
                     <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${table.fundingSoughtFirst} ? ${fundingLevel} : ${fundingSought}"/>
+                </th:block>
+                <th:block th:if="${table.isThirdPartyOfgem}" th:with="contributionToProjectPercentage=|${#numbers.formatDecimal(row.contributionToProjectPercentage,1,'DEFAULT',2,'DEFAULT')}%|">
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.fundingSought, 0, 'DEFAULT')}"/>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${contributionToProjectPercentage}"/>
                 </th:block>
                 <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.otherFunding, 0, 'DEFAULT')}"/>
                 <td th:if="${table.ktp}" class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.contributionPercentage, 0, 'DEFAULT')}"/>

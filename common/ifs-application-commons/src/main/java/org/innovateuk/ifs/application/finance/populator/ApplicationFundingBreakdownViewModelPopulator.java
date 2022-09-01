@@ -107,7 +107,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 competition.getName(),
                 rows,
                 collaborativeProject,
-                competition.getFundingType() == FundingType.KTP,
+                competition.isKtp(),
                 financeRowTypes,
                 competition.isHorizonEuropeGuarantee());
     }
