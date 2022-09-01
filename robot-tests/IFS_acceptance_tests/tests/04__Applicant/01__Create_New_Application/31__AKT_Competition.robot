@@ -14,8 +14,7 @@ Resource          ../../../resources/keywords/MYSQL_AND_DATE_KEYWORDS.robot
 ${AKT2ICompName}                            Access Knowledge Transfer to Innovate Competition
 ${aktLeadEmail}                             akt.ktp@gmail.com
 &{aktLeadCredentials}                       email=${aktLeadEmail}  password=${short_password}
-${AKT2IAssessmentCompetitionID}             ${competition_ids['${AKT2ICompName}']}
-${ktpAssessmentApplicationName}             KTP assessment application
+${AKT2IAssessmentCompetitionID}             ${competition_i
 ${ktpAssessmentApplicationID}               ${application_ids['${ktpAssessmentApplicationName}']}
 ${ktpDetailsFinanceCompetitionName}         KTP assessment Detailed Finances
 ${ktpDetailsFinanceCompetitionID}           ${competition_ids['${ktpDetailsFinanceCompetitionName}']}
@@ -616,10 +615,6 @@ the user should see read only view for FEC declaration
     the user should not see the element                     jQuery = button:contains("Edit your fEC Model")
     the user checks the read-only page
 
-Get competitions id and set it as suite variable
-    [Arguments]  ${AKT2ICompName}
-    ${AKT2IAssessmentCompetitionID} =  get comp id from comp title  ${AKT2ICompName}
-    Set suite variable  ${AKT2IAssessmentCompetitionID}
 
 the user checks the read-only page
     # Due to us testing webtest data here, the file does not exist so we check for only no internal server errors. Page not found is OK in this case.
