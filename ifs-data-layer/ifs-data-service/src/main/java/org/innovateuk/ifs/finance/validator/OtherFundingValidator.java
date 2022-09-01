@@ -91,27 +91,32 @@ public class OtherFundingValidator implements Validator {
         return !otherFundingRows.isEmpty() && "Yes".equals(otherFundingRows.get(0).getItem());
     }
 
+    private Optional<ApplicationFinanceRow> applicationCost(BaseOtherFunding otherFunding) {
+        return applicationFinanceRowRepository.findById(otherFunding.getId());
+    }
+
+    private ApplicationFinance applicationFinance(BaseOtherFunding otherFunding) {
+        return applicationCost(otherFunding).get().getTarget();
+    }
+
+    private ProjectFinance projectFinance(BaseOtherFunding otherFunding) {
+        ProjectFinanceRow projectCost = projectFinanceRowRepository.findById(otherFunding.getId()).get();
+        return projectCost.getTarget();
+    }
+
     private List<? extends FinanceRow> getRows(BaseOtherFunding otherFunding) {
-        Optional<ApplicationFinanceRow> applicationCost = applicationFinanceRowRepository.findById(otherFunding.getId());
-        if (applicationCost.isPresent()) {
-            ApplicationFinance applicationFinance = applicationCost.get().getTarget();
-            return applicationFinanceRowRepository.findByTargetIdAndType(applicationFinance.getId(), otherFunding.getCostType());
+        if (applicationCost(otherFunding).isPresent()) {
+            return applicationFinanceRowRepository.findByTargetIdAndType(applicationFinance(otherFunding).getId(), otherFunding.getCostType());
         } else {
-            ProjectFinanceRow projectCost = projectFinanceRowRepository.findById(otherFunding.getId()).get();
-            ProjectFinance projectFinance = projectCost.getTarget();
-            return projectFinanceRowRepository.findByTargetIdAndType(projectFinance.getId(), otherFunding.getCostType());
+            return projectFinanceRowRepository.findByTargetIdAndType(projectFinance(otherFunding).getId(), otherFunding.getCostType());
         }
     }
 
     private boolean isCompTypeOfgemAndFundingTypeThirdParty(BaseOtherFunding otherFunding) {
-        Optional<ApplicationFinanceRow> applicationCost = applicationFinanceRowRepository.findById(otherFunding.getId());
-        if (applicationCost.isPresent()) {
-            ApplicationFinance applicationFinance = applicationCost.get().getTarget();
-            return applicationFinance.getApplication().getCompetition().isThirdPartyOfgem();
+        if (applicationCost(otherFunding).isPresent()) {
+            return applicationFinance(otherFunding).getApplication().getCompetition().isThirdPartyOfgem();
         } else {
-            ProjectFinanceRow projectCost = projectFinanceRowRepository.findById(otherFunding.getId()).get();
-            ProjectFinance projectFinance = projectCost.getTarget();
-            return projectFinance.getProject().getApplication().getCompetition().isThirdPartyOfgem();
+            return projectFinance(otherFunding).getProject().getApplication().getCompetition().isThirdPartyOfgem();
         }
     }
 

@@ -36,6 +36,7 @@ public class ProjectYourFundingFormValidator extends AbstractYourFundingFormVali
         ProjectResource projectResource = projectRestService.getProjectById(projectId).getSuccess();
         CompetitionApplicationConfigResource competitionApplicationConfigResource
                 = competitionApplicationConfigRestService.findOneByCompetitionId(projectResource.getCompetition()).getSuccess();
+
         boolean isCompTypeOfgemAndFundingTypeThirdParty = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess().isCompTypeOfgemAndFundingTypeThirdParty();
 
         validate(form, errors, financeSupplier, competitionApplicationConfigResource.getMaximumFundingSought(), isCompTypeOfgemAndFundingTypeThirdParty);
