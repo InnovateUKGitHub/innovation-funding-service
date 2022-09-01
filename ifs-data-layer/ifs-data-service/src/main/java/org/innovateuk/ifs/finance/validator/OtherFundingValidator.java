@@ -48,11 +48,11 @@ public class OtherFundingValidator implements Validator {
         String fundingSource = otherFunding.getFundingSource();
         BigDecimal fundingAmount = otherFunding.getFundingAmount();
         if (userHasSelectedYesToOtherFunding && fundingSource != null && !fundingSource.equals(OTHER_FUNDING)) {
-            validateDate(otherFunding, errors);
+            validateDate(otherFunding, errors, isCompTypeOfgemAndFundingTypeThirdParty(otherFunding));
             validateFundingSource(fundingSource, errors);
             validateFundingAmount(fundingAmount, errors);
         } else if(userHasSelectedYesToOtherFunding && fundingSource == null) {
-        	validateDate(otherFunding, errors);
+        	validateDate(otherFunding, errors, isCompTypeOfgemAndFundingTypeThirdParty(otherFunding));
         }
     }
 
@@ -71,11 +71,11 @@ public class OtherFundingValidator implements Validator {
         }
     }
 
-    private void validateDate(BaseOtherFunding otherFunding, Errors errors){
+    private void validateDate(BaseOtherFunding otherFunding, Errors errors, boolean isCompTypeOfgemAndFundingTypeThirdParty){
         String securedDate = otherFunding.getSecuredDate();
-        if(StringUtils.isBlank(securedDate)){
+        if(StringUtils.isBlank(securedDate) && !isCompTypeOfgemAndFundingTypeThirdParty){
             rejectValue(errors, "securedDate", "validation.finance.funding.date.invalid");
-        }else if(!isValidDate(securedDate)) {
+        }else if(!isValidDate(securedDate, isCompTypeOfgemAndFundingTypeThirdParty)) {
             rejectValue(errors, "securedDate", "validation.finance.funding.date.invalid");
         }
     }
@@ -103,13 +103,29 @@ public class OtherFundingValidator implements Validator {
         }
     }
 
-    private boolean isValidDate(final String input){
+    private boolean isCompTypeOfgemAndFundingTypeThirdParty(BaseOtherFunding otherFunding) {
+        Optional<ApplicationFinanceRow> applicationCost = applicationFinanceRowRepository.findById(otherFunding.getId());
+        if (applicationCost.isPresent()) {
+            ApplicationFinance applicationFinance = applicationCost.get().getTarget();
+            return applicationFinance.getApplication().getCompetition().isThirdPartyOfgem();
+        } else {
+            ProjectFinanceRow projectCost = projectFinanceRowRepository.findById(otherFunding.getId()).get();
+            ProjectFinance projectFinance = projectCost.getTarget();
+            return projectFinance.getProject().getApplication().getCompetition().isThirdPartyOfgem();
+        }
+    }
+
+    private boolean isValidDate(final String input, boolean isCompTypeOfgemAndFundingTypeThirdParty){
+        if (isCompTypeOfgemAndFundingTypeThirdParty && input.isBlank()) {
+            return true;
+        }
+
         SimpleDateFormat format = new SimpleDateFormat("MM-yyyy");
         format.setLenient(false);
         try {
             Date dt = format.parse(input);
             return format.format(dt).equals(input);
-        } catch(ParseException e){
+        } catch (ParseException e) {
             return false;
         }
     }
