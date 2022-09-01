@@ -140,9 +140,9 @@
                     <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${table.fundingLevelFirst} ? '' : ${fundingSought}"/>
                     <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${table.fundingSoughtFirst} ? '' : ${fundingSought}"/>
                 </th:block>
-                <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(table.otherFunding, 0, 'DEFAULT')}"></td>
-                <td th:if="${table.ktp}" class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(table.contributionPercentage, 0, 'DEFAULT')}"></td>
                 <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(table.contribution, 0, 'DEFAULT')}"></td>
+                <td th:if="${table.ktp}" class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(table.contributionPercentage, 0, 'DEFAULT')}"></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(table.otherFunding, 0, 'DEFAULT')}"></td>
             </tr>
             </tbody>
         </table>
