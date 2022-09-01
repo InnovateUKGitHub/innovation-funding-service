@@ -9,6 +9,8 @@ Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/Competition_Commons.robot
 Resource          ../../../resources/common/Assessor_Commons.robot
 Resource          ../../../resources/keywords/MYSQL_AND_DATE_KEYWORDS.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
+Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
 ${AKT2ICompName}                            Access Knowledge Transfer to Innovate Competition
@@ -36,7 +38,8 @@ ${ktpProjectID}                             ${project_ids["${KTPapplication}"]}
 ${KTPapplicationId}                         ${application_ids["${KTPapplication}"]}
 ${KTPcompetiton}                            KTP in panel
 ${ktpLead}                                  bob@knowledge.base
-${ktp}                               jessica.doe@ludlow.co.uk
+${ktp}                                      jessica.doe@ludlow.co.uk
+${ktpApplicationTitle}                      KTP New Application
 
 
 *** Test Cases ***
@@ -78,6 +81,7 @@ Lead applicant can complete application team section without KTA
     And the user clicks the button/link                             id = application-question-complete
     Then the user should see the element                            jQuery = p:contains("Application team is marked as complete")
 
+
 Lead applicant can not view KTA details in application summary
     [Documentation]  IFS-12476
     Given the user clicks the button/link       link = Application overview
@@ -85,259 +89,15 @@ Lead applicant can not view KTA details in application summary
     And the user clicks the button/link         id = accordion-questions-heading-1-1
     Then the user should not see the element    jQuery = h2:contains("Knowledge transfer adviser")
 
-Invite the KTA to assess the KTP competition
-    [Documentation]   IFS-8260
-    Given log in as a different user                    &{ifs_admin_user_credentials}
-    When the user navigates to the page                 ${server}/management/competition/${competitionId}/assessors/find
-    And the user clicks the button/link                 jQuery = tr:contains("Hermen Mermen") label
-    And the user clicks the button/link                 id = add-selected-assessors-to-invite-list-button
-    When the user clicks the button/link                id = review-and-send-assessor-invites-button
-    And the user clicks the button/link                 jQuery = button:contains("Send invitation")
-    Then the user should see the element                link = Hermen Mermen
+Lead applicant completes the KTP application
 
-Assessor accept the inviation to assess the KTP competition
-    [Documentation]   IFS-8260
-    Given KTA accepts the invitation to assess the application      ${AKT2ICompName}   ${ktaEmail}   ${short_password}
-    When log in as a different user                                 &{ifs_admin_user_credentials}
-    And the user navigates to the page                              ${server}/management/competition/${competitionId}/assessors/accepted
-    Then the user should see the element                            link = Hermen Mermen
-
-Allocated KTA to assess the KTP application
-    [Documentation]   IFS-8260
-    Given the user navigates to the page     ${server}/management/assessment/competition/${CompetitionID}/applications
-    When the user clicks the button/link     link = View progress
-    And the user selects the checkbox        assessor-row-1
-    And the user clicks the button/link      jQuery = button:contains("Add to application")
-    Then the user should see the element     jQuery = tr td:contains("Hermen Mermen")
-
-Assessor accept the inviation to assess the KTP application
-    [Documentation]   IFS-8260
-    Given the user navigates to the page               ${server}/management/competition/${CompetitionID}
-    And the user clicks the button/link                id = notify-assessors-changes-since-last-notify-button
-    When KTA accepts to assess the KTP application     ${CompetitionID}   ${ktaEmail}  ${short_password}
-    And the user clicks the button/link                link = Access Knowledge Transfer to Innovate Competition
-
-Assessor can see lead organisation project finances when all option selected in assessor view of fiannces in competition setup
-    [Documentation]  IFS-8453
-    Given the user clicks the button/link     link = Finances overview
-    When the user clicks the button/link      jQuery = div:contains("A base of knowledge") ~ a:contains("View finances")
-    Then the user should see the element      link = Your project costs
-    And the user should see the element       link = Your project location
-    And the user should see the element       link = Your funding
-
-Assessor can see project cost summary in finance overview when all option selected in assessor view of fiannces in competition setup
-    [Documentation]  IFS-8453
-    Given the user clicks the button/link     link = Back to finances overview
-    Then the user should see the element      jQuery = h2:contains("Project cost summary")
-    And the user should see the element       jQuery = td:contains("Other costs") + td:contains("1,100")
-
-Assessor should get a validation message if the score is not selected
-    [Documentation]   IFS-7915
-    Given The user clicks the button/link                  link = Back to your assessment overview
-    And the user clicks the button/link                    link = Impact
-    When the user clicks the button/link                   jQuery = button:contains("Save and return to assessment overview")
-    Then the user should see a field and summary error     The assessor score must be a number.
-
-Assessor can score impact category in the KTP application
-    [Documentation]   IFS-7915
-    Given The user clicks the button/link             link = Back to your assessment overview
-    And the user clicks the button/link               link = Impact
-    When Assessor completes the KTP category          Testing feedback text
-    Then Assessor should see the category details     Impact   10   25%
-
-Assessor can score innovation category in the KTP application
-    [Documentation]   IFS-7915
-    Given the user clicks the button/link             link = Innovation
-    When Assessor completes the KTP category          Testing feedback text
-    Then Assessor should see the category details     Innovation   20   50%
-
-Assessor can score challenge category in the KTP application
-    [Documentation]   IFS-7915
-    Given the user clicks the button/link             link = Challenge
-    When Assessor completes the KTP category          Testing feedback text
-    Then Assessor should see the category details     Innovation   30   75%
-
-Assessor can score cohesiveness category in the KTP application
-    [Documentation]   IFS-7915
-    Given the user clicks the button/link             link = Cohesiveness
-    When Assessor completes the KTP category          Testing feedback text
-    Then Assessor should see the category details     Innovation   40   100%
-
-Assessor can see the Print button and the score Total
-    [Documentation]   IFS-8617
-    When the user should see the element      jQuery = a:contains("Print or download the application")
-    And the user should see the element       jQuery = p:contains("Total score:")
-
-Assessor is presented with an error message when saving an assessment without guidance for funding sutability decision
-    [Documentation]   IFS-8295
-    Given the user clicks the button/link                  link = Review and complete your assessment
-    When the user clicks the button/link                   jQuery = button:contains("Save assessment")
-    Then the user should see a field and summary error     You must select an option.
-    And the user should see the element                    jQuery = h1:contains("Assessment summary")
-    And the user should see the element                    jQuery = h2:contains("Review assessment")
-
-Assessor should see the scope section as incomplete if try to review the assessment without completing scope section
-    [Documentation]   IFS-8295
-    When the user clicks the button/link                                    id = accordion-questions-heading-1
-    Then Assessor should review the incomplete scope category details       Incomplete    accordion-questions-content-1   ${EMPTY}
-
-Assessor can review feedback they added to the impact assessment category section in the KTP application
-    [Documentation]   IFS-8295
-    Given the user clicks the button/link                           id = accordion-questions-heading-2
-    Then Assessor should review the assessment category details     Complete    10/10   accordion-questions-content-2   Testing feedback text
-
-Assessor can review feedback they added to the innovation assessment category section in the KTP application
-    [Documentation]   IFS-8295
-    Given the user clicks the button/link                            id = accordion-questions-heading-3
-    Then Assessor should review the assessment category details      Complete    10/10   accordion-questions-content-3   Testing feedback text
-
-Assessor can review feedback they added to the challenge assessment category section in the KTP application
-    [Documentation]   IFS-8295
-    Given the user clicks the button/link                            id = accordion-questions-heading-4
-    Then Assessor should review the assessment category details      Complete    10/10   accordion-questions-content-4   Testing feedback text
-
-Assessor can review feedback they added to the cohesiveness assessment category section in the KTP application
-    [Documentation]   IFS-8295
-    Given the user clicks the button/link                            id = accordion-questions-heading-5
-    Then Assessor should review the assessment category details      Complete    10/10   accordion-questions-content-5   Testing feedback text
-
-Assessor can amend the feedback they added to the scope assessment category section in the KTP application
-    [Documentation]   IFS-8295
-    Given the user clicks the button/link                            link = Edit the scope section
-    When Assessor completes the scope section of an application
-    And the user clicks the button/link                              link = Review and complete your assessment
-    Then Assessor should review the scope category details           Complete    Yes   accordion-questions-content-1   Testing feedback text
-
-Assessor can amend the feedback they added to the impact assessment category section in the KTP application
-    [Documentation]   IFS-8295
-    Given the user clicks the button/link                            link = Edit the impact section
-    When Assessor completes the KTP category                         NEW testing feedback text
-    And the user clicks the button/link                              link = Review and complete your assessment
-    Then Assessor should review the assessment category details      Complete    10/10   accordion-questions-content-2   NEW testing feedback text
-
-Assessor can amend the feedback they added to the innovation assessment category section in the KTP application
-    [Documentation]   IFS-8295
-    Given the user clicks the button/link                            link = Edit the innovation section
-    When Assessor completes the KTP category                         NEW testing feedback text
-    And the user clicks the button/link                              link = Review and complete your assessment
-    Then Assessor should review the assessment category details      Complete    10/10   accordion-questions-content-3   NEW testing feedback text
-
-Assessor can amend the feedback they added to the challenge assessment category section in the KTP application
-    [Documentation]   IFS-8295
-    Given the user clicks the button/link                            link = Edit the challenge section
-    When Assessor completes the KTP category                         NEW testing feedback text
-    And the user clicks the button/link                              link = Review and complete your assessment
-    Then Assessor should review the assessment category details      Complete    10/10   accordion-questions-content-4   NEW testing feedback text
-
-Assessor can amend the feedback they added to the cohesiveness assessment category section in the KTP application
-    [Documentation]   IFS-8295
-    Given the user clicks the button/link                            link = Edit the cohesiveness section
-    When Assessor completes the KTP category                         NEW testing feedback text
-    And the user clicks the button/link                              link = Review and complete your assessment
-    Then Assessor should review the assessment category details      Complete    10/10   accordion-questions-content-5   NEW testing feedback text
-
-Assessor can save the KTP application assessment
-    [Documentation]   IFS-8295
-    Given the user should see the element           jQuery = .govuk-body:contains("You must explain your decision")
-    And the user selects the radio button           fundingConfirmation   true
-    And the user enters text to a text field        id = feedback    Testing feedback text
-    And the user clicks the button/link             jQuery = button:contains("Save assessment")
-    Then the user should see the element            jQuery = li:contains("KTP assessment application") .msg-progress:contains("Assessed")
-
-Assessor can submit the KTP application assessment
-    [Documentation]   IFS-8295
-    Given the user selects the checkbox             assessmentIds1
-    When the user clicks the button/link            id = submit-assessment-button
-    And the user clicks the button/link             jQuery = button:contains("Yes I want to submit the assessments")
-    Then the user should see the element            jQuery = li:contains("KTP assessment application") .msg-progress:contains("Recommended")
-
-Deafult value of assessor view finance config set to all for ktp competitions
-    [Documentation]   IFS-8594  IFS-8779
-    Given Log in as a different user                 &{Comp_admin1_credentials}
-    When the user navigates to the page              ${CA_UpcomingComp}
-    And the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
-    And the user fills in the CS Initial details     competition config  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  KTP
-    And the user clicks the button/link              link = Assessors
-    Then radio button should be set to               assessorFinanceView   ALL
-
-Assessor can see lead organisation detailed finances when detailed option selected in assessor view of fiannces in competition setup
-    [Documentation]  IFS-8453
-    Given Invite KTA to assess the competition     ${ktpDetailsFinanceCompetitionID}   ${ktpDetailsFinanceApplicationName}   ${ktpDetailsFinanceCompetitionName}   ${ktaEmail}  ${short_password}
-    And the user clicks the button/link            link = Finances overview
-    When the user clicks the button/link           jQuery = div:contains("A base of knowledge") ~ a:contains("View finances")
-    Then the user should not see the element       link = Your project costs
-    And the user should not see the element        link = Your project location
-    And the user should not see the element        link = Your funding
-    And the user should see the element            jQuery = h2:contains("Detailed finances")
-
-Assessor can see project cost summary in detailed finance overview when detailed option selected in assessor view of fiannces in competition setup
-    [Documentation]  IFS-8453
-    Given the user clicks the button/link     link = Back to funding
-    Then the user should see the element      jQuery = h2:contains("Project cost summary")
-    And the user should see the element       jQuery = td:contains("Other costs") + td:contains("1,100")
-
-
-Assessor can see lead organisation finances for non ktp compettition when all option selected in assessor view of fiannces in competition setup
-    [Documentation]  IFS-8453
-    Given Invite KTA to assess the competition     ${nonKTPOverviewFinanceCompetitionID}    ${nonKTPOverviewFinanceApplicationName}    ${nonKTPOverviewFinanceCompetitionName}     addison.shannon@gmail.com   ${short_password}
-    And the user clicks the button/link            link = Finances overview
-    When the user clicks the button/link           jQuery = div:contains("Mo Juggling Mo Problems Ltd") ~ a:contains("View finances")
-    Then the user should see the element           link = Your project costs
-    And the user should see the element            link = Your project location
-    And the user should see the element            link = Your organisation
-    And the user should see the element            link = Your funding
-
-KTA can see application successfull banner and feedback information with date on making the application successful, before the feedback is released
-    [Documentation]  IFS-8548
-    Given IFS Admin makes the application decision           ${ktpAssessmentCompetitionName}  Successful
-    And IFS Admin notifies all applicants
-    When MO navigates to application overview page           ${ktpAssessmentApplicationName}  This application was successful.
-    Then the user should see the element                     jQuery = h2:contains("This application was successful.")
-    And the user should see the element                      jQuery = p:contains("All application feedback will be available here from ${ktpAssessmentCompetitionReleaseFeedbackDayMonthYear}.")
-
-KTA can see application successful banner and feedback information after the feedback is released
-    [Documentation]  IFS-8548
-    Given IFS admin releases feedback to the applicant    ${ktpAssessmentCompetitionName}
-    When MO navigates to application overview page        ${ktpAssessmentApplicationName}  This application was successful.
-    Then the user should see the element                  jQuery = h2:contains("This application was successful.")
-    And the user should see the element                   jQuery = p:contains("You can view all scores and application feedback in the relevant sections.")
-
-KTA can see application unsuccessful banner and feedback information with date on making the application unsuccessful, before the feedback is released
-    [Documentation]  IFS-8548
-    Given IFS Admin makes the application decision        ${ktpDetailsFinanceCompetitionName}  Unsuccessful
-    And IFS Admin notifies all applicants
-    When MO navigates to application overview page        ${ktpDetailsFinanceApplicationName}  This application was unsuccessful.
-    Then the user should see the element                  jQuery = h2:contains("This application was unsuccessful.")
-    And the user should see the element                   jQuery = p:contains("All application feedback will be available here from ${ktpDetailsFinanceCompetitionReleaseFeedbackDayMonthYear}.")
-
-KTA can see application unsuccessful banner and feedback information after the feedback is released
-    [Documentation]  IFS-8548
-    Given IFS admin releases feedback to the applicant    ${ktpDetailsFinanceCompetitionName}
-    When MO navigates to application overview page        ${ktpDetailsFinanceApplicationName}  This application was unsuccessful.
-    Then the user should see the element                  jQuery = h2:contains("This application was unsuccessful.")
-    And the user should see the element                   jQuery = p:contains("You can view all scores and application feedback in the relevant sections.")
-
-KTA receives a notification email that assessor and supporter feedback is available on release feedback
-    [Documentation]  IFS-8550
-    Given log in as a different user                                     &{ifs_admin_user_credentials}
-    And the user clicks the button/link                                  link = ${KTPcompetiton}
-    When IFS admin releases feedback on making application sucessful
-    Then the user reads his email and clicks the link                    ${monitoringOfficerEmail}   ${KTPcompetiton}: Feedback for application ${KTPapplicationId} is now available.   You can now view the feedback for this application  1
-
-KTA can view written feedback from assessors and supporters on release feedback
-    [Documentation]  IFS-8550
-    Given log in as a different user                        ${monitoringOfficerEmail}   ${short_password}
-    When the user navigates to the page                     ${server}/project-setup/project/${ktpProjectID}
-    And the user clicks the button/link                     link = view application overview
-    #When the user navigates to application overview         ${KTPapplication}
-    Then KTA should see assessors and supporters feedback
-
-Project lead should not see assessor or supporter feedback
-    [Documentation]  IFS-8550
-    Given log in as a different user                                               ${ktpLead}  ${short_password}
-    When the user navigates to the page                                            ${server}/project-setup/project/${ktpProjectID}
-    And the user clicks the button/link                                            link = view application overview
-    Then the project team member should not see assessor or supporter feedback
+    the user completes the KTP application except application team and your project finances
+    the user selects research category from funding
+    the applicant goes to the project summary, and performs actions
+    the lead applicant marks the KTP project location as complete
+    the applicant goes to the scope section, and performs actions
+    the applicant goes to the public description, and performs actions
+    the applicant submits the application
 
 
 *** Keywords ***
@@ -582,4 +342,54 @@ the user checks the read-only page
     the user should not see internal server and forbidden errors
     the user closes the last opened tab
 
+the user completes the KTP application except application team and your project finances
+    the user clicks the button/link                                                 link = Application details
+    the user fills in the KTP Application details                                   ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    the lead applicant fills all the questions and marks as complete(programme)
+    the user navigates to Your-finances page                                        ${ktpApplicationTitle}
+    the lead applicant marks the KTP project location as complete
+    the user accept the competition terms and conditions                            Return to application overview
+
+the user fills in the KTP Application details
+    [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    the user should see the element                jQuery = h1:contains("Application details")
+    the user should not see the element            id = startDate
+    the user enters text to a text field           id = name  ${appTitle}
+    the user enters text to a text field           id = durationInMonths  24
+    the user clicks the button twice               css = label[for="resubmission-no"]
+    the user can mark the question as complete
+    the user should see the element                jQuery = li:contains("Application details") > .task-status-complete
+
+the lead applicant marks the KTP project location as complete
+    the user enters the project location
+    the user should see the element          jQuery = li:contains("Your project location") span:contains("Complete")
+    the user clicks the button/link          link = Back to application overview
+
+
+the applicant submits the application
+    the user clicks the button/link                    link = Review and submit
+    the user should not see the element                jQuery = .task-status-incomplete
+    the user clicks the button/link                    jQuery = .govuk-button:contains("Submit application")
+    the user should be redirected to the correct page  track
+
+the applicant goes to the project summary, and performs actions
+    click link    Project summary
+    time until page contains    Please provide a short summary of your project    Loading the project summary section
+    Input Text    css = #form-input-1039 .editor    This is some random text
+    mark section as complete    Marking summary section as complete
+    the applicant saves and returns to the overview    Saving the project summary section
+
+the applicant goes to the public description, and performs actions
+    click link    Public description
+    time until page contains    Please provide a brief description of your project    Loading the public description section
+    Input Text    css = #form-input-1040 .editor    This is some random text
+    mark section as complete    Marking public description section as complete
+    the applicant saves and returns to the overview    Saving the public description section
+
+the applicant goes to the scope section, and performs actions
+    click link    Scope
+    time until page contains    If your application doesn't align with the scope    Loading the scope section
+    Input Text    css = #form-input-1041 .editor    This is some random textThis is some random textThis is some random textThis is some random textThis is some random textThis is some random textThis is some random textThis is some random textThis is some random textThis is some random textThis is some random textThis is some random textThis is some random textThis is some random textThis is some random textThis is some random text
+    mark section as complete    Marking scope section as complete
+    the applicant saves and returns to the overview    Saving the scope section
 
