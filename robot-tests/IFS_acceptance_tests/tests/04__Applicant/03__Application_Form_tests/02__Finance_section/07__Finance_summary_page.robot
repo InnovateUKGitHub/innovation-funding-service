@@ -303,10 +303,10 @@ the finance summary table in Your project Finances has correct values for lead
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  ${grant}
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(3)  Funding sought
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(3)  ${funding_sought}
-    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(4)  Other public sector funding
-    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(4)  ${other_funding}
-    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(5)  Contribution to project
-    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(5)  ${contribution}
+    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(4)  Contribution to project
+    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(4)  ${contribution}
+    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(5)  Other public sector funding
+    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(5)  ${other_funding}
 
 the finance summary table in Your project Finances has correct values for collaborator
     [Arguments]  ${project_costs}  ${grant}  ${funding_sought}  ${other_funding}  ${contribution}
@@ -316,10 +316,10 @@ the finance summary table in Your project Finances has correct values for collab
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  ${grant}
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(3)  Funding sought
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(3)  ${funding_sought}
-    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(4)  Other public sector funding
-    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(4)  ${other_funding}
-    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(5)  Contribution to project
-    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(5)  ${contribution}
+    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(4)  Contribution to project
+    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(4)  ${contribution}
+    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(5)  Other public sector funding
+    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(5)  ${other_funding}
 
 the contribution to project and funding sought should be 0 and not a negative number
     the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
