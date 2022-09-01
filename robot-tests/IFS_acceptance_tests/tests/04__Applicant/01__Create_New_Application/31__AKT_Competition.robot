@@ -85,7 +85,7 @@ Lead applicant can complete application team section without KTA
 Lead applicant completes the KTP application
     Given the user clicks the button/link                                                        link = Application overview
     the user completes the KTP application except application team and your project finances
-    the user selects research category from funding
+    the user selects research category from funding                                              Feasibility studies
     the applicant goes to the project summary, and performs actions
     the lead applicant marks the KTP project location as complete
     the applicant goes to the scope section, and performs actions
