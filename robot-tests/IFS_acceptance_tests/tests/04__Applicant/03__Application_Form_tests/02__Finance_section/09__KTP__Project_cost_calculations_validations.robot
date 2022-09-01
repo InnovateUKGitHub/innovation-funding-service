@@ -267,7 +267,6 @@ KTA assessor assigned to application can view the read-only view for 'No' select
 
 The supporter can view assessment deadline in the application review email
     [Documentation]  IFS-11138
-#    [Setup]  get assessment deadline date using competition id            ${KTPcompetitonId}
     Given log in as a different user                                      &{ifs_admin_user_credentials}
     When ifs admin invites a supporter to the ktp application
     Then the user reads his email    ${supporter_credentials["email"]}    You have been invited to review an application    The deadline to review this application is midday
@@ -340,6 +339,7 @@ knowledge based applicant invites KTA user to the application
     log in as a different user                       &{KTPLead}
     the user clicks the button/link                  link = ${KTPapplication}
     the user clicks the button/link                  link = Application team
+    the user clicks the button/link                  jQuery = button:contains("Edit")
     the user enters text to a text field             id = ktaEmail   ${ktp_KTA_email}
     the user clicks the button/link                  name = invite-kta
     logout as user
@@ -460,6 +460,9 @@ the user collapses and expands the academic and secretarial support section
 knowledge based applicant completes and submits application
     log in as a different user                               &{KTPLead}
     the user clicks the button/link                          link = ${KTPapplication}
+    the user clicks the button/link                          link = Application team
+    the user clicks the button/link                          jQuery = button:contains("Mark as complete")
+    the user clicks the button/link                          link = Application overview
     the user clicks the button/link                          link = Your project finances
     the user marks the KTP project location as complete
     the user accept the competition terms and conditions     Return to application overview

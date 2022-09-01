@@ -221,7 +221,8 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
     }
 
     public boolean isKtp() {
-        return fundingType == FundingType.KTP;
+        return fundingType == FundingType.KTP
+                || fundingType == FundingType.KTP_AKT;
     }
 
     @Override

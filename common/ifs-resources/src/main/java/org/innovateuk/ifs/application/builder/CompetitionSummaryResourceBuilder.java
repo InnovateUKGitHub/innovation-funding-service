@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.time.ZonedDateTime;
@@ -76,5 +77,9 @@ public class CompetitionSummaryResourceBuilder extends BaseBuilder<CompetitionSu
 
     public CompetitionSummaryResourceBuilder withAssesorsInvited(Integer... assessorsInvited) {
         return withArraySetFieldByReflection("assessorsInvited", assessorsInvited);
+    }
+
+    public CompetitionSummaryResourceBuilder withFundingType(FundingType... fundingTypes) {
+        return withArray((fundingType, competition) -> competition.setFundingType(fundingType), fundingTypes);
     }
 }

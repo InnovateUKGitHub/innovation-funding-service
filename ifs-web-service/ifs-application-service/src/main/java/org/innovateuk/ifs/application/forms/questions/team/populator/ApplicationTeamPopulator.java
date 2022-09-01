@@ -129,13 +129,24 @@ public class ApplicationTeamPopulator {
             ktaInvite = applicationKtaInviteRestService.getKtaInviteByApplication(applicationId).getSuccess();
         }
 
-        return new ApplicationTeamViewModel(applicationId, application.getName(), application.getCompetitionName(), questionId, organisationViewModels, user.getId(),
+        return new ApplicationTeamViewModel(
+                applicationId,
+                application.getName(),
+                application.getCompetitionName(),
+                questionId, organisationViewModels,
+                user.getId(),
                 leadApplicant,
                 competition.getCollaborationLevel() == CollaborationLevel.SINGLE,
                 application.isOpen() && competition.isOpen(),
                 questionStatuses.stream().anyMatch(QuestionStatusResource::getMarkedAsComplete),
-                competition.isKtp(), ktpPhase2Enabled,
-                ktaInvite, ktaProcessRole, isEDIUpdateEnabled, competition.isThirdPartyOfgem(), user.hasRoles(Role.ASSESSOR,Role.APPLICANT));
+                competition.isKtp(),
+                competition.isKtpAkt(),
+                ktpPhase2Enabled,
+                ktaInvite,
+                ktaProcessRole,
+                isEDIUpdateEnabled,
+                competition.isThirdPartyOfgem(),
+                user.hasRoles(Role.ASSESSOR,Role.APPLICANT));
     }
 
     private ApplicationTeamOrganisationViewModel toInviteOrganisationTeamViewModel(InviteOrganisationResource organisationInvite, boolean leadApplicant) {

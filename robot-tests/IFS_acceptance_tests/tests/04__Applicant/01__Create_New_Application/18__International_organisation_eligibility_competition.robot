@@ -653,7 +653,7 @@ the user checks for organisational eligibility fields
     the user should see the element           css = [for="comp-internationalOrganisationsApplicable-yes"]
     the user should see the element           css = [for="comp-internationalOrganisationsApplicable-no"]
     the user should see the element           jQuery = button:contains("Save and continue")
-    the user should see the element           jQuery = span:contains("Funding eligibility")
+    the user should see the element           jQuery = span:contains("Funding amount sought")
     the user should see the element           link = Back to competition details
     the user should see the element           link = Return to setup overview
 

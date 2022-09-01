@@ -44,7 +44,8 @@ import java.util.stream.Collectors;
                 FileEntryMapper.class,
                 GolTemplateMapper.class,
                 CompetitionThirdPartyConfigMapper.class,
-                CompetitionEoiEvidenceConfigMapper.class
+                CompetitionEoiEvidenceConfigMapper.class,
+                CompetitionApplicationConfigMapper.class
         })
 public abstract class CompetitionMapper extends BaseMapper<Competition, CompetitionResource, Long> {
 

@@ -88,7 +88,7 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
 
         CompetitionResource competition = competitionRestService.getPublishedCompetitionById(getCompetitionIdFromInviteOrCookie(request)).getSuccess();
         if (registrationCookieService.isLeadJourney(request)
-                && competition.getFundingType() == FundingType.KTP) {
+                && competition.isKtp()) {
             return handleKtpLeadOrganisationType(request, response);
         }
         Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
