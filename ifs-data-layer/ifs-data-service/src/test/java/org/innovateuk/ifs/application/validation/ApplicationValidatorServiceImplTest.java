@@ -6,12 +6,14 @@ import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.validator.ValidatorTestUtil;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionApplicationConfig;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.handler.item.GrantClaimPercentageHandler;
@@ -58,6 +60,7 @@ import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.ne
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
@@ -116,6 +119,9 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
     @Mock
     private ApplicationFinanceRepository applicationFinanceRepository;
+
+    @Mock
+    private ApplicationService applicationService;
 
     @Test
     public void validateFormInputResponse() {
@@ -269,6 +275,8 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
         List<ValidationMessages> validationMessages = emptyList();
 
+        CompetitionResource competitionResource = newCompetitionResource().build();
+
         ProcessRole processRole = newProcessRole()
                 .withOrganisationId(organisationId)
                 .withId(1L)
@@ -287,7 +295,8 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
         when(processRoleRepository.findById(markedAsCompleteById)).thenReturn(Optional.of(processRole));
         when(financeService.financeDetails(applicationId, organisationId)).thenReturn(serviceSuccess(expectedFinances));
-        when(financeValidationUtil.validateCostItem(TRAVEL, costCategory)).thenReturn(validationMessages);
+        when(financeValidationUtil.validateCostItem(TRAVEL, costCategory, false)).thenReturn(validationMessages);
+        when(applicationService.getCompetitionByApplicationId(applicationId)).thenReturn(serviceSuccess(competitionResource));
 
         List<ValidationMessages> result = service.validateCostItem(applicationId, FinanceRowType.TRAVEL, markedAsCompleteById);
 
@@ -295,7 +304,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
         verify(processRoleRepository).findById(markedAsCompleteById);
         verify(financeService).financeDetails(applicationId, organisationId);
-        verify(financeValidationUtil).validateCostItem(TRAVEL, costCategory);
+        verify(financeValidationUtil).validateCostItem(TRAVEL, costCategory, false);
 
     }
 
@@ -310,6 +319,8 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         Long markedAsCompleteById = null;
 
         List<ValidationMessages> validationMessages = emptyList();
+
+        CompetitionResource competitionResource = newCompetitionResource().build();
 
         ProcessRole processRole = newProcessRole()
                 .withOrganisationId(organisationId)
@@ -328,7 +339,8 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
         when(processRoleRepository.findById(markedAsCompleteById)).thenReturn(Optional.of(processRole));
         when(financeService.financeDetails(applicationId, organisationId)).thenReturn(serviceSuccess(expectedFinances));
-        when(financeValidationUtil.validateCostItem(TRAVEL, costCategory)).thenReturn(validationMessages);
+        when(financeValidationUtil.validateCostItem(TRAVEL, costCategory, false)).thenReturn(validationMessages);
+        when(applicationService.getCompetitionByApplicationId(applicationId)).thenReturn(serviceSuccess(competitionResource));
 
         List<ValidationMessages> result = service.validateCostItem(applicationId, FinanceRowType.TRAVEL, markedAsCompleteById);
 
@@ -336,7 +348,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
         verify(processRoleRepository).findById(markedAsCompleteById);
         verify(financeService).financeDetails(applicationId, organisationId);
-        verify(financeValidationUtil).validateCostItem(TRAVEL, costCategory);
+        verify(financeValidationUtil).validateCostItem(TRAVEL, costCategory, false);
     }
 
     @Test

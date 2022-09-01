@@ -5,4 +5,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResou
 
 public interface CompetitionApplicationConfigRestService {
     RestResult<CompetitionApplicationConfigResource> findOneByCompetitionId(long competitionId);
+
+    RestResult<CompetitionApplicationConfigResource> update(long competitionId, CompetitionApplicationConfigResource competitionApplicationConfigResource);
+
 }

@@ -1,0 +1,119 @@
+<!-- ================= Section: Funding amount sought (17) =========================== -->
+<th:block th:fragment="section-content">
+    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
+    </div>
+
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding amount sought',size='govuk-heading-xl'" />
+
+    <form th:action="@{(${model.general.editable} ? '' : 'funding-amount-sought/edit')}" method="post"
+          th:object="${competitionSetupForm}" novalidate="novalidate"
+          th:attr="data-competition=${model.general.competition.id}"
+          data-section="funding-amount-sought">
+        <th:block th:if="${model.general.editable}">
+            <div class="govuk-form-group"
+                 th:with="unchecked=${model.general.firstTimeInForm && !#fields.hasErrors('${competitionSetupForm.*}')}"
+                 th:classappend="${#fields.hasErrors('fundingAmountSoughtApplicable')} ? 'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingAmountSoughtApplicable">
+                        <h2 class="govuk-fieldset__heading">Is a maximum funding amount sought?</h2>
+                    </legend>
+                    <span th:if="${#fields.hasErrors('fundingAmountSoughtApplicable')}" class="govuk-error-message"
+                          th:each="err : ${#fields.errors('fundingAmountSoughtApplicable')}" th:text="${err}"/>
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item" data-target="funding-amount-sought"
+                             data-target-clear-validation="true" data-target-clear-form="true">
+                            <input type="radio"
+                                   class="govuk-radios__input"
+                                   id="comp-fundingAmountSoughtApplicable-yes"
+                                   name="fundingAmountSoughtApplicable"
+                                   th:checked="${competitionSetupForm.fundingAmountSoughtApplicable == true}"
+                                   value="true"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.applicationfundingamountsoughtform.application.funding.amount.sought.applicable.required}"/>
+                            <label class="govuk-radios__label"
+                                   for="comp-fundingAmountSoughtApplicable-yes">
+                                Yes
+                            </label>
+                        </div>
+
+                        <div id="funding-amount-sought" class="panel">
+                            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('fundingAmountSought')} ? 'govuk-form-group--error'">
+                                <fieldset class="govuk-fieldset">
+                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingAmountSought">
+                                        <h2 class="govuk-fieldset__heading">Funding amount sought </h2>
+                                    </legend>
+                                    <span th:if="${#fields.hasErrors('fundingAmountSought')}" class="govuk-error-message"
+                                          th:each="err : ${#fields.errors('fundingAmountSought')}" th:text="${err}"/>
+                                    <th:block>
+                                        <span class="govuk-body govuk-!-padding-right-1">&pound;</span>
+                                    <input class="govuk-input govuk-input--width-10 govuk-!-margin-right-1"
+                                           th:field="*{__fundingAmountSought__}"
+                                           th:errorclass="govuk-input--error"
+                                           type="number"
+                                           min="1"
+                                           required="required"
+                                           data-prevent-input-non-number
+                                           th:attr="data-required-errormessage=#{validation.applicationfundingamountsoughtform.application.funding.amount.sought.required},
+                                           data-min-errormessage=#{validation.applicationfundingamountsoughtform.application.funding.amount.sought.min}" />
+                                    </th:block>
+                                </fieldset>
+                            </div>
+                        </div>
+
+                        <div class="govuk-radios__item"
+                             data-target-clear-validation="true" data-target-clear-form="true">
+                            <input type="radio"
+                                   class="govuk-radios__input"
+                                   id="comp-fundingAmountSoughtApplicable-no"
+                                   name="fundingAmountSoughtApplicable"
+                                   th:checked="${competitionSetupForm.fundingAmountSoughtApplicable == false}"
+                                   value="false"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.applicationfundingamountsoughtform.application.funding.amount.sought.applicable.required}"/>
+                            <label class="govuk-radios__label"
+                                   for="comp-fundingAmountSoughtApplicable-no">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <button class="govuk-button govuk-!-margin-top-6">Done</button>
+        </th:block>
+
+        <th:block th:if="${!model.general.editable}">
+
+            <dl class="standard-definition-list column-definition-list">
+                <dt>Is a maximum funding amount sought?</dt>
+                <dd th:text="${competitionSetupForm.fundingAmountSoughtApplicable ? 'Yes' : 'No'}"></dd>
+                <th:block th:if="${competitionSetupForm.fundingAmountSoughtApplicable}">
+                    <dt>Funding amount sought </dt>
+                    <dd th:text="'£' + ${#numbers.formatInteger(competitionSetupForm.fundingAmountSought, 0,'DEFAULT')}"></dd>
+                </th:block>
+            </dl>
+            <p th:unless="${(!model.general.editable and !competitionSetupForm.fundingAmountSoughtApplicable) or model.general.state.preventEdit}" class="govuk-body govuk-!-font-weight-bold">Click edit to change the funding amount sought.</p>
+            <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button govuk-!-margin-top-6">Edit</button>
+        </th:block>
+
+    </form>
+
+    <ul class="govuk-list pagination">
+        <li class="prev">
+            <a rel="prev" title="Navigate to previous part"
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='funding-level-percentage')}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Funding level percentage</span>
+            </a>
+        </li>
+
+        <li class="next">
+            <a rel="next" title="Navigate to next part"
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='organisational-eligibility')}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Organisational eligibility</span>
+            </a>
+        </li>
+    </ul>
+</th:block>
