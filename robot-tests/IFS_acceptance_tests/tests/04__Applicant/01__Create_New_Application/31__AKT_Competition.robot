@@ -82,15 +82,8 @@ Lead applicant can complete application team section without KTA
     Then the user should see the element                            jQuery = p:contains("Application team is marked as complete")
 
 
-Lead applicant can not view KTA details in application summary
-    [Documentation]  IFS-12476
-    Given the user clicks the button/link       link = Application overview
-    When the user clicks the button/link        link = Review and submit
-    And the user clicks the button/link         id = accordion-questions-heading-1-1
-    Then the user should not see the element    jQuery = h2:contains("Knowledge transfer adviser")
-
 Lead applicant completes the KTP application
-
+    Given the user clicks the button/link                                                        link = Application overview
     the user completes the KTP application except application team and your project finances
     the user selects research category from funding
     the applicant goes to the project summary, and performs actions
@@ -98,6 +91,14 @@ Lead applicant completes the KTP application
     the applicant goes to the scope section, and performs actions
     the applicant goes to the public description, and performs actions
     the applicant submits the application
+
+Lead applicant can not view KTA details in application summary
+    [Documentation]  IFS-12476
+    Given the user clicks the button/link       link = Application overview
+    When the user clicks the button/link        link = Review and submit
+    And the user clicks the button/link         id = accordion-questions-heading-1-1
+    Then the user should not see the element    jQuery = h2:contains("Knowledge transfer adviser")
+
 
 
 *** Keywords ***
