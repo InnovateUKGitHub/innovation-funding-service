@@ -29,7 +29,12 @@ public class AbstractYourFundingFormValidator {
             validateYourFundingAmountForm((AbstractYourFundingAmountForm) form, errors, financeSupplier, maximumFundingSought);
         }
 
-        ValidationUtils.rejectIfEmpty(errors, "otherFunding", "validation.finance.other.funding.required");
+        if (isCompTypeOfgemAndFundingTypeThirdParty) {
+            ValidationUtils.rejectIfEmpty(errors, "otherFunding", "validation.finance.contribution.in.kind.required");
+        } else {
+            ValidationUtils.rejectIfEmpty(errors, "otherFunding", "validation.finance.other.funding.required");
+        }
+
         if (TRUE.equals(form.getOtherFunding())) {
             validateOtherFundingRows(form.getOtherFundingRows(), errors, isCompTypeOfgemAndFundingTypeThirdParty);
         }
@@ -37,7 +42,7 @@ public class AbstractYourFundingFormValidator {
 
     private void validateOtherFundingRows(Map<String, BaseOtherFundingRowForm> rows, Errors errors, boolean isCompTypeOfgemAndFundingTypeThirdParty) {
         if (rows == null || rows.isEmpty()) {
-            errors.rejectValue("otherFunding", "validation.finance.min.row.other.funding.single");
+                errors.rejectValue("otherFunding","validation.finance.min.row.contributions.in.kind.single");
         } else {
             rows.forEach((id, row) -> {
                 if (!isBlankButNotOnlyRow(row, rows)) {
