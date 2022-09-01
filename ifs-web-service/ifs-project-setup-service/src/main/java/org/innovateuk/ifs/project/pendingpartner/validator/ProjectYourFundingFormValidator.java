@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.forms.sections.yourfunding.form.AbstractYo
 import org.innovateuk.ifs.application.forms.sections.yourfunding.validator.AbstractYourFundingFormValidator;
 import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResource;
 import org.innovateuk.ifs.competition.service.CompetitionApplicationConfigRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -24,6 +25,9 @@ public class ProjectYourFundingFormValidator extends AbstractYourFundingFormVali
     private CompetitionApplicationConfigRestService competitionApplicationConfigRestService;
 
     @Autowired
+    private CompetitionRestService competitionRestService;
+
+    @Autowired
     private ProjectRestService projectRestService;
 
     public void validate(AbstractYourFundingForm form, Errors errors, long projectId, long organisationId) {
@@ -32,7 +36,8 @@ public class ProjectYourFundingFormValidator extends AbstractYourFundingFormVali
         ProjectResource projectResource = projectRestService.getProjectById(projectId).getSuccess();
         CompetitionApplicationConfigResource competitionApplicationConfigResource
                 = competitionApplicationConfigRestService.findOneByCompetitionId(projectResource.getCompetition()).getSuccess();
+        boolean isCompTypeOfgemAndFundingTypeThirdParty = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess().isCompTypeOfgemAndFundingTypeThirdParty();
 
-        validate(form, errors, financeSupplier, competitionApplicationConfigResource.getMaximumFundingSought());
+        validate(form, errors, financeSupplier, competitionApplicationConfigResource.getMaximumFundingSought(), isCompTypeOfgemAndFundingTypeThirdParty);
     }
 }
