@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP;
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.THIRDPARTY;
 import static org.innovateuk.ifs.util.CollectionFunctions.negate;
 
 /**
@@ -57,8 +56,7 @@ public class FinanceSummaryTableViewModel implements BaseAnalyticsViewModel {
     }
 
     private String computeFinanceSummaryOtherCostLabel(CompetitionResource competition) {
-        if (competition.getCompetitionTypeEnum() == CompetitionTypeEnum.OFGEM &&
-                THIRDPARTY.equals(competition.getFundingType()))
+        if (competition.isCompTypeOfgemAndFundingTypeThirdParty())
             return "Contributions in kind (£)";
         else if (KTP.equals(competition.getFundingType()) ||
                 CompetitionTypeEnum.OFGEM.equals(competition.getCompetitionTypeEnum()))
