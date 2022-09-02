@@ -3,12 +3,14 @@ package org.innovateuk.ifs.application.finance.viewmodel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.SectionType;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP;
 import static org.innovateuk.ifs.util.CollectionFunctions.negate;
 
 /**
@@ -27,6 +29,9 @@ public class FinanceSummaryTableViewModel implements BaseAnalyticsViewModel {
     private final boolean includeOrganisationNames;
     private final boolean isThirdPartyOfgem;
 
+    private final boolean isCompTypeOfgemAndFundingTypeThirdParty;
+    private final String financeSummaryOtherCostLabel;
+
     public FinanceSummaryTableViewModel(long applicationId,
                                         CompetitionResource competition,
                                         List<FinanceSummaryTableRow> rows,
@@ -34,7 +39,8 @@ public class FinanceSummaryTableViewModel implements BaseAnalyticsViewModel {
                                         boolean collaborativeProject,
                                         BigDecimal competitionMaximumFundingSought,
                                         boolean includeOrganisationNames,
-                                        boolean isThirdPartyOfgem) {
+                                        boolean isThirdPartyOfgem,
+                                        boolean isCompTypeOfgemAndFundingTypeThirdParty) {
         this.applicationId = applicationId;
         this.competitionName = competition.getName();
         this.rows = rows;
@@ -45,8 +51,23 @@ public class FinanceSummaryTableViewModel implements BaseAnalyticsViewModel {
         this.ktp = competition.isKtp();
         this.includeOrganisationNames = includeOrganisationNames;
         this.isThirdPartyOfgem = isThirdPartyOfgem;
+        this.financeSummaryOtherCostLabel = computeFinanceSummaryOtherCostLabel(competition);
+        this.isCompTypeOfgemAndFundingTypeThirdParty = isCompTypeOfgemAndFundingTypeThirdParty;
     }
 
+    private String computeFinanceSummaryOtherCostLabel(CompetitionResource competition) {
+        if (competition.isCompTypeOfgemAndFundingTypeThirdParty())
+            return "Contributions in kind (£)";
+        else if (KTP.equals(competition.getFundingType()) ||
+                CompetitionTypeEnum.OFGEM.equals(competition.getCompetitionTypeEnum()))
+            return "Other funding (£)";
+        else
+            return "Other public sector funding (£)";
+
+    }
+    public boolean isCompTypeOfgemAndFundingTypeThirdParty() {
+        return isCompTypeOfgemAndFundingTypeThirdParty;
+    }
     @Override
     public Long getApplicationId() {
         return applicationId;
@@ -92,6 +113,11 @@ public class FinanceSummaryTableViewModel implements BaseAnalyticsViewModel {
     public boolean isThirdPartyOfgem() {
         return isThirdPartyOfgem;
     }
+
+    public String financeSummmaryCostLabel() {
+        return financeSummaryOtherCostLabel;
+    }
+
 
     public boolean isAllFinancesComplete() {
         return rows.stream()
@@ -148,6 +174,7 @@ public class FinanceSummaryTableViewModel implements BaseAnalyticsViewModel {
         return rows.stream().filter(FinanceSummaryTableRow::isComplete)
                 .count() > 1;
     }
+
     @JsonIgnore
     public SectionType getFinanceSectionType() {
         return SectionType.FINANCE;

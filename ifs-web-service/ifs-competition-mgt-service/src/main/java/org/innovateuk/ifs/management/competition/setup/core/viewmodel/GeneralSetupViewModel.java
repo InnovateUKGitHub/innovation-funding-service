@@ -161,4 +161,9 @@ public class GeneralSetupViewModel {
     public Funder[] getFunderValues() {
         return Funder.values();
     }
+
+    @JsonIgnore
+    public boolean isMaximumFoundingSoughtEnabled() {
+        return competition.getCompetitionApplicationConfigResource().isMaximumFundingSoughtEnabled();
+    }
 }

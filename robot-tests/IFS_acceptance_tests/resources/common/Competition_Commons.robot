@@ -171,22 +171,24 @@ the user fills in the CS funding eligibility
     ...  ELSE IF   "${fundingRule}" == "STATE_AID" and '${researchCategory}' == 'true'           the user should see the element     jQuery = p:contains("Click edit to change the maximum funding level percentage.")
     ...  ELSE IF   "${fundingRule}" == "STATE_AID" and '${researchCategory}' == 'false'          run keywords                        the user fills in maximum funding level percentage
     ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
-    ...                                     AND              the user should see the element     jQuery = p:contains("Click edit to change the maximum funding level percentage.")
     ...  ELSE IF   "${fundingRule}" == "NOT_AID" and '${researchCategory}' == 'false'            run keywords        the user fills in non aid maximum funding level percentage
     ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
     ...  ELSE IF    '${researchCategory}' == 'false'         run keywords                        the user fills in maximum funding level percentage
     ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
     ...                                     AND              the user fills in maximum funding level percentage for state aid
     ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
-    ...                                     AND              the user should see the element     jQuery = p:contains("Maximum funding level percentage is set to 10%")
-    ...                                     AND              the user should see the element     jQuery = p:contains("Click edit to change the maximum funding level percentage.")
     ...  ELSE                                                run keywords                        the user fills funding level percentages     ${compType}
     ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element    jQuery = button:contains("Done")
-    Run Keyword If  '${status}' == 'PASS'                    run keywords          the user clicks the button/link     jQuery = button:contains("Done")
-    ...                                     AND              the user should see the element         jQuery = button:contains("Edit")
-    the user clicks the button/link         link = Return to setup overview
-    the user should see the element         jQuery = div:contains("Funding eligibility") ~ .task-status-complete
+    Run Keyword If  '${status}' == 'PASS'                   the user clicks the button/link     jQuery = button:contains("Done")
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element    jQuery = h1:contains("Funding amount sought")
+    Run Keyword If  '${status}' == 'FAIL'   run keywords    the user clicks the button/link     jQuery = span:contains("Funding amount sought")
+    ...                                     AND             the user clicks the button/link     jQuery = button:contains("Done")
+    # to mark the funding amount sought section as complete since its got a default value of No
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element    jQuery = button:contains("Done")
+    Run Keyword If  '${status}' == 'PASS'                   the user clicks the button/link     jQuery = button:contains("Done")
+    the user clicks the button/link                         link = Return to setup overview
+    the user should see the element                         jQuery = div:contains("Funding eligibility") ~ .task-status-complete
 
 the user fills funding level percentages
     [Arguments]   ${compType}
@@ -806,3 +808,11 @@ the internal team notifies all applicants
     the user clicks the button/link                      id = send-email-to-all-applicants
     the user clicks the button/link                      id = send-email-to-all-applicants-button
     the user refreshes until element appears on page     jQuery = td:contains("${ApplicationID}") ~ td:contains("Sent")
+
+the user completes milestones section
+    the user clicks the button/link                    link = Milestones
+    the user clicks the button twice                   jQuery = label:contains("Project setup")
+    the user clicks the button/link                    jQuery = button:contains("Done")
+    the user completes application submission page     Yes
+    the user inputs application assessment decision    Yes
+    the user clicks the button/link                    jQuery = button:contains("Done")
