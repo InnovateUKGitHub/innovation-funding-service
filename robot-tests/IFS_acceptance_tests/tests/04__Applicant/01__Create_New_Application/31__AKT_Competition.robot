@@ -92,11 +92,9 @@ Lead applicant completes the KTP application
     Given the user clicks the button/link                                                        link = Application overview
     the user completes the KTP application except application team and your project finances
     the user selects research category                                                           Feasibility studies
-    the lead applicant marks the KTP project location as complete
 
 Lead applicant is shown a validation error when marking a non-selected option as complete for the organisation's fEC model type
      [Documentation]  IFS-9239
-     Given the user clicks the button/link                     link = Application overview
      When the user clicks the button/link                      link = Your project finances
      When the user clicks the button/link                      link = Your fEC model
      And the user selects the radio button                     fecModelEnabled  fecModelEnabled-yes
@@ -118,10 +116,11 @@ Lead applicant can declare any other government funding received
     [Documentation]  IFS-7956  IFS-7958
     Given the user fills in the funding information                         ${Application}   no
 
-Lead applicant completes the project costs
+Lead applicant completes the project costs and Project Location
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814  IFS-8154
     When the user fills in ktp project costs
-    Then the user should see the element         jQuery = li:contains("Your project costs") span:contains("Complete")
+    Then the user should see the element                            jQuery = li:contains("Your project costs") span:contains("Complete")
+    the lead applicant marks the KTP project location as complete
 
 Lead applicant submits the KTP application
     Given the user clicks the button/link       link = Application overview
