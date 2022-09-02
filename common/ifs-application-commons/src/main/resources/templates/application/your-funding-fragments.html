@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<th:block th:fragment="form(form, readOnly, guidanceFragment, maximumFundingLevel, hideAreYouRequestingFunding, ktpFundingType, lead, isThirdPartyOfgem, isFixedFundingLevel)">
+<th:block th:fragment="form(model, form, readOnly, guidanceFragment, maximumFundingLevel, hideAreYouRequestingFunding, ktpFundingType, lead, isThirdPartyOfgem, isFixedFundingLevel, isCompTypeOfgemAndFundingTypeThirdParty)">
     <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
     <input type="hidden" id="cacheTest" value=""/>
     <th:block th:unless="${readOnly}">
@@ -94,7 +94,7 @@
             <fieldset class="govuk-fieldset" id="otherFundingShowHideToggle">
                 <th:block th:unless="${ktpFundingType}">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                        <h1 class="govuk-fieldset__heading">Other funding</h1>
+                        <h1 class="govuk-fieldset__heading" th:text="${model.getFundingHeading()}">Other funding</h1>
                     </legend>
                 </th:block>
                 <th:block th:if="${ktpFundingType}">
@@ -108,10 +108,8 @@
                 <span class="govuk-error-message" th:each="err : ${#fields.errors('otherFunding')}"
                       th:text="${err}"></span>
                 <th:block th:unless="${ktpFundingType}">
-                    <span class="govuk-hint" th:if="${isThirdPartyOfgem}">Have you received any aligned or third party funding for this project?</span>
-                    <span class="govuk-hint" th:unless="${isThirdPartyOfgem}">Have you received any other public sector funding for this project?
-                        This is important as other public sector support counts as part of the funding you can receive.
-                    </span>
+                    <span class="govuk-hint" th:text="${model.getHeadingHint()}">Have you received any other public sector funding for this project?
+                        This is important as other public sector support counts as part of the funding you can receive.</span>
                 </th:block>
                 <div id="otherFunding" class="govuk-radios">
                     <div class="govuk-radios__item" data-target="other-funding-table">
@@ -120,7 +118,7 @@
                                id="other-funding-yes"
                                value="true"
                                required="required"
-                               th:attr="data-required-errormessage=#{validation.finance.other.funding.required}"
+                               th:attr="data-required-errormessage=${isCompTypeOfgemAndFundingTypeThirdParty} ? #{validation.finance.contribution.in.kind.required} : #{validation.finance.other.funding.required}"
                                th:field="*{otherFunding}"/>
                         <label for="other-funding-yes"
                                class="govuk-label govuk-radios__label">
@@ -134,7 +132,7 @@
                                id="other-funding-no"
                                value="false"
                                required="required"
-                               th:attr="data-required-errormessage=#{validation.finance.other.funding.required}"
+                               th:attr="data-required-errormessage=${isCompTypeOfgemAndFundingTypeThirdParty} ? #{validation.finance.contribution.in.kind.required} : #{validation.finance.other.funding.required}"
                                th:field="*{otherFunding}"/>
                         <label for="other-funding-no"
                                class="govuk-label govuk-radios__label">
@@ -159,23 +157,22 @@
             <dd th:text="|£${form.amount == null ? 0 : form.amount}|">10</dd>
         </dl>
         <th:block th:unless="${form.otherFunding}">
-            <p class="govuk-body">No other funding</p>
+            <p th:text="${model.getNoOtherFundingText()}" class="govuk-body">No other funding</p>
         </th:block>
         <th:block th:if="${form.otherFunding}">
             <div class="table-overflow">
                 <table class="govuk-table">
                     <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th id="other-funding-source" class="govuk-table__header" scope="col">Source of funding</th>
+                        <th th:text="${model.getSourceOfFundingText()}" id="other-funding-source" class="govuk-table__header" scope="col">Source of funding</th>
                         <th id="other-funding-date" class="width-150 govuk-table__header" scope="col">Date secured</th>
-                        <th id="other-funding-amount" class="width-150 govuk-table__header" scope="col">Funding amount
-                        </th>
+                        <th th:text="${model.getFundingAmountText()}" id="other-funding-amount" th:class="${model.getFundingAmountWidth()}" scope="col">Funding amount</th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
                     <tr class="govuk-table__row" th:each="entry : ${form.otherFundingRows}"
                         th:unless="${entry.value.blank}">
-                        <th class="govuk-table__header" scope="row" th:text="${entry.value.source}">National rail</th>
+                        <th th:class="${model.getTableClass()}" scope="row" th:text="${entry.value.source}">National rail</th>
                         <td class="govuk-table__cell" th:text="${entry.value.date}">17 April 2016</td>
                         <td class="govuk-table__cell govuk-table__cell--numeric"
                             th:text="'£' + ${entry.value.fundingAmount != null ? #numbers.formatInteger(entry.value.fundingAmount,0,'DEFAULT') : '0'}"></td>
@@ -183,7 +180,7 @@
                     </tbody>
                     <tfoot>
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="row" colspan="2">Total other funding</th>
+                        <th th:text="${model.getTotalText()}" class="govuk-table__header" scope="row" colspan="2">Total other funding</th>
                         <td class="govuk-table__cell govuk-table__cell--numeric"
                             th:text="'£' + ${#numbers.formatInteger(form.otherFundingTotal, 0, 'DEFAULT')}"></td>
                     </tr>
@@ -232,9 +229,9 @@
                 <table class="govuk-table">
                     <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col" id="other-funding-source">Source of funding</th>
+                        <th th:text="${model.getSourceOfFundingText()}" class="govuk-table__header" th:classappend="${isCompTypeOfgemAndFundingTypeThirdParty} ? 'width-40-percent' : ''" scope="col" id="other-funding-source">Source of funding</th>
                         <th scope="col" id="other-funding-date" class="govuk-table__header width-150">Date secured</th>
-                        <th scope="col" id="other-funding-amount"
+                        <th th:text="${isCompTypeOfgemAndFundingTypeThirdParty ? 'Contributions in kind value (&pound;)' : 'Funding amount (&pound;)'}" scope="col" id="other-funding-amount"
                             class="govuk-table__header govuk-table__header--numeric width-200">Funding amount (&pound;)
                         </th>
                         <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Actions</span>
@@ -254,12 +251,13 @@
                         name="add_row"
                         class="button-clear"
                         data-repeatable-rowcontainer="#other-funding-table tbody"
+                        th:text="${model.addAnotherSourceText()}"
                 >Add another source of funding
                 </button>
             </p>
         </div>
         <div class="govuk-form-group alignright inline">
-            <label class="govuk-label"
+            <label th:text="${model.getTotalText()}" class="govuk-label"
                    for="other-funding-total">Total other funding</label>
             <input class="govuk-input govuk-input--width-10 alignright"
                    data-calculation-fields="[id*=fundingAmount]"

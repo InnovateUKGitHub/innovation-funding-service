@@ -732,35 +732,6 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         verify(populator).populate(projectResource, competition);
     }
 
-
-    @Test
-    public void viewGrantOfferLetterTemplate_KTP() throws Exception {
-        long projectId = 123L;
-
-        GolTemplateResource golTemplateResource = new GolTemplateResource();
-        golTemplateResource.setName(FundingType.KTP.getGolType());
-        golTemplateResource.setTemplate("gol-template");
-
-        CompetitionResource competition = newCompetitionResource()
-                .withGolTemplate(golTemplateResource)
-                .build();
-        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        ProjectResource projectResource = newProjectResource()
-                .withCompetition(competition.getId())
-                .build();
-
-        when(projectService.getById(projectId)).thenReturn(projectResource);
-
-        KtpGrantOfferLetterTemplateViewModel viewModel = mock(KtpGrantOfferLetterTemplateViewModel.class);
-
-        when(ktpGrantOfferLetterTemplatePopulator.populate(projectResource)).thenReturn(viewModel);
-
-        mockMvc.perform(get("/project/" + projectId + "/grant-offer-letter/template"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("project/gol-template"))
-                .andExpect(model().attribute("model", viewModel));
-    }
-
     private ServiceResult<GrantOfferLetterStateResource> golState(GrantOfferLetterState state) {
         return serviceSuccess(stateInformationForNonPartnersView(state, GrantOfferLetterEvent.SIGNED_GOL_APPROVED));
     }

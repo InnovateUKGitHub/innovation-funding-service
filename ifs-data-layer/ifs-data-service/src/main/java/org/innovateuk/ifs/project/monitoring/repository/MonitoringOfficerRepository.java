@@ -53,8 +53,10 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
             "   monitoringOfficer.user.id = :userId " +
             "   AND project.projectProcess.activityState in " + PROJECT_STATES;
 
-    String NOT_KTP = "AND project.application.competition.fundingType != (org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP)";
-    String IS_KTP = "AND project.application.competition.fundingType = org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP ";
+    String NOT_KTP = "AND (project.application.competition.fundingType != (org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP)" +
+            " OR project.application.competition.fundingType != (org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP_AKT))";
+    String IS_KTP = "AND (project.application.competition.fundingType = org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP" +
+            " OR project.application.competition.fundingType = org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP_AKT) ";
 
     String FILTER_PROJECTS_BY_MO = "SELECT monitoringOfficer " +
             "FROM MonitoringOfficer monitoringOfficer " +

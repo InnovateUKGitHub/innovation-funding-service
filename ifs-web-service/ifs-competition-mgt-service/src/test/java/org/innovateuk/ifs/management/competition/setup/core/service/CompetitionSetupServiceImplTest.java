@@ -239,6 +239,8 @@ public class CompetitionSetupServiceImplTest {
                 INITIAL_DETAILS, Optional.of(Boolean.TRUE),
                 CompetitionSetupSection.ADDITIONAL_INFO, Optional.of(Boolean.TRUE),
                 CompetitionSetupSection.PROJECT_ELIGIBILITY, Optional.of(Boolean.TRUE),
+                CompetitionSetupSection.FUNDING_LEVEL_PERCENTAGE, Optional.of(Boolean.TRUE),
+                CompetitionSetupSection.FUNDING_AMOUNT_SOUGHT, Optional.of(Boolean.TRUE),
                 CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY, Optional.of(Boolean.TRUE),
                 CompetitionSetupSection.MILESTONES, Optional.of(Boolean.TRUE),
                 CompetitionSetupSection.APPLICATION_FORM, Optional.of(Boolean.TRUE),
@@ -263,7 +265,7 @@ public class CompetitionSetupServiceImplTest {
         testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.TERMS_AND_CONDITIONS, Optional.of(Boolean.TRUE));
 
-        CompetitionResource competitionResource = newCompetitionResource()
+                CompetitionResource competitionResource = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .withStartDate(ZonedDateTime.now().plusDays(1)).build();
@@ -301,6 +303,9 @@ public class CompetitionSetupServiceImplTest {
         testSectionStatus.put(CompetitionSetupSection.CONTENT, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.TERMS_AND_CONDITIONS, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.FUNDING_ELIGIBILITY, Optional.of(Boolean.TRUE));
+        testSectionStatus.put(CompetitionSetupSection.FUNDING_LEVEL_PERCENTAGE, Optional.of(Boolean.TRUE));
+        testSectionStatus.put(CompetitionSetupSection.FUNDING_AMOUNT_SOUGHT, Optional.of(Boolean.TRUE));
+
         CompetitionResource competitionResource = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)

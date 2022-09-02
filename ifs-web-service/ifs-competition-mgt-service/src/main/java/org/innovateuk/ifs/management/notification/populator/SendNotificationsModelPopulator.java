@@ -30,13 +30,24 @@ public class SendNotificationsModelPopulator {
     @Autowired
     private ApplicationDecisionRestService applicationDecisionRestService;
 
-
     public SendNotificationsViewModel populate(long competitionId, List<Long> applicationIds, NotificationEmailsForm form) {
+        return populate(competitionId, applicationIds, form, false);
+    }
+
+    public SendNotificationsViewModel populate(long competitionId, List<Long> applicationIds, NotificationEmailsForm form, boolean eoi) {
         List<ApplicationDecisionToSendApplicationResource> filteredApplications = applicationDecisionRestService.getNotificationResourceForApplications(applicationIds).getSuccess();
 
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        CompetitionAssessmentConfigResource competitionAssessmentConfigResource = competitionAssessmentConfigRestService.findOneByCompetitionId(competitionId).getSuccess();
 
+        if (eoi) {
+            return eoiSendNotificationsViewModel(form, filteredApplications, competitionResource);
+        } else {
+            CompetitionAssessmentConfigResource competitionAssessmentConfigResource = competitionAssessmentConfigRestService.findOneByCompetitionId(competitionId).getSuccess();
+            return sendNotificationsViewModel(form, filteredApplications, competitionResource, competitionAssessmentConfigResource);
+        }
+    }
+
+    private SendNotificationsViewModel sendNotificationsViewModel(NotificationEmailsForm form, List<ApplicationDecisionToSendApplicationResource> filteredApplications, CompetitionResource competitionResource, CompetitionAssessmentConfigResource competitionAssessmentConfigResource) {
         long successfulCount = getApplicationCountByDecision(filteredApplications, Decision.FUNDED);
         long unsuccessfulCount = getApplicationCountByDecision(filteredApplications, Decision.UNFUNDED);
         long onHoldCount = getApplicationCountByDecision(filteredApplications, Decision.ON_HOLD);
@@ -46,12 +57,23 @@ public class SendNotificationsModelPopulator {
         }
 
         return new SendNotificationsViewModel(filteredApplications,
-                                              successfulCount,
-                                              unsuccessfulCount,
-                                              onHoldCount,
-                                              competitionResource,
-                                              Boolean.TRUE.equals(competitionAssessmentConfigResource.getIncludeAverageAssessorScoreInNotifications()),
-                                              competitionResource.isHorizonEuropeGuarantee());
+                successfulCount,
+                unsuccessfulCount,
+                onHoldCount,
+                competitionResource,
+                Boolean.TRUE.equals(competitionAssessmentConfigResource.getIncludeAverageAssessorScoreInNotifications()),
+                competitionResource.isHorizonEuropeGuarantee());
+    }
+
+    private SendNotificationsViewModel eoiSendNotificationsViewModel(NotificationEmailsForm form, List<ApplicationDecisionToSendApplicationResource> filteredApplications, CompetitionResource competitionResource) {
+        long eoiApprovedCount = getApplicationCountByDecision(filteredApplications, Decision.EOI_APPROVED);
+        long eoiRejectedCount = getApplicationCountByDecision(filteredApplications, Decision.EOI_REJECTED);
+
+        if (form.getMessage() == null) {
+            tryToPrePopulateEoiMessage(competitionResource, eoiApprovedCount, eoiRejectedCount, form);
+        }
+
+        return new SendNotificationsViewModel(filteredApplications, competitionResource, true);
     }
 
     private long getApplicationCountByDecision(List<ApplicationDecisionToSendApplicationResource> filteredApplications, Decision decision) {
@@ -74,5 +96,21 @@ public class SendNotificationsModelPopulator {
 
     private boolean onlySuccessfulEmails(long successfulCount, long unsuccessfulCount, long onHoldCount) {
         return successfulCount > 0 && unsuccessfulCount == 0 && onHoldCount == 0;
+    }
+
+    private void tryToPrePopulateEoiMessage(CompetitionResource competition, long eoiApprovedCount, long eoiRejectedCount, NotificationEmailsForm form) {
+        if (onlyEoiApprovedEmails(eoiApprovedCount, eoiRejectedCount)) {
+            form.setMessage(applicationNotificationTemplateRestService.getEoiApprovedNotificationTemplate(competition.getId()).getSuccess().getMessageBody());
+        } else if (onlyEoiRejectedEmails(eoiApprovedCount, eoiRejectedCount)) {
+            form.setMessage(applicationNotificationTemplateRestService.getEoiRejectedNotificationTemplate(competition.getId()).getSuccess().getMessageBody());
+        }
+    }
+
+    private boolean onlyEoiRejectedEmails(long eoiApprovedCount, long eoiRejectedCount) {
+        return eoiRejectedCount > 0 && eoiApprovedCount == 0;
+    }
+
+    private boolean onlyEoiApprovedEmails(long eoiApprovedCount, long eoiRejectedCount) {
+        return eoiApprovedCount > 0 && eoiRejectedCount == 0;
     }
 }

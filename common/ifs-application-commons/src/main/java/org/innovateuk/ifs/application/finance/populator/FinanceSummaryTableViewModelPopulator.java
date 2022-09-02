@@ -102,7 +102,8 @@ public class FinanceSummaryTableViewModelPopulator {
                 application.isCollaborativeProject(),
                 null,
                 includeOrganisationNames,
-                competition.isThirdPartyOfgem());
+                competition.isThirdPartyOfgem(),
+                competition.isCompTypeOfgemAndFundingTypeThirdParty());
     }
 
     public FinanceSummaryTableViewModel populateAllOrganisations(ApplicationResource application, CompetitionResource competition, List<ProcessRoleResource> processRoles, UserResource user) {
@@ -150,7 +151,8 @@ public class FinanceSummaryTableViewModelPopulator {
                 application.isCollaborativeProject(),
                 maximumFundingSought,
                 true,
-                competition.isThirdPartyOfgem());
+                competition.isThirdPartyOfgem(),
+                competition.isCompTypeOfgemAndFundingTypeThirdParty());
     }
 
     private Optional<ProcessRoleResource> getCurrentUsersRole(List<ProcessRoleResource> processRoles, UserResource user) {
@@ -183,6 +185,7 @@ public class FinanceSummaryTableViewModelPopulator {
         Optional<ApplicationFinanceResource> finance = ofNullable(finances.get(organisation.getId()));
         Optional<ApplicationFinanceResource> leadFinance = ofNullable(finances.get(leadOrganisationId));
         boolean lead = organisation.getId().equals(leadOrganisationId);
+        BigDecimal calculateContributionToProjectPercentage = finance.map(ApplicationFinanceResource::getContributionToProjectPercentage).orElse(BigDecimal.ZERO);
         return new FinanceSummaryTableRow(
                 organisation.getId(),
                 organisation.getName(),
@@ -197,10 +200,10 @@ public class FinanceSummaryTableViewModelPopulator {
                         .map(completedIds -> completedIds.contains(financeSection.getId()))
                         .orElse(false),
                 financeLink.isPresent(),
-                financeLink.orElse(null)
+                financeLink.orElse(null),
+                calculateContributionToProjectPercentage
         );
     }
-
 
     private BigDecimal calculateOtherFundingColumn(CompetitionResource competition, Optional<ApplicationFinanceResource> finance) {
         if (competition.isKtp()) {
@@ -221,7 +224,9 @@ public class FinanceSummaryTableViewModelPopulator {
             } else {
                 return BigDecimal.ZERO;
             }
-        } else {
+        } else   if (competition.isCompTypeOfgemAndFundingTypeThirdParty()) {
+            return  finance.map(appRes->appRes.getTotal().subtract(appRes.getTotalFundingSought())).orElse(BigDecimal.ZERO);
+        }{
             return finance.map(ApplicationFinanceResource::getTotalContribution).orElse(BigDecimal.ZERO);
         }
     }

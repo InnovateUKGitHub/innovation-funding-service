@@ -54,6 +54,17 @@ public class KtpTemplate implements FundingTypeTemplate {
     @Override
     public List<SectionBuilder> sections(List<SectionBuilder> competitionTypeSections) {
 
+        updateFinanceSection(competitionTypeSections);
+
+        competitionTypeSections.add(
+                ktpAssessmentSection()
+                        .withQuestions(ktpDefaultQuestions())
+        );
+
+        return overrideApplicationQuestionFormInputs(competitionTypeSections);
+   }
+
+    protected void updateFinanceSection(List<SectionBuilder> competitionTypeSections) {
         competitionTypeSections.stream().filter(section -> section.getType() == SectionType.FINANCES)
                 .findAny()
                 .ifPresent(financeSection ->
@@ -65,14 +76,7 @@ public class KtpTemplate implements FundingTypeTemplate {
                                 yourProjectFinancesSection.withChildSections(fecChildSections()));
                     }
                 });
-
-        competitionTypeSections.add(
-                ktpAssessmentSection()
-                        .withQuestions(ktpDefaultQuestions())
-        );
-
-        return overrideApplicationQuestionFormInputs(competitionTypeSections);
-   }
+    }
 
     public List<SectionBuilder> fecChildSections() {
         List<SectionBuilder> list =

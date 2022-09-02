@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResource;
-import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -18,6 +17,10 @@ public class CompetitionApplicationConfigResourceBuilder extends BaseBuilder<Com
 
     public static CompetitionApplicationConfigResourceBuilder newCompetitionApplicationConfigResource() {
         return new CompetitionApplicationConfigResourceBuilder(emptyList());
+    }
+
+    public CompetitionApplicationConfigResourceBuilder withMaximumFundingSoughtEnabled(boolean... maximumFundingSoughtEnabled) {
+        return withArraySetFieldByReflection("maximumFundingSoughtEnabled", maximumFundingSoughtEnabled);
     }
 
     public CompetitionApplicationConfigResourceBuilder withMaximumFundingSought(BigDecimal... maximumFundingSought) {

@@ -321,7 +321,7 @@ public class GrantOfferLetterController {
         GolTemplateResource template = competition.getGolTemplate();
         if (template.getName().equals(DEFAULT_GOL_TEMPLATE)) {
             model.addAttribute("model", grantOfferLetterTemplatePopulator.populate(project, competition));
-        } else if (template.getName().equals(FundingType.KTP.getGolType())) {
+        } else if (template.getName().equals(FundingType.KTP.getGolType()) || template.getName().equals(FundingType.KTP_AKT.getGolType())) {
             model.addAttribute("model", ktpGrantOfferLetterTemplatePopulator.populate(project));
         } else if (template.getName().equals(FundingType.PROCUREMENT.getGolType())) {
             model.addAttribute("model", procurementGrantOfferLetterTemplatePopulator.populate(project, competition));

@@ -13,7 +13,8 @@ public enum FundingType {
     LOAN("Loan", "Loans"),
     PROCUREMENT("Procurement", "Procurement", "Procurement GOL Template"),
     THIRDPARTY("Thirdparty", "Thirdparty", "Default GOL Template"),
-    HECP("Horizon Europe Guarantee", "Horizon Europe Guarantee", "Horizon Europe Guarantee GOL Template");
+    HECP("Horizon Europe Guarantee", "Horizon Europe Guarantee", "Horizon Europe Guarantee GOL Template"),
+    KTP_AKT("Access Knowledge Transfer to Innovate (AKT2I)", "Knowledge Transfer Partnership (KTP)", "KTP GOL Template");
 
     private final String displayName;
     private final String defaultTermsName;

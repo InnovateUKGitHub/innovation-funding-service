@@ -942,14 +942,13 @@ the user completes funding level in application
     the user clicks the button/link          jQuery = button:contains("Mark as complete")
     the user clicks the button/link          link = Your funding
 
-the lead user completes project details, application questions and finances sections
-    [Arguments]  ${ediStatus}  ${userEmail}
+the lead user completes project details, application questions sections
+    [Arguments]  ${applicationName}  ${ediStatus}  ${userEmail}
     the user completes the application details section                              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  25
     the applicant completes Application Team                                        ${ediStatus}  ${userEmail}
     the user completes the research category                                        Feasibility studies
     the lead applicant fills all the questions and marks as complete(programme)
     the user clicks the button/link                                                 link = Your project finances
-    the user marks the finances as complete                                         ${applicationName}  labour costs  54,000  yes
 
 the user checks the status of the application before completion
     the user should see the element         jQuery = dt:contains("Application deadline:") ~ dd:contains("Decision pending")
