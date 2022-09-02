@@ -51,9 +51,7 @@ The Investor partnership t&c's are correct
     When the user clicks the button/link     link = Investor Partnerships (opens in a new window)
     And select window                        title = Terms and conditions for Investor Partners - Innovation Funding Service
     Then the user should see the element     jQuery = h1:contains("Terms and conditions for Investor Partners")
-    #And close window
     [Teardown]  the user closes the last opened tab
-    #And select window                        title = Competition terms and conditions - Innovation Funding Service
 
 T&c's can be confirmed
     [Documentation]  IFS-7213  IFS-9214  IFS-12827
