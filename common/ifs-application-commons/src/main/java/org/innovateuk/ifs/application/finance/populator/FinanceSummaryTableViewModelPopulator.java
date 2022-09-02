@@ -102,7 +102,8 @@ public class FinanceSummaryTableViewModelPopulator {
                 application.isCollaborativeProject(),
                 null,
                 includeOrganisationNames,
-                competition.isThirdPartyOfgem());
+                competition.isThirdPartyOfgem(),
+                competition.isCompTypeOfgemAndFundingTypeThirdParty());
     }
 
     public FinanceSummaryTableViewModel populateAllOrganisations(ApplicationResource application, CompetitionResource competition, List<ProcessRoleResource> processRoles, UserResource user) {
@@ -150,7 +151,8 @@ public class FinanceSummaryTableViewModelPopulator {
                 application.isCollaborativeProject(),
                 maximumFundingSought,
                 true,
-                competition.isThirdPartyOfgem());
+                competition.isThirdPartyOfgem(),
+                competition.isCompTypeOfgemAndFundingTypeThirdParty());
     }
 
     private Optional<ProcessRoleResource> getCurrentUsersRole(List<ProcessRoleResource> processRoles, UserResource user) {
@@ -222,7 +224,9 @@ public class FinanceSummaryTableViewModelPopulator {
             } else {
                 return BigDecimal.ZERO;
             }
-        } else {
+        } else   if (competition.isCompTypeOfgemAndFundingTypeThirdParty()) {
+            return  finance.map(appRes->appRes.getTotal().subtract(appRes.getTotalFundingSought())).orElse(BigDecimal.ZERO);
+        }{
             return finance.map(ApplicationFinanceResource::getTotalContribution).orElse(BigDecimal.ZERO);
         }
     }

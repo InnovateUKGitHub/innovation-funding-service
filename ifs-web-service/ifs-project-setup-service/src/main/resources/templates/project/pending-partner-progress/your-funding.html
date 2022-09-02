@@ -50,6 +50,7 @@
                   method="POST">
 
                 <th:block th:insert="application/your-funding-fragments :: form(
+                               model=${model},
                                form=${form},
                                readOnly=${model.readOnly},
                                guidanceFragment=${model.business ? 'project-business' : 'project-non-business'},
@@ -58,7 +59,8 @@
                                ktpFundingType=${model.ktpFundingType},
                                lead=${model.leadOrganisation},
                                isThirdPartyOfgem=${model.thirdPartyOfgem},
-                               isFixedFundingLevel = ${model.isFixedFundingLevel}
+                               isFixedFundingLevel = ${model.isFixedFundingLevel},
+                               isCompTypeOfgemAndFundingTypeThirdParty = ${model.isCompTypeOfgemAndFundingTypeThirdParty}
                    )" />
 
                 <div class="form-footer">
