@@ -152,7 +152,9 @@ public class YourFundingViewModelPopulator {
         String hash = publicContentItem.getPublicContentResource().getHash();
 
         return new ManagementYourFundingViewModel(applicationId, application.getCompetitionName(), sectionId, organisationId, application.getCompetition(), application.getName(),
-                format("/application/%d/form/FINANCE/%d", applicationId, organisationId), competition.getFundingType(), organisation.getOrganisationTypeEnum(), competition.isThirdPartyOfgem(), hash, competition.isThirdPartyFundingType(), competition.isCompTypeOfgemAndFundingTypeThirdParty());
+                format("/application/%d/form/FINANCE/%d", applicationId, organisationId), competition.getFundingType(),
+                organisation.getOrganisationTypeEnum(), competition.isThirdPartyOfgem(), hash, competition.isThirdPartyFundingType(),
+                competition.isCompTypeOfgemAndFundingTypeThirdParty(), competition.isKtp());
     }
 
     private Long getSubsidyBasisQuestionId(ApplicantSectionResource section) {
