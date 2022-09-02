@@ -308,7 +308,7 @@
                    placeholder="MM-YYYY"
                    pattern="(0[1-9]|1[012])-[0-9]{4}"
                    th:attr="data-required-errormessage=${isCompTypeOfgemAndFundingTypeThirdParty} ? null : #{validation.field.must.not.be.blank},
-                            required=${isCompTypeOfgemAndFundingTypeThirdParty ? null : 'required'},
+                            required=${isCompTypeOfgemAndFundingTypeThirdParty} ? false : 'required',
                             data-pattern-errormessage=#{validation.finance.funding.date.invalid}"
                    maxlength="7"
                    th:errorclass="govuk-input--error"/>
