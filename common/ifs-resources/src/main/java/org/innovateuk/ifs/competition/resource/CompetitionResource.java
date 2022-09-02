@@ -217,7 +217,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     }
 
     public boolean isCompTypeOfgemAndFundingTypeThirdParty() {
-        return isThirdPartyOfgem() && isThirdPartyFundingType();
+        return competitionTypeEnum == CompetitionTypeEnum.OFGEM && THIRDPARTY.equals(fundingType);
     }
 
     @JsonIgnore

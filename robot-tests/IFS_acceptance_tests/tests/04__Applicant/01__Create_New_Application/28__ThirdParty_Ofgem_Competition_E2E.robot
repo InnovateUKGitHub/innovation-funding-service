@@ -21,7 +21,11 @@ Documentation   IFS-11442 OFGEM: Create a "ThirdParty" generic template
 ...
 ...             IFS-11595 Modify application view in application journey, assessment & project setup for T & C changes
 ...
+...             IFS-12819 Ofgem - Discovery 2 - Confirmation of submission page amendments
+...
 ...             IFS-12765 Ofgem - Discovery 2 - Finance summary changes - Applicant journey
+...
+...             IFS-12796 Ofgem - Discovery 2 - Third party - Finance summary: 'Contributions in kind'
 ...
 ...             IFS-12795 Ofgem - Third party finances - Contributions in kind
 ...
@@ -163,18 +167,20 @@ the user marks the your funding section as complete with contributions in kind
     Given the user clicks the button/link                               jQuery = button:contains("Edit your funding")
     And the user fills thirdparty contributions in kind information
     And the user clicks the button/link                                 id = mark-all-as-complete
-    Then the user should see the element                                jQuery = td:contains("53,220") ~ td:contains("25,678") ~ td:contains("14.17%") ~ td:contains("20,000") ~ td:contains("7,542")
+    Then the user should see the element                                jQuery = td:contains("53,220") ~ td:contains("25,678") ~ td:contains("51.75") ~ td:contains("27,542") ~ td:contains("20,000")
     And the user should see the element                                 jQuery = th:contains("Contribution to project (%)")
+    And the user should see the element                                 jQuery = th:contains("Contributions in kind (£)")
 
 Ofgem application finance overview
-    [Documentation]  IFS-11481  IFS-12765
+    [Documentation]  IFS-11481  IFS-12765  IFS-12796
     Given the user clicks the button/link  link = Back to application overview
     When the user clicks the button/link   link = Finances overview
-    Then the user should see the element   jQuery = td:contains("53,220") ~ td:contains("25,678") ~ td:contains("14.17%") ~ td:contains("20,000") ~ td:contains("7,542")
+    Then the user should see the element   jQuery = td:contains("53,220") ~ td:contains("25,678") ~ td:contains("51.75") ~ td:contains("27,542") ~ td:contains("20,000")
     And the user should see the element    jQuery = th:contains("Contribution to project (%)")
+    And the user should see the element    jQuery = th:contains("Contributions in kind (£)")
 
 the user submits the third party ofgem application
-    [Documentation]   IFS-11475  IFS-11476  IFS-11480
+    [Documentation]   IFS-11475  IFS-11476  IFS-11480  IFS-12819
     [Setup]  Get competitions id and set it as suite variable   ${thirdPartyOfgemCompetitionName}
     Given the user clicks the button/link                       link = Application overview
     And the user accept the thirdpary terms and conditions      Back to application overview
@@ -185,12 +191,12 @@ the user submits the third party ofgem application
     [Teardown]  update milestone to yesterday                   ${competitionId}  SUBMISSION_DATE
 
 the applicant should not view overhead and capital usage costs in application summary
-    [Documentation]   IFS-11475  IFS-11476
+    [Documentation]   IFS-11475  IFS-11476  IFS-12796
     Given the user clicks the button/link      link = View application
     When the user clicks the button/link       jQuery = button:contains("Finances summary")
     Then the user should not see the element   jQuery = th:contains("Overheads (£)")
     And the user should not see the element    jQuery = th:contains("Capital usage (£)")
-    And the user should see the element        jQuery = th:contains("Other funding (£)")
+    And the user should see the element        jQuery = th:contains("Contributions in kind (£)")
 
 The lead applicant can not view general guidenece reference
     [Documentation]  IFS-11483
@@ -317,11 +323,15 @@ the user enters empty funding amount
     the user should see a field and summary error  Enter the amount of funding sought.
 
 the user should see ofgem submitted application amendments
-    the user should see the element     jQuery = h3:contains("Assessment process")
-    the user should see the element     jQuery = h3:contains("Decision notification")
-    the user should see the element     jQuery = h3:contains("If your application is successful")
-    the user should see the element     jQuery = h3:contains("If your application is unsuccessful")
-    the user should see the element     jQuery = h3:contains("Application feedback")
+    the user should see the element         jQuery = h3:contains("Assessment process")
+    the user should see the element         jQuery = h3:contains("Decision notification")
+    the user should see the element         jQuery = h3:contains("If your application is successful")
+    the user should see the element         jQuery = h3:contains("If your application is unsuccessful")
+    the user should see the element         jQuery = h3:contains("Application feedback")
+    the user should not see the element     jQuery = li:contains("the assessor will score each question and provide feedback to justify those scores")
+    the user should not see the element     jQuery = li:contains("a panel process is held to moderate and ratify the outcome of the decision")
+    the user should see the element         jQuery = li:contains("eligible applications will be independently evaluated by assessors")
+    the user should see the element         jQuery = li:contains("each application is evaluated by up to 3 assessors by the same set criteria")
 
 the user fills in ofgem labour costs
     [Arguments]  ${roleName}  ${rate}  ${days}
