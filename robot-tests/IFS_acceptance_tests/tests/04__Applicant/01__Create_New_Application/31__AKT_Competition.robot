@@ -110,7 +110,7 @@ Lead applicant uploads a document for the organisation's fEC model and save the 
 
 Lead applicant can declare any other government funding received
     [Documentation]  IFS-7956  IFS-7958
-    Given the user fills in the funding information                         ${KTPapplicationTitle}   yes
+    Given the user fills in the funding information                         ${Application}   no
 
 Lead applicant completes the project costs
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814  IFS-8154
