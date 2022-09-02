@@ -39,7 +39,7 @@ ${KTPapplicationId}                         ${application_ids["${KTPapplication}
 ${KTPcompetiton}                            KTP in panel
 ${ktpLead}                                  bob@knowledge.base
 ${ktp}                                      jessica.doe@ludlow.co.uk
-${ktpApplicationTitle}                      KTP New Application
+${ktpApplicationTitle}                      AKT2I New Application
 
 
 *** Test Cases ***
@@ -114,13 +114,12 @@ Lead applicant uploads a document for the organisation's fEC model and save the 
 
 Lead applicant can declare any other government funding received
     [Documentation]  IFS-7956  IFS-7958
-    Given the user fills in the funding information                         ${Application}   no
+    Given the user fills in the funding information                         ${ktpApplicationTitle}   no
 
 Lead applicant completes the project costs and Project Location
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814  IFS-8154
     When the user fills in ktp project costs
     Then the user should see the element                            jQuery = li:contains("Your project costs") span:contains("Complete")
-    the lead applicant marks the KTP project location as complete
 
 Lead applicant submits the KTP application
     Given the user clicks the button/link       link = Application overview
@@ -703,3 +702,22 @@ the user enters empty data into date fields
     the user enters text to a text field   id = fecCertExpiryDay  ${date}
     the user enters text to a text field   id = fecCertExpiryMonth   ${month}
     the user enters text to a text field   id = fecCertExpiryYear  ${year}
+
+the user fills in the funding information for AKT2I
+    [Arguments]  ${Application}   ${otherFunding}
+    the user navigates to Your-finances page                        ${Application}
+    the user selects funding section in project finances
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   page should contain element  jQuery = legend:contains("${yourFundingSubTitle}")
+    Run Keyword If  '${status}' == 'PASS' and "${Application}" == "AKT2I New Application"    run keywords   the user selects the radio button     requestingFunding   true
+    ...                                                AND    the user enters text to a text field       css = [name^="grantClaimPercentage"]  10
+    ...         ELSE IF   "${Application}" != "KTP New Application"     run keywords   the user selects the radio button     requestingFunding   true
+    ...                                                AND    the user enters text to a text field       css = [name^="grantClaimPercentage"]  42.34
+    run keyword if  '${otherFunding}' == 'yes'   run keywords         the user selects the radio button        otherFunding   true
+    ...                                                AND     the user enters text to a text field     css = [name*=source]  Lottery funding
+    ...                                                AND     the user enters text to a text field     css = [name*=date]  12-${nextyear}
+    ...                                                AND     the user enters text to a text field     css = [name*=fundingAmount]  20000
+    ...              ELSE              run keyword    the user selects the radio button     otherFunding   false
+    the user clicks the button/link                                 jQuery = button:contains("Mark as complete")
+    the user selects funding section in project finances
+    the user should see the element                                 jQuery = button:contains("Edit")
+    the user has read only view once section is marked complete
