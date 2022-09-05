@@ -20,7 +20,8 @@ public enum SectionType {
 	GENERAL,
     TERMS_AND_CONDITIONS,
     KTP_ASSESSMENT,
-    FEC_COSTS_FINANCES;
+    FEC_COSTS_FINANCES,
+    SUPPORTING_INFORMATION;
 
     public String getNameLower() {
         return this.name().toLowerCase();
