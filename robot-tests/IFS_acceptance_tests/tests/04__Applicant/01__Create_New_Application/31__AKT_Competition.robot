@@ -69,79 +69,23 @@ Lead applicant can not view KTA details in application summary
     And the user clicks the button/link         id = accordion-questions-heading-1-1
     Then the user should not see the element    jQuery = h2:contains("Knowledge transfer adviser")
 
-Lead applicant completes the KTP application
-    Given the user clicks the button/link                                                        link = Application overview
-    the user completes the KTP application except application team and your project finances
-    the user selects research category                                                           Feasibility studies
+Lead applicant submits the AKT2I application
+    [Documentation]  IFS-12478
+    Given the user clicks the button/link                                                           link = Application overview
+    And the user completes the KTP application except application team and your project finances
+    And the user fills project finances section
+    And the user clicks the button/link                                                             link = Review and submit
+    Then the user clicks the button/link                                                            id = submit-application-button
 
-Lead applicant is shown a validation error when marking a non-selected option as complete for the organisation's fEC model type
-     [Documentation]  IFS-9239
-     When the user clicks the button/link                      link = Your project finances
-     When the user clicks the button/link                      link = Your fEC model
-     And the user selects the radio button                     fecModelEnabled  fecModelEnabled-yes
-     And The user clicks the button/link                       jQuery = button:contains("Next")
-     Then the user sees fEC model validation error message
-
-Lead applicant makes a 'Yes' selection for the organisation's fEC model without uploading a document
-     [Documentation]  IFS-9240
-     Then the user should see a field and summary error     You must upload a file.
-
-Lead applicant uploads a document for the organisation's fEC model and save the selection
-     [Documentation]  IFS-9240  IFS-11143
-     When the user uploads the file                      css = .inputfile   testing_5MB.pdf
-     And the user enters empty data into date fields     01  12  2500
-     Then the user clicks the button/link                jQuery = button:contains("Mark as complete")
-     And The user should see the element                 jQuery = li:contains("Your fEC model") span:contains("Complete")
-
-Lead applicant can declare any other government funding received
-    [Documentation]  IFS-7956  IFS-7958
-    Given the user fills in the funding information                         ${ktpApplicationTitle}   no
-
-Lead applicant completes the project costs and Project Location
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814  IFS-8154
-    When the user clicks the button/link                            link = Your project costs
-    When the user fills in ktp project costs
-    Then the user should see the element                            jQuery = li:contains("Your project costs") span:contains("Complete")
-
-Lead applicant submits the KTP application
-    Given the user clicks the button/link                           link = Back to application overview
-    When the user clicks the button/link         link = Review and submit
-    And the user clicks the button/link          id = submit-application-button
-
-
-
-Invite the KTA to assess the KTP competition
-    [Documentation]   IFS-8260
-    [Setup]   Given moving competition to Closed        ${competitionId}
-    Given log in as a different user                    &{ifs_admin_user_credentials}
-    When the user navigates to the page                 ${server}/management/competition/${competitionId}/assessors/find
-    And the user clicks the button/link                 jQuery = tr:contains("Hermen Mermen") label
-    And the user clicks the button/link                 id = add-selected-assessors-to-invite-list-button
-    When the user clicks the button/link                id = review-and-send-assessor-invites-button
-    And the user clicks the button/link                 jQuery = button:contains("Send invitation")
-    Then the user should see the element                link = Hermen Mermen
-
-Assessor accept the inviation to assess the KTP competition
-    [Documentation]   IFS-8260
-    Given KTA accepts the invitation to assess the application      ${AKT2ICompName}   ${ktaEmail}   ${short_password}
-    When log in as a different user                                 &{ifs_admin_user_credentials}
-    And the user navigates to the page                              ${server}/management/competition/${competitionId}/assessors/accepted
-    Then the user should see the element                            link = Hermen Mermen
-
-Comp Admin allocates assessor to application
-    [Documentation]  IFS-10084
-    Given the user navigates to the page             ${server}/management/assessment/competition/${CompetitionID}/applications
-    Then the user clicks the button/link             jQuery = tr:contains("${ktpApplicationTitle}") a:contains("Assign")
-    And the user adds an assessor to application     jQuery = tr:contains("Hermen Mermen") :checkbox
-    And the user navigates to the page               ${server}/management/competition/${competitionId}
-    And the user clicks the button/link              jQuery = button:contains("Notify assessors")
-
-Allocated assessor assess the application
-    [Documentation]  IFS-10084
-    Given Log in as a different user                         &{assessor3_credentials}
-    KTA accepts to assess the KTP application                ${AKT2ICompName}   ${ktaEmail}   ${short_password}
-    And the user clicks the button/link                      link = ${ktpApplicationTitle}
-    the assessor submits the feedback for the application
+Assessor submits assessment of the application
+    [Documentation]   IFS-12748
+    [Setup]  moving competition to Closed                         ${competitionId}
+    Given log in as a different user                              &{ifs_admin_user_credentials}
+    When Assessor is invited to assess the AKT2I competition
+    And Assessor accept the inviation to assess the AKT2I competition
+    And Comp Admin allocates assessor to application
+    And Allocated assessor assess the application
+    Then the user should see the element                           jQuery = li:contains("${ktpApplicationTitle}") strong:contains("Recommended")
 
 *** Keywords ***
 Custom suite setup
@@ -199,11 +143,6 @@ the user marks the KTP_AKT Assessed questions as complete
     the user clicks the button/link                                                         link = Back to competition details
     the user should see the element                                                         jQuery = div:contains("Application") ~ .task-status-complete
 
-the user filters the KTA user
-    the user navigates to the page           ${server}/management/competition/${ktpAssessmentCompetitionID}/assessors/find
-    the user enters text to a text field     id = assessorNameFilter   Amy
-    the user clicks the button/link          id = assessor-filter-button
-
 KTA accepts the invitation to assess the application
     [Arguments]    ${compettitionName}                    ${ktaEmail}   ${short_password}
     log in as a different user                            ${ktaEmail}   ${short_password}
@@ -221,24 +160,6 @@ KTA accepts to assess the KTP application
     the user selects the radio button                     assessmentAccept  true
     the user clicks the button/link                       jQuery = button:contains("Confirm")
 
-Assessor completes the KTP category
-    [Arguments]   ${feedbackText}
-    The user selects the option from the drop-down menu     10    css = .assessor-question-score
-    The user enters text to a text field                    css = .editor    ${feedbackText}
-    Wait for autosave
-    mouse out  css = .editor
-    the user should see the element                                    jQuery = span:contains("Saved!")
-    The user clicks the button/link                                    jQuery = button:contains("Save and return to assessment overview")
-    ${error} =   Run Keyword and return status without screenshots     page should contain     An unexpected error occurred.
-    Run Keyword If    '${error}' == 'True'                             the user clicks the button/link   jQuery = button:contains("Save and return to assessment overview")
-
-Assessor should see the category details
-    [Arguments]   ${category}   ${score}   ${percentage}
-    the user should see the element     jQuery = li:contains("${category}") .task-status-complete:contains("Complete")
-    the user should see the element     jQuery = li:contains("${category}") .notification:contains("Score 10 / 10")
-    the user should see the element     jQuery = p:contains("${score}")
-    the user should see the element     jQuery = p:contains("${percentage}")
-
 Assessor completes the scope section of an application
     the user selects the radio button                       govuk-radios__item     in-scope-true
     The user selects the option from the drop-down menu     Industrial research    css = .research-category
@@ -249,27 +170,6 @@ Assessor completes the scope section of an application
     the user clicks the button/link                                    jQuery = button:contains("Save and return to assessment overview")
     ${error} =   Run Keyword and return status without screenshots     page should contain     An unexpected error occurred.
     Run Keyword If    '${error}' == 'True'                             the user clicks the button/link   jQuery = button:contains("Save and return to assessment overview")
-
-Assessor should review the assessment category details
-    [Arguments]   ${sectionStatus}   ${score}   ${idSelector}   ${feedbackText}
-    the user should see the element     jQuery = h2:contains("${sectionStatus}")
-    the user should see the element     jQuery = .section-score:contains("Score")
-    the user should see the element     jQuery = .section-score:contains("${score}")
-    the user should see the element     jQuery = \#${idSelector}:contains("${feedbackText}")
-    the user should see the element     jQuery = .govuk-body:contains(40/40)
-    the user should see the element     jQuery = .govuk-body:contains(100%)
-
-Assessor should review the scope category details
-    [Arguments]   ${sectionStatus}   ${scopeAnswer}   ${idSelector}   ${feedbackText}
-    the user should see the element     jQuery = h2:contains("${sectionStatus}")
-    the user should see the element     jQuery = .score:contains("In scope: ${scopeAnswer}")
-    the user should see the element     jQuery = \#${idSelector}:contains("${feedbackText}")
-
-Assessor should review the incomplete scope category details
-    [Arguments]   ${sectionStatus}   ${idSelector}   ${feedbackText}
-    the user should see the element         jQuery = h2:contains("${sectionStatus}")
-    the user should not see the element     jQuery = .score:contains("In scope:")
-    the user should see the element         jQuery = \#${idSelector}:contains("${feedbackText}")
 
 Invite KTA to assess the competition
     [Arguments]   ${competitionID}   ${applicationTitle}   ${competitionName}   ${email}  ${short_password}
@@ -292,105 +192,13 @@ Invite KTA to assess the competition
     KTA accepts to assess the KTP application                ${competitionName}    ${email}  ${short_password}
     the user clicks the button/link                          link = ${applicationTitle}
 
-IFS Admin makes the application decision
-    [Arguments]   ${competitionName}  ${decision}
-    log in as a different user                            &{ifs_admin_user_credentials}
-    the user clicks the button/link                       link = ${competitionName}
-    the user clicks the button/link                       id = close-assessment-button
-    IFS admin inputs the funding decision                 ${decision}
-
-IFS admin inputs the funding decision
-    [Arguments]   ${decision}
-    the user clicks the button/link     link = Input and review funding decision
-    the user clicks the button/link     id = select-all-1
-    the user clicks the button/link     jQuery = button:contains("${decision}")
-    the user clicks the button/link     link = Competition
-
-IFS Admin notifies all applicants
-    the user clicks the button/link                      link = Manage funding notifications
-    the user clicks the button/link                      id = select-all-1
-    the user clicks the button/link                      id = write-and-send-email
-    the user clicks the button/link                      id = send-email-to-all-applicants
-    the user clicks the button/link                      id = send-email-to-all-applicants-button
-    the user refreshes until element appears on page     jQuery = td:contains("Sent")
-
-IFS admin releases feedback to the applicant
-    [Arguments]  ${competitionName}
-    log in as a different user          &{ifs_admin_user_credentials}
-    the user clicks the button/link     link = ${competitionName}
-    the user clicks the button/link     id = release-feedback-button
-
-MO navigates to application overview page
-    [Arguments]  ${applicationName}  ${message}
-    log in as a different user                            ${monitoringOfficerEmail}  ${short_password}
-    the user navigates to application overview            ${applicationName}
-    the user refreshes until element appears on page      jQuery = h2:contains("${message}")
-
-the user navigates to application overview
-    [Arguments]  ${applicationName}
-    the user navigates to the page                       ${server}/project-setup/monitoring-officer/dashboard
-    the user selects the checkbox                        previousProject
-    the user clicks the button/link                      id = update-documents-results-button
-    the user refreshes until element appears on page     link = ${applicationName}
-    the user clicks the button/link                      link = ${applicationName}
-    the user clicks the button/link                      link = view application overview
-
-KTA should see assessors and supporters feedback
-    the user clicks the button/link     jQuery = .govuk-heading-m:contains("Score assessment") + div button:contains("Open all")
-    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Impact") + div h3:contains("Assessor 1") + p:contains("This is the impact feedback")
-    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Impact") + div h3:contains("Assessor 2") + p:contains("This is the impact feedback")
-    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Impact") span:contains("Average score 7.0 / 10")
-    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Innovation") + div h3:contains("Assessor 1") + p:contains("This is the innovation feedback")
-    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Innovation") + div h3:contains("Assessor 2") + p:contains("This is the innovation feedback")
-    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Innovation") span:contains("Average score 7.0 / 10")
-    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Challenge") + div h3:contains("Assessor 1") + p:contains("This is the challenge feedback")
-    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Challenge") + div h3:contains("Assessor 2") + p:contains("This is the challenge feedback")
-    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Challenge") span:contains("Average score 7.0 / 10")
-    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Cohesiveness") + div h3:contains("Assessor 1") + p:contains("This is the cohesiveness feedback")
-    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Cohesiveness") + div h3:contains("Assessor 2") + p:contains("This is the cohesiveness feedback")
-    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Cohesiveness") span:contains("Average score 7.0 / 10")
-    the user should see the element     jQuery = h3:contains("Application score: 70.0%")
-    the user clicks the button/link     jQuery = .govuk-heading-m:contains("Application feedback") + div button:contains("Open all")
-    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Assessor feedback") + div ul li:contains("Assessor 1") p:contains("Perfect application")
-    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Assessor feedback") + div ul li:contains("Assessor 2") p:contains("Perfect application")
-    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Supporter feedback") + div ul li span:contains("Anarchy inc.") p:contains("This application is extraordinary I'd love to fund it")
-    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Supporter feedback") + div ul li span:contains("Money inc.") p:contains("This application is extraordinary I'd love to fund it")
-    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Supporter feedback") + div ul li span:contains("Evil inc.") p:contains("This application is extraordinary I'd hate to fund it")
-    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Supporter feedback") + div ul li span:contains("Guest inc.") p:contains("This application is extraordinary I'd hate to fund it")
-    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Supporter feedback") + div ul li span:contains("Connolly inc.")
-    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Supporter feedback") + div ul li span:contains("Alston inc.")
-
-the project team member should not see assessor or supporter feedback
-    the user should not see the element    jQuery = .govuk-accordion__section-header:contains("Assessor feedback")
-    the user should not see the element    jQuery = .govuk-accordion__section-header:contains("Supporter feedback")
-    the user should not see the element    jQuery = h2:contains("Score assessment")
-
-IFS admin releases feedback on making application sucessful
-    IFS admin inputs the funding decision                Successful
-    IFS Admin notifies all applicants
-    the user clicks the button/link                      link = Competition
-    the user refreshes until element appears on page     id = release-feedback-button
-    the user clicks the button/link                      id = release-feedback-button
-
-the user should see read only view for FEC declaration
-    the user should not see the element                     jQuery = button:contains("Edit your fEC Model")
-    the user checks the read-only page
-
-
-the user checks the read-only page
-    # Due to us testing webtest data here, the file does not exist so we check for only no internal server errors. Page not found is OK in this case.
-    the user should see the element     jQuery = h3:contains("Will you be using the full economic costing (fEC) funding model?") ~ div p:contains("Yes")
-    the user clicks the button/link     jQuery = h3:contains("Your fEC certificate") ~ div a:contains("fec-file")
-    Select Window                       NEW
-    the user should not see internal server and forbidden errors
-    the user closes the last opened tab
-
 the user completes the KTP application except application team and your project finances
     the user clicks the button/link                                                 link = Application details
     the user fills in the KTP Application details                                   ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the lead applicant fills all the questions and marks as complete(programme)
     the user navigates to Your-finances page                                        ${ktpApplicationTitle}
     the lead applicant marks the KTP project location as complete
+    the user selects research category                                              Feasibility studies
     the user accept the competition terms and conditions                            Return to application overview
 
 the user fills in the KTP Application details
@@ -407,13 +215,6 @@ the lead applicant marks the KTP project location as complete
     the user enters the project location
     the user should see the element          jQuery = li:contains("Your project location") span:contains("Complete")
     the user clicks the button/link          link = Back to application overview
-
-
-the applicant submits the application
-    the user clicks the button/link                    link = Review and submit
-    the user should not see the element                jQuery = .task-status-incomplete
-    the user clicks the button/link                    jQuery = .govuk-button:contains("Submit application")
-    the user should be redirected to the correct page  track
 
 the applicant goes to the project summary, and performs actions
     click link    Project summary
@@ -443,10 +244,18 @@ the user selects research category
     the user can mark the question as complete
     the user should see the element   jQuery = li:contains("Research category") > .task-status-complete
 
-the user sees fEC model validation error message
-     the user clicks the button/link                   jQuery = button:contains("Mark as complete")
-     the user should see the element                   jQuery = span:contains("You must upload a file.")
-     the user should see the element                   jQuery = span:contains("You must enter an expiry date.")
+the user fills project finances section
+     the user clicks the button/link                       link = Your project finances
+     the user clicks the button/link                       link = Your fEC model
+     the user selects the radio button                     fecModelEnabled  fecModelEnabled-yes
+     The user clicks the button/link                       jQuery = button:contains("Next")
+     the user uploads the file                             css = .inputfile   testing_5MB.pdf
+     the user enters empty data into date fields           01  12  2500
+     the user clicks the button/link                       jQuery = button:contains("Mark as complete")
+     the user fills in the funding information             ${ktpApplicationTitle}   no
+     the user clicks the button/link                       link = Your project costs
+     the user fills in ktp project costs
+     Given the user clicks the button/link                  link = Back to application overview
 
 the user fills in ktp project costs
     the user fills in Associate employment
@@ -462,25 +271,6 @@ the user enters empty data into date fields
     the user enters text to a text field   id = fecCertExpiryMonth   ${month}
     the user enters text to a text field   id = fecCertExpiryYear  ${year}
 
-the user fills in the funding information for AKT2I
-    [Arguments]  ${Application}   ${otherFunding}
-    the user navigates to Your-finances page                        ${Application}
-    the user selects funding section in project finances
-    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   page should contain element  jQuery = legend:contains("${yourFundingSubTitle}")
-    Run Keyword If  '${status}' == 'PASS' and "${Application}" == "AKT2I New Application"    run keywords   the user selects the radio button     requestingFunding   true
-    ...                                                AND    the user enters text to a text field       css = [name^="grantClaimPercentage"]  10
-    ...         ELSE IF   "${Application}" != "KTP New Application"     run keywords   the user selects the radio button     requestingFunding   true
-    ...                                                AND    the user enters text to a text field       css = [name^="grantClaimPercentage"]  42.34
-    run keyword if  '${otherFunding}' == 'yes'   run keywords         the user selects the radio button        otherFunding   true
-    ...                                                AND     the user enters text to a text field     css = [name*=source]  Lottery funding
-    ...                                                AND     the user enters text to a text field     css = [name*=date]  12-${nextyear}
-    ...                                                AND     the user enters text to a text field     css = [name*=fundingAmount]  20000
-    ...              ELSE              run keyword    the user selects the radio button     otherFunding   false
-    the user clicks the button/link                                 jQuery = button:contains("Mark as complete")
-    the user selects funding section in project finances
-    the user should see the element                                 jQuery = button:contains("Edit")
-    the user has read only view once section is marked complete
-
 the user fills in Associate employment
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element   jQuery = table[id="${associateSalaryTable}"]
     Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link         jQuery = button:contains("Associate employment")
@@ -492,7 +282,7 @@ the user fills in Associate development
     Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link         jQuery = button:contains("Associate development")
     the user enters text to a text field    jQuery = table[id="${associateDevelopmentTable}"] td:contains("Associate 1") ~ td input[id$="cost"]  ${costsValue}
 
-the assessor submits the feedback for the application
+the assessor submits the assessment for the application
     the assessor adds score and feedback for every assessor question    10
     the user clicks the button/link                            link = Scope
     Assessor completes the scope section of an application
@@ -527,3 +317,32 @@ the user accepts the application to assess
     the user clicks the button/link       jQuery = li:contains("${applicationTitle}") a:contains("Accept or reject")
     the user selects the radio button     assessmentAccept  true
     the user clicks the button/link       jQuery = .govuk-button:contains("Confirm")
+
+Assessor is invited to assess the AKT2I competition
+    [Documentation]   IFS-8260
+    the user navigates to the page                 ${server}/management/competition/${competitionId}/assessors/find
+    the user clicks the button/link                 jQuery = tr:contains("Hermen Mermen") label
+    the user clicks the button/link                 id = add-selected-assessors-to-invite-list-button
+    the user clicks the button/link                 id = review-and-send-assessor-invites-button
+    the user clicks the button/link                 jQuery = button:contains("Send invitation")
+
+Assessor accept the inviation to assess the AKT2I competition
+    KTA accepts the invitation to assess the application      ${AKT2ICompName}   ${ktaEmail}   ${short_password}
+    log in as a different user                                &{ifs_admin_user_credentials}
+    the user navigates to the page                            ${server}/management/competition/${competitionId}/assessors/accepted
+    the user should see the element                           link = Hermen Mermen
+
+Comp Admin allocates assessor to application
+    [Documentation]  IFS-10084
+    the user navigates to the page               ${server}/management/assessment/competition/${CompetitionID}/applications
+    the user clicks the button/link              jQuery = tr:contains("${ktpApplicationTitle}") a:contains("Assign")
+    the user adds an assessor to application     jQuery = tr:contains("Hermen Mermen") :checkbox
+    the user navigates to the page               ${server}/management/competition/${competitionId}
+    the user clicks the button/link              jQuery = button:contains("Notify assessors")
+
+Allocated assessor assess the application
+    [Documentation]  IFS-10084
+    Log in as a different user                               &{assessor3_credentials}
+    KTA accepts to assess the KTP application                ${AKT2ICompName}   ${ktaEmail}   ${short_password}
+    the user clicks the button/link                          link = ${ktpApplicationTitle}
+    the assessor submits the assessment for the application
