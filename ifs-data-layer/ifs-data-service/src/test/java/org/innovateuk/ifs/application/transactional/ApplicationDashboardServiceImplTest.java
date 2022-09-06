@@ -113,22 +113,19 @@ public class ApplicationDashboardServiceImplTest {
 
         List<Application> applications = asList(h2020Application, projectInSetupApplication, pendingPartnerInSetupApplication, completedProjectApplication,
                 inProgressOpenCompApplication, inProgressClosedCompApplication, inProgressAlwaysOpenCompApplicationInAssessment, onHoldNotifiedApplication,
-                unsuccessfulNotifiedApplication, ineligibleApplication, submittedAwaitingDecisionApplication,eoiApplicationWithoutEvidence,eoiApplicationWithEvidence);
+                unsuccessfulNotifiedApplication, ineligibleApplication, submittedAwaitingDecisionApplication, eoiApplicationWithoutEvidence, eoiApplicationWithEvidence);
 
         when(applicationRepository.findApplicationsForDashboard(USER_ID))
                 .thenReturn(applications);
 
-        when(applicationEoiEvidenceResponseRepository.findOneByApplicationId (eoiApplicationWithoutEvidence.getId())).thenReturn(Optional.empty());
+        when(applicationEoiEvidenceResponseRepository.findOneByApplicationId(eoiApplicationWithoutEvidence.getId())).thenReturn(Optional.empty());
 
         ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = ApplicationEoiEvidenceResponse.builder()
                 .application(newApplication().build())
                 .organisation(newOrganisation().build())
                 .fileEntry(newFileEntry().build())
                 .build();
-        when(applicationEoiEvidenceResponseRepository.findOneByApplicationId (eoiApplicationWithEvidence.getId())).thenReturn(Optional.of(applicationEoiEvidenceResponse));
-
-
-
+        when(applicationEoiEvidenceResponseRepository.findOneByApplicationId(eoiApplicationWithEvidence.getId())).thenReturn(Optional.of(applicationEoiEvidenceResponse));
 
 
         ApplicantDashboardResource dashboardResource = applicationDashboardService.getApplicantDashboard(USER_ID).getSuccess();
@@ -163,7 +160,11 @@ public class ApplicationDashboardServiceImplTest {
                 .findFirst().get()
                 .isExpressionOfInterest());
 
-       List<DashboardInProgressRowResource> inProgressRowResourceList =  dashboardResource.getInProgress();
+        List<DashboardInProgressRowResource> inProgressRowResourceList = dashboardResource.getInProgress();
+        assertNull(inProgressRowResourceList.get(0).getEvidenceUploaded());
+        assertNull(inProgressRowResourceList.get(1).getEvidenceUploaded());
+        assertNull(inProgressRowResourceList.get(2).getEvidenceUploaded());
+        assertNull(inProgressRowResourceList.get(3).getEvidenceUploaded());
         assertFalse(inProgressRowResourceList.get(4).getEvidenceUploaded());
         assertTrue(inProgressRowResourceList.get(5).getEvidenceUploaded());
     }
@@ -239,6 +240,7 @@ public class ApplicationDashboardServiceImplTest {
                         .build())
                 .build();
     }
+
     private Application eoiApplication() {
         return newApplication()
                 .withProcessRole(processRole)
@@ -248,9 +250,6 @@ public class ApplicationDashboardServiceImplTest {
                         .enabledForExpressionOfInterest(true)
                         .build())
                 .build();
-
-
-
 
 
     }
