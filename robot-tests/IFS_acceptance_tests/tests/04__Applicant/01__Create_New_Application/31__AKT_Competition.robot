@@ -3,6 +3,7 @@ Documentation     IFS-12745 Adding new template to support KTP AKT
 ...
 ...               IFS-12746 KTA is optional for KTP AKT funding type
 ...
+...               IFS-12748 KTP AKT 2022 - Enable assessments for questions for KTP AKT funding type
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -319,7 +320,6 @@ the user accepts the application to assess
     the user clicks the button/link       jQuery = .govuk-button:contains("Confirm")
 
 Assessor is invited to assess the AKT2I competition
-    [Documentation]   IFS-8260
     the user navigates to the page                 ${server}/management/competition/${competitionId}/assessors/find
     the user clicks the button/link                 jQuery = tr:contains("Hermen Mermen") label
     the user clicks the button/link                 id = add-selected-assessors-to-invite-list-button
@@ -333,7 +333,6 @@ Assessor accept the inviation to assess the AKT2I competition
     the user should see the element                           link = Hermen Mermen
 
 Comp Admin allocates assessor to application
-    [Documentation]  IFS-10084
     the user navigates to the page               ${server}/management/assessment/competition/${CompetitionID}/applications
     the user clicks the button/link              jQuery = tr:contains("${ktpApplicationTitle}") a:contains("Assign")
     the user adds an assessor to application     jQuery = tr:contains("Hermen Mermen") :checkbox
@@ -341,7 +340,6 @@ Comp Admin allocates assessor to application
     the user clicks the button/link              jQuery = button:contains("Notify assessors")
 
 Allocated assessor assess the application
-    [Documentation]  IFS-10084
     Log in as a different user                               &{assessor3_credentials}
     KTA accepts to assess the KTP application                ${AKT2ICompName}   ${ktaEmail}   ${short_password}
     the user clicks the button/link                          link = ${ktpApplicationTitle}
