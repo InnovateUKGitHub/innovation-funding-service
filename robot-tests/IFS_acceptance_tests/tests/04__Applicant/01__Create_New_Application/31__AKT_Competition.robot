@@ -75,7 +75,7 @@ Lead applicant submits the AKT2I application
     Given the user clicks the button/link                                                           link = Application overview
     And the user completes the KTP application except application team and your project finances
     And the user fills project finances section
-    And the user clicks the button/link                                                             link = Review and submit
+    When the user clicks the button/link                                                             link = Review and submit
     Then the user clicks the button/link                                                            id = submit-application-button
 
 Assessor submits assessment of the application
