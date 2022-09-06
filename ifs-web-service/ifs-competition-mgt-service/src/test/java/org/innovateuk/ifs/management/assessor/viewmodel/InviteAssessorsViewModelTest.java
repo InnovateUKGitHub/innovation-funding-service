@@ -17,7 +17,7 @@ public class InviteAssessorsViewModelTest {
     private final boolean ktp;
     private final boolean expected;
 
-    @Parameterized.Parameters(name = "{index}: FundingType->{0}")
+    @Parameterized.Parameters(name = "{index}: ktp->{0}")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[] [] {
                 {true, true}, {false, false}
