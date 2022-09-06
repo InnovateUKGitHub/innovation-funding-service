@@ -5,11 +5,14 @@ import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInProgressRowRes
 import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInSetupRowResource;
 import org.innovateuk.ifs.applicant.resource.dashboard.DashboardRowResource;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationEoiEvidenceResponse;
 import org.innovateuk.ifs.application.domain.ApplicationExpressionOfInterestConfig;
+import org.innovateuk.ifs.application.repository.ApplicationEoiEvidenceResponseRepository;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionEoiEvidenceConfig;
 import org.innovateuk.ifs.fundingdecision.domain.DecisionStatus;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
 import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
@@ -33,6 +36,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.resource.CompetitionResource.H2020_TYPE_NAME;
+import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
@@ -49,7 +53,8 @@ public class ApplicationDashboardServiceImplTest {
 
     @InjectMocks
     private ApplicationDashboardServiceImpl applicationDashboardService;
-
+    @Mock
+    private ApplicationEoiEvidenceResponseRepository applicationEoiEvidenceResponseRepository;
     @Mock
     private InterviewAssignmentService interviewAssignmentService;
     @Mock
@@ -65,6 +70,16 @@ public class ApplicationDashboardServiceImplTest {
     private final Competition openCompetition = newCompetition().withSetupComplete(true)
             .withStartDate(ZonedDateTime.now().minusDays(2))
             .withEndDate(ZonedDateTime.now().plusDays(1))
+            .withAlwaysOpen(false)
+            .build();
+
+    private final Competition eoiCompetition = newCompetition().withSetupComplete(true)
+            .withStartDate(ZonedDateTime.now().minusDays(2))
+            .withEndDate(ZonedDateTime.now().plusDays(1))
+            .withEnabledForExpressionOfInterest(true)
+            .withCompetitionEoiEvidenceConfig((CompetitionEoiEvidenceConfig.builder()
+                    .evidenceRequired(true)
+                    .build()))
             .withAlwaysOpen(false)
             .build();
 
@@ -91,20 +106,35 @@ public class ApplicationDashboardServiceImplTest {
         Application unsuccessfulNotifiedApplication = unsuccessfulNotifiedApplication();
         Application ineligibleApplication = ineligibleApplication();
         Application submittedAwaitingDecisionApplication = submittedAwaitingDecisionApplication();
+        Application eoiApplicationWithoutEvidence = eoiApplication();
+        Application eoiApplicationWithEvidence = eoiApplication();
 
         when(interviewAssignmentService.isApplicationAssigned(anyLong())).thenReturn(serviceSuccess(true));
 
         List<Application> applications = asList(h2020Application, projectInSetupApplication, pendingPartnerInSetupApplication, completedProjectApplication,
                 inProgressOpenCompApplication, inProgressClosedCompApplication, inProgressAlwaysOpenCompApplicationInAssessment, onHoldNotifiedApplication,
-                unsuccessfulNotifiedApplication, ineligibleApplication, submittedAwaitingDecisionApplication);
+                unsuccessfulNotifiedApplication, ineligibleApplication, submittedAwaitingDecisionApplication,eoiApplicationWithoutEvidence,eoiApplicationWithEvidence);
 
         when(applicationRepository.findApplicationsForDashboard(USER_ID))
                 .thenReturn(applications);
 
+        when(applicationEoiEvidenceResponseRepository.findOneByApplicationId (eoiApplicationWithoutEvidence.getId())).thenReturn(Optional.empty());
+
+        ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = ApplicationEoiEvidenceResponse.builder()
+                .application(newApplication().build())
+                .organisation(newOrganisation().build())
+                .fileEntry(newFileEntry().build())
+                .build();
+        when(applicationEoiEvidenceResponseRepository.findOneByApplicationId (eoiApplicationWithEvidence.getId())).thenReturn(Optional.of(applicationEoiEvidenceResponse));
+
+
+
+
+
         ApplicantDashboardResource dashboardResource = applicationDashboardService.getApplicantDashboard(USER_ID).getSuccess();
 
         assertEquals(1, dashboardResource.getEuGrantTransfer().size());
-        assertEquals(4, dashboardResource.getInProgress().size());
+        assertEquals(6, dashboardResource.getInProgress().size());
         assertEquals(2, dashboardResource.getInSetup().size());
         assertEquals(4, dashboardResource.getPrevious().size());
 
@@ -132,6 +162,10 @@ public class ApplicationDashboardServiceImplTest {
                 .filter(DashboardInProgressRowResource::isAlwaysOpen)
                 .findFirst().get()
                 .isExpressionOfInterest());
+
+       List<DashboardInProgressRowResource> inProgressRowResourceList =  dashboardResource.getInProgress();
+        assertFalse(inProgressRowResourceList.get(4).getEvidenceUploaded());
+        assertTrue(inProgressRowResourceList.get(5).getEvidenceUploaded());
     }
 
     private Application inProgressAlwaysOpenCompApplication() {
@@ -200,8 +234,25 @@ public class ApplicationDashboardServiceImplTest {
                 .withProcessRole(processRole)
                 .withCompetition(openCompetition)
                 .withApplicationState(ApplicationState.OPENED)
-                .withCompetition(newCompetition().withSetupComplete(true).withStartDate(ZonedDateTime.now().minusDays(2)).withEndDate(ZonedDateTime.now().plusDays(1)).build())
+                .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig.builder()
+                        .enabledForExpressionOfInterest(true)
+                        .build())
                 .build();
+    }
+    private Application eoiApplication() {
+        return newApplication()
+                .withProcessRole(processRole)
+                .withCompetition(eoiCompetition)
+                .withApplicationState(ApplicationState.OPENED)
+                .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig.builder()
+                        .enabledForExpressionOfInterest(true)
+                        .build())
+                .build();
+
+
+
+
+
     }
 
     private Application completedProjectApplication() {
@@ -222,8 +273,8 @@ public class ApplicationDashboardServiceImplTest {
                         .withProjectProcess(newProjectProcess().withActivityState(ProjectState.SETUP).build())
                         .withProjectUsers(newProjectUser().withUser(newUser().withId(USER_ID).build())
                                 .withPartnerOrganisation(newPartnerOrganisation()
-                                    .withOrganisation(newOrganisation().build())
-                                    .build())
+                                        .withOrganisation(newOrganisation().build())
+                                        .build())
                                 .build(1))
                         .build())
                 .build();
