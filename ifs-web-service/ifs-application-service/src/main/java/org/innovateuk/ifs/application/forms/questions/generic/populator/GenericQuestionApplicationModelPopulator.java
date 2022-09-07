@@ -95,6 +95,7 @@ public class GenericQuestionApplicationModelPopulator {
                 .withLoansPartBEnabled(ifsLoanPartBEnabled)
                 .withLoansFormQuestionsSalesForceURL(salesForceURL)
                 .withCompetitionId(competition.getId())
+                .withIMSurveyEnabled(competition.isImSurveyEnabled())
                 .build();
     }
 

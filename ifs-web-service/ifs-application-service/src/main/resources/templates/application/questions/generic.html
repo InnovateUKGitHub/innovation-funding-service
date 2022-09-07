@@ -98,6 +98,13 @@
                      ifs:utext="${model.questionGuidance}">Guidance
                 </div>
             </details>
+
+                <div th:if="${model.imSurveyEnabled}">
+                    <a class="govuk-button"
+                       th:href="@{${model.getLoansQuestionsFormSalesForceURL()}}"
+                       value="open-salesforce"
+                       type="Continue">Go to survey</a>
+                </div>
         </th:block>
 
         <th:block th:if="${model.isLoansPartBEnabled() and (model.questionType == model.getLoansBusinessAndFinancialInformation())}">
@@ -130,7 +137,7 @@
                 <input type="hidden" th:field="${model.multipleChoiceOptionsActive}" />
             </th:block>
 
-            <th:block th:unless="${model.isLoansPartBEnabled() and (model.questionType == model.getLoansBusinessAndFinancialInformation())}">
+            <th:block th:unless="${(model.isLoansPartBEnabled() and (model.questionType == model.getLoansBusinessAndFinancialInformation())) or model.imSurveyEnabled}">
                 <div class="govuk-form-group" th:if="${model.textAreaActive}"
                  th:classappend="${#fields.hasErrors('answer')} ? 'govuk-form-group--error'">
                 <th:block th:if="${#fields.hasErrors('answer')}">

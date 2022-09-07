@@ -16,10 +16,12 @@ import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.*;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.FormInputBuilder.aFormInput;
@@ -67,6 +69,8 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                 applicationQuestions()
                         .withQuestions(horizonEuropeDefaultQuestions()),
                 finances(),
+                supportingInformation()
+                        .withQuestions(Collections.singletonList(impactManagementSurvey())),
                 termsAndConditions()
         );
     }

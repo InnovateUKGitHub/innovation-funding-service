@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.Sectio
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -51,6 +52,8 @@ public class ThirdPartyOfgemTemplate implements CompetitionTemplate {
                                 thirdPartyOfgemDefaultQuestions()
                         )),
                 finances(),
+                supportingInformation()
+                        .withQuestions(Collections.singletonList(impactManagementSurvey())),
                 termsAndConditions()
         );
     }

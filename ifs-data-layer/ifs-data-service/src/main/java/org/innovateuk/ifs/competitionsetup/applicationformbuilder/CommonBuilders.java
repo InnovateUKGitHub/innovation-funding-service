@@ -153,6 +153,40 @@ public class CommonBuilders {
                 .withQuestionSetupType(QuestionSetupType.APPLICATION_DETAILS);
     }
 
+    // Impact management survey
+    public static SectionBuilder supportingInformation() {
+        return aSection()
+                .withName("Supporting information")
+                .withType(SectionType.SUPPORTING_INFORMATION)
+                .withDescription("This section is not scored but will provide background to your project.")
+                .withQuestions(newArrayList(aQuestion()
+                        .withShortName("Project impact")
+                        .withName("Project impact")
+                        .withDescription("Project impact")
+                        .withMarkAsCompletedEnabled(true)
+                        .withMultipleStatuses(true)
+                        .withAssignEnabled(false)
+                        .withQuestionSetupType(QuestionSetupType.IMPACT_MANAGEMENT_SURVEY)));
+    }
+
+    public static QuestionBuilder impactManagementSurvey() {
+        return aQuestion()
+                .withQuestionSetupType(QuestionSetupType.IMPACT_MANAGEMENT_SURVEY)
+                .withShortName("Project impact")
+                .withName("Temporary impact management title")
+                .withMarkAsCompletedEnabled(true)
+                .withDescription(
+                        "<p><strong>Impact management</strong></p>" +
+                                "<p>Impact management</p>" +
+                                "<p><strong>Description 1</strong></p>"
+                )
+                .withDescription2(
+                        "<p><strong>Impact management</strong></p>" +
+                                "<p>Impact management description 2</p>"
+                )
+                .withAssignEnabled(true);
+    }
+
     public static QuestionBuilder researchCategory() {
         return aQuestion()
                 .withShortName("Research category")

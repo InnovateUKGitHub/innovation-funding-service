@@ -8,9 +8,11 @@ import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.Sectio
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.*;
 
 @Component
@@ -45,6 +47,8 @@ public class PrincesTrustTemplate implements CompetitionTemplate {
                         )),
                 applicationQuestions()
                         .withQuestions(princesTrustDefaultQuestions()),
+                supportingInformation()
+                        .withQuestions(Collections.singletonList(impactManagementSurvey())),
                 termsAndConditions()
         );
 

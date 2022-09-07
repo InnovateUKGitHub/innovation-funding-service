@@ -35,6 +35,9 @@ public enum SectionType {
                 return (this == PROJECT_COST_FINANCES || this == FEC_COSTS_FINANCES);
             }
         }
+        if (!competition.isImSurveyEnabled()) {
+            return this == SUPPORTING_INFORMATION;
+        }
         if (this == SectionType.TERMS_AND_CONDITIONS) {
             return competition.isExpressionOfInterest();
         }

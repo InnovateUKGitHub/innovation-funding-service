@@ -12,6 +12,7 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -66,6 +67,8 @@ public class ApcTemplate implements CompetitionTemplate {
                 applicationQuestions()
                         .withQuestions(apcDefaultQuestions()),
                 finances(),
+                supportingInformation()
+                        .withQuestions(Collections.singletonList(impactManagementSurvey())),
                 termsAndConditions()
         );
     }
