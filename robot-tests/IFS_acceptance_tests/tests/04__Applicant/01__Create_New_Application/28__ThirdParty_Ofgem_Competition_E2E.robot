@@ -169,8 +169,8 @@ the user marks the your funding section as complete with contributions in kind w
     And the user fills thirdparty contributions in kind information without date
     And the user clicks the button/link                                             id = mark-all-as-complete
     When the user clicks the button/link                                            link = Your funding
-    Then the user should see the element                                            jQuery = th:contains("Lottery funding")
-    Then the user should see the element                                            jQuery = td:contains("£20,000")
+    And the user should see the element                                             jQuery = th:contains("Lottery funding") ~ td:contains("")+td:contains("£20,000")
+
 
 the user marks the your funding section as complete with contributions in kind
     [Documentation]  IFS-11481  IFS-12765  IFS-12795
@@ -180,6 +180,7 @@ the user marks the your funding section as complete with contributions in kind
     Then the user should see the element                                jQuery = td:contains("53,220") ~ td:contains("25,678") ~ td:contains("51.75") ~ td:contains("27,542") ~ td:contains("20,000")
     And the user should see the element                                 jQuery = th:contains("Contribution to project (%)")
     And the user should see the element                                 jQuery = th:contains("Contributions in kind (£)")
+
 
 Ofgem application finance overview
     [Documentation]  IFS-11481  IFS-12765  IFS-12796
