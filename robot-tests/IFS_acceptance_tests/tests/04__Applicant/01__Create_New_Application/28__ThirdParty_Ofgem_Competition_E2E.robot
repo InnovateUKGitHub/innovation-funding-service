@@ -169,7 +169,7 @@ the user marks the your funding section as complete with contributions in kind w
     And the user fills thirdparty contributions in kind information without date
     And the user clicks the button/link                                             id = mark-all-as-complete
     When the user clicks the button/link                                            link = Your funding
-    And the user should see the element                                             jQuery = th:contains("Lottery funding") ~ td:contains("")+td:contains("£20,000")
+    Then the user should see the element                                             jQuery = th:contains("Lottery funding") ~ td:contains("")+td:contains("£20,000")
 
 
 the user marks the your funding section as complete with contributions in kind
