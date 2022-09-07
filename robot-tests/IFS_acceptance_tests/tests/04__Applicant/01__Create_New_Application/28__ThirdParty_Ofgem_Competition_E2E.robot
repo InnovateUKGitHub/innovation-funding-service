@@ -29,6 +29,7 @@ Documentation   IFS-11442 OFGEM: Create a "ThirdParty" generic template
 ...
 ...             IFS-12795 Ofgem - Third party finances - Contributions in kind
 ...
+...             IFS-12806 Ofgem - Discovery 2 - Contributions in kind date secured validation
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -161,6 +162,15 @@ the user marks your funding section as complete without contributions in kind
     And the user clicks the button/link             id = mark-all-as-complete
     And the user clicks the button/link             link = Your funding
     Then the user should see the element            jQuery = p:contains("No contributions in kind")
+
+the user marks the your funding section as complete with contributions in kind without date
+    [Documentation]  IFS-12806
+    Given the user clicks the button/link                                           jQuery = button:contains("Edit your funding")
+    And the user fills thirdparty contributions in kind information without date
+    And the user clicks the button/link                                             id = mark-all-as-complete
+    When the user clicks the button/link                                            link = Your funding
+    Then the user should see the element                                            jQuery = th:contains("Lottery funding")
+    Then the user should see the element                                            jQuery = td:contains("£20,000")
 
 the user marks the your funding section as complete with contributions in kind
     [Documentation]  IFS-11481  IFS-12765  IFS-12795
@@ -391,3 +401,12 @@ the user completes ofgem project organisation details
     the user enters text to a text field    css = #headCount    3000
     the user clicks the button/link         jQuery = button:contains("Mark as complete")
     the user should see the element         jQuery = li div:contains("Your organisation") ~ .task-status-complete
+
+the user fills thirdparty contributions in kind information without date
+    the user selects the radio button       otherFunding  true
+    the user should see the element         jQuery = th:contains("Description and breakdown of contributions in kind")
+    the user should see the element         jQuery = th:contains("Contributions in kind value (£)")
+    the user should see the element         jQuery = button:contains("Add another contribution in kind")
+    the user enters text to a text field    css = [name*=source]  Lottery funding
+    the user enters text to a text field    css = [name*=fundingAmount]  20000
+    the user should see the element         jQuery = label:contains("Total contributions in kind")
