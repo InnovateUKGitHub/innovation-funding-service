@@ -25,6 +25,8 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...
 ...               IFS-12380 Pre-Registration (Internal Journey) - full application
 ...
+...               IFS-12522 HECP Phase 2 - Document upload - Dashboard
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -52,10 +54,11 @@ Comp Admin creates a prereg competition
 Applicants should view prereg related content when competition is opened
     [Documentation]  IFS-12065
     Given Comp admin set the competion as prereg comp and hide the question, section and subsection
-    When the user navigates to the page         ${frontDoor}
-    And the user enters text to a text field    id = keywords   Pre Registration
-    And the user clicks the button/link         id = update-competition-results-button
-    Then the user should see the element        jQuery = li:contains("${hecpPreregCompName}") div:contains("Refer to competition date for competition submission deadlines.")
+    And Update competition to have evidence required
+    When the user navigates to the page                 ${frontDoor}
+    And the user enters text to a text field            id = keywords   Pre Registration
+    And the user clicks the button/link                 id = update-competition-results-button
+    Then the user should see the element                jQuery = li:contains("${hecpPreregCompName}") div:contains("Refer to competition date for competition submission deadlines.")
 
 Internal users should see EOI specifc content on funding decision page
     [Documentation]    IFS-12177
@@ -86,16 +89,32 @@ Applicant should view EOI label on dashboard for expression of interest applicat
     When the user clicks the button/link    link = Back to applications
     Then the user should see the element    jQuery = li:contains("${hecpPreregAppName}") .status-msg:contains("Expression of interest")
 
+Lead applicant invites a team member to the application
+    [Documentation]  IFS-12522
+    Given the user clicks the button/link                                           link = ${hecpPreregAppName}
+    And the user clicks the button/link                                             link = Application team
+    When the user clicks the button/link                                            jQuery = button:contains("Add person to Empire Ltd")
+    And the user invites a person to the same organisation                          Troy Ward  troy.ward@gmail.com
+    Then the user accepts invitation to join application under same organisation    troy.ward@gmail.com   ${short_password}   Invitation to contribute in Hecp Pre Registration Competition   You are invited by Steve Smith to participate in an application for funding through the Innovation Funding Service.
+
+Lead applicant invites a partner organisation and completes project finances
+    [Documentation]  IFS-12522
+    Given log in as a different user                            &{lead_applicant_credentials}
+    And the user clicks the button/link                         link = ${hecpPreregAppName}
+    When the lead invites already registered user               ${collaborator1_credentials["email"]}  ${hecpPreregCompName}
+    Then Partner applicant completes prereg project finances    ${hecpPreregAppName}  ${collaborator1_credentials["email"]}  ${short_password}
+
 Lead applicant completes the application sections
     [Arguments]  IFS-12077
-    Given the user clicks the button/link                                link = ${hecpPreregAppName}
-    When the applicant completes Application Team                        COMPLETE  steve.smith@empire.com
+    Given log in as a different user                                                &{lead_applicant_credentials}
+    And the user clicks the button/link                                             link = ${hecpPreregAppName}
+    When the applicant completes Application Team                                   COMPLETE  steve.smith@empire.com
     And the user complete the work programme
     And The user is able to complete horizon grant agreement section
     And the lead applicant fills all the questions and marks as complete(prereg)
-    And the user completes prereg project finances                      ${hecpPreregAppName}   no
-    Then the user should see the element                                jQuery = .progress:contains("100%")
-    Then the user should see the element                                link = Print your expression of interest
+    And the user completes prereg project finances                                  ${hecpPreregAppName}   no
+    Then the user should see the element                                            jQuery = .progress:contains("100%")
+    And the user should see the element                                             link = Print your expression of interest
 
 Applicant can not view hidden question, section and subsection in application summary
     [Documentation]  IFS-12079
@@ -122,7 +141,23 @@ Applicant can not view hidden question, section and subsection in print applicat
     Then the user should see the element                               xpath = //*[contains(text(),'Expression of interest questions')]
     And the user should not see the element                            xpath = //h2[contains(text(),'Terms and conditions')]
     And the user should not see the element                            xpath = //span[contains(text(),'Award terms and conditions')]
-    [Teardown]  the user navigates to the page                         ${SERVER}/application/${preregApplicationID}/track
+
+Lead applicant views application status as evidence required on submitting an application
+    [Documentation]  IFS-12522
+    When the user navigates to the page    ${SERVER}/applicant/dashboard
+    Then the user should see the element   jQuery = li:contains("${hecpPreregAppName}") .status-msg:contains("Expression of interest") + .status-msg:contains("Evidence required")
+
+Member of the same lead organisation views the application status as evidence required on submitting an application
+    [Documentation]  IFS-12522
+    Given log in as a different user       troy.ward@gmail.com   ${short_password}
+    When the user navigates to the page    ${SERVER}/applicant/dashboard
+    Then the user should see the element   jQuery = li:contains("${hecpPreregAppName}") .status-msg:contains("Expression of interest") + .status-msg:contains("Evidence required")
+
+Partner applicant should not see evidence required status instead should still view submited status
+    [Documentation]  IFS-12522
+    Given log in as a different user                           ${collaborator1_credentials["email"]}  ${short_password}
+    When the user clicks the application tile if displayed
+    Then the user should see the element                       jQuery = li:contains("${hecpPreregAppName}") .status-msg:contains("Expression of interest") + .status-msg:contains("Submitted")
 
 Comp admin can not view mark as ineligible application link
     [Documentation]  IFS-12257
@@ -212,10 +247,18 @@ Lead applicant can navigate to orginal EOI application from full application
     Then the user clicks the button/link        jQuery = h1:contains("Expression of interest overview")
     And the user should see the element         jQuery = h2:contains("Congratulations, your application has been successful")
 
-Lead applicant completes the full application and submits
+Partner completes project finances and terms and conditions in full application
     [Documentation]  IFS-12382
-    Given the user clicks the button/link                       link = Back to application overview
-    When the user completes remaining application questions
+    Given log in as a different user                             ${collaborator1_credentials["email"]}  ${short_password}
+    When the user navigates to the page                          ${server}/application/${preregApplicationID}
+    Then the user completes the project location
+    And the user accept the competition terms and conditions     Back to application overview
+
+Lead applicant completes remaining questions and submits full application
+    [Documentation]  IFS-12382
+    Given log in as a different user                            &{lead_applicant_credentials}
+    When the user navigates to the page                         ${server}/application/${preregApplicationID}
+    And the user completes remaining application questions
     And the user completes the project location
     And the user accept the competition terms and conditions    Back to application overview
     And the user clicks the button/link                         id = application-overview-submit-cta
@@ -447,3 +490,13 @@ the internal team mark the application as successful
     the user clicks the button/link     link = Input and review funding decision
     the user clicks the button/link     jQuery = tr:contains("${applicationName}") label
     the user clicks the button/link     css = [type="submit"][value="${decision}"]
+
+Update competition to have evidence required
+    execute sql string    INSERT INTO `ifs`.`competition_eoi_evidence_config` (`id`, `evidence_required`, `evidence_title`, `evidence_guidance`) VALUES ('50', 1, 'Eoi Evidence 3', 'upload eoi 3');
+    execute sql string    UPDATE `ifs`.`competition` SET `competition_eoi_evidence_config_id` = '50' WHERE id = '${preregCompetitionId}';
+
+Partner applicant completes prereg project finances
+    [Arguments]   ${application_title}  ${collaboratorEmail}  ${collaboratorPassword}
+    logging in and error checking                    ${collaboratorEmail}  ${collaboratorPassword}
+    the user clicks the button/link                  css = .govuk-button[type="submit"]    #Save and continue
+    the user completes prereg project finances       ${hecpPreregAppName}   no
