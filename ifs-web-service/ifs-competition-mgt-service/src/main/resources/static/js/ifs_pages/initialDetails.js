@@ -71,7 +71,7 @@ IFS.competitionManagement.initialDetails = (function () {
       })
       jQuery('[name*="innovationAreaCategoryId"]').find('[disabled]:not([value=""])').removeAttr('disabled').removeAttr('aria-hidden')
       for (var section in disabledSections) {
-        jQuery('[name*="innovationAreaCategoryId"]:not([name="' + section + '"]) option[value="' + disabledSections[section] + '"]').attr({'disabled': 'disabled', 'aria-hidden': 'true'})
+        jQuery('[name*="innovationAreaCategoryId"]:not([name="' + section + '"]) option[value="' + disabledSections[section] + '"]').attr('disabled', 'disabled').attr('aria-hidden', 'true')
       }
     },
     fillInnovationAreas: function (currentAreas) {
