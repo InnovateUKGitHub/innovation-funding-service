@@ -27,6 +27,10 @@ public class CompetitionApplicationConfigResourceBuilder extends BaseBuilder<Com
         return withArraySetFieldByReflection("maximumFundingSought", maximumFundingSought);
     }
 
+    public CompetitionApplicationConfigResourceBuilder withIMSurveyRequired(boolean... imSurveyRequired) {
+        return withArraySetFieldByReflection("imSurveyRequired", imSurveyRequired);
+    }
+
     @Override
     protected CompetitionApplicationConfigResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionApplicationConfigResource>> actions) {
         return new CompetitionApplicationConfigResourceBuilder(actions);

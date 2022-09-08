@@ -83,14 +83,15 @@ public class GenericQuestionApplicationModelPopulator {
                                                        .withLastUpdatedByName(response.getUpdatedByUserName()));
 
         boolean imSurveyQuestion = applicantQuestion.getQuestion().getQuestionSetupType() == IMPACT_MANAGEMENT_SURVEY;
+        if (imSurveyQuestion) {
             long imQuestionId = questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), IMPACT_MANAGEMENT_SURVEY).getSuccess().getId();
             Optional<QuestionStatusResource> questionStatus = questionStatusRestService.getMarkedAsCompleteByQuestionApplicationAndOrganisation(imQuestionId, application.getId(), applicantQuestion.getLeadOrganisation().getId()).getSuccess();
-
-            if (imSurveyQuestion && questionStatus.isPresent()) {
+            if (questionStatus.isPresent()) {
                 viewModelBuilder.withLastUpdated(toUkTimeZone(questionStatus.get().getMarkedAsCompleteOn()))
                         .withLastUpdatedBy(questionStatus.get().getMarkedAsCompleteByUserId())
                         .withLastUpdatedByName(questionStatus.get().getMarkedAsCompleteByUserName());
             }
+        }
 
         boolean hideAssignButtons = !Boolean.TRUE.equals(question.isAssignEnabled());
 
