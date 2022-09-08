@@ -100,6 +100,7 @@ Lead applicant invites a team member to the application
 Lead applicant invites a partner organisation and completes project finances
     [Documentation]  IFS-12522
     Given log in as a different user                            &{lead_applicant_credentials}
+    And the user clicks the application tile if displayed
     And the user clicks the button/link                         link = ${hecpPreregAppName}
     When the lead invites already registered user               ${collaborator1_credentials["email"]}  ${hecpPreregCompName}
     Then Partner applicant completes prereg project finances    ${hecpPreregAppName}  ${collaborator1_credentials["email"]}  ${short_password}
@@ -107,6 +108,7 @@ Lead applicant invites a partner organisation and completes project finances
 Lead applicant completes the application sections
     [Arguments]  IFS-12077
     Given log in as a different user                                                &{lead_applicant_credentials}
+    And the user clicks the application tile if displayed
     And the user clicks the button/link                                             link = ${hecpPreregAppName}
     When the applicant completes Application Team                                   COMPLETE  steve.smith@empire.com
     And the user complete the work programme
