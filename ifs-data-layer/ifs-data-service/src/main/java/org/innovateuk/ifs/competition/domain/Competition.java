@@ -1097,11 +1097,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     @Override
-    public Boolean isImSurveyEnabled() {
-        return competitionApplicationConfig != null && competitionApplicationConfig.isImSurveyRequired();
-    }
-
-    @Override
     public ApplicationConfiguration getApplicationConfiguration() {
         return this;
     }

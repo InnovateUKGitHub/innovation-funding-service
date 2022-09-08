@@ -871,13 +871,13 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         return procurementMilestones;
     }
 
-    @Override
-    public Boolean isImSurveyEnabled() {
-        return competitionApplicationConfigResource.isImSurveyRequired();
-    }
-
     public void setProcurementMilestones(boolean procurementMilestones) {
         this.procurementMilestones = procurementMilestones;
+    }
+
+    @JsonIgnore
+    public Boolean isImSurveyEnabled() {
+        return competitionApplicationConfigResource.isImSurveyRequired();
     }
 
     @JsonIgnore

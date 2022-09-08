@@ -33,8 +33,6 @@ public interface ApplicationConfiguration {
 
     boolean isProcurementMilestones();
 
-    Boolean isImSurveyEnabled();
-
     default boolean isMaximumFundingLevelConstant(Supplier<OrganisationTypeEnum> organisationType, Supplier<Boolean> maximumFundingLevelOverridden) {
         return LOAN == getFundingType() ||
                 isFullyFunded() ||
