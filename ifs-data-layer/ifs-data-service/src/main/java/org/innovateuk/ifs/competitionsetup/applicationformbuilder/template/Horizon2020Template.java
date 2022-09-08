@@ -57,7 +57,7 @@ public class Horizon2020Template implements CompetitionTemplate {
                         )),
                 finances(),
                 supportingInformation()
-                        .withQuestions(Collections.singletonList(impactManagementSurvey())),
+                        .withQuestions(newArrayList(impactManagementSurvey())),
                 termsAndConditions()
         );
     }

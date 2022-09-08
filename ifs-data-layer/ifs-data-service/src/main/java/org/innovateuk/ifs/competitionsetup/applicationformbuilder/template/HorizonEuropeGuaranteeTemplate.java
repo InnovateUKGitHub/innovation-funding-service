@@ -70,7 +70,7 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                         .withQuestions(horizonEuropeDefaultQuestions()),
                 finances(),
                 supportingInformation()
-                        .withQuestions(Collections.singletonList(impactManagementSurvey())),
+                        .withQuestions(newArrayList(impactManagementSurvey())),
                 termsAndConditions()
         );
     }

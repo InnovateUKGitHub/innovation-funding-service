@@ -10,12 +10,10 @@ import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.*;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.GuidanceRowBuilder.aGuidanceRow;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aDefaultAssessedQuestion;
@@ -61,7 +59,7 @@ public class ProgrammeTemplate implements CompetitionTemplate {
                         .withQuestions(programmeDefaultQuestions()),
                 finances(),
                 supportingInformation()
-                        .withQuestions(Collections.singletonList(impactManagementSurvey())),
+                        .withQuestions(newArrayList(impactManagementSurvey())),
                 termsAndConditions()
         );
 

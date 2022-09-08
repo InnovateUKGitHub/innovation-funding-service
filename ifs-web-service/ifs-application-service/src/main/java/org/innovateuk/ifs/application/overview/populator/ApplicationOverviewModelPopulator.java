@@ -98,16 +98,13 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                 resolve(questions), resolve(processRoles), resolve(organisation), resolve(statuses),
                 resolve(completedSectionIds), resolve(completedSectionsByOrganisation), user);
 
-//        Map<Long, SectionResource> sectionsList = removeIMSurveySectionIfNotEnabled(data.getCompetition(), data.getSections());
-
-//        Set<ApplicationOverviewSectionViewModel> sectionViewModels = sectionsList
         Set<ApplicationOverviewSectionViewModel> sectionViewModels = data.getSections()
                 .values()
                 .stream()
                 .sorted(comparing(SectionResource::getPriority))
                 .filter(section -> section.getParentSection() == null)
                 .filter(section -> section.getType() != SectionType.KTP_ASSESSMENT)
-                .filter(section -> removeIMSurveySectionIfNotEnabled(data.getCompetition(), section) != null)
+                .filter(section -> removeIMSurveySectionIfNotEnabled(data.getCompetition(), section))
                 .filter(section -> !application.isEnabledForExpressionOfInterest() || section.isEnabledForPreRegistration())
                 .map(section -> sectionViewModel(section, data))
                 .collect(toCollection(LinkedHashSet::new));
@@ -115,18 +112,8 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         return new ApplicationOverviewViewModel(data.getUserProcessRole(), data.getCompetition(), application, sectionViewModels, application.hasBeenReopened(), application.getLastStateChangeDate());
     }
 
-//    private Map<Long, SectionResource> removeIMSurveySectionIfNotEnabled(CompetitionResource competition, Map<Long, SectionResource> sectionResource) {
-//        if (!competition.isImSurveyEnabled()){
-//            return sectionResource.entrySet().stream().filter(section -> section.getValue().getType() != SectionType.SUPPORTING_INFORMATION).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
-//        }
-//        return sectionResource;
-//    }
-
-    private SectionResource removeIMSurveySectionIfNotEnabled(CompetitionResource competition, SectionResource sectionResource) {
-        if (!competition.isImSurveyEnabled() && sectionResource.getType() == SectionType.SUPPORTING_INFORMATION){
-            return null;
-        }
-        return sectionResource;
+    private boolean removeIMSurveySectionIfNotEnabled(CompetitionResource competition, SectionResource sectionResource) {
+        return competition.isImSurveyEnabled() || sectionResource.getType() != SectionType.SUPPORTING_INFORMATION;
     }
 
     private ApplicationOverviewSectionViewModel sectionViewModel(SectionResource section, ApplicationOverviewData data) {
@@ -176,6 +163,9 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         switch (section.getType()) {
             case FINANCES:
                 messageCode = getFinanceSectionSubTitle(competition);
+                break;
+            case SUPPORTING_INFORMATION:
+                messageCode = "ifs.section.supportingInformation.description";
                 break;
             case PROJECT_DETAILS:
                 if (competition.isKtp()) {

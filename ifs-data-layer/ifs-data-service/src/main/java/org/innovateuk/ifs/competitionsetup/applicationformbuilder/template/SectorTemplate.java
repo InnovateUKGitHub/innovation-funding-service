@@ -67,7 +67,7 @@ public class SectorTemplate implements CompetitionTemplate {
                         .withQuestions(sectorDefaultQuestions()),
                 finances(),
                 supportingInformation()
-                        .withQuestions(Collections.singletonList(impactManagementSurvey())),
+                        .withQuestions(newArrayList(impactManagementSurvey())),
                 termsAndConditions()
         );
 
