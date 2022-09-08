@@ -51,8 +51,6 @@ public class ThirdPartyOfgemTemplate implements CompetitionTemplate {
                                 thirdPartyOfgemDefaultQuestions()
                         )),
                 finances(),
-                supportingInformation()
-                        .withQuestions(newArrayList(impactManagementSurvey())),
                 termsAndConditions()
         );
     }

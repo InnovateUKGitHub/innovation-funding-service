@@ -56,8 +56,6 @@ public class AtiTemplate implements CompetitionTemplate {
                 applicationQuestions()
                         .withQuestions(atiDefaultQuestions()),
                 finances(),
-                supportingInformation()
-                        .withQuestions(newArrayList(impactManagementSurvey())),
                 termsAndConditions()
         );
     }

@@ -66,7 +66,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
     private final boolean loansPartBEnabled;
     private final String salesForceURL;
     private final Long competitionId;
-    private final boolean imSurveyEnabled;
+    private final boolean imSurveyQuestion;
 
     public GenericQuestionApplicationViewModel(long applicationId,
                                                String competitionName,
@@ -111,7 +111,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
                                                boolean loansPartBEnabled,
                                                String salesForceURL,
                                                Long competitionId,
-                                               boolean imSurveyEnabled) {
+                                               boolean imSurveyQuestion) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.questionId = questionId;
@@ -155,7 +155,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         this.loansPartBEnabled = loansPartBEnabled;
         this.salesForceURL = salesForceURL;
         this.competitionId = competitionId;
-        this.imSurveyEnabled = imSurveyEnabled;
+        this.imSurveyQuestion = imSurveyQuestion;
     }
 
     @Override
@@ -362,8 +362,8 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         return leadOrganisationCompaniesHouseNumber;
     }
 
-    public boolean isImSurveyEnabled() {
-        return imSurveyEnabled;
+    public boolean isImSurveyQuestion() {
+        return imSurveyQuestion;
     }
 
     @JsonIgnore
@@ -431,7 +431,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         private boolean loansPartBEnabled;
         private String salesForceURL;
         private Long competitionId;
-        private boolean imSurveyEnabled;
+        private boolean imSurveyQuestion;
 
         private GenericQuestionApplicationViewModelBuilder() {
         }
@@ -655,8 +655,8 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
             return this;
         }
 
-        public GenericQuestionApplicationViewModelBuilder withIMSurveyEnabled(boolean imSurveyEnabled) {
-            this.imSurveyEnabled = imSurveyEnabled;
+        public GenericQuestionApplicationViewModelBuilder withIMSurveyQuestion(boolean imSurveyQuestion) {
+            this.imSurveyQuestion = imSurveyQuestion;
             return this;
         }
 
@@ -667,7 +667,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
                     appendices, maximumAppendices, maximumAppendixSize, templateDocumentFormInputId, templateDocumentTitle, templateDocumentFilename,
                     templateDocumentResponseFilename, templateDocumentResponseFileEntryId, lastUpdated, lastUpdatedByName, lastUpdatedBy,
                     open, complete, leadApplicant, assignButtonsViewModel, multipleChoiceFormInputId, multipleChoiceOptions, selectedMultipleChoiceOption,
-                    leadOrganisationName, leadOrganisationCompaniesHouseNumber, loansPartBEnabled, salesForceURL, competitionId, imSurveyEnabled);
+                    leadOrganisationName, leadOrganisationCompaniesHouseNumber, loansPartBEnabled, salesForceURL, competitionId, imSurveyQuestion);
         }
     }
 }

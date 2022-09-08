@@ -9,6 +9,9 @@ import org.innovateuk.ifs.application.forms.questions.generic.viewmodel.GenericQ
 import org.innovateuk.ifs.application.populator.AssignButtonsPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -30,6 +33,7 @@ import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.forms.questions.generic.viewmodel.GenericQuestionApplicationViewModel.GenericQuestionApplicationViewModelBuilder.aGenericQuestionApplicationViewModel;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.IMPACT_MANAGEMENT_SURVEY;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 
 @Component
@@ -37,6 +41,12 @@ public class GenericQuestionApplicationModelPopulator {
 
     @Autowired
     private AssignButtonsPopulator assignButtonsPopulator;
+
+    @Autowired
+    private QuestionStatusRestService questionStatusRestService;
+
+    @Autowired
+    private QuestionRestService questionRestService;
 
     @Value("${ifs.loan.partb.enabled}")
     private boolean ifsLoanPartBEnabled;
@@ -72,6 +82,16 @@ public class GenericQuestionApplicationModelPopulator {
                                                        .withLastUpdatedBy(response.getUpdatedByUser())
                                                        .withLastUpdatedByName(response.getUpdatedByUserName()));
 
+        boolean imSurveyQuestion = applicantQuestion.getQuestion().getQuestionSetupType() == IMPACT_MANAGEMENT_SURVEY;
+            long imQuestionId = questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), IMPACT_MANAGEMENT_SURVEY).getSuccess().getId();
+            Optional<QuestionStatusResource> questionStatus = questionStatusRestService.getMarkedAsCompleteByQuestionApplicationAndOrganisation(imQuestionId, application.getId(), applicantQuestion.getLeadOrganisation().getId()).getSuccess();
+
+            if (imSurveyQuestion && questionStatus.isPresent()) {
+                viewModelBuilder.withLastUpdated(toUkTimeZone(questionStatus.get().getMarkedAsCompleteOn()))
+                        .withLastUpdatedBy(questionStatus.get().getMarkedAsCompleteByUserId())
+                        .withLastUpdatedByName(questionStatus.get().getMarkedAsCompleteByUserName());
+            }
+
         boolean hideAssignButtons = !Boolean.TRUE.equals(question.isAssignEnabled());
 
         return viewModelBuilder.withApplicationId(application.getId())
@@ -95,7 +115,7 @@ public class GenericQuestionApplicationModelPopulator {
                 .withLoansPartBEnabled(ifsLoanPartBEnabled)
                 .withLoansFormQuestionsSalesForceURL(salesForceURL)
                 .withCompetitionId(competition.getId())
-                .withIMSurveyEnabled(competition.isImSurveyEnabled())
+                .withIMSurveyQuestion(imSurveyQuestion)
                 .build();
     }
 

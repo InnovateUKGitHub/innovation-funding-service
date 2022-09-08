@@ -66,8 +66,6 @@ public class DirectAwardTemplate implements CompetitionTemplate {
                                 directAwardDefaultQuestion()
                         )),
                 finances(),
-                supportingInformation()
-                        .withQuestions(newArrayList(impactManagementSurvey())),
                 termsAndConditions()
         );
     }

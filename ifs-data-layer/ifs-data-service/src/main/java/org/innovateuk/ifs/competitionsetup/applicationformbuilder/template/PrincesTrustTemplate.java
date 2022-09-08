@@ -45,8 +45,6 @@ public class PrincesTrustTemplate implements CompetitionTemplate {
                         )),
                 applicationQuestions()
                         .withQuestions(princesTrustDefaultQuestions()),
-                supportingInformation()
-                        .withQuestions(newArrayList(impactManagementSurvey())),
                 termsAndConditions()
         );
 

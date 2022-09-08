@@ -66,8 +66,6 @@ public class ApcTemplate implements CompetitionTemplate {
                 applicationQuestions()
                         .withQuestions(apcDefaultQuestions()),
                 finances(),
-                supportingInformation()
-                        .withQuestions(newArrayList(impactManagementSurvey())),
                 termsAndConditions()
         );
     }

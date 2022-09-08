@@ -55,8 +55,6 @@ public class EoiTemplate implements CompetitionTemplate {
                         )),
                 applicationQuestions()
                         .withQuestions(eoiDefaultQuestions()),
-                supportingInformation()
-                        .withQuestions(newArrayList(impactManagementSurvey())),
                 eoiTermsAndConditions()
         );
 

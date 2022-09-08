@@ -69,8 +69,6 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                 applicationQuestions()
                         .withQuestions(horizonEuropeDefaultQuestions()),
                 finances(),
-                supportingInformation()
-                        .withQuestions(newArrayList(impactManagementSurvey())),
                 termsAndConditions()
         );
     }

@@ -56,8 +56,6 @@ public class GenericTemplate implements CompetitionTemplate {
                                 genericQuestion()
                         )),
                 finances(),
-                supportingInformation()
-                        .withQuestions(newArrayList(impactManagementSurvey())),
                 termsAndConditions()
         );
     }
