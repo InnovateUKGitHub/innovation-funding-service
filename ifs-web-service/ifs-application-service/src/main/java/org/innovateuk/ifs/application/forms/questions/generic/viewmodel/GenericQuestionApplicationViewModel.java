@@ -66,6 +66,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
     private final boolean loansPartBEnabled;
     private final String salesForceURL;
     private final Long competitionId;
+    private boolean isExpressionOfInterestApplication;
     private final boolean imSurveyQuestion;
 
     public GenericQuestionApplicationViewModel(long applicationId,
@@ -111,6 +112,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
                                                boolean loansPartBEnabled,
                                                String salesForceURL,
                                                Long competitionId,
+                                               boolean isExpressionOfInterestApplication,
                                                boolean imSurveyQuestion) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
@@ -155,6 +157,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         this.loansPartBEnabled = loansPartBEnabled;
         this.salesForceURL = salesForceURL;
         this.competitionId = competitionId;
+        this.isExpressionOfInterestApplication = isExpressionOfInterestApplication;
         this.imSurveyQuestion = imSurveyQuestion;
     }
 
@@ -318,6 +321,10 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
     }
 
     public boolean shouldDisplayQuestionNumber() {
+        if (isExpressionOfInterestApplication()) {
+            return false;
+        }
+
         return questionType == ASSESSED_QUESTION;
     }
 
@@ -379,6 +386,10 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         return loansPartBEnabled;
     }
 
+    public boolean isExpressionOfInterestApplication() {
+        return isExpressionOfInterestApplication;
+    }
+
     @JsonIgnore
     public String getLoansQuestionsFormSalesForceURL() {
         return salesForceURL + "?" + "CompanyNumber=" + leadOrganisationCompaniesHouseNumber + "&" +
@@ -431,6 +442,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         private boolean loansPartBEnabled;
         private String salesForceURL;
         private Long competitionId;
+        private boolean isExpressionOfInterestApplication;
         private boolean imSurveyQuestion;
 
         private GenericQuestionApplicationViewModelBuilder() {
@@ -655,19 +667,64 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
             return this;
         }
 
+        public GenericQuestionApplicationViewModelBuilder withIsExpressionOfInterestApplication(boolean isExpressionOfInterestApplication) {
+            this.isExpressionOfInterestApplication = isExpressionOfInterestApplication;
+            return this;
+        }
+
         public GenericQuestionApplicationViewModelBuilder withIMSurveyQuestion(boolean imSurveyQuestion) {
             this.imSurveyQuestion = imSurveyQuestion;
             return this;
         }
 
         public GenericQuestionApplicationViewModel build() {
-            return new GenericQuestionApplicationViewModel(applicationId, competitionName, questionId, currentUser, applicationName,
-                    questionName, questionNumber, questionSubtitle, questionDescription, questionDescription2, questionGuidanceTitle, questionGuidance,
-                    questionType, questionHasMultipleStatuses, textAreaFormInputId, wordCount, wordsLeft, appendixFormInputId, appendixGuidance, appendixAllowedFileTypes,
-                    appendices, maximumAppendices, maximumAppendixSize, templateDocumentFormInputId, templateDocumentTitle, templateDocumentFilename,
-                    templateDocumentResponseFilename, templateDocumentResponseFileEntryId, lastUpdated, lastUpdatedByName, lastUpdatedBy,
-                    open, complete, leadApplicant, assignButtonsViewModel, multipleChoiceFormInputId, multipleChoiceOptions, selectedMultipleChoiceOption,
-                    leadOrganisationName, leadOrganisationCompaniesHouseNumber, loansPartBEnabled, salesForceURL, competitionId, imSurveyQuestion);
+            return new GenericQuestionApplicationViewModel(
+                    applicationId,
+                    competitionName,
+                    questionId,
+                    currentUser,
+                    applicationName,
+                    questionName,
+                    questionNumber,
+                    questionSubtitle,
+                    questionDescription,
+                    questionDescription2,
+                    questionGuidanceTitle,
+                    questionGuidance,
+                    questionType,
+                    questionHasMultipleStatuses,
+                    textAreaFormInputId,
+                    wordCount,
+                    wordsLeft,
+                    appendixFormInputId,
+                    appendixGuidance,
+                    appendixAllowedFileTypes,
+                    appendices,
+                    maximumAppendices,
+                    maximumAppendixSize,
+                    templateDocumentFormInputId,
+                    templateDocumentTitle,
+                    templateDocumentFilename,
+                    templateDocumentResponseFilename,
+                    templateDocumentResponseFileEntryId,
+                    lastUpdated,
+                    lastUpdatedByName,
+                    lastUpdatedBy,
+                    open,
+                    complete,
+                    leadApplicant,
+                    assignButtonsViewModel,
+                    multipleChoiceFormInputId,
+                    multipleChoiceOptions,
+                    selectedMultipleChoiceOption,
+                    leadOrganisationName,
+                    leadOrganisationCompaniesHouseNumber,
+                    loansPartBEnabled,
+                    salesForceURL,
+                    competitionId,
+                    isExpressionOfInterestApplication,
+                    imSurveyQuestion
+            );
         }
     }
 }

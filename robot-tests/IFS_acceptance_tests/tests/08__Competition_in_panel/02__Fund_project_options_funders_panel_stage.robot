@@ -36,18 +36,26 @@ ${unsuccMessage}                     We are sorry to annouce that your applicati
 ${successMessage}                    We are happy to inform you that your application is eligible for funding.
 
 *** Test Cases ***
+Comp Admin can set the notification email to include assessor average score
+    [Documentation]  IFS-7369
+    Given log in as a different user                       &{Comp_admin1_credentials}
+    And the user navigates to the page                     ${CA_Live}
+    When the user clicks the button/link                   link = ${assessorScoreComp}
+    And the user set assessor score notification to yes
+    Then the user should see the element                  jQuery = dt:contains("Include the average assessor score in funding decision notifications?") + dd:contains("Yes")
+
 Funding decision buttons should be disabled
     [Documentation]    INFUND-2601
     [Tags]
-    Given the user navigates to the page    ${funders_panel_competition_url}/funding
+    Given the user navigates to the page                                        ${funders_panel_competition_url}/funding
     Then the user should see the options to make funding decisions disabled
 
 An application is selected and the buttons become enabled
     [Documentation]    INFUND-7377
     [Tags]
-    When the user selects the checkbox      app-row-2
+    When the user selects the checkbox                                          app-row-2
     Then the user should see the options to make funding decisions enabled
-    When the user unselects the checkbox    app-row-2
+    When the user unselects the checkbox                                        app-row-2
     Then the user should see the options to make funding decisions disabled
 
 Internal user puts the application on hold
@@ -58,18 +66,18 @@ Internal user puts the application on hold
 Proj Finance user can send Fund Decision notification
     [Documentation]  INFUND-7376 INFUND-7377 INFUND-8813, IFS-3560
     [Tags]
-    [Setup]  log in as a different user      &{internal_finance_credentials}
+    [Setup]  log in as a different user                                             &{internal_finance_credentials}
     Given the user should see write and send email button is disabled
     When the user send funding decision email for all applicant
-    Then the user should see a field and summary error  Please enter the email message.
+    Then the user should see a field and summary error                              Please enter the email message.
     And the user cancels the process and needs to re-select the recipients
-    When the internal sends the descision notification email to all applicants  ${onHoldMessage}
-    Then the user should see the element     jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("Sent") ~ td:contains("${today}")
+    When the internal sends the descision notification email to all applicants      ${onHoldMessage}
+    Then the user should see the element                                            jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("Sent") ~ td:contains("${today}")
 
 Internal user can filter notified applications
     [Documentation]  INFUND-7376 INFUND-8065
     [Tags]
-    Given the user navigates to the page       ${funders_panel_competition_url}/manage-funding-applications
+    Given the user navigates to the page                        ${funders_panel_competition_url}/manage-funding-applications
     Then the user filter applications by application number
     And the user filter applications by sent email status
     And the user filter applications by sent email status
@@ -83,9 +91,9 @@ External lead applicant and collaborators reads their funding decision emails
 Unsuccessful Funding Decision
     [Documentation]  INFUND-7376 INFUND-7377
     [Tags]
-    Given the internal user marks the application as  Unsuccessful  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  1
-    When the internal user sends an email notification  Unsuccessful  ${application1Subject}  ${unsuccMessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
-    Then the external user reads his email and can see the correct status  Unsuccessful  ${application1Subject}  ${unsuccMessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${test_mailbox_one}+fundsuccess@gmail.com
+    Given the internal user marks the application as                        Unsuccessful  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  1
+    When the internal user sends an email notification                      Unsuccessful  ${application1Subject}  ${unsuccMessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
+    Then the external user reads his email and can see the correct status   Unsuccessful  ${application1Subject}  ${unsuccMessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${test_mailbox_one}+fundsuccess@gmail.com
 
 Successful Funding Decision
     [Documentation]  INFUND-7376 INFUND-7377  IFS-2903
@@ -111,46 +119,39 @@ Successful applications are turned into Project
     Given log in as a different user      ${test_mailbox_one}+fundsuccess@gmail.com  ${short_password}
     Then the user should see the element  jQuery = .projects-in-setup li:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
 
-Comp Admin can set the notification email to include assessor average score
-    [Documentation]  IFS-7369
-    Given log in as a different user                       &{Comp_admin1_credentials}
-    And the user navigates to the page                     ${CA_Live}
-    When the user clicks the button/link                  link = ${assessorScoreComp}
-    And the user set assessor score notification to yes
-    Then the user should see the element                  jQuery = dt:contains("Include the average assessor score in funding decision notifications?") + dd:contains("Yes")
-
 Internal user can see the comp in Project Setup once applicant is notified
     [Documentation]  IFS-1620
     [Tags]
-    Given the user navigates to the page                   ${CA_Live}
-    When the user clicks the button/link                   jQuery = a:contains("Project setup")
-    And the user should see the element                    jQuery = h2:not(".govuk-tabs__title"):contains("Project setup")
-    Then the user clicks the button/link                   link = ${FUNDERS_PANEL_COMPETITION_NAME}
-    And the user should be redirected to the correct page  ${Notified_Application_Competition_Status}
+    Given log in as a different user                        &{Comp_admin1_credentials}
+    And the user navigates to the page                      ${CA_Live}
+    When the user clicks the button/link                    jQuery = a:contains("Project setup")
+    And the user should see the element                     jQuery = h2:not(".govuk-tabs__title"):contains("Project setup")
+    Then the user clicks the button/link                    link = ${FUNDERS_PANEL_COMPETITION_NAME}
+    And the user should be redirected to the correct page   ${Notified_Application_Competition_Status}
 
 Once all final decisions have been made and emails are sent Comp moves to Inform status
     [Documentation]  INFUND-8854
     [Tags]
-    Given the internal user marks the application as     Unsuccessful  ${FUNDERS_PANEL_APPLICATION_2_TITLE}  2
-    And the internal user sends an email notification    Unsuccessful  ${application2Subject}  ${unsuccMessage}  ${FUNDERS_PANEL_APPLICATION_2_TITLE}  ${FUNDERS_PANEL_APPLICATION_2_NUMBER}
-    Then the external user reads his email and can see the correct status  Unsuccessful  ${application2Subject}  ${unsuccMessage}  ${FUNDERS_PANEL_APPLICATION_2_TITLE}   worth.email.test.two+fundfailure@gmail.com
-    Given log in as a different user                     &{Comp_admin1_credentials}
-    When the user navigates to the page                  ${CA_Live}
-    Then the user should see the element                 jQuery = section:contains("Inform") > ul:contains("${FUNDERS_PANEL_COMPETITION_NAME}")
+    Given the internal user marks the application as                        Unsuccessful  ${FUNDERS_PANEL_APPLICATION_2_TITLE}  2
+    And the internal user sends an email notification                       Unsuccessful  ${application2Subject}  ${unsuccMessage}  ${FUNDERS_PANEL_APPLICATION_2_TITLE}  ${FUNDERS_PANEL_APPLICATION_2_NUMBER}
+    Then the external user reads his email and can see the correct status   Unsuccessful  ${application2Subject}  ${unsuccMessage}  ${FUNDERS_PANEL_APPLICATION_2_TITLE}   worth.email.test.two+fundfailure@gmail.com
+    Given log in as a different user                                        &{Comp_admin1_credentials}
+    When the user navigates to the page                                     ${CA_Live}
+    Then the user should see the element                                    jQuery = section:contains("Inform") > ul:contains("${FUNDERS_PANEL_COMPETITION_NAME}")
 
 Notification email template includes assessor score
     [Documentation]  IFS-7370
     [Setup]  Assess the application and move to in notification
-    Given the user clicks the button/link  link = Manage funding notifications
-    When the user selects the checkbox     app-row-${assessorScoreApplicationId}
-    And the user clicks the button/link    id = write-and-send-email
-    Then the user should see the element   jQuery = p:contains("Average assessor score")
+    Given the user clicks the button/link                           link = Manage funding notifications
+    When the user selects the checkbox                              app-row-${assessorScoreApplicationId}
+    And the user clicks the button/link                             id = write-and-send-email
+    Then the user should see the element                            jQuery = p:contains("Average assessor score")
 
 Email to external user contains average assessor score
     [Documentation]  IFS-7370
-    Given the user clicks the button/link        jQuery = button:contains("Send notification")[data-js-modal = "send-to-all-applicants-modal"]
-    When the user clicks the button/link         jQuery = .send-to-all-applicants-modal button:contains("Send email")
-    Then the user reads his email                nancy.peterson@gmail.com   Important message about your application '${assessorScoreApplication}' for the competition '${assessorScoreComp}'  Average assessor score
+    Given the user clicks the button/link       jQuery = button:contains("Send notification")[data-js-modal = "send-to-all-applicants-modal"]
+    When the user clicks the button/link        jQuery = .send-to-all-applicants-modal button:contains("Send email")
+    Then the user reads his email               nancy.peterson@gmail.com   Important message about your application '${assessorScoreApplication}' for the competition '${assessorScoreComp}'  Average assessor score
 
 *** Keywords ***
 Custom Suite Setup

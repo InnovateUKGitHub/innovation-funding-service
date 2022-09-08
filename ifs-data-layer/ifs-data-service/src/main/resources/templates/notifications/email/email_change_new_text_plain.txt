@@ -3,6 +3,6 @@
 Dear ${notificationTarget.name},
 We recently received a request to change your email to this address on the Innovation Funding Service.
 This is now completed and we will not use your old email address.
-For any queries about your account please contact the support desk at support@innovateuk.ukri.org
+For any queries about your account please contact the support desk at support@iuk.ukri.org
 <@layout.senderPlainText />
 </@layout.defaultPlainText>
