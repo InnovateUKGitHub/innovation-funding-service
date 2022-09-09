@@ -18,6 +18,7 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -47,6 +48,9 @@ public class GenericQuestionApplicationModelPopulator {
 
     @Autowired
     private QuestionRestService questionRestService;
+
+    @Autowired
+    private ProcessRoleRestService processRoleRestService;
 
     @Value("${ifs.loan.partb.enabled}")
     private boolean ifsLoanPartBEnabled;
@@ -85,12 +89,12 @@ public class GenericQuestionApplicationModelPopulator {
         boolean imSurveyQuestion = applicantQuestion.getQuestion().getQuestionSetupType() == IMPACT_MANAGEMENT_SURVEY;
         if (imSurveyQuestion) {
             long imQuestionId = questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), IMPACT_MANAGEMENT_SURVEY).getSuccess().getId();
-            Optional<QuestionStatusResource> questionStatus = questionStatusRestService.getMarkedAsCompleteByQuestionApplicationAndOrganisation(imQuestionId, application.getId(), applicantQuestion.getLeadOrganisation().getId()).getSuccess();
-            if (questionStatus.isPresent()) {
-                viewModelBuilder.withLastUpdated(toUkTimeZone(questionStatus.get().getMarkedAsCompleteOn()))
-                        .withLastUpdatedBy(questionStatus.get().getMarkedAsCompleteByUserId())
-                        .withLastUpdatedByName(questionStatus.get().getMarkedAsCompleteByUserName());
-            }
+            long currentUserId = applicantQuestion.getCurrentUser().getId();
+            long currentUserOrganisationId = processRoleRestService.findProcessRole(currentUserId, application.getId()).getSuccess().getOrganisationId();
+            Optional<QuestionStatusResource> questionStatusResource = questionStatusRestService.getMarkedAsCompleteByQuestionApplicationAndOrganisation(imQuestionId, application.getId(), currentUserOrganisationId).getSuccess();
+            questionStatusResource.ifPresent(statusResource -> viewModelBuilder.withLastUpdated(toUkTimeZone(statusResource.getMarkedAsCompleteOn()))
+                    .withLastUpdatedBy(statusResource.getMarkedAsCompleteByUserId())
+                    .withLastUpdatedByName(statusResource.getMarkedAsCompleteByUserName()));
         }
 
         boolean hideAssignButtons = !Boolean.TRUE.equals(question.isAssignEnabled());

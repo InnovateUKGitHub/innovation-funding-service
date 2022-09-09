@@ -314,7 +314,7 @@
                     </div>
                     <div class="form-footer__info" aria-live="polite" aria-atomic="true" role="status">
                         <th:block th:if="${model.hasResponse() or (model.imSurveyQuestion and model.complete)}">
-                            <span class="update-label">Last updated: </span>
+                            <span class="update-label" th:text="${model.imSurveyQuestion? 'Last completed:' : 'Last updated:'}">Last updated:</span>
                             <th:block th:insert="question-type/form-elements :: updateTimeDetails" th:with="updateDate=${model.lastUpdated},lastUpdatedText=${model.lastUpdatedText}, applicationId=${model.applicationId}" />
                         </th:block>
                     </div>
