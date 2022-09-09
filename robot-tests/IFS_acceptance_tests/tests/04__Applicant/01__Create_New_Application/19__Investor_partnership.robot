@@ -7,6 +7,8 @@ Documentation     IFS-7213  Investor Partnerships Funding type & T&Cs
 ...
 ...               IFS-9214 Add dual T&Cs to Subsidy Control Competitions
 ...
+...               IFS-12827 Investor Partnerships - Update to terms and conditions
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -39,23 +41,22 @@ Edit view of initial details
     [Teardown]   navigate to comp setup of investor comp
 
 Creating a new investor comp points to the correct T&C
-    [Documentation]  IFS-7213
+    [Documentation]  IFS-7213  IFS-12827
     Given the user fills in initial details
-    When the user clicks the button/link                     link = Terms and conditions
-    Then the user sees that the radio button is selected     termsAndConditionsId  31
+    When the user clicks the button/link        link = Terms and conditions
+    Then the user should see the element        jQuery = [name="termsAndConditionsId"]:checked ~ label:contains("Investor Partnerships")
 
 The Investor partnership t&c's are correct
     [Documentation]  IFS-7213
     When the user clicks the button/link     link = Investor Partnerships (opens in a new window)
-    And select window                        title = Award terms and conditions - Innovation Funding Service
-    Then the user should see the element     jQuery = h1:contains("Terms and conditions of an Innovate UK investor partnerships competition")
-    And close window
-    And select window                        title = Competition terms and conditions - Innovation Funding Service
+    And select window                        title = Terms and conditions for Investor Partners - Innovation Funding Service
+    Then the user should see the element     jQuery = h1:contains("Terms and conditions for Investor Partners")
+    [Teardown]  the user closes the last opened tab
 
 T&c's can be confirmed
-    [Documentation]  IFS-7213  IFS-9214
+    [Documentation]  IFS-7213  IFS-9214  IFS-12827
     Given the user clicks the button/link      jQuery = button:contains("Done")
-    When the user selects the radio button     termsAndConditionsId  31
+    When the user clicks the button twice      jQuery = label:contains("Investor Partnerships")
     And the user clicks the button/link        jQuery = button:contains("Done")
     And the user should see the element        jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Investor Partnerships")
     And the user should see the element        jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Investor Partnerships")
