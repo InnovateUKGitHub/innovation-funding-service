@@ -15,7 +15,7 @@ spec:
         app: mail
     spec:
       containers:
-        - image: docker-ifs.devops.innovateuk.org/snapshots/ifs-mail-sink:ARCHIVE-BUILDBASEIMAGESTEST0-SKAFFOLDBUILD-52_4bc99b61956c765ad3ff84d5284941fc228b46bc@sha256:c0b1da05d1186727cad8c1735645f3f30db0b2b787d110ccf9be52d53da3330c
+        - image: docker-ifs.devops.innovateuk.org/releases/ifs-mail-sink:9_9_2022@sha256:927eb02fb38b92da982f9fd17fc0ae3c6b136de6531d30ba4096874f9d0e7d0f
           name: mail
           imagePullPolicy: IfNotPresent
           envFrom:
