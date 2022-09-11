@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.review.populator.ReviewAndSubmitViewModelPopulator;
 import org.innovateuk.ifs.application.review.viewmodel.ReviewAndSubmitViewModel;
 import org.innovateuk.ifs.application.review.viewmodel.TrackViewModel;
+import org.innovateuk.ifs.application.service.ApplicationEoiEvidenceResponseRestService;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
@@ -17,6 +18,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.CovidType;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.horizon.service.HorizonWorkProgrammeRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -34,6 +37,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.lang.Boolean.TRUE;
@@ -62,6 +66,11 @@ public class ReviewAndSubmitController {
     @Autowired
     private HorizonWorkProgrammeRestService horizonWorkProgrammeRestService;
 
+    @Autowired
+    private FileEntryRestService fileEntryRestService;
+    @Autowired
+    private ApplicationEoiEvidenceResponseRestService applicationEoiEvidenceResponseRestService;
+
     @Value("${ifs.early.metrics.url}")
     private String earlyMetricsUrl;
 
@@ -81,6 +90,16 @@ public class ReviewAndSubmitController {
 
 
         return "application/review-and-submit";
+    }
+
+    @PostMapping("/{applicationId}/eoi-evidence-response/{eoiEvidenceResponseId}")
+    public String deleteEoiEvidenceResponse(@PathVariable long applicationId,
+                                    @PathVariable long eoiEvidenceResponseId) {
+
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+        applicationEoiEvidenceResponseRestService.delete(application.getApplicationEoiEvidenceResponseResource()).getSuccess();
+
+        return "redirect:/application/" + applicationId + "/track";
     }
 
     @SecuredBySpring(value = "APPLICATION_SUBMIT", description = "Applicants can submit their applications.")
@@ -270,6 +289,12 @@ public class ReviewAndSubmitController {
             return "redirect:/application/" + applicationId;
         }
 
+        String eoiEvidenceResponseFileName = Optional.ofNullable(application.getApplicationEoiEvidenceResponseResource().getFileEntryId())
+                .map(fileEntryRestService::findOne)
+                .flatMap(RestResult::getOptionalSuccessObject)
+                .map(FileEntryResource::getName)
+                .orElse(null);
+
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         model.addAttribute("model", new TrackViewModel(
@@ -277,7 +302,8 @@ public class ReviewAndSubmitController {
                 application,
                 earlyMetricsUrl,
                 application.getCompletion(),
-                canReopenApplication(application, user, competition)
+                canReopenApplication(application, user, competition),
+                eoiEvidenceResponseFileName
         ));
         return getTrackingPage(competition, application);
     }

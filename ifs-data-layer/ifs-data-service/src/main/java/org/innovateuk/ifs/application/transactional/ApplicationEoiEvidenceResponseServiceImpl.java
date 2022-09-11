@@ -93,4 +93,20 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
                     }
                 });
     }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> delete(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource) {
+        Long applicationId = applicationEoiEvidenceResponseResource.getApplicationId();
+        return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
+                .andOnSuccess(application -> {
+                    Optional<ApplicationEoiEvidenceResponse> optionalApplicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.findOneByApplicationId(application.getId());
+                    if (optionalApplicationEoiEvidenceResponse.isPresent()) {
+                        ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = optionalApplicationEoiEvidenceResponse.get();
+                        applicationEoiEvidenceResponseRepository.delete(applicationEoiEvidenceResponse);
+                    }
+
+                    return serviceFailure(CommonFailureKeys.APPLICATION_UNABLE_TO_FIND_UPLOADED_EOI_EVIDENCE);
+                });
+    }
 }

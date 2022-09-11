@@ -16,17 +16,20 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
     private String earlyMetricsUrl;
     private BigDecimal completedQuestionsPercentage;
     private boolean reopenLinkVisible;
+    private String eoiEvidenceFileName;
 
     public TrackViewModel(CompetitionResource currentCompetition,
                           ApplicationResource currentApplication,
                           String earlyMetricsUrl,
                           BigDecimal completedQuestionsPercentage,
-                          boolean reopenLinkVisible) {
+                          boolean reopenLinkVisible,
+                          String eoiEvidenceFileName) {
         this.currentCompetition = currentCompetition;
         this.currentApplication = currentApplication;
         this.earlyMetricsUrl = earlyMetricsUrl;
         this.completedQuestionsPercentage = completedQuestionsPercentage;
         this.reopenLinkVisible = reopenLinkVisible;
+        this.eoiEvidenceFileName = eoiEvidenceFileName;
     }
 
     @Override
@@ -69,6 +72,10 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
 
     public void setCompletedQuestionsPercentage(BigDecimal completedQuestionsPercentage) {
         this.completedQuestionsPercentage = completedQuestionsPercentage;
+    }
+
+    public String getEoiEvidenceFileName() {
+        return eoiEvidenceFileName;
     }
 
     public boolean isReopenLinkVisible() {
