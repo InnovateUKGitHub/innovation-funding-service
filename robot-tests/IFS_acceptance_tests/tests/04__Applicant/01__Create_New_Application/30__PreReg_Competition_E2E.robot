@@ -27,6 +27,8 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...
 ...               IFS-12522 HECP Phase 2 - Document upload - Dashboard
 ...
+...               IFS-12568 HECP Phase 2 - Document upload - Internal view
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -173,18 +175,21 @@ Internal users can see expression of interest statistics
     When the user clicks the button/link        link = Applications: All, submitted, expression of interest, ineligible
     Then the user should see the element        jQuery = .highlight-panel:contains("Expressions of interest") span:contains("1")
 
-Internal users can see submitted expression of interest applications
-    [Documentation]  IFS-12176
+Internal users can see submitted expression of interest applications without checkbox when the eveidence is not uploaded
+    [Documentation]  IFS-12176  IFS-12568
     When the user clicks the button/link        link = Expressions of interest
     Then the user should see the element        jQuery = td:contains("${preregApplicationID}") + td:contains("${hecpPreregAppName}")
     And the user should see the element         jQuery = .highlight-panel:contains("Expressions of interest") span:contains("1")
+    And the user should not see the element     jQuery = label[for = "app-row-1"]
 
-Internal user submit the EOI applications funding decision
-    [Documentation]  IFS-12265
+Internal user submit the EOI applications funding decision after evidence is uploaded
+    [Documentation]  IFS-12265  IFS-12568
     Given Existing user creates and submits new application for unsuccessful EOI journey
     And Requesting application ID of unsuccessful prereg application
+    When Update application evidence has uploaded                                           24  ${preregApplicationID}  200
+    And Update application evidence has uploaded                                            25  ${unSuccessfulPreRegApplicationID}  201
     And Log in as a different user                                                          &{Comp_admin1_credentials}
-    When Internal user marks the EOI as successful/unsuccessful                             ${unSuccessPreregAppName}   EOI_REJECTED
+    And Internal user marks the EOI as successful/unsuccessful                              ${unSuccessPreregAppName}   EOI_REJECTED
     And Internal user marks the EOI as successful/unsuccessful                              ${hecpPreregAppName}   EOI_APPROVED
     Then the user should see the element                                                    jQuery = td:contains("${preregApplicationID}")+td:contains("${hecpPreregAppName}")+td:contains("Empire Ltd")+td:contains("Successful")
     And the user should see the element                                                     jQuery = td:contains("${unSuccessfulPreRegApplicationID}")+td:contains("${unSuccessPreregAppName}")+td:contains("Empire Ltd")+td:contains("Unsuccessful")
@@ -502,3 +507,7 @@ Partner applicant completes prereg project finances
     logging in and error checking                    ${collaboratorEmail}  ${collaboratorPassword}
     the user clicks the button/link                  css = .govuk-button[type="submit"]    #Save and continue
     the user completes prereg project finances       ${hecpPreregAppName}   no
+
+Update application evidence has uploaded
+    [Arguments]  ${dbValue}  ${applicationID}  ${fileID}
+    execute sql string    INSERT INTO `ifs`.`application_eoi_evidence_response` (`id`, `application_id`, `organisation_id`, `file_entry_id`) VALUES ('${dbValue}', '${applicationID}', '21', '${fileID}');
