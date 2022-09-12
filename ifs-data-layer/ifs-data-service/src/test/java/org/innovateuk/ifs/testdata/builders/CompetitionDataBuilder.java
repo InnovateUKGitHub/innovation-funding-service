@@ -213,15 +213,17 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                         new MultipleChoiceOptionResource("I"), new MultipleChoiceOptionResource("J"), new MultipleChoiceOptionResource("K")));
                 questionSetupCompetitionService.update(manyAnswers);
             }
+        });
+    }
 
-            if(data.getCompetition().isImSurveyEnabled()) {
-                SectionResource termsAndConditionsSection = getTermsAndConditionsSection(data.getCompetition());
-                int termsAndConditionsCurrentPriority = termsAndConditionsSection.getPriority();
-                termsAndConditionsSection.setPriority(termsAndConditionsCurrentPriority + 1);
+    public CompetitionDataBuilder setIMSurveyPriorityOrder() {
+        return asCompAdmin(data -> {
+            SectionResource termsAndConditionsSection = getTermsAndConditionsSection(data.getCompetition());
+            int termsAndConditionsCurrentPriority = termsAndConditionsSection.getPriority();
+            termsAndConditionsSection.setPriority(termsAndConditionsCurrentPriority + 1);
 
-                SectionResource supportingInformationSection = getSupportingInformationSection(data.getCompetition());
-                supportingInformationSection.setPriority(termsAndConditionsCurrentPriority);
-            }
+            SectionResource supportingInformationSection = getSupportingInformationSection(data.getCompetition());
+            supportingInformationSection.setPriority(termsAndConditionsCurrentPriority);
         });
     }
 

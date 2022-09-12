@@ -31,8 +31,8 @@ import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCom
 import static org.innovateuk.ifs.testdata.builders.CompetitionFunderDataBuilder.newCompetitionFunderData;
 import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.newPublicContentDateDataBuilder;
 import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder.newPublicContentGroupDataBuilder;
-import static org.innovateuk.ifs.testdata.data.CompetitionWebTestData.buildCompetitionLines;
 import static org.innovateuk.ifs.testdata.data.CompetitionPreRegistrationWebTestData.buildCompetitionPreRegistrationLines;
+import static org.innovateuk.ifs.testdata.data.CompetitionWebTestData.buildCompetitionLines;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -187,6 +187,9 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                 .withImpactManagement(line);
 
         CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(line, competitionBeforeMilestones);
+        if (line.isImSurveyEnabled()) {
+            competitionWithMilestones.setIMSurveyPriorityOrder();
+        }
 
         return competitionWithMilestones.
                 withDefaultPublicContent(line);
