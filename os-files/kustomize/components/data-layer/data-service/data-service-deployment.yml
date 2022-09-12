@@ -312,6 +312,11 @@ spec:
             configMapKeyRef:
               key: SPRING_DATASOURCE_HIKARI_MAXLIFETIME
               name: data-service-config
+        - name: IFS_FLYWAY_REPAIR
+          valueFrom:
+            configMapKeyRef:
+              key: IFS_FLYWAY_REPAIR
+              name: data-service-config
         - name: SPRING_DATASOURCE_HIKARI_POOLNAME
           value: "IFS_DATA_SERVICE_CONNECTION_POOL"
         - name: FLYWAY_BASELINE_ON_MIGRATE
