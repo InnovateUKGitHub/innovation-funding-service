@@ -23,6 +23,7 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
     private final boolean assignedToMe;
     private final ApplicationState applicationState;
     private final boolean leadApplicant;
+    private final boolean leadOrganisation;
     private final ZonedDateTime endDate;
     private final Long daysLeft;
     private final int applicationProgress;
@@ -32,6 +33,7 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
     private final boolean hasAssessmentStage;
     private final boolean alwaysOpen;
     private final boolean expressionOfInterest;
+    private Boolean evidenceUploaded;
 
     public InProgressDashboardRowViewModel(String title,
                                            long applicationId,
@@ -47,7 +49,9 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
                                            boolean showReopenLink,
                                            boolean hasAssessmentStage,
                                            boolean alwaysOpen,
-                                           boolean expressionOfInterest) {
+                                           boolean expressionOfInterest,
+                                           Boolean evidenceUploaded,
+                                           boolean leadOrganisation) {
         super(title, applicationId, competitionTitle);
         this.assignedToMe = assignedToMe;
         this.applicationState = applicationState;
@@ -61,6 +65,8 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
         this.hasAssessmentStage = hasAssessmentStage;
         this.alwaysOpen = alwaysOpen;
         this.expressionOfInterest = expressionOfInterest;
+        this.evidenceUploaded = evidenceUploaded;
+        this.leadOrganisation = leadOrganisation;
     }
 
     public InProgressDashboardRowViewModel (DashboardInProgressRowResource resource){
@@ -77,6 +83,8 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
         this.hasAssessmentStage = resource.isHasAssessmentStage();
         this.alwaysOpen = resource.isAlwaysOpen();
         this.expressionOfInterest = resource.isExpressionOfInterest();
+        this.evidenceUploaded = resource.getEvidenceUploaded();
+        this.leadOrganisation = resource.isLeadOrganisation();
     }
 
     public boolean isAssignedToMe() {
@@ -158,6 +166,12 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
         return isApplicationComplete() ? "Ready to review and submit" : applicationProgress + "% complete";
     }
 
+    public Boolean getEvidenceUploaded() {
+        return evidenceUploaded;
+    }
+    public boolean isLeadOrganisation() {
+        return leadOrganisation;
+    }
     @Override
     public String getLinkUrl() {
         if (isSubmitted()) {
