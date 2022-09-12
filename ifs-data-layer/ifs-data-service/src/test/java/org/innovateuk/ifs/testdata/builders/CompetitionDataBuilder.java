@@ -234,7 +234,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                             section.setCompetition(comp);
                             section.setName("Supporting Information");
                             section.setType(SectionType.SUPPORTING_INFORMATION);
-                            section.setPriority(1);
+                            section.setPriority(3);
                             section.setEnabledForPreRegistration(true);
                             Section s = sectionRepository.save(section);
 
@@ -262,14 +262,19 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
     private Question populateQuestion(Optional<Competition> competition1) {
         Question question = QuestionBuilder.aQuestion()
-                .withName("Project Impact")
-                .withShortName("Project Impact")
-                .withDescription("Project Impact")
+                .withName("Understanding the benefits of the projects Innovate UK supports")
+                .withShortName("Project impact")
+                .withDescription("<p>The purpose of these questions is to understand the economic impacts and societal benefits provided by the projects and people Innovate UK support.</p>" +
+                        "<p>The number of questions is limited to the minimum possible and this varies depending on the competition. </p>" +
+                        "<p>Each organisation in your application must complete all the impact questions.  Where questions do not require a response from public sector organisations, academic institutions or individuals you must select ''not applicable'' as your answer.</p>" +
+                        "<p>These questions are not scored and do not form any part of the assessment of your application or the monitoring of your project.</p>" +
+                        "<p>If you need more information about how to complete the Impact questions, see our <a href=\\\"https://www.ukri.org/councils/innovate-uk/guidance-for-applicants/\\\">project impact guidance </a>(opens in a new window), or you can contact our customer support service by calling 0300 321 4357 or email <a href=\\\"mailto:support@iuk.ukri.org\\\">support@iuk.ukri.org</a>.</p>")
                 .withType(QuestionType.GENERAL)
                 .withMarkAsCompletedEnabled(true)
                 .withMultipleStatuses(true)
                 .withAssignEnabled(true)
                 .withQuestionSetupType(QuestionSetupType.IMPACT_MANAGEMENT_SURVEY)
+                .withPreRegistration(true)
                 .build();
         question.setEnabledForPreRegistration(true);
         question.setCompetition(competition1.get());
