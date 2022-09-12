@@ -216,25 +216,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder setIMSurveyPriorityOrder() {
-        return asCompAdmin(data -> {
-            SectionResource termsAndConditionsSection = getTermsAndConditionsSection(data.getCompetition());
-            int termsAndConditionsCurrentPriority = termsAndConditionsSection.getPriority();
-            termsAndConditionsSection.setPriority(termsAndConditionsCurrentPriority + 1);
-
-            SectionResource supportingInformationSection = getSupportingInformationSection(data.getCompetition());
-            supportingInformationSection.setPriority(termsAndConditionsCurrentPriority);
-        });
-    }
-
-    private SectionResource getTermsAndConditionsSection(CompetitionResource competition) {
-        return sectionService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.TERMS_AND_CONDITIONS).getSuccess().get(0);
-    }
-
-    private SectionResource getSupportingInformationSection(CompetitionResource competition) {
-        return sectionService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.SUPPORTING_INFORMATION).getSuccess().get(0);
-    }
-
     public CompetitionDataBuilder withImpactManagement(CompetitionLine line) {
 
         return asCompAdmin(data -> {
@@ -252,6 +233,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                             section.setCompetition(comp);
                             section.setName("Supporting Information");
                             section.setType(SectionType.SUPPORTING_INFORMATION);
+                            section.setPriority(3);
                             section.setEnabledForPreRegistration(true);
                             Section s = sectionRepository.save(section);
 

@@ -187,9 +187,6 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                 .withImpactManagement(line);
 
         CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(line, competitionBeforeMilestones);
-        if (line.isImSurveyEnabled()) {
-            competitionWithMilestones.setIMSurveyPriorityOrder();
-        }
 
         return competitionWithMilestones.
                 withDefaultPublicContent(line);

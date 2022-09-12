@@ -104,16 +104,11 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                 .sorted(comparing(SectionResource::getPriority))
                 .filter(section -> section.getParentSection() == null)
                 .filter(section -> section.getType() != SectionType.KTP_ASSESSMENT)
-                .filter(section -> removeIMSurveySectionIfNotEnabled(data.getCompetition(), section))
                 .filter(section -> !application.isEnabledForExpressionOfInterest() || section.isEnabledForPreRegistration())
                 .map(section -> sectionViewModel(section, data))
                 .collect(toCollection(LinkedHashSet::new));
 
         return new ApplicationOverviewViewModel(data.getUserProcessRole(), data.getCompetition(), application, sectionViewModels, application.hasBeenReopened(), application.getLastStateChangeDate());
-    }
-
-    private boolean removeIMSurveySectionIfNotEnabled(CompetitionResource competition, SectionResource sectionResource) {
-        return competition.isImSurveyEnabled() || sectionResource.getType() != SectionType.SUPPORTING_INFORMATION;
     }
 
     private ApplicationOverviewSectionViewModel sectionViewModel(SectionResource section, ApplicationOverviewData data) {
