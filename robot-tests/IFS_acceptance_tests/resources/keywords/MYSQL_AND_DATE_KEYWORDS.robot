@@ -76,7 +76,8 @@ the days remaining should be correct (Applicant's dashboard)
     ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    jQuery=.in-progress li:contains("${applicationName}") .days-remaining
     #due to bst limitations this test is failing while running afternoon time , So leaving a if else to mark the test as complete - intermittent test
     Run Keyword if  '${SCREEN_NO_OF_DAYS_LEFT}' == '740'  Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    740.0
-    ...                            ELSE                     Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    741.0
+    ...                            ELSE IF                Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    741.0
+    ...                            ELSE                   Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
 
 Get competition id and set open date to yesterday
      [Arguments]  ${competitionTitle}
