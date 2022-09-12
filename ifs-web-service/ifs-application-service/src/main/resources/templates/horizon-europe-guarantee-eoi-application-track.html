@@ -2,7 +2,8 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org"
       th:with="applicationName=${#strings.isEmpty(model.currentApplication.name)} ? #{ifs.application.no_title} : ${model.currentApplication.name}">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Expression of interest Status - ${applicationName}|"/>
+    <th:block th:insert="fragments/layout :: head"
+              th:with="pageTitle=|Expression of interest Status - ${applicationName}|"/>
 </head>
 <body class="govuk-template__body app-track">
 <th:block th:insert="fragments/layout :: body-start"/>
@@ -20,18 +21,63 @@
                       th:with="pageTitle='Expression of interest status',subTitle=${applicationName},size='govuk-heading-xl'"/>
         </th:block>
 
-        <th:block><th:block th:insert="fragments/application-submitted-panel"/></th:block>
+        <th:block>
+            <th:block th:insert="fragments/application-submitted-panel"/>
+        </th:block>
 
         <h2 class="govuk-heading-l">What happens next?</h2>
 
         <p class="govuk-body">
-            Your submission will now be evaluated by our team. If the evidence you provided is satisfactory, you will progress to the full application.
+            Your submission will now be evaluated by our team. If the evidence you provided is satisfactory, you will
+            progress to the full application.
         </p>
 
+        <div class="govuk-form-group"
+             th:if="${model.currentCompetition.competitionEoiEvidenceConfigResource.evidenceRequired}">-->
+            <div class="upload-section govuk-!-width-one-half">
+                <div class="ajax-upload"
+                     data-js-upload-button-name="uploadAttachment"
+                     data-js-upload-file-input="attachment"
+                     data-js-number-of-files="1"
+                     data-js-upload-one-at-a-time="">
+                    <h2 class="govuk-heading-s govuk-!-margin-0">Proof of success letter</h2>
+                    <details class="govuk-details">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">What should I include?</span>
+                        </summary>
+                        <div class="govuk-details__text wysiwyg-styles">
+                            <p class="govuk-body"><strong>You can only upload these file types</strong></p>
+                            <ul class="govuk-list govuk-list--bullet">
+                                <li>spreadsheet (.ods)</li>
+                                <li>text document (.odt)</li>
+                                <li>PDF (.pdf)</li>
+                            </ul>
+                            <p>Each document must be less than 32MB</p>
+                        </div>
+                    </details>
+                    <p th:if="${model.currentApplication.applicationEoiEvidenceResponseResource.fileEntryId == null}"
+                       class="govuk-body no-file-uploaded">No file have been uploaded yet.</p>
+                    <th:block th:unless="${#strings.isEmpty(model.eoiEvidenceFileName)}">
+                        <ul class="govuk-list file-list">
+                            <div class="file-row">
+                                <a th:href="@{/application/{applicationId}/eoi-evidence-document/{eoiEvidenceFileEntryId}(applicationId=${model.currentApplication.id}, eoiEvidenceFileEntryId=${model.currentApplication.applicationEoiEvidenceResponseResource.fileEntryId})}"
+                                   th:text="|${model.eoiEvidenceFileName} (opens in a new window)|"
+                                   target="_blank"
+                                   class="govuk-link"
+                                   aria-describedby="file-hint">File</a>
+                                <button name="eoiEvidenceFileEntryId" th:value="${eoiEvidenceFileEntryId}"
+                                        class="button-clear remove-file" aria-label="Remove uploaded document">Remove
+                                </button>
+                            </div>
+                        </ul>
+                    </th:block>
+                </div>
+            </div>
+        </div>
 
+        <th:block th:insert="fragments/layout :: main-content-end"/>
 
-<th:block th:insert="fragments/layout :: main-content-end"/>
-</main>
+    </main>
 </div>
 
 <th:block th:insert="fragments/layout :: footer"/>

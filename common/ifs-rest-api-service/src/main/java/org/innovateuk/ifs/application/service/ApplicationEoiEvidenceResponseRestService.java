@@ -5,5 +5,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 
 public interface ApplicationEoiEvidenceResponseRestService {
 
+
+
     RestResult<Void> delete(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource);
 }

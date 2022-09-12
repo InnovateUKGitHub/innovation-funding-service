@@ -92,9 +92,13 @@ public class ReviewAndSubmitController {
         return "application/review-and-submit";
     }
 
-    @PostMapping("/{applicationId}/eoi-evidence-response/{eoiEvidenceResponseId}")
-    public String deleteEoiEvidenceResponse(@PathVariable long applicationId,
-                                    @PathVariable long eoiEvidenceResponseId) {
+    @PostMapping(
+            value = "/{applicationId}/{application-eoi-evidence-response}",
+            params = "delete-eoi-evidence-response")
+    public String deleteEoiEvidenceResponse(Model model,
+                                            UserResource user,
+                                            @PathVariable long applicationId,
+                                            @RequestParam("delete-eoi-evidence-response") long applicationEoiEvidenceResponseFileEntryId) {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         applicationEoiEvidenceResponseRestService.delete(application.getApplicationEoiEvidenceResponseResource()).getSuccess();

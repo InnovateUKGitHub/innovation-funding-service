@@ -10,7 +10,7 @@ import static java.lang.String.format;
 @Service
 public class ApplicationEoiEvidenceResponseRestServiceImpl extends BaseRestService implements ApplicationEoiEvidenceResponseRestService {
 
-    private String applicationEoiEvidenceResponse = "/application-eoi-evidence-response";
+    private String applicationEoiEvidenceResponse = "/application-eoi-evidence";
 
     @Override
     public RestResult<Void> delete(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource) {
