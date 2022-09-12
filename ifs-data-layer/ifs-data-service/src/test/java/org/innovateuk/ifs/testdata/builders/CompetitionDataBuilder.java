@@ -229,12 +229,17 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 Optional<Competition> competition = competitionRepository.findById(competitionResource.getId());
                 competition.ifPresentOrElse(comp -> {
 
+                            // swap priority order with t&Cs
+                            Optional<Section> termsAndConditionsSection = getTermsAndConditionsSection(comp);
+                            int termsAndConditionsCurrentPriority = termsAndConditionsSection.isPresent() ? termsAndConditionsSection.get().getPriority() : 0;
+                            termsAndConditionsSection.get().setPriority(termsAndConditionsCurrentPriority + 1);
+
                             // Create Section
                             Section section = new Section();
                             section.setCompetition(comp);
                             section.setName("Supporting Information");
                             section.setType(SectionType.SUPPORTING_INFORMATION);
-                            section.setPriority(3);
+                            section.setPriority(termsAndConditionsCurrentPriority);
                             section.setEnabledForPreRegistration(true);
                             Section s = sectionRepository.save(section);
 
@@ -260,6 +265,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             }
         });
     }
+
+    private Optional<Section> getTermsAndConditionsSection(Competition competition) {
+        return competition.getSections().stream().filter(section -> section.getType() == SectionType.TERMS_AND_CONDITIONS).findFirst();
+    }
+
     private Question populateQuestion(Optional<Competition> competition1) {
         Question question = QuestionBuilder.aQuestion()
                 .withName("Understanding the benefits of the projects Innovate UK supports")
@@ -268,7 +278,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                         "<p>The number of questions is limited to the minimum possible and this varies depending on the competition. </p>" +
                         "<p>Each organisation in your application must complete all the impact questions.  Where questions do not require a response from public sector organisations, academic institutions or individuals you must select ''not applicable'' as your answer.</p>" +
                         "<p>These questions are not scored and do not form any part of the assessment of your application or the monitoring of your project.</p>" +
-                        "<p>If you need more information about how to complete the Impact questions, see our <a href=\\\"https://www.ukri.org/councils/innovate-uk/guidance-for-applicants/\\\">project impact guidance </a>(opens in a new window), or you can contact our customer support service by calling 0300 321 4357 or email <a href=\\\"mailto:support@iuk.ukri.org\\\">support@iuk.ukri.org</a>.</p>")
+                        "<p>If you need more information about how to complete the Impact questions, see our <a href=\"https://www.ukri.org/councils/innovate-uk/guidance-for-applicants/\">project impact guidance </a>(opens in a new window), or you can contact our customer support service by calling 0300 321 4357 or email <a href=\"mailto:support@iuk.ukri.org\">support@iuk.ukri.org</a>.</p>")
                 .withType(QuestionType.GENERAL)
                 .withMarkAsCompletedEnabled(true)
                 .withMultipleStatuses(true)
