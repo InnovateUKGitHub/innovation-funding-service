@@ -213,9 +213,25 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                         new MultipleChoiceOptionResource("I"), new MultipleChoiceOptionResource("J"), new MultipleChoiceOptionResource("K")));
                 questionSetupCompetitionService.update(manyAnswers);
             }
+
+            if(data.getCompetition().isImSurveyEnabled()) {
+                SectionResource termsAndConditionsSection = getTermsAndConditionsSection(data.getCompetition());
+                int termsAndConditionsCurrentPriority = termsAndConditionsSection.getPriority();
+                termsAndConditionsSection.setPriority(termsAndConditionsCurrentPriority + 1);
+
+                SectionResource supportingInformationSection = getSupportingInformationSection(data.getCompetition());
+                supportingInformationSection.setPriority(termsAndConditionsCurrentPriority);
+            }
         });
     }
 
+    private SectionResource getTermsAndConditionsSection(CompetitionResource competition) {
+        return sectionService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.TERMS_AND_CONDITIONS).getSuccess().get(0);
+    }
+
+    private SectionResource getSupportingInformationSection(CompetitionResource competition) {
+        return sectionService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.SUPPORTING_INFORMATION).getSuccess().get(0);
+    }
 
     public CompetitionDataBuilder withImpactManagement(CompetitionLine line) {
 
@@ -229,17 +245,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 Optional<Competition> competition = competitionRepository.findById(competitionResource.getId());
                 competition.ifPresentOrElse(comp -> {
 
-                            // swap priority order with t&Cs
-                            Optional<Section> termsAndConditionsSection = getTermsAndConditionsSection(comp);
-                            int termsAndConditionsCurrentPriority = termsAndConditionsSection.isPresent() ? termsAndConditionsSection.get().getPriority() : 0;
-                            termsAndConditionsSection.get().setPriority(termsAndConditionsCurrentPriority + 1);
-
                             // Create Section
                             Section section = new Section();
                             section.setCompetition(comp);
                             section.setName("Supporting Information");
                             section.setType(SectionType.SUPPORTING_INFORMATION);
-                            section.setPriority(termsAndConditionsCurrentPriority);
                             section.setEnabledForPreRegistration(true);
                             Section s = sectionRepository.save(section);
 
@@ -264,10 +274,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 );
             }
         });
-    }
-
-    private Optional<Section> getTermsAndConditionsSection(Competition competition) {
-        return competition.getSections().stream().filter(section -> section.getType() == SectionType.TERMS_AND_CONDITIONS).findFirst();
     }
 
     private Question populateQuestion(Optional<Competition> competition1) {
