@@ -15,7 +15,7 @@ spec:
         app: mail
     spec:
       containers:
-        - image: docker-ifs.devops.innovateuk.org/releases/ifs-mail-sink:9_9_2022@sha256:927eb02fb38b92da982f9fd17fc0ae3c6b136de6531d30ba4096874f9d0e7d0f
+        - image: docker-ifs.devops.innovateuk.org/releases/ifs-mail-sink:09_13_2022_manifest
           name: mail
           imagePullPolicy: IfNotPresent
           envFrom:
