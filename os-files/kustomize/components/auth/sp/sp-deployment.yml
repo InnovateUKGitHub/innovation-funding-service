@@ -24,7 +24,7 @@ spec:
           secret:
             secretName: sp-keys-secrets
       containers:
-        - image: docker-ifs.devops.innovateuk.org/releases/sp-service:ARCHIVE-BILTEST0-SKAFFOLDBUILD-21_2474c1ace2912787b5c0f6424e47df876ee824f1@sha256:74690484366f33bbfc987b339e65d7357d51d52582e48db6346530c29ef7efe2
+        - image: docker-ifs.devops.innovateuk.org/releases/sp-service:09_13_2022_manifest
           name: shib
           volumeMounts:
             - name: sp-keys-volume
