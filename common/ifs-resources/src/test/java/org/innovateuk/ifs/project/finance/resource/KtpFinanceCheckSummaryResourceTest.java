@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.finance.resource;
 
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -8,33 +7,33 @@ import org.junit.runners.Parameterized;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP;
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP_AKT;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckSummaryResourceBuilder.newFinanceCheckSummaryResource;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(Parameterized.class)
 public class KtpFinanceCheckSummaryResourceTest {
 
-    private final FundingType fundingType;
+    private final boolean ktp;
+    private final boolean expected;
 
-    @Parameterized.Parameters(name = "{index}: FundingType->{0}")
+    @Parameterized.Parameters(name = "{index}: ktp->{0}")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[] [] {
-                {KTP}, {KTP_AKT}
+                {true, true}, {false, false}
         });
     }
 
-    public KtpFinanceCheckSummaryResourceTest(FundingType fundingType) {
-        this.fundingType = fundingType;
+    public KtpFinanceCheckSummaryResourceTest(boolean ktp, boolean expected) {
+        this.ktp = ktp;
+        this.expected = expected;
     }
 
     @Test
     public void isKtp() {
         FinanceCheckSummaryResource resource = newFinanceCheckSummaryResource()
-                .withFundingType(fundingType)
+                .withKtp(ktp)
                 .build();
 
-        assertTrue(resource.isKtp());
+        assertEquals(expected, resource.isKtp());
     }
 }

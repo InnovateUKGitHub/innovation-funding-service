@@ -36,11 +36,11 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "FROM AssessmentParticipant assessmentParticipant " +
             "LEFT JOIN assessmentParticipant.user.roleProfileStatuses roleStatuses " +
             "WHERE ((" +
-                "assessmentParticipant.competition.fundingType != org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP " +
+                "assessmentParticipant.competition.fundingType NOT IN (org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP, org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP_AKT) " +
                 "AND roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
                 "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
             ") OR ( " +
-                "assessmentParticipant.competition.fundingType = org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP " +
+                "assessmentParticipant.competition.fundingType IN (org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP, org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP_AKT) " +
             "))" +
             "AND assessmentParticipant.competition.id = :competitionId " +
             "AND assessmentParticipant.role = 'ASSESSOR' " +
@@ -52,11 +52,11 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "FROM AssessmentParticipant assessmentParticipant " +
             "LEFT JOIN assessmentParticipant.user.roleProfileStatuses roleStatuses " +
             "WHERE ((" +
-                "assessmentParticipant.competition.fundingType != org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP " +
+                "assessmentParticipant.competition.fundingType NOT IN (org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP, org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP_AKT) " +
                 "AND roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
                 "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
             ") OR ( " +
-                "assessmentParticipant.competition.fundingType = org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP " +
+                "assessmentParticipant.competition.fundingType IN (org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP,  org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP_AKT) " +
             "))" +
             "AND assessmentParticipant.competition.id = :competitionId " +
             "AND assessmentParticipant.role = 'ASSESSOR' " +

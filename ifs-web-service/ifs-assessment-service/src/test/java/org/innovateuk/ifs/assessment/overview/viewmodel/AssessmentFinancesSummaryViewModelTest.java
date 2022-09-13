@@ -38,7 +38,7 @@ public class AssessmentFinancesSummaryViewModelTest {
 
         AssessmentFinancesSummaryViewModel viewModel = new AssessmentFinancesSummaryViewModel(assessmentId, applicationId,
                 applicationName, daysLeft, daysLeftPercentage, fundingType, null, null,
-                null,false, false);
+                null,false, false, true);
 
         assertTrue(viewModel.isKtpCompetition());
     }

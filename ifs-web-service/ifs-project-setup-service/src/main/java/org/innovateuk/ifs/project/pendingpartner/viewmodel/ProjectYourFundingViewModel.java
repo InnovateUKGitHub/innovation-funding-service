@@ -26,6 +26,7 @@ public class ProjectYourFundingViewModel {
     private final boolean isFixedFundingLevel;
     private final boolean isCompTypeOfgemAndFundingTypeThirdParty;
     private final boolean isThirdPartyFundingType;
+    private final boolean ktp;
 
     public ProjectYourFundingViewModel(ProjectResource project,
                                        long organisationId,
@@ -43,7 +44,9 @@ public class ProjectYourFundingViewModel {
                                        String hash,
                                        boolean isFixedFundingLevel,
                                        boolean isCompTypeOfgemAndFundingTypeThirdParty,
-                                       boolean isThirdPartyFundingType) {
+                                       boolean isThirdPartyFundingType,
+                                       boolean ktp) {
+
         this.projectName = project.getName();
         this.projectId = project.getId();
         this.organisationId = organisationId;
@@ -62,6 +65,7 @@ public class ProjectYourFundingViewModel {
         this.isFixedFundingLevel = isFixedFundingLevel;
         this.isCompTypeOfgemAndFundingTypeThirdParty = isCompTypeOfgemAndFundingTypeThirdParty;
         this.isThirdPartyFundingType = isThirdPartyFundingType;
+        this.ktp = ktp;
     }
 
     public String getProjectName() {
@@ -101,8 +105,7 @@ public class ProjectYourFundingViewModel {
     }
 
     public boolean isKtpFundingType() {
-        return FundingType.KTP == fundingType
-                || FundingType.KTP_AKT == fundingType;
+        return ktp;
     }
 
     public OrganisationTypeEnum getOrganisationType() {
