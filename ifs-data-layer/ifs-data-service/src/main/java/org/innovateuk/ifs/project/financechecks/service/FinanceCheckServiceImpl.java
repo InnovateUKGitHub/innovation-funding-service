@@ -141,7 +141,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
         return serviceSuccess(new FinanceCheckSummaryResource(overviewResource, competition.getId(), competition.getName(),
                 spendProfile.isPresent(), getPartnerStatuses(sortedPartnersList, project), bankDetailsApproved,
-                spendProfileGeneratedBy, spendProfileGeneratedDate, application.getId(), competition.isH2020(), competition.getFundingType(), competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE)));
+                spendProfileGeneratedBy, spendProfileGeneratedDate, application.getId(), competition.isH2020(), competition.getFundingType(),
+                competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE), competition.isKtp()));
     }
 
     @Override

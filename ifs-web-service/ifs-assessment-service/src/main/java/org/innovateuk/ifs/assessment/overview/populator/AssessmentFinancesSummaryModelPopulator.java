@@ -55,7 +55,8 @@ public class AssessmentFinancesSummaryModelPopulator {
                 applicationFundingBreakdownViewModelPopulator.populate(assessment.getApplication(), user),
                 applicationProcurementMilestonesSummaryViewModel,
                 competition.isProcurementMilestones(),
-                competition.isHorizonEuropeGuarantee()
+                competition.isHorizonEuropeGuarantee(),
+                competition.isKtp()
         );
     }
 }
