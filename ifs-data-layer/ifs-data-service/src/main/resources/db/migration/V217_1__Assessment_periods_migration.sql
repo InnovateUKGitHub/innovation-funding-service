@@ -1,4 +1,4 @@
-ALTER TABLE assessment_period DROP COLUMN rank;
+ALTER TABLE assessment_period DROP COLUMN `rank`;
 
 INSERT INTO assessment_period (competition_id)
 SELECT

@@ -17,6 +17,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
     private boolean assignedToMe;
     private ApplicationState applicationState;
     private boolean leadApplicant;
+    private boolean leadOrganisation;
     private ZonedDateTime endDate;
     private Long daysLeft;
     private int applicationProgress;
@@ -26,6 +27,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
     private boolean hasAssessmentStage;
     private boolean alwaysOpen;
     private boolean expressionOfInterest;
+    private Boolean evidenceUploaded;
 
     // Private constructor to enforce immutability
     private DashboardInProgressRowResource() {
@@ -79,7 +81,12 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
     public boolean isExpressionOfInterest() {
         return expressionOfInterest;
     }
-
+    public Boolean getEvidenceUploaded() {
+        return evidenceUploaded;
+    }
+    public boolean isLeadOrganisation() {
+        return leadOrganisation;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -136,6 +143,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
         private boolean assignedToMe;
         private ApplicationState applicationState;
         private boolean leadApplicant;
+        private boolean leadOrganisation;
         private ZonedDateTime endDate;
         private Long daysLeft;
         private int applicationProgress;
@@ -145,9 +153,18 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
         private boolean showReopenLink;
         private boolean alwaysOpen;
         private boolean expressionOfInterest;
+        private Boolean evidenceUploaded;
 
         public DashboardApplicationInProgressResourceBuilder withTitle(String title) {
             this.title = title;
+            return this;
+        }
+        public DashboardApplicationInProgressResourceBuilder withEvidenceUploaded(Boolean evidenceUploaded) {
+            this.evidenceUploaded = evidenceUploaded;
+            return this;
+        }
+        public DashboardApplicationInProgressResourceBuilder withLeadOrganisation(Boolean leadOrganisation) {
+            this.leadOrganisation = leadOrganisation;
             return this;
         }
 
@@ -173,6 +190,10 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
 
         public DashboardApplicationInProgressResourceBuilder withLeadApplicant(boolean leadApplicant) {
             this.leadApplicant = leadApplicant;
+            return this;
+        }
+        public DashboardApplicationInProgressResourceBuilder withLeadOrganisation(boolean leadOrganisation) {
+            this.leadOrganisation= leadOrganisation;
             return this;
         }
 
@@ -238,7 +259,8 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
             result.alwaysOpen = this.alwaysOpen;
             result.hasAssessmentStage = this.hasAssessmentStage;
             result.expressionOfInterest = this.expressionOfInterest;
-
+            result.evidenceUploaded = this.evidenceUploaded;
+            result.leadOrganisation = this.leadOrganisation;
             return result;
         }
     }

@@ -2,8 +2,8 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.applicant.resource.dashboard.*;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationEoiEvidenceResponseRepository;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.util.Collections.sort;
 import static java.util.Optional.ofNullable;
@@ -44,9 +45,12 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
     @Autowired
     private QuestionStatusService questionStatusService;
     @Autowired
+    private ApplicationService applicationService;
+    @Autowired
     private ApplicationRepository applicationRepository;
     @Autowired
-    private AssessmentService assessmentService;
+    private ApplicationEoiEvidenceResponseRepository applicationEoiEvidenceResponseRepository;
+
 
     @Override
     public ServiceResult<ApplicantDashboardResource> getApplicantDashboard(long userId) {
@@ -170,6 +174,17 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
                 .filter(pr -> pr.getUser().getId().equals(userId))
                 .findFirst();
         boolean invitedToInterview = interviewAssignmentService.isApplicationAssigned(application.getId()).getSuccess();
+        Boolean evidenceUploaded = null;
+
+        if (application.getCompetition().isEnabledForPreRegistration()
+                && application.getCompetition().isEoiEvidenceRequired()
+                && application.isEnabledForExpressionOfInterest()) {
+
+            evidenceUploaded = applicationEoiEvidenceResponseRepository
+                    .findOneByApplicationId(application.getId())
+                    .isPresent();
+        }
+
 
         return new DashboardApplicationInProgressResourceBuilder()
                 .withTitle(application.getName())
@@ -178,6 +193,7 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
                 .withAssignedToMe(isAssigned(application, role))
                 .withApplicationState(application.getApplicationProcess().getProcessState())
                 .withLeadApplicant(isLead(role))
+                .withLeadOrganisation(isLeadOrganisation(application, userId))
                 .withEndDate(application.getCompetition().getEndDate())
                 .withDaysLeft(application.getCompetition().getDaysLeft())
                 .withHasAssessmentStage(application.getCompetition().isHasAssessmentStage())
@@ -187,6 +203,7 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
                 .withShowReopenLink(showReopenLinkVisible(application, userId))
                 .withAlwaysOpen(application.getCompetition().isAlwaysOpen())
                 .withExpressionOfInterest(application.isEnabledForExpressionOfInterest())
+                .withEvidenceUploaded(evidenceUploaded)
                 .build();
     }
 
@@ -243,5 +260,23 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
 
     private boolean isLead(Optional<ProcessRole> processRole) {
         return processRole.map(ProcessRole::getRole).map(ProcessRoleType::isLeadApplicant).orElse(false);
+    }
+
+    private boolean isLeadOrganisation(Application application, long userId) {
+        AtomicBoolean leadOrganisation = new AtomicBoolean(false);
+
+        Optional<ProcessRole> loggedInUserProcessRole = application.getProcessRoles().stream()
+                .filter(pr -> pr.getUser().getId().equals(userId))
+                .findFirst();
+
+        loggedInUserProcessRole.ifPresent(loggedInUser -> {
+            Optional<ProcessRole> leadUserProcessRole = application.getProcessRoles().stream()
+                    .filter(ProcessRole::isLeadApplicant)
+                    .findFirst();
+            leadUserProcessRole.ifPresent(leadUser -> leadOrganisation.set(leadUser.getOrganisationId().equals(loggedInUser.getOrganisationId()))
+            );
+        });
+
+        return leadOrganisation.get();
     }
 }
