@@ -147,6 +147,12 @@ spec:
                configMapKeyRef:
                  name: web-config
                  key: IFS_LOANS_SALESFORCE_PAGE_URL
+          - name: IFS_IMPACT_MANAGEMENT_SALESFORCE_PAGE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: web-config
+                key: IFS_IMPACT_MANAGEMENT_SALESFORCE_PAGE_URL
+
           - name: IFS_EDI_UPDATE_ENABLED
             valueFrom:
               configMapKeyRef:

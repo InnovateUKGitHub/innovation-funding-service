@@ -56,8 +56,9 @@ public class GenericQuestionApplicationModelPopulator {
     private boolean ifsLoanPartBEnabled;
 
     @Value("${ifs.loans.salesforce.page.url}")
-    private String salesForceURL;
-
+    private String loansSalesForceCommunityURL;
+    @Value("${ifs.impact-management.salesforce.page.url}")
+    private String impactManagementSalesForceCommunityURL;
     @Value("${ifs.forminputresponse.max.filesize.bytes}")
     private Long maximumAppendixSize;
 
@@ -118,10 +119,11 @@ public class GenericQuestionApplicationModelPopulator {
                 .withLeadOrganisationName(leadOrganisation.getName())
                 .withLeadOrganisationCompaniesHouseNumber(leadOrganisation.getCompaniesHouseNumber())
                 .withLoansPartBEnabled(ifsLoanPartBEnabled)
-                .withLoansFormQuestionsSalesForceURL(salesForceURL)
+                .withLoansFormQuestionsSalesForceURL(loansSalesForceCommunityURL)
                 .withCompetitionId(competition.getId())
                 .withIsExpressionOfInterestApplication(application.isEnabledForExpressionOfInterest())
                 .withIMSurveyQuestion(imSurveyQuestion)
+                .withImpactManagementSalesForceURL(impactManagementSalesForceCommunityURL)
                 .build();
     }
 

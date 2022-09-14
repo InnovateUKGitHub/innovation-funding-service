@@ -64,10 +64,12 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
     private final List<MultipleChoiceOptionResource> multipleChoiceOptions;
     private final MultipleChoiceOptionResource selectedMultipleChoiceOption;
     private final boolean loansPartBEnabled;
-    private final String salesForceURL;
+    private final String loansSalesForceCommunityURL;
     private final Long competitionId;
     private boolean isExpressionOfInterestApplication;
     private final boolean imSurveyQuestion;
+    private final String impactManagementSalesForceCommunityURL;
+
 
     public GenericQuestionApplicationViewModel(long applicationId,
                                                String competitionName,
@@ -110,10 +112,11 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
                                                String leadOrganisationName,
                                                String leadOrganisationCompaniesHouseNumber,
                                                boolean loansPartBEnabled,
-                                               String salesForceURL,
+                                               String loansSalesForceCommunityURL,
                                                Long competitionId,
                                                boolean isExpressionOfInterestApplication,
-                                               boolean imSurveyQuestion) {
+                                               boolean imSurveyQuestion,
+                                               String impactManagementSalesForceCommunityURL) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.questionId = questionId;
@@ -155,10 +158,11 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         this.leadOrganisationName = leadOrganisationName;
         this.leadOrganisationCompaniesHouseNumber = leadOrganisationCompaniesHouseNumber;
         this.loansPartBEnabled = loansPartBEnabled;
-        this.salesForceURL = salesForceURL;
+        this.loansSalesForceCommunityURL = loansSalesForceCommunityURL;
         this.competitionId = competitionId;
         this.isExpressionOfInterestApplication = isExpressionOfInterestApplication;
         this.imSurveyQuestion = imSurveyQuestion;
+        this.impactManagementSalesForceCommunityURL = impactManagementSalesForceCommunityURL;
     }
 
     @Override
@@ -378,8 +382,8 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         return QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION;
     }
 
-    public String getSalesForceURL() {
-        return salesForceURL;
+    public String getLoansSalesForceCommunityURL() {
+        return loansSalesForceCommunityURL;
     }
 
     public boolean isLoansPartBEnabled() {
@@ -392,10 +396,21 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
 
     @JsonIgnore
     public String getLoansQuestionsFormSalesForceURL() {
-        return salesForceURL + "?" + "CompanyNumber=" + leadOrganisationCompaniesHouseNumber + "&" +
+        return loansSalesForceCommunityURL + "?" +
+                "CompanyNumber=" + leadOrganisationCompaniesHouseNumber + "&" +
                 "IFSApplicationNumber=" + applicationId + "&" +
                 "CompanyName=" + leadOrganisationName + "&" +
                 "CompetitionId=" + competitionId;
+    }
+
+    public String getImpactManagementSalesForceURL() {
+        return impactManagementSalesForceCommunityURL + "?" +
+                "CompanyNumber=" + leadOrganisationCompaniesHouseNumber + "&" +
+                "IFSApplicationNumber=" + applicationId + "&" +
+                "CompanyName=" + leadOrganisationName + "&" +
+                "CompetitionId=" + competitionId + "&" +
+                "PreApproval=true";
+
     }
 
     public static final class GenericQuestionApplicationViewModelBuilder {
@@ -440,10 +455,12 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         private String leadOrganisationName;
         private String leadOrganisationCompaniesHouseNumber;
         private boolean loansPartBEnabled;
-        private String salesForceURL;
+        private String loansSalesForceCommunityURL;
+
         private Long competitionId;
         private boolean isExpressionOfInterestApplication;
         private boolean imSurveyQuestion;
+        private String impactManagementSalesForceCommunityURL;
 
         private GenericQuestionApplicationViewModelBuilder() {
         }
@@ -658,7 +675,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         }
 
         public GenericQuestionApplicationViewModelBuilder withLoansFormQuestionsSalesForceURL(String salesForceURL) {
-            this.salesForceURL = salesForceURL;
+            this.loansSalesForceCommunityURL = salesForceURL;
             return this;
         }
 
@@ -674,6 +691,11 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
 
         public GenericQuestionApplicationViewModelBuilder withIMSurveyQuestion(boolean imSurveyQuestion) {
             this.imSurveyQuestion = imSurveyQuestion;
+            return this;
+        }
+
+        public GenericQuestionApplicationViewModelBuilder withImpactManagementSalesForceURL(String impactManagementSalesForceCommunityURL) {
+            this.impactManagementSalesForceCommunityURL = impactManagementSalesForceCommunityURL;
             return this;
         }
 
@@ -720,10 +742,12 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
                     leadOrganisationName,
                     leadOrganisationCompaniesHouseNumber,
                     loansPartBEnabled,
-                    salesForceURL,
+                    loansSalesForceCommunityURL,
                     competitionId,
                     isExpressionOfInterestApplication,
-                    imSurveyQuestion
+                    imSurveyQuestion,
+                    impactManagementSalesForceCommunityURL
+
             );
         }
     }
