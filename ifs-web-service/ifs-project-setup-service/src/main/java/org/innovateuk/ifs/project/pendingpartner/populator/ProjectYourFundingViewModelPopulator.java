@@ -92,6 +92,8 @@ public class ProjectYourFundingViewModelPopulator {
                 hash,
                 projectFinance.isFixedFundingLevel(),
                 competition.isCompTypeOfgemAndFundingTypeThirdParty(),
-                competition.isThirdPartyFundingType());
+                competition.isThirdPartyFundingType(),
+                competition.isKtp());
+
     }
 }

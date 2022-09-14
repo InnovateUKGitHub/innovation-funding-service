@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.assessor.viewmodel;
 
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -10,24 +9,24 @@ import org.mockito.invocation.InvocationOnMock;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP;
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP_AKT;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(Parameterized.class)
 public class InviteAssessorsViewModelTest {
 
-    private final FundingType fundingType;
+    private final boolean ktp;
+    private final boolean expected;
 
-    @Parameterized.Parameters(name = "{index}: FundingType->{0}")
+    @Parameterized.Parameters(name = "{index}: ktp->{0}")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[] [] {
-                {KTP}, {KTP_AKT}
+                {true, true}, {false, false}
         });
     }
 
-    public InviteAssessorsViewModelTest(FundingType fundingType) {
-        this.fundingType = fundingType;
+    public InviteAssessorsViewModelTest(boolean ktp, boolean expected) {
+        this.ktp = ktp;
+        this.expected = expected;
     }
 
     @Test
@@ -35,8 +34,8 @@ public class InviteAssessorsViewModelTest {
         InviteAssessorsViewModel inviteAssessorsViewModel = Mockito.mock(InviteAssessorsViewModel.class,
                 InvocationOnMock::callRealMethod);
 
-        inviteAssessorsViewModel.setFundingType(fundingType);
+        inviteAssessorsViewModel.setKtp(ktp);
 
-        assertTrue(inviteAssessorsViewModel.isKtp());
+        assertEquals(expected, inviteAssessorsViewModel.isKtp());
     }
 }

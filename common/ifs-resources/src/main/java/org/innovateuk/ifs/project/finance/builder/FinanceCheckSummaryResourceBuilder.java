@@ -102,6 +102,10 @@ public class FinanceCheckSummaryResourceBuilder extends BaseBuilder<FinanceCheck
         return withArray((fundingType, financeCheckResource) -> financeCheckResource.setFundingType(fundingType), fundingTypes);
     }
 
+    public FinanceCheckSummaryResourceBuilder withKtp(Boolean... ktpFlags) {
+        return withArray((ktpFlag, financeCheckResource) -> setField("ktp", ktpFlag, financeCheckResource), ktpFlags);
+    }
+
     @SafeVarargs
     public final FinanceCheckSummaryResourceBuilder withPartnerStatusResources(List<FinanceCheckPartnerStatusResource>... partnerStatusResourcesLst) {
         return withArray((competitionId, financeCheckResource) -> setField("partnerStatusResources", competitionId, financeCheckResource), partnerStatusResourcesLst);
