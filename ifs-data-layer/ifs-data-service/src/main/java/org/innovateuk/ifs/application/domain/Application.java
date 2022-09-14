@@ -585,4 +585,16 @@ public class Application implements ProcessActivity {
     public void setApplicationEoiEvidenceResponse(ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse) {
         this.applicationEoiEvidenceResponse = applicationEoiEvidenceResponse;
     }
+
+    public boolean expressionOfInterestEvidenceDocumentRequired() {
+        return competition.getCompetitionEoiEvidenceConfig() != null && competition.getCompetitionEoiEvidenceConfig().isEvidenceRequired();
+    }
+
+    public boolean isApplicationExpressionOfInterestEvidenceResponseReceived() {
+        return getApplicationEoiEvidenceResponse() != null;
+    }
+
+    public boolean applicationEoiEvidenceIsRequiredAndNotReceived() {
+        return expressionOfInterestEvidenceDocumentRequired() && !isApplicationExpressionOfInterestEvidenceResponseReceived();
+    }
 }

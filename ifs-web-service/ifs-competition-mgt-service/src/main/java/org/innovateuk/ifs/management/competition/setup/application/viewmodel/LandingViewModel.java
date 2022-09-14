@@ -70,4 +70,9 @@ public class LandingViewModel extends CompetitionSetupViewModel {
     public Boolean isFinancesDetailsCompSetupSubSection() {
         return subsectionStatuses.get(CompetitionSetupSubsection.FINANCES);
     }
+
+    @JsonIgnore
+    public boolean isktpAssessorQuestionsAvailable() {
+        return ktpAssessorQuestions.size() > 0;
+    }
 }

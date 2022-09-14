@@ -48,11 +48,11 @@ public class OtherFundingValidator implements Validator {
         String fundingSource = otherFunding.getFundingSource();
         BigDecimal fundingAmount = otherFunding.getFundingAmount();
         if (userHasSelectedYesToOtherFunding && fundingSource != null && !fundingSource.equals(OTHER_FUNDING)) {
-            validateDate(otherFunding, errors);
+            validateDate(otherFunding, errors, isCompTypeOfgemAndFundingTypeThirdParty(otherFunding));
             validateFundingSource(fundingSource, errors);
             validateFundingAmount(fundingAmount, errors);
         } else if(userHasSelectedYesToOtherFunding && fundingSource == null) {
-        	validateDate(otherFunding, errors);
+        	validateDate(otherFunding, errors, isCompTypeOfgemAndFundingTypeThirdParty(otherFunding));
         }
     }
 
@@ -71,11 +71,11 @@ public class OtherFundingValidator implements Validator {
         }
     }
 
-    private void validateDate(BaseOtherFunding otherFunding, Errors errors){
+    private void validateDate(BaseOtherFunding otherFunding, Errors errors, boolean isCompTypeOfgemAndFundingTypeThirdParty){
         String securedDate = otherFunding.getSecuredDate();
-        if(StringUtils.isBlank(securedDate)){
+        if(StringUtils.isBlank(securedDate) && !isCompTypeOfgemAndFundingTypeThirdParty){
             rejectValue(errors, "securedDate", "validation.finance.funding.date.invalid");
-        }else if(!isValidDate(securedDate)) {
+        }else if(!isValidDate(securedDate, isCompTypeOfgemAndFundingTypeThirdParty)) {
             rejectValue(errors, "securedDate", "validation.finance.funding.date.invalid");
         }
     }
@@ -91,25 +91,46 @@ public class OtherFundingValidator implements Validator {
         return !otherFundingRows.isEmpty() && "Yes".equals(otherFundingRows.get(0).getItem());
     }
 
+    private Optional<ApplicationFinanceRow> applicationCost(BaseOtherFunding otherFunding) {
+        return applicationFinanceRowRepository.findById(otherFunding.getId());
+    }
+
+    private ApplicationFinance applicationFinance(BaseOtherFunding otherFunding) {
+        return applicationCost(otherFunding).get().getTarget();
+    }
+
+    private ProjectFinance projectFinance(BaseOtherFunding otherFunding) {
+        ProjectFinanceRow projectCost = projectFinanceRowRepository.findById(otherFunding.getId()).get();
+        return projectCost.getTarget();
+    }
+
     private List<? extends FinanceRow> getRows(BaseOtherFunding otherFunding) {
-        Optional<ApplicationFinanceRow> applicationCost = applicationFinanceRowRepository.findById(otherFunding.getId());
-        if (applicationCost.isPresent()) {
-            ApplicationFinance applicationFinance = applicationCost.get().getTarget();
-            return applicationFinanceRowRepository.findByTargetIdAndType(applicationFinance.getId(), otherFunding.getCostType());
+        if (applicationCost(otherFunding).isPresent()) {
+            return applicationFinanceRowRepository.findByTargetIdAndType(applicationFinance(otherFunding).getId(), otherFunding.getCostType());
         } else {
-            ProjectFinanceRow projectCost = projectFinanceRowRepository.findById(otherFunding.getId()).get();
-            ProjectFinance projectFinance = projectCost.getTarget();
-            return projectFinanceRowRepository.findByTargetIdAndType(projectFinance.getId(), otherFunding.getCostType());
+            return projectFinanceRowRepository.findByTargetIdAndType(projectFinance(otherFunding).getId(), otherFunding.getCostType());
         }
     }
 
-    private boolean isValidDate(final String input){
+    private boolean isCompTypeOfgemAndFundingTypeThirdParty(BaseOtherFunding otherFunding) {
+        if (applicationCost(otherFunding).isPresent()) {
+            return applicationFinance(otherFunding).getApplication().getCompetition().isThirdPartyOfgem();
+        } else {
+            return projectFinance(otherFunding).getProject().getApplication().getCompetition().isThirdPartyOfgem();
+        }
+    }
+
+    private boolean isValidDate(final String input, boolean isCompTypeOfgemAndFundingTypeThirdParty){
+        if (isCompTypeOfgemAndFundingTypeThirdParty && input.isBlank()) {
+            return true;
+        }
+
         SimpleDateFormat format = new SimpleDateFormat("MM-yyyy");
         format.setLenient(false);
         try {
             Date dt = format.parse(input);
             return format.format(dt).equals(input);
-        } catch(ParseException e){
+        } catch (ParseException e) {
             return false;
         }
     }

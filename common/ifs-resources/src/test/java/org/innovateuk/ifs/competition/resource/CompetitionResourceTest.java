@@ -88,4 +88,17 @@ public class CompetitionResourceTest {
 
         assertTrue(competition.isThirdPartyOfgem());
     }
+
+    @Test
+    public void isKtpOnly() {
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.KTP_AKT)
+                .build();
+
+        assertFalse(competition.isKtpOnly());
+
+        competition.setFundingType(FundingType.KTP);
+
+        assertTrue(competition.isKtpOnly());
+    }
 }

@@ -41,7 +41,6 @@ import org.innovateuk.ifs.util.MapFunctions;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -134,23 +133,25 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
 
     @Before
     public void setup() {
-    	competition = newCompetition().withAssessmentPeriods(newAssessmentPeriod().build(1)).withAssessorFeedbackDate("01/02/2017 17:30:00").withCompetitionStatus(CompetitionStatus.FUNDERS_PANEL).withCompetitionAssessmentConfig(newCompetitionAssessmentConfig().withIncludeAverageAssessorScoreInNotifications(true).build()).withId(123L).build();
+    	competition = newCompetition()
+                .withAssessmentPeriods(newAssessmentPeriod()
+                        .build(1))
+                .withAssessorFeedbackDate("01/02/2017 17:30:00")
+                .withCompetitionStatus(CompetitionStatus.FUNDERS_PANEL)
+                .withCompetitionAssessmentConfig(newCompetitionAssessmentConfig()
+                        .withIncludeAverageAssessorScoreInNotifications(true)
+                        .build())
+                .withId(123L)
+                .build();
+
     	when(competitionRepository.findById(123L)).thenReturn(Optional.of(competition));
     	
-    	when(decisionMapper.mapToDomain(any(Decision.class))).thenAnswer(new Answer<DecisionStatus>(){
-			@Override
-			public DecisionStatus answer(InvocationOnMock invocation) throws Throwable {
-				return DecisionStatus.valueOf(((Decision)invocation.getArguments()[0]).name());
-			}});
-    	when(decisionMapper.mapToResource(any(DecisionStatus.class))).thenAnswer(new Answer<Decision>(){
-			@Override
-			public Decision answer(InvocationOnMock invocation) throws Throwable {
-				return Decision.valueOf(((DecisionStatus)invocation.getArguments()[0]).name());
-			}});
+    	when(decisionMapper.mapToDomain(any(Decision.class))).thenAnswer((Answer<DecisionStatus>) invocation -> DecisionStatus.valueOf(((Decision)invocation.getArguments()[0]).name()));
+    	when(decisionMapper.mapToResource(any(DecisionStatus.class))).thenAnswer((Answer<Decision>) invocation -> Decision.valueOf(((DecisionStatus)invocation.getArguments()[0]).name()));
     }
 
     @Test
-    public void testNotifyLeadApplicantsOfDecisions() {
+    public void notifyLeadApplicantsOfDecisions() {
         CompetitionAssessmentConfig competitionAssessmentConfig = new CompetitionAssessmentConfig();
 
         Competition competition = newCompetition()
@@ -247,7 +248,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
     }
 
     @Test
-    public void testNotifyLeadApplicantsOfDecisionsWithAverageAssessorScore() {
+    public void notifyLeadApplicantsOfDecisionsWithAverageAssessorScore() {
         CompetitionAssessmentConfig competitionAssessmentConfig = new CompetitionAssessmentConfig();
         competitionAssessmentConfig.setIncludeAverageAssessorScoreInNotifications(true);
 
@@ -343,7 +344,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
     }
 
     @Test
-    public void testNotifyAllApplicantsOfDecisions() {
+    public void notifyAllApplicantsOfDecisions() {
         CompetitionAssessmentConfig competitionAssessmentConfig = new CompetitionAssessmentConfig();
         Competition competition = newCompetition().withCompetitionAssessmentConfig(competitionAssessmentConfig).withFundingType(FundingType.GRANT).build();
 
@@ -590,7 +591,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
     }
 
     @Test
-    public void testNotifyAllApplicantsOfDecisions_Ktp_ProjectNotCreated() {CompetitionAssessmentConfig competitionAssessmentConfig = new CompetitionAssessmentConfig();
+    public void notifyAllApplicantsOfDecisions_Ktp_ProjectNotCreated() {CompetitionAssessmentConfig competitionAssessmentConfig = new CompetitionAssessmentConfig();
         Competition competition = newCompetition().withCompetitionAssessmentConfig(competitionAssessmentConfig).withFundingType(FundingType.KTP).build();
 
         Application application = newApplication().withActivityState(ApplicationState.SUBMITTED).withCompetition(competition).build();
@@ -607,7 +608,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
 
     }
     @Test
-    public void testNotifyAllApplicantsOfDecisions_Ktp() {
+    public void notifyAllApplicantsOfDecisions_Ktp() {
         CompetitionAssessmentConfig competitionAssessmentConfig = new CompetitionAssessmentConfig();
         Competition competition = newCompetition().withCompetitionAssessmentConfig(competitionAssessmentConfig).withFundingType(FundingType.KTP).build();
 
@@ -680,7 +681,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
     }
 
     @Test
-    public void testSaveDecisionData() {
+    public void saveDecisionData() {
     	
     	Application application1 = newApplication().withId(1L).withCompetition(competition).withDecision(DecisionStatus.FUNDED).withApplicationState(ApplicationState.OPENED).build();
      	Application application2 = newApplication().withId(2L).withCompetition(competition).withDecision(DecisionStatus.UNFUNDED).withApplicationState(ApplicationState.OPENED).build();
@@ -700,7 +701,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
     }
 
     @Test
-    public void testSaveDecisionDataWillResetEmailDate() {
+    public void saveDecisionDataWillResetEmailDate() {
 
         Long applicationId = 1L;
         Long competitionId = competition.getId();
@@ -717,7 +718,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
     }
 
     @Test
-    public void testSaveDecisionDataWhenDecisionIsChanged() {
+    public void saveDecisionDataWhenDecisionIsChanged() {
         Long applicationId = 1L;
         Long competitionId = competition.getId();
         Application application1 = newApplication()
@@ -742,11 +743,11 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         verify(applicationService, times(2)).setApplicationFundingEmailDateTime(applicationId, null);
         verifyNoInteractions(applicationWorkflowHandler);
 
-        assertTrue(DecisionStatus.UNFUNDED.equals(application1.getDecision()));
+        assertEquals(DecisionStatus.UNFUNDED, application1.getDecision());
     }
 
     @Test
-    public void testSaveDecisionDataWontResetEmailDateForSameDecision() {
+    public void saveDecisionDataWontResetEmailDateForSameDecision() {
         Long applicationId = 1L;
         Long competitionId = competition.getId();
         Application application1 = newApplication().withId(applicationId).withCompetition(competition).withDecision(DecisionStatus.FUNDED).withApplicationState(ApplicationState.OPENED).build();
@@ -762,7 +763,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
     }
 
     @Test
-    public void testSaveDecisionDataForCompetitionInProjectSetup() {
+    public void saveDecisionDataForCompetitionInProjectSetup() {
         Long unsuccessfulApplicationId = 246L;
         Long projectSetupCompetitionId = 456L;
 
@@ -787,7 +788,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
                 .withApplicationState(ApplicationState.SUBMITTED)
                 .build();
 
-        assertTrue(projectSetupCompetition.getCompetitionStatus().equals(CompetitionStatus.PROJECT_SETUP));
+        assertEquals(projectSetupCompetition.getCompetitionStatus(), CompetitionStatus.PROJECT_SETUP);
 
         when(applicationRepository.findAllowedApplicationsForCompetition(new HashSet<>(singletonList(unsuccessfulApplicationId)), projectSetupCompetitionId)).thenReturn(singletonList(unsuccessfulApplication));
         when(applicationWorkflowHandler.approve(unsuccessfulApplication)).thenReturn(true);
@@ -805,7 +806,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
     }
 
     @Test
-    public void testSaveDecisionDataWithNoDecisions() {
+    public void saveDecisionDataWithNoDecisions() {
 
         Application application1 = newApplication().withId(1L).withCompetition(competition).withDecision(DecisionStatus.FUNDED).withApplicationState(ApplicationState.OPENED).build();
         Application application2 = newApplication().withId(2L).withCompetition(competition).withDecision(DecisionStatus.UNFUNDED).withApplicationState(ApplicationState.OPENED).build();

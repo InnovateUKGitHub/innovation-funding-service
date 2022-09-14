@@ -94,7 +94,7 @@ Academic finances JeS link showing
     [Tags]
     [Setup]    log in as a different user                &{collaborator2_credentials}
     When the user navigates to Your-finances page        Evolution of the global phosphorus cycle
-    And the user should see correct grant percentage     0.00%
+    And the user should see correct grant percentage     0.00
     When the user clicks the button/link                 link = Your project costs
     Then the user can see JeS details
 
@@ -119,7 +119,7 @@ User should not be able to edit or upload the form
     [Documentation]    INFUND-2437
     [Tags]
     When the user navigates to Your-finances page     Evolution of the global phosphorus cycle
-    And the user should see correct grant percentage  32.12%
+    And the user should see correct grant percentage  32.12
     And the user clicks the button/link               link = Your project costs
     Then the user should not see the element          jQuery = button:contains("Remove")
     And the user should see the element               css = [name$="incurredStaff"][readonly]

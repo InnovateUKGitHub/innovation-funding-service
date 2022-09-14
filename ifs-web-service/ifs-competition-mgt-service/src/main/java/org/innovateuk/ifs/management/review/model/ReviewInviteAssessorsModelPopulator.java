@@ -30,6 +30,7 @@ abstract class ReviewInviteAssessorsModelPopulator<ViewModelType extends InviteA
         model.setCompetitionId(competition.getId());
         model.setCompetitionName(competition.getName());
         model.setFundingType(competition.getFundingType());
+        model.setKtp(competition.isKtp());
         return model;
     }
 
