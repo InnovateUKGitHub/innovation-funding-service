@@ -17,7 +17,8 @@ public class ManagementYourFundingViewModel extends YourFundingViewModel {
                                           boolean isThirdPartyOfgem,
                                           String hash,
                                           boolean isThirdPartyFundingType,
-                                          boolean isCompTypeOfgemAndFundingTypeThirdParty) {
+                                          boolean isCompTypeOfgemAndFundingTypeThirdParty,
+                                          boolean ktp) {
         super(
                 applicationId,
                 competitionName,
@@ -45,7 +46,8 @@ public class ManagementYourFundingViewModel extends YourFundingViewModel {
                 hash,
                 false,
                 isThirdPartyFundingType,
-                isCompTypeOfgemAndFundingTypeThirdParty
+                isCompTypeOfgemAndFundingTypeThirdParty,
+                ktp
         );
     }
 }

@@ -11,14 +11,14 @@ public class ManageSupportersViewModel {
 
     private final Long competitionId;
     private final String competitionName;
-    private final FundingType competitionFundingType;
     private final CompetitionStatus competitionStatus;
+    private final boolean ktpCompetition;
 
     public ManageSupportersViewModel(CompetitionResource competition) {
         this.competitionId = competition.getId();
         this.competitionName = competition.getName();
-        this.competitionFundingType = competition.getFundingType();
         this.competitionStatus = competition.getCompetitionStatus();
+        this.ktpCompetition = competition.isKtp();
     }
 
     public Long getCompetitionId() {
@@ -30,7 +30,7 @@ public class ManageSupportersViewModel {
     }
 
     public boolean isAllocateLinkEnabled() {
-        return (competitionFundingType == FundingType.KTP || competitionFundingType == FundingType.KTP_AKT)
+        return  ktpCompetition
                 && competitionStatus.isLaterThan(READY_TO_OPEN)
                 && !competitionStatus.isLaterThan(IN_ASSESSMENT);
     }

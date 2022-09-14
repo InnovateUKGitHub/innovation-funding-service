@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
@@ -36,7 +37,7 @@ import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionR
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -138,6 +139,40 @@ public class LandingModelPopulatorTest {
         assertEquals(questionResources, viewModel.getQuestions());
         assertEquals(new ArrayList(), viewModel.getProjectDetails());
         assertEquals(CompetitionSetupSection.APPLICATION_FORM, viewModel.getGeneral().getCurrentSection());
+        assertFalse(viewModel.isktpAssessorQuestionsAvailable());
+    }
+
+    @Test
+    public void testPopulateModelWithKTPAssessedQuestions() {
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionCode("code")
+                .withName("name")
+                .withId(COMPETITION_ID)
+                .withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
+                .withFundingType(FundingType.KTP)
+                .build();
+        Long questionId = 100L;
+
+        List<SectionResource> sections = newSectionResource()
+                .withName("Application questions")
+                .withType(SectionType.KTP_ASSESSMENT)
+                .withQuestions(asList(questionId))
+                .build(1);
+        when(sectionService.getAllByCompetitionId(competition.getId())).thenReturn(sections);
+        List<QuestionResource> questionResources = asList(newQuestionResource().withId(questionId).build());
+        when(questionRestService.findByCompetition(competition.getId())).thenReturn(restSuccess(questionResources));
+
+        List<FormInputResource> formInputResources = newFormInputResource().withScope(APPLICATION).build(1);
+        when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(formInputResources));
+        List<FormInputResource> formInputResourcesAssessment = newFormInputResource().withScope(ASSESSMENT).build(1);
+        when(formInputRestService.getByQuestionIdAndScope(questionId, ASSESSMENT)).thenReturn(restSuccess(formInputResourcesAssessment));
+
+        LandingViewModel viewModel = (LandingViewModel) populator.populateModel(getBasicGeneralSetupView(competition), competition);
+
+        assertEquals(questionResources, viewModel.getKtpAssessorQuestions());
+        assertEquals(new ArrayList(), viewModel.getProjectDetails());
+        assertEquals(CompetitionSetupSection.APPLICATION_FORM, viewModel.getGeneral().getCurrentSection());
+        assertTrue(viewModel.isktpAssessorQuestionsAvailable());
     }
 
     private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionResource competition) {

@@ -30,6 +30,7 @@ abstract class InterviewInviteAssessorsModelPopulator<ViewModelType extends Invi
         model.setCompetitionId(competition.getId());
         model.setCompetitionName(competition.getName());
         model.setFundingType(competition.getFundingType());
+        model.setKtp(competition.isKtp());
         return model;
     }
 
