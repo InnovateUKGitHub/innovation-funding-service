@@ -24,7 +24,7 @@ spec:
             - name: LDAP_PORT
               value: "8389"
           name: ldap
-          image: docker-ifs.devops.innovateuk.org/releases/ldap-service:09_13_2022_manifest
+          image: docker-ifs.devops.innovateuk.org/releases/ldap-service:09_13_2022_amd64
           volumeMounts:
             - name: ldap-keys-volume
               mountPath: /var/certs
