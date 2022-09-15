@@ -15,7 +15,8 @@
     "resolve": "^1.7.1",
     "sshpk": "^1.15.1",
     "tablesorter": "^2.31.3",
-    "acorn": "^7.1.1"
+    "acorn": "^7.1.1",
+    "front-matter": "^4.0.1"
   },
   "devDependencies": {
     "gulp": "^4.0.2",
