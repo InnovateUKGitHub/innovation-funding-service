@@ -20,6 +20,7 @@ public abstract class InviteAssessorsViewModel<ViewModelRowType extends InviteAs
     private List<ViewModelRowType> assessors;
     private Pagination pagination;
     private FundingType fundingType;
+    private boolean ktp;
 
     protected InviteAssessorsViewModel() {
     }
@@ -100,7 +101,11 @@ public abstract class InviteAssessorsViewModel<ViewModelRowType extends InviteAs
         this.pagination = pagination;
     }
 
+    public void setKtp(boolean ktp) {
+        this.ktp = ktp;
+    }
+
     public boolean isKtp() {
-        return fundingType == FundingType.KTP;
+        return ktp;
     }
 }

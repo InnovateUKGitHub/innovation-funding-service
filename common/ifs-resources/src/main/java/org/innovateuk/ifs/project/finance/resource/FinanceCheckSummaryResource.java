@@ -36,13 +36,15 @@ public class FinanceCheckSummaryResource {
     private boolean h2020;
     private FundingType fundingType;
     private boolean hasGrantClaimPercentage;
+    private boolean ktp;
 
     public FinanceCheckSummaryResource() {
     }
 
     public FinanceCheckSummaryResource(FinanceCheckOverviewResource overviewResource, Long competitionId, String competitionName, boolean spendProfilesGenerated,
                                        List<FinanceCheckPartnerStatusResource> partnerStatusResources, boolean bankDetailsApproved,
-                                       String spendProfileGeneratedBy, LocalDate spendProfileGeneratedDate, Long applicationId, boolean h2020, FundingType fundingType, boolean hasGrantClaimPercentage) {
+                                       String spendProfileGeneratedBy, LocalDate spendProfileGeneratedDate, Long applicationId,
+                                       boolean h2020, FundingType fundingType, boolean hasGrantClaimPercentage, boolean ktp) {
         this.projectId = overviewResource.getProjectId();
         this.projectName = overviewResource.getProjectName();
         this.competitionId = competitionId;
@@ -65,6 +67,7 @@ public class FinanceCheckSummaryResource {
         this.h2020 = h2020;
         this.fundingType = fundingType;
         this.hasGrantClaimPercentage = hasGrantClaimPercentage;
+        this.ktp = ktp;
     }
 
     public Long getProjectId() {
@@ -303,6 +306,6 @@ public class FinanceCheckSummaryResource {
 
     @JsonIgnore
     public boolean isKtp(){
-        return this.fundingType.equals(KTP);
+        return ktp;
     }
 }

@@ -22,4 +22,12 @@ public interface ApplicationNotificationTemplateService {
 	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
 	@SecuredBySpring(value = "GET_DEFAULT_INELIGIBLE_TEMPLATE", securedType = Decision.class, description = "Comp Admins should be able to see default templates for application emails.")
 	ServiceResult<ApplicationNotificationTemplateResource> getIneligibleNotificationTemplate(long competitionId);
+
+	@PreAuthorize("hasAnyAuthority('comp_admin')")
+	@SecuredBySpring(value = "GET_DEFAULT_EOI_APPROVED_TEMPLATE", securedType = Decision.class, description = "Comp Admins should be able to see default templates for eoi approved application emails.")
+	ServiceResult<ApplicationNotificationTemplateResource> getEoiApprovedNotificationTemplate(long competitionId);
+
+	@PreAuthorize("hasAnyAuthority('comp_admin')")
+	@SecuredBySpring(value = "GET_DEFAULT_EOI_REJECTED_TEMPLATE", securedType = Decision.class, description = "Comp Admins should be able to see default templates for eoi rejected application emails.")
+	ServiceResult<ApplicationNotificationTemplateResource> getEoiRejectedNotificationTemplate(long competitionId);
 }

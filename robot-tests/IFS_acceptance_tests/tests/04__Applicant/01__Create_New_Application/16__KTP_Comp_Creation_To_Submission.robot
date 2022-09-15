@@ -227,7 +227,7 @@ The knowledge transfer partnership t&c's are correct
 T&c's can be confirmed
     [Documentation]  IFS-7213  IFS-9124
     Given the user clicks the button/link                    jQuery = button:contains("Done")
-    When the user selects the radio button                   termsAndConditionsId    termsAndConditionsId13
+    When the user selects the radio button                   termsAndConditionsId    termsAndConditionsId14
     And the user clicks the button/link                      jQuery = button:contains("Done")
     And the user should see the element                      jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Knowledge Transfer Partnership (KTP) - Subsidy control")
     And the user should see the element                      jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Innovate UK")
@@ -1411,7 +1411,7 @@ the user can see project cost breakdown of lead organisation
 
 the user can view lead and partner finance summary calculations
     the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("2,369")
-    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("10.00%")
+    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("10.00")
     the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("237")
     the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("20,000")
     the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("2,132")
@@ -1439,15 +1439,15 @@ the user should see the changes in the finance table in Overview screen
     the user should see the element     jQuery = th:contains("Company contribution (%)")
     the user should see the element     jQuery = th:contains("Company contribution (£)")
     the user should see the element     jQuery = th:contains("${ktpOrgName}") + td:contains("2,369")
-    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:nth-child(6):contains("0.00%") + td:nth-child(7):contains("0")
-    the user should see the element     jQuery = th:contains("ROYAL MAIL PLC") ~ td:contains("90.00%")
+    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:nth-child(6):contains("0.00") + td:nth-child(7):contains("0")
+    the user should see the element     jQuery = th:contains("ROYAL MAIL PLC") ~ td:contains("90.00")
     the user should see the element     jQuery = th:contains("ROYAL MAIL PLC") ~ td:contains("2,132")
 
 the user sees the changes in the finance summary table in Eligibility screen
     the user should see the element     jQuery = th:contains("Other funding (£)")
     the user should see the element     jQuery = th:contains("Company contribution (%)")
     the user should see the element     jQuery = th:contains("Company contribution (£)")
-    the user should see the element     jQuery = td:nth-child(6):contains("0.00%") + td:nth-child(7):contains("0")
+    the user should see the element     jQuery = td:nth-child(6):contains("0.00") + td:nth-child(7):contains("0")
 
 the user should not see Documents and Spend profile dashboard sections
     the user should not see the element       jQuery = li:contains("Documents")

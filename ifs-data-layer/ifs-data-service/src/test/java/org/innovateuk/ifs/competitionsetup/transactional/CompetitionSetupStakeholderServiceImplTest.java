@@ -90,7 +90,7 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
     }
 
     @Test
-    public void inviteStakeholderWhenUserDetailsMissing() throws Exception {
+    public void inviteStakeholderWhenUserDetailsMissing() {
 
         UserResource invitedUser = UserResourceBuilder.newUserResource().build();
 
@@ -101,7 +101,7 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
     }
 
     @Test
-    public void inviteStakeholderWhenEmailDomainIsIncorrect() throws Exception {
+    public void inviteStakeholderWhenEmailDomainIsIncorrect() {
 
         invitedUser.setEmail("Rayon.Kevin@innovateuk.ukri.org");
 
@@ -112,14 +112,11 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
     }
 
     @Test
-    public void inviteAlreadyInvitedStakeholderFailure() throws Exception {
+    public void inviteAlreadyInvitedStakeholderFailure() {
 
         long competitionId = 1L;
 
-        String user1Name = "Rayon Kevin";
-        String user2Name = "Sonal Dsilva";
         String user1Email = "Rayon.Kevin@gmail.com";
-        String user2Email = "Sonal.Dsilva@gmail.com";
 
         when(stakeholderInviteRepositoryMock.existsByCompetitionIdAndStatusAndEmail(competitionId, SENT, user1Email)).thenReturn(true);
 
@@ -135,19 +132,8 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
     public void inviteUserAlreadyStakeholderOnCompetitionFailure() {
 
         long competitionId = 1L;
-        long stakeholderUser1 = 12L;
-        long stakeholderUser2 = 14L;
         String email1 = "user1@gmail.com";
         String email2 = "Rayon.Kevin@gmail.com";
-
-        List<User> stakeholderUsers = UserBuilder.newUser()
-                .withId(stakeholderUser1, stakeholderUser2)
-                .withEmailAddress(email1, email2)
-                .build(2);
-
-        List<Stakeholder> stakeholders = StakeholderBuilder.newStakeholder()
-                .withUser(stakeholderUsers.get(0), stakeholderUsers.get(1))
-                .build(2);
 
         when(stakeholderInviteRepositoryMock.existsByCompetitionIdAndStatusAndEmail(competitionId, SENT, email1)).thenReturn(false);
         when(stakeholderRepositoryMock.existsByCompetitionIdAndStakeholderEmail(competitionId, email2)).thenReturn(true);
@@ -200,7 +186,7 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
     }
 
     @Test
-    public void inviteStakeholderSuccess() throws Exception {
+    public void inviteStakeholderSuccess() {
 
         long competitionId = 1L;
         String competitionName = "competition1";
@@ -268,7 +254,7 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
     }
 
     @Test
-    public void findStakeholders() throws Exception {
+    public void findStakeholders() {
 
         long competitionId = 1L;
 
@@ -297,7 +283,7 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
     }
 
     @Test
-    public void addStakeholder() throws Exception {
+    public void addStakeholder() {
 
         long competitionId = 1L;
         long stakeholderUserId = 2L;
@@ -355,7 +341,7 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
     }
 
     @Test
-    public void removeStakeholder() throws Exception {
+    public void removeStakeholder() {
 
         long competitionId = 1L;
         long stakeholderUserId = 2L;
@@ -367,7 +353,7 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
     }
 
     @Test
-    public void findPendingStakeholderInvites() throws Exception {
+    public void findPendingStakeholderInvites() {
 
         long competitionId = 1L;
 

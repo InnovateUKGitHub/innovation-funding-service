@@ -24,13 +24,15 @@ public class AssessmentFinancesSummaryViewModel {
     private final ApplicationProcurementMilestonesSummaryViewModel applicationProcurementMilestonesSummaryViewModel;
     private final boolean procurementMilestones;
     private final boolean hecpCompetition;
+    private final boolean ktpCompetition;
 
     public AssessmentFinancesSummaryViewModel(long assessmentId, long applicationId, String applicationName, long daysLeft,
                                               long daysLeftPercentage, FundingType fundingType, ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel,
                                               ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
                                               ApplicationProcurementMilestonesSummaryViewModel applicationProcurementMilestonesSummaryViewModel,
                                               boolean procurementMilestones,
-                                              boolean hecpCompetition) {
+                                              boolean hecpCompetition,
+                                              boolean ktpCompetition) {
         this.assessmentId = assessmentId;
         this.applicationId = applicationId;
         this.applicationName = applicationName;
@@ -42,6 +44,7 @@ public class AssessmentFinancesSummaryViewModel {
         this.applicationProcurementMilestonesSummaryViewModel = applicationProcurementMilestonesSummaryViewModel;
         this.procurementMilestones = procurementMilestones;
         this.hecpCompetition = hecpCompetition;
+        this.ktpCompetition = ktpCompetition;
     }
 
     public long getAssessmentId() {
@@ -69,7 +72,7 @@ public class AssessmentFinancesSummaryViewModel {
     }
 
     public boolean isKtpCompetition() {
-        return FundingType.KTP.equals(fundingType);
+        return ktpCompetition;
     }
 
     public boolean isHecpCompetition() {

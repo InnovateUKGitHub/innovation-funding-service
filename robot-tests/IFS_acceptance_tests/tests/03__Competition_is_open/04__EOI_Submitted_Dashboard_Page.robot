@@ -53,19 +53,22 @@ Pagination on Expression of interest
 Internal user submit the EOI applications funding decision
     [Documentation]    IFS-12261
     Given Internal user makes decision on EOI
+    When the user clicks the button/link                            jQuery = span:contains("Next")
+    Then the user should see the element                            jQuery = td:contains("Horizon Europe Guarantee Eoi Application21")
+    And Internal user marks the EOI as successful/unsuccessful      Horizon Europe Guarantee Eoi Application21   EOI_APPROVED
 
 Comp admin can view read only view of Expression of interest
     [Documentation]  IFS-12177
     Given the user clicks the button/link       link = ${openCompetitionPreRegApplicationId}
     Then the user should see the element        jQuery = h1:contains(${openCompetitionPreRegApplicationName})
-    And the user should see the element         jQuery = h1:contains("Application overview")
+    And the user should see the element         jQuery = h1:contains("Expression of interest overview")
 
 Admin can view Expression of Interest notifications page
     [Documentation]    IFS-12261
     Given The user logs-in in new browser       &{Comp_admin1_credentials}
     when the user navigates to the page         ${SERVER}/management/competition/${openCompetitionPreReg}/applications/eoi
     And the user clicks the button/link         link = Manage notifications
-    Then the user should see the element         jQuery = h1:contains("Expression of interest notifications")
+    Then the user should see the element        jQuery = h1:contains("Expression of interest notifications")
     And The user should see the element         css = .govuk-button[disabled]
 
 Filter on application number, sent and Expression of interest decision on Expression of Interest notifications page
@@ -110,7 +113,4 @@ Internal user makes decision on EOI
     Internal user marks the EOI as successful/unsuccessful      Horizon Europe Guarantee Eoi Application16   EOI_REJECTED
     Internal user marks the EOI as successful/unsuccessful      Horizon Europe Guarantee Eoi Application18   EOI_APPROVED
     Internal user marks the EOI as successful/unsuccessful      Horizon Europe Guarantee Eoi Application20   EOI_REJECTED
-    the user clicks the button/link                             jQuery = span:contains("Next")
-    the user should see the element                             jQuery = td:contains("Horizon Europe Guarantee Eoi Application21")
-    Internal user marks the EOI as successful/unsuccessful      Horizon Europe Guarantee Eoi Application21   EOI_APPROVED
 

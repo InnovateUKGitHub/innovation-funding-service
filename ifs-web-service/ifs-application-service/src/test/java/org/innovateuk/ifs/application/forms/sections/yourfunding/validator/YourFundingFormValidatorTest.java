@@ -1,14 +1,16 @@
 package org.innovateuk.ifs.application.forms.sections.yourfunding.validator;
 
-import org.innovateuk.ifs.Application;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.OtherFundingRowForm;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingAmountForm;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionApplicationConfigRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
@@ -27,6 +29,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.generateUnsavedRowId;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionApplicationConfigResourceBuilder.newCompetitionApplicationConfigResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertFalse;
@@ -49,6 +52,9 @@ public class YourFundingFormValidatorTest extends BaseServiceUnitTest<YourFundin
     @Mock
     private CompetitionApplicationConfigRestService competitionApplicationConfigRestService;
 
+    @Mock
+    private CompetitionRestService competitionRestService;
+
     @Override
     protected YourFundingFormValidator supplyServiceUnderTest() {
         return new YourFundingFormValidator();
@@ -62,13 +68,18 @@ public class YourFundingFormValidatorTest extends BaseServiceUnitTest<YourFundin
         form.setGrantClaimPercentage(BigDecimal.valueOf(0));
         long competitionId = 1l;
 
+        CompetitionResource competition = newCompetitionResource()
+                .withId(competitionId)
+                .withFundingType(FundingType.GRANT)
+                .build();
         ApplicationResource applicationResource = newApplicationResource()
-                .withCompetition(competitionId)
+                .withCompetition(competition.getId())
                 .build();
         CompetitionApplicationConfigResource competitionApplicationConfigResource = newCompetitionApplicationConfigResource().build();
 
         when(applicationRestService.getApplicationById(anyLong())).thenReturn(restSuccess(applicationResource));
         when(competitionApplicationConfigRestService.findOneByCompetitionId(competitionId)).thenReturn(restSuccess(competitionApplicationConfigResource));
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
         form.setOtherFunding(true);
         OtherFundingRowForm emptyRow = new OtherFundingRowForm(new OtherFunding(null, null, "Valid", "01-2019", new BigDecimal(123), 1L));
@@ -101,9 +112,13 @@ public class YourFundingFormValidatorTest extends BaseServiceUnitTest<YourFundin
     public void validateYourFundingAmountForm() {
 
         long competitionId = 1l;
+        CompetitionResource competition = newCompetitionResource()
+                .withId(competitionId)
+                .withFundingType(FundingType.GRANT)
+                .build();
 
         ApplicationResource applicationResource = newApplicationResource()
-                .withCompetition(competitionId)
+                .withCompetition(competition.getId())
                 .build();
         CompetitionApplicationConfigResource competitionApplicationConfigResource = newCompetitionApplicationConfigResource().build();
 
@@ -121,6 +136,7 @@ public class YourFundingFormValidatorTest extends BaseServiceUnitTest<YourFundin
         when(applicationFinanceRestService.getFinanceDetails(applicationId, organisation.getId())).thenReturn(restSuccess(baseFinanceResource));
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(applicationResource));
         when(competitionApplicationConfigRestService.findOneByCompetitionId(competitionId)).thenReturn(restSuccess(competitionApplicationConfigResource));
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
         when(baseFinanceResource.getTotal()).thenReturn(new BigDecimal("99.9"));
         service.validate(form, bindingResult, user, applicationId);

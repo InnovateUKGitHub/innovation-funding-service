@@ -34,6 +34,7 @@ public class CompetitionManagementEOIDecisionController extends CompetitionManag
         return "eoiDecisionSelectionForm";
     }
 
+    @Override
     @GetMapping
     public String applications(Model model,
                                @PathVariable("competitionId") long competitionId,
@@ -58,6 +59,7 @@ public class CompetitionManagementEOIDecisionController extends CompetitionManag
                 response);
     }
 
+    @Override
     @PostMapping(value = {""})
     public String makeDecision(Model model,
                                @PathVariable("competitionId") long competitionId,
@@ -82,6 +84,7 @@ public class CompetitionManagementEOIDecisionController extends CompetitionManag
                 response);
     }
 
+    @Override
     @PostMapping(value = {""}, params = {"addAll"})
     public @ResponseBody JsonNode addAllApplicationsToDecisionSelectionList(@PathVariable("competitionId") long competitionId,
                                                                                    @RequestParam("addAll") boolean addAll,
@@ -94,6 +97,7 @@ public class CompetitionManagementEOIDecisionController extends CompetitionManag
                 response);
     }
 
+    @Override
     @PostMapping(value = {""}, params = {"selectionId", "isSelected"})
     public @ResponseBody JsonNode addSelectedApplicationsToDecisionList(@PathVariable("competitionId") long competitionId,
                                                                                @RequestParam("selectionId") long applicationId,

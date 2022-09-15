@@ -161,7 +161,7 @@ The user will not be able to mark the application as complete without completing
     And The user should see the element                         jQuery = span:contains("Business and financial information")
     And The user should see the element                         jQuery = p:contains("Information not yet provided")
     And The user should not see the element                     jQuery = #accordion-questions-content-1-1 button:contains("Mark")
-    And the user should see the element                         jQuery = .section-incomplete + button:contains("Business and financial information")
+    And the user should see the element                         jQuery = div:contains("Incomplete") button:contains("Business and financial information")
     And the user should see the element                         jQuery = h2:contains("Applicant details")
     And the user should see the element                         jQuery = h2:contains("Project finance")
 
@@ -169,7 +169,7 @@ The user can see the business and financial information application question in 
     [Documentation]    IFS-9484  IFS-10705
     When the user marks b&fi question as complete or incomplete     steve.smith@empire.com  ${loanApplicationID}  Complete  2025-04-11T12:15:45.000Z
     And the user reloads the page
-    Then the user should see the element                            jQuery = .section-complete + button:contains("Business and financial information")
+    Then the user should see the element                            jQuery = div:contains("Complete") button:contains("Business and financial information")
     And the user checks valid question status received form SIL     ${loanApplicationID}  Complete  2025-04-11T12:15:45Z
 
 Return and edit button should not change the status of B&FI question
@@ -196,13 +196,13 @@ Loan application Your funding
     Given the user enters empty funding amount
     When the user enters text to a text field  id = amount   57,803
     And the user clicks the button/link        id = mark-all-as-complete
-    Then the user should see the element       jQuery = td:contains("200,903") ~ td:contains("57,803") ~ td:contains("30.00%") ~ td:contains("2,468") ~ td:contains("140,632")
+    Then the user should see the element       jQuery = td:contains("200,903") ~ td:contains("57,803") ~ td:contains("30.00") ~ td:contains("140,632") ~ td:contains("2,468")
 
 Loan application finance overview
     [Documentation]  IFS-6208
     Given the user clicks the button/link  link = Back to application overview
     When the user clicks the button/link   link = Finances overview
-    Then the user should see the element   jQuery = td:contains("200,903") ~ td:contains("57,803") ~ td:contains("30.00%") ~ td:contains("2,468") ~ td:contains("140,632")
+    Then the user should see the element   jQuery = td:contains("200,903") ~ td:contains("57,803") ~ td:contains("30.00") ~ td:contains("140,632") ~ td:contains("2,468")
 
 Loan application submission
     [Documentation]  IFS-6237  IFS-6238  IFS-9483 IFS-10825 IFS-10869 IFS-11137
@@ -252,7 +252,7 @@ Fund sought changes
     [Documentation]  IFS-6293  IFS-6298  IFS-8944
     Given the user enters text to a text field     id = partners[${EMPIRE_LTD_ID}].funding  6000
     When the user clicks the button/link           jQuery = button:contains("Save and return to project finances")
-    Then the user should see the element           jQuery = h3:contains("Finance summary") ~ div td:contains("£200,903") ~ td:contains("4.21%") ~ td:contains("6,000") ~ td:contains("2,468") ~ td:contains("192,435")
+    Then the user should see the element           jQuery = h3:contains("Finance summary") ~ div td:contains("£200,903") ~ td:contains("4.21") ~ td:contains("6,000") ~ td:contains("2,468") ~ td:contains("192,435")
 
 Project finance completes all project setup steps
     [Documentation]  IFS-6369  IFS-6292  IFS-6307  IFS-6298  IFS-6368

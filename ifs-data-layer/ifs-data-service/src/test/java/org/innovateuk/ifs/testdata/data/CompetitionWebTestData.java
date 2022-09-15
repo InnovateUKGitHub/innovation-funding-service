@@ -496,7 +496,12 @@ public class CompetitionWebTestData {
                         .withPreRegistration(true),
                 grantCompetition()
                         .withName("Grant Competition With IM survey enabled")
-                        .withImSurveyEnabled(true)
+                        .withImSurveyEnabled(true),
+                horizonEuropeGuaranteeCompetition()
+                        .withName("Horizon Europe Guarantee Pre Registration Competition with Evidence Enabled")
+                        .withAssessmentStage(false)
+                        .withPreRegistration(true)
+                        .withEoiEvidenceRequired(true)
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.OPEN))

@@ -42,6 +42,7 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
     private final String templateDocumentTitle;
     private final List<ResearchCategoryResource> researchCategories;
     private final FundingType fundingType;
+    private final boolean ktp;
 
     private AssessmentFeedbackViewModel(long assessmentId,
                                         long daysLeft,
@@ -63,7 +64,8 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                                         FileDetailsViewModel templateDocumentDetails,
                                         String templateDocumentTitle,
                                         List<ResearchCategoryResource> researchCategories,
-                                        FundingType fundingType) {
+                                        FundingType fundingType,
+                                        boolean ktp) {
         this.assessmentId = assessmentId;
         this.daysLeft = daysLeft;
         this.daysLeftPercentage = daysLeftPercentage;
@@ -85,6 +87,7 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
         this.templateDocumentTitle = templateDocumentTitle;
         this.researchCategories = researchCategories;
         this.fundingType = fundingType;
+        this.ktp = ktp;
     }
 
     public AssessmentFeedbackViewModel(AssessmentResource assessment,
@@ -120,7 +123,8 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                 templateDocumentDetails,
                 templateDocumentTitle,
                 researchCategories,
-                competition.getFundingType());
+                competition.getFundingType(),
+                competition.isKtp());
     }
 
     public long getAssessmentId() {
@@ -221,7 +225,7 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
     }
 
     public boolean isKtp() {
-        return fundingType == FundingType.KTP;
+        return ktp;
     }
 
     @Override

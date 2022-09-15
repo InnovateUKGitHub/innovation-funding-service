@@ -1,0 +1,64 @@
+hibernate:
+    dialect:
+        storage_engine: innodb
+ifs:
+    web:
+        system:
+            user:
+                uid: c0d02979-e66e-11e7-ac43-0242ac120002
+logging:
+    level:
+        org:
+            innovateuk:
+                ifs: INFO
+            springframework: WARN
+        root: WARN
+management:
+    endpoint:
+        health:
+            show-components: ALWAYS
+            show-details: ALWAYS
+        restart:
+            enabled: false
+        shutdown:
+            enabled: false
+    endpoints:
+        enabled-by-default: true
+        health:
+            enabled: true
+        info:
+            enabled: true
+        web:
+            base-path: /monitoring
+            exposure:
+                exclude: threaddump,heapdump
+                include: '*'
+server:
+    connection-timeout: 600000
+    servlet:
+        session:
+            cookie:
+                http-only: false
+                secure: true
+spring:
+    application:
+        name: IFS Survey Data Service
+    datasource:
+        driver-class-name: org.mariadb.jdbc.Driver
+        password: password
+        test-on-borrow: true
+        url: jdbc:mysql://ifs-database:3306/ifs_survey?useMysqlMetadata=true&characterEncoding=utf8
+        username: root
+        validation-query: SELECT 1
+    flyway:
+        check-location: false
+        driver-class-name: org.mariadb.jdbc.Driver
+        enabled: true
+        locations: db/migration
+        password: password
+        table: schema_version
+        url: jdbc:mysql://ifs-database:3306/ifs_survey?useMysqlMetadata=true&characterEncoding=utf8
+        user: root
+    jpa:
+        database-platform: org.hibernate.dialect.MySQL57Dialect
+        generate-ddl: false

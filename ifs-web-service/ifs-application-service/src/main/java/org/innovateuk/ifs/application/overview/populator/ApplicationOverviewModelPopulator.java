@@ -124,7 +124,8 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                                     childSection.getName(),
                                     format("/application/%d/form/section/%d", data.getApplication().getId(), childSection.getId()),
                                     data.getCompletedSectionIds().contains(childSection.getId()),
-                                    true
+                                    true,
+                                    childSection.isEnabledForPreRegistration()
                             )
                     )
                     .collect(toCollection(LinkedHashSet::new));
@@ -201,17 +202,19 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         return getAssignableViewModel(question, data)
                 .map(avm ->
                         new ApplicationOverviewRowViewModel(
-                                getQuestionTitle(question, data.getCompetition()),
+                                getQuestionTitle(question, data),
                                 getRowUrlFromQuestion(question, data),
                                 complete,
                                 avm,
-                                showStatus)
+                                showStatus,
+                                question.isEnabledForPreRegistration())
                 ).orElse(
                         new ApplicationOverviewRowViewModel(
-                                getQuestionTitle(question, data.getCompetition()),
+                                getQuestionTitle(question, data),
                                 getRowUrlFromQuestion(question, data),
                                 complete,
-                                showStatus)
+                                showStatus,
+                                question.isEnabledForPreRegistration())
                 );
     }
 
@@ -270,8 +273,10 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         }
     }
 
-    private static String getQuestionTitle(QuestionResource question, CompetitionResource competition) {
-        boolean preRegistration = competition.isEnabledForPreRegistration();
+    private static String getQuestionTitle(QuestionResource question, ApplicationOverviewData data) {
+        CompetitionResource competition = data.getCompetition();
+        ApplicationResource application = data.getApplication();
+        boolean preRegistration = application.isEnabledForExpressionOfInterest();
         String questionTitle = preRegistration ? format("%s", question.getShortName()) : format("%s. %s", question.getQuestionNumber(), question.getShortName());
 
         return (question.getQuestionSetupType() == ASSESSED_QUESTION) ?

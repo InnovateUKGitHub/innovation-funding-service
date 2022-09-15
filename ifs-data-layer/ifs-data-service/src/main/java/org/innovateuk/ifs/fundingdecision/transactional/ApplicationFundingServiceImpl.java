@@ -2,9 +2,9 @@ package org.innovateuk.ifs.fundingdecision.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.resource.ApplicationDecisionToSendApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.Decision;
-import org.innovateuk.ifs.application.resource.ApplicationDecisionToSendApplicationResource;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
@@ -36,13 +36,13 @@ import java.util.stream.StreamSupport;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.application.resource.Decision.FUNDED;
 import static org.innovateuk.ifs.application.resource.Decision.UNFUNDED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingServiceImpl.Notifications.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.user.resource.ProcessRoleType.*;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.COLLABORATOR;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Service
@@ -79,7 +79,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     private String webBaseUrl;
 
     public enum Notifications {
-        APPLICATION_FUNDING, HORIZON_2020_FUNDING, HORIZON_EUROPE_FUNDING
+        APPLICATION_FUNDING, HORIZON_2020_FUNDING, HORIZON_EUROPE_FUNDING, EOI_DECISION
     }
 
     @Override
@@ -90,6 +90,14 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
         }
         return getCompetition(competitionId).andOnSuccess(competition -> {
             List<Application> applications = findValidApplications(applicationDecisions, competitionId);
+
+            if (competition.isEnabledForPreRegistration()) {
+                applications = applications
+                        .stream()
+                        .filter(a -> !a.applicationEoiEvidenceIsRequiredAndNotReceived())
+                        .collect(toList());
+            }
+
             return saveDecisionData(applications, applicationDecisions);
         });
     }
@@ -279,7 +287,9 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     private Notifications getNotificationType(List<Application> applications, Competition competition) {
         Notifications notificationType;
 
-        if(isH2020Competition(applications)){
+        if (isEoiDecision(applications, competition)) {
+            notificationType = EOI_DECISION;
+        } else if(isH2020Competition(applications)){
             notificationType = HORIZON_2020_FUNDING;
         } else if (competition.isHorizonEuropeGuarantee()){
             notificationType = HORIZON_EUROPE_FUNDING;
@@ -304,6 +314,11 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
             applicationNotificationTargets.add(getProcessRoles(applicationId, LEADAPPLICANT).andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail).andOnSuccessReturn(pr -> Pair.of(applicationId, new UserNotificationTarget(pr.getUser().getName(), pr.getUser().getEmail()))));
         });
         return applicationNotificationTargets;
+    }
+
+    private boolean isEoiDecision(List<Application> applications, Competition competition) {
+        return competition.isEnabledForPreRegistration()
+                && applications.stream().anyMatch(Application::isEnabledForExpressionOfInterest);
     }
 
     private boolean isH2020Competition(List<Application> applications) {

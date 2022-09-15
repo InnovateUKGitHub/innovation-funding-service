@@ -22,6 +22,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
     private final boolean open;
     private final boolean complete;
     private final boolean ktpCompetition;
+    private final boolean ktpAktCompetition;
     private final boolean ktpPhase2Enabled;
     private final ApplicationKtaInviteResource ktaInvite;
     private final ProcessRoleResource ktaProcessRole;
@@ -40,6 +41,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
                                     boolean open,
                                     boolean complete,
                                     boolean ktpCompetition,
+                                    boolean ktpAktCompetition,
                                     boolean ktpPhase2Enabled,
                                     ApplicationKtaInviteResource ktaInvite,
                                     ProcessRoleResource ktaProcessRole,
@@ -57,6 +59,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         this.open = open;
         this.complete = complete;
         this.ktpCompetition = ktpCompetition;
+        this.ktpAktCompetition = ktpAktCompetition;
         this.ktpPhase2Enabled = ktpPhase2Enabled;
         this.ktaInvite = ktaInvite;
         this.ktaProcessRole = ktaProcessRole;
@@ -137,6 +140,10 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         return ktpCompetition;
     }
 
+    public boolean isKtpAktCompetition() {
+        return ktpAktCompetition;
+    }
+
     public boolean isKtpPhase2Enabled() { return ktpPhase2Enabled; }
 
     public Long getKtaInvitePendingDays() {
@@ -156,7 +163,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
     }
 
     public boolean hasNoKta() {
-        return ktaProcessRole == null && ktaInvite == null;
+        return ktaProcessRole == null && ktaInvite == null && this.ktpCompetition;
     }
 
     public String getKtaEmail() {
@@ -185,5 +192,17 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
 
     public boolean isThirdPartyOfgem() {
         return isThirdPartyOfgem;
+    }
+
+    public String ktpCompetitionKtaHeadingContent() {
+        if (ktpAktCompetition) {
+            return "Knowledge transfer adviser (optional)";
+        } else {
+            return "Knowledge transfer adviser";
+        }
+    }
+
+    public boolean ktpAktApplicationHasNoKtaAndIsReadOnly() {
+        return isKtpAktCompetition() && hasNoKta() && isReadOnly();
     }
 }

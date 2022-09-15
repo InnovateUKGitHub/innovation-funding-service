@@ -43,7 +43,9 @@ import java.util.stream.Collectors;
                 FileTypeMapper.class,
                 FileEntryMapper.class,
                 GolTemplateMapper.class,
-                CompetitionThirdPartyConfigMapper.class
+                CompetitionThirdPartyConfigMapper.class,
+                CompetitionEoiEvidenceConfigMapper.class,
+                CompetitionApplicationConfigMapper.class
         })
 public abstract class CompetitionMapper extends BaseMapper<Competition, CompetitionResource, Long> {
 
@@ -57,7 +59,8 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
             @Mapping(source = "modifiedBy.name", target = "modifiedBy"),
             @Mapping(target = "assessorFinanceView", ignore = true),
             @Mapping(source = "competitionThirdPartyConfig", target = "competitionThirdPartyConfigResource"),
-            @Mapping(source = "competitionApplicationConfig", target = "competitionApplicationConfigResource")
+            @Mapping(source = "competitionApplicationConfig", target = "competitionApplicationConfigResource"),
+            @Mapping(source = "competitionEoiEvidenceConfig", target = "competitionEoiEvidenceConfigResource")
     })
     @Override
     public abstract CompetitionResource mapToResource(Competition domain);
@@ -75,7 +78,8 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
             @Mapping(target = "useDocusignForGrantOfferLetter", ignore = true),
             @Mapping(target = "competitionFinanceRowTypes", ignore = true),
             @Mapping(target = "competitionExternalConfig", ignore = true),
-            @Mapping(source = "competitionThirdPartyConfigResource", target = "competitionThirdPartyConfig")
+            @Mapping(source = "competitionThirdPartyConfigResource", target = "competitionThirdPartyConfig"),
+            @Mapping(source = "competitionEoiEvidenceConfigResource", target = "competitionEoiEvidenceConfig")
     })
     public abstract Competition mapToDomain(CompetitionResource domain);
 

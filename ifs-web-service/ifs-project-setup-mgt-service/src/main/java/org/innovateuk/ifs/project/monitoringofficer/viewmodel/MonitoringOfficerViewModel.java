@@ -123,7 +123,7 @@ public class MonitoringOfficerViewModel {
     }
 
     public boolean isKtp() {
-        return this.competitionSummary.getFundingType().equals(FundingType.KTP);
+        return ktpCompetition;
     }
 
     public boolean isDisplayAssignMonitoringOfficerButton() {

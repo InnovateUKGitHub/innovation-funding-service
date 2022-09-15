@@ -1,0 +1,47 @@
+logging:
+    level:
+        org:
+            innovateuk:
+                ifs: INFO
+                ifs.sil.email.controller.SimpleEmailEndpointController: INFO
+            springframework: WARN
+        root: WARN
+management:
+    endpoint:
+        health:
+            show-components: ALWAYS
+            show-details: ALWAYS
+    endpoints:
+        enabled-by-default: true
+        web:
+            base-path: /monitoring
+server:
+    connection-timeout: 600000
+    tomcat:
+        accept-count: 700
+        max-connections: 700
+        max-threads: 300
+        min-spare-threads: 20
+sil:
+    stub:
+        send:
+            mail:
+                from:
+                    ifs: true
+        smtp:
+            auth: false
+            host: mail
+            password: smtp
+            port: 8025
+            starttls:
+                enable: false
+            timeout:
+                millis: 10000
+            user: smtp
+spring:
+    application:
+        name: IFS Sil Stub
+    boot:
+        admin:
+            client:
+                service-url: http://sil-stub:8080

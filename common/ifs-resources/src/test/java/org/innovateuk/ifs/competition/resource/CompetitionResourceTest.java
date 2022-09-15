@@ -20,58 +20,6 @@ import static org.junit.Assert.*;
 
 @SuppressWarnings("unchecked")
 public class CompetitionResourceTest {
-    @Test
-    public void getFinanceRowTypesByFinanceForFecCostModel() {
-        CompetitionResource competition = newCompetitionResource()
-                .withFundingType(FundingType.KTP)
-                .withFinanceRowTypes(FinanceRowType.getKtpFinanceRowTypes())
-                .build();
-
-        ApplicationFinanceResource finance = newApplicationFinanceResource()
-                .withFecEnabled(true)
-                .build();
-
-        List<FinanceRowType> financeRowTypes = competition.getFinanceRowTypesByFinance(Optional.of(finance));
-
-        assertNotNull(financeRowTypes);
-        assertEquals(Arrays.asList(FinanceRowType.OTHER_COSTS,
-                FinanceRowType.FINANCE,
-                FinanceRowType.ASSOCIATE_SALARY_COSTS,
-                FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS,
-                FinanceRowType.CONSUMABLES,
-                FinanceRowType.ASSOCIATE_SUPPORT,
-                FinanceRowType.KNOWLEDGE_BASE,
-                FinanceRowType.ESTATE_COSTS,
-                FinanceRowType.KTP_TRAVEL,
-                FinanceRowType.ADDITIONAL_COMPANY_COSTS,
-                FinanceRowType.PREVIOUS_FUNDING), financeRowTypes);
-    }
-
-    @Test
-    public void getFinanceRowTypesByFinanceForNonFecCostModel() {
-        CompetitionResource competition = newCompetitionResource()
-                .withFundingType(FundingType.KTP)
-                .withFinanceRowTypes(FinanceRowType.getKtpFinanceRowTypes())
-                .build();
-
-        ApplicationFinanceResource finance = newApplicationFinanceResource()
-                .withFecEnabled(false)
-                .build();
-
-        List<FinanceRowType> financeRowTypes = competition.getFinanceRowTypesByFinance(Optional.of(finance));
-
-        assertNotNull(financeRowTypes);
-        assertEquals(Arrays.asList(FinanceRowType.OTHER_COSTS,
-                FinanceRowType.FINANCE,
-                FinanceRowType.ASSOCIATE_SALARY_COSTS,
-                FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS,
-                FinanceRowType.CONSUMABLES,
-                FinanceRowType.KTP_TRAVEL,
-                FinanceRowType.ADDITIONAL_COMPANY_COSTS,
-                FinanceRowType.PREVIOUS_FUNDING,
-                FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT,
-                FinanceRowType.INDIRECT_COSTS), financeRowTypes);
-    }
 
     @Test
     public void getFinanceRowTypesByFinanceForEmptyFinance() {
@@ -139,5 +87,18 @@ public class CompetitionResourceTest {
         competition.setCompetitionTypeEnum(CompetitionTypeEnum.OFGEM);
 
         assertTrue(competition.isThirdPartyOfgem());
+    }
+
+    @Test
+    public void isKtpOnly() {
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.KTP_AKT)
+                .build();
+
+        assertFalse(competition.isKtpOnly());
+
+        competition.setFundingType(FundingType.KTP);
+
+        assertTrue(competition.isKtpOnly());
     }
 }

@@ -80,7 +80,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             "OR (:sent = true AND a.manageDecisionEmailDate IS NOT NULL) " +
             "OR (:sent = false AND a.manageDecisionEmailDate IS NULL)) " +
             "AND (" +
-            "(:eoi = false AND (eoiConfig IS NULL)) " +
+            "(:eoi = false AND (eoiConfig IS NULL OR eoiConfig.enabledForExpressionOfInterest = false)) " +
             "OR (:eoi = true AND eoiConfig.enabledForExpressionOfInterest = true)) " +
             "AND (:funding IS NULL " +
             "OR (a.decision = :funding)) ";
@@ -122,6 +122,10 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
     String FIND_BY_PROJECT = "SELECT app FROM Application app " +
             "INNER JOIN Project p ON p.application = app " +
             "WHERE p.id = :projectId";
+
+    String FIND_BY_EOI_APPLICATION = "SELECT app FROM Application app " +
+            "INNER JOIN ApplicationExpressionOfInterestConfig e ON e.application = app " +
+            "WHERE e.eoiApplicationId = :eoiApplicationId";
 
     @Override
     List<Application> findAll();
@@ -223,9 +227,6 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     List<Application> findByCompetitionIdAndApplicationProcessActivityStateIn(long competitionId, Collection<ApplicationState> applicationStates);
 
-    // default List<Application> findApplicationsByCompetitionIdAndStateIn(long competitionId, Collection<ApplicationState> applicationStates) { return findByCompetitionIdAndApplicationProcessActivityStateInApplicationExpressionOfInterestConfigEnabledForExpressionOfInterestFalse(competitionId, applicationStates); }
-    // List<Application> findByCompetitionIdAndApplicationProcessActivityStateInAndApplicationExpressionOfInterestConfigEnabledForExpressionOfInterestFalse(long competitionId, Collection<ApplicationState> applicationStates);
-
     List<Application> findByCompetitionIdAndAssessmentPeriodIdAndApplicationProcessActivityStateIn(long competitionId, long assessmentPeriodId, Collection<ApplicationState> applicationStates);
 
     Stream<Application> findByApplicationProcessActivityStateIn(Collection<ApplicationState> applicationStates);
@@ -256,7 +257,13 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
                                                                      @Param("funding") DecisionStatus funding,
                                                                      @Param("eoi") Boolean eoi);
 
-    @Query("SELECT a.id FROM Application a LEFT JOIN a.applicationExpressionOfInterestConfig eoiConfig LEFT JOIN a.projectToBeCreated projectToBeCreated " + COMP_FUNDING_FILTER + " AND NOT ((a.manageDecisionEmailDate != null AND a.decision = org.innovateuk.ifs.fundingdecision.domain.DecisionStatus.FUNDED) OR (projectToBeCreated IS NOT NULL AND a.competition.fundingType != org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP))")
+    @Query("SELECT a.id FROM Application a " +
+            "LEFT JOIN a.applicationExpressionOfInterestConfig eoiConfig " +
+            "LEFT JOIN a.projectToBeCreated projectToBeCreated " +
+            COMP_FUNDING_FILTER +
+            " AND NOT ((a.manageDecisionEmailDate != null AND a.decision = org.innovateuk.ifs.fundingdecision.domain.DecisionStatus.FUNDED)" +
+            " OR (projectToBeCreated IS NOT NULL" +
+            " AND a.competition.fundingType NOT IN (org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP, org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP_AKT)))")
     List<Long> getWithDecisionIsChangeableApplicationIdsByCompetitionId(@Param("compId") long competitionId,
                                                                      @Param("filter") String filter,
                                                                      @Param("sent") Boolean sent,
@@ -379,9 +386,20 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
            "    ON pu.project.id = proj.id " +
            "        AND pu.user.id=:userId " +
            "        AND type(pu) = ProjectUser " +
+           " LEFT JOIN ApplicationExpressionOfInterestConfig eoiConfig " +
+           "    ON eoiConfig.application.id = app.id " +
            " WHERE (proj.id IS NULL AND pr iS NOT NULL" + // No project exists and user has applicant process role
            "    OR  pu.id IS NOT NULL)" + // Or project exists and user is a project user.
-            "   AND hidden IS NULL")
+           "   AND hidden IS NULL" +
+           "   AND (eoiConfig IS NULL OR eoiConfig.enabledForExpressionOfInterest = false" +
+           "        OR (eoiConfig.enabledForExpressionOfInterest = true" +
+           "            AND (app.decision IS NULL" +
+           "                 OR (app.decision IN (org.innovateuk.ifs.fundingdecision.domain.DecisionStatus.EOI_APPROVED)" +
+           "                     AND app.manageDecisionEmailDate IS NULL)" +
+           "                 OR (app.decision IN (org.innovateuk.ifs.fundingdecision.domain.DecisionStatus.EOI_REJECTED))" +
+           "                )" +
+           "           )" +
+           "       )")
     List<Application> findApplicationsForDashboard(long userId);
 
     boolean existsByProcessRolesUserIdAndCompetitionId(long userId, long competitionId);
@@ -421,4 +439,6 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
                                                                                       @Param("closedAssessmentPeriods") List<Long> closedAssessmentPeriods,
                                                                                       Pageable pageable);
 
+    @Query(FIND_BY_EOI_APPLICATION)
+    Optional<Application> findByEoiApplicationId(@Param("eoiApplicationId") long eoiApplicationId);
 }

@@ -24,7 +24,9 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectToBeCreated;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectToBeCreatedRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -42,7 +44,6 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -102,6 +103,9 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Autowired
     private ApplicationExpressionOfInterestConfigRepository applicationExpressionOfInterestConfigRepository;
+
+    @Autowired
+    private ProjectToBeCreatedRepository projectToBeCreatedRepository;
 
     @Autowired
     @Override
@@ -449,6 +453,15 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .withName("userOnAppButNotProject")
                 .build();
 
+        Application eoiApp = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withName("eoiApps")
+                .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig.builder()
+                        .enabledForExpressionOfInterest(true)
+                        .build())
+                .build();
+
         Project projectWithoutUser = newProject()
                 .with(id(null))
                 .withName("projectWithoutUser")
@@ -516,6 +529,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         assertFalse(applications.stream().anyMatch(app -> app.getId().equals(userOnAppButNotProject.getId())));
         assertFalse(applications.stream().anyMatch(app -> app.getId().equals(assessorApp.getId())));
+        assertFalse(applications.stream().anyMatch(app -> app.getId().equals(eoiApp.getId())));
     }
 
     @Test
@@ -663,6 +677,60 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         List<Application> foundApplications = repository.findByApplicationStateAndDecision(competition.getId(), SUBMITTED_STATES, null, FUNDED, false);
 
         assertEquals(2, foundApplications.size());
+    }
+
+    @Test
+    public void getWithDecisionIsChangeableKTPApplicationIdsByCompetitionId() {
+        loginCompAdmin();
+
+        Competition competition = competitionRepository.save(newCompetition().with(id(null))
+                .withFundingType(FundingType.KTP)
+                .build());
+
+        List<Application> applications = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withActivityState(SUBMITTED)
+                .withActivityState(SUBMITTED)
+                .withDecision(FUNDED, null, UNFUNDED)
+                .withManageDecisionEmailDate(ZonedDateTime.now(), null, null)
+                .build(3);
+
+        applicationRepository.saveAll(applications);
+
+        ProjectToBeCreated projectToBeCreated = new ProjectToBeCreated(applications.get(0), null);
+        projectToBeCreatedRepository.save(projectToBeCreated);
+
+        List<Long> foundApplications = repository.getWithDecisionIsChangeableApplicationIdsByCompetitionId(competition.getId(), "", null, FUNDED, false);
+
+        assertEquals(0, foundApplications.size());
+    }
+
+    @Test
+    public void getWithDecisionIsChangeableKTPAKTApplicationIdsByCompetitionId() {
+        loginCompAdmin();
+
+        Competition competition = competitionRepository.save(newCompetition().with(id(null))
+                .withFundingType(FundingType.KTP_AKT)
+                .build());
+
+        List<Application> applications = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withActivityState(SUBMITTED)
+                .withActivityState(SUBMITTED)
+                .withDecision(FUNDED, null, UNFUNDED)
+                .withManageDecisionEmailDate(ZonedDateTime.now(), null, null)
+                .build(3);
+
+        applicationRepository.saveAll(applications);
+
+        ProjectToBeCreated projectToBeCreated = new ProjectToBeCreated(applications.get(0), null);
+        projectToBeCreatedRepository.save(projectToBeCreated);
+
+        List<Long> foundApplications = repository.getWithDecisionIsChangeableApplicationIdsByCompetitionId(competition.getId(), "", null, FUNDED, false);
+
+        assertEquals(0, foundApplications.size());
     }
 
     @Test

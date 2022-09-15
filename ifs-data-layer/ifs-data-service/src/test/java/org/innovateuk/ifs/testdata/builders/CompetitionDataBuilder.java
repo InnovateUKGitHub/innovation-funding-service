@@ -5,19 +5,20 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.Decision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionApplicationConfig;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
-import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.form.resource.SectionResource;
-import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionLine;
 import org.innovateuk.ifs.testdata.builders.data.PreRegistrationSectionLine;
@@ -169,18 +170,18 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
         return asCompAdmin(data -> {
 
-            CompetitionResource competition = data.getCompetition();
+            CompetitionResource competitionResource = data.getCompetition();
 
-            competitionSetupService.copyFromCompetitionTypeTemplate(competition.getId(), competition.getCompetitionType()).
+            competitionSetupService.copyFromCompetitionTypeTemplate(competitionResource.getId(), competitionResource.getCompetitionType()).
                     getSuccess();
 
-            updateCompetitionInCompetitionData(data, competition.getId());
+            updateCompetitionInCompetitionData(data, competitionResource.getId());
 
-            setGrantClaimMaximums(competition);
+            setGrantClaimMaximums(competitionResource);
 
             if (data.getCompetition().getCompetitionTypeName().equals("Generic")) {
 
-                List<Question> questions = questionRepository.findByCompetitionIdAndSectionTypeOrderByPriorityAsc(competition.getId(), SectionType.APPLICATION_QUESTIONS);
+                List<Question> questions = questionRepository.findByCompetitionIdAndSectionTypeOrderByPriorityAsc(competitionResource.getId(), SectionType.APPLICATION_QUESTIONS);
                 Question question = questions.get(0);
                 question.setName("Generic question heading");
                 question.setShortName("Generic question title");
@@ -215,14 +216,75 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
+
+    public CompetitionDataBuilder withImpactManagement(CompetitionLine line) {
+
+        return asCompAdmin(data -> {
+
+            CompetitionResource competitionResource = data.getCompetition();
+
+
+            if (line != null &&
+                    line.isImSurveyEnabled()) {
+                Optional<Competition> competition = competitionRepository.findById(competitionResource.getId());
+                competition.ifPresentOrElse(comp -> {
+
+                            // Create Section
+                            Section section = new Section();
+                            section.setCompetition(comp);
+                            section.setName("Supporting Information");
+                            section.setType(SectionType.SUPPORTING_INFORMATION);
+                            section.setPriority(1);
+                            section.setEnabledForPreRegistration(true);
+                            Section s = sectionRepository.save(section);
+
+                            // Create Question
+                            Question q = populateQuestion(competition);
+                            Optional<Section> getSection = sectionRepository.findById(s.getId());
+
+                            getSection.ifPresentOrElse(ss -> {
+                                        q.setSection(getSection.get());
+                                        q.setPriority(0);
+                                        questionRepository.save(q);
+                                    },
+                                    () -> {
+                                        throw new RuntimeException("Section not found for id" + s.getId());
+                                    });
+
+                        },
+                        () -> {
+                            throw new RuntimeException("Competition not found for id" + competitionResource.getId());
+                        }
+
+                );
+            }
+        });
+    }
+    private Question populateQuestion(Optional<Competition> competition1) {
+        Question question = QuestionBuilder.aQuestion()
+                .withName("Project Impact")
+                .withShortName("Project Impact")
+                .withDescription("Project Impact")
+                .withType(QuestionType.GENERAL)
+                .withMarkAsCompletedEnabled(true)
+                .withMultipleStatuses(true)
+                .withAssignEnabled(true)
+                .withQuestionSetupType(QuestionSetupType.IMPACT_MANAGEMENT_SURVEY)
+                .build();
+        question.setEnabledForPreRegistration(true);
+        question.setCompetition(competition1.get());
+        return question;
+
+    }
+
     private void setGrantClaimMaximums(CompetitionResource competition) {
         grantClaimMaximumService.revertToDefault(competition.getId()).getSuccess();
 
         List<GrantClaimMaximumResource> maximumsNeedingALevel = grantClaimMaximumService.getGrantClaimMaximumByCompetitionId(competition.getId()).toOptionalIfNotFound().getSuccess()
                 .map(list ->
-                list.stream()
-                .filter(max -> max.getMaximum() == null)
-                .collect(Collectors.toList()))
+                        list.stream()
+                                .filter(max -> max.getMaximum() == null)
+                                .collect(Collectors.toList()))
                 .orElse(emptyList());
         IntStream.range(0, maximumsNeedingALevel.size()).forEach(i -> {
             GrantClaimMaximumResource maximum = maximumsNeedingALevel.get(i);
@@ -531,7 +593,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     public CompetitionDataBuilder withCompetitionTermsAndConditions(CompetitionLine line) {
         CompetitionDataBuilder competitionDataBuilder = asCompAdmin(data -> {
             if (line.getTermsAndConditionsTemplate() != null) {
-                GrantTermsAndConditions termsAndConditions =termsAndConditionsRepository.findOneByTemplate(line.getTermsAndConditionsTemplate());
+                GrantTermsAndConditions termsAndConditions = termsAndConditionsRepository.findOneByTemplate(line.getTermsAndConditionsTemplate());
                 competitionService.updateTermsAndConditionsForCompetition(data.getCompetition().getId(), termsAndConditions.getId());
             }
         });
@@ -568,6 +630,31 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
+    public CompetitionDataBuilder withEoiEvidenceConfig(CompetitionLine line) {
+        return asCompAdmin(data -> {
+            doCompetitionDetailsUpdate(data, competition -> {
+                if (line.isEoiEvidenceRequired()) {
+                    CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource = CompetitionEoiEvidenceConfigResource.builder()
+                            .evidenceRequired(true)
+                            .evidenceTitle("Eoi Evidence")
+                            .evidenceGuidance("Please upload Eoi Evidence file.")
+                            .competitionId(data.getCompetition().getId()).build();
+                    competitionEoiEvidenceConfigService.create(competitionEoiEvidenceConfigResource).getSuccess();
+                }
+            });
+
+            Long competitionEoiEvidenceConfigId = data.getCompetition().getCompetitionEoiEvidenceConfigResource().getId();
+
+            EOI_DOCUMENT_FILE_TYPES.stream()
+                    .forEach(fileTypeId -> {
+                        CompetitionEoiDocumentResource competitionEoiDocumentResource = CompetitionEoiDocumentResource.builder()
+                                .fileTypeId(fileTypeId)
+                                .competitionEoiEvidenceConfigId(competitionEoiEvidenceConfigId).build();
+                        competitionEoiEvidenceConfigService.createDocument(competitionEoiDocumentResource);
+                    });
+        });
+    }
+
     private void updateCompetitionInCompetitionData(CompetitionData competitionData, Long competitionId) {
         CompetitionResource newCompetitionSaved = competitionService.getCompetitionById(competitionId).getSuccess();
         competitionData.setCompetition(newCompetitionSaved);
@@ -579,7 +666,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             doCompetitionDetailsUpdate(data, competition -> {
 
                 List<PreRegistrationSectionLine> sectionLines = simpleFilter(preRegistrationSectionLines, l ->
-                       line.getName().equals(l.competitionName));
+                        line.getName().equals(l.competitionName));
 
                 sectionLines.forEach(sectionLine -> {
                     List<SectionResource> competitionSections = sectionService.getByCompetitionId(competition.getId()).getSuccess();
@@ -601,7 +688,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    private void  markSectionForPreRegistration(SectionResource section, String subSectionName, String questionName) {
+    private void markSectionForPreRegistration(SectionResource section, String subSectionName, String questionName) {
         section.setEnabledForPreRegistration(false);
         sectionService.save(section);
 

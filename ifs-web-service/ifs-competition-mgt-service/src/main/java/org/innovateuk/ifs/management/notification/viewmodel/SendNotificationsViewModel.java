@@ -24,6 +24,7 @@ public class SendNotificationsViewModel {
     private boolean horizonEurope;
     private boolean hasAssessmentStage;
     private boolean isDirectAward;
+    private boolean eoi;
 
     public SendNotificationsViewModel(List<ApplicationDecisionToSendApplicationResource> applications,
                                       long successfulRecipientsCount,
@@ -45,6 +46,16 @@ public class SendNotificationsViewModel {
         this.horizonEurope = horizonEurope;
         this.hasAssessmentStage = competition.isHasAssessmentStage();
         this.isDirectAward = competition.isDirectAward();
+        this.eoi = eoi;
+    }
+
+    public SendNotificationsViewModel(List<ApplicationDecisionToSendApplicationResource> applications,
+                                      CompetitionResource competition,
+                                      boolean eoi) {
+        this.applications = applications;
+        this.competitionId = competition.getId();
+        this.competitionName = competition.getName();
+        this.eoi = eoi;
     }
 
     public long getCompetitionId() {
@@ -88,8 +99,17 @@ public class SendNotificationsViewModel {
     }
 
     public String getPageTitle () {
-        return alwaysOpen && hasAssessmentStage
-                ? "Send decision notification and release feedback" : "Send decision notification";
+        String pageTitle;
+
+        if (eoi) {
+            pageTitle = "Send an expression of interest notification";
+        } else if (alwaysOpen && hasAssessmentStage) {
+            pageTitle = "Send decision notification and release feedback";
+        } else {
+            pageTitle = "Send decision notification";
+        }
+
+        return pageTitle;
     }
 
     public Map<Long, Decision> getDecisions() {
@@ -103,5 +123,9 @@ public class SendNotificationsViewModel {
 
     public boolean isHorizonEurope() {
         return horizonEurope;
+    }
+
+    public boolean isEoi() {
+        return eoi;
     }
 }

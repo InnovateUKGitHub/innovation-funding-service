@@ -160,6 +160,59 @@ public class SilMessageRecordingServiceTest extends BaseServiceUnitTest<SilMessa
 
         verify(silMessageRepository).save(silMessage);
     }
+    @Test
+    public void getApplicationLocationInfo() {
+        String silApplicationLocationInfo = "{\n" +
+                "   \"appID\":28,\n" +
+                "   \"appName\":\"Evolution of the global phosphorus cycle\",\n" +
+                "   \"appStartDate\":\"2015-11-01T00:00:00Z\",\n" +
+                "   \"compID\":\"37\",\n" +
+                "   \"fundingDecision\":null,\n" +
+                "   \"durationInMonths\":20,\n" +
+                "   \"completion\":\"3.23%\",\n" +
+                "   \"manageFundingEmailDate\":null,\n" +
+                "   \"inAssessmentReviewPanel\":false,\n" +
+                "   \"companyAge\":null,\n" +
+                "   \"companyPrimaryFocus\":null,\n" +
+                "   \"organisations\":[\n" +
+                "      {\n" +
+                "         \"organisationID\":21,\n" +
+                "         \"organisationName\":\"Empire Ltd\",\n" +
+                "         \"companiesHouseNo\":\"60674010\",\n" +
+                "         \"internationalRegistrationNumber\":null,\n" +
+                "         \"organisationSize\":\"Medium\",\n" +
+                "         \"internationalLocation\":null,\n" +
+                "         \"workPostcode\":\"AB12 3CD\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "         \"organisationID\":37,\n" +
+                "         \"organisationName\":\"Ludlow\",\n" +
+                "         \"companiesHouseNo\":\"53532322\",\n" +
+                "         \"internationalRegistrationNumber\":null,\n" +
+                "         \"organisationSize\":\"Micro or small\",\n" +
+                "         \"internationalLocation\":null,\n" +
+                "         \"workPostcode\":\"AB12 3CD\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "         \"organisationID\":38,\n" +
+                "         \"organisationName\":\"EGGS\",\n" +
+                "         \"companiesHouseNo\":\"63404345\",\n" +
+                "         \"internationalRegistrationNumber\":null,\n" +
+                "         \"organisationSize\":null,\n" +
+                "         \"internationalLocation\":null,\n" +
+                "         \"workPostcode\":\"AB12 3CD\"\n" +
+                "      }\n" +
+                "   ]\n" +
+                "}";
+        service.recordSilMessage(SilPayloadType.APPLICATION_LOCATION_INFO, SilPayloadKeyType.USER_ID, USER_ID,
+                silApplicationLocationInfo, null);
+
+
+        SilMessage silMessage = SilMessage.builder().payloadType(SilPayloadType.APPLICATION_LOCATION_INFO).keyType(SilPayloadKeyType.USER_ID)
+                .keyValue(USER_ID).payload(silApplicationLocationInfo).responseCode(null).dateCreated(TimeMachine.now()).build();
+
+        verify(silMessageRepository).save(silMessage);
+    }
 
 
     @Override
