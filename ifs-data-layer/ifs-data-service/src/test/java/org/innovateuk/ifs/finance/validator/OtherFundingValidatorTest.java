@@ -3,6 +3,7 @@ package org.innovateuk.ifs.finance.validator;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.validator.ValidatorTestUtil;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder;
 import org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
@@ -27,6 +28,7 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -123,6 +125,20 @@ public class OtherFundingValidatorTest {
     public void validFullFunding() {
         mockWithRadio("No");
         OtherFunding otherFunding = new OtherFunding(6L, "Yes", "Source1", "2014", new BigDecimal(100), 1L);
+        expectNoErrors(otherFunding);
+    }
+
+    @Test
+    public void acceptsNoSecuredDateThirdPartyCompetition() {
+        Competition competition = newCompetition().withFundingType(FundingType.THIRDPARTY).withCompetitionType(newCompetitionType().withName("Ofgem").build()).build();
+        Application application = newApplication().withCompetition(competition).build();
+        ApplicationFinance applicationFinance = ApplicationFinanceBuilder.newApplicationFinance().withApplication(application).build();
+        ApplicationFinanceRow cost = ApplicationFinanceRowBuilder.newApplicationFinanceRow().withOwningFinance(applicationFinance).withType(FinanceRowType.OTHER_FUNDING).withItem("Yes").build();
+        when(financeRowRepository.findById(any(Long.class))).thenReturn(Optional.of(cost));
+        List<ApplicationFinanceRow> listOfCostWithYes = new ArrayList<>();
+        listOfCostWithYes.add(cost);
+        when(financeRowRepository.findByTargetIdAndType(anyLong(), eq(FinanceRowType.OTHER_FUNDING))).thenReturn(listOfCostWithYes);
+        OtherFunding otherFunding = new OtherFunding(4L, "Yes", "Source1", "", new BigDecimal(100), 1L);
         expectNoErrors(otherFunding);
     }
 

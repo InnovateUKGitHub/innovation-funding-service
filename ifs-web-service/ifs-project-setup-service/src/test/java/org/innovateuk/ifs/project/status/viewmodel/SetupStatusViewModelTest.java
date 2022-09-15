@@ -37,7 +37,8 @@ public class SetupStatusViewModelTest {
 
         SetupStatusViewModel viewModel = new SetupStatusViewModel(project, false, Collections.emptyList(),
         fundingType, false, false, false, null,
-                "", false, null, false, false);
+                "", false, null, false,
+                false, true);
 
         assertTrue(viewModel.isKtpCompetition());
     }

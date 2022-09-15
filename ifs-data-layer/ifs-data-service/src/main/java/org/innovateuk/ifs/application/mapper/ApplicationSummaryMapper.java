@@ -82,6 +82,8 @@ public abstract class ApplicationSummaryMapper {
         result.setInnovationArea(source.getInnovationArea() != null ? source.getInnovationArea().getName() : null);
 
         result.setInAssessmentPanel(source.isInAssessmentReviewPanel());
+        result.setEoiEvidenceDocumentRequired(source.expressionOfInterestEvidenceDocumentRequired());
+        result.setEoiEvidenceDocumentReceived(source.isApplicationExpressionOfInterestEvidenceResponseReceived());
 
         return result;
     }

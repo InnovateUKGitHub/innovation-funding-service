@@ -307,10 +307,11 @@
                    th:id="__${path}__.date"
                    placeholder="MM-YYYY"
                    pattern="(0[1-9]|1[012])-[0-9]{4}"
-                   th:attr="data-pattern-errormessage=#{validation.finance.funding.date.invalid}"
+                   th:attr="data-required-errormessage=${isCompTypeOfgemAndFundingTypeThirdParty} ? null : #{validation.field.must.not.be.blank},
+                            required=${isCompTypeOfgemAndFundingTypeThirdParty} ? false : 'required',
+                            data-pattern-errormessage=#{validation.finance.funding.date.invalid}"
                    maxlength="7"
-                   th:errorclass="govuk-input--error"
-                   required="required"/>
+                   th:errorclass="govuk-input--error"/>
         </td>
         <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group"
             th:classappend="${#fields.hasErrors('__${path}__.fundingAmount')} ? 'govuk-form-group--error'">

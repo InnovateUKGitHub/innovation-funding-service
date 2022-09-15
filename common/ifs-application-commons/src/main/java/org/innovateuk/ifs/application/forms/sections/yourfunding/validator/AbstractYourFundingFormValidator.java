@@ -20,7 +20,7 @@ import static org.innovateuk.ifs.util.NumberUtils.getBigDecimalFormatted;
 @SuppressWarnings("unchecked")
 public class AbstractYourFundingFormValidator {
 
-    protected void validate(AbstractYourFundingForm form, Errors errors, Supplier<BaseFinanceResource> financeSupplier, BigDecimal maximumFundingSought, Boolean isCompTypeOfgemAndFundingTypeThirdParty) {
+    protected void validate(AbstractYourFundingForm form, Errors errors, Supplier<BaseFinanceResource> financeSupplier, BigDecimal maximumFundingSought, boolean isCompTypeOfgemAndFundingTypeThirdParty) {
 
         if (form instanceof AbstractYourFundingPercentageForm) {
             validateYourFundingPercentageForm((AbstractYourFundingPercentageForm) form, errors, financeSupplier, maximumFundingSought);
@@ -40,15 +40,13 @@ public class AbstractYourFundingFormValidator {
         }
     }
 
-    private void validateOtherFundingRows(Map<String, BaseOtherFundingRowForm> rows, Errors errors, Boolean isCompTypeOfgemAndFundingTypeThirdParty) {
+    private void validateOtherFundingRows(Map<String, BaseOtherFundingRowForm> rows, Errors errors, boolean isCompTypeOfgemAndFundingTypeThirdParty) {
         if (rows == null || rows.isEmpty()) {
-
                 errors.rejectValue("otherFunding","validation.finance.min.row.contributions.in.kind.single");
-
         } else {
             rows.forEach((id, row) -> {
                 if (!isBlankButNotOnlyRow(row, rows)) {
-                    validateOtherFundingDate(id, row, errors);
+                    validateOtherFundingDate(id, row, errors, isCompTypeOfgemAndFundingTypeThirdParty);
                     validateOtherFundingSource(id, row, errors);
                     validateOtherFundingAmount(id, row, errors);
                 }
@@ -80,8 +78,8 @@ public class AbstractYourFundingFormValidator {
         }
     }
 
-    private void validateOtherFundingDate(String id, BaseOtherFundingRowForm row, Errors errors) {
-        if (isNullOrEmpty(row.getDate())) {
+    private void validateOtherFundingDate(String id, BaseOtherFundingRowForm row, Errors errors, boolean isCompTypeOfgemAndFundingTypeThirdParty) {
+        if (isNullOrEmpty(row.getDate()) && !isCompTypeOfgemAndFundingTypeThirdParty) {
             errors.rejectValue(String.format("otherFundingRows[%s].date", id), "validation.finance.funding.date.invalid");
         }
         Pattern pattern = Pattern.compile("^(?:((0[1-9]|1[012])-[0-9]{4})|)$");

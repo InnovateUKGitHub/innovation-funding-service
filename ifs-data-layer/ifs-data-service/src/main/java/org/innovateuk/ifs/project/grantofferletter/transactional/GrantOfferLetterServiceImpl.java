@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.grantofferletter.transactional;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
@@ -12,8 +11,8 @@ import org.innovateuk.ifs.docusign.transactional.DocusignService;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.resource.BasicFileAndContents;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.resource.FileAndContents;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileService;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
@@ -32,7 +31,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
 import java.io.InputStream;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -623,6 +621,6 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                "<p>Yours sincerely</p>" +
                "Innovate UK, part of UK Research and Innovation<br/>" +
                "Tel: 0300 321 4357<br/>" +
-               "Email: competitions@innovateuk.ukri.org", name, applicationId, projectName);
+               "Email: competitions@iuk.ukri.org", name, applicationId, projectName);
     }
 }
