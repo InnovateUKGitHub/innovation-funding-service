@@ -1,22 +1,22 @@
 {
   "dependencies": {
     "accessible-autocomplete": "^1.6.2",
+    "acorn": "^7.1.1",
     "call-bind": "^1.0.2",
     "compass-importer": "^0.4.1",
     "cryptiles": "^4.1.2",
     "files-exist": "^1.1.0",
+    "front-matter": "^4.0.1",
     "govuk-frontend": "^3.3.0",
     "html5shiv": "^3.7.3",
     "http-proxy-agent": "^2.1.0",
-    "jquery": "^1.12.4",
+    "jquery": "^3.6.1",
     "jquery-ui": "^1.12.1",
     "js-cookie": "^2.2.1",
     "jshint-stylish": "^2.2.1",
     "resolve": "^1.7.1",
     "sshpk": "^1.15.1",
-    "tablesorter": "^2.31.3",
-    "acorn": "^7.1.1",
-    "front-matter": "^4.0.1"
+    "tablesorter": "^2.31.3"
   },
   "devDependencies": {
     "gulp": "^4.0.2",
