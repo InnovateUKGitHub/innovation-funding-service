@@ -5,6 +5,8 @@ import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.UserResource;
 
+import java.util.Optional;
+
 public interface ApplicationEoiEvidenceResponseService {
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
@@ -15,4 +17,7 @@ public interface ApplicationEoiEvidenceResponseService {
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> delete(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource);
+
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    ServiceResult <Optional<ApplicationEoiEvidenceResponseResource>> findOneByApplicationId(long applicationId);
 }

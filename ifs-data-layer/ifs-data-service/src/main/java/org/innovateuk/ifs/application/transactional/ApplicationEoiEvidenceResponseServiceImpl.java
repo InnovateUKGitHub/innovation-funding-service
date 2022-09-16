@@ -109,4 +109,9 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
                     return serviceFailure(CommonFailureKeys.APPLICATION_UNABLE_TO_FIND_UPLOADED_EOI_EVIDENCE);
                 });
     }
+
+    @Override
+    public ServiceResult <Optional<ApplicationEoiEvidenceResponseResource>> findOneByApplicationId(long applicationId) {
+        return serviceSuccess(applicationEoiEvidenceResponseRepository.findOneByApplicationId(applicationId).map(applicationEoiEvidenceResponseMapper::mapToResource));
+    }
 }

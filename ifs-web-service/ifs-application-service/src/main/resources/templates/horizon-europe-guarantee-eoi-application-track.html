@@ -32,48 +32,125 @@
             progress to the full application.
         </p>
 
-        <div class="govuk-form-group"
-             th:if="${model.currentCompetition.competitionEoiEvidenceConfigResource.evidenceRequired}">-->
-            <div class="upload-section govuk-!-width-one-half">
-                <div class="ajax-upload"
-                     data-js-upload-button-name="uploadAttachment"
-                     data-js-upload-file-input="attachment"
-                     data-js-number-of-files="1"
-                     data-js-upload-one-at-a-time="">
-                    <h2 class="govuk-heading-s govuk-!-margin-0">Proof of success letter</h2>
-                    <details class="govuk-details">
-                        <summary class="govuk-details__summary">
-                            <span class="govuk-details__summary-text">What should I include?</span>
-                        </summary>
-                        <div class="govuk-details__text wysiwyg-styles">
-                            <p class="govuk-body"><strong>You can only upload these file types</strong></p>
-                            <ul class="govuk-list govuk-list--bullet">
-                                <li>spreadsheet (.ods)</li>
-                                <li>text document (.odt)</li>
-                                <li>PDF (.pdf)</li>
-                            </ul>
-                            <p>Each document must be less than 32MB</p>
-                        </div>
-                    </details>
-                    <p th:if="${model.currentApplication.applicationEoiEvidenceResponseResource.fileEntryId == null}"
-                       class="govuk-body no-file-uploaded">No file have been uploaded yet.</p>
-                    <th:block th:unless="${#strings.isEmpty(model.eoiEvidenceFileName)}">
-                        <ul class="govuk-list file-list">
-                            <div class="file-row">
-                                <a th:href="@{/application/{applicationId}/eoi-evidence-document/{eoiEvidenceFileEntryId}(applicationId=${model.currentApplication.id}, eoiEvidenceFileEntryId=${model.currentApplication.applicationEoiEvidenceResponseResource.fileEntryId})}"
-                                   th:text="|${model.eoiEvidenceFileName} (opens in a new window)|"
-                                   target="_blank"
-                                   class="govuk-link"
-                                   aria-describedby="file-hint">File</a>
-                                <button name="eoiEvidenceFileEntryId" th:value="${eoiEvidenceFileEntryId}"
-                                        class="button-clear remove-file" aria-label="Remove uploaded document">Remove
-                                </button>
-                            </div>
+        <th:block th:if="${model.currentCompetition.competitionEoiEvidenceConfigResource.evidenceRequired}"
+                  class="govuk-form-group">
+            <div class="upload-section">
+                <h2 class="govuk-heading-s govuk-!-margin-0">Proof of success letter</h2>
+                <details class="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">What should I include?</span>
+                    </summary>
+                    <div class="govuk-details__text wysiwyg-styles">
+                        <ul class="govuk-list">
+                            <li class="govuk-body">You need to upload a proof of success letter to your expression of interest application.</li>
+                            <li class="govuk-body"><strong>Accepted appendix file types</strong>
+                                <ul class="govuk-list govuk-list--bullet">
+                                    <li>PDF (.pdf)</li>
+                                </ul>
+                            </li>
+                            <li>It must be less than 32MB in size.</li>
                         </ul>
-                    </th:block>
-                </div>
+                    </div>
+                </details>
+
+                <form th:action="@{/application/{applicationId}/eoi-evidence-response(applicationId=${model.currentApplication.id})}"
+                      th:object="${form}"
+                      method="post"
+                      id="upload-document-form"
+                      enctype="multipart/form-data"
+                      th:with="viewmode='edit',
+                           downloadUrl=@{/application/{applicationId}/view-eoi-evidence(applicationId=${model.currentApplication.id})},
+                           filename=${form.evidenceFileEntryName},
+                           inputField='eoiEvidenceFile',
+                           validationField=${inputField},
+                           mayRemove=true,
+                           removeName='remove-eoi-evidence-response',
+                           saveName='upload-eoi-evidence'">
+
+                    <!--/* file is not uploaded */-->
+                    <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
+                </form>
+
             </div>
-        </div>
+        </th:block>
+
+
+<!--        <form th:object="${form}">-->
+<!--        <div class="govuk-form-group"-->
+<!--             th:if="${model.currentCompetition.competitionEoiEvidenceConfigResource.evidenceRequired}">-->
+<!--            <div id="upload-evidence" class="upload-section">-->
+<!--                <div class="ajax-upload"-->
+<!--                     data-js-upload-button-name="uploadAttachment"-->
+<!--                     data-js-upload-file-input="attachment"-->
+<!--                     data-js-number-of-files="1"-->
+<!--                     data-js-upload-one-at-a-time="">-->
+<!--                    <h2 class="govuk-heading-s govuk-!-margin-0">Proof of success letter</h2>-->
+<!--                    <details class="govuk-details">-->
+<!--                        <summary class="govuk-details__summary">-->
+<!--                            <span class="govuk-details__summary-text">What should I include?</span>-->
+<!--                        </summary>-->
+<!--                        <div class="govuk-details__text wysiwyg-styles">-->
+<!--                            <p class="govuk-body"><strong>You can only upload these file types</strong></p>-->
+<!--                            <ul class="govuk-list govuk-list&#45;&#45;bullet">-->
+<!--                                <li>spreadsheet (.ods)</li>-->
+<!--                                <li>text document (.odt)</li>-->
+<!--                                <li>PDF (.pdf)</li>-->
+<!--                            </ul>-->
+<!--                            <p>Each document must be less than 32MB</p>-->
+<!--                        </div>-->
+<!--                    </details>-->
+<!--                    <p th:if="${model.currentApplication.applicationEoiEvidenceResponseResource.fileEntryId == null}"-->
+<!--                       class="govuk-body no-file-uploaded">No file have been uploaded yet.</p>-->
+<!--                    <th:block th:unless="${#strings.isEmpty(model.eoiEvidenceFileName)}">-->
+<!--                            <div class="file-row">-->
+<!--                                <a th:href="@{/application/{applicationId}/eoi-evidence-document/{eoiEvidenceFileEntryId}(applicationId=${model.currentApplication.id}, eoiEvidenceFileEntryId=${model.currentApplication.applicationEoiEvidenceResponseResource.fileEntryId})}"-->
+<!--                                   th:text="|${model.eoiEvidenceFileName} (opens in a new window)|"-->
+<!--                                   target="_blank"-->
+<!--                                   class="govuk-link"-->
+<!--                                   aria-describedby="file-hint">File</a>-->
+<!--                                <button name="delete-eoi-evidence-response"-->
+<!--                                        th:value="${eoiEvidenceFileEntryId}"-->
+<!--                                        class="button-clear remove-file"-->
+<!--                                        aria-label="Remove uploaded document">Remove-->
+<!--                                </button>-->
+<!--                            </div>-->
+<!--                    </th:block>-->
+<!--                    <th:block th:if="${#strings.isEmpty(model.eoiEvidenceFileName)}">-->
+<!--                        <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group&#45;&#45;error' : ''">-->
+<!--                            <th:block th:if="${#fields.hasErrors('attachment')}">-->
+<!--                                            <span class="govuk-error-message"-->
+<!--                                                  th:each="err : ${#fields.errors('attachment')}"-->
+<!--                                                  th:text="${err}"/>-->
+<!--                            </th:block>-->
+<!--                            <input type="file" id="attachment" class="inputfile" name="attachment">-->
+<!--                            <label for="attachment"-->
+<!--                                   class="govuk-!-margin-top-6">Upload-->
+<!--                            </label>-->
+<!--                            <button name="uploadEvidence"-->
+<!--                                    class="govuk-button govuk-button&#45;&#45;secondary"-->
+<!--                                    type="submit"-->
+<!--                                    data-for-file-upload="attachment">Save-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </th:block>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        </form>-->
+
+                    <th:block
+                            th:unless="${model.currentCompetition.competitionEoiEvidenceConfigResource.evidenceRequired}">
+                        <div class="govuk-!-margin-top-6">
+                            <p class="govuk-body">You can give feedback to help us improve this service. This should
+                                take no
+                                more than 2 minutes.</p>
+                            <a th:href="@{/survey/{competitionId}/feedback(competitionId=${model.currentCompetition.id})}"
+                               class="govuk-button">Give us feedback</a>
+                        </div>
+                        <p class="govuk-body govuk-!-margin-bottom-6">
+                            <a class="govuk-link" th:href="@{/applicant/dashboard}">Finish without feedback</a>
+                        </p>
+                    </th:block>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
 
