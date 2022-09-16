@@ -52,10 +52,8 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
 
     private final ZonedDateTime lastUpdated;
     private final String lastUpdatedByName;
-    private final String completedByName;
-
     private final Long lastUpdatedBy;
-    private final Long completedBy;
+
     private final boolean open;
     private final boolean complete;
     private final boolean leadApplicant;
@@ -118,10 +116,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
                                                Long competitionId,
                                                boolean isExpressionOfInterestApplication,
                                                boolean imSurveyQuestion,
-                                               String impactManagementSalesForceCommunityURL,
-                                               Long completedBy,
-                                               String completedByName
-    ) {
+                                               String impactManagementSalesForceCommunityURL) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.questionId = questionId;
@@ -168,8 +163,6 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         this.isExpressionOfInterestApplication = isExpressionOfInterestApplication;
         this.imSurveyQuestion = imSurveyQuestion;
         this.impactManagementSalesForceCommunityURL = impactManagementSalesForceCommunityURL;
-        this.completedBy = completedBy;
-        this.completedByName = completedByName;
     }
 
     @Override
@@ -451,9 +444,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         private Long templateDocumentResponseFileEntryId;
         private ZonedDateTime lastUpdated;
         private String lastUpdatedByName;
-        private String completedByName;
         private Long lastUpdatedBy;
-        private Long completedBy;
         private boolean open;
         private boolean complete;
         private boolean leadApplicant;
@@ -622,17 +613,9 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
             this.lastUpdatedByName = lastUpdatedByName;
             return this;
         }
-        public GenericQuestionApplicationViewModelBuilder withCompletedByName(String completedByName) {
-            this.completedByName = completedByName;
-            return this;
-        }
 
         public GenericQuestionApplicationViewModelBuilder withLastUpdatedBy(Long lastUpdatedBy) {
             this.lastUpdatedBy = lastUpdatedBy;
-            return this;
-        }
-        public GenericQuestionApplicationViewModelBuilder withCompletedBy(Long completedBy) {
-            this.completedBy = completedBy;
             return this;
         }
 
@@ -763,9 +746,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
                     competitionId,
                     isExpressionOfInterestApplication,
                     imSurveyQuestion,
-                    impactManagementSalesForceCommunityURL,
-                    completedBy,
-                    completedByName
+                    impactManagementSalesForceCommunityURL
 
             );
         }
