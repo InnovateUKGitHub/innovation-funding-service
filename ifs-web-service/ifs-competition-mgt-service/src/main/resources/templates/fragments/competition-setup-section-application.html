@@ -143,7 +143,7 @@
             </li>
         </ul>
 
-        <th:block th:if="${model.general.competition.isKtp()}">
+        <th:block th:if="${model.general.competition.isKtp() && model.isktpAssessorQuestionsAvailable()}">
             <h3 class="govuk-heading-s">Score Guidance</h3>
             <ul class="task-list">
                 <li th:each="question : ${model.ktpAssessorQuestions}">

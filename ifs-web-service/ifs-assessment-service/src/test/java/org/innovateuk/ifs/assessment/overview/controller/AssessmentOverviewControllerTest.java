@@ -502,6 +502,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
                 applicationFundingBreakdownViewModel,
                 null,
                 false,
+                false,
                 false);
 
         mockMvc.perform(get("/{assessmentId}/finances", assessmentResource.getId()))

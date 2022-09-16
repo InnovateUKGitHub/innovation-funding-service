@@ -20,6 +20,6 @@ public class ReviewAndSubmitControllerSecurityTest extends BaseControllerSecurit
         roles.add(Role.APPLICANT);
         roles.add(Role.KNOWLEDGE_TRANSFER_ADVISER);
 
-        assertRolesCanPerform(() -> classUnderTest.applicationTrack(null, 0L, null), roles);
+        assertRolesCanPerform(() -> classUnderTest.applicationTrack(null, 0L,  null, null), roles);
     }
 }

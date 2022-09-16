@@ -382,6 +382,55 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     @Test
+    public void submitSectionApplicationKTPAssessedQuestionWithGuidanceRowErrors() throws Exception {
+        Long questionId = 14L;
+        CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
+        question.setQuestionId(questionId);
+        question.setType(QuestionSetupType.KTP_ASSESSMENT);
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withFundingType(FundingType.KTP)
+                .build();
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+        when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(KTP_ASSESSMENT), eq(loggedInUser))).thenReturn(serviceFailure(Collections.emptyList()));
+        when(questionSetupCompetitionRestService.getByQuestionId(questionId)).thenReturn(restSuccess(question));
+        when(competitionSetupPopulator.populateGeneralModelAttributes(any(CompetitionResource.class), any(UserResource.class), any(CompetitionSetupSection.class)))
+                .thenReturn(getBasicGeneralViewModel(CompetitionSetupSection.APPLICATION_FORM, competition, Boolean.TRUE));
+
+        Map<String, Object> model = mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
+                        .param("question.type", QuestionSetupType.KTP_ASSESSMENT.name())
+                        .param("question.questionId", questionId.toString())
+                        .param("question.title", "My Title")
+                        .param("question.guidanceTitle", "My Title")
+                        .param("question.guidance", "My guidance")
+                        .param("question.maxWords", "400")
+                        .param("numberOfUploads", "0")
+                        .param("question.appendix", "false")
+                        .param("question.scored", "true")
+                        .param("question.scoreTotal", "100")
+                        .param("question.writtenFeedback", "true")
+                        .param("question.assessmentGuidance", "My assessment guidance")
+                        .param("question.assessmentGuidanceTitle", "My assessment guidance title")
+                        .param("question.assessmentMaxWords", "200")
+                        .param("question.type", "")
+                        .param("guidanceRows[0].scoreFrom", "")
+                        .param("guidanceRows[0].scoreTo", "")
+                        .param("guidanceRows[0].justification", ""))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/setup/question"))
+                .andReturn().getModelAndView().getModel();
+
+        assertEquals(QuestionSetupViewModel.class, model.get("model").getClass());
+        QuestionSetupViewModel viewModel = (QuestionSetupViewModel) model.get("model");
+
+        assertEquals(Boolean.TRUE, viewModel.getGeneral().isEditable());
+        assertTrue(viewModel.isDisplayAssessmentOptions());
+
+        verify(questionSetupCompetitionRestService, never()).save(question);
+    }
+
+    @Test
     public void submitSectionApplicationScopeQuestionWithGuidanceRowErrors() throws Exception {
         Long questionId = 4L;
         CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
@@ -514,6 +563,64 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult." + CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
         assertEquals("This field cannot be left blank.", bindingResult.getFieldError("question.allowedAppendixResponseFileTypes").getDefaultMessage());
         assertEquals("This field cannot be left blank.", bindingResult.getFieldError("question.appendixGuidance").getDefaultMessage());
+
+        verify(competitionSetupService, never()).saveCompetitionSetupSubsection(isA(QuestionForm.class), eq(competition), eq(CompetitionSetupSection.APPLICATION_FORM), eq(CompetitionSetupSubsection.QUESTIONS), eq(loggedInUser));
+    }
+
+    @Test
+    public void submitSectionApplicationKTPAKTAssessedQuestionWithAppendixError() throws Exception {
+        Long questionId = 24L;
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withFundingType(FundingType.KTP_AKT)
+                .build();
+        CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
+        question.setQuestionId(questionId);
+        question.setType(ASSESSED_QUESTION);
+        question.setTemplateFilename("templateFile");
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+        when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS), eq(loggedInUser))).thenReturn(serviceFailure(Collections.emptyList()));
+        when(questionSetupCompetitionRestService.getByQuestionId(questionId)).thenReturn(restSuccess(question));
+
+        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question/" + questionId.toString() + "/edit")
+                        .param("question.type", ASSESSED_QUESTION.name())
+                        .param("question.questionId", questionId.toString())
+                        .param("question.title", "My Title")
+                        .param("question.shortTitle", "My Short Title")
+                        .param("question.guidanceTitle", "My Title")
+                        .param("question.guidance", "My guidance")
+                        .param("question.maxWords", "400")
+                        .param("numberOfUploads", "1")
+                        .param("question.appendix", "true")
+                        .param("question.allowedAppendixResponseFileTypes", "")
+                        .param("question.appendixGuidance", "")
+                        .param("question.templateDocument", "true")
+                        .param("question.allowedTemplateResponseFileTypes", "DOCUMENT")
+                        .param("question.templateTitle", "Document")
+                        .param("question.scored", "true")
+                        .param("question.scoreTotal", "100")
+                        .param("question.writtenFeedback", "true")
+                        .param("question.assessmentGuidance", "My assessment guidance")
+                        .param("question.assessmentGuidanceTitle", "My assessment guidance title")
+                        .param("question.assessmentMaxWords", "200")
+                        .param("guidanceRows[0].scoreFrom", "1")
+                        .param("guidanceRows[0].scoreTo", "10")
+                        .param("guidanceRows[0].justification", "My justification"))
+                .andExpect(model().hasErrors())
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+
+        BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult." + CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
+        assertEquals("This field cannot be left blank.", bindingResult.getFieldError("question.allowedAppendixResponseFileTypes").getDefaultMessage());
+        assertEquals("This field cannot be left blank.", bindingResult.getFieldError("question.appendixGuidance").getDefaultMessage());
+
+        Map<String, Object> model = result.getModelAndView().getModel();
+
+        assertEquals(QuestionSetupViewModel.class, model.get("model").getClass());
+        QuestionSetupViewModel viewModel = (QuestionSetupViewModel) model.get("model");
+
+        assertFalse(viewModel.isDisplayAssessmentOptions());
 
         verify(competitionSetupService, never()).saveCompetitionSetupSubsection(isA(QuestionForm.class), eq(competition), eq(CompetitionSetupSection.APPLICATION_FORM), eq(CompetitionSetupSubsection.QUESTIONS), eq(loggedInUser));
     }
@@ -774,6 +881,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(model().attributeHasFieldErrorCode(CompetitionSetupController.COMPETITION_SETUP_FORM_KEY, "question.choices[1].text", "validation.competition.setup.multiple.choice.duplicate"))
                 .andExpect(model().attributeHasFieldErrorCode(CompetitionSetupController.COMPETITION_SETUP_FORM_KEY, "question.choices[2].text", "NotBlank"));
     }
+
     @Test
     public void submitSectionApplicationScopeQuestionWithoutErrors() throws Exception {
         long questionId = 4L;

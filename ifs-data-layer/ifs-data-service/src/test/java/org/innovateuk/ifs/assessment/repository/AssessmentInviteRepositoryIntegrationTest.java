@@ -6,6 +6,7 @@ import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.profile.domain.Profile;
@@ -44,6 +45,7 @@ import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.RoleProfileStatusBuilder.newRoleProfileStatus;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
+import static org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
@@ -56,6 +58,10 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
     private final long INNOVATION_AREA_ID = 5L;
 
     private Competition competition;
+
+    private Competition ktpCompetition;
+
+    private Competition ktpAktCompetition;
 
     private InnovationArea innovationArea;
 
@@ -90,6 +96,18 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
         competition = competitionRepository.save(newCompetition()
                 .with(id(null))
                 .withName("competition")
+                .build());
+
+        ktpCompetition = competitionRepository.save(newCompetition()
+                .with(id(null))
+                .withName("competition")
+                .withFundingType(FundingType.KTP)
+                .build());
+
+        ktpAktCompetition = competitionRepository.save(newCompetition()
+                .with(id(null))
+                .withName("competition")
+                .withFundingType(FundingType.KTP_AKT)
                 .build());
 
         innovationArea = innovationAreaRepository.save(newInnovationArea()
@@ -301,6 +319,86 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
     }
 
     @Test
+    public void findAssessorsByKTPCompetitionAndInnovationArea() {
+        String assessorFilter = "";
+
+        addTestAssessors();
+
+        assertEquals(6, userRepository.findByRoles(ASSESSOR).size());
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "firstName"));
+
+        Page<User> pagedUsers = repository.findAssessorsByCompetitionAndAssessorNameLike(ktpCompetition.getId(), assessorFilter, pageable);
+
+        assertEquals(0, pagedUsers.getTotalElements());
+        assertEquals(0, pagedUsers.getTotalPages());
+        assertEquals(0, pagedUsers.getContent().size());
+        assertEquals(0, pagedUsers.getNumber());
+    }
+
+    @Test
+    public void findKTAByKTPCompetitionAndInnovationArea() {
+        String assessorFilter = "";
+
+        addTestKTA();
+
+        assertEquals(4, userRepository.findByRoles(KNOWLEDGE_TRANSFER_ADVISER).size());
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "firstName"));
+
+        Page<User> pagedUsers = repository.findAssessorsByCompetitionAndAssessorNameLike(ktpCompetition.getId(), assessorFilter, pageable);
+
+        assertEquals(4, pagedUsers.getTotalElements());
+        assertEquals(1, pagedUsers.getTotalPages());
+        assertEquals(4, pagedUsers.getContent().size());
+        assertEquals(0, pagedUsers.getNumber());
+        assertEquals("kta1", pagedUsers.getContent().get(0).getFirstName());
+        assertEquals("kta2", pagedUsers.getContent().get(1).getFirstName());
+        assertEquals("kta3", pagedUsers.getContent().get(2).getFirstName());
+        assertEquals("kta4", pagedUsers.getContent().get(3).getFirstName());
+    }
+
+    @Test
+    public void findAssessorsByKTPAKTCompetitionAndInnovationArea() {
+        String assessorFilter = "";
+
+        addTestAssessors();
+
+        assertEquals(6, userRepository.findByRoles(ASSESSOR).size());
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "firstName"));
+
+        Page<User> pagedUsers = repository.findAssessorsByCompetitionAndAssessorNameLike(ktpAktCompetition.getId(), assessorFilter, pageable);
+
+        assertEquals(0, pagedUsers.getTotalElements());
+        assertEquals(0, pagedUsers.getTotalPages());
+        assertEquals(0, pagedUsers.getContent().size());
+        assertEquals(0, pagedUsers.getNumber());
+    }
+
+    @Test
+    public void findKTAByKTPAKTCompetitionAndInnovationArea() {
+        String assessorFilter = "";
+
+        addTestKTA();
+
+        assertEquals(4, userRepository.findByRoles(KNOWLEDGE_TRANSFER_ADVISER).size());
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "firstName"));
+
+        Page<User> pagedUsers = repository.findAssessorsByCompetitionAndAssessorNameLike(ktpAktCompetition.getId(), assessorFilter, pageable);
+
+        assertEquals(4, pagedUsers.getTotalElements());
+        assertEquals(1, pagedUsers.getTotalPages());
+        assertEquals(4, pagedUsers.getContent().size());
+        assertEquals(0, pagedUsers.getNumber());
+        assertEquals("kta1", pagedUsers.getContent().get(0).getFirstName());
+        assertEquals("kta2", pagedUsers.getContent().get(1).getFirstName());
+        assertEquals("kta3", pagedUsers.getContent().get(2).getFirstName());
+        assertEquals("kta4", pagedUsers.getContent().get(3).getFirstName());
+    }
+
+    @Test
     public void findAssessorsByCompetition_nextPage() {
         Competition competition = competitionRepository.findById(1L).get();
 
@@ -366,6 +464,42 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
                 .withFirstName("Victoria", "James", "Jessica", "Andrew")
                 .withLastName("Beckham", "Blake", "Alba", "Marr")
                 .withRoles(singleton(ASSESSOR))
+                .withStatus(ACTIVE)
+                .withProfileId(profileIds[0], profileIds[1], profileIds[2], profileIds[3])
+                .build(4);
+
+        userRepository.saveAll(users);
+
+        Set<RoleProfileStatus> roleProfileStates = newRoleProfileStatus()
+                .withProfileRole(ProfileRole.ASSESSOR)
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .withUser(users.toArray(new User[users.size()]))
+                .withCreatedBy(users.toArray(new User[users.size()]))
+                .withCreatedOn(ZonedDateTime.now())
+                .buildSet(users.size());
+        roleProfileStatusRepository.saveAll(roleProfileStates);
+
+        flushAndClearSession();
+    }
+
+    private void addTestKTA() {
+        InnovationArea innovationArea = innovationAreaRepository.findById(INNOVATION_AREA_ID).get();
+
+        List<Profile> profiles = newProfile()
+                .withId()
+                .withInnovationArea(innovationArea)
+                .build(4);
+
+        List<Profile> savedProfiles = Lists.newArrayList(profileRepository.saveAll(profiles));
+
+        Long[] profileIds = simpleMap(savedProfiles, Profile::getId).toArray(new Long[savedProfiles.size()]);
+
+        List<User> users = newUser()
+                .withId()
+                .withUid("uid1", "uid2", "uid3", "uid4")
+                .withFirstName("kta1", "kta2", "kta3", "kta4")
+                .withLastName("Beckham", "Blake", "Alba", "Marr")
+                .withRoles(singleton(KNOWLEDGE_TRANSFER_ADVISER))
                 .withStatus(ACTIVE)
                 .withProfileId(profileIds[0], profileIds[1], profileIds[2], profileIds[3])
                 .build(4);

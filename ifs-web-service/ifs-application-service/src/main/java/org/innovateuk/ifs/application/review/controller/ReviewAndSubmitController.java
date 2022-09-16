@@ -2,6 +2,8 @@ package org.innovateuk.ifs.application.review.controller;
 
 import org.innovateuk.ifs.application.forms.form.ApplicationReopenForm;
 import org.innovateuk.ifs.application.forms.form.ApplicationSubmitForm;
+import org.innovateuk.ifs.application.forms.form.EoiEvidenceForm;
+import org.innovateuk.ifs.application.forms.populator.EoiEvidenceFormPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.review.populator.ReviewAndSubmitViewModelPopulator;
 import org.innovateuk.ifs.application.review.viewmodel.ReviewAndSubmitViewModel;
@@ -18,8 +20,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.CovidType;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
+import org.innovateuk.ifs.file.service.FileUploadRestService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.horizon.service.HorizonWorkProgrammeRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -34,15 +36,16 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
+import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 
 @Controller
 @RequestMapping("/application")
@@ -71,6 +74,12 @@ public class ReviewAndSubmitController {
     @Autowired
     private ApplicationEoiEvidenceResponseRestService applicationEoiEvidenceResponseRestService;
 
+    @Autowired
+    private FileUploadRestService fileUploadRestService;
+
+    @Autowired
+    private EoiEvidenceFormPopulator eoiEvidenceFormPopulator;
+
     @Value("${ifs.early.metrics.url}")
     private String earlyMetricsUrl;
 
@@ -90,20 +99,6 @@ public class ReviewAndSubmitController {
 
 
         return "application/review-and-submit";
-    }
-
-    @PostMapping(
-            value = "/{applicationId}/{application-eoi-evidence-response}",
-            params = "delete-eoi-evidence-response")
-    public String deleteEoiEvidenceResponse(Model model,
-                                            UserResource user,
-                                            @PathVariable long applicationId,
-                                            @RequestParam("delete-eoi-evidence-response") long applicationEoiEvidenceResponseFileEntryId) {
-
-        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-        applicationEoiEvidenceResponseRestService.delete(application.getApplicationEoiEvidenceResponseResource()).getSuccess();
-
-        return "redirect:/application/" + applicationId + "/track";
     }
 
     @SecuredBySpring(value = "APPLICATION_SUBMIT", description = "Applicants can submit their applications.")
@@ -281,11 +276,84 @@ public class ReviewAndSubmitController {
                 .failNowOrSucceedWith(failureView, successView);
     }
 
+    @PreAuthorize("hasAnyAuthority('applicant')")
+    @PostMapping(params = "upload-eoi-evidence")
+    @SecuredBySpring(value = "UPLOAD_EOI_EVIDENCE", description = "Lead applicant can upload their eoi evidence")
+    public String uploadDocument(@PathVariable("applicationId") long applicationId,
+                                 @PathVariable("organisationId") long organisationId,
+                                 @ModelAttribute("form") EoiEvidenceForm form,
+                                 @SuppressWarnings("unused") BindingResult bindingResult,
+                                 ValidationHandler validationHandler,
+                                 Model model,
+                                 UserResource loggedInUser) {
+        return handleFileUpload("eoiEvidenceFile", form.getEoiEvidenceFile(), applicationId, organisationId, loggedInUser, form, bindingResult, validationHandler, model);
+    }
+
+    private String handleFileUpload(String inputField, MultipartFile file, long applicationId, long organisationId, UserResource user, EoiEvidenceForm form, BindingResult bindingResult, ValidationHandler validationHandler, Model model) {
+        Supplier<String> view = () -> applicationTrack(model, applicationId, form, user);
+
+        return validationHandler.performFileUpload(inputField, view, () -> {
+            return applicationEoiEvidenceResponseRestService.uploadEoiEvidence(applicationId, organisationId, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
+
+        });
+    }
+
+//        long organisationId = processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess().getOrganisationId();
+//
+//           MultipartFile eoiEvidence = form.getEoiEvidenceFile();
+//            RestResult<ApplicationEoiEvidenceResponseResource> eoiEvidenceUpload = applicationEoiEvidenceResponseRestService.uploadEoiEvidence(applicationId, organisationId, eoiEvidence.getContentType(), eoiEvidence.getSize());
+//            if (eoiEvidenceUpload.isFailure()) {
+//                eoiEvidenceUpload.getErrors().forEach(error ->
+//                        bindingResult.rejectValue("eoiEvidenceFile",  error.getErrorKey(), error.getArguments().toArray(), "Upload error"));
+//            } else {
+//                form.setEvidenceFileEntryName(eoiEvidence.getName());
+//            }
+//        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+//        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+//
+//        model.addAttribute("model", new TrackViewModel(
+//                    competition,
+//                    application,
+//                    earlyMetricsUrl,
+//                    application.getCompletion(),
+//                    canReopenApplication(application, loggedInUser, competition),
+//                    form.getEvidenceFileEntryName()
+//            ));
+//            return "horizon-europe-guarantee-eoi-application-track";
+//        }
+
+//    @GetMapping("/{applicationId}/view-eoi-evidence")
+//    public @ResponseBody
+//    ResponseEntity<ByteArrayResource> viewEoiEvidenceFile(
+//            @PathVariable("applicationId") final Long applicationId) {
+//
+//
+//        final FileEntryResource fileDetails = fileEntryRestService.findOne(applicationEoiEvidenceResponseRestService.findOneByApplicationId(applicationId).getSuccess().get().getFileEntryId()).getSuccess();
+//        final ByteArrayResource resource = fileservice;
+//        return getFileResponseEntity(resource, fileDetails);
+//    }
+
+    @PostMapping(params = "remove-eoi-evidence-response")
+    @AsyncMethod
+    @PreAuthorize("hasAuthority('applicant')")
+    @SecuredBySpring(value = "REMOVE_EOI_EVIDENCE", description = "Lead applicant can remove their eoi evidence")
+    public String removeEoiEvidenceResponse(Model model,
+                                            UserResource user,
+                                            @PathVariable long applicationId,
+                                            @RequestParam("remove-eoi-evidence-response") long applicationEoiEvidenceResponseFileEntryId) {
+
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+        applicationEoiEvidenceResponseRestService.delete(application.getApplicationEoiEvidenceResponseResource()).getSuccess();
+
+        return "redirect:/application/" + applicationId + "/track";
+    }
+
     @SecuredBySpring(value = "APPLICANT_TRACK", description = "Applicants and kta can track their application after submitting.")
     @PreAuthorize("hasAnyAuthority('applicant', 'knowledge_transfer_adviser')")
     @GetMapping("/{applicationId}/track")
     public String applicationTrack(Model model,
                                    @PathVariable long applicationId,
+                                   @ModelAttribute("form") EoiEvidenceForm form,
                                    UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
 
@@ -293,13 +361,11 @@ public class ReviewAndSubmitController {
             return "redirect:/application/" + applicationId;
         }
 
-        String eoiEvidenceResponseFileName = Optional.ofNullable(application.getApplicationEoiEvidenceResponseResource().getFileEntryId())
-                .map(fileEntryRestService::findOne)
-                .flatMap(RestResult::getOptionalSuccessObject)
-                .map(FileEntryResource::getName)
-                .orElse(null);
-
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+
+        if (competition.getCompetitionEoiEvidenceConfigResource().isEvidenceRequired()) {
+            eoiEvidenceFormPopulator.populate(form, applicationId);
+        }
 
         model.addAttribute("model", new TrackViewModel(
                 competition,
@@ -307,7 +373,7 @@ public class ReviewAndSubmitController {
                 earlyMetricsUrl,
                 application.getCompletion(),
                 canReopenApplication(application, user, competition),
-                eoiEvidenceResponseFileName
+                form.getEvidenceFileEntryName()
         ));
         return getTrackingPage(competition, application);
     }

@@ -165,7 +165,9 @@
                                             <span class="status-msg msg-deadline-waiting">Expression of interest</span>
                                         </th:block>
                                         <span class="status-msg msg-progress">
-                                            Submitted
+                                            <th th:text="${inProgressView.evidenceUploaded != null
+                                                            && !inProgressView.evidenceUploaded
+                                                            && inProgressView.leadOrganisation }  ? 'Evidence required' : 'Submitted'">Submitted</th>
                                             <th:block th:if="${inProgressView.showReopenLink}">
                                                 <br/>
                                                 <a th:href="@{/application/{applicationId}/confirm-reopen(applicationId=${inProgressView.applicationNumber})}" class="govuk-link govuk-body reopen-application-link">Reopen</a>

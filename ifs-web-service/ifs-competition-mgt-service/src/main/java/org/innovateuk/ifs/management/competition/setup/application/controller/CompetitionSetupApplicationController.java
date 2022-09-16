@@ -488,7 +488,7 @@ public class CompetitionSetupApplicationController {
     }
 
     private boolean displayAssessmentOptions(CompetitionResource competitionResource, CompetitionSetupQuestionResource questionResource) {
-        return (!competitionResource.isKtp() && isAssessedQuestion(questionResource)) || isKtpAssessmentQuestion(questionResource);
+        return (!competitionResource.isKtpOnly() && isAssessedQuestion(questionResource)) || isKtpAssessmentQuestion(questionResource);
     }
 
     private boolean isAssessedQuestion(CompetitionSetupQuestionResource questionResource) {

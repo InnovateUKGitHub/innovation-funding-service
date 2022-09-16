@@ -23,6 +23,8 @@ public class ApplicationSummaryResource {
     private Boolean ineligibleInformed;
     private boolean inAssessmentPanel;
     private boolean emailInQueue;
+    private boolean eoiEvidenceDocumentRequired;
+    private boolean eoiEvidenceDocumentReceived;
 
     public ZonedDateTime getManageDecisionEmailDate() {
         return manageDecisionEmailDate;
@@ -149,7 +151,31 @@ public class ApplicationSummaryResource {
     }
 
     public Boolean applicationDecisionIsChangeable() {
+        if (eoiEvidenceDocumentIsRequiredAndHasNotBeenUploaded()) {
+            return false;
+        }
+
         return (this.manageDecisionEmailDate == null || !decision.equals(Decision.FUNDED)) && !emailInQueue;
+    }
+
+    private boolean eoiEvidenceDocumentIsRequiredAndHasNotBeenUploaded() {
+        return isEoiEvidenceDocumentRequired() && !isEoiEvidenceDocumentReceived();
+    }
+
+    public boolean isEoiEvidenceDocumentRequired() {
+        return eoiEvidenceDocumentRequired;
+    }
+
+    public void setEoiEvidenceDocumentRequired(boolean eoiEvidenceDocumentRequired) {
+        this.eoiEvidenceDocumentRequired = eoiEvidenceDocumentRequired;
+    }
+
+    public boolean isEoiEvidenceDocumentReceived() {
+        return eoiEvidenceDocumentReceived;
+    }
+
+    public void setEoiEvidenceDocumentReceived(boolean eoiEvidenceDocumentReceived) {
+        this.eoiEvidenceDocumentReceived = eoiEvidenceDocumentReceived;
     }
 
     public String emailStatus() {

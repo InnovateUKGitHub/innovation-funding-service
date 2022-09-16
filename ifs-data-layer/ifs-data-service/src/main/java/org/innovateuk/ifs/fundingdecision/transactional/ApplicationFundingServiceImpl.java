@@ -2,9 +2,9 @@ package org.innovateuk.ifs.fundingdecision.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.resource.ApplicationDecisionToSendApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.Decision;
-import org.innovateuk.ifs.application.resource.ApplicationDecisionToSendApplicationResource;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
@@ -36,13 +36,13 @@ import java.util.stream.StreamSupport;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.application.resource.Decision.FUNDED;
 import static org.innovateuk.ifs.application.resource.Decision.UNFUNDED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingServiceImpl.Notifications.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.user.resource.ProcessRoleType.*;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.COLLABORATOR;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Service
@@ -90,6 +90,14 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
         }
         return getCompetition(competitionId).andOnSuccess(competition -> {
             List<Application> applications = findValidApplications(applicationDecisions, competitionId);
+
+            if (competition.isEnabledForPreRegistration()) {
+                applications = applications
+                        .stream()
+                        .filter(a -> !a.applicationEoiEvidenceIsRequiredAndNotReceived())
+                        .collect(toList());
+            }
+
             return saveDecisionData(applications, applicationDecisions);
         });
     }
