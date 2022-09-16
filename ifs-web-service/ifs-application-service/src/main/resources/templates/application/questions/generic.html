@@ -312,20 +312,6 @@
                                type="Continue" class="button-clear">Review survey answers</a>
                         </div>
                     </div>
-
-                    <div class="form-footer__info" aria-live="polite" aria-atomic="true" role="status">
-                        <th:block th:if="${model.hasResponse() and !model.imSurveyQuestion}">
-                            <span class="update-label">Last updated: </span>
-                            <th:block th:insert="question-type/form-elements :: updateTimeDetails" th:with="updateDate=${model.lastUpdated},lastUpdatedText=${model.lastUpdatedText}, applicationId=${model.applicationId}" />
-                        </th:block>
-                        <th:block th:unless="${model.hasResponse() and !model.imSurveyQuestion}">
-                            <th:block th:if="${model.complete}">
-                            <span class="update-label">Last completed: </span>
-                            <th:block th:insert="question-type/form-elements :: updateTimeDetails" th:with="updateDate=${model.lastUpdated},lastUpdatedText=${model.lastUpdatedText}, applicationId=${model.applicationId}" />
-                            </th:block>
-                        </th:block>
-
-                    </div>
                     <div class="form-footer__info" aria-live="polite" aria-atomic="true" role="status">
                         <th:block th:if="${model.hasResponse() or (model.imSurveyQuestion and model.complete)}">
                             <span class="update-label" th:text="${model.imSurveyQuestion? 'Last completed:' : 'Last updated:'}">Last updated:</span>

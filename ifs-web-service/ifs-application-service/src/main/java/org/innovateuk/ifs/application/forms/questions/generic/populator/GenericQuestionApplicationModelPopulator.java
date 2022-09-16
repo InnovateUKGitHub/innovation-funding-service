@@ -94,8 +94,8 @@ public class GenericQuestionApplicationModelPopulator {
             long currentUserOrganisationId = processRoleRestService.findProcessRole(currentUserId, application.getId()).getSuccess().getOrganisationId();
             Optional<QuestionStatusResource> questionStatusResource = questionStatusRestService.getMarkedAsCompleteByQuestionApplicationAndOrganisation(imQuestionId, application.getId(), currentUserOrganisationId).getSuccess();
             questionStatusResource.ifPresent(statusResource -> viewModelBuilder.withLastUpdated(toUkTimeZone(statusResource.getMarkedAsCompleteOn()))
-                     .withCompletedBy(statusResource.getMarkedAsCompleteByUserId())
-                    .withCompletedByName(statusResource.getMarkedAsCompleteByUserName()));
+                    .withLastUpdatedBy(statusResource.getMarkedAsCompleteByUserId())
+                    .withLastUpdatedByName(statusResource.getMarkedAsCompleteByUserName()));
         }
 
         boolean hideAssignButtons = !Boolean.TRUE.equals(question.isAssignEnabled());
