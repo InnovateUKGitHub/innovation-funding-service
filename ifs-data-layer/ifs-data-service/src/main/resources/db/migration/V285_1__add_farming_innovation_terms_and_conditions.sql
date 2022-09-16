@@ -7,3 +7,4 @@ SET @new_terms_id = 74;
 
 INSERT INTO terms_and_conditions (id, name, template, version, type, created_by, created_on, modified_on, modified_by)
 values(@new_terms_id, 'Farming Innovation Programme', 'farming-innovation-programme-terms-and-conditions-v1', 1, 'GRANT', @system_maintenance_user_id, now(), now(), @system_maintenance_user_id);
+
