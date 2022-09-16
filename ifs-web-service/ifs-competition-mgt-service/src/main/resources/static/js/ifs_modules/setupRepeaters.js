@@ -334,7 +334,7 @@ IFS.competitionManagement.repeater = (function () {
       var editor = IFS.core.editor.prepareEditorHTML(el)
       // make a copy of the global wysiwyg-editor settings object and add the html link functionality
       var editorOptions = jQuery.extend(true, {}, IFS.core.editor.settings.editorOptions, {
-        plugins: {'hallolink': {}}
+        plugins: { hallolink: {} }
       })
       jQuery(editor).hallo(editorOptions)
     }
