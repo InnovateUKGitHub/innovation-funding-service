@@ -277,22 +277,23 @@ public class ReviewAndSubmitController {
     }
 
     @PreAuthorize("hasAnyAuthority('applicant')")
-    @PostMapping(params = "upload-eoi-evidence")
+    @PostMapping(value="/{applicationId}/track", params = "upload-eoi-evidence")
     @SecuredBySpring(value = "UPLOAD_EOI_EVIDENCE", description = "Lead applicant can upload their eoi evidence")
     public String uploadDocument(@PathVariable("applicationId") long applicationId,
-                                 @PathVariable("organisationId") long organisationId,
                                  @ModelAttribute("form") EoiEvidenceForm form,
                                  @SuppressWarnings("unused") BindingResult bindingResult,
                                  ValidationHandler validationHandler,
                                  Model model,
                                  UserResource loggedInUser) {
-        return handleFileUpload("eoiEvidenceFile", form.getEoiEvidenceFile(), applicationId, organisationId, loggedInUser, form, bindingResult, validationHandler, model);
+        long organisationId = processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess().getOrganisationId();
+        return handleFileUpload("eoiEvidenceFile", applicationId, organisationId, loggedInUser, form, bindingResult, validationHandler, model);
     }
 
-    private String handleFileUpload(String inputField, MultipartFile file, long applicationId, long organisationId, UserResource user, EoiEvidenceForm form, BindingResult bindingResult, ValidationHandler validationHandler, Model model) {
+    private String handleFileUpload(String inputField, long applicationId, long organisationId, UserResource user, EoiEvidenceForm form, BindingResult bindingResult, ValidationHandler validationHandler, Model model) {
         Supplier<String> view = () -> applicationTrack(model, applicationId, form, user);
 
         return validationHandler.performFileUpload(inputField, view, () -> {
+            MultipartFile file = form.getEoiEvidenceFile();
             return applicationEoiEvidenceResponseRestService.uploadEoiEvidence(applicationId, organisationId, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
 
         });
@@ -372,9 +373,7 @@ public class ReviewAndSubmitController {
                 application,
                 earlyMetricsUrl,
                 application.getCompletion(),
-                canReopenApplication(application, user, competition),
-                form.getEvidenceFileEntryName()
-        ));
+                canReopenApplication(application, user, competition)));
         return getTrackingPage(competition, application);
     }
 

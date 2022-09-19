@@ -20,11 +20,13 @@ public class EoiEvidenceFormPopulator {
 
     public EoiEvidenceForm populate(EoiEvidenceForm form, long applicationId) {
 
+//        Optional<MultipartFile> file = Optional.of(form.getEoiEvidenceFile());
         Optional<ApplicationEoiEvidenceResponseResource> eoiEvidence = applicationEoiEvidenceResponseRestService.findOneByApplicationId(applicationId).getSuccess();
         if (eoiEvidence.isPresent()) {
-            String fileName = fileEntryRestService.findOne(eoiEvidence.get().getFileEntryId()).getSuccess().getName();
-            form.setEvidenceFileEntryId(eoiEvidence.get().getFileEntryId());
-            form.setEvidenceFileEntryName(fileName);
+//            String fileName = fileEntryRestService.findOne(eoiEvidence.get().getFileEntryId()).getSuccess().getName();
+//            form.setEvidenceFileEntryId(eoiEvidence.get().getFileEntryId());
+            form.setEvidenceFileEntryName(form.getEvidenceFileEntryName());
+//            form.setEvidenceFileEntryId();
             return form;
         } else {
             return new EoiEvidenceForm();

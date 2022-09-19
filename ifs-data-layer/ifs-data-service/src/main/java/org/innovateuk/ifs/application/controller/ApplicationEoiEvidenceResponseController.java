@@ -2,8 +2,11 @@ package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceResponseResource;
 import org.innovateuk.ifs.application.transactional.ApplicationEoiEvidenceResponseService;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.repository.CompetitionEoiDocumentRepository;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.controller.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.file.domain.FileEntry;
@@ -31,10 +34,19 @@ public class ApplicationEoiEvidenceResponseController {
     private FileService fileService;
 
     @Autowired
+    private ApplicationService applicationService;
+
+    @Autowired
+    private CompetitionService competitionService;
+
+    @Autowired
+    private CompetitionEoiDocumentRepository competitionEoiDocumentRepository;
+
+    @Autowired
     @Qualifier("mediaTypeStringsFileValidator")
     private FilesizeAndTypeFileValidator<List<String>> fileValidator;
 
-    @Value("${ifs.data.service.file.upload.files.valid.media.types}")
+    @Value("${ifs.data.service.file.storage.interview.response.valid.media.types}")
     private List<String> validMediaTypes;
 
     @Value("${ifs.data.service.file.storage.forminputresponse.max.filesize.bytes}")
@@ -43,19 +55,24 @@ public class ApplicationEoiEvidenceResponseController {
     private FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
 
-    @PostMapping(value = "/upload-eoi-evidence", produces = "application/json")
+    @PostMapping(value = "/{applicationId}/eoi-evidence/{organisationId}/upload", produces = "application/json")
     public RestResult<ApplicationEoiEvidenceResponseResource> uploadEoiEvidence(@RequestHeader(value = "Content-Type", required = false) String contentType,
                                                                                 @RequestHeader(value = "Content-Length", required = false) String contentLength,
-                                                                                @RequestParam("applicationId") long applicationId,
-                                                                                @RequestParam("organisationId") long organisationId,
+                                                                                @PathVariable("applicationId") long applicationId,
+                                                                                @PathVariable("organisationId") long organisationId,
                                                                                 @RequestParam(value = "filename", required = false) String originalFilename,
                                                                                 HttpServletRequest request) {
 
-        ServiceResult<FileEntry> fileCreated = fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypes, maxFilesizeBytesForEoiEvidenceResponse, request, (fileAttributes, inputStreamSupplier) ->
-            fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)).toServiceResult();
+        long competitionId = applicationService.getApplicationById(applicationId).getSuccess().getCompetition();
+        long eoiEvidenceConfigId = competitionService.getCompetitionById(competitionId).getSuccess().getCompetitionEoiEvidenceConfigResource().getId();
+//        List<String> validMediaTypes = Collections.singletonList(competitionEoiDocumentRepository.findById(eoiEvidenceConfigId).get().getFileType().getName());
+        ServiceResult<FileEntry> fileCreated = fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename,
+                fileValidator, validMediaTypes, maxFilesizeBytesForEoiEvidenceResponse, request,
+                (fileAttributes, inputStreamSupplier) ->
+                        fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)).toServiceResult();
 
-        return applicationEoiEvidenceResponseService.create(new ApplicationEoiEvidenceResponseResource(applicationId, organisationId, fileCreated.toGetResponse().getSuccess().getId())).toGetResponse();
-            }
+        return applicationEoiEvidenceResponseService.create(new ApplicationEoiEvidenceResponseResource(applicationId, organisationId, fileCreated.getSuccess().getId())).toGetResponse();
+    }
 
     @PostMapping("/eoi-evidence-response/submit")
     public RestResult<Void> submitEoiEvidence(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource,

@@ -53,7 +53,7 @@
                     </div>
                 </details>
 
-                <form th:action="@{/application/{applicationId}/eoi-evidence-response(applicationId=${model.currentApplication.id})}"
+                <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
                       th:object="${form}"
                       method="post"
                       id="upload-document-form"
