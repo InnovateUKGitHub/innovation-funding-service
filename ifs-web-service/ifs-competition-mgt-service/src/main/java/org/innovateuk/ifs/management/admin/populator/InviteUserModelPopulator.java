@@ -44,7 +44,6 @@ public class InviteUserModelPopulator {
         return roles.stream()
                 .filter(r -> !r.isSuperAdminUser())
                 .filter(r -> !r.isIfsAdministrator())
-                .filter(r -> !r.isAuditor())
                 .collect(toSet());
     }
 
