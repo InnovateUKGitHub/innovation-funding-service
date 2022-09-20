@@ -20,6 +20,30 @@ project.getConfigurations().all { config ->
             details.useVersion("20180130")
         }
 
+        if (details.requested.group.equalsIgnoreCase("org.apache.commons") && details.requested.name.equalsIgnoreCase('commons-compress')) {
+            details.useVersion("1.21")
+        }
+
+        if (details.requested.group.equalsIgnoreCase("commons-io") && details.requested.name.equalsIgnoreCase('commons-io')) {
+            details.useVersion("2.7")
+        }
+
+        if (details.requested.group.equalsIgnoreCase("com.amazonaws") && details.requested.name.equalsIgnoreCase('aws-java-sdk-s3')) {
+            details.useVersion("1.12.261")
+        }
+
+        if (details.requested.group.equalsIgnoreCase("org.apache.pdfbox") && details.requested.name.equalsIgnoreCase('pdfbox')) {
+            details.useVersion("2.0.24")
+        }
+
+        if (details.requested.group.equalsIgnoreCase("org.jsoup") && details.requested.name.equalsIgnoreCase('jsoup')) {
+            details.useVersion("1.15.3")
+        }
+
+        if (details.requested.group.equalsIgnoreCase("org.apache.tika") && details.requested.name.equalsIgnoreCase('tika-core')) {
+            details.useVersion("2.4.1")
+        }
+
     }
 
 }
