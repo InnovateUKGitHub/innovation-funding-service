@@ -276,7 +276,7 @@ public class ReviewAndSubmitController {
                 .failNowOrSucceedWith(failureView, successView);
     }
 
-    @PreAuthorize("hasAnyAuthority('applicant')")
+    @PreAuthorize("hasAuthority('applicant')")
     @PostMapping(value="/{applicationId}/track", params = "upload-eoi-evidence")
     @SecuredBySpring(value = "UPLOAD_EOI_EVIDENCE", description = "Lead applicant can upload their eoi evidence")
     public String uploadDocument(@PathVariable("applicationId") long applicationId,
