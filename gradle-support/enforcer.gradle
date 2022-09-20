@@ -11,5 +11,17 @@ project.getConfigurations().all { config ->
             throw new GradleException(sprintf("log4j-core found %s.%s",
                     [details.requested.group, details.requested.version]))
         }
+
+        if (details.requested.group.equalsIgnoreCase("io.netty")) {
+            details.useVersion("4.1.44.Final")
+        }
+
+        if (details.requested.group.equalsIgnoreCase("org.json")) {
+            details.useVersion("20180130")
+        }
+
+        if (details.requested.group.equalsIgnoreCase("org.yaml")) {
+            details.useVersion("1.31")
+        }
     }
 }
