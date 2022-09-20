@@ -8,7 +8,10 @@ import org.innovateuk.ifs.user.resource.UserResource;
 public interface ApplicationEoiEvidenceResponseService {
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
-    ServiceResult<ApplicationEoiEvidenceResponseResource> create(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource);
+    ServiceResult<ApplicationEoiEvidenceResponseResource> upload(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource);
+
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    ServiceResult<ApplicationEoiEvidenceResponseResource> remove(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> submit(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource);
