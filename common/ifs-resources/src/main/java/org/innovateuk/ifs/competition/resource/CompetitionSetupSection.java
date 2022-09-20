@@ -26,6 +26,7 @@ public enum CompetitionSetupSection {
     PROJECT_ELIGIBILITY(4L, "project-eligibility", "Project eligibility", emptyList(), false, false),
     COMPLETION_STAGE(11L, "completion-stage", "Milestones", emptyList(), false, emptyList(), false),
     APPLICATION_SUBMISSION(15L, "application-submission", "Milestones", emptyList(), false, emptyList(), false),
+    APPLICATION_EXPRESSION_OF_INTEREST(18L, "application-expression-of-interest", "Milestones", emptyList(), false, emptyList(), false),
     APPLICATION_ASSESSMENT(16L, "application-assessment", "Milestones", emptyList(), false, emptyList(), false),
     MILESTONES(5L, "milestones", "Milestones", emptyList(), true, asList(COMPLETION_STAGE, APPLICATION_SUBMISSION, APPLICATION_ASSESSMENT), true),
     APPLICATION_FORM(6L, "application", "Application", asList(PROJECT_DETAILS, QUESTIONS, FINANCES, APPLICATION_DETAILS, KTP_ASSESSMENT), false, true),
