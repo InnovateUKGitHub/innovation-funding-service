@@ -43,9 +43,9 @@ public class InviteUserViewModelPopulatorTest {
 
         InviteUserViewModel viewModel = populator.populate(InviteUserView.INTERNAL_USER, Role.internalRoles(), loggedInUser);
 
-        EnumSet<Role> roles = EnumSet.of(PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD);
+        EnumSet<Role> roles = EnumSet.of(PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD, AUDITOR);
 
-        assertEquals(viewModel.getRoles().size(), 4);
+        assertEquals(viewModel.getRoles().size(), 5);
         assertEquals(viewModel.getRoles(), roles);
         assertEquals(expectedInnovationSectorOptions, viewModel.getInnovationSectorOptions());
     }
