@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.user.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
-import static java.util.Arrays.asList;
 import static java.util.Collections.disjoint;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
@@ -115,7 +113,9 @@ public class UserResource implements Serializable {
 
     @JsonIgnore
     public boolean isInternalUser() {
-        return internalRoles().stream().anyMatch(roles::contains);
+        return internalRoles().stream()
+                .filter(r -> !r.isAuditor())
+                .anyMatch(roles::contains);
     }
 
     @JsonIgnore
