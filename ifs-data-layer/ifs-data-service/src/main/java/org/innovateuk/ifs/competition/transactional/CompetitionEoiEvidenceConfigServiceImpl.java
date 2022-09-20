@@ -81,7 +81,6 @@ public class CompetitionEoiEvidenceConfigServiceImpl extends BaseTransactionalSe
     private List<String> getMediaTypes(List<Long> fileTypeIds) {
         List<String> validMediaTypes = new ArrayList<>();
 
-
 //        fileTypeIds.forEach(fileTypeId -> validMediaTypes.add(fileTypeRepository.findById(fileTypeId).get().getExtension()));
         for (Long fileTypeId : fileTypeIds) {
             switch (fileTypeRepository.findById(fileTypeId).get().getName()) {
