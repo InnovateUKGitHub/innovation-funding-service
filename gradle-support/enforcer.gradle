@@ -12,16 +12,15 @@ project.getConfigurations().all { config ->
                     [details.requested.group, details.requested.version]))
         }
 
-        if (details.requested.group.equalsIgnoreCase("io.netty")) {
-            details.useVersion("4.1.44.Final")
+        if (details.requested.name.equalsIgnoreCase('netty') && details.requested.version == "3.10.6.Final") {
+            details.useTarget group: 'io.netty', name: 'netty-all', version: '4.1.44.Final'
         }
 
-        if (details.requested.group.equalsIgnoreCase("org.json")) {
+        if (details.requested.group.equalsIgnoreCase("org.json") && details.requested.name.equalsIgnoreCase('json')) {
             details.useVersion("20180130")
         }
 
-        if (details.requested.group.equalsIgnoreCase("org.yaml")) {
-            details.useVersion("1.31")
-        }
     }
+
 }
+
