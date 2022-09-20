@@ -15,6 +15,10 @@ dependencies {
     api("org.slf4j:slf4j-api")
     api("org.projectlombok:lombok")
 
+    runtime("io.netty:netty-all:4.1.44.Final")
+    runtime("org.json:json:20180130")
+    runtime("org.apache.commons:commons-compress:1.21")
+
     // These are just constants
     api project(":common:api:static")
 
@@ -36,10 +40,6 @@ dependencies {
         api("org.projectlombok:lombok:1.18.24")
         api("com.google.guava:guava:31.0.1-jre")
         api("javax.validation:validation-api:2.0.1.Final")
-
-        api("io.netty:netty-all:4.1.44.Final")
-        api("org.json:json:20180130")
-        api("org.apache.commons:commons-compress:1.21")
 
         // Api - keep it light, jackson and maybe some annotation libs at most
         api project(":common:api:static")
