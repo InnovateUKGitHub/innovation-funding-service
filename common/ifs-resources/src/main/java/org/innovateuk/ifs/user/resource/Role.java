@@ -1,11 +1,9 @@
 package org.innovateuk.ifs.user.resource;
 
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.identity.Identifiable;
 
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -38,7 +36,6 @@ public enum Role implements Identifiable {
     final long id;
     final String displayName;
     final List<Authority> authorities;
-
     Role(final long id, final String displayName, final Authority... authorities) {
         this.id = id;
         this.displayName = displayName;
@@ -73,12 +70,16 @@ public enum Role implements Identifiable {
         return this == SUPER_ADMIN_USER;
     }
 
+    public boolean isIfsAdministrator() {
+        return this == IFS_ADMINISTRATOR;
+    }
+
     public boolean isAuditor() {
         return this == AUDITOR;
     }
 
     public static Set<Role> internalRoles() {
-        return EnumSet.of(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD, SUPER_ADMIN_USER);
+        return EnumSet.of(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD, SUPER_ADMIN_USER, AUDITOR);
     }
 
     public static Set<Role> inviteExternalRoles() {
