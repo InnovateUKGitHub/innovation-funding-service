@@ -65,6 +65,7 @@ dependencies {
     implementation 'com.docusign:docusign-esign-java:3.21.0'
     implementation 'javax.ws.rs:javax.ws.rs-api:2.0.1'
     implementation 'org.glassfish.jersey.core:jersey-common'
+    implementation 'com.sun.jersey:jersey-core:1.19.4'
     implementation "com.newrelic.agent.java:newrelic-api:6.1.0"
     implementation "com.hubspot.slack:slack-base:1.12"
     implementation "com.hubspot.slack:slack-java-client:1.12"
