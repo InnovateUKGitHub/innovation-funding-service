@@ -334,7 +334,7 @@ public class ReviewAndSubmitController {
 //        return getFileResponseEntity(resource, fileDetails);
 //    }
 
-    @PostMapping(params = "remove-eoi-evidence-response")
+    @PostMapping(params = "remove-eoi-evidence")
     @AsyncMethod
     @PreAuthorize("hasAuthority('applicant')")
     @SecuredBySpring(value = "REMOVE_EOI_EVIDENCE", description = "Lead applicant can remove their eoi evidence")
@@ -373,7 +373,9 @@ public class ReviewAndSubmitController {
                 application,
                 earlyMetricsUrl,
                 application.getCompletion(),
-                canReopenApplication(application, user, competition)));
+                canReopenApplication(application, user, competition),
+                applicationEoiEvidenceResponseRestService.findOneByApplicationId(applicationId).getSuccess().isPresent(),
+                form.getEvidenceFileEntryName()));
         return getTrackingPage(competition, application);
     }
 

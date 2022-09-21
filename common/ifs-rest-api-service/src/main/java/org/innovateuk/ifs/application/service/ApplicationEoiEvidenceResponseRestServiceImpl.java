@@ -30,11 +30,11 @@ public class ApplicationEoiEvidenceResponseRestServiceImpl extends BaseRestServi
 
     @Override
     public RestResult<Void> delete(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource) {
-        return deleteWithRestResult(URL + applicationEoiEvidenceResponseResource.getApplicationId() + "/eoi-evidence-response/delete/" + applicationEoiEvidenceResponseResource.getFileEntryId(), Void.class);
+        return deleteWithRestResult(URL + "/" + applicationEoiEvidenceResponseResource.getApplicationId() + "/eoi-evidence-response/delete/" + applicationEoiEvidenceResponseResource.getFileEntryId(), Void.class);
     }
 
     @Override
     public RestResult <Optional<ApplicationEoiEvidenceResponseResource>> findOneByApplicationId(long applicationId) {
-        return getWithRestResult(URL + applicationId + "/eoi-evidence-response" , ApplicationEoiEvidenceResponseResource.class).toOptionalIfNotFound();
+        return getWithRestResult(URL + "/" +  applicationId + "/eoi-evidence-response" , ApplicationEoiEvidenceResponseResource.class).toOptionalIfNotFound();
     }
 }
