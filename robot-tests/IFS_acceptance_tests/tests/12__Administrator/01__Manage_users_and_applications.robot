@@ -40,7 +40,9 @@ Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...               IFS-8547 KTA application and project dashboards
 ...
 ...               IFS-10511 Permit alternative email domain for internal user accounts
-
+...
+...               IFS-12899 Super administrator - IFS admin changes in Manage users
+...
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
@@ -223,28 +225,34 @@ Server side validation for invite new internal user
 The user must use an Innovate UK email
     [Documentation]  IFS-1944
     [Tags]  HappyPath
-    [Setup]  Log in as a different user                   &{ifs_admin_user_credentials}
-    Given the user navigates to the page                  ${server}/management/admin/users/active
-    When the IFS admin invites a new internal user
-    Then the user should see a field and summary error    Users cannot be registered without an Innovate UK email address.
-    [Teardown]  the user clicks the button/link           link = Cancel
+    When the user enters text to a text field               id = firstName  Support
+    And the user enters text to a text field                id = lastName  User
+    And the user enters text to a text field                id = emailAddress  ${invalidEmail}
+    And the user clicks the button/link                     jQuery = button:contains("Send invitation")
+    Then the user should see a field and summary error      Users cannot be registered without an Innovate UK email address.
+    [Teardown]  the user clicks the button/link             link = Cancel
 
 Client side validations for invite new internal user
     [Documentation]  IFS-27 IFS-10511
     When the user navigates to the page       ${server}/management/admin/invite-user
     Then the user validates the fields
 
-Administrator can successfully invite a new user
-    [Documentation]  IFS-27 IFS-983 IFS-10511
-    [Tags]  HappyPath
-    Given the IFS admin send invite to internal user         Support  User  IFS Administrator
-    Then the user cannot see a validation error in the page
-    And the user should see the element                     jQuery = h1:contains("Manage users")
-    #The Admin is redirected to the Manage Users page on Success
-    And the user should see the element                     jQuery = .govuk-tabs__list-item--selected:contains("Pending")
+IFS admin can not invite another ifs administartor
+    [Documentation]  IFS-12899
+    When the user navigates to the page         ${server}/management/admin/invite-user
+    Then the user should not see the element    jQuery = option:contains("IFS Administrator")
 
-Administrator can successfully finish the rest of the invitation
-    [Documentation]  IFS-27  IFS-983  IFS-2412  IFS-2842 IFS-10511
+Super administrator can successfully invite a new IFS Admin
+    [Documentation]  IFS-27  IFS-983  IFS-10511  IFS-12899
+    [Tags]  HappyPath
+    [Setup]  Log in as a different user                         &{superAdminCredentials}
+    Given the IFS admin send invite to internal user            Support  User  IFS Administrator
+    Then the user cannot see a validation error in the page
+    And the user should see the element                         jQuery = h1:contains("Manage users")
+    And the user should see the element                         jQuery = .govuk-tabs__list-item--selected:contains("Pending")
+
+Super administrator can successfully finish the rest of the invitation
+    [Documentation]  IFS-27  IFS-983  IFS-2412  IFS-2842  IFS-10511  IFS-12899
     [Tags]  HappyPath
     Given the user resends the invite
     When the user should see the element  jQuery = td:contains("Support User") ~ td:contains("IFS Administrator") ~ td:contains("${email}")
@@ -252,37 +260,38 @@ Administrator can successfully finish the rest of the invitation
     [Teardown]  Logout as user
 
 Account creation validation checks - Blank
-    [Documentation]  IFS-643  IFS-642
+    [Documentation]  IFS-643  IFS-642  IFS-12899
     Given the user reads his email and clicks the link            ${email}  ${emailInviteSubject}  Your Innovation Funding Service account has been created.
     And the user clicks the button/link                           jQuery = .govuk-button:contains("Create account")
     And the use should see the validation error summary           Password must be at least 12 characters
     When the user enters the basic details to create account      New  Administrator  ${email}
-    Set Focus To Element                                          css = #lastName
+    And Set Focus To Element                                      css = #lastName
     Then the user cannot see a validation error in the page
 
 Account creation validation checks - Lowercase password
-    [Documentation]  IFS-3554
+    [Documentation]  IFS-3554  IFS-12899
     Given the user enters text to a text field  id = password  PASSWORD1357123
     When The user clicks the button/link        jQuery = .govuk-button:contains("Create account")
     Then The user should see a field and summary error  Password must contain at least one lower case letter.
     [Teardown]  the user enters text to a text field   css = #password  ${short_password}
 
 New user account is created and verified
-    [Documentation]  IFS-643 IFS-983
+    [Documentation]  IFS-643 IFS-983  IFS-12899
     Given the user clicks the button/link      jQuery = .govuk-button:contains("Create account")
     Then the user should see the element       jQuery = h1:contains("Your account has been created")
     When the user clicks the button/link       jQuery = .govuk-button:contains("Sign into your account")
     Then the new internal user logs in and checks user details
 
 Inviting the same user for the same role again should give an error
-    [Documentation]  IFS-27
-    Given log in as a different user                  &{ifs_admin_user_credentials}
+    [Documentation]  IFS-27  IFS-12899
+    Given log in as a different user                  &{superAdminCredentials}
     When the IFS admin send invite to internal user   New  Administrator  IFS Administrator
     Then the user should see a summary error          This email address is already in use.
 
 Inviting the same user for the different role again should also give an error
     [Documentation]  IFS-27
-    Given the IFS admin send invite to internal user   Project  Finance  Project Finance
+    Given log in as a different user                   &{ifs_admin_user_credentials}
+    When the IFS admin send invite to internal user    Project  Finance  Project Finance
     Then the user should see a summary error           This email address is already in use.
 
 Administrator can navigate to edit page to edit the internal user details
@@ -626,7 +635,6 @@ the IFS admin send invite to internal user
     the user enters text to a text field                 id = emailAddress  ${email}
     the user selects the option from the drop-down menu  ${user_role}  id = role
     the user clicks the button/link                      jQuery = .govuk-button:contains("Send invitation")
-
 
 the IFS admin send invite to internal user with alternative email
     [Arguments]  ${first_name}  ${last_name}  ${user_role}
