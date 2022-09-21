@@ -1,0 +1,10 @@
+<#ftl output_format="HTML" auto_esc=true>
+<#import "layout/default.html" as layout>
+<@layout.default>
+<p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
+<p>You have successfully submitted your evidence file to Innovate UK’s ${competitionName} competition.</p>
+<p>Please sign into your IFS account to find out what happens next.</p>
+<p>If you have any queries about your submission please contact our customer support services at support@iuk.ukri.org or 0300 321 4357.</p>
+<p>Yours sincerely,</p>
+<@layout.senderHTML />
+</@layout.default>
