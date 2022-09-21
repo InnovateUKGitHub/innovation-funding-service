@@ -31,7 +31,6 @@ var vendorJsFiles = [
   nodeModulesPath + 'jquery-ui/ui/tabbable.js',
   nodeModulesPath + 'jquery-ui/ui/widget.js',
   nodeModulesPath + 'accessible-autocomplete/dist/accessible-autocomplete.min.js',
-  nodeModulesPath + 'jquery-migrate/dist/jquery-migrate.js',
   govukFrontendPath + 'all.js',
   __dirname + '/js/vendor/govuk/application.js',
   __dirname + '/js/vendor/govuk/govuk-cookies.js',
@@ -77,10 +76,10 @@ gulp.task('web-core:ifs-js', function () {
   ])
   .pipe(standard())
   .pipe(concat('ifs.min.js'))
-  //.pipe(uglify())
+  .pipe(uglify())
   .pipe(gulp.dest(__dirname + '/js/dest'))
   .pipe(standard.reporter('default', {
-    breakOnError: false,
+    breakOnError: true,
     breakOnWarning: false,
     quiet: false
   }))
@@ -90,7 +89,7 @@ gulp.task('web-core:ifs-js', function () {
 gulp.task('web-core:vendor', function () {
   return gulp.src(filesExist(vendorJsFiles))
   .pipe(concat('vendor.min.js'))
-  //.pipe(uglify())
+  .pipe(uglify())
   .pipe(gulp.dest(__dirname + '/js/dest'))
 })
 
