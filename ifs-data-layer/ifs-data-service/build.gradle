@@ -60,6 +60,7 @@ dependencies {
     implementation 'org.apache.poi:poi-ooxml:4.1.2'
 
     implementation 'org.apache.commons:commons-lang3'
+    implementation 'org.apache.commons:commons-compress:1.21'
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     implementation 'com.docusign:docusign-esign-java:3.2.0'
     implementation 'javax.ws.rs:javax.ws.rs-api:2.0.1'
