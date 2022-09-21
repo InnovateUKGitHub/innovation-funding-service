@@ -62,26 +62,26 @@ public class ApplicationEoiEvidenceWorkflowHandler extends BaseWorkflowEventHand
     }
 
     public boolean submit(ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse, ProcessRole participant, User internalUser) {
-        return fireEvent(submitEvent(applicationEoiEvidenceResponse, participant, internalUser), applicationEoiEvidenceResponse);
+        return fireEvent(event(ApplicationEoiEvidenceEvent.SUBMIT, applicationEoiEvidenceResponse, participant, internalUser), applicationEoiEvidenceResponse);
     }
 
-    public boolean documentUploaded(ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse) {
-        return fireEvent(unSubmitEvent(applicationEoiEvidenceResponse), applicationEoiEvidenceResponse);
+    public boolean documentUploaded(ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse, ProcessRole participant, User internalUser) {
+        return fireEvent(event(ApplicationEoiEvidenceEvent.UNSUBMIT, applicationEoiEvidenceResponse, participant, internalUser), applicationEoiEvidenceResponse);
     }
 
-    private MessageBuilder<ApplicationEoiEvidenceEvent> submitEvent(ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse, ProcessRole  participant, User internalUser) {
+    public boolean documentRemoved(ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse, ProcessRole participant, User internalUser) {
+        return fireEvent(event(ApplicationEoiEvidenceEvent.REMOVE, applicationEoiEvidenceResponse, participant, internalUser), applicationEoiEvidenceResponse);
+    }
+
+    private MessageBuilder<ApplicationEoiEvidenceEvent> event(ApplicationEoiEvidenceEvent eoiEvidenceEvent,
+                                                              ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse,
+                                                              ProcessRole participant,
+                                                              User internalUser) {
         return MessageBuilder
-                .withPayload(ApplicationEoiEvidenceEvent.SUBMIT)
+                .withPayload(eoiEvidenceEvent)
                 .setHeader("target", applicationEoiEvidenceResponse)
                 .setHeader("participant", participant)
-                .setHeader("internalParticipant", internalUser)
-                .setHeader("applicationEoiEvidenceProcess", applicationEoiEvidenceResponse.getApplicationEoiEvidenceProcess());
-    }
-
-    private MessageBuilder<ApplicationEoiEvidenceEvent> unSubmitEvent(ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse) {
-        return MessageBuilder
-                .withPayload(ApplicationEoiEvidenceEvent.UNSUBMIT)
-                .setHeader("target", applicationEoiEvidenceResponse)
+//                .setHeader("internalParticipant", internalUser)
                 .setHeader("applicationEoiEvidenceProcess", applicationEoiEvidenceResponse.getApplicationEoiEvidenceProcess());
     }
 }

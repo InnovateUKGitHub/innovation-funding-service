@@ -57,28 +57,43 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
 
     @Override
     @Transactional
-    public ServiceResult<ApplicationEoiEvidenceResponseResource> create(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource) {
+    public ServiceResult<ApplicationEoiEvidenceResponseResource> createEoiEvidenceFileEntry(long applicationId, long organisationId, UserResource userResource, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        return find(competitionEoiEvidenceConfig(applicationId))
+                .andOnSuccess(config -> isValidFileEntryType(applicationId, fileEntryResource))
+                .andOnSuccess(() -> fileService.createFile(fileEntryResource, inputStreamSupplier)
+                        .andOnSuccessReturn(fileDetails -> upload(new ApplicationEoiEvidenceResponseResource(applicationId, organisationId, fileDetails.getId()), userResource).getSuccess()));
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<ApplicationEoiEvidenceResponseResource> upload(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource) {
         Long applicationId = applicationEoiEvidenceResponseResource.getApplicationId();
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
                 .andOnSuccess((application) -> {
                     if (application.isSubmitted()) {
                         ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = applicationEoiEvidenceResponseMapper.mapToDomain(applicationEoiEvidenceResponseResource);
                         applicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse);
-                        return initialiseApplicationEoiEvidenceWorkflow(application, applicationEoiEvidenceResponse)
+                        return uploadApplicationEoiEvidenceWorkflow(application, applicationEoiEvidenceResponse, userResource)
                                 .andOnSuccess(initialisedApplicationEoiEvidenceResponse -> serviceSuccess(applicationEoiEvidenceResponseMapper.mapToResource(initialisedApplicationEoiEvidenceResponse)));
                     } else {
                         return serviceFailure(CommonFailureKeys.APPLICATION_UNABLE_TO_UPLOAD_EOI_EVIDENCE_AS_APPLICATION_NOT_YET_SUBMITTED);
                     }
                 });
     }
-
-    @Override
-    @Transactional
-    public ServiceResult<ApplicationEoiEvidenceResponseResource> createEoiEvidenceFileEntry(long applicationId, long organisationId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-        return find(competitionEoiEvidenceConfig(applicationId))
-                .andOnSuccess(config -> isValidFileEntryType(applicationId, fileEntryResource))
-                .andOnSuccess(() -> fileService.createFile(fileEntryResource, inputStreamSupplier)
-                        .andOnSuccessReturn(fileDetails -> create(new ApplicationEoiEvidenceResponseResource(applicationId, organisationId, fileDetails.getId())).getSuccess()));
+    private ServiceResult<ApplicationEoiEvidenceResponse> uploadApplicationEoiEvidenceWorkflow(Application application, ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse, UserResource userResource) {
+        if (application.getCompetition().isEnabledForPreRegistration()
+                && application.getCompetition().isEoiEvidenceRequired()
+                && application.isEnabledForExpressionOfInterest()) {
+            ProcessRole processRole = application.getLeadApplicantProcessRole();
+            User user = userMapper.mapToDomain(userResource);
+            if (applicationEoiEvidenceWorkflowHandler.documentUploaded(applicationEoiEvidenceResponse, processRole, user)) {
+                return serviceSuccess(applicationEoiEvidenceResponse);
+            } else {
+                return serviceFailure(CommonFailureKeys.APPLICATION_UNABLE_TO_INITIALISE_EOI_EVIDENCE_UPLOAD);
+            }
+        } else {
+            return serviceFailure(CommonFailureKeys.APPLICATION_NOT_ENABLED_FOR_EOI_EVIDENCE_UPLOAD);
+        }
     }
 
     private ServiceResult <CompetitionEoiEvidenceConfig> competitionEoiEvidenceConfig(long applicationId) {
@@ -91,17 +106,31 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
         return serviceSuccess(competitionEoiEvidenceConfigService.getValidMediaTypesForEoiEvidence(eoiEvidenceConfigId).getSuccess().contains(fileEntryResource.getMediaType()));
     }
 
-    private ServiceResult<ApplicationEoiEvidenceResponse> initialiseApplicationEoiEvidenceWorkflow(Application application, ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse) {
-        if (application.getCompetition().isEnabledForPreRegistration()
-                && application.getCompetition().isEoiEvidenceRequired()
-                && application.isEnabledForExpressionOfInterest()) {
-            if (applicationEoiEvidenceWorkflowHandler.documentUploaded(applicationEoiEvidenceResponse)) {
-                return serviceSuccess(applicationEoiEvidenceResponse);
-            } else {
-                return serviceFailure(CommonFailureKeys.APPLICATION_UNABLE_TO_INITIALISE_EOI_EVIDENCE_UPLOAD);
-            }
+    @Override
+    public ServiceResult<ApplicationEoiEvidenceResponseResource> remove(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource) {
+        Long applicationId = applicationEoiEvidenceResponseResource.getApplicationId();
+        return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
+                .andOnSuccess((application) -> {
+                    Optional<ApplicationEoiEvidenceResponse> optionalApplicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.findOneByApplicationId(application.getId());
+                    if (optionalApplicationEoiEvidenceResponse.isPresent()) {
+                        ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = optionalApplicationEoiEvidenceResponse.get();
+                        applicationEoiEvidenceResponse.setFileEntry(null);
+                        applicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse);
+                        return removeApplicationEoiEvidenceWorkflow(application, applicationEoiEvidenceResponse, userResource)
+                                .andOnSuccess(removedApplicationEoiEvidenceResponse -> serviceSuccess(applicationEoiEvidenceResponseMapper.mapToResource(removedApplicationEoiEvidenceResponse)));
+                    } else {
+                        return serviceFailure(CommonFailureKeys.APPLICATION_UNABLE_TO_FIND_UPLOADED_EOI_EVIDENCE);
+                    }
+                });
+    }
+
+    private ServiceResult<ApplicationEoiEvidenceResponse> removeApplicationEoiEvidenceWorkflow(Application application, ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse, UserResource userResource) {
+        ProcessRole processRole = application.getLeadApplicantProcessRole();
+        User user = userMapper.mapToDomain(userResource);
+        if (applicationEoiEvidenceWorkflowHandler.documentRemoved(applicationEoiEvidenceResponse, processRole, user)) {
+            return serviceSuccess(applicationEoiEvidenceResponse);
         } else {
-            return serviceFailure(CommonFailureKeys.APPLICATION_NOT_ENABLED_FOR_EOI_EVIDENCE_UPLOAD);
+            return serviceFailure(CommonFailureKeys.APPLICATION_UNABLE_TO_REMOVE_EOI_EVIDENCE_UPLOAD);
         }
     }
 
@@ -122,22 +151,6 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
                     } else {
                         return serviceFailure(CommonFailureKeys.APPLICATION_UNABLE_TO_FIND_UPLOADED_EOI_EVIDENCE);
                     }
-                });
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> delete(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource) {
-        Long applicationId = applicationEoiEvidenceResponseResource.getApplicationId();
-        return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
-                .andOnSuccess(application -> {
-                    Optional<ApplicationEoiEvidenceResponse> optionalApplicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.findOneByApplicationId(application.getId());
-                    if (optionalApplicationEoiEvidenceResponse.isPresent()) {
-                        ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = optionalApplicationEoiEvidenceResponse.get();
-                        applicationEoiEvidenceResponseRepository.delete(applicationEoiEvidenceResponse);
-                    }
-
-                    return serviceFailure(CommonFailureKeys.APPLICATION_UNABLE_TO_FIND_UPLOADED_EOI_EVIDENCE);
                 });
     }
 

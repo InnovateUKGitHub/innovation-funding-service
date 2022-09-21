@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface ApplicationEoiEvidenceResponseRestService {
 
-    RestResult<FileEntryResource> uploadEoiEvidence(long applicationId, long organisationId, String contentType, long contentLength, String originalFileName, byte[] file);
+    RestResult<FileEntryResource> uploadEoiEvidence(long applicationId, long organisationId, long userId, String contentType, long contentLength, String originalFileName, byte[] file);
 
     RestResult<Void> submitEoiEvidence(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource);
 

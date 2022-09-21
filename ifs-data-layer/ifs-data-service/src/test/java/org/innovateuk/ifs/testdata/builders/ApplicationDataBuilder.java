@@ -209,7 +209,6 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
             if (competitionEoiEvidenceConfigResource != null
                     && competitionEoiEvidenceConfigResource.isEvidenceRequired()) {
                 ApplicationResource application = data.getApplication();
-                ProcessRole processRole = processRoleRepository.findOneByApplicationIdAndRole(application.getId(), ProcessRoleType.LEADAPPLICANT);
                 FileEntry fileEntry = fileEntryRepository.save(
                         new FileEntry(null, "eoi-evidence-file" + application.getId() + ".pdf", "application/pdf", 7945));
 
@@ -219,7 +218,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                         .fileEntryId(fileEntry.getId())
                         .build();
 
-                applicationEoiEvidenceResponseService.create(applicationEoiEvidenceResponseResource)
+                applicationEoiEvidenceResponseService.upload(applicationEoiEvidenceResponseResource, data.getLeadApplicant())
                         .andOnSuccess((createdApplicationEoiEvidenceResponseResource) -> applicationEoiEvidenceResponseService.submit(createdApplicationEoiEvidenceResponseResource, data.getLeadApplicant()));
             }
         });

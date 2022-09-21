@@ -13,6 +13,7 @@ import org.innovateuk.ifs.application.workflow.configuration.ApplicationEoiEvide
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.CompetitionEoiEvidenceConfig;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
@@ -57,6 +58,10 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
     private long organisationId;
     private long fileEntryId;
     private ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource;
+    private User user;
+    private ProcessRole processRole;
+    private UserResource userResource;
+    private Organisation organisation;
 
     @Override
     protected ApplicationEoiEvidenceResponseServiceImpl supplyServiceUnderTest() {
@@ -68,15 +73,26 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
         applicationId = 1L;
         organisationId = 2L;
         fileEntryId = 3L;
+
         applicationEoiEvidenceResponseResource = ApplicationEoiEvidenceResponseResource.builder()
                 .applicationId(applicationId)
                 .organisationId(organisationId)
                 .fileEntryId(fileEntryId)
                 .build();
+
+        user = newUser().build();
+
+        processRole = newProcessRole()
+                .withRole(ProcessRoleType.LEADAPPLICANT)
+                .withUser(user).build();
+
+        userResource = newUserResource().build();
+
+        organisation = newOrganisation().build();
     }
 
     @Test
-    public void create() {
+    public void upload() {
 
         Application application = newApplication()
                 .withId(applicationId)
@@ -90,6 +106,7 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
                 .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig.builder()
                         .enabledForExpressionOfInterest(true)
                         .build())
+                .withProcessRole(processRole)
                 .build();
         ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = ApplicationEoiEvidenceResponse.builder()
                 .application(newApplication().build())
@@ -100,20 +117,21 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
         when(applicationEoiEvidenceResponseMapper.mapToDomain(applicationEoiEvidenceResponseResource)).thenReturn(applicationEoiEvidenceResponse);
         when(applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponse);
-        when(applicationEoiEvidenceWorkflowHandler.documentUploaded(applicationEoiEvidenceResponse)).thenReturn(true);
+        when(applicationEoiEvidenceWorkflowHandler.documentUploaded(applicationEoiEvidenceResponse, processRole, user)).thenReturn(true);
         when(applicationEoiEvidenceResponseMapper.mapToResource(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponseResource);
+        when(userMapper.mapToDomain(userResource)).thenReturn(user);
 
-        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.create(applicationEoiEvidenceResponseResource);
+        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationEoiEvidenceResponseResource, userResource);
 
         assertTrue(result.isSuccess());
     }
 
     @Test
-    public void createThrowsApplicationNotFound() {
+    public void uploadThrowsApplicationNotFound() {
 
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.empty());
 
-        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.create(applicationEoiEvidenceResponseResource);
+        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationEoiEvidenceResponseResource, userResource);
 
         assertTrue(result.isFailure());
 
@@ -123,7 +141,7 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
     }
 
     @Test
-    public void createThrowsApplicationNotSubmitted() {
+    public void uploadThrowsApplicationNotSubmitted() {
 
         Application application = newApplication()
                 .withId(applicationId)
@@ -132,7 +150,7 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
 
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
 
-        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.create(applicationEoiEvidenceResponseResource);
+        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationEoiEvidenceResponseResource, userResource);
 
         assertTrue(result.isFailure());
 
@@ -142,7 +160,7 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
     }
 
     @Test
-    public void createThrowsEvidenceNotRequired() {
+    public void uploadThrowsEvidenceNotRequired() {
 
         Application application = newApplication()
                 .withId(applicationId)
@@ -164,7 +182,7 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
         when(applicationEoiEvidenceResponseMapper.mapToDomain(applicationEoiEvidenceResponseResource)).thenReturn(applicationEoiEvidenceResponse);
         when(applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponse);
 
-        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.create(applicationEoiEvidenceResponseResource);
+        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationEoiEvidenceResponseResource, userResource);
 
         assertTrue(result.isFailure());
 
@@ -174,7 +192,7 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
     }
 
     @Test
-    public void createThrowsCompetitionNotEoiEnabled() {
+    public void uploadThrowsCompetitionNotEoiEnabled() {
 
         Application application = newApplication()
                 .withId(applicationId)
@@ -199,7 +217,7 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
         when(applicationEoiEvidenceResponseMapper.mapToDomain(applicationEoiEvidenceResponseResource)).thenReturn(applicationEoiEvidenceResponse);
         when(applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponse);
 
-        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.create(applicationEoiEvidenceResponseResource);
+        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationEoiEvidenceResponseResource, userResource);
 
         assertTrue(result.isFailure());
 
@@ -209,7 +227,7 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
     }
 
     @Test
-    public void createThrowsApplicationNotEoiEnabled() {
+    public void uploadThrowsApplicationNotEoiEnabled() {
 
         Application application = newApplication()
                 .withId(applicationId)
@@ -231,7 +249,7 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
         when(applicationEoiEvidenceResponseMapper.mapToDomain(applicationEoiEvidenceResponseResource)).thenReturn(applicationEoiEvidenceResponse);
         when(applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponse);
 
-        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.create(applicationEoiEvidenceResponseResource);
+        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationEoiEvidenceResponseResource, userResource);
 
         assertTrue(result.isFailure());
 
@@ -241,48 +259,8 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
     }
 
     @Test
-    public void createThrowsUnableToInitialiseWorkflow() {
+    public void uploadThrowsUnableToInitialiseWorkflow() {
 
-        Application application = newApplication()
-                .withId(applicationId)
-                .withCompetition(newCompetition()
-                        .withEnabledForExpressionOfInterest(true)
-                        .withCompetitionEoiEvidenceConfig(CompetitionEoiEvidenceConfig.builder()
-                                .evidenceRequired(true)
-                                .build())
-                        .build())
-                .withActivityState(ApplicationState.SUBMITTED)
-                .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig.builder()
-                        .enabledForExpressionOfInterest(true)
-                        .build())
-                .build();
-        ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = ApplicationEoiEvidenceResponse.builder()
-                .application(newApplication().build())
-                .organisation(newOrganisation().build())
-                .fileEntry(newFileEntry().build())
-                .build();
-
-        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
-        when(applicationEoiEvidenceResponseMapper.mapToDomain(applicationEoiEvidenceResponseResource)).thenReturn(applicationEoiEvidenceResponse);
-        when(applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponse);
-        when(applicationEoiEvidenceWorkflowHandler.documentUploaded(applicationEoiEvidenceResponse)).thenReturn(false);
-
-        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.create(applicationEoiEvidenceResponseResource);
-
-        assertTrue(result.isFailure());
-
-        assertEquals(1, result.getErrors().size());
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getErrors().get(0).getStatusCode());
-        assertEquals("APPLICATION_UNABLE_TO_INITIALISE_EOI_EVIDENCE_UPLOAD", result.getErrors().get(0).getErrorKey());
-    }
-
-    @Test
-    public void submit() {
-
-        User user = newUser().build();
-        ProcessRole processRole = newProcessRole()
-                .withRole(ProcessRoleType.LEADAPPLICANT)
-                .withUser(user).build();
         Application application = newApplication()
                 .withId(applicationId)
                 .withCompetition(newCompetition()
@@ -302,7 +280,164 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
                 .organisation(newOrganisation().build())
                 .fileEntry(newFileEntry().build())
                 .build();
-        UserResource userResource = newUserResource().build();
+
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+        when(applicationEoiEvidenceResponseMapper.mapToDomain(applicationEoiEvidenceResponseResource)).thenReturn(applicationEoiEvidenceResponse);
+        when(applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponse);
+        when(applicationEoiEvidenceWorkflowHandler.documentUploaded(applicationEoiEvidenceResponse, processRole, user)).thenReturn(false);
+
+        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationEoiEvidenceResponseResource, userResource);
+
+        assertTrue(result.isFailure());
+
+        assertEquals(1, result.getErrors().size());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getErrors().get(0).getStatusCode());
+        assertEquals("APPLICATION_UNABLE_TO_INITIALISE_EOI_EVIDENCE_UPLOAD", result.getErrors().get(0).getErrorKey());
+    }
+
+    @Test
+    public void remove() {
+
+        Application application = newApplication()
+                .withId(applicationId)
+                .withCompetition(newCompetition()
+                        .withEnabledForExpressionOfInterest(true)
+                        .withCompetitionEoiEvidenceConfig(CompetitionEoiEvidenceConfig.builder()
+                                .evidenceRequired(true)
+                                .build())
+                        .build())
+                .withActivityState(ApplicationState.SUBMITTED)
+                .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig.builder()
+                        .enabledForExpressionOfInterest(true)
+                        .build())
+                .withProcessRole(processRole)
+                .build();
+        ApplicationEoiEvidenceResponse uploadedEoiEvidenceResponse = ApplicationEoiEvidenceResponse.builder()
+                .application(application)
+                .organisation(organisation)
+                .fileEntry(newFileEntry().build())
+                .build();
+        ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = uploadedEoiEvidenceResponse;
+        applicationEoiEvidenceResponse.setFileEntry(null);
+
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+        when(applicationEoiEvidenceResponseRepository.findOneByApplicationId (applicationId)).thenReturn(Optional.of(uploadedEoiEvidenceResponse));
+        when(applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponse);
+        when(applicationEoiEvidenceWorkflowHandler.documentRemoved(applicationEoiEvidenceResponse, processRole, user)).thenReturn(true);
+        when(applicationEoiEvidenceResponseMapper.mapToResource(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponseResource);
+        when(userMapper.mapToDomain(userResource)).thenReturn(user);
+
+        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.remove(applicationEoiEvidenceResponseResource, userResource);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void removeThrowsApplicationNotFound() {
+
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.empty());
+
+        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.remove(applicationEoiEvidenceResponseResource, userResource);
+
+        assertTrue(result.isFailure());
+
+        assertEquals(1, result.getErrors().size());
+        assertEquals(HttpStatus.NOT_FOUND, result.getErrors().get(0).getStatusCode());
+        assertEquals("GENERAL_NOT_FOUND", result.getErrors().get(0).getErrorKey());
+    }
+
+    @Test
+    public void removeThrowsUnableToFindUploadedEvidence() {
+
+        Application application = newApplication()
+                .withId(applicationId)
+                .withCompetition(newCompetition()
+                        .withEnabledForExpressionOfInterest(true)
+                        .withCompetitionEoiEvidenceConfig(CompetitionEoiEvidenceConfig.builder()
+                                .evidenceRequired(true)
+                                .build())
+                        .build())
+                .withActivityState(ApplicationState.SUBMITTED)
+                .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig.builder()
+                        .enabledForExpressionOfInterest(true)
+                        .build())
+                .withProcessRole(processRole)
+                .build();
+
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+        when(applicationEoiEvidenceResponseRepository.findOneByApplicationId (applicationId)).thenReturn(Optional.empty());
+
+        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.remove(applicationEoiEvidenceResponseResource, userResource);
+
+        assertTrue(result.isFailure());
+
+        assertEquals(1, result.getErrors().size());
+        assertEquals(HttpStatus.NOT_FOUND, result.getErrors().get(0).getStatusCode());
+        assertEquals("APPLICATION_UNABLE_TO_FIND_UPLOADED_EOI_EVIDENCE", result.getErrors().get(0).getErrorKey());
+    }
+
+    @Test
+    public void removeThrowsUnableToRemoveEoiEvidenceUpload() {
+
+        Application application = newApplication()
+                .withId(applicationId)
+                .withCompetition(newCompetition()
+                        .withEnabledForExpressionOfInterest(true)
+                        .withCompetitionEoiEvidenceConfig(CompetitionEoiEvidenceConfig.builder()
+                                .evidenceRequired(true)
+                                .build())
+                        .build())
+                .withActivityState(ApplicationState.SUBMITTED)
+                .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig.builder()
+                        .enabledForExpressionOfInterest(true)
+                        .build())
+                .withProcessRole(processRole)
+                .build();
+        ApplicationEoiEvidenceResponse uploadedEoiEvidenceResponse = ApplicationEoiEvidenceResponse.builder()
+                .application(application)
+                .organisation(organisation)
+                .fileEntry(newFileEntry().build())
+                .build();
+        ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = uploadedEoiEvidenceResponse;
+        applicationEoiEvidenceResponse.setFileEntry(null);
+
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+        when(applicationEoiEvidenceResponseRepository.findOneByApplicationId (applicationId)).thenReturn(Optional.of(uploadedEoiEvidenceResponse));
+        when(applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponse);
+        when(applicationEoiEvidenceWorkflowHandler.documentUploaded(applicationEoiEvidenceResponse, processRole, user)).thenReturn(false);
+        when(userMapper.mapToDomain(userResource)).thenReturn(user);
+
+        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.remove(applicationEoiEvidenceResponseResource, userResource);
+
+        assertTrue(result.isFailure());
+
+        assertEquals(1, result.getErrors().size());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getErrors().get(0).getStatusCode());
+        assertEquals("APPLICATION_UNABLE_TO_REMOVE_EOI_EVIDENCE_UPLOAD", result.getErrors().get(0).getErrorKey());
+    }
+
+    @Test
+    public void submit() {
+
+        Application application = newApplication()
+                .withId(applicationId)
+                .withCompetition(newCompetition()
+                        .withEnabledForExpressionOfInterest(true)
+                        .withCompetitionEoiEvidenceConfig(CompetitionEoiEvidenceConfig.builder()
+                                .evidenceRequired(true)
+                                .build())
+                        .build())
+                .withActivityState(ApplicationState.SUBMITTED)
+                .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig.builder()
+                        .enabledForExpressionOfInterest(true)
+                        .build())
+                .withProcessRole(processRole)
+                .build();
+        ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = ApplicationEoiEvidenceResponse.builder()
+                .application(newApplication().build())
+                .organisation(newOrganisation().build())
+                .fileEntry(newFileEntry().build())
+                .build();
 
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
         when(applicationEoiEvidenceResponseRepository.findOneByApplicationId (applicationId)).thenReturn(Optional.of(applicationEoiEvidenceResponse));
@@ -333,10 +468,6 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
     @Test
     public void submitThrowsUnableToFindUploadedEvidence() {
 
-        User user = newUser().build();
-        ProcessRole processRole = newProcessRole()
-                .withRole(ProcessRoleType.LEADAPPLICANT)
-                .withUser(user).build();
         Application application = newApplication()
                 .withId(applicationId)
                 .withCompetition(newCompetition()
@@ -351,7 +482,6 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
                         .build())
                 .withProcessRole(processRole)
                 .build();
-        UserResource userResource = newUserResource().build();
 
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
         when(applicationEoiEvidenceResponseRepository.findOneByApplicationId (applicationId)).thenReturn(Optional.empty());
@@ -368,10 +498,6 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
     @Test
     public void submitThrowsUnableToSubmitWorkflow() {
 
-        User user = newUser().build();
-        ProcessRole processRole = newProcessRole()
-                .withRole(ProcessRoleType.LEADAPPLICANT)
-                .withUser(user).build();
         Application application = newApplication()
                 .withId(applicationId)
                 .withCompetition(newCompetition()
@@ -391,7 +517,6 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
                 .organisation(newOrganisation().build())
                 .fileEntry(newFileEntry().build())
                 .build();
-        UserResource userResource = newUserResource().build();
 
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
         when(applicationEoiEvidenceResponseRepository.findOneByApplicationId (applicationId)).thenReturn(Optional.of(applicationEoiEvidenceResponse));

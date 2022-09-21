@@ -294,7 +294,7 @@ public class ReviewAndSubmitController {
 
         return validationHandler.performFileUpload(inputField, view, () -> {
             MultipartFile file = form.getEoiEvidenceFile();
-            return applicationEoiEvidenceResponseRestService.uploadEoiEvidence(applicationId, organisationId, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
+            return applicationEoiEvidenceResponseRestService.uploadEoiEvidence(applicationId, organisationId, user.getId(), file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
 
         });
     }

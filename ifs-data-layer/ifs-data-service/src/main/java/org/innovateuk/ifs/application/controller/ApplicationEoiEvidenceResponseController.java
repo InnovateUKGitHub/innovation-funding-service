@@ -4,12 +4,15 @@ import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceResponseRes
 import org.innovateuk.ifs.application.transactional.ApplicationEoiEvidenceResponseService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.repository.CompetitionEoiDocumentRepository;
 import org.innovateuk.ifs.competition.transactional.CompetitionEoiEvidenceConfigService;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.controller.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.file.service.FileService;
+import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,6 +22,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
+
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
  **/
@@ -45,6 +51,12 @@ public class ApplicationEoiEvidenceResponseController {
     private CompetitionEoiEvidenceConfigService competitionEoiEvidenceConfigService;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
     @Qualifier("mediaTypeStringsFileValidator")
     private FilesizeAndTypeFileValidator<List<String>> fileValidator;
 
@@ -54,24 +66,26 @@ public class ApplicationEoiEvidenceResponseController {
     @Value("${ifs.data.service.file.storage.forminputresponse.max.filesize.bytes}")
     private Long maxFilesizeBytesForEoiEvidenceResponse;
 
-    private FileControllerUtils fileControllerUtils = new FileControllerUtils();
+    private final FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
 
-    @PostMapping(value = "/{applicationId}/eoi-evidence/{organisationId}/upload", produces = "application/json")
+    @PostMapping(value = "/{applicationId}/eoi-evidence/{organisationId}/{userId}/upload", produces = "application/json")
     public RestResult<ApplicationEoiEvidenceResponseResource> uploadEoiEvidence(@RequestHeader(value = "Content-Type", required = false) String contentType,
                                                                                 @RequestHeader(value = "Content-Length", required = false) String contentLength,
                                                                                 @PathVariable("applicationId") long applicationId,
                                                                                 @PathVariable("organisationId") long organisationId,
+                                                                                @PathVariable("userId") long userId,
                                                                                 @RequestParam(value = "filename", required = false) String originalFilename,
                                                                                 HttpServletRequest request) {
         long competitionId = applicationService.getApplicationById(applicationId).getSuccess().getCompetition();
         long eoiEvidenceConfigId = competitionService.getCompetitionById(competitionId).getSuccess().getCompetitionEoiEvidenceConfigResource().getId();
         List<String> validMediaTypesForEoiEvidence = competitionEoiEvidenceConfigService.getValidMediaTypesForEoiEvidence(eoiEvidenceConfigId).getSuccess();
+        UserResource userResource = getUserById(userId).getSuccess();
 
         return fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename,
                 fileValidator, validMediaTypesForEoiEvidence, maxFilesizeBytesForEoiEvidenceResponse, request,
                 (fileAttributes, inputStreamSupplier) ->
-                        applicationEoiEvidenceResponseService.createEoiEvidenceFileEntry(applicationId, organisationId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
+                        applicationEoiEvidenceResponseService.createEoiEvidenceFileEntry(applicationId, organisationId, userResource, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
 //        long competitionId = applicationService.getApplicationById(applicationId).getSuccess().getCompetition();
@@ -97,7 +111,7 @@ public class ApplicationEoiEvidenceResponseController {
     }
 
     @DeleteMapping("/{applicationId}/eoi-evidence-response/delete/{fileEntryId}")
-    public RestResult<Void> delete(@PathVariable("applicationId") long applicationId,
+    public RestResult<ApplicationEoiEvidenceResponseResource> remove(@PathVariable("applicationId") long applicationId,
                                    @PathVariable("fileEntryId") long fileEntryId,
                                    long organisationId,
                                    UserResource userResource) {
@@ -106,7 +120,11 @@ public class ApplicationEoiEvidenceResponseController {
         eoiEvidenceResponseResource.setApplicationId(applicationId);
         eoiEvidenceResponseResource.setOrganisationId(organisationId);
         eoiEvidenceResponseResource.setFileEntryId(fileEntryId);
-        return applicationEoiEvidenceResponseService.delete(eoiEvidenceResponseResource, userResource).toGetResponse();
+        return applicationEoiEvidenceResponseService.remove(eoiEvidenceResponseResource, userResource).toGetResponse();
+    }
+
+    public ServiceResult<UserResource> getUserById(long id) {
+        return find(userRepository.findById(id), notFoundError(UserResource.class, id)).andOnSuccessReturn(userMapper::mapToResource);
     }
 
 }

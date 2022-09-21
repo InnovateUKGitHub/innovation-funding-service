@@ -8,6 +8,7 @@ import org.innovateuk.ifs.workflow.resource.ProcessEvent;
 @Getter
 public enum ApplicationEoiEvidenceEvent  implements ProcessEvent {
     UNSUBMIT("not-submitted"),
+    REMOVE("removed"),
     SUBMIT("submitted");
 
     private final String type;
