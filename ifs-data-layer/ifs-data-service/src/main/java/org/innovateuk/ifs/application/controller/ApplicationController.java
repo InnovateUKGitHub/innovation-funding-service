@@ -114,6 +114,12 @@ public class ApplicationController {
         if (updateStatusResult.isSuccess() && ApplicationState.SUBMITTED == state) {
             updateStatusResult = applicationService.saveApplicationSubmitDateTime(id, TimeMachine.now());
             applicationNotificationService.sendNotificationApplicationSubmitted(id);
+
+            // TODO: Needs to be removed once IFs-12702 completed and integrated
+            ApplicationResource applicationResource = updateStatusResult.getSuccess();
+            if (applicationResource.isEnabledForExpressionOfInterest()) {
+                applicationNotificationService.sendNotificationEoiEvidenceSubmitted(applicationResource.getId());
+            }
         }
 
         crmService.syncCrmApplicationState(updateStatusResult.getSuccess());
