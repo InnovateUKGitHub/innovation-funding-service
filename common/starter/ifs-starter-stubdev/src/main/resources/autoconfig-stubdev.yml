@@ -12,6 +12,7 @@ ifs:
       enableClientMethodTiming: false
       validateHtml: false
       webCoreTemplates: "/ifs-web-service/ifs-web-core/src/main/resources/templates/"
+      assessmentCommonsTemplates: "/common/ifs-assessment-commons/src/main/resources/templates/"
       logThymeLeafTemplates: false
       defaultUuid: "98fc8417-9d57-4d1f-9984-c8fd6037b697"
       rewriteRules:

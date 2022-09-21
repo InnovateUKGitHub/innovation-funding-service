@@ -96,6 +96,21 @@ public class IfsStubDevAutoConfiguration {
     }
 
     @Bean
+    public ITemplateResolver assessmentCommonsResolver() {
+        SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
+        resolver.setName("ASSESSMENT_COMMONS_TEMPLATE_RESOLVER");
+        resolver.setApplicationContext(this.applicationContext);
+        resolver.setPrefix(stubDevConfigurationProperties.getProjectRootDirectory()
+                + stubDevConfigurationProperties.getAssessmentCommonsTemplates());
+        resolver.setSuffix(".html");
+        resolver.setTemplateMode(TemplateMode.HTML);
+        resolver.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        resolver.setCacheable(false);
+        resolver.setCheckExistence(true);
+        return resolver;
+    }
+
+    @Bean
     @Primary
     public StubUidSupplier stubUidSupplier() {
         return new StubUidSupplier();
