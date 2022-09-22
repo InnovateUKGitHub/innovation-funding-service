@@ -215,7 +215,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
 
     public boolean checkHasAnyApplicantParticipantRole(final long applicationId, final long organisationId, final UserResource user) {
         return processRoleRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId).stream()
-                .filter(applicantUser -> user.getId().equals(applicantUser.getId()))
+                .filter(applicantUser -> user.getId().equals(applicantUser.getUser().getId()))
                 .findFirst()
                 .isPresent();
     }

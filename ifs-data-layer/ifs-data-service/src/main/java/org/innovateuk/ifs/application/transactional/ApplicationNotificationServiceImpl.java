@@ -246,6 +246,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                                 Map<String, Object> notificationArguments = new HashMap<>();
                                 notificationArguments.put("name", applicant.getUser().getName());
                                 notificationArguments.put("competitionName", competition.getName());
+                                notificationArguments.put("webBaseUrl", webBaseUrl);
                                 sendEoiEvidenceNotification(from, to, notificationArguments);
                             });
                 });
