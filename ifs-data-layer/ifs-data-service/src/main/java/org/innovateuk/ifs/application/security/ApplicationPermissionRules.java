@@ -53,8 +53,7 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(value = "READ", description = "Lead applicant can see their application resources")
-    public boolean applicantCanViewApplication(final ApplicationResource application, final UserResource user) {
-//        return hasProcessRole(application.getId(), user);
+    public boolean canViewTheirApplication(final ApplicationResource application, final UserResource user) {
         return isLeadApplicant(application.getId(), user);
     }
 

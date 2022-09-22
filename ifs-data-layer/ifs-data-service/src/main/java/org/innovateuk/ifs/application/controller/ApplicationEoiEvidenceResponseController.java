@@ -60,27 +60,32 @@ public class ApplicationEoiEvidenceResponseController {
     @Qualifier("mediaTypeStringsFileValidator")
     private FilesizeAndTypeFileValidator<List<String>> fileValidator;
 
-//    @Value("${ifs.data.service.file.storage.interview.response.valid.media.types}")
-//    private List<String> validMediaTypesForEoiEvidence;
-
     @Value("${ifs.data.service.file.storage.forminputresponse.max.filesize.bytes}")
     private Long maxFilesizeBytesForEoiEvidenceResponse;
 
     private final FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
 
-    @PostMapping(value = "/{applicationId}/eoi-evidence/{organisationId}/{userId}/upload", produces = "application/json")
+//    @Value("${ifs.data.service.file.storage.interview.response.valid.media.types}")
+//    private List<String> validMediaTypesForEoiEvidence;
+
+    //    @PostMapping(value = "/{applicationId}/eoi-evidence/{organisationId}/{userId}/upload", produces = "application/json")
+
+    @PostMapping(value = "/{applicationId}/eoi-evidence/{organisationId}/upload", produces = "application/json")
     public RestResult<ApplicationEoiEvidenceResponseResource> uploadEoiEvidence(@RequestHeader(value = "Content-Type", required = false) String contentType,
                                                                                 @RequestHeader(value = "Content-Length", required = false) String contentLength,
                                                                                 @PathVariable("applicationId") long applicationId,
                                                                                 @PathVariable("organisationId") long organisationId,
-                                                                                @PathVariable("userId") long userId,
+//                                                                                @PathVariable("userId") long userId,
+//                                                                                @RequestParam(value = "filename", required = false) String originalFilename,
+//                                                                                HttpServletRequest request) {
                                                                                 @RequestParam(value = "filename", required = false) String originalFilename,
+                                                                                UserResource userResource,
                                                                                 HttpServletRequest request) {
         long competitionId = applicationService.getApplicationById(applicationId).getSuccess().getCompetition();
         long eoiEvidenceConfigId = competitionService.getCompetitionById(competitionId).getSuccess().getCompetitionEoiEvidenceConfigResource().getId();
         List<String> validMediaTypesForEoiEvidence = competitionEoiEvidenceConfigService.getValidMediaTypesForEoiEvidence(eoiEvidenceConfigId).getSuccess();
-        UserResource userResource = getUserById(userId).getSuccess();
+//        UserResource userResource = getUserById(userId).getSuccess();
 
         return fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename,
                 fileValidator, validMediaTypesForEoiEvidence, maxFilesizeBytesForEoiEvidenceResponse, request,

@@ -60,7 +60,7 @@
                       enctype="multipart/form-data"
                       th:with="viewmode='edit',
                            downloadUrl=@{/application/{applicationId}/view-eoi-evidence(applicationId=${model.currentApplication.id})},
-                           filename=${form.evidenceFileEntryName},
+                           filename=${model.eoiEvidenceFileName},
                            inputField='eoiEvidenceFile',
                            validationField=${inputField},
                            mayRemove=true,

@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.forms.form.ApplicationReopenForm;
 import org.innovateuk.ifs.application.forms.form.ApplicationSubmitForm;
 import org.innovateuk.ifs.application.forms.form.EoiEvidenceForm;
 import org.innovateuk.ifs.application.forms.populator.EoiEvidenceFormPopulator;
+import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceResponseResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.review.populator.ReviewAndSubmitViewModelPopulator;
 import org.innovateuk.ifs.application.review.viewmodel.ReviewAndSubmitViewModel;
@@ -20,6 +21,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.CovidType;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.file.service.FileUploadRestService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
@@ -40,6 +42,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.lang.Boolean.TRUE;
@@ -286,16 +289,18 @@ public class ReviewAndSubmitController {
                                  Model model,
                                  UserResource loggedInUser) {
         long organisationId = processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess().getOrganisationId();
-        return handleFileUpload("eoiEvidenceFile", applicationId, organisationId, loggedInUser, form, bindingResult, validationHandler, model);
+        return handleFileUpload(applicationId, organisationId, loggedInUser, form, bindingResult, validationHandler, model);
     }
 
-    private String handleFileUpload(String inputField, long applicationId, long organisationId, UserResource user, EoiEvidenceForm form, BindingResult bindingResult, ValidationHandler validationHandler, Model model) {
-        Supplier<String> view = () -> applicationTrack(model, applicationId, form, user);
+    private String handleFileUpload(long applicationId, long organisationId, UserResource user, EoiEvidenceForm form, BindingResult bindingResult, ValidationHandler validationHandler, Model model) {
+        MultipartFile file = form.getEoiEvidenceFile();
 
-        return validationHandler.performFileUpload(inputField, view, () -> {
-            MultipartFile file = form.getEoiEvidenceFile();
-            return applicationEoiEvidenceResponseRestService.uploadEoiEvidence(applicationId, organisationId, user.getId(), file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
+        EoiEvidenceForm eoiEvidenceForm = new EoiEvidenceForm();
+        eoiEvidenceForm.setEvidenceFileEntryName(file.getOriginalFilename());
+        Supplier<String> view = () -> applicationTrack(model, applicationId, eoiEvidenceForm, user);
 
+        return validationHandler.performFileUpload("eoiEvidenceFile", view, () -> {
+            return applicationEoiEvidenceResponseRestService.uploadEoiEvidence(applicationId, organisationId,  user.getId(), file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
         });
     }
 
@@ -368,6 +373,9 @@ public class ReviewAndSubmitController {
             eoiEvidenceFormPopulator.populate(form, applicationId);
         }
 
+        Optional<ApplicationEoiEvidenceResponseResource> eoiEvidence = applicationEoiEvidenceResponseRestService.findOneByApplicationId(applicationId).getSuccess();
+        String eoiEvidenceFileName = eoiEvidence.map(applicationEoiEvidenceResponseResource -> fileEntryRestService.findOne(applicationEoiEvidenceResponseResource.getFileEntryId()).getSuccess().getName()).orElse(null);
+
         model.addAttribute("model", new TrackViewModel(
                 competition,
                 application,
@@ -375,7 +383,7 @@ public class ReviewAndSubmitController {
                 application.getCompletion(),
                 canReopenApplication(application, user, competition),
                 applicationEoiEvidenceResponseRestService.findOneByApplicationId(applicationId).getSuccess().isPresent(),
-                form.getEvidenceFileEntryName()));
+                eoiEvidenceFileName));
         return getTrackingPage(competition, application);
     }
 
