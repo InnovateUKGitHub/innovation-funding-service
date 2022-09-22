@@ -52,11 +52,6 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return applicationSecurityHelper.canViewApplication(application.getId(), user);
     }
 
-    @PermissionRule(value = "READ", description = "Lead applicant can see their application resources")
-    public boolean canViewTheirApplication(final ApplicationResource application, final UserResource user) {
-        return isLeadApplicant(application.getId(), user);
-    }
-
     @PermissionRule(value = "APPLICATION_SUBMITTED_NOTIFICATION", description = "A lead applicant can send the notification of a submitted application")
     public boolean aLeadApplicantCanSendApplicationSubmittedNotification(final ApplicationResource applicationResource, final UserResource user) {
         return isLeadApplicant(applicationResource.getId(), user);
