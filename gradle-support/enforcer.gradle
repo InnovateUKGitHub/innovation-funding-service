@@ -26,6 +26,11 @@ project.getConfigurations().all { config ->
             details.useTarget group: 'io.netty', name: 'netty-all', version: '4.1.44.Final'
         }
 
+        // Fix CVE in snakeyml < 1.31
+        if (details.requested.group == 'org.snakeyaml') {
+            details.useVersion '1.31'
+        }
+
     }
 
 }
