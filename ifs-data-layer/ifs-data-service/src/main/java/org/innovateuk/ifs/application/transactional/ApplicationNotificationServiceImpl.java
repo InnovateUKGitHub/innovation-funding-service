@@ -238,7 +238,8 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                 .andOnSuccessReturnVoid(application -> {
                     NotificationSource from = systemNotificationSource;
                     Competition competition = application.getCompetition();
-                    List<ProcessRole> applicationTeam = application.getApplicantProcessRoles();
+                    Long leadOrganisationId = application.getLeadOrganisationId();
+                    List<ProcessRole> applicationTeam = application.getProcessRolesByOrganisation(leadOrganisationId);
                     applicationTeam.stream()
                             .filter(pr -> pr.getUser().isActive())
                             .forEach(applicant -> {

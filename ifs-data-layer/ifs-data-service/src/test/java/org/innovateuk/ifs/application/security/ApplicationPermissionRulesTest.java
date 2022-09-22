@@ -14,6 +14,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
@@ -35,6 +36,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newC
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -453,5 +455,16 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         assertTrue(rules.consortiumCanCheckFundingSoughtIsValid(applicationResource1, leadOnApplication1));
         assertTrue(rules.consortiumCanCheckFundingSoughtIsValid(applicationResource1, user2));
         assertFalse(rules.consortiumCanCheckFundingSoughtIsValid(applicationResource1, user3));
+    }
+
+    @Test
+    public void isLeadOrganisationMemberCanSendApplicationSubmittedNotification() {
+        OrganisationResource organisationResource = newOrganisationResource().build();
+        applicationResource1.setLeadOrganisationId(organisationResource.getId());
+
+        setUpApplicationUsersForLeadOrganisation(applicationResource1, organisationResource, leadOnApplication1, processRole1);
+
+        assertTrue(rules.isLeadOrganisationMemberCanSendApplicationSubmittedNotification(applicationResource1, leadOnApplication1));
+        assertFalse(rules.isLeadOrganisationMemberCanSendApplicationSubmittedNotification(applicationResource1, user2));
     }
 }
