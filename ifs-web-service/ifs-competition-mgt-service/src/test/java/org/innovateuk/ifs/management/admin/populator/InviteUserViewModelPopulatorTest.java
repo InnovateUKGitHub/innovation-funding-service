@@ -41,7 +41,7 @@ public class InviteUserViewModelPopulatorTest {
 
         when(categoryRestService.getInnovationSectors()).thenReturn(restSuccess(expectedInnovationSectorOptions));
 
-        InviteUserViewModel viewModel = populator.populate(InviteUserView.INTERNAL_USER, Role.internalRoles(), loggedInUser);
+        InviteUserViewModel viewModel = populator.populate(InviteUserView.INTERNAL_USER, Role.internalInviteRoles(), loggedInUser);
 
         EnumSet<Role> roles = EnumSet.of(PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD, AUDITOR);
 
@@ -60,7 +60,7 @@ public class InviteUserViewModelPopulatorTest {
 
         when(categoryRestService.getInnovationSectors()).thenReturn(restSuccess(expectedInnovationSectorOptions));
 
-        InviteUserViewModel viewModel = populator.populate(InviteUserView.INTERNAL_USER, Role.internalRoles(), loggedInUser);
+        InviteUserViewModel viewModel = populator.populate(InviteUserView.INTERNAL_USER, Role.internalInviteRoles(), loggedInUser);
 
         EnumSet<Role> roles = EnumSet.of(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD, AUDITOR);
 

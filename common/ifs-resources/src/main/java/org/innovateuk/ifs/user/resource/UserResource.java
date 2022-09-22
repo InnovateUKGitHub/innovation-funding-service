@@ -113,9 +113,7 @@ public class UserResource implements Serializable {
 
     @JsonIgnore
     public boolean isInternalUser() {
-        return internalRoles().stream()
-                .filter(r -> !r.isAuditor())
-                .anyMatch(roles::contains);
+        return internalRoles().stream().anyMatch(roles::contains);
     }
 
     @JsonIgnore

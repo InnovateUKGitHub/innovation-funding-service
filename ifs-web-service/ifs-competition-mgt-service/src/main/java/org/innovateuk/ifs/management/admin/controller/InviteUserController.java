@@ -80,7 +80,7 @@ public class InviteUserController {
                                 UserResource loggedInUser) {
         InviteUserForm form = new InviteUserForm();
 
-        return doViewInviteNewUser(model, form, InviteUserView.INTERNAL_USER, Role.internalRoles(), loggedInUser);
+        return doViewInviteNewUser(model, form, InviteUserView.INTERNAL_USER, Role.internalInviteRoles(), loggedInUser);
     }
 
     @GetMapping("/invite-external-user")
@@ -106,7 +106,7 @@ public class InviteUserController {
     public String saveUserInvite(Model model, @Validated({Default.class, Primary.class}) @ModelAttribute(FORM_ATTR_NAME) InviteUserForm form,
                                  @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler, UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.INTERNAL_USER, Role.internalRoles(), loggedInUser);
+        Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.INTERNAL_USER, Role.internalInviteRoles(), loggedInUser);
 
         return saveInvite(form, validationHandler, failureView);
     }

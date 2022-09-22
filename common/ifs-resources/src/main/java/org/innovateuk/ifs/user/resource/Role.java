@@ -81,6 +81,10 @@ public enum Role implements Identifiable {
     }
 
     public static Set<Role> internalRoles() {
+        return EnumSet.of(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD, SUPER_ADMIN_USER);
+    }
+
+    public static Set<Role> internalInviteRoles() {
         return EnumSet.of(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD, SUPER_ADMIN_USER, AUDITOR);
     }
 

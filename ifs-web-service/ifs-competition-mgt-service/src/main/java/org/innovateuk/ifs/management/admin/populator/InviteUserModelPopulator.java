@@ -28,7 +28,7 @@ public class InviteUserModelPopulator {
         if (loggedInUser.hasAuthority(Authority.SUPER_ADMIN_USER)) {
             filteredRoles = internalRolesExcludingSuperAdminRole(roles);
         } else {
-            filteredRoles = internalRolesExcludingAdminAndAuditorRoles(roles);
+            filteredRoles = internalRolesExcludingAdminRoles(roles);
         }
 
         InviteUserViewModel inviteUserViewModel =  new InviteUserViewModel(type, filteredRoles);
@@ -40,7 +40,7 @@ public class InviteUserModelPopulator {
         return categoryRestService.getInnovationSectors().getSuccess();
     }
 
-    public static Set<Role> internalRolesExcludingAdminAndAuditorRoles(Set<Role> roles) {
+    public static Set<Role> internalRolesExcludingAdminRoles(Set<Role> roles) {
         return roles.stream()
                 .filter(r -> !r.isSuperAdminUser())
                 .filter(r -> !r.isIfsAdministrator())
