@@ -58,7 +58,7 @@ public class ApplicationSubmissionSectionUpdaterTest {
 
         String nextSection = updater.getNextSection(form, competition, CompetitionSetupSection.MILESTONES);
 
-        assertThat(nextSection).isEqualTo("redirect:/competition/setup/1/section/application-expression-interest");
+        assertThat(nextSection).isEqualTo("redirect:/competition/setup/1/section/application-expression-of-interest");
     }
 
     @Test
