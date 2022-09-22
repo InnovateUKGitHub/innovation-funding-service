@@ -17,6 +17,11 @@ project.getConfigurations().all { config ->
                     [details.requested.group, details.requested.version]))
         }
 
+        if (details.requested.name.equalsIgnoreCase("commons-io") && details.requested.version != "2.11.0") {
+            throw new GradleException(sprintf("commons-io found %s.%s",
+                    [details.requested.group, details.requested.version]))
+        }
+
         if (details.requested.name.equalsIgnoreCase('netty') && details.requested.version == "3.10.6.Final") {
             details.useTarget group: 'io.netty', name: 'netty-all', version: '4.1.44.Final'
         }
