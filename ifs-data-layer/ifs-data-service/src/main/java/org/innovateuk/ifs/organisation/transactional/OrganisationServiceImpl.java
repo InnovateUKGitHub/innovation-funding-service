@@ -10,10 +10,7 @@ import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.*;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
-import org.innovateuk.ifs.organisation.repository.AcademicRepository;
-import org.innovateuk.ifs.organisation.repository.ExecutiveOfficerRepository;
-import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
-import org.innovateuk.ifs.organisation.repository.SicCodeRepository;
+import org.innovateuk.ifs.organisation.repository.*;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -68,6 +65,9 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     @Autowired
     private AddressRepository addressRepository;
 
+    @Autowired
+    private OrganisationRepo organisationRepo;
+
     @Override
     public ServiceResult<Set<OrganisationResource>> findByApplicationId(final long applicationId) {
 
@@ -110,7 +110,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<OrganisationResource> getByUserAndProjectId(long userId, long projectId) {
-        Organisation org = organisationRepository.findByUserAndProjectId(userId, projectId);
+        Organisation org = organisationRepo.findByUserAndProjectId(userId, projectId);
         return find(org, notFoundError(Organisation.class, userId, projectId)).andOnSuccessReturn(o ->
                 organisationMapper.mapToResource(o)
         );

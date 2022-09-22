@@ -8,6 +8,8 @@ apply from: "../flyway.gradle"
 
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
 
+apply from: rootProject.file("gradle-support/jpa-metamodel.gradle")
+
 apply from: rootProject.file("gradle-support/jib.gradle")
 
 group 'innovateuk'
