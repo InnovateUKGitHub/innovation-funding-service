@@ -13,12 +13,16 @@ public class ApplicationEoiEvidenceResponsePermissionRules extends BasePermissio
 
     @PermissionRule(value = "CREATE_EOI_EVIDENCE_FILE_ENTRY", description = "Lead applicant can create file entry and eoi evidence resource.")
     public boolean applicantCanCreateFileEntryAndEoiEvidence(ApplicationResource applicationResource, UserResource user) {
-//        applicationResource.getLeadOrganisationId().equals(che)
         return isLeadApplicant(applicationResource.getId(), user);
     }
 
     @PermissionRule(value = "UPLOAD_EOI_EVIDENCE", description = "Lead applicant can create the eoi evidence")
     public boolean applicantCanCreateEoiEvidence(ApplicationResource applicationResource, UserResource user) {
+        return isLeadApplicant(applicationResource.getId(), user);
+    }
+
+    @PermissionRule(value = "REMOVE_EOI_EVIDENCE", description = "Lead applicant can remove the eoi evidence")
+    public boolean applicantCanRemoveEoiEvidence(ApplicationResource applicationResource, UserResource user) {
         return isLeadApplicant(applicationResource.getId(), user);
     }
 

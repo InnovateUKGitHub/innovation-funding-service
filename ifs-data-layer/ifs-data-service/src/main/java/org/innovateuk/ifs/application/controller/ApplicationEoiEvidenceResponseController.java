@@ -104,7 +104,7 @@ public class ApplicationEoiEvidenceResponseController {
 //        return applicationEoiEvidenceResponseService.create(new ApplicationEoiEvidenceResponseResource(applicationId, organisationId, fileCreated.getSuccess().getId())).toGetResponse();
 //    }
 
-    @PostMapping("/eoi-evidence-response/submit")
+    @PostMapping(value = "/eoi-evidence-response/submit", params= "submit-eoi-evidence")
     public RestResult<Void> submitEoiEvidence(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource,
                                               UserResource userResource) {
         return applicationEoiEvidenceResponseService.submit(applicationEoiEvidenceResponseResource, userResource).toGetResponse();

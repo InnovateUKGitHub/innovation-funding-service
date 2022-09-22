@@ -64,7 +64,7 @@
                            inputField='eoiEvidenceFile',
                            validationField=${inputField},
                            mayRemove=true,
-                           removeName='remove-eoi-evidence-response',
+                           removeName='remove-eoi-evidence',
                            saveName='upload-eoi-evidence'">
 
                     <!--/* file is not uploaded */-->
@@ -137,6 +137,14 @@
 <!--            </div>-->
 <!--        </div>-->
 <!--        </form>-->
+
+<!--        <button id="mark_as_complete" th:unless="${model.complete}" type="submit" name="mark-as-complete"-->
+<!--                class="button-clear" value="true">Mark as complete-->
+<!--        </button>-->
+<!--        th:disabled="${!model.isEoiEvidenceCreated}-->
+                    <button id="submit-eoi-evidence" type="submit" name="submit-eoi-evidence"
+                            class="govuk-button govuk-!-margin-top-6" value="true">Submit for review
+                    </button>
 
                     <th:block
                             th:unless="${model.currentCompetition.competitionEoiEvidenceConfigResource.evidenceRequired}">

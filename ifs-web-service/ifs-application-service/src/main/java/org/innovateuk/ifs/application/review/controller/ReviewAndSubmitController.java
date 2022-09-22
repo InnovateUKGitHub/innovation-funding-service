@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.forms.form.ApplicationReopenForm;
 import org.innovateuk.ifs.application.forms.form.ApplicationSubmitForm;
 import org.innovateuk.ifs.application.forms.form.EoiEvidenceForm;
 import org.innovateuk.ifs.application.forms.populator.EoiEvidenceFormPopulator;
+import org.innovateuk.ifs.application.forms.sections.yourfeccosts.form.YourFECModelForm;
 import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceResponseResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.review.populator.ReviewAndSubmitViewModelPopulator;
@@ -24,6 +25,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.file.service.FileUploadRestService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.horizon.service.HorizonWorkProgrammeRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -338,14 +340,14 @@ public class ReviewAndSubmitController {
 //        return getFileResponseEntity(resource, fileDetails);
 //    }
 
+
     @PostMapping(params = "remove-eoi-evidence")
     @AsyncMethod
     @PreAuthorize("hasAuthority('applicant')")
     @SecuredBySpring(value = "REMOVE_EOI_EVIDENCE", description = "Lead applicant can remove their eoi evidence")
     public String removeEoiEvidenceResponse(Model model,
                                             UserResource user,
-                                            @PathVariable long applicationId,
-                                            @RequestParam("remove-eoi-evidence-response") long applicationEoiEvidenceResponseFileEntryId) {
+                                            @PathVariable long applicationId) {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         applicationEoiEvidenceResponseRestService.delete(application.getApplicationEoiEvidenceResponseResource()).getSuccess();
