@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.file.controller;
 
+import com.google.common.io.ByteStreams;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -108,7 +108,7 @@ public class FileControllerUtils {
 
     private static InputStream inputStream(HttpServletRequest request) {
         try {
-            byte[] array = IOUtils.toByteArray(request.getInputStream());
+            byte[] array = ByteStreams.toByteArray(request.getInputStream());
             return new ByteArrayInputStream(array);
         } catch (IOException e) {
             log.error("Unable to open an input stream from request", e);
