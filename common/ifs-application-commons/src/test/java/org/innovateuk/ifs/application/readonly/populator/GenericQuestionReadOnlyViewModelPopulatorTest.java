@@ -304,15 +304,45 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
                 .build();
         CompetitionResource competition = newCompetitionResource()
                 .build();
-        QuestionResource question1 = newQuestionResource()
+        QuestionResource question = newQuestionResource()
                 .withId(questionId)
                 .withShortName("Question short name 1")
                 .withQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION)
                 .withEnabledForPreRegistration(true)
                 .build();
-        QuestionResource question2 = newQuestionResource()
+
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(),
+                emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), Optional.empty());
+
+        ApplicationReadOnlySettings settings = defaultSettings()
+                .setIncludeAllAssessorFeedback(true)
+                .setIncludeQuestionNumber(true);
+
+        GenericQuestionReadOnlyViewModel viewModel = populator.populate(question, data, settings);
+
+        assertNotNull(viewModel);
+        assertEquals("Question short name 1", viewModel.getDisplayName());
+    }
+
+    @Test
+    public void populateEOIFullApplication() {
+        Long questionId = 1L;
+
+        ApplicationExpressionOfInterestConfigResource applicationExpressionOfInterestConfig = newApplicationExpressionOfInterestConfigResource()
+                .withEnabledForExpressionOfInterest(false)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withResearchCategory(newResearchCategoryResource()
+                        .withName("Research category")
+                        .build())
+                .withApplicationExpressionOfInterestConfigResource(applicationExpressionOfInterestConfig)
+                .build();
+        CompetitionResource competition = newCompetitionResource()
+                .build();
+        QuestionResource question = newQuestionResource()
                 .withId(questionId)
-                .withShortName("Question short name 2")
+                .withShortName("Question short name 1")
                 .withQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION)
                 .withEnabledForPreRegistration(false)
                 .build();
@@ -320,20 +350,13 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(),
                 emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), Optional.empty());
 
-        ApplicationReadOnlySettings settings1 = defaultSettings()
+        ApplicationReadOnlySettings settings = defaultSettings()
                 .setIncludeAllAssessorFeedback(true)
                 .setIncludeQuestionNumber(true);
-        ApplicationReadOnlySettings settings2 = defaultSettings()
-                .setIncludeAllAssessorFeedback(true)
-                .setIncludeQuestionNumber(false);
 
-        GenericQuestionReadOnlyViewModel viewModel1 = populator.populate(question1, data, settings1);
-        GenericQuestionReadOnlyViewModel viewModel2 = populator.populate(question2, data, settings2);
+        GenericQuestionReadOnlyViewModel viewModel = populator.populate(question, data, settings);
 
-        assertNotNull(viewModel1);
-        assertEquals("1. Question short name 1", viewModel1.getDisplayName());
-        assertNotNull(viewModel2);
-        assertEquals("Question short name 2", viewModel2.getDisplayName());
-
+        assertNotNull(viewModel);
+        assertEquals("1. Question short name 1", viewModel.getDisplayName());
     }
 }
