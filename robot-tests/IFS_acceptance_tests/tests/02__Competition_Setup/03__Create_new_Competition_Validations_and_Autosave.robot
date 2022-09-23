@@ -186,7 +186,8 @@ Milestones: Autosave
     [Tags]
     When the user clicks the button/link              link = Milestones
     ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = a:contains("Next")
-    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  jQuery = a:contains("Next")
+    Run Keyword If  '${status}' == 'PASS'  run keywords  the user clicks the button/link  jQuery = a:contains("Next")
+    ...                             AND    the user clicks the button/link  jQuery = a:contains("Next")
     Run Keyword If  '${status}' == 'FAIL'  the user selects the radio button  selectedCompletionStage  PROJECT_SETUP
     Run Keyword If  '${status}' == 'FAIL'  the user clicks the button/link  jQuery = button:contains("Done")
     Then the user should see the correct inputs in the Milestones form
@@ -417,7 +418,8 @@ the user should see the group of errors
 
 the user completes completition stage and application submissions
     ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = a:contains("Next")
-    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  jQuery = a:contains("Next")
+    Run Keyword If  '${status}' == 'PASS'  run keywords   the user clicks the button/link  jQuery = a:contains("Next")
+    ...                            AND                    the user clicks the button/link  jQuery = span:contains("Application expression of interest")
     Run Keyword If  '${status}' == 'FAIL'  run keywords   the user selects the radio button   selectedCompletionStage   PROJECT_SETUP
     ...                                             AND   the user clicks the button/link  jQuery = button:contains("Done")
     ...                                             AND   the user clicks the button/link  jQuery = span:contains("Application expression of interest")
