@@ -29,6 +29,8 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...
 ...               IFS-12568 HECP Phase 2 - Document upload - Internal view
 ...
+...               IFS-12569 HECP Phase 2 - Document upload - Sending notification
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -45,7 +47,8 @@ ${preRegApplicationUnsuccessfulEmail}           You have been unsuccessful in th
 ${preRegApplicationSuccessfulEmail}             We are pleased to inform you that your expression of interest application has been successful.
 ${preregApplicationSubmissionEmail}             You have successfully submitted an application for funding to
 ${fullApplicationSuccessfulEmail}               We are pleased to inform you that your application for the Horizon Europe collaborative competition has been successful and passed the technical assessment phase.
-
+${evidenceSubmittedEmailSubject}                Evidence file submitted
+${evidenceSubmittedEmailDescription}            You have successfully submitted your evidence file to Innovate UK’s ${hecpPreregCompName} competition.
 
 *** Test Cases ***
 Comp Admin creates a prereg competition
@@ -182,12 +185,16 @@ Internal users can see submitted expression of interest applications without che
     And the user should see the element         jQuery = .highlight-panel:contains("Expressions of interest") span:contains("1")
     And the user should not see the element     jQuery = label[for = "app-row-1"]
 
+Lead organisation should get notified on submitting the EOI evidence
+    [Documentation]  IFS-12569
+    When Update application evidence has uploaded       24  ${preregApplicationID}  200
+    Then the user reads his email                       ${lead_applicant_credentials["email"]}  ${evidenceSubmittedEmailSubject}  ${evidenceSubmittedEmailDescription}
+
 Internal user submit the EOI applications funding decision after evidence is uploaded
     [Documentation]  IFS-12265  IFS-12568
     Given Existing user creates and submits new application for unsuccessful EOI journey
     And Requesting application ID of unsuccessful prereg application
-    When Update application evidence has uploaded                                           24  ${preregApplicationID}  200
-    And Update application evidence has uploaded                                            25  ${unSuccessfulPreRegApplicationID}  201
+    When Update application evidence has uploaded                                           25  ${unSuccessfulPreRegApplicationID}  201
     And Log in as a different user                                                          &{Comp_admin1_credentials}
     And Internal user marks the EOI as successful/unsuccessful                              ${unSuccessPreregAppName}   EOI_REJECTED
     And Internal user marks the EOI as successful/unsuccessful                              ${hecpPreregAppName}   EOI_APPROVED
