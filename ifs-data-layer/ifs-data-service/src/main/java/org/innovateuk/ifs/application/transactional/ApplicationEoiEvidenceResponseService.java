@@ -22,8 +22,9 @@ public interface ApplicationEoiEvidenceResponseService {
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> submit(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'REMOVE_EOI_EVIDENCE')")
     ServiceResult<ApplicationEoiEvidenceResponseResource> remove(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource);
+
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult <Optional<ApplicationEoiEvidenceResponseResource>> findOneByApplicationId(long applicationId);

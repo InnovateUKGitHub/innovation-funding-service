@@ -296,8 +296,7 @@ public class ReviewAndSubmitController {
     @SecuredBySpring(value = "REMOVE_EOI_EVIDENCE", description = "Lead applicant can remove their eoi evidence")
     public String removeEoiEvidenceResponse(Model model,
                                             UserResource user,
-                                            @PathVariable long applicationId,
-                                            @RequestParam("remove-eoi-evidence-response") long applicationEoiEvidenceResponseFileEntryId) {
+                                            @PathVariable long applicationId) {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         applicationEoiEvidenceResponseRestService.delete(application.getApplicationEoiEvidenceResponseResource()).getSuccess();
@@ -327,7 +326,6 @@ public class ReviewAndSubmitController {
         model.addAttribute("model", trackViewModelPopulator.populate(applicationId,canReopenApplication(application, user, competition), user.getId()));
         return getTrackingPage(competition, application);
     }
-
 
     private String getTrackingPage(CompetitionResource competition, ApplicationResource application) {
         if (CovidType.ADDITIONAL_FUNDING.equals(competition.getCovidType())) {
