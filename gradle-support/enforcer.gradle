@@ -12,11 +12,6 @@ project.getConfigurations().all { config ->
                     [details.requested.group, details.requested.version]))
         }
 
-        if (details.requested.name.equalsIgnoreCase("json") && details.requested.version != "20220320") {
-            throw new GradleException(sprintf("json found %s.%s",
-                    [details.requested.group, details.requested.version]))
-        }
-
         if (details.requested.name.equalsIgnoreCase("commons-io") && details.requested.version != "2.11.0") {
             throw new GradleException(sprintf("commons-io found %s.%s",
                     [details.requested.group, details.requested.version]))
