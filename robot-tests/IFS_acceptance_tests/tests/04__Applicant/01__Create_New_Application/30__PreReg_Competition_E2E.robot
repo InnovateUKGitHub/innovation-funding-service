@@ -391,8 +391,8 @@ the user completes milestones with out assessment
     the user clicks the button twice                    jQuery = label:contains("Project setup")
     the user clicks the button/link                     jQuery = button:contains("Done")
     the user completes application submission page      Yes
+    the user inputs application expression of interest  Yes
     the user inputs application assessment decision     No
-    the user inputs application expression of interest  No
     the user clicks the button/link                     jQuery = button:contains("Done")
     the user clicks the button/link                     link = Back to competition details
     the user should see the element                     jQuery = div:contains("Milestones") ~ .task-status-complete
