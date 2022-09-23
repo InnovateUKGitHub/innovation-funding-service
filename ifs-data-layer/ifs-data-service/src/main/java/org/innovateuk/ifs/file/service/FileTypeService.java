@@ -7,8 +7,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface FileTypeService {
 
-    @SecuredBySpring(value = "READ", description = "Currently only comp admin, project finance or IFS admin can retrieve a file type by id. This API can be opened up to others as and when required")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'ifs_administrator')")
+    @SecuredBySpring(value = "READ", description = "Applicant, comp admin, project finance or IFS admin can retrieve a file type by id. This API can be opened up to others as and when required")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'ifs_administrator', 'applicant')")
     ServiceResult<FileTypeResource> findOne(long id);
 
     @SecuredBySpring(value = "READ", description = "Currently only comp admin, project finance or IFS admin can retrieve a file type by name. This API can be opened up to others as and when required")

@@ -9,6 +9,11 @@ import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceResponseRes
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationEoiEvidenceWorkflowHandler;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.CompetitionEoiEvidenceConfig;
+import org.innovateuk.ifs.competition.transactional.CompetitionEoiEvidenceConfigService;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.file.service.FileService;
+import org.innovateuk.ifs.file.service.FileTypeService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -18,11 +23,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
@@ -41,7 +51,36 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
     private ApplicationEoiEvidenceWorkflowHandler applicationEoiEvidenceWorkflowHandler;
 
     @Autowired
+    private CompetitionEoiEvidenceConfigService competitionEoiEvidenceConfigService;
+
+    @Autowired
+    private FileService fileService;
+
+    @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private FileTypeService fileTypeService;
+
+    @Override
+    @Transactional
+    public ServiceResult<ApplicationEoiEvidenceResponseResource> createEoiEvidenceFileEntry(long applicationId, long organisationId, UserResource userResource, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        return find(competitionEoiEvidenceConfig(applicationId))
+                .andOnSuccess(config -> isValidFileEntryType(applicationId, fileEntryResource))
+                .andOnSuccess(() -> fileService.createFile(fileEntryResource, inputStreamSupplier)
+                        .andOnSuccessReturn(fileDetails -> {
+                            Optional<ApplicationEoiEvidenceResponse> optionalApplicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.findOneByApplicationId(applicationId);
+                            ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource;
+                            if (optionalApplicationEoiEvidenceResponse.isPresent()) {
+                                applicationEoiEvidenceResponseResource = applicationEoiEvidenceResponseMapper.mapToResource(optionalApplicationEoiEvidenceResponse.get());
+                                applicationEoiEvidenceResponseResource.setFileEntryId(fileDetails.getId());
+                            } else {
+                                applicationEoiEvidenceResponseResource = new ApplicationEoiEvidenceResponseResource(applicationId, organisationId, fileDetails.getId());
+                            }
+                            return upload(applicationEoiEvidenceResponseResource, userResource).getSuccess();
+                        })
+                );
+    }
 
     @Override
     @Transactional
@@ -59,7 +98,6 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
                     }
                 });
     }
-
     private ServiceResult<ApplicationEoiEvidenceResponse> uploadApplicationEoiEvidenceWorkflow(Application application, ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse, UserResource userResource) {
         if (application.getCompetition().isEnabledForPreRegistration()
                 && application.getCompetition().isEoiEvidenceRequired()
@@ -76,6 +114,38 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
         }
     }
 
+    private ServiceResult <CompetitionEoiEvidenceConfig> competitionEoiEvidenceConfig(long applicationId) {
+        long competitionId = applicationRepository.findById(applicationId).get().getCompetition().getId();
+        return serviceSuccess(competitionRepository.findById(competitionId).get().getCompetitionEoiEvidenceConfig());
+    }
+
+    private ServiceResult <Boolean> isValidFileEntryType(long applicationId, FileEntryResource fileEntryResource) {
+        long eoiEvidenceConfigId = competitionEoiEvidenceConfig(applicationId).getSuccess().getId();
+        List<String> validFileTypes = getMediaMimeTypes(competitionEoiEvidenceConfigService.getValidFileTypesIdsForEoiEvidence(eoiEvidenceConfigId).getSuccess());
+        return serviceSuccess(validFileTypes.contains(fileEntryResource.getMediaType()));
+    }
+
+    private List<String> getMediaMimeTypes(List<Long> fileTypeIds) {
+        List<String> validMediaTypes = new ArrayList<>();
+
+        for (Long fileTypeId : fileTypeIds) {
+            switch (fileTypeService.findOne(fileTypeId).getSuccess().getName()) {
+                case "PDF":
+                    validMediaTypes.addAll(PDF.getMimeTypes());
+                    break;
+                case "Spreadsheets":
+                    validMediaTypes.addAll(SPREADSHEET.getMimeTypes());
+                    break;
+                case "Text":
+                    validMediaTypes.addAll(DOCUMENT.getMimeTypes());
+                    break;
+                default:
+                    // do nothing
+            }
+        }
+        return validMediaTypes;
+    }
+
     @Override
     public ServiceResult<ApplicationEoiEvidenceResponseResource> remove(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource) {
         Long applicationId = applicationEoiEvidenceResponseResource.getApplicationId();
@@ -83,6 +153,8 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
                 .andOnSuccess((application) -> {
                     Optional<ApplicationEoiEvidenceResponse> optionalApplicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.findOneByApplicationId(application.getId());
                     if (optionalApplicationEoiEvidenceResponse.isPresent()) {
+
+                        //TODO - remove the data from file entry first
                         ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = optionalApplicationEoiEvidenceResponse.get();
                         applicationEoiEvidenceResponse.setFileEntry(null);
                         applicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse);
@@ -122,5 +194,10 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
                         return serviceFailure(CommonFailureKeys.APPLICATION_UNABLE_TO_FIND_UPLOADED_EOI_EVIDENCE);
                     }
                 });
+    }
+
+    @Override
+    public ServiceResult <Optional<ApplicationEoiEvidenceResponseResource>> findOneByApplicationId(long applicationId) {
+        return serviceSuccess(applicationEoiEvidenceResponseRepository.findOneByApplicationId(applicationId).map(applicationEoiEvidenceResponseMapper::mapToResource));
     }
 }

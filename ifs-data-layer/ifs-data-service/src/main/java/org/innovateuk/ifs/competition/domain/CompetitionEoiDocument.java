@@ -11,6 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
+@Getter
 @Table(name = "eoi_evidence_config_file_type")
 public class CompetitionEoiDocument {
 

@@ -2,7 +2,8 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org"
       th:with="applicationName=${#strings.isEmpty(model.currentApplication.name)} ? #{ifs.application.no_title} : ${model.currentApplication.name}">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Expression of interest Status - ${applicationName}|"/>
+    <th:block th:insert="fragments/layout :: head"
+              th:with="pageTitle=|Expression of interest Status - ${applicationName}|"/>
 </head>
 <body class="govuk-template__body app-track">
 <th:block th:insert="fragments/layout :: body-start"/>
@@ -20,25 +21,87 @@
                       th:with="pageTitle='Expression of interest status',subTitle=${applicationName},size='govuk-heading-xl'"/>
         </th:block>
 
-        <th:block><th:block th:insert="fragments/application-submitted-panel"/></th:block>
+        <th:block>
+            <th:block th:insert="fragments/application-submitted-panel"/>
+        </th:block>
 
         <h2 class="govuk-heading-l">What happens next?</h2>
 
         <p class="govuk-body">
-            Your submission will now be evaluated by our team. If the evidence you provided is satisfactory, you will progress to the full application.
+            Your submission will now be evaluated by our team. If the evidence you provided is satisfactory, you will
+            progress to the full application.
         </p>
 
-        <div class="govuk-!-margin-top-6">
-            <p class="govuk-body">You can give feedback to help us improve this service. This should take no more than 2 minutes.</p>
-            <a th:href="@{/survey/{competitionId}/feedback(competitionId=${model.currentCompetition.id})}"
-               class="govuk-button">Give us feedback</a>
-        </div>
+        <th:block th:if="${model.currentCompetition.competitionEoiEvidenceConfigResource.evidenceRequired && model.userFromLeadOrganisation}"
+                  class="govuk-form-group">
+            <div class="upload-section">
+                <h2 class="govuk-heading-s govuk-!-margin-bottom-4"
+                    th:text="${model.eoiEvidenceConfigResource.evidenceTitle}"></h2>
+                <details class="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">What should I include?</span>
+                    </summary>
+                    <div class="govuk-details__text wysiwyg-styles">
+                        <p class="govuk-body" th:text="${model.eoiEvidenceConfigResource.evidenceGuidance}"></p>
+                        <p class="govuk-body govuk-!-margin-bottom-0"><strong>Accepted file types</strong>
+                        <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0" th:each="type : ${model.validEoiEvidenceFileTypes}">
+                            <li th:text="${type}"></li>
+                        </ul>
+                        </p>
+                        <p class="govuk-body"> It must be less than 32MB in size.</p>
+                    </div>
+                </details>
 
-        <p class="govuk-body govuk-!-margin-bottom-6">
-            <a class="govuk-link" th:href="@{/applicant/dashboard}">Finish without feedback</a>
-        </p>
-<th:block th:insert="fragments/layout :: main-content-end"/>
-</main>
+                <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+                      th:object="${form}"
+                      method="post"
+                      id="upload-document-form"
+                      enctype="multipart/form-data"
+                      th:with="viewmode='edit',
+                           downloadUrl=@{/application/{applicationId}/view-eoi-evidence(applicationId=${model.currentApplication.id})},
+                           filename=${model.eoiEvidenceFileName},
+                           inputField='eoiEvidenceFile',
+                           validationField=${inputField},
+                           mayRemove=true,
+                           removeName='remove-eoi-evidence',
+                           saveName='upload-eoi-evidence'">
+
+                    <!--/* file is not uploaded */-->
+                    <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
+
+                    <button id="submit-eoi-evidence"  type="submit" name="submit-eoi-evidence"
+                            class="govuk-button govuk-!-margin-top-6" value="true">Submit for review
+                    </button>
+
+                </form>
+
+            </div>
+        </th:block>
+
+        <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+            <button id="submit_eoi_evidence" type="submit" name="submit-eoi-evidence"
+                    class="button govuk-!-margin-top-6" value="true">Submit for review
+            </button>
+        </form>
+
+<!--        temporary adding the feedback for partner org only-->
+        <th:block
+                th:unless="${model.currentCompetition.competitionEoiEvidenceConfigResource.evidenceRequired && model.userFromLeadOrganisation}">
+            <div class="govuk-!-margin-top-6">
+                <p class="govuk-body">You can give feedback to help us improve this service. This should
+                    take no
+                    more than 2 minutes.</p>
+                <a th:href="@{/survey/{competitionId}/feedback(competitionId=${model.currentCompetition.id})}"
+                   class="govuk-button">Give us feedback</a>
+            </div>
+            <p class="govuk-body govuk-!-margin-bottom-6">
+                <a class="govuk-link" th:href="@{/applicant/dashboard}">Finish without feedback</a>
+            </p>
+        </th:block>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+
+    </main>
 </div>
 
 <th:block th:insert="fragments/layout :: footer"/>
