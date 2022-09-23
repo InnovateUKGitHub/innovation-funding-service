@@ -10,7 +10,14 @@ import java.time.ZonedDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ApplicationEoiEvidenceResponseResource {
+    private Long Id;
     private Long applicationId;
     private Long organisationId;
     private Long fileEntryId;
+
+    public ApplicationEoiEvidenceResponseResource(Long applicationId, Long organisationId, Long fileEntryId) {
+        this.applicationId = applicationId;
+        this.organisationId = organisationId;
+        this.fileEntryId = fileEntryId;
+    }
 }

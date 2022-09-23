@@ -87,7 +87,7 @@ public class ApplicationEoiEvidenceResponseController {
         return fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename,
                 fileValidator, getMediaMimeTypes(validFileTypesIdsForEoiEvidence), maxFilesizeBytesForEoiEvidenceResponse, request,
                 (fileAttributes, inputStreamSupplier) ->
-                        applicationEoiEvidenceResponseService.createEoiEvidenceFileEntry(applicationId, organisationId, userResource, fileAttributes.toFileEntryResource(), inputStreamSupplier));
+                        applicationEoiEvidenceResponseService.upload(applicationId, organisationId, userResource, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
 

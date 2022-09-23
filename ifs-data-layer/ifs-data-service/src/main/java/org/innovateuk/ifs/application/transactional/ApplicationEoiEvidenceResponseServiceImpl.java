@@ -11,6 +11,7 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.CompetitionEoiEvidenceConfig;
 import org.innovateuk.ifs.competition.transactional.CompetitionEoiEvidenceConfigService;
+import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileService;
 import org.innovateuk.ifs.file.service.FileTypeService;
@@ -64,21 +65,30 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
 
     @Override
     @Transactional
-    public ServiceResult<ApplicationEoiEvidenceResponseResource> createEoiEvidenceFileEntry(long applicationId, long organisationId, UserResource userResource, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+    public ServiceResult<ApplicationEoiEvidenceResponseResource> upload(long applicationId, long organisationId, UserResource userResource, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return find(competitionEoiEvidenceConfig(applicationId))
                 .andOnSuccess(config -> isValidFileEntryType(applicationId, fileEntryResource))
                 .andOnSuccess(() -> fileService.createFile(fileEntryResource, inputStreamSupplier)
-                        .andOnSuccessReturn(fileDetails -> upload(new ApplicationEoiEvidenceResponseResource(applicationId, organisationId, fileDetails.getId()), userResource).getSuccess()));
+                        .andOnSuccessReturn(fileDetails -> {
+                            Optional<ApplicationEoiEvidenceResponse> optionalApplicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.findOneByApplicationId(applicationId);
+                            ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource;
+                            if (optionalApplicationEoiEvidenceResponse.isPresent()) {
+                                applicationEoiEvidenceResponseResource = applicationEoiEvidenceResponseMapper.mapToResource(optionalApplicationEoiEvidenceResponse.get());
+                                applicationEoiEvidenceResponseResource.setFileEntryId(fileDetails.getId());
+                            } else {
+                                applicationEoiEvidenceResponseResource = new ApplicationEoiEvidenceResponseResource(applicationId, organisationId, fileDetails.getId());
+                            }
+                            return upload(applicationEoiEvidenceResponseResource, userResource).getSuccess();
+                        })
+                );
     }
 
-    @Override
-    @Transactional
-    public ServiceResult<ApplicationEoiEvidenceResponseResource> upload(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource) {
+
+    private ServiceResult<ApplicationEoiEvidenceResponseResource> upload(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource) {
         Long applicationId = applicationEoiEvidenceResponseResource.getApplicationId();
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
                 .andOnSuccess((application) -> {
                     if (application.isSubmitted()) {
-                        //TODO fetch and if it's there update or create new entry
                         ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = applicationEoiEvidenceResponseMapper.mapToDomain(applicationEoiEvidenceResponseResource);
                         applicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse);
                         return uploadApplicationEoiEvidenceWorkflow(application, applicationEoiEvidenceResponse, userResource)
@@ -137,17 +147,19 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
     }
 
     @Override
+    @Transactional
     public ServiceResult<ApplicationEoiEvidenceResponseResource> remove(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource) {
         Long applicationId = applicationEoiEvidenceResponseResource.getApplicationId();
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
                 .andOnSuccess((application) -> {
-                    Optional<ApplicationEoiEvidenceResponse> optionalApplicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.findOneByApplicationId(application.getId());
+                    Optional<ApplicationEoiEvidenceResponse> optionalApplicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.findById(applicationEoiEvidenceResponseResource.getId());
                     if (optionalApplicationEoiEvidenceResponse.isPresent()) {
-
-                        //TODO - remove the data from file entry first
                         ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = optionalApplicationEoiEvidenceResponse.get();
                         applicationEoiEvidenceResponse.setFileEntry(null);
-                        applicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse);
+                        FileEntry fileEntry = applicationEoiEvidenceResponse.getFileEntry();
+                        fileService.deleteFileIgnoreNotFound(fileEntry.getId()).andOnSuccess(() -> {
+                           applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse);
+                        });
                         return removeApplicationEoiEvidenceWorkflow(application, applicationEoiEvidenceResponse, userResource)
                                 .andOnSuccess(removedApplicationEoiEvidenceResponse -> serviceSuccess(applicationEoiEvidenceResponseMapper.mapToResource(removedApplicationEoiEvidenceResponse)));
                     } else {
