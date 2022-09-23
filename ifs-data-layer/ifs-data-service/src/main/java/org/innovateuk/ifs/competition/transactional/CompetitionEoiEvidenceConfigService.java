@@ -12,4 +12,7 @@ public interface CompetitionEoiEvidenceConfigService {
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<CompetitionEoiDocumentResource> createDocument(CompetitionEoiDocumentResource competitionEoiDocumentResource);
+
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    ServiceResult<CompetitionEoiEvidenceConfigResource> findOneByCompetitionId(long competitionId);
 }

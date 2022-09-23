@@ -1,7 +1,11 @@
 package org.innovateuk.ifs.application.readonly.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
+import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceResponseResource;
+import org.innovateuk.ifs.application.resource.EoiEvidenceReadOnlyViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -22,6 +26,8 @@ public class ApplicationReadOnlyViewModel {
     private final boolean isLoanPartBEnabled;
     private final boolean isExpressionOfInterestApplication;
     private boolean eoiFullApplication;
+    private boolean leadOrganisationMember;
+    private EoiEvidenceReadOnlyViewModel eoiEvidenceReadOnlyViewModel;
 
     public ApplicationReadOnlyViewModel(ApplicationReadOnlySettings settings,
                                         Set<ApplicationSectionReadOnlyViewModel> sections,
@@ -34,7 +40,9 @@ public class ApplicationReadOnlyViewModel {
                                         CompetitionThirdPartyConfigResource thirdPartyConfig,
                                         boolean isLoanPartBEnabled,
                                         boolean isExpressionOfInterestApplication,
-                                        boolean eoiFullApplication) {
+                                        boolean eoiFullApplication,
+                                        boolean leadOrganisationMember,
+                                        EoiEvidenceReadOnlyViewModel eoiEvidenceReadOnlyViewModel) {
         this.settings = settings;
         this.sections = sections;
         this.applicationScore = applicationScore;
@@ -47,6 +55,8 @@ public class ApplicationReadOnlyViewModel {
         this.isLoanPartBEnabled = isLoanPartBEnabled;
         this.isExpressionOfInterestApplication = isExpressionOfInterestApplication;
         this.eoiFullApplication = eoiFullApplication;
+        this.leadOrganisationMember = leadOrganisationMember
+        this.eoiEvidenceReadOnlyViewModel = eoiEvidenceReadOnlyViewModel;
     }
 
     public List<String> getOverallFeedbacks() {
@@ -113,5 +123,18 @@ public class ApplicationReadOnlyViewModel {
 
     public boolean isEoiFullApplication() {
         return eoiFullApplication;
+    }
+
+    public boolean isLeadOrganisationMember() {
+        return leadOrganisationMember;
+    }
+
+    @JsonIgnore
+    public boolean shouldDisplayEoiEvidenceUpload() {
+        return isExpressionOfInterestApplication() && isLeadOrganisationMember();
+    }
+
+    public EoiEvidenceReadOnlyViewModel getEoiEvidenceReadOnlyViewModel() {
+        return eoiEvidenceReadOnlyViewModel;
     }
 }

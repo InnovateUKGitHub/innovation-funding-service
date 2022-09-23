@@ -8,17 +8,16 @@ import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyView
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationSectionReadOnlyViewModel;
 import org.innovateuk.ifs.application.readonly.viewmodel.SupporterAssignmentReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.EoiEvidenceReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.application.service.QuestionRestService;
-import org.innovateuk.ifs.application.service.QuestionStatusRestService;
-import org.innovateuk.ifs.application.service.SectionRestService;
+import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionEoiEvidenceConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -93,6 +92,12 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
     @Autowired
     private HorizonWorkProgrammeRestService horizonWorkProgrammeRestService;
 
+    @Autowired
+    private ApplicationEoiEvidenceResponseRestService applicationEoiEvidenceResponseRestService;
+
+    @Autowired
+    private CompetitionEoiEvidenceConfigRestService competitionEoiEvidenceConfigRestService;
+
     private Map<QuestionSetupType, QuestionReadOnlyViewModelPopulator<?>> populatorMap;
 
     @Autowired
@@ -141,6 +146,8 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 .map(this::resolve)
                 .collect(toCollection(LinkedHashSet::new));
 
+        EoiEvidenceReadOnlyViewModel eoiEvidenceReadOnlyViewModel = new EoiEvidenceReadOnlyViewModel(data.getApplicationId(), null, null);
+
         return new ApplicationReadOnlyViewModel(settings,
                 sectionViews,
                 settings.isIncludeAllAssessorFeedback() ? data.getApplicationScore() : BigDecimal.ZERO,
@@ -158,7 +165,9 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 competition.getCompetitionThirdPartyConfigResource(),
                 isLoanPartBEnabled,
                 data.getApplication().isEnabledForExpressionOfInterest(),
-                data.getApplication().isEoiFullApplication()
+                data.getApplication().isEoiFullApplication(),
+                false,
+                eoiEvidenceReadOnlyViewModel
         );
     }
 

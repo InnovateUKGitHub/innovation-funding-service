@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.domain.CompetitionEoiDocument;
 import org.innovateuk.ifs.competition.mapper.CompetitionEoiDocumentMapper;
 import org.innovateuk.ifs.competition.mapper.CompetitionEoiEvidenceConfigMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionEoiDocumentRepository;
+import org.innovateuk.ifs.competition.repository.CompetitionEoiEvidenceConfigRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionEoiDocumentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionEoiEvidenceConfigResource;
 import org.innovateuk.ifs.file.domain.FileType;
@@ -33,6 +34,9 @@ public class CompetitionEoiEvidenceConfigServiceImpl extends BaseTransactionalSe
     @Autowired
     private FileTypeRepository fileTypeRepository;
 
+    @Autowired
+    private CompetitionEoiEvidenceConfigRepository competitionEoiEvidenceConfigRepository;
+
     @Override
     @Transactional
     public ServiceResult<CompetitionEoiEvidenceConfigResource> create(CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource) {
@@ -53,5 +57,11 @@ public class CompetitionEoiEvidenceConfigServiceImpl extends BaseTransactionalSe
                     CompetitionEoiDocument competitionEoiDocument = competitionEoiDocumentMapper.mapToDomain(competitionEoiDocumentResource);
                     return competitionEoiDocumentMapper.mapToResource(competitionEoiDocumentRepository.save(competitionEoiDocument));
                 });
+    }
+
+    @Override
+    public ServiceResult<CompetitionEoiEvidenceConfigResource> findOneByCompetitionId(long competitionId) {
+        return find(competitionEoiEvidenceConfigRepository.findOneByCompetitionId(competitionId), notFoundError(CompetitionEoiEvidenceConfigResource.class, competitionId))
+                .andOnSuccessReturn(competitionEoiEvidenceConfigMapper::mapToResource);
     }
 }
