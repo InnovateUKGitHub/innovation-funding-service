@@ -21,8 +21,8 @@ import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +78,7 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
                 .andOnSuccess((application) -> {
                     if (application.isSubmitted()) {
+                        //TODO fetch and if it's there update or create new entry
                         ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = applicationEoiEvidenceResponseMapper.mapToDomain(applicationEoiEvidenceResponseResource);
                         applicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse);
                         return uploadApplicationEoiEvidenceWorkflow(application, applicationEoiEvidenceResponse, userResource)
@@ -142,6 +143,8 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
                 .andOnSuccess((application) -> {
                     Optional<ApplicationEoiEvidenceResponse> optionalApplicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.findOneByApplicationId(application.getId());
                     if (optionalApplicationEoiEvidenceResponse.isPresent()) {
+
+                        //TODO - remove the data from file entry first
                         ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = optionalApplicationEoiEvidenceResponse.get();
                         applicationEoiEvidenceResponse.setFileEntry(null);
                         applicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse);

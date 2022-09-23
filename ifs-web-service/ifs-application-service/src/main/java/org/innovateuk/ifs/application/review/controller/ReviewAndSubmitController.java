@@ -290,17 +290,33 @@ public class ReviewAndSubmitController {
         });
     }
 
-    @PostMapping(params = "remove-eoi-evidence")
+    @PostMapping(value="/{applicationId}/track", params = "remove-eoi-evidence")
     @AsyncMethod
     @PreAuthorize("hasAuthority('applicant')")
     @SecuredBySpring(value = "REMOVE_EOI_EVIDENCE", description = "Lead applicant can remove their eoi evidence")
-    public String removeEoiEvidenceResponse(Model model,
-                                            UserResource user,
-                                            @PathVariable long applicationId) {
+    public String removeEoiEvidenceResponse(@PathVariable("applicationId") long applicationId,
+                                            @ModelAttribute("form") EoiEvidenceForm form,
+                                            Model model,
+                                            UserResource loggedInUser) {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-        applicationEoiEvidenceResponseRestService.delete(application.getApplicationEoiEvidenceResponseResource()).getSuccess();
+        applicationEoiEvidenceResponseRestService.delete(application.getApplicationEoiEvidenceResponseResource(), loggedInUser).getSuccess();
 
+        return "redirect:/application/" + applicationId + "/track";
+    }
+
+
+    @PostMapping(value="/{applicationId}/track", params = "submit-eoi-evidence")
+    @AsyncMethod
+    @PreAuthorize("hasAuthority('applicant')")
+  //  @SecuredBySpring(value = "REMOVE_EOI_EVIDENCE", description = "Lead applicant can remove their eoi evidence")
+    public String submitEoiEvidenceResponse(@PathVariable("applicationId") long applicationId,
+                                            @ModelAttribute("form") EoiEvidenceForm form,
+                                            Model model,
+                                            UserResource loggedInUser) {
+
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+        applicationEoiEvidenceResponseRestService.submitEoiEvidence(application.getApplicationEoiEvidenceResponseResource(), loggedInUser).getSuccess();
         return "redirect:/application/" + applicationId + "/track";
     }
 

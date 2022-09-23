@@ -66,12 +66,23 @@
                            removeName='remove-eoi-evidence',
                            saveName='upload-eoi-evidence'">
 
-                    <th:block
-                            th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})"/>
+                    <!--/* file is not uploaded */-->
+                    <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
+
+                    <button id="submit-eoi-evidence"  type="submit" name="submit-eoi-evidence"
+                            class="govuk-button govuk-!-margin-top-6" value="true">Submit for review
+                    </button>
+
                 </form>
 
             </div>
         </th:block>
+
+        <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+            <button id="submit_eoi_evidence" type="submit" name="submit-eoi-evidence"
+                    class="button govuk-!-margin-top-6" value="true">Submit for review
+            </button>
+        </form>
 
 <!--        temporary adding the feedback for partner org only-->
         <th:block

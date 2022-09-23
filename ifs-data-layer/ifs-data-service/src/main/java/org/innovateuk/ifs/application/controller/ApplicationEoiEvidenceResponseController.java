@@ -14,6 +14,7 @@ import org.innovateuk.ifs.file.service.FileService;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.transactional.BaseUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,6 +60,9 @@ public class ApplicationEoiEvidenceResponseController {
     private FileTypeRepository fileTypeRepository;
 
     @Autowired
+    private BaseUserService baseUserService;
+
+    @Autowired
     @Qualifier("mediaTypeStringsFileValidator")
     private FilesizeAndTypeFileValidator<List<String>> fileValidator;
 
@@ -66,6 +70,7 @@ public class ApplicationEoiEvidenceResponseController {
     private Long maxFilesizeBytesForEoiEvidenceResponse;
 
     private final FileControllerUtils fileControllerUtils = new FileControllerUtils();
+
 
     @PostMapping(value = "/{applicationId}/eoi-evidence/{organisationId}/upload", produces = "application/json")
     public RestResult<ApplicationEoiEvidenceResponseResource> uploadEoiEvidence(@RequestHeader(value = "Content-Type", required = false) String contentType,
@@ -85,30 +90,39 @@ public class ApplicationEoiEvidenceResponseController {
                         applicationEoiEvidenceResponseService.createEoiEvidenceFileEntry(applicationId, organisationId, userResource, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
-    @PostMapping("/eoi-evidence-response/submit")
-    public RestResult<Void> submitEoiEvidence(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource,
-                                              UserResource userResource) {
-        return applicationEoiEvidenceResponseService.submit(applicationEoiEvidenceResponseResource, userResource).toGetResponse();
+
+    @DeleteMapping("/{applicationId}/eoi-evidence-response/delete/{userId}")
+    public RestResult<ApplicationEoiEvidenceResponseResource> remove(@PathVariable("applicationId") long applicationId,
+                                   @PathVariable("userId") long userId) {
+
+          Optional<ApplicationEoiEvidenceResponseResource> applicationEoiEvidenceResponseResource =
+                applicationEoiEvidenceResponseService.findOneByApplicationId(applicationId).getSuccess();
+          UserResource userResource = baseUserService.getUserById(userId).getSuccess();
+          if(applicationEoiEvidenceResponseResource.isPresent()) {
+              return applicationEoiEvidenceResponseService.remove(applicationEoiEvidenceResponseResource.get(),  userResource).toGetResponse();
+          }
+          //TODO need to make this as void
+          return RestResult.restSuccess(new ApplicationEoiEvidenceResponseResource());
     }
+
+    @PostMapping("/{applicationId}/eoi-evidence-response/submit/{userId}")
+    public RestResult<Void> submitEoiEvidence(@PathVariable("applicationId") long applicationId,
+                                              @PathVariable("userId") long userId) {
+
+        Optional<ApplicationEoiEvidenceResponseResource> applicationEoiEvidenceResponseResource =
+                applicationEoiEvidenceResponseService.findOneByApplicationId(applicationId).getSuccess();
+        UserResource userResource = baseUserService.getUserById(userId).getSuccess();
+        if(applicationEoiEvidenceResponseResource.isPresent()) {
+            return applicationEoiEvidenceResponseService.submit(applicationEoiEvidenceResponseResource.get(),  userResource).toGetResponse();
+        }
+        return RestResult.restSuccess();
+    }
+
 
     @GetMapping ("/{applicationId}/eoi-evidence-response")
     public RestResult <Optional<ApplicationEoiEvidenceResponseResource>> findOneByApplicationId(@PathVariable("applicationId") long applicationId) {
         return applicationEoiEvidenceResponseService.findOneByApplicationId(applicationId).toGetResponse();
     }
-
-    @DeleteMapping("/{applicationId}/eoi-evidence-response/delete/{fileEntryId}")
-    public RestResult<ApplicationEoiEvidenceResponseResource> remove(@PathVariable("applicationId") long applicationId,
-                                   @PathVariable("fileEntryId") long fileEntryId,
-                                   long organisationId,
-                                   UserResource userResource) {
-
-        ApplicationEoiEvidenceResponseResource eoiEvidenceResponseResource = new ApplicationEoiEvidenceResponseResource();
-        eoiEvidenceResponseResource.setApplicationId(applicationId);
-        eoiEvidenceResponseResource.setOrganisationId(organisationId);
-        eoiEvidenceResponseResource.setFileEntryId(fileEntryId);
-        return applicationEoiEvidenceResponseService.remove(eoiEvidenceResponseResource, userResource).toGetResponse();
-    }
-
     public ServiceResult<UserResource> getUserById(long id) {
         return find(userRepository.findById(id), notFoundError(UserResource.class, id)).andOnSuccessReturn(userMapper::mapToResource);
     }

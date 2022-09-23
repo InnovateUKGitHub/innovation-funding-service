@@ -23,14 +23,12 @@ public class ApplicationEoiEvidenceResponseRestServiceImpl extends BaseRestServi
 
     @Override
     public RestResult<Void> submitEoiEvidence(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource) {
-        String url = URL + "/eoi-evidence-response/submit";
-
-        return postWithRestResult(url, Void.class);
+        return postWithRestResult(URL + "/" + applicationEoiEvidenceResponseResource.getApplicationId() + "/eoi-evidence-response/submit/" + userResource.getId(), Void.class);
     }
 
     @Override
-    public RestResult<ApplicationEoiEvidenceResponseResource> delete(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource) {
-        return deleteWithRestResult(URL + "/" + applicationEoiEvidenceResponseResource.getApplicationId() + "/eoi-evidence-response/delete/" + applicationEoiEvidenceResponseResource.getFileEntryId(), ApplicationEoiEvidenceResponseResource.class);
+    public RestResult<ApplicationEoiEvidenceResponseResource> delete(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource) {
+        return deleteWithRestResult(URL + "/" + applicationEoiEvidenceResponseResource.getApplicationId() + "/eoi-evidence-response/delete/" + userResource.getId(), ApplicationEoiEvidenceResponseResource.class);
     }
 
     @Override
