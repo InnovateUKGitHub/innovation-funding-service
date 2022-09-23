@@ -164,6 +164,8 @@ Milestones: Server side validations, submission time is default
     And the user clicks the button/link                           jQuery = button:contains("Done")
     And the user clicks the button twice                          jQuery = label:contains("No")
     And the user clicks the button/link                           jQuery = button:contains("Save and continue")
+    And the user clicks the button twice                          jQuery = label:contains("No")
+    And the user clicks the button/link                           jQuery = button:contains("Save and continue")
     And the user fills the milestones with invalid data
     And the user clicks the button/link                           jQuery = button:contains(Done)
     Then Validation summary should be visible
@@ -418,6 +420,8 @@ the user completes completition stage and application submissions
     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  jQuery = a:contains("Next")
     Run Keyword If  '${status}' == 'FAIL'  run keywords   the user selects the radio button   selectedCompletionStage   PROJECT_SETUP
     ...                                             AND   the user clicks the button/link  jQuery = button:contains("Done")
+    ...                                             AND   the user clicks the button/link  jQuery = span:contains("Application expression of interest")
+    ...                                             AND   the user clicks the button/link  jQuery = button:contains("Save and continue")
     the user clicks the button/link  jQuery = span:contains("Milestones")
     ${i} =  Set Variable   1
      :FOR   ${ELEMENT}   IN    @{milestones}
