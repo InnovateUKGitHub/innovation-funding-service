@@ -16,8 +16,8 @@ public interface CompetitionEoiEvidenceConfigService {
     ServiceResult<CompetitionEoiDocumentResource> createDocument(CompetitionEoiDocumentResource competitionEoiDocumentResource);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
-    ServiceResult <List<CompetitionEoiDocumentResource>> findAllByCompetitionEoiEvidenceConfigId(long competitionEoiEvidenceConfigId);
+    ServiceResult <List<CompetitionEoiDocumentResource>> findAllByCompetitionEoiDocumentResources(long competitionEoiEvidenceConfigId);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
-    ServiceResult<List<String>> getValidMediaTypesForEoiEvidence(long competitionEoiEvidenceConfigId);
+    ServiceResult<List<Long>> getValidFileTypesIdsForEoiEvidence(long competitionEoiEvidenceConfigId);
 }

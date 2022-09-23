@@ -5,9 +5,11 @@ import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
+import org.innovateuk.ifs.competition.resource.CompetitionEoiEvidenceConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class TrackViewModel implements BaseAnalyticsViewModel {
 
@@ -18,6 +20,9 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
     private boolean reopenLinkVisible;
     private boolean isEoiEvidenceCreated;
     private String eoiEvidenceFileName;
+    private List<String> validEoiEvidenceFileTypes;
+    private CompetitionEoiEvidenceConfigResource eoiEvidenceConfigResource;
+    private boolean userFromLeadOrganisation;
 
     public TrackViewModel(CompetitionResource currentCompetition,
                           ApplicationResource currentApplication,
@@ -25,7 +30,10 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
                           BigDecimal completedQuestionsPercentage,
                           boolean reopenLinkVisible,
                           boolean isEoiEvidenceCreated,
-                          String eoiEvidenceFileName) {
+                          String eoiEvidenceFileName,
+                          List<String> validEoiEvidenceFileTypes,
+                          CompetitionEoiEvidenceConfigResource eoiEvidenceConfigResource,
+                          boolean userFromLeadOrganisation) {
         this.currentCompetition = currentCompetition;
         this.currentApplication = currentApplication;
         this.earlyMetricsUrl = earlyMetricsUrl;
@@ -33,6 +41,9 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
         this.reopenLinkVisible = reopenLinkVisible;
         this.isEoiEvidenceCreated = isEoiEvidenceCreated;
         this.eoiEvidenceFileName = eoiEvidenceFileName;
+        this.validEoiEvidenceFileTypes = validEoiEvidenceFileTypes;
+        this.eoiEvidenceConfigResource = eoiEvidenceConfigResource;
+        this.userFromLeadOrganisation = userFromLeadOrganisation;
     }
 
     @Override
@@ -87,6 +98,18 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
 
     public String getEoiEvidenceFileName() {
         return eoiEvidenceFileName;
+    }
+
+    public List<String> getValidEoiEvidenceFileTypes() {
+        return validEoiEvidenceFileTypes;
+    }
+
+    public CompetitionEoiEvidenceConfigResource getEoiEvidenceConfigResource() {
+        return eoiEvidenceConfigResource;
+    }
+
+    public boolean isUserFromLeadOrganisation() {
+        return userFromLeadOrganisation;
     }
 
     public boolean isDisplayIfsAssessmentInformation() {

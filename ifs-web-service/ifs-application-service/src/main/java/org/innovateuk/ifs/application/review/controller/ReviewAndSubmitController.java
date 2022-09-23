@@ -4,11 +4,10 @@ import org.innovateuk.ifs.application.forms.form.ApplicationReopenForm;
 import org.innovateuk.ifs.application.forms.form.ApplicationSubmitForm;
 import org.innovateuk.ifs.application.forms.form.EoiEvidenceForm;
 import org.innovateuk.ifs.application.forms.populator.EoiEvidenceFormPopulator;
-import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceResponseResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.review.populator.ReviewAndSubmitViewModelPopulator;
+import org.innovateuk.ifs.application.review.populator.TrackViewModelPopulator;
 import org.innovateuk.ifs.application.review.viewmodel.ReviewAndSubmitViewModel;
-import org.innovateuk.ifs.application.review.viewmodel.TrackViewModel;
 import org.innovateuk.ifs.application.service.ApplicationEoiEvidenceResponseRestService;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
@@ -21,8 +20,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.CovidType;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.file.service.FileEntryRestService;
-import org.innovateuk.ifs.file.service.FileUploadRestService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.horizon.service.HorizonWorkProgrammeRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -30,7 +27,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,7 +37,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.lang.Boolean.TRUE;
@@ -70,20 +65,12 @@ public class ReviewAndSubmitController {
     private ProcessRoleRestService processRoleRestService;
     @Autowired
     private HorizonWorkProgrammeRestService horizonWorkProgrammeRestService;
-
     @Autowired
-    private FileEntryRestService fileEntryRestService;
+    private TrackViewModelPopulator trackViewModelPopulator;
     @Autowired
     private ApplicationEoiEvidenceResponseRestService applicationEoiEvidenceResponseRestService;
-
-    @Autowired
-    private FileUploadRestService fileUploadRestService;
-
     @Autowired
     private EoiEvidenceFormPopulator eoiEvidenceFormPopulator;
-
-    @Value("${ifs.early.metrics.url}")
-    private String earlyMetricsUrl;
 
     @SecuredBySpring(value = "READ", description = "Applicants can review and submit their applications")
     @PreAuthorize("hasAnyAuthority('applicant')")
@@ -303,41 +290,6 @@ public class ReviewAndSubmitController {
         });
     }
 
-//        long organisationId = processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess().getOrganisationId();
-//
-//           MultipartFile eoiEvidence = form.getEoiEvidenceFile();
-//            RestResult<ApplicationEoiEvidenceResponseResource> eoiEvidenceUpload = applicationEoiEvidenceResponseRestService.uploadEoiEvidence(applicationId, organisationId, eoiEvidence.getContentType(), eoiEvidence.getSize());
-//            if (eoiEvidenceUpload.isFailure()) {
-//                eoiEvidenceUpload.getErrors().forEach(error ->
-//                        bindingResult.rejectValue("eoiEvidenceFile",  error.getErrorKey(), error.getArguments().toArray(), "Upload error"));
-//            } else {
-//                form.setEvidenceFileEntryName(eoiEvidence.getName());
-//            }
-//        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-//        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-//
-//        model.addAttribute("model", new TrackViewModel(
-//                    competition,
-//                    application,
-//                    earlyMetricsUrl,
-//                    application.getCompletion(),
-//                    canReopenApplication(application, loggedInUser, competition),
-//                    form.getEvidenceFileEntryName()
-//            ));
-//            return "horizon-europe-guarantee-eoi-application-track";
-//        }
-
-//    @GetMapping("/{applicationId}/view-eoi-evidence")
-//    public @ResponseBody
-//    ResponseEntity<ByteArrayResource> viewEoiEvidenceFile(
-//            @PathVariable("applicationId") final Long applicationId) {
-//
-//
-//        final FileEntryResource fileDetails = fileEntryRestService.findOne(applicationEoiEvidenceResponseRestService.findOneByApplicationId(applicationId).getSuccess().get().getFileEntryId()).getSuccess();
-//        final ByteArrayResource resource = fileservice;
-//        return getFileResponseEntity(resource, fileDetails);
-//    }
-
     @PostMapping(params = "remove-eoi-evidence")
     @AsyncMethod
     @PreAuthorize("hasAuthority('applicant')")
@@ -372,19 +324,10 @@ public class ReviewAndSubmitController {
             eoiEvidenceFormPopulator.populate(form, applicationId);
         }
 
-        Optional<ApplicationEoiEvidenceResponseResource> eoiEvidence = applicationEoiEvidenceResponseRestService.findOneByApplicationId(applicationId).getSuccess();
-        String eoiEvidenceFileName = eoiEvidence.map(applicationEoiEvidenceResponseResource -> fileEntryRestService.findOne(applicationEoiEvidenceResponseResource.getFileEntryId()).getSuccess().getName()).orElse(null);
-
-        model.addAttribute("model", new TrackViewModel(
-                competition,
-                application,
-                earlyMetricsUrl,
-                application.getCompletion(),
-                canReopenApplication(application, user, competition),
-                applicationEoiEvidenceResponseRestService.findOneByApplicationId(applicationId).getSuccess().isPresent(),
-                eoiEvidenceFileName));
+        model.addAttribute("model", trackViewModelPopulator.populate(applicationId,canReopenApplication(application, user, competition), user.getId()));
         return getTrackingPage(competition, application);
     }
+
 
     private String getTrackingPage(CompetitionResource competition, ApplicationResource application) {
         if (CovidType.ADDITIONAL_FUNDING.equals(competition.getCovidType())) {

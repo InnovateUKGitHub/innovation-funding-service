@@ -15,12 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.file.resource.FileTypeCategory.*;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
@@ -37,13 +36,6 @@ public class CompetitionEoiEvidenceConfigServiceImpl extends BaseTransactionalSe
 
     @Autowired
     private FileTypeRepository fileTypeRepository;
-
-    @Autowired
-    private CompetitionService competitionService;
-
-    private static final String PDF_FILE_TYPE = "PDF";
-    private static final String SPREADSHEET_FILE_TYPE = "Spreadsheet";
-    private static final String DOCUMENT_FILE_TYPE ="text document";
 
     @Override
     @Transactional
@@ -68,36 +60,27 @@ public class CompetitionEoiEvidenceConfigServiceImpl extends BaseTransactionalSe
     }
 
     @Override
-    public ServiceResult<List<CompetitionEoiDocumentResource>> findAllByCompetitionEoiEvidenceConfigId(long competitionEoiEvidenceConfigId) {
+    public ServiceResult<List<CompetitionEoiDocumentResource>> findAllByCompetitionEoiDocumentResources(long competitionEoiEvidenceConfigId) {
         return find(competitionEoiDocumentRepository.findByCompetitionEoiEvidenceConfigId(competitionEoiEvidenceConfigId), notFoundError(CompetitionEoiDocumentResource.class, competitionEoiEvidenceConfigId))
                 .andOnSuccessReturn(competitionEoiDocumentMapper::mapToResource);
     }
 
     @Override
-    public ServiceResult<List<String>> getValidMediaTypesForEoiEvidence(long competitionEoiEvidenceConfigId) {
-        return findAllByCompetitionEoiEvidenceConfigId(competitionEoiEvidenceConfigId).andOnSuccessReturn(eoiEvidenceConfig -> getMediaTypes(eoiEvidenceConfig.stream().map(CompetitionEoiDocumentResource::getFileTypeId).collect(Collectors.toList())));
+    public ServiceResult<List<Long>> getValidFileTypesIdsForEoiEvidence(long competitionEoiEvidenceConfigId) {
+        return serviceSuccess(findAllByCompetitionEoiDocumentResources(competitionEoiEvidenceConfigId)
+                .getSuccess()
+                .stream()
+                .map(CompetitionEoiDocumentResource::getFileTypeId)
+                .collect(Collectors.toList()));
     }
 
-    private List<String> getMediaTypes(List<Long> fileTypeIds) {
-        List<String> validMediaTypes = new ArrayList<>();
 
-//        fileTypeIds.forEach(fileTypeId -> validMediaTypes.add(fileTypeRepository.findById(fileTypeId).get().getExtension()));
-        for (Long fileTypeId : fileTypeIds) {
-            switch (fileTypeRepository.findById(fileTypeId).get().getName()) {
-                case PDF_FILE_TYPE:
-                    validMediaTypes.addAll(PDF.getMimeTypes());
-                    break;
-                case SPREADSHEET_FILE_TYPE:
-                    validMediaTypes.addAll(SPREADSHEET.getMimeTypes());
-                    break;
-                case DOCUMENT_FILE_TYPE:
-                    validMediaTypes.addAll(DOCUMENT.getMimeTypes());
-                    break;
-                default:
-                    // do nothing
-            }
-        }
-        return validMediaTypes;
-    }
-
+//    @Override
+//    public ServiceResult<List<String>> getValidMediaTypesForEoiEvidence(long competitionEoiEvidenceConfigId) {
+//        return serviceSuccess(findAllByCompetitionEoiDocumentResources(competitionEoiEvidenceConfigId)
+//                .getSuccess()
+//                .stream()
+//                .map(config -> fileTypeRepository.findById(config.getFileTypeId()).get().getName())
+//                .collect(Collectors.toList()));
+//    }
 }
