@@ -9,7 +9,9 @@ import org.innovateuk.ifs.competition.service.CompetitionEoiEvidenceConfigRestSe
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class EoiEvidenceReadOnlyViewModelPopulator {
 
     @Autowired
