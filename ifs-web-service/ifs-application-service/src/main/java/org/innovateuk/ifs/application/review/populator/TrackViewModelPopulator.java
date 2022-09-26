@@ -58,12 +58,11 @@ public class TrackViewModelPopulator {
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         Optional<ApplicationEoiEvidenceResponseResource> eoiEvidence = applicationEoiEvidenceResponseRestService.findOneByApplicationId(applicationId).getSuccess();
-        String eoiEvidenceFileName = eoiEvidence.map(applicationEoiEvidenceResponseResource ->
-                fileEntryRestService.findOne(applicationEoiEvidenceResponseResource.getFileEntryId()).getSuccess().getName()).orElse(null);
-
-
-
-        return new TrackViewModel(
+        String eoiEvidenceFileName = "";
+        if (eoiEvidence.isPresent() && eoiEvidence.get().getFileEntryId() != null) {
+            eoiEvidenceFileName = fileEntryRestService.findOne(eoiEvidence.get().getFileEntryId()).getSuccess().getName();
+        }
+           return new TrackViewModel(
                 competition,
                 application,
                 earlyMetricsUrl,

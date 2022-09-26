@@ -92,7 +92,7 @@ public class ApplicationEoiEvidenceResponseController {
     }
 
 
-    @PutMapping("/{applicationId}/eoi-evidence-response/delete/{userId}")
+    @DeleteMapping("/{applicationId}/eoi-evidence-response/delete/{userId}")
     public RestResult<ApplicationEoiEvidenceResponseResource> remove(@PathVariable("applicationId") long applicationId,
                                    @PathVariable("userId") long userId) {
 
@@ -100,10 +100,11 @@ public class ApplicationEoiEvidenceResponseController {
                 applicationEoiEvidenceResponseService.findOneByApplicationId(applicationId).getSuccess();
           UserResource userResource = baseUserService.getUserById(userId).getSuccess();
           if(applicationEoiEvidenceResponseResource.isPresent()) {
-              return applicationEoiEvidenceResponseService.remove(applicationEoiEvidenceResponseResource.get(),  userResource).toGetResponse();
+              ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseRes =  applicationEoiEvidenceResponseService.remove(applicationEoiEvidenceResponseResource.get(), userResource).getSuccess();
+              return RestResult.restSuccess(applicationEoiEvidenceResponseRes);
           }
-          //TODO need to make this as void
-          return RestResult.restSuccess(new ApplicationEoiEvidenceResponseResource());
+          //TODO error handling
+        return RestResult.restSuccess(new ApplicationEoiEvidenceResponseResource());
     }
 
     @PostMapping(value = "/{applicationId}/eoi-evidence-response/submit/{userId}", produces = "application/json")

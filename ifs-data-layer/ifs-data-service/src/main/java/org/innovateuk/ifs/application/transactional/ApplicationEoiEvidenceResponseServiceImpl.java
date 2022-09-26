@@ -151,22 +151,25 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
     @Transactional
     public ServiceResult<ApplicationEoiEvidenceResponseResource> remove(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource) {
         Long applicationId = applicationEoiEvidenceResponseResource.getApplicationId();
+        Long fileEntryId = applicationEoiEvidenceResponseResource.getFileEntryId();
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
                 .andOnSuccess((application) -> {
-                    Optional<ApplicationEoiEvidenceResponse> optionalApplicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.findById(applicationEoiEvidenceResponseResource.getId());
+                    Optional<ApplicationEoiEvidenceResponse> optionalApplicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.findOneByApplicationId(applicationId);
                     if (optionalApplicationEoiEvidenceResponse.isPresent()) {
                         ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = optionalApplicationEoiEvidenceResponse.get();
                         applicationEoiEvidenceResponse.setFileEntry(null);
-                        FileEntry fileEntry = applicationEoiEvidenceResponse.getFileEntry();
-                        fileService.deleteFileIgnoreNotFound(fileEntry.getId()).andOnSuccess(() -> {
-                           applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse);
-                        });
-                        return removeApplicationEoiEvidenceWorkflow(application, applicationEoiEvidenceResponse, userResource)
-                                .andOnSuccess(removedApplicationEoiEvidenceResponse -> serviceSuccess(applicationEoiEvidenceResponseMapper.mapToResource(removedApplicationEoiEvidenceResponse)));
-                    } else {
+                        applicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse);
+                     return removeApplicationEoiEvidenceWorkflow(application, applicationEoiEvidenceResponse, userResource)
+                             .andOnSuccess(removedApplicationEoiEvidenceResponse ->
+                                {
+                                    fileService.deleteFileIgnoreNotFound(fileEntryId);
+                                    return serviceSuccess(applicationEoiEvidenceResponseMapper.mapToResource(removedApplicationEoiEvidenceResponse));
+                                });
+                       } else {
                         return serviceFailure(CommonFailureKeys.APPLICATION_UNABLE_TO_FIND_UPLOADED_EOI_EVIDENCE);
                     }
-                });
+    });
+
     }
 
     private ServiceResult<ApplicationEoiEvidenceResponse> removeApplicationEoiEvidenceWorkflow(Application application, ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse, UserResource userResource) {
@@ -185,7 +188,7 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
         Long applicationId = applicationEoiEvidenceResponseResource.getApplicationId();
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
                 .andOnSuccess((application) -> {
-                    Optional<ApplicationEoiEvidenceResponse> optionalApplicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.findOneByApplicationId(application.getId());
+                    Optional<ApplicationEoiEvidenceResponse> optionalApplicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.findOneByApplicationId(applicationId);                            applicationEoiEvidenceResponseRepository.findOneByApplicationId(application.getId());
                     if (optionalApplicationEoiEvidenceResponse.isPresent()) {
                         ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = optionalApplicationEoiEvidenceResponse.get();
                         ProcessRole processRole = application.getLeadApplicantProcessRole();

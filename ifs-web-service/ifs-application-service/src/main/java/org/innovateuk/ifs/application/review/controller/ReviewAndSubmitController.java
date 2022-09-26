@@ -291,7 +291,8 @@ public class ReviewAndSubmitController {
         });
     }
 
-    @PostMapping(params = "remove-eoi-evidence")
+
+    @PostMapping(value="/{applicationId}/track", params = "remove-eoi-evidence")
     @AsyncMethod
     @PreAuthorize("hasAuthority('applicant')")
     @SecuredBySpring(value = "REMOVE_EOI_EVIDENCE", description = "Lead applicant can remove their eoi evidence")
