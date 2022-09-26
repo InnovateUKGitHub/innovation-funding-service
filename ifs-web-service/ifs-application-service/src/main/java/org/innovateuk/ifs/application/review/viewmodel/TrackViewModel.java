@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.review.viewmodel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
+import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceState;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
@@ -11,6 +12,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceState.*;
+
 public class TrackViewModel implements BaseAnalyticsViewModel {
 
     private CompetitionResource currentCompetition;
@@ -18,7 +21,7 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
     private String earlyMetricsUrl;
     private BigDecimal completedQuestionsPercentage;
     private boolean reopenLinkVisible;
-    private boolean isEoiEvidenceCreated;
+    private ApplicationEoiEvidenceState applicationEoiEvidenceState;
     private String eoiEvidenceFileName;
     private List<String> validEoiEvidenceFileTypes;
     private CompetitionEoiEvidenceConfigResource eoiEvidenceConfigResource;
@@ -29,7 +32,7 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
                           String earlyMetricsUrl,
                           BigDecimal completedQuestionsPercentage,
                           boolean reopenLinkVisible,
-                          boolean isEoiEvidenceCreated,
+                          ApplicationEoiEvidenceState applicationEoiEvidenceState,
                           String eoiEvidenceFileName,
                           List<String> validEoiEvidenceFileTypes,
                           CompetitionEoiEvidenceConfigResource eoiEvidenceConfigResource,
@@ -39,7 +42,7 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
         this.earlyMetricsUrl = earlyMetricsUrl;
         this.completedQuestionsPercentage = completedQuestionsPercentage;
         this.reopenLinkVisible = reopenLinkVisible;
-        this.isEoiEvidenceCreated = isEoiEvidenceCreated;
+        this.applicationEoiEvidenceState = applicationEoiEvidenceState;
         this.eoiEvidenceFileName = eoiEvidenceFileName;
         this.validEoiEvidenceFileTypes = validEoiEvidenceFileTypes;
         this.eoiEvidenceConfigResource = eoiEvidenceConfigResource;
@@ -92,8 +95,8 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
         return reopenLinkVisible;
     }
 
-    public boolean isEoiEvidenceCreated() {
-        return isEoiEvidenceCreated;
+    public ApplicationEoiEvidenceState getApplicationEoiEvidenceState() {
+        return applicationEoiEvidenceState;
     }
 
     public String getEoiEvidenceFileName() {
@@ -121,5 +124,25 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
     @JsonIgnore
     public FundingType getProcurementFundingType() {
         return FundingType.PROCUREMENT;
+    }
+
+    @JsonIgnore
+    public boolean isEoiEvidenceSubmitted() {
+        return applicationEoiEvidenceState == SUBMITTED;
+    }
+
+    @JsonIgnore
+    public boolean isEoiEvidenceCreatedAndNotSubmitted() {
+        return applicationEoiEvidenceState == NOT_SUBMITTED;
+    }
+
+    @JsonIgnore
+    public boolean isEoiEvidenceIsRemoved() {
+        return applicationEoiEvidenceState == REMOVED;
+    }
+
+    @JsonIgnore
+    public boolean showFeedBackSection() {
+        return applicationEoiEvidenceState == SUBMITTED || (currentCompetition.getCompetitionEoiEvidenceConfigResource().isEvidenceRequired() && !userFromLeadOrganisation);
     }
 }

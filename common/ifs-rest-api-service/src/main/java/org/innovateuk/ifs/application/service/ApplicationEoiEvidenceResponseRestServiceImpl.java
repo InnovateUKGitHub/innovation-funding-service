@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceResponseResource;
+import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceState;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -34,5 +35,10 @@ public class ApplicationEoiEvidenceResponseRestServiceImpl extends BaseRestServi
     @Override
     public RestResult <Optional<ApplicationEoiEvidenceResponseResource>> findOneByApplicationId(long applicationId) {
         return getWithRestResult(URL + "/" +  applicationId + "/eoi-evidence-response" , ApplicationEoiEvidenceResponseResource.class).toOptionalIfNotFound();
+    }
+
+    @Override
+    public RestResult<Optional<ApplicationEoiEvidenceState>> getApplicationEoiEvidenceState(long applicationId) {
+        return getWithRestResult(URL + "/" +  applicationId + "/eoi-evidence-response-process-state", ApplicationEoiEvidenceState.class).toOptionalIfNotFound();
     }
 }

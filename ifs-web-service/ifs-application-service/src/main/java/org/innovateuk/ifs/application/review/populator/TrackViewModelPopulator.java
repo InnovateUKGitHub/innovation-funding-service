@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.review.populator;
 
 import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceResponseResource;
+import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceState;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.review.viewmodel.TrackViewModel;
 import org.innovateuk.ifs.application.service.ApplicationEoiEvidenceResponseRestService;
@@ -60,13 +61,15 @@ public class TrackViewModelPopulator {
         String eoiEvidenceFileName = eoiEvidence.map(applicationEoiEvidenceResponseResource ->
                 fileEntryRestService.findOne(applicationEoiEvidenceResponseResource.getFileEntryId()).getSuccess().getName()).orElse(null);
 
+
+
         return new TrackViewModel(
                 competition,
                 application,
                 earlyMetricsUrl,
                 application.getCompletion(),
                 canReopenApplication,
-                eoiEvidence.isPresent(),
+                getApplicationEoiEvidenceState(applicationId),
                 eoiEvidenceFileName,
                 getValidEoiEvidenceFileTypes(competition.getId()),
                 competition.getCompetitionEoiEvidenceConfigResource(),
@@ -96,5 +99,9 @@ public class TrackViewModelPopulator {
         } else {
             return userProcessRoleResource.getOrganisationId().equals(leadOrganisationId);
         }
+    }
+
+    private ApplicationEoiEvidenceState getApplicationEoiEvidenceState(long applicationId) {
+        return applicationEoiEvidenceResponseRestService.getApplicationEoiEvidenceState(applicationId).getSuccess().orElse(null);
     }
 }

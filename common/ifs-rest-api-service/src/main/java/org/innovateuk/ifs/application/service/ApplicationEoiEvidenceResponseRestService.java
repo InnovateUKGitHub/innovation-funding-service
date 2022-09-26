@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceResponseResource;
+import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceState;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -15,5 +16,7 @@ public interface ApplicationEoiEvidenceResponseRestService {
 
     RestResult<ApplicationEoiEvidenceResponseResource> delete(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource);
 
-    RestResult <Optional<ApplicationEoiEvidenceResponseResource>> findOneByApplicationId(long applicationId);
+    RestResult<Optional<ApplicationEoiEvidenceResponseResource>> findOneByApplicationId(long applicationId);
+
+    RestResult<Optional<ApplicationEoiEvidenceState>> getApplicationEoiEvidenceState(long applicationId);
 }

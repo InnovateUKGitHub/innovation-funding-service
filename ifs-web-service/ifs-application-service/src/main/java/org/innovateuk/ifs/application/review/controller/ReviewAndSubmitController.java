@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.forms.form.ApplicationReopenForm;
 import org.innovateuk.ifs.application.forms.form.ApplicationSubmitForm;
 import org.innovateuk.ifs.application.forms.form.EoiEvidenceForm;
 import org.innovateuk.ifs.application.forms.populator.EoiEvidenceFormPopulator;
+import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceResponseResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.review.populator.ReviewAndSubmitViewModelPopulator;
 import org.innovateuk.ifs.application.review.populator.TrackViewModelPopulator;
@@ -290,7 +291,7 @@ public class ReviewAndSubmitController {
         });
     }
 
-    @PostMapping(value="/{applicationId}/track", params = "remove-eoi-evidence")
+    @PostMapping(params = "remove-eoi-evidence")
     @AsyncMethod
     @PreAuthorize("hasAuthority('applicant')")
     @SecuredBySpring(value = "REMOVE_EOI_EVIDENCE", description = "Lead applicant can remove their eoi evidence")
@@ -307,18 +308,29 @@ public class ReviewAndSubmitController {
 
 
     @PostMapping(value="/{applicationId}/track", params = "submit-eoi-evidence")
-    @AsyncMethod
     @PreAuthorize("hasAuthority('applicant')")
-  //  @SecuredBySpring(value = "REMOVE_EOI_EVIDENCE", description = "Lead applicant can remove their eoi evidence")
     public String submitEoiEvidenceResponse(@PathVariable("applicationId") long applicationId,
                                             @ModelAttribute("form") EoiEvidenceForm form,
+                                            @SuppressWarnings("unused") BindingResult bindingResult,
+                                            ValidationHandler validationHandler,
                                             Model model,
                                             UserResource loggedInUser) {
+        ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = applicationEoiEvidenceResponseRestService.findOneByApplicationId(applicationId).getSuccess().get();
+        Supplier<String> failureView = () -> applicationTrack(model, applicationId, form, loggedInUser);
+        Supplier<String> successView = () -> applicationTrack(model, applicationId, form, loggedInUser);
 
-        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-        applicationEoiEvidenceResponseRestService.submitEoiEvidence(application.getApplicationEoiEvidenceResponseResource(), loggedInUser).getSuccess();
-        return "redirect:/application/" + applicationId + "/track";
-    }
+        return validationHandler.failNowOrSucceedWith(
+                failureView,
+                () -> {
+                    validationHandler.addAnyErrors(applicationEoiEvidenceResponseRestService.submitEoiEvidence(applicationEoiEvidenceResponseResource, loggedInUser));
+                    return validationHandler.failNowOrSucceedWith(failureView, successView);
+                    });
+                }
+
+//        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+//        applicationEoiEvidenceResponseRestService.submitEoiEvidence(application.getApplicationEoiEvidenceResponseResource(), loggedInUser).getSuccess();
+//        return "redirect:/application/" + applicationId + "/track";
+
 
     @SecuredBySpring(value = "APPLICANT_TRACK", description = "Applicants and kta can track their application after submitting.")
     @PreAuthorize("hasAnyAuthority('applicant', 'knowledge_transfer_adviser')")
@@ -336,7 +348,7 @@ public class ReviewAndSubmitController {
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         if (competition.getCompetitionEoiEvidenceConfigResource().isEvidenceRequired()) {
-            eoiEvidenceFormPopulator.populate(form, applicationId);
+            eoiEvidenceFormPopulator.populate(applicationId);
         }
 
         model.addAttribute("model", trackViewModelPopulator.populate(applicationId,canReopenApplication(application, user, competition), user.getId()));

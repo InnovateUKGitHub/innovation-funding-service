@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceResponseResource;
+import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceState;
 import org.innovateuk.ifs.application.transactional.ApplicationEoiEvidenceResponseService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -91,7 +92,7 @@ public class ApplicationEoiEvidenceResponseController {
     }
 
 
-    @DeleteMapping("/{applicationId}/eoi-evidence-response/delete/{userId}")
+    @PutMapping("/{applicationId}/eoi-evidence-response/delete/{userId}")
     public RestResult<ApplicationEoiEvidenceResponseResource> remove(@PathVariable("applicationId") long applicationId,
                                    @PathVariable("userId") long userId) {
 
@@ -105,7 +106,7 @@ public class ApplicationEoiEvidenceResponseController {
           return RestResult.restSuccess(new ApplicationEoiEvidenceResponseResource());
     }
 
-    @PostMapping("/{applicationId}/eoi-evidence-response/submit/{userId}")
+    @PostMapping(value = "/{applicationId}/eoi-evidence-response/submit/{userId}", produces = "application/json")
     public RestResult<Void> submitEoiEvidence(@PathVariable("applicationId") long applicationId,
                                               @PathVariable("userId") long userId) {
 
@@ -113,16 +114,22 @@ public class ApplicationEoiEvidenceResponseController {
                 applicationEoiEvidenceResponseService.findOneByApplicationId(applicationId).getSuccess();
         UserResource userResource = baseUserService.getUserById(userId).getSuccess();
         if(applicationEoiEvidenceResponseResource.isPresent()) {
-            return applicationEoiEvidenceResponseService.submit(applicationEoiEvidenceResponseResource.get(),  userResource).toGetResponse();
+            return applicationEoiEvidenceResponseService.submit(applicationEoiEvidenceResponseResource.get(),  userResource).toPostResponse();
         }
         return RestResult.restSuccess();
     }
 
 
     @GetMapping ("/{applicationId}/eoi-evidence-response")
-    public RestResult <Optional<ApplicationEoiEvidenceResponseResource>> findOneByApplicationId(@PathVariable("applicationId") long applicationId) {
+    public RestResult<Optional<ApplicationEoiEvidenceResponseResource>> findOneByApplicationId(@PathVariable("applicationId") long applicationId) {
         return applicationEoiEvidenceResponseService.findOneByApplicationId(applicationId).toGetResponse();
     }
+
+    @GetMapping ("/{applicationId}/eoi-evidence-response-process-state")
+    public RestResult<Optional<ApplicationEoiEvidenceState>> getApplicationEoiEvidenceState(@PathVariable("applicationId") long applicationId) {
+        return applicationEoiEvidenceResponseService.getApplicationEoiEvidenceState(applicationId).toGetResponse();
+    }
+
     public ServiceResult<UserResource> getUserById(long id) {
         return find(userRepository.findById(id), notFoundError(UserResource.class, id)).andOnSuccessReturn(userMapper::mapToResource);
     }

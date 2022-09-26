@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceResponseResource;
+import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceState;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -26,7 +27,10 @@ public interface ApplicationEoiEvidenceResponseService {
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<ApplicationEoiEvidenceResponseResource> remove(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource);
 
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    ServiceResult<Optional<ApplicationEoiEvidenceResponseResource>> findOneByApplicationId(long applicationId);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
-    ServiceResult <Optional<ApplicationEoiEvidenceResponseResource>> findOneByApplicationId(long applicationId);
+    ServiceResult<Optional<ApplicationEoiEvidenceState>> getApplicationEoiEvidenceState(long applicationId);
+
 }

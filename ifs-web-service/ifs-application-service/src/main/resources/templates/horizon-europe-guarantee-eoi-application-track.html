@@ -44,7 +44,8 @@
                     <div class="govuk-details__text wysiwyg-styles">
                         <p class="govuk-body" th:text="${model.eoiEvidenceConfigResource.evidenceGuidance}"></p>
                         <p class="govuk-body govuk-!-margin-bottom-0"><strong>Accepted file types</strong>
-                        <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0" th:each="type : ${model.validEoiEvidenceFileTypes}">
+                        <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0"
+                            th:each="type : ${model.validEoiEvidenceFileTypes}">
                             <li th:text="${type}"></li>
                         </ul>
                         </p>
@@ -57,7 +58,7 @@
                       method="post"
                       id="upload-document-form"
                       enctype="multipart/form-data"
-                      th:with="viewmode='edit',
+                      th:with="viewmode=${model.isEoiEvidenceSubmitted() ? 'readonly' : 'edit'},
                            downloadUrl=@{/application/{applicationId}/view-eoi-evidence(applicationId=${model.currentApplication.id})},
                            filename=${model.eoiEvidenceFileName},
                            inputField='eoiEvidenceFile',
@@ -67,27 +68,31 @@
                            saveName='upload-eoi-evidence'">
 
                     <!--/* file is not uploaded */-->
-                    <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
-
-                    <button id="submit-eoi-evidence"  type="submit" name="submit-eoi-evidence"
-                            class="govuk-button govuk-!-margin-top-6" value="true">Submit for review
-                    </button>
-
+                    <th:block
+                            th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})"/>
                 </form>
-
             </div>
-        </th:block>
 
-        <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
-            <button id="submit_eoi_evidence" type="submit" name="submit-eoi-evidence"
-                    class="button govuk-!-margin-top-6" value="true">Submit for review
-            </button>
-        </form>
+            <th:block th:unless="${model.isEoiEvidenceSubmitted()}">
+                <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+                      method="post">
+                    <button th:disabled="${!model.isEoiEvidenceCreatedAndNotSubmitted() or model.isEoiEvidenceIsRemoved()}"
+                            id="submit-eoi-evidence"
+                            type="submit" name="submit-eoi-evidence"
+                            class="govuk-button govuk-!-margin-top-8" value="true">Submit for review
+                    </button>
+                </form>
+            </th:block>
+
+
+
+        </th:block>
 
 <!--        temporary adding the feedback for partner org only-->
         <th:block
-                th:unless="${model.currentCompetition.competitionEoiEvidenceConfigResource.evidenceRequired && model.userFromLeadOrganisation}">
+                th:unless="${!model.showFeedBackSection()}">
             <div class="govuk-!-margin-top-6">
+                <h3 class="govuk-heading-m govuk-!-margin-bottom-6">Feedback</h3>
                 <p class="govuk-body">You can give feedback to help us improve this service. This should
                     take no
                     more than 2 minutes.</p>

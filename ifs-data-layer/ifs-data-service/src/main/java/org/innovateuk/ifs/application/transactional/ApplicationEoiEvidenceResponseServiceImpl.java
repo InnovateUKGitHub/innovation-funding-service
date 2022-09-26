@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.mapper.ApplicationEoiEvidenceResponseMappe
 import org.innovateuk.ifs.application.repository.ApplicationEoiEvidenceResponseRepository;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceResponseResource;
+import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceState;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationEoiEvidenceWorkflowHandler;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -202,4 +203,10 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
     public ServiceResult <Optional<ApplicationEoiEvidenceResponseResource>> findOneByApplicationId(long applicationId) {
         return serviceSuccess(applicationEoiEvidenceResponseRepository.findOneByApplicationId(applicationId).map(applicationEoiEvidenceResponseMapper::mapToResource));
     }
+
+    @Override
+    public ServiceResult<Optional<ApplicationEoiEvidenceState>> getApplicationEoiEvidenceState(long applicationId) {
+        return serviceSuccess(applicationEoiEvidenceResponseRepository.findOneByApplicationId(applicationId).map(eoiEvidence -> eoiEvidence.getApplicationEoiEvidenceProcess().getProcessState()));
+    }
+
 }
