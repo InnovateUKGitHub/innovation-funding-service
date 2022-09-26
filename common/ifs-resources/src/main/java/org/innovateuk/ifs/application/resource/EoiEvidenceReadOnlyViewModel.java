@@ -7,7 +7,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 public class EoiEvidenceReadOnlyViewModel extends FileEntryResource {
 
     private Long applicationId;
-    private boolean leadOrganisationMember
+    private boolean leadOrganisationMember;
     private String title;
 
     public EoiEvidenceReadOnlyViewModel(Long applicationId, boolean leadOrganisationMember, String title, FileEntryResource fileEntryResource) {

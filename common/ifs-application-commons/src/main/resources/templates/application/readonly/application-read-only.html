@@ -189,14 +189,16 @@
 </th:block>
 
 <th:block th:fragment="eoi_evidence_view(model)">
-    <ul class="govuk-body">
-        <li class="govuk-form-group download">
-            <div class="govuk-heading-s govuk-!-margin-0" th:text="${model.title}">Proof of success</div>
-            <a target="_blank"
-               th:href="@{/application/{applicationId}/view-eoi-evidence(applicationId=${model.applicationId})}"
-               th:text="|${model.name}, ${model.getHumanReadableFileSize()} (opens in a new window)|">Eoi-evidance-plan.pdf, 438.00 KB</a>
-        </li>
-    </ul>
+    <th:block th:if="${model.isLeadOrganisationMember()}">
+        <ul class="govuk-body">
+            <li class="govuk-form-group download">
+                <div class="govuk-heading-s govuk-!-margin-0" th:text="${model.title}">Proof of success</div>
+                <a target="_blank"
+                   th:href="@{/application/{applicationId}/view-eoi-evidence(applicationId=${model.applicationId})}"
+                   th:text="|${model.name}, ${model.getHumanReadableFileSize()} (opens in a new window)|">Eoi-evidance-plan.pdf, 438.00 KB</a>
+            </li>
+        </ul>
+    </th:block>
 </th:block>
 
 <th:block th:fragment="supporter_feedback(model)">

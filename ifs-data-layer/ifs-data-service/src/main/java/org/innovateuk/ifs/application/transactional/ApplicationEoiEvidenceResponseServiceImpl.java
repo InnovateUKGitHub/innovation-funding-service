@@ -93,4 +93,10 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
                     }
                 });
     }
+
+    @Override
+    public ServiceResult <ApplicationEoiEvidenceResponseResource> findOneByApplicationId(long applicationId) {
+        return find(applicationEoiEvidenceResponseRepository.findOneByApplicationId(applicationId), notFoundError(ApplicationEoiEvidenceResponseResource.class, applicationId))
+                .andOnSuccessReturn(applicationEoiEvidenceResponseMapper::mapToResource);
+    }
 }
