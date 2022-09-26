@@ -26,7 +26,6 @@ public class ApplicationReadOnlyViewModel {
     private final boolean isLoanPartBEnabled;
     private final boolean isExpressionOfInterestApplication;
     private boolean eoiFullApplication;
-    private boolean leadOrganisationMember;
     private EoiEvidenceReadOnlyViewModel eoiEvidenceReadOnlyViewModel;
 
     public ApplicationReadOnlyViewModel(ApplicationReadOnlySettings settings,
