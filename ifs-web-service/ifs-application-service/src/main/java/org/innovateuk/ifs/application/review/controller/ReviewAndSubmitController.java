@@ -30,10 +30,8 @@ import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -43,7 +41,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.lang.Boolean.TRUE;
@@ -325,7 +322,7 @@ public class ReviewAndSubmitController {
                                             UserResource loggedInUser) {
         ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = applicationEoiEvidenceResponseRestService.findOneByApplicationId(applicationId).getSuccess().get();
         Supplier<String> failureView = () -> applicationTrack(model, applicationId, form, loggedInUser);
-        Supplier<String> successView = () -> applicationTrack(model, applicationId, form, loggedInUser);
+        Supplier<String> successView = () -> "redirect:/application/" + applicationId + "/track";
 
         return validationHandler.failNowOrSucceedWith(
                 failureView,

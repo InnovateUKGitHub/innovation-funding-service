@@ -137,12 +137,7 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
     }
 
     @JsonIgnore
-    public boolean isEoiEvidenceIsRemoved() {
-        return applicationEoiEvidenceState == REMOVED;
-    }
-
-    @JsonIgnore
     public boolean showFeedBackSection() {
-        return applicationEoiEvidenceState == SUBMITTED || (currentCompetition.getCompetitionEoiEvidenceConfigResource().isEvidenceRequired() && !userFromLeadOrganisation);
+        return (currentCompetition.getCompetitionEoiEvidenceConfigResource().isEvidenceRequired() && !userFromLeadOrganisation) || applicationEoiEvidenceState == SUBMITTED;
     }
 }
