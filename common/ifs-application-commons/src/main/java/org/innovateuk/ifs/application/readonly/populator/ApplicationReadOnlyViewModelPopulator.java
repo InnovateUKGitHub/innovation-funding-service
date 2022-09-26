@@ -143,7 +143,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 .map(this::resolve)
                 .collect(toCollection(LinkedHashSet::new));
 
-        EoiEvidenceReadOnlyViewModel eoiEvidenceReadOnlyViewModel = eoiEvidenceReadOnlyViewModelPopulator.populate(application);
+        EoiEvidenceReadOnlyViewModel eoiEvidenceReadOnlyViewModel = eoiEvidenceReadOnlyViewModelPopulator.populate(application, user);
 
         return new ApplicationReadOnlyViewModel(settings,
                 sectionViews,

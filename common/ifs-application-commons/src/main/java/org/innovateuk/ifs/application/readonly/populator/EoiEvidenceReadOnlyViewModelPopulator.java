@@ -8,11 +8,19 @@ import org.innovateuk.ifs.competition.resource.CompetitionEoiEvidenceConfigResou
 import org.innovateuk.ifs.competition.service.CompetitionEoiEvidenceConfigRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class EoiEvidenceReadOnlyViewModelPopulator {
+
+    @Autowired
+    private ProcessRoleRestService processRoleRestService;
 
     @Autowired
     private ApplicationEoiEvidenceResponseRestService applicationEoiEvidenceResponseRestService;
@@ -23,12 +31,17 @@ public class EoiEvidenceReadOnlyViewModelPopulator {
     @Autowired
     private FileEntryRestService fileEntryRestService;
 
-    public EoiEvidenceReadOnlyViewModel populate(ApplicationResource application) {
+    public EoiEvidenceReadOnlyViewModel populate(ApplicationResource application, UserResource user) {
+        List<ProcessRoleResource> processRoleResources = processRoleRestService.findProcessRole(application.getId()).getSuccess();
         ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = applicationEoiEvidenceResponseRestService.findOneByApplicationId(application.getId()).getSuccess();
         CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource = competitionEoiEvidenceConfigRestService.findOneByCompetitionId(application.getCompetition()).getSuccess();
         FileEntryResource fileEntryresource = fileEntryRestService.findOne(applicationEoiEvidenceResponseResource.getFileEntryId()).getSuccess();
 
-        return new EoiEvidenceReadOnlyViewModel(application.getId(), application.isEnabledForExpressionOfInterest(),true,
+        boolean partner = processRoleResources.stream()
+                .anyMatch(pr -> pr.getUser().equals(user.getId())
+                        && !pr.getOrganisationId().equals(application.getLeadOrganisationId()));
+
+        return new EoiEvidenceReadOnlyViewModel(application.getId(), application.isEnabledForExpressionOfInterest(), partner,
                 competitionEoiEvidenceConfigResource.getEvidenceTitle(), fileEntryresource);
     }
 }
