@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -33,12 +34,22 @@ public class ApplicationEoiEvidenceResponseRestServiceImpl extends BaseRestServi
     }
 
     @Override
-    public RestResult <Optional<ApplicationEoiEvidenceResponseResource>> findOneByApplicationId(long applicationId) {
-        return getWithRestResult(URL + "/" +  applicationId + "/eoi-evidence-response" , ApplicationEoiEvidenceResponseResource.class).toOptionalIfNotFound();
+    public  RestResult <Optional<ApplicationEoiEvidenceResponseResource>> findOneByApplicationId(long applicationId) {
+       return getWithRestResult(URL + "/" +  applicationId + "/eoi-evidence-response" , ApplicationEoiEvidenceResponseResource.class).toOptionalIfNotFound();
     }
 
     @Override
     public RestResult<Optional<ApplicationEoiEvidenceState>> getApplicationEoiEvidenceState(long applicationId) {
         return getWithRestResult(URL + "/" +  applicationId + "/eoi-evidence-response-process-state", ApplicationEoiEvidenceState.class).toOptionalIfNotFound();
+    }
+
+    @Override
+    public RestResult<ByteArrayResource> getEvidenceByApplication(Long applicationId) {
+        return getWithRestResult(URL + "/" + applicationId + "/view-eoi-evidence-file" , ByteArrayResource.class);
+    }
+
+    @Override
+    public RestResult<FileEntryResource> getEvidenceDetailsByApplication(Long applicationId) {
+        return getWithRestResult(URL + "/" + applicationId + "/view-eoi-evidence-file/details" , FileEntryResource.class);
     }
 }

@@ -81,7 +81,7 @@ public class ApplicationEoiEvidenceWorkflowHandler extends BaseWorkflowEventHand
                 .withPayload(eoiEvidenceEvent)
                 .setHeader("target", applicationEoiEvidenceResponse)
                 .setHeader("participant", participant)
-           //     .setHeader("internalParticipant", internalUser)
-              .setHeader("applicationEoiEvidenceProcess", applicationEoiEvidenceResponse.getApplicationEoiEvidenceProcess());
+          //      .setHeader("internalParticipant", internalUser)
+               .setHeader("applicationEoiEvidenceProcess", applicationEoiEvidenceResponse.getApplicationEoiEvidenceProcess());
     }
 }

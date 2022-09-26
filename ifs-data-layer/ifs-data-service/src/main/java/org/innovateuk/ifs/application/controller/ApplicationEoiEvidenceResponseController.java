@@ -11,6 +11,9 @@ import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.controller.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
+import org.innovateuk.ifs.file.resource.BasicFileAndContents;
+import org.innovateuk.ifs.file.resource.FileAndContents;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileService;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
@@ -19,9 +22,11 @@ import org.innovateuk.ifs.user.transactional.BaseUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -119,6 +124,19 @@ public class ApplicationEoiEvidenceResponseController {
         }
         return RestResult.restSuccess();
     }
+
+    @GetMapping ("/{applicationId}/view-eoi-evidence-file")
+    public @ResponseBody
+    ResponseEntity<Object> getEvidenceByApplication(
+            @PathVariable("applicationId") long applicationId) throws IOException {
+        return fileControllerUtils.handleFileDownload(() -> applicationEoiEvidenceResponseService.getEvidenceFileContents(applicationId));
+    }
+
+    @GetMapping ("/{applicationId}/view-eoi-evidence-file/details")
+    public RestResult<FileEntryResource> getEvidenceDetailsByApplication(@PathVariable("applicationId") long applicationId) throws IOException {
+        return applicationEoiEvidenceResponseService.getEvidenceFileEntryDetails(applicationId).toGetResponse();
+    }
+
 
 
     @GetMapping ("/{applicationId}/eoi-evidence-response")

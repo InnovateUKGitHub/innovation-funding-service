@@ -13,6 +13,9 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.CompetitionEoiEvidenceConfig;
 import org.innovateuk.ifs.competition.transactional.CompetitionEoiEvidenceConfigService;
 import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.file.mapper.FileEntryMapper;
+import org.innovateuk.ifs.file.resource.BasicFileAndContents;
+import org.innovateuk.ifs.file.resource.FileAndContents;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileService;
 import org.innovateuk.ifs.file.service.FileTypeService;
@@ -64,6 +67,9 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
     @Autowired
     private FileTypeService fileTypeService;
 
+    @Autowired
+    private FileEntryMapper fileEntryMapper;
+
     @Override
     @Transactional
     public ServiceResult<ApplicationEoiEvidenceResponseResource> upload(long applicationId, long organisationId, UserResource userResource, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
@@ -71,26 +77,26 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
                 .andOnSuccess(config -> isValidFileEntryType(applicationId, fileEntryResource))
                 .andOnSuccess(() -> fileService.createFile(fileEntryResource, inputStreamSupplier)
                         .andOnSuccessReturn(fileDetails -> {
-                            Optional<ApplicationEoiEvidenceResponse> optionalApplicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.findOneByApplicationId(applicationId);
-                            ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource;
-                            if (optionalApplicationEoiEvidenceResponse.isPresent()) {
-                                applicationEoiEvidenceResponseResource = applicationEoiEvidenceResponseMapper.mapToResource(optionalApplicationEoiEvidenceResponse.get());
-                                applicationEoiEvidenceResponseResource.setFileEntryId(fileDetails.getId());
-                            } else {
-                                applicationEoiEvidenceResponseResource = new ApplicationEoiEvidenceResponseResource(applicationId, organisationId, fileDetails.getId());
-                            }
-                            return upload(applicationEoiEvidenceResponseResource, userResource).getSuccess();
+                             return upload(applicationId, organisationId , userResource, fileDetails).getSuccess();
                         })
                 );
     }
 
 
-    private ServiceResult<ApplicationEoiEvidenceResponseResource> upload(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource) {
-        Long applicationId = applicationEoiEvidenceResponseResource.getApplicationId();
+    private ServiceResult<ApplicationEoiEvidenceResponseResource> upload(Long applicationId, Long organisationId, UserResource userResource, FileEntry fileEntry) {
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
                 .andOnSuccess((application) -> {
                     if (application.isSubmitted()) {
-                        ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = applicationEoiEvidenceResponseMapper.mapToDomain(applicationEoiEvidenceResponseResource);
+                        Optional<ApplicationEoiEvidenceResponse> optionalApplicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.findOneByApplicationId(applicationId);
+                        ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse;
+                        if (optionalApplicationEoiEvidenceResponse.isPresent()) {
+                            applicationEoiEvidenceResponse = optionalApplicationEoiEvidenceResponse.get();
+                            applicationEoiEvidenceResponse.setFileEntry(fileEntry);
+                        } else {
+                           applicationEoiEvidenceResponse =
+                                   applicationEoiEvidenceResponseMapper.mapToDomain(new ApplicationEoiEvidenceResponseResource(applicationId, organisationId, fileEntry.getId()));
+                        }
+
                         applicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse);
                         return uploadApplicationEoiEvidenceWorkflow(application, applicationEoiEvidenceResponse, userResource)
                                 .andOnSuccess(initialisedApplicationEoiEvidenceResponse -> serviceSuccess(applicationEoiEvidenceResponseMapper.mapToResource(initialisedApplicationEoiEvidenceResponse)));
@@ -200,6 +206,40 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
                         return serviceFailure(CommonFailureKeys.APPLICATION_UNABLE_TO_FIND_UPLOADED_EOI_EVIDENCE);
                     }
                 });
+    }
+
+    @Override
+    public ServiceResult<FileAndContents> getEvidenceFileContents(long applicationId) {
+           Optional<ApplicationEoiEvidenceResponse> optionalApplicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.findOneByApplicationId(applicationId);
+            if (optionalApplicationEoiEvidenceResponse.isPresent()) {
+            FileEntry fileEntry =   optionalApplicationEoiEvidenceResponse.get().getFileEntry();
+                return getFileAndContentsResult(fileEntry);
+               }
+            return null;
+       }
+
+    @Override
+    public ServiceResult<FileEntryResource> getEvidenceFileEntryDetails(Long applicationId) {
+
+        Optional<ApplicationEoiEvidenceResponse> optionalApplicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.findOneByApplicationId(applicationId);
+        if (optionalApplicationEoiEvidenceResponse.isPresent()) {
+            FileEntry fileEntry =   optionalApplicationEoiEvidenceResponse.get().getFileEntry();
+            if (fileEntry == null) {
+                return serviceFailure(notFoundError(FileEntry.class));
+            }
+
+            return serviceSuccess(fileEntryMapper.mapToResource(fileEntry));
+        }
+        return  null;
+    }
+
+    private ServiceResult<FileAndContents> getFileAndContentsResult(FileEntry fileEntry) {
+        if (fileEntry == null) {
+            return serviceFailure(notFoundError(FileEntry.class));
+        }
+
+        ServiceResult<Supplier<InputStream>> getFileResult = fileService.getFileByFileEntryId(fileEntry.getId());
+        return getFileResult.andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntryMapper.mapToResource(fileEntry), inputStream));
     }
 
     @Override

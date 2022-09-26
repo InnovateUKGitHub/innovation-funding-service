@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceState;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.core.io.ByteArrayResource;
 
 import java.util.Optional;
 
@@ -19,4 +20,7 @@ public interface ApplicationEoiEvidenceResponseRestService {
     RestResult<Optional<ApplicationEoiEvidenceResponseResource>> findOneByApplicationId(long applicationId);
 
     RestResult<Optional<ApplicationEoiEvidenceState>> getApplicationEoiEvidenceState(long applicationId);
+
+    RestResult<ByteArrayResource> getEvidenceByApplication(Long applicationId);
+    RestResult<FileEntryResource> getEvidenceDetailsByApplication(Long applicationId);
 }

@@ -21,6 +21,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.CovidType;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.horizon.service.HorizonWorkProgrammeRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -28,7 +29,11 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -38,12 +43,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
+import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 
 @Controller
 @RequestMapping("/application")
@@ -328,9 +335,17 @@ public class ReviewAndSubmitController {
                     });
                 }
 
-//        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-//        applicationEoiEvidenceResponseRestService.submitEoiEvidence(application.getApplicationEoiEvidenceResponseResource(), loggedInUser).getSuccess();
-//        return "redirect:/application/" + applicationId + "/track";
+    @GetMapping("/{applicationId}/view-eoi-evidence")
+    public
+    @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadEOIEvidenceFile(
+            @PathVariable("applicationId") final Long applicationId) {
+
+        final ByteArrayResource resource = applicationEoiEvidenceResponseRestService.getEvidenceByApplication(applicationId).getSuccess();
+        final FileEntryResource fileDetails = applicationEoiEvidenceResponseRestService.getEvidenceDetailsByApplication(applicationId).getSuccess();
+
+       return getFileResponseEntity(resource, fileDetails);
+    }
 
 
     @SecuredBySpring(value = "APPLICANT_TRACK", description = "Applicants and kta can track their application after submitting.")
