@@ -40,8 +40,23 @@ public class ApplicationReadOnlyViewModel {
                                         CompetitionThirdPartyConfigResource thirdPartyConfig,
                                         boolean isLoanPartBEnabled,
                                         boolean isExpressionOfInterestApplication,
+                                        boolean eoiFullApplication) {
+        this(settings, sections, applicationScore, overallFeedbacks, assignments, shouldDisplayKtpApplicationFeedback,
+                ktpCompetition, thirdPartyProcurement, thirdPartyConfig, isLoanPartBEnabled, isExpressionOfInterestApplication, eoiFullApplication, null);
+    }
+
+    public ApplicationReadOnlyViewModel(ApplicationReadOnlySettings settings,
+                                        Set<ApplicationSectionReadOnlyViewModel> sections,
+                                        BigDecimal applicationScore,
+                                        List<String> overallFeedbacks,
+                                        Map<String, List<SupporterAssignmentReadOnlyViewModel>> assignments,
+                                        boolean shouldDisplayKtpApplicationFeedback,
+                                        boolean ktpCompetition,
+                                        boolean thirdPartyProcurement,
+                                        CompetitionThirdPartyConfigResource thirdPartyConfig,
+                                        boolean isLoanPartBEnabled,
+                                        boolean isExpressionOfInterestApplication,
                                         boolean eoiFullApplication,
-                                        boolean leadOrganisationMember,
                                         EoiEvidenceReadOnlyViewModel eoiEvidenceReadOnlyViewModel) {
         this.settings = settings;
         this.sections = sections;
@@ -55,7 +70,6 @@ public class ApplicationReadOnlyViewModel {
         this.isLoanPartBEnabled = isLoanPartBEnabled;
         this.isExpressionOfInterestApplication = isExpressionOfInterestApplication;
         this.eoiFullApplication = eoiFullApplication;
-        this.leadOrganisationMember = leadOrganisationMember
         this.eoiEvidenceReadOnlyViewModel = eoiEvidenceReadOnlyViewModel;
     }
 
@@ -125,16 +139,8 @@ public class ApplicationReadOnlyViewModel {
         return eoiFullApplication;
     }
 
-    public boolean isLeadOrganisationMember() {
-        return leadOrganisationMember;
-    }
-
     @JsonIgnore
     public boolean shouldDisplayEoiEvidenceUpload() {
-        return isExpressionOfInterestApplication() && isLeadOrganisationMember();
-    }
-
-    public EoiEvidenceReadOnlyViewModel getEoiEvidenceReadOnlyViewModel() {
-        return eoiEvidenceReadOnlyViewModel;
+        return isExpressionOfInterestApplication();
     }
 }

@@ -93,10 +93,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
     private HorizonWorkProgrammeRestService horizonWorkProgrammeRestService;
 
     @Autowired
-    private ApplicationEoiEvidenceResponseRestService applicationEoiEvidenceResponseRestService;
-
-    @Autowired
-    private CompetitionEoiEvidenceConfigRestService competitionEoiEvidenceConfigRestService;
+    private EoiEvidenceReadOnlyViewModelPopulator eoiEvidenceReadOnlyViewModelPopulator;
 
     private Map<QuestionSetupType, QuestionReadOnlyViewModelPopulator<?>> populatorMap;
 
@@ -146,7 +143,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 .map(this::resolve)
                 .collect(toCollection(LinkedHashSet::new));
 
-        EoiEvidenceReadOnlyViewModel eoiEvidenceReadOnlyViewModel = new EoiEvidenceReadOnlyViewModel(data.getApplicationId(), null, null);
+        EoiEvidenceReadOnlyViewModel eoiEvidenceReadOnlyViewModel = eoiEvidenceReadOnlyViewModelPopulator.populate(application);
 
         return new ApplicationReadOnlyViewModel(settings,
                 sectionViews,

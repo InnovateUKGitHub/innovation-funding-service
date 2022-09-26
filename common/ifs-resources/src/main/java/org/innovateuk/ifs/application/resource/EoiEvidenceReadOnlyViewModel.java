@@ -7,12 +7,13 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 public class EoiEvidenceReadOnlyViewModel extends FileEntryResource {
 
     private Long applicationId;
+    private boolean leadOrganisationMember
     private String title;
 
-
-    public EoiEvidenceReadOnlyViewModel(Long applicationId, String title, FileEntryResource fileEntryResource) {
+    public EoiEvidenceReadOnlyViewModel(Long applicationId, boolean leadOrganisationMember, String title, FileEntryResource fileEntryResource) {
         super(fileEntryResource.getId(), fileEntryResource.getName(), fileEntryResource.getMediaType(), fileEntryResource.getFilesizeBytes());
         this.applicationId = applicationId;
+        this.leadOrganisationMember = leadOrganisationMember;
         this.title = title;
     }
 
@@ -22,6 +23,10 @@ public class EoiEvidenceReadOnlyViewModel extends FileEntryResource {
 
     public String getTitle() {
         return title;
+    }
+
+    public boolean isLeadOrganisationMember() {
+        return leadOrganisationMember;
     }
 
     @JsonIgnore
