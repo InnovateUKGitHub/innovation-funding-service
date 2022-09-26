@@ -163,7 +163,6 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 isLoanPartBEnabled,
                 data.getApplication().isEnabledForExpressionOfInterest(),
                 data.getApplication().isEoiFullApplication(),
-                false,
                 eoiEvidenceReadOnlyViewModel
         );
     }
