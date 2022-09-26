@@ -137,4 +137,15 @@ public class CompetitionPermissionRules extends BasePermissionRules {
     public boolean auditorCanViewPreviousApplications(CompetitionResource competition, UserResource user) {
         return  user.hasAuthority(Authority.AUDITOR);
     }
+
+    @PermissionRule(value = "VIEW_EOI_EVIDENCE_CONFIG", description = "Allowed for internal users to view eoi evidence config")
+    public boolean internalUsersCanReadEoiEvidenceConfigForCompetition(CompetitionResource competition, UserResource user) {
+        return isInternal(user);
+    }
+
+    @PermissionRule(value = "VIEW_EOI_EVIDENCE_CONFIG", description = "Allowed for lead organisation members of applications to view eoi evidence config")
+    public boolean leadOrganisationMembersCanReadEoiEvidenceConfigForCompetition(CompetitionResource competition, UserResource user) {
+        return applicationRepository.findByCompetitionId(competition.getId()).stream()
+                .anyMatch(application -> checkHasAnyApplicantParticipantRole(application.getId(), application.getLeadOrganisationId(), user));
+    }
 }

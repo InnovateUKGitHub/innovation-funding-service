@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionEoiDocumentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionEoiEvidenceConfigResource;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface CompetitionEoiEvidenceConfigService {
 
@@ -13,6 +14,6 @@ public interface CompetitionEoiEvidenceConfigService {
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<CompetitionEoiDocumentResource> createDocument(CompetitionEoiDocumentResource competitionEoiDocumentResource);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'VIEW_EOI_EVIDENCE_CONFIG')")
     ServiceResult<CompetitionEoiEvidenceConfigResource> findOneByCompetitionId(long competitionId);
 }

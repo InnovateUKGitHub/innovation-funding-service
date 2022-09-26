@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceResponseRes
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface ApplicationEoiEvidenceResponseService {
 
@@ -13,6 +14,6 @@ public interface ApplicationEoiEvidenceResponseService {
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> submit(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'VIEW_EOI_EVIDENCE_RESPONSE')")
     ServiceResult <ApplicationEoiEvidenceResponseResource> findOneByApplicationId(long applicationId);
 }
