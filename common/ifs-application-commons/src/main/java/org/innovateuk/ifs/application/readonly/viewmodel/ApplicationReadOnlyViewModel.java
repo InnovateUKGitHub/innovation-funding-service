@@ -40,22 +40,6 @@ public class ApplicationReadOnlyViewModel {
                                         CompetitionThirdPartyConfigResource thirdPartyConfig,
                                         boolean isLoanPartBEnabled,
                                         boolean isExpressionOfInterestApplication,
-                                        boolean eoiFullApplication) {
-        this(settings, sections, applicationScore, overallFeedbacks, assignments, shouldDisplayKtpApplicationFeedback,
-                ktpCompetition, thirdPartyProcurement, thirdPartyConfig, isLoanPartBEnabled, isExpressionOfInterestApplication, eoiFullApplication, null);
-    }
-
-    public ApplicationReadOnlyViewModel(ApplicationReadOnlySettings settings,
-                                        Set<ApplicationSectionReadOnlyViewModel> sections,
-                                        BigDecimal applicationScore,
-                                        List<String> overallFeedbacks,
-                                        Map<String, List<SupporterAssignmentReadOnlyViewModel>> assignments,
-                                        boolean shouldDisplayKtpApplicationFeedback,
-                                        boolean ktpCompetition,
-                                        boolean thirdPartyProcurement,
-                                        CompetitionThirdPartyConfigResource thirdPartyConfig,
-                                        boolean isLoanPartBEnabled,
-                                        boolean isExpressionOfInterestApplication,
                                         boolean eoiFullApplication,
                                         EoiEvidenceReadOnlyViewModel eoiEvidenceReadOnlyViewModel) {
         this.settings = settings;
@@ -139,8 +123,11 @@ public class ApplicationReadOnlyViewModel {
         return eoiFullApplication;
     }
 
-    @JsonIgnore
-    public boolean shouldDisplayEoiEvidenceUpload() {
-        return isExpressionOfInterestApplication();
+    public EoiEvidenceReadOnlyViewModel getEoiEvidenceReadOnlyViewModel() {
+        return eoiEvidenceReadOnlyViewModel;
+    }
+
+    public void setEoiEvidenceReadOnlyViewModel(EoiEvidenceReadOnlyViewModel eoiEvidenceReadOnlyViewModel) {
+        this.eoiEvidenceReadOnlyViewModel = eoiEvidenceReadOnlyViewModel;
     }
 }

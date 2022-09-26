@@ -16,7 +16,7 @@ public class CompetitionEoiEvidenceConfigController {
     @Autowired
     private CompetitionEoiEvidenceConfigService competitionEoiEvidenceConfigService;
 
-    @GetMapping("/{applicationId}/eoi-evidence-config")
+    @GetMapping("/{competitionId}/eoi-evidence-config")
     public RestResult<CompetitionEoiEvidenceConfigResource> findOneByApplicationId(@PathVariable("competitionId") long competitionId) {
         return competitionEoiEvidenceConfigService.findOneByCompetitionId(competitionId).toGetResponse();
     }

@@ -28,9 +28,7 @@ public class EoiEvidenceReadOnlyViewModelPopulator {
         CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource = competitionEoiEvidenceConfigRestService.findOneByCompetitionId(application.getCompetition()).getSuccess();
         FileEntryResource fileEntryresource = fileEntryRestService.findOne(applicationEoiEvidenceResponseResource.getFileEntryId()).getSuccess();
 
-        return new EoiEvidenceReadOnlyViewModel(application.getId(),
-                true,
-                competitionEoiEvidenceConfigResource.getEvidenceTitle(),
-                fileEntryresource);
+        return new EoiEvidenceReadOnlyViewModel(application.getId(), application.isEnabledForExpressionOfInterest(),true,
+                competitionEoiEvidenceConfigResource.getEvidenceTitle(), fileEntryresource);
     }
 }
