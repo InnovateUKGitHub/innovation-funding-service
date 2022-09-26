@@ -31,6 +31,8 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...
 ...               IFS-12569 HECP Phase 2 - Document upload - Sending notification
 ...
+...               IFS-12839 Pre-registration - Internal view - Question numbers appearing in question overview
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -290,12 +292,13 @@ Internal user marks the full application as successful and sent a notification
     Then the user reads his email                                   steve.smith@empire.com  Important message about your application '${hecpPreregAppName}' for the competition '${hecpPreregCompName}'  ${fullApplicationSuccessfulEmail}
 
 Internal user can view EOI application from full application
-    [Documentation]   IFS-12380
+    [Documentation]   IFS-12380  IFS-12839
     Given the user navigates to the page     ${server}/project-setup-management/competition/${preregCompetitionId}/status/all
     And the user clicks the button/link      link = ${preregApplicationID}
     When the user clicks the button/link     link = Expression of interest
     Then the user clicks the button/link     jQuery = h1:contains("Expression of interest overview")
     And the user should see the element      jQuery = h2:contains("Expression of interest questions")
+    And the user should see the element      jQuery = button:contains("Tell us where your organisation is based")
 
 #Lead applicant can delete unsubmitted applications from dashboard
 #    [Documentation]  IFS-12265

@@ -1,4 +1,3 @@
--- IFS-12827 - Investor Partnership - Terms and conditions V2
 SET @system_maintenance_user_id = (
     SELECT id
     FROM user
