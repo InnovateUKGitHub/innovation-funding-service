@@ -34,6 +34,9 @@
                 <p class="govuk-body" th:text="${model.assessment.getDecision().getComment()}">Feedback text</p>
             </section>
 
+            <div class="govuk-body govuk-!-margin-top-8">
+                <th:block th:insert="application/readonly/application-read-only :: eoi_evidence_view (${model.applicationReadOnlyViewModel.eoiEvidenceReadOnlyViewModel})" ></th:block>
+            </div>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
