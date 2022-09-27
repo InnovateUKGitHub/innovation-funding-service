@@ -22,6 +22,10 @@ ifs:
         salesforce:
             page:
                 url: https://loans-innovateuk.cs80.force.com/loansCommunity/s
+    impact-management:
+        salesforce:
+            page:
+                url: https://innovateuk--imdev.sandbox.my.site.com/IMCommunity/s
     new:
         organisation:
             search:
