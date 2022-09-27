@@ -74,9 +74,10 @@
             </div>
 
             <th:block th:unless="${model.isEoiEvidenceSubmitted()}">
-                <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+                <form th:action="@{/application/{applicationId}/track(applicationId=${model.currentApplication.id})}"
                       method="post">
                     <button th:disabled="${!model.isEoiEvidenceCreatedAndNotSubmitted()}"
+                            th:classappend="${!model.isEoiEvidenceCreatedAndNotSubmitted()} ? govuk-button--disabled"
                             id="submit-eoi-evidence"
                             type="submit" name="submit-eoi-evidence"
                             class="govuk-button govuk-!-margin-top-8" value="true">Submit for review

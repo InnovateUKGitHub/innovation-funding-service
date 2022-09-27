@@ -74,13 +74,4 @@ public class CompetitionEoiEvidenceConfigServiceImpl extends BaseTransactionalSe
                 .collect(Collectors.toList()));
     }
 
-
-//    @Override
-//    public ServiceResult<List<String>> getValidMediaTypesForEoiEvidence(long competitionEoiEvidenceConfigId) {
-//        return serviceSuccess(findAllByCompetitionEoiDocumentResources(competitionEoiEvidenceConfigId)
-//                .getSuccess()
-//                .stream()
-//                .map(config -> fileTypeRepository.findById(config.getFileTypeId()).get().getName())
-//                .collect(Collectors.toList()));
-//    }
 }

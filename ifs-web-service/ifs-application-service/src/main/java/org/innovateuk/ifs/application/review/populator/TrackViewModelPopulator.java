@@ -18,11 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.*;
 import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
 
 @Slf4j
@@ -62,7 +64,9 @@ public class TrackViewModelPopulator {
         if (eoiEvidence.isPresent() && eoiEvidence.get().getFileEntryId() != null) {
             eoiEvidenceFileName = fileEntryRestService.findOne(eoiEvidence.get().getFileEntryId()).getSuccess().getName();
         }
-           return new TrackViewModel(
+        List<String> getValidEoiEvidenceFileTypes = getValidEoiEvidenceFileTypes(competition.getId());
+        List<String> combinedMediaDisplayNameWithExtensions = getMediaDisplayNameWithExtensions(getValidEoiEvidenceFileTypes);
+        return new TrackViewModel(
                 competition,
                 application,
                 earlyMetricsUrl,
@@ -70,7 +74,7 @@ public class TrackViewModelPopulator {
                 canReopenApplication,
                 getApplicationEoiEvidenceState(applicationId),
                 eoiEvidenceFileName,
-                getValidEoiEvidenceFileTypes(competition.getId()),
+                combinedMediaDisplayNameWithExtensions,
                 competition.getCompetitionEoiEvidenceConfigResource(),
                 userFromLeadOrganisation(applicationId, userId));
     }
@@ -86,6 +90,27 @@ public class TrackViewModelPopulator {
         } else {
             return emptyList();
         }
+    }
+
+    private List<String> getMediaDisplayNameWithExtensions(List<String> mediaTypes) {
+        List<String> validMediaTypes = new ArrayList<>();
+
+        for (String mediaType : mediaTypes) {
+            switch (mediaType) {
+                case "PDF":
+                    validMediaTypes.add(PDF.getDisplayName() + " (.pdf)");
+                    break;
+                case "Spreadsheets":
+                    validMediaTypes.add(SPREADSHEET.getDisplayName() + " (.ods, .xls, .xlsx)");
+                    break;
+                case "Text":
+                    validMediaTypes.add(DOCUMENT.getDisplayName() + " (.odt, .doc, .docx)");
+                    break;
+                default:
+                    // do nothing
+            }
+        }
+        return validMediaTypes;
     }
 
     private boolean userFromLeadOrganisation(long applicationId, long userId) {

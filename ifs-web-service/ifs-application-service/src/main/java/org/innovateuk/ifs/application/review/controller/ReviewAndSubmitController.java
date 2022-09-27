@@ -290,11 +290,9 @@ public class ReviewAndSubmitController {
         eoiEvidenceForm.setEvidenceFileEntryName(file.getOriginalFilename());
         Supplier<String> view = () -> applicationTrack(model, applicationId, eoiEvidenceForm, user);
 
-        return validationHandler.performFileUpload("eoiEvidenceFile", view, () -> {
-            return applicationEoiEvidenceResponseRestService.uploadEoiEvidence(applicationId, organisationId,  user.getId(), file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
-        });
+        return validationHandler.performFileUpload("eoiEvidenceFile", view, () ->
+            applicationEoiEvidenceResponseRestService.uploadEoiEvidence(applicationId, organisationId, user.getId(), file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file)));
     }
-
 
     @PostMapping(value="/{applicationId}/track", params = "remove-eoi-evidence")
     @AsyncMethod
