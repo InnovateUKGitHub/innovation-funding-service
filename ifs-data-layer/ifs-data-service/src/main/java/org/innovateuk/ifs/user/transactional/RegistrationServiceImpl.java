@@ -379,7 +379,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     private ServiceResult<Void> validateInternalUserRole(Role userRoleType) {
 
-        return Role.internalRoles().contains(userRoleType) ?
+        return Role.internalInviteRoles().contains(userRoleType) ?
                 serviceSuccess() : serviceFailure(NOT_AN_INTERNAL_USER_ROLE);
     }
 }

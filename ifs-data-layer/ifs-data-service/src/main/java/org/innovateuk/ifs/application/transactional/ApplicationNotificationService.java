@@ -27,4 +27,7 @@ public interface ApplicationNotificationService {
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'APPLICATION_REOPENED_NOTIFICATION')")
     ServiceResult<Void> sendNotificationApplicationReopened(@P("applicationId") Long applicationId);
+
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'EOI_EVIDENCE_SUBMITTED_NOTIFICATION')")
+    ServiceResult<Void> sendNotificationEoiEvidenceSubmitted(Long applicationId);
 }
