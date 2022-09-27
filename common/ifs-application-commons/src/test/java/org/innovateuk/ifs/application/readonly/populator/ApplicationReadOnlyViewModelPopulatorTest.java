@@ -48,6 +48,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -478,6 +479,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         String name = "eoi_evidence.pdf";
         int filesizeBytes = 4380;
         String mediaType = ".pdf";
+        long fileEntryId = 1234L;
 
         UserResource user = newUserResource()
                 .withRoleGlobal(Role.APPLICANT)
@@ -503,10 +505,16 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .withFundingType(FundingType.GRANT)
                 .withTermsAndConditions(grantTermsAndConditionsResource)
                 .build();
+        ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = ApplicationEoiEvidenceResponseResource.builder()
+                .fileEntryId(fileEntryId)
+                .build();
         ApplicationResource application = newApplicationResource()
                 .withId(applicationId)
                 .withCompetition(competition.getId())
                 .withApplicationExpressionOfInterestConfigResource(applicationExpressionOfInterestConfig)
+                .withApplicationState(ApplicationState.SUBMITTED)
+                .withSubmittedDate(ZonedDateTime.now())
+                .withApplicationEoiEvidenceResponseResource(applicationEoiEvidenceResponseResource)
                 .build();
         List<QuestionResource> questions = newQuestionResource()
                 .withQuestionSetupType(QuestionSetupType.APPLICATION_TEAM)
