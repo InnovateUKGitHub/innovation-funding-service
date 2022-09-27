@@ -12,12 +12,12 @@ import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireQuestionRe
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireResponseRestService;
 import org.innovateuk.ifs.questionnaire.response.viewmodel.QuestionnaireQuestionViewModel;
 import org.junit.Test;
+import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 
 import java.util.UUID;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.questionnaire.builder.QuestionnaireOptionResourceBuilder.newQuestionnaireOptionResource;
 import static org.innovateuk.ifs.questionnaire.builder.QuestionnaireQuestionResponseResourceBuilder.newQuestionnaireQuestionResponseResource;
@@ -106,9 +106,12 @@ public class QuestionnaireWebControllerTest extends BaseControllerMockMVCTest<Qu
                 .andExpect(status().isOk())
                 .andExpect(view().name("questionnaire/question"))
                 .andExpect(model().attribute("model", viewModel))
-                .andExpect(model().attribute("form", lambdaMatches(f -> ((QuestionnaireQuestionForm)f).getOption().equals(2L))))
+                .andExpect(model().attribute("form", questionQuestionMatches(2L)))
                 .andReturn();
 
+    }
+    private ArgumentMatcher<QuestionnaireQuestionForm> questionQuestionMatches(Long option) {
+        return qqf -> qqf.getOption().equals(option);
     }
 
     @Test
@@ -132,7 +135,11 @@ public class QuestionnaireWebControllerTest extends BaseControllerMockMVCTest<Qu
                 .andExpect(redirectedUrl(String.format("/questionnaire/%s/question/%d", id.toString(), nextQuestionId)))
                 .andReturn();
 
-        verify(questionnaireQuestionResponseRestService).create(argThat(lambdaMatches(r -> r.getOption().equals(option.getId()))));
+        verify(questionnaireQuestionResponseRestService).create(argThat(questionOptionMatches(option.getId())));
+    }
+
+    private ArgumentMatcher<QuestionnaireQuestionResponseResource> questionOptionMatches(Long option) {
+        return qor -> qor.getId().equals(option);
     }
 
     @Test
