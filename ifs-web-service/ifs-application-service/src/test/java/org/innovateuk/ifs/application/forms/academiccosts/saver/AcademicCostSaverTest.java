@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.academiccosts.saver;
 
+import org.hamcrest.Matcher;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
@@ -96,12 +97,11 @@ public class AcademicCostSaverTest extends BaseServiceUnitTest<AcademicCostSaver
         verifyNoMoreInteractions(financeRowRestService);
     }
 
-    private ArgumentMatcher<AcademicCost> hasNameAndItem(String name, String item) {
-        return i -> i.getName().equals(name) && i.getItem().equals(item);
+    private ArgumentMatcher<AcademicCost> hasNameAndCost(String name, BigDecimal value) {
+        return cost -> cost != null && cost.getName().equals(name) && cost.getCost().equals(value);
     }
-
-    private ArgumentMatcher<AcademicCost> hasNameAndCost(String name, BigDecimal cost) {
-        return i -> i.getName().equals(name) && i.getCost().equals(cost);
+    private ArgumentMatcher<AcademicCost> hasNameAndItem(String name, String item) {
+        return cost -> cost != null && cost.getName().equals(name) && cost.getItem().equals(item);
     }
 
 }
