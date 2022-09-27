@@ -56,6 +56,7 @@ import java.util.function.Supplier;
 import static java.util.Collections.*;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
+import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.INTERNATIONAL;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -548,10 +549,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
         ApplicationResource newApplication = newApplicationResource().build();
 
-        Supplier<Application> applicationExpectations = () -> argThat(created -> {
+        Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals(tomorrow, created.getManageDecisionEmailDate());
             return true;
-        });
+        }));
         when(applicationMapper.mapToResource(applicationExpectations.get())).thenReturn(newApplication);
 
         ServiceResult<ApplicationResource> result = service.setApplicationFundingEmailDateTime(applicationId, tomorrow);
@@ -566,11 +567,11 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
         ApplicationResource newApplication = newApplicationResource().build();
 
-        Supplier<Application> applicationExpectations = () -> argThat(created -> {
+        Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals(tomorrow, created.getManageDecisionEmailDate());
             assertNotNull(created.getFeedbackReleased());
             return true;
-        });
+        }));
         when(applicationMapper.mapToResource(applicationExpectations.get())).thenReturn(newApplication);
 
         ServiceResult<ApplicationResource> result = service.setApplicationFundingEmailDateTime(applicationId, tomorrow);
