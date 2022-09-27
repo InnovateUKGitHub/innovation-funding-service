@@ -215,7 +215,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         when(organisationRepository.findDistinctByProcessRolesUser(user)).thenReturn(singletonList(organisation));
         when(applicationRepository.findById(application.getId())).thenReturn(of(application));
 
-        Supplier<Application> applicationExpectations = () -> argThat(created -> {
+        Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals("testApplication", created.getName());
             assertEquals(applicationState, created.getApplicationProcess().getProcessState());
             assertEquals(Long.valueOf(3), created.getDurationInMonths());
@@ -235,7 +235,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
             assertEquals(companyPrimaryFocus, created.getCompanyPrimaryFocus());
 
             return true;
-        });
+        }));
 
         when(applicationMapper.mapToResource(applicationExpectations.get())).thenReturn(applicationResource);
 
@@ -528,12 +528,12 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         when(applicationRepository.save(any(Application.class))).thenReturn(application);
         when(applicationRepository.findById(application.getId())).thenReturn(of(application));
 
-        Supplier<Application> applicationExpectations = () -> argThat(created -> {
+        Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals(applicationName, created.getName());
             assertEquals(applicationState, created.getApplicationProcess().getProcessState());
             assertEquals(competitionId, created.getCompetition().getId());
             return true;
-        });
+        }));
 
         when(applicationMapper.mapToResource(applicationExpectations.get())).thenReturn(newApplication);
 
@@ -588,10 +588,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
         ApplicationResource newApplication = newApplicationResource().build();
 
-        Supplier<Application> applicationExpectations = () -> argThat(created -> {
+        Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals(tomorrow, created.getManageDecisionEmailDate());
             return true;
-        });
+        }));
         when(applicationMapper.mapToResource(applicationExpectations.get())).thenReturn(newApplication);
 
         ServiceResult<ApplicationResource> result = service.setApplicationFundingEmailDateTime(applicationId, tomorrow);
