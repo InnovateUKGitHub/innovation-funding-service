@@ -301,7 +301,7 @@ public class Application implements ProcessActivity {
 
     public List<ProcessRole> getProcessRolesByOrganisation(Long organisationId) {
         return this.processRoles.stream()
-                .filter(processRole -> processRole.getOrganisationId()  == organisationId)
+                .filter(processRole -> processRole.getOrganisationId().equals(organisationId))
                 .collect(Collectors.toList());
     }
 
