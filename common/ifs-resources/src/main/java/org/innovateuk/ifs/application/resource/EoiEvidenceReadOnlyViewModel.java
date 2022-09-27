@@ -1,9 +1,13 @@
 package org.innovateuk.ifs.application.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import org.innovateuk.ifs.commons.error.HumanByteUtil;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 
+@Builder
+@AllArgsConstructor
 public class EoiEvidenceReadOnlyViewModel extends FileEntryResource {
 
     private final Long applicationId;

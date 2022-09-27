@@ -1,15 +1,13 @@
 package org.innovateuk.ifs.application.readonly.viewmodel;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
-import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceResponseResource;
 import org.innovateuk.ifs.application.resource.EoiEvidenceReadOnlyViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public class ApplicationReadOnlyViewModel {
@@ -26,7 +24,7 @@ public class ApplicationReadOnlyViewModel {
     private final boolean isLoanPartBEnabled;
     private final boolean isExpressionOfInterestApplication;
     private boolean eoiFullApplication;
-    private EoiEvidenceReadOnlyViewModel eoiEvidenceReadOnlyViewModel;
+    private Optional<EoiEvidenceReadOnlyViewModel> optionalEoiEvidenceReadOnlyViewModel;
 
     public ApplicationReadOnlyViewModel(ApplicationReadOnlySettings settings,
                                         Set<ApplicationSectionReadOnlyViewModel> sections,
@@ -40,7 +38,7 @@ public class ApplicationReadOnlyViewModel {
                                         boolean isLoanPartBEnabled,
                                         boolean isExpressionOfInterestApplication,
                                         boolean eoiFullApplication,
-                                        EoiEvidenceReadOnlyViewModel eoiEvidenceReadOnlyViewModel) {
+                                        Optional<EoiEvidenceReadOnlyViewModel> optionalEoiEvidenceReadOnlyViewModel) {
         this.settings = settings;
         this.sections = sections;
         this.applicationScore = applicationScore;
@@ -53,7 +51,7 @@ public class ApplicationReadOnlyViewModel {
         this.isLoanPartBEnabled = isLoanPartBEnabled;
         this.isExpressionOfInterestApplication = isExpressionOfInterestApplication;
         this.eoiFullApplication = eoiFullApplication;
-        this.eoiEvidenceReadOnlyViewModel = eoiEvidenceReadOnlyViewModel;
+        this.optionalEoiEvidenceReadOnlyViewModel = optionalEoiEvidenceReadOnlyViewModel;
     }
 
     public List<String> getOverallFeedbacks() {
@@ -123,10 +121,6 @@ public class ApplicationReadOnlyViewModel {
     }
 
     public EoiEvidenceReadOnlyViewModel getEoiEvidenceReadOnlyViewModel() {
-        return eoiEvidenceReadOnlyViewModel;
-    }
-
-    public void setEoiEvidenceReadOnlyViewModel(EoiEvidenceReadOnlyViewModel eoiEvidenceReadOnlyViewModel) {
-        this.eoiEvidenceReadOnlyViewModel = eoiEvidenceReadOnlyViewModel;
+        return optionalEoiEvidenceReadOnlyViewModel.isPresent() ? optionalEoiEvidenceReadOnlyViewModel.get() : null;
     }
 }

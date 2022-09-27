@@ -48,12 +48,12 @@
     <section class="portrait">
         <th:block th:if="${model.settings.includeAllAssessorFeedback}" th:insert="application/readonly/application-read-only :: assessor_feedback (${model})" />
         <th:block th:if="${model.settings.includeAllSupporterFeedback}" th:insert="application/readonly/application-read-only :: supporter_feedback (${model})" />
-        <th:block th:insert="application/readonly/application-read-only :: eoi_evidence_print_view (${model.eoiEvidenceReadOnlyViewModel})" />
+        <th:block th:if="${model.isExpressionOfInterestApplication()}" th:insert="application/readonly/application-read-only :: eoi_evidence_print_view (${model})" />
     </section>
 </th:block>
 
 <th:block th:fragment="eoi_evidence_print_view(model)">
-    <th:block th:insert="application/readonly/application-read-only :: eoi_evidence (model=${model},toPrint=true)" />
+    <th:block th:insert="application/readonly/application-read-only :: eoi_evidence (model=${model.getEoiEvidenceReadOnlyViewModel()},toPrint=true)" />
 </th:block>
 
 <th:block th:fragment="accordion(model)" th:with="parentModel=${parentModel} ?: null, feedbackFragment=${feedbackFragment} ?: null">
@@ -190,7 +190,9 @@
 </th:block>
 
 <th:block th:fragment="eoi_evidence_view(model)">
-    <th:block th:insert="application/readonly/application-read-only :: eoi_evidence (model=${model},toPrint=false)" />
+    <th:block th:if="${model.isExpressionOfInterestApplication()}">
+        <th:block th:insert="application/readonly/application-read-only :: eoi_evidence (model=${model.getEoiEvidenceReadOnlyViewModel()},toPrint=false)" />
+    </th:block>
 </th:block>
 
 <th:block th:fragment="eoi_evidence(model, toPrint)">

@@ -179,7 +179,12 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(competition.getCompetitionStatus());
     }
 
-    @PermissionRule(value = "VIEW_EOI_EVIDENCE_RESPONSE", description = "A lead organisation member can send the notification of eoi evidence submission")
+    @PermissionRule(value = "VIEW_EOI_EVIDENCE_RESPONSE", description = "Allowed for internal users to view eoi evidence response for application")
+    public boolean internalUsersCanReadEoiEvidenceResponseForApplication(final ApplicationResource applicationResource, final UserResource user) {
+        return isInternal(user);
+    }
+
+    @PermissionRule(value = "VIEW_EOI_EVIDENCE_RESPONSE", description = "A lead organisation member can view eoi evidence response for application")
     public boolean leadOrganisationMembersCanReadEoiEvidenceResponseForApplication(final ApplicationResource applicationResource, final UserResource user) {
         return checkHasAnyApplicantParticipantRole(applicationResource.getId(), applicationResource.getLeadOrganisationId(), user);
     }

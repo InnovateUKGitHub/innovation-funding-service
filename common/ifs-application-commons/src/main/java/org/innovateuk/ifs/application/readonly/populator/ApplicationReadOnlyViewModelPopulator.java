@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyView
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationSectionReadOnlyViewModel;
 import org.innovateuk.ifs.application.readonly.viewmodel.SupporterAssignmentReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.EoiEvidenceReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.*;
@@ -17,7 +16,6 @@ import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestServic
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionEoiEvidenceConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -143,8 +141,6 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 .map(this::resolve)
                 .collect(toCollection(LinkedHashSet::new));
 
-        EoiEvidenceReadOnlyViewModel eoiEvidenceReadOnlyViewModel = eoiEvidenceReadOnlyViewModelPopulator.populate(application, user);
-
         return new ApplicationReadOnlyViewModel(settings,
                 sectionViews,
                 settings.isIncludeAllAssessorFeedback() ? data.getApplicationScore() : BigDecimal.ZERO,
@@ -163,7 +159,9 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 isLoanPartBEnabled,
                 data.getApplication().isEnabledForExpressionOfInterest(),
                 data.getApplication().isEoiFullApplication(),
-                eoiEvidenceReadOnlyViewModel
+                data.getApplication().isEnabledForExpressionOfInterest()
+                        ? Optional.of(eoiEvidenceReadOnlyViewModelPopulator.populate(application, user))
+                        : Optional.empty()
         );
     }
 
