@@ -224,9 +224,7 @@ public class FinanceSummaryTableViewModelPopulator {
             } else {
                 return BigDecimal.ZERO;
             }
-        } else   if (competition.isCompTypeOfgemAndFundingTypeThirdParty()) {
-            return  finance.map(appRes->appRes.getTotal().subtract(appRes.getTotalFundingSought())).orElse(BigDecimal.ZERO);
-        }{
+        } else {
             return finance.map(ApplicationFinanceResource::getTotalContribution).orElse(BigDecimal.ZERO);
         }
     }
