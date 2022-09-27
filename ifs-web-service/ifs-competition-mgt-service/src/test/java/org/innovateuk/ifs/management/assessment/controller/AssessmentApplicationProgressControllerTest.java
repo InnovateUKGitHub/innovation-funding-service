@@ -14,7 +14,6 @@ import org.innovateuk.ifs.assessment.service.AssessmentPeriodService;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
-import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessment.form.AvailableAssessorForm;
@@ -135,6 +134,8 @@ public class AssessmentApplicationProgressControllerTest extends BaseControllerM
                 "",
                 Sort.ASSESSOR,
                 expectedPaginationModel,
+                false,
+                false,
                 false
         );
 

@@ -7,6 +7,7 @@
     <body class="govuk-template__body competition-management competition-setup">
         <th:block th:insert="fragments/modals :: modal-overlay" />
         <th:block th:insert="fragments/competition-setup :: comp-setup-remove-assigned-assessor-modal" />
+        <th:block th:insert="fragments/competition-setup :: comp-setup-unsubmit-assessment-assigned-assessor-modal" />
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
@@ -64,10 +65,11 @@
                                 <th class="govuk-table__header" scope="col">Innovation area</th>
                                 <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total applications</th>
                                 <th class="govuk-table__header govuk-table__header--numeric" scope="col">Assigned</th>
-                                <th th:if="${model.inAssessment || model.competitionAlwaysOpen}" class="govuk-table__header aligncentre" scope="col">Notified</th>
-                                <th th:if="${model.inAssessment || model.competitionAlwaysOpen}" class="govuk-table__header aligncentre" scope="col">Accepted</th>
-                                <th th:if="${model.inAssessment || model.competitionAlwaysOpen}" class="govuk-table__header aligncentre" scope="col">Started</th>
-                                <th th:if="${model.inAssessment || model.competitionAlwaysOpen}" class="govuk-table__header aligncentre" scope="col">Submitted</th>
+                                <th th:if="${model.inAssessment || model.competitionAlwaysOpen}" class="govuk-table__header width-80 aligncentre" scope="col">Notified</th>
+                                <th th:if="${model.inAssessment || model.competitionAlwaysOpen}" class="govuk-table__header width-80 aligncentre" scope="col">Accepted</th>
+                                <th th:if="${model.inAssessment || model.competitionAlwaysOpen}" class="govuk-table__header width-80 aligncentre" scope="col">Started</th>
+                                <th th:if="${model.inAssessment || model.competitionAlwaysOpen}" class="govuk-table__header width-80 aligncentre" scope="col">Submitted</th>
+                                <th th:if="${model.inAssessment || model.competitionAlwaysOpen}" class="govuk-table__header width-80 alignright" scope="col">Action</th>
                                 <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Actions</span></th>
                             </tr>
                         </thead>
@@ -98,14 +100,31 @@
                                     <span th:remove="${assessor.submitted} ? 'all' : 'tag'">-</span>
                                     <span th:remove="${assessor.submitted} ? 'tag' : 'all'" class="yes">Yes</span>
                                 </td>
-                                <td class="govuk-table__cell alignright">
-                                    <a th:if="${assessor.notified}" class="govuk-button govuk-button--secondary govuk-!-margin-0 govuk-link" data-js-modal="remove-assigned-assessor-modal"
+                                <td class="govuk-table__cell aligncentre">
+                                    <th:block th:if="${model.isSuperAdmin()}">
+                                        <th:block th:unless="${model.isAssessmentClosed()}">
+                                            <a th:if="${assessor.submitted}"
+                                               class="govuk-link govuk-!-margin-0"
+                                               data-js-modal="unsubmit-assessment-assigned-assessor-modal"
+                                               th:href="${removeActionNonJs}"
+                                               th:attr="data-modal-form-action=${removeAction}"
+                                               th:with="removeAction=@{/assessment/competition/{cId}/application/{apId}/period/{assessmentPeriodId}/assessors/unsubmit/{asId}(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},assessmentPeriodId=${model.assessmentPeriodId})},
+                                               removeActionNonJs=@{/assessment/competition/{cId}/application/{apId}/period/{assessmentPeriodId}/assessors/unsubmit/{asId}/confirm(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},assessmentPeriodId=${model.assessmentPeriodId})}">
+                                        Unsubmit
+                                            </a>
+                                        </th:block>
+                                    </th:block>
+
+                                    <a th:if="${assessor.notified}"
+                                       class="govuk-link govuk-!-margin-0"
+                                       data-js-modal="remove-assigned-assessor-modal"
                                        th:href="${removeActionNonJs}"
                                        th:attr="data-modal-form-action=${removeAction}"
-                                       th:with="
-                                       removeAction=@{/assessment/competition/{cId}/application/{apId}/period/{assessmentPeriodId}/assessors/withdraw/{asId}(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},assessmentPeriodId=${model.assessmentPeriodId})},
+                                       th:with="removeAction=@{/assessment/competition/{cId}/application/{apId}/period/{assessmentPeriodId}/assessors/withdraw/{asId}(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},assessmentPeriodId=${model.assessmentPeriodId})},
                                        removeActionNonJs=@{/assessment/competition/{cId}/application/{apId}/period/{assessmentPeriodId}/assessors/withdraw/{asId}/confirm(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},assessmentPeriodId=${model.assessmentPeriodId})}"
-                                       th:unless="${assessor.submitted}">Remove</a>
+                                       th:unless="${assessor.submitted}">
+                                        Remove
+                                    </a>
                                     <form th:unless="${assessor.notified}" method="post"
                                           th:action="@{/assessment/competition/{cId}/application/{apId}/period/{assessmentPeriodId}/assessors/withdraw/{asId}(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},assessmentPeriodId=${model.assessmentPeriodId})}">
                                         <button type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-0">Remove</button>
@@ -289,6 +308,7 @@
                                     <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col">Total applications</th>
                                     <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col">Assigned</th>
                                     <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col">Submitted</th>
+                                    <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col">Action</th>
                                 </tr>
                             </thead>
                             <tbody class="govuk-table__body">
