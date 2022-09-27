@@ -33,8 +33,8 @@ public class EoiEvidenceReadOnlyViewModelPopulator {
 
     public EoiEvidenceReadOnlyViewModel populate(ApplicationResource application, UserResource user) {
         List<ProcessRoleResource> processRoleResources = processRoleRestService.findProcessRole(application.getId()).getSuccess();
-        ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = applicationEoiEvidenceResponseRestService.findOneByApplicationId(application.getId()).getSuccess();
         CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource = competitionEoiEvidenceConfigRestService.findOneByCompetitionId(application.getCompetition()).getSuccess();
+        ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = applicationEoiEvidenceResponseRestService.findOneByApplicationId(application.getId()).getSuccess();
         FileEntryResource fileEntryresource = fileEntryRestService.findOne(applicationEoiEvidenceResponseResource.getFileEntryId()).getSuccess();
 
         boolean partner = processRoleResources.stream()

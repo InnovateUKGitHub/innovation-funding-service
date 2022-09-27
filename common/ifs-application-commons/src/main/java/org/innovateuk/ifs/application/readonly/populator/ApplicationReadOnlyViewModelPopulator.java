@@ -133,6 +133,8 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
             settings.setIncludeAllSupporterFeedback(data.getFeedbackToApplicationSupport().size() > 0);
         }
 
+        settings.setIncludeEoiEvidence(shouldDisplayEoiEvidence(application));
+
         Set<ApplicationSectionReadOnlyViewModel> sectionViews = resolve(sectionsFuture)
                 .stream()
                 .filter(section -> section.getParentSection() == null)
@@ -159,10 +161,16 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 isLoanPartBEnabled,
                 data.getApplication().isEnabledForExpressionOfInterest(),
                 data.getApplication().isEoiFullApplication(),
-                data.getApplication().isEnabledForExpressionOfInterest()
+                settings.isIncludeEoiEvidence()
                         ? Optional.of(eoiEvidenceReadOnlyViewModelPopulator.populate(application, user))
                         : Optional.empty()
         );
+    }
+
+    private boolean shouldDisplayEoiEvidence(ApplicationResource application) {
+        return application.isSubmitted()
+                && application.isEnabledForExpressionOfInterest()
+                && (application.getApplicationEoiEvidenceResponseResource().getFileEntryId() != null);
     }
 
     private boolean shouldDisplayKtpApplicationFeedback(CompetitionResource competition, UserResource user, List<ProcessRoleResource> processRoles) {
