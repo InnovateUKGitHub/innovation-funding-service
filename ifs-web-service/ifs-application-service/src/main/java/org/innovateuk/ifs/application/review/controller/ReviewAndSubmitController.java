@@ -280,22 +280,14 @@ public class ReviewAndSubmitController {
                                  Model model,
                                  UserResource loggedInUser) {
         long organisationId = processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess().getOrganisationId();
-        return handleFileUpload(applicationId, organisationId, loggedInUser, form, bindingResult, validationHandler, model);
-    }
-
-    private String handleFileUpload(long applicationId, long organisationId, UserResource user, EoiEvidenceForm form, BindingResult bindingResult, ValidationHandler validationHandler, Model model) {
         MultipartFile file = form.getEoiEvidenceFile();
-
-        EoiEvidenceForm eoiEvidenceForm = new EoiEvidenceForm();
-        eoiEvidenceForm.setEvidenceFileEntryName(file.getOriginalFilename());
-        Supplier<String> view = () -> applicationTrack(model, applicationId, eoiEvidenceForm, user);
+        Supplier<String> view = () -> applicationTrack(model, applicationId, form, loggedInUser);
 
         return validationHandler.performFileUpload("eoiEvidenceFile", view, () ->
-            applicationEoiEvidenceResponseRestService.uploadEoiEvidence(applicationId, organisationId, user.getId(), file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file)));
+                applicationEoiEvidenceResponseRestService.uploadEoiEvidence(applicationId, organisationId, loggedInUser.getId(), file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file)));
     }
 
     @PostMapping(value="/{applicationId}/track", params = "remove-eoi-evidence")
-    @AsyncMethod
     @PreAuthorize("hasAuthority('applicant')")
     @SecuredBySpring(value = "REMOVE_EOI_EVIDENCE", description = "Lead applicant can remove their eoi evidence")
     public String removeEoiEvidenceResponse(@PathVariable("applicationId") long applicationId,
@@ -318,17 +310,15 @@ public class ReviewAndSubmitController {
                                             ValidationHandler validationHandler,
                                             Model model,
                                             UserResource loggedInUser) {
-        ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = applicationEoiEvidenceResponseRestService.findOneByApplicationId(applicationId).getSuccess().get();
-        Supplier<String> failureView = () -> applicationTrack(model, applicationId, form, loggedInUser);
-        Supplier<String> successView = () -> "redirect:/application/" + applicationId + "/track";
+        if (applicationEoiEvidenceResponseRestService.findOneByApplicationId(applicationId).getSuccess().get().getFileEntryId() == null) {
+            bindingResult.rejectValue("eoiEvidenceFile", "validation.file.required");
+            return applicationTrack(model, applicationId, form, loggedInUser);
+        }
 
-        return validationHandler.failNowOrSucceedWith(
-                failureView,
-                () -> {
-                    validationHandler.addAnyErrors(applicationEoiEvidenceResponseRestService.submitEoiEvidence(applicationEoiEvidenceResponseResource, loggedInUser));
-                    return validationHandler.failNowOrSucceedWith(failureView, successView);
-                    });
-                }
+        ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = applicationEoiEvidenceResponseRestService.findOneByApplicationId(applicationId).getSuccess().get();
+        applicationEoiEvidenceResponseRestService.submitEoiEvidence(applicationEoiEvidenceResponseResource, loggedInUser);
+        return String.format("redirect:/application/%s/track", applicationId);
+    }
 
     @GetMapping("/{applicationId}/view-eoi-evidence")
     public

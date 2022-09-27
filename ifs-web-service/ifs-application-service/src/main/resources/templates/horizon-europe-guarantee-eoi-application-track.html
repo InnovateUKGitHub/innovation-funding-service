@@ -78,6 +78,7 @@
                       method="post">
                     <button th:disabled="${!model.isEoiEvidenceCreatedAndNotSubmitted()}"
                             th:classappend="${!model.isEoiEvidenceCreatedAndNotSubmitted()} ? govuk-button--disabled"
+                            data-js-enabled-on-file-upload=""
                             id="submit-eoi-evidence"
                             type="submit" name="submit-eoi-evidence"
                             class="govuk-button govuk-!-margin-top-8" value="true">Submit for review
