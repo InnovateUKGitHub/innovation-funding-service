@@ -931,9 +931,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 eq(CompetitionSetupSection.COMPLETION_STAGE));
 
         verify(competitionSetupService, times(1)).saveCompetitionSetupSection(
-//                createLambdaMatcher(form -> {
-//                    assertThat(((CompletionStageForm) form).getSelectedCompletionStage()).isEqualTo(CompetitionCompletionStage.COMPETITION_CLOSE);
-//                }),
                 any(CompletionStageForm.class),
                 eq(competition),
                 eq(CompetitionSetupSection.COMPLETION_STAGE),
@@ -1013,9 +1010,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 eq(CompetitionSetupSection.APPLICATION_SUBMISSION));
 
         verify(competitionSetupService, times(1)).saveCompetitionSetupSection(
-//                createLambdaMatcher(form -> {
-//                    assertThat(((ApplicationSubmissionForm) form).getAlwaysOpen()).isEqualTo(true);
-//                }),
                 any(ApplicationSubmissionForm.class),
                 eq(competition),
                 eq(CompetitionSetupSection.APPLICATION_SUBMISSION),
