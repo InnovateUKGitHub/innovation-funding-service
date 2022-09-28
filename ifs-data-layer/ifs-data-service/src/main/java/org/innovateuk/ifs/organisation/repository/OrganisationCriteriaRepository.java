@@ -18,7 +18,7 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 
 @Repository
-public class OrganisationRepo {
+public class OrganisationCriteriaRepository {
 
     @Autowired
     private EntityManager entityManager;
@@ -27,21 +27,16 @@ public class OrganisationRepo {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Organisation> cq = cb.createQuery(Organisation.class);
 
-//        "SELECT o FROM Organisation o " +
-//        "JOIN ProjectUser pu ON o.id = pu.organisation.id "
         Root<Organisation> organisationRoot = cq.from(Organisation.class);
         Join<Organisation, ProjectUser> projectUserJoin = organisationRoot.join(Organisation_.projectUsers);
 
-        //WHERE pu.user.id = :userId
         Join<ProjectUser, User> user = projectUserJoin.join(ProjectUser_.user);
         user.on(cb.equal(user.get(User_.id), userId));
 
-        //"AND pu.project.id = :projectId"
         Join<ProjectUser, Project> project = projectUserJoin.join(ProjectUser_.project);
         project.on(cb.equal(project.get(Project_.id), projectId));
 
         return entityManager.createQuery(cq).getSingleResult();
-
     }
 
 }

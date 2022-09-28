@@ -66,7 +66,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     private AddressRepository addressRepository;
 
     @Autowired
-    private OrganisationRepo organisationRepo;
+    private OrganisationCriteriaRepository organisationCriteriaRepository;
 
     @Override
     public ServiceResult<Set<OrganisationResource>> findByApplicationId(final long applicationId) {
@@ -110,7 +110,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<OrganisationResource> getByUserAndProjectId(long userId, long projectId) {
-        Organisation org = organisationRepo.findByUserAndProjectId(userId, projectId);
+        Organisation org = organisationCriteriaRepository.findByUserAndProjectId(userId, projectId);
         return find(org, notFoundError(Organisation.class, userId, projectId)).andOnSuccessReturn(o ->
                 organisationMapper.mapToResource(o)
         );
