@@ -15,7 +15,7 @@ public interface ApplicationEoiEvidenceResponseRestService {
 
     RestResult<Void> submitEoiEvidence(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource);
 
-    RestResult<ApplicationEoiEvidenceResponseResource> delete(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource);
+    RestResult<ApplicationEoiEvidenceResponseResource> remove(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource);
 
     RestResult<Optional<ApplicationEoiEvidenceResponseResource>> findOneByApplicationId(long applicationId);
 

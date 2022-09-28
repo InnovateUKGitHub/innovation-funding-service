@@ -296,7 +296,7 @@ public class ReviewAndSubmitController {
                                             UserResource loggedInUser) {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-        applicationEoiEvidenceResponseRestService.delete(application.getApplicationEoiEvidenceResponseResource(), loggedInUser).getSuccess();
+        applicationEoiEvidenceResponseRestService.remove(application.getApplicationEoiEvidenceResponseResource(), loggedInUser).getSuccess();
 
         return "redirect:/application/" + applicationId + "/track";
     }

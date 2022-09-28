@@ -11,8 +11,6 @@ import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.controller.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
-import org.innovateuk.ifs.file.resource.BasicFileAndContents;
-import org.innovateuk.ifs.file.resource.FileAndContents;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileService;
 import org.innovateuk.ifs.user.mapper.UserMapper;
@@ -97,7 +95,7 @@ public class ApplicationEoiEvidenceResponseController {
     }
 
 
-    @DeleteMapping("/{applicationId}/eoi-evidence-response/delete/{userId}")
+    @PostMapping("/{applicationId}/eoi-evidence-response/remove/{userId}")
     public RestResult<ApplicationEoiEvidenceResponseResource> remove(@PathVariable("applicationId") long applicationId,
                                    @PathVariable("userId") long userId) {
 
