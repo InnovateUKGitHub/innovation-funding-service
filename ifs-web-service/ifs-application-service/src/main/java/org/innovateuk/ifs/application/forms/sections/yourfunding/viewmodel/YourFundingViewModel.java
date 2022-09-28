@@ -258,4 +258,12 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
                         "Have you received any other public sector funding for this project? This is important as other public sector support counts as part of the funding you can receive.";
     }
 
+    public String getFundingAmountWidth() {
+        return isCompTypeOfgemAndFundingTypeThirdParty ? "width-250 govuk-table__header alignright" :"width-150 govuk-table__header";
+    }
+
+    public String getTableClass() {
+        return isCompTypeOfgemAndFundingTypeThirdParty ? "govuk-table__cell" : "govuk-table__header";
+    }
+
 }

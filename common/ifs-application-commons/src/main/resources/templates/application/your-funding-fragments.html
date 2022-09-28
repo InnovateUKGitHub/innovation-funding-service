@@ -166,13 +166,13 @@
                     <tr class="govuk-table__row">
                         <th th:text="${model.isCompTypeOfgemAndFundingTypeThirdParty ? 'Description and breakdown of contributions in kind' : 'Source of funding'}" id="other-funding-source" class="govuk-table__header" scope="col">Source of funding</th>
                         <th id="other-funding-date" class="width-150 govuk-table__header" scope="col">Date secured</th>
-                        <th th:text="${model.isCompTypeOfgemAndFundingTypeThirdParty ? 'Contributions in kind value' : 'Funding amount'}" id="other-funding-amount" th:class="${model.isCompTypeOfgemAndFundingTypeThirdParty ? 'width-250 govuk-table__header alignright' : 'width-150 govuk-table__header'}" scope="col">Funding amount</th>
+                        <th th:text="${model.isCompTypeOfgemAndFundingTypeThirdParty ? 'Contributions in kind value' : 'Funding amount'}" id="other-funding-amount" th:class="${model.getFundingAmountWidth()}" scope="col">Funding amount</th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
                     <tr class="govuk-table__row" th:each="entry : ${form.otherFundingRows}"
                         th:unless="${entry.value.blank}">
-                        <th th:class="${model.isCompTypeOfgemAndFundingTypeThirdParty ? 'govuk-table__cell' : 'govuk-table__header'}" scope="row" th:text="${entry.value.source}">National rail</th>
+                        <th th:class="${model.getTableClass()}" scope="row" th:text="${entry.value.source}">National rail</th>
                         <td class="govuk-table__cell" th:text="${entry.value.date}">17 April 2016</td>
                         <td class="govuk-table__cell govuk-table__cell--numeric"
                             th:text="'£' + ${entry.value.fundingAmount != null ? #numbers.formatInteger(entry.value.fundingAmount,0,'DEFAULT') : '0'}"></td>
