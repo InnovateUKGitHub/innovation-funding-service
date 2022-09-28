@@ -16,6 +16,7 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
@@ -44,10 +45,10 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.ProcessRoleType.COLLABORATOR;
-import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
@@ -767,5 +768,137 @@ public class ApplicationNotificationServiceImplTest {
         inOrder.verify(applicationRepository).findById(applicationId);
         inOrder.verify(applicationWorkflowHandler).informIneligible(application);
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void sendNotificationEoiEvidenceSubmitted() {
+        Organisation leadOrganisation = newOrganisation().build();
+
+        User leadUser = newUser()
+                .withFirstName("Lead")
+                .withLastName("LeadUser")
+                .withEmailAddress("leadapplicant@example.com")
+                .build();
+
+        User teamUser = newUser()
+                .withFirstName("Team")
+                .withLastName("TeamUser")
+                .withEmailAddress("teamapplicant@example.com")
+                .build();
+
+        ProcessRole leadProcessRole = newProcessRole()
+                .withUser(leadUser)
+                .withRole(LEADAPPLICANT)
+                .withOrganisation(leadOrganisation)
+                .build();
+
+        ProcessRole teamProcessRole = newProcessRole()
+                .withUser(teamUser)
+                .withRole(COLLABORATOR)
+                .withOrganisation(leadOrganisation)
+                .build();
+
+        Competition competition = newCompetition()
+                .build();
+
+        Application application = newApplication()
+                .withProcessRoles(leadProcessRole, teamProcessRole)
+                .withCompetition(competition)
+                .build();
+
+        when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application));
+        when(notificationService.sendNotificationWithFlush(any(Notification.class), eq(EMAIL))).thenReturn(ServiceResult.serviceSuccess());
+
+        ServiceResult<Void> result = service.sendNotificationEoiEvidenceSubmitted(application.getId());
+
+        assertTrue(result.isSuccess());
+
+        InOrder inOrder = inOrder(applicationRepository, notificationService);
+        inOrder.verify(applicationRepository).findById(application.getId());
+        inOrder.verify(notificationService, times(1)).sendNotificationWithFlush(createLambdaMatcher(notification -> {
+            assertEquals(EOI_EVIDENCE_SUBMITTED, notification.getMessageKey());
+            assertEquals(competition.getName(), notification.getGlobalArguments().get("competitionName"));
+            assertEquals(WEB_BASE_URL, notification.getGlobalArguments().get("webBaseUrl"));
+            assertEquals(1, notification.getTo().size());
+            assertEquals(leadUser.getName(), notification.getTo().get(0).getTo().getName());
+            assertEquals(leadUser.getEmail(), notification.getTo().get(0).getTo().getEmailAddress());
+        }), eq(EMAIL));
+        inOrder.verify(notificationService, times(1)).sendNotificationWithFlush(createLambdaMatcher(notification -> {
+            assertEquals(EOI_EVIDENCE_SUBMITTED, notification.getMessageKey());
+            assertEquals(competition.getName(), notification.getGlobalArguments().get("competitionName"));
+            assertEquals(WEB_BASE_URL, notification.getGlobalArguments().get("webBaseUrl"));
+            assertEquals(1, notification.getTo().size());
+            assertEquals(teamUser.getName(), notification.getTo().get(0).getTo().getName());
+            assertEquals(teamUser.getEmail(), notification.getTo().get(0).getTo().getEmailAddress());
+        }), eq(EMAIL));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void sendNotificationEoiEvidenceSubmitted_sendsNotificationOnlyForLeadOrganisationMembers() {
+        Organisation leadOrganisation = newOrganisation().build();
+        Organisation partnerOrganisation = newOrganisation().build();
+
+        User leadUser = newUser()
+                .withFirstName("Lead")
+                .withLastName("LeadUser")
+                .withEmailAddress("leadapplicant@example.com")
+                .build();
+
+        User teamUser = newUser()
+                .withFirstName("Team")
+                .withLastName("TeamUser")
+                .withEmailAddress("teamapplicant@example.com")
+                .build();
+
+        ProcessRole leadProcessRole = newProcessRole()
+                .withUser(leadUser)
+                .withRole(LEADAPPLICANT)
+                .withOrganisation(leadOrganisation)
+                .build();
+
+        ProcessRole teamProcessRole = newProcessRole()
+                .withUser(teamUser)
+                .withRole(COLLABORATOR)
+                .withOrganisation(partnerOrganisation)
+                .build();
+
+        Competition competition = newCompetition()
+                .build();
+
+        Application application = newApplication()
+                .withProcessRoles(leadProcessRole, teamProcessRole)
+                .withCompetition(competition)
+                .build();
+
+        when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application));
+        when(notificationService.sendNotificationWithFlush(any(Notification.class), eq(EMAIL))).thenReturn(ServiceResult.serviceSuccess());
+
+        ServiceResult<Void> result = service.sendNotificationEoiEvidenceSubmitted(application.getId());
+
+        assertTrue(result.isSuccess());
+
+        InOrder inOrder = inOrder(applicationRepository, notificationService);
+        inOrder.verify(applicationRepository).findById(application.getId());
+        inOrder.verify(notificationService, times(1)).sendNotificationWithFlush(createLambdaMatcher(notification -> {
+            assertEquals(EOI_EVIDENCE_SUBMITTED, notification.getMessageKey());
+            assertEquals(competition.getName(), notification.getGlobalArguments().get("competitionName"));
+            assertEquals(WEB_BASE_URL, notification.getGlobalArguments().get("webBaseUrl"));
+            assertEquals(1, notification.getTo().size());
+            assertEquals(leadUser.getName(), notification.getTo().get(0).getTo().getName());
+            assertEquals(leadUser.getEmail(), notification.getTo().get(0).getTo().getEmailAddress());
+        }), eq(EMAIL));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void sendNotificationEoiEvidenceSubmitted_applicationNotFound() {
+        Application application = newApplication().build();
+
+        when(applicationRepository.findById(application.getId())).thenReturn(Optional.empty());
+
+        ServiceResult<Void> result = service.sendNotificationEoiEvidenceSubmitted(application.getId());
+
+        assertFalse(result.isSuccess());
     }
 }

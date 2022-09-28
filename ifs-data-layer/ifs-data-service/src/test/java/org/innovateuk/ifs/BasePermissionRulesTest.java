@@ -1,5 +1,6 @@
 package org.innovateuk.ifs;
 
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.mapper.ExternalFinanceRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -20,6 +21,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,6 +34,7 @@ import static org.innovateuk.ifs.project.core.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.Role.AUDITOR;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.mockito.Mockito.when;
@@ -191,5 +194,19 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
         when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(
                 project.getId(), user.getId(), leadOrganisation.getId(), PROJECT_PARTNER)).thenReturn(userIsLeadPartner ? newProjectUser().build() : null);
     }
+
+    protected void setUpApplicationUsersForLeadOrganisation(ApplicationResource applicationResource,
+                                                            OrganisationResource organisationResource,
+                                                            UserResource userResource,
+                                                            ProcessRole processRole) {
+
+        processRole.setOrganisationId(organisationResource.getId());
+        processRole.setUser(newUser().withId(userResource.getId()).build());
+        List<ProcessRole> processRoles = Collections.singletonList(processRole);
+
+        when(processRoleRepository.findByApplicationIdAndOrganisationId(applicationResource.getId(), organisationResource.getId()))
+                .thenReturn(processRoles);
+    }
+
     protected abstract T supplyPermissionRulesUnderTest();
 }

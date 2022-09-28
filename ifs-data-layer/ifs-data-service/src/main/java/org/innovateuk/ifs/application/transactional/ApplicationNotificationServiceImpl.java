@@ -231,6 +231,28 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                 });
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public ServiceResult<Void> sendNotificationEoiEvidenceSubmitted(Long applicationId) {
+        return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
+                .andOnSuccessReturnVoid(application -> {
+                    NotificationSource from = systemNotificationSource;
+                    Competition competition = application.getCompetition();
+                    Long leadOrganisationId = application.getLeadOrganisationId();
+                    List<ProcessRole> applicationTeam = application.getProcessRolesByOrganisation(leadOrganisationId);
+                    applicationTeam.stream()
+                            .filter(pr -> pr.getUser().isActive())
+                            .forEach(applicant -> {
+                                NotificationTarget to = new UserNotificationTarget(applicant.getUser().getName(), applicant.getUser().getEmail());
+                                Map<String, Object> notificationArguments = new HashMap<>();
+                                notificationArguments.put("name", applicant.getUser().getName());
+                                notificationArguments.put("competitionName", competition.getName());
+                                notificationArguments.put("webBaseUrl", webBaseUrl);
+                                sendEoiEvidenceNotification(from, to, notificationArguments);
+                            });
+                });
+    }
+
     private void sendNotificationToLeadApplicant(NotificationSource from, NotificationTarget to, Map<String, Object> notificationArguments) {
         Notification notification = new Notification(from, to, Notifications.REOPEN_APPLICATION_LEAD, notificationArguments);
         notificationService.sendNotificationWithFlush(notification, EMAIL);
@@ -314,6 +336,11 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
         );
     }
 
+    private void sendEoiEvidenceNotification(NotificationSource from, NotificationTarget to, Map<String, Object> notificationArguments) {
+        Notification notification = new Notification(from, to, Notifications.EOI_EVIDENCE_SUBMITTED, notificationArguments);
+        notificationService.sendNotificationWithFlush(notification, EMAIL);
+    }
+
     enum Notifications {
         APPLICATION_SUBMITTED,
         APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
@@ -324,6 +351,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
         APPLICATION_INELIGIBLE,
         LOANS_APPLICATION_SUBMITTED,
         REOPEN_APPLICATION_PARTNER,
-        REOPEN_APPLICATION_LEAD
+        REOPEN_APPLICATION_LEAD,
+        EOI_EVIDENCE_SUBMITTED
     }
 }

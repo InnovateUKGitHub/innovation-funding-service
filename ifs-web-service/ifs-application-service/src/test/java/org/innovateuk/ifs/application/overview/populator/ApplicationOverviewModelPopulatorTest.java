@@ -43,6 +43,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationExpressionOfInte
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionApplicationConfigResourceBuilder.newCompetitionApplicationConfigResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionThirdPartyConfigResourceBuilder.newCompetitionThirdPartyConfigResource;
 import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
@@ -103,6 +104,7 @@ public class ApplicationOverviewModelPopulatorTest {
         CompetitionResource competition = newCompetitionResource()
                 .withCollaborationLevel(SINGLE)
                 .withTermsAndConditions(termsAndCondition)
+                .withCompetitionApplicationConfig(newCompetitionApplicationConfigResource().build())
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
@@ -214,6 +216,7 @@ public class ApplicationOverviewModelPopulatorTest {
                 .withCollaborationLevel(SINGLE)
                 .withTermsAndConditions(termsAndCondition)
                 .withEnabledForExpressionOfInterest(true)
+                .withCompetitionApplicationConfig(newCompetitionApplicationConfigResource().build())
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
@@ -343,6 +346,7 @@ public class ApplicationOverviewModelPopulatorTest {
         CompetitionResource competition = newCompetitionResource()
                 .withCollaborationLevel(SINGLE)
                 .withTermsAndConditions(termsAndCondition)
+                .withCompetitionApplicationConfig(newCompetitionApplicationConfigResource().build())
                 .build();
 
         ApplicationResource application = newApplicationResource()
@@ -436,6 +440,7 @@ public class ApplicationOverviewModelPopulatorTest {
                 .withCollaborationLevel(SINGLE)
                 .withTermsAndConditions(termsAndCondition)
                 .withCompetitionThirdPartyConfig(thirdPartyConfigResource)
+                .withCompetitionApplicationConfig(newCompetitionApplicationConfigResource().build())
                 .build();
 
         ApplicationResource application = newApplicationResource()
@@ -541,6 +546,123 @@ public class ApplicationOverviewModelPopulatorTest {
         assertEquals("Test label", termsAndConditionsSection.getTitle());
         assertEquals("You must agree to it before you submit your application", termsAndConditionsSection.getSubTitle());
         assertEquals((long) sections.get(3).getId(), termsAndConditionsSection.getId());
+
+        verify(questionService).removeNotifications(questionStatuses);
+    }
+
+    @Test
+    public void populateModelWithIMSurvey() {
+        GrantTermsAndConditionsResource termsAndCondition = newGrantTermsAndConditionsResource().withName("Innovate UK").build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCollaborationLevel(SINGLE)
+                .withTermsAndConditions(termsAndCondition)
+                .withCompetitionApplicationConfig(newCompetitionApplicationConfigResource().withIMSurveyRequired(true).build())
+                .build();
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competition.getId())
+                .build();
+        List<QuestionResource> questions = newQuestionResource()
+                .withShortName("A question")
+                .withQuestionSetupType(ASSESSED_QUESTION)
+                .withQuestionNumber("4")
+                .build(1);
+        UserResource user = newUserResource().build();
+        OrganisationResource organisation = newOrganisationResource().build();
+        List<ProcessRoleResource> processRoles = newProcessRoleResource()
+                .withUser(user, newUserResource().build())
+                .withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR)
+                .withOrganisation(organisation.getId(), 99L)
+                .build(2);
+        List<QuestionStatusResource> questionStatuses = newQuestionStatusResource()
+                .withQuestion(questions.get(0).getId())
+                .withMarkedAsComplete(false)
+                .withAssignee(processRoles.get(1).getId())
+                .build(1);
+
+        SectionResource childSection = newSectionResource()
+                .withName("Child finance")
+                .withPriority(3)
+                .build();
+        List<SectionResource> sections = newSectionResource()
+                .withPriority(1, 2, 3, 4, 5)
+                .withName("Section with questions", "Finances", "Project details", "Supporting information", "Terms and conditions")
+                .withType(SectionType.GENERAL, SectionType.FINANCES, SectionType.PROJECT_DETAILS, SectionType.SUPPORTING_INFORMATION, SectionType.TERMS_AND_CONDITIONS)
+                .withChildSections(emptyList(), Collections.singletonList(childSection.getId()), emptyList(), emptyList(), emptyList())
+                .withQuestions(questions.stream().map(QuestionResource::getId).collect(Collectors.toList()), emptyList(), emptyList(), emptyList(), emptyList())
+                .build(5);
+        sections.add(childSection);
+        childSection.setParentSection(sections.get(1).getId());
+
+        Map<Long, Set<Long>> completedSectionsByOrganisation = emptyMap();
+
+        when(organisationRestService.getByUserAndApplicationId(user.getId(), application.getId())).thenReturn(restSuccess(organisation));
+        when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
+        when(sectionRestService.getByCompetition(application.getCompetition())).thenReturn(restSuccess(sections));
+        when(questionRestService.findByCompetition(application.getCompetition())).thenReturn(restSuccess(questions));
+        when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(processRoles));
+        when(questionStatusRestService.findByApplicationAndOrganisation(application.getId(), organisation.getId())).thenReturn(restSuccess(questionStatuses));
+        when(sectionStatusRestService.getCompletedSectionIds(application.getId(), organisation.getId())).thenReturn(restSuccess(asList(sections.get(1).getId(), childSection.getId())));
+        when(questionService.getNotificationsForUser(questionStatuses, user.getId())).thenReturn(questionStatuses);
+        when(messageSource.getMessage("ifs.section.finances.description", null, Locale.getDefault())).thenReturn("Finance description");
+        when(messageSource.getMessage("ifs.section.projectDetails.description", null, Locale.getDefault())).thenReturn("Project details description");
+        when(messageSource.getMessage("ifs.section.termsAndConditions.description", null, Locale.getDefault())).thenReturn("T&Cs description");
+        when(messageSource.getMessage("ifs.section.supportingInformation.description", null, Locale.getDefault())).thenReturn("This section is not scored but will provide background to your project.");
+        when(applicationUrlHelper.getQuestionUrl(any(), anyLong(), anyLong(), anyLong())).thenReturn(Optional.of("/the-question-url"));
+        when(sectionStatusRestService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(restSuccess(completedSectionsByOrganisation));
+        when(grantTermsAndConditionsResource.isProcurementThirdParty()).thenReturn(false);
+
+        ApplicationOverviewViewModel viewModel = populator.populateModel(application, user);
+
+        assertEquals(application, viewModel.getApplication());
+        assertEquals(competition, viewModel.getCompetition());
+        assertEquals(processRoles.get(0), viewModel.getProcessRole());
+        assertTrue(viewModel.isLead());
+
+        assertEquals(5, viewModel.getSections().size());
+
+        Iterator<ApplicationOverviewSectionViewModel> sectionIterator = viewModel.getSections()
+                .stream()
+                .sorted(comparing(ApplicationOverviewSectionViewModel::getId))
+                .iterator();
+
+        ApplicationOverviewSectionViewModel sectionWithQuestions = sectionIterator.next();
+        assertEquals("Section with questions", sectionWithQuestions.getTitle());
+        assertNull(sectionWithQuestions.getSubTitle());
+        assertEquals((long) sections.get(0).getId(), sectionWithQuestions.getId());
+        assertEquals(1, sectionWithQuestions.getRows().size());
+
+        ApplicationOverviewRowViewModel questionRow = sectionWithQuestions.getRows().iterator().next();
+        assertEquals("4. A question", questionRow.getTitle());
+        assertEquals("/the-question-url", questionRow.getUrl());
+        assertEquals(false, questionRow.isComplete());
+        assertEquals(processRoles.get(1), questionRow.getAssignButtonsViewModel().get().getAssignee());
+        assertEquals(processRoles, questionRow.getAssignButtonsViewModel().get().getAssignableApplicants());
+
+        ApplicationOverviewSectionViewModel sectionWithChildSections = sectionIterator.next();
+        assertEquals("Finances", sectionWithChildSections.getTitle());
+        assertEquals("Finance description", sectionWithChildSections.getSubTitle());
+        assertEquals((long) sections.get(1).getId(), sectionWithChildSections.getId());
+
+        ApplicationOverviewRowViewModel childSectionRow = sectionWithChildSections.getRows().iterator().next();
+        assertEquals("Child finance", childSectionRow.getTitle());
+        assertEquals(String.format("/application/%d/form/section/%d", application.getId(), childSection.getId()), childSectionRow.getUrl());
+        assertEquals(true, childSectionRow.isComplete());
+        assertFalse(childSectionRow.getAssignButtonsViewModel().isPresent());
+
+        ApplicationOverviewSectionViewModel projectDetailsSection = sectionIterator.next();
+        assertEquals("Project details", projectDetailsSection.getTitle());
+        assertEquals("Project details description", projectDetailsSection.getSubTitle());
+        assertEquals((long) sections.get(2).getId(), projectDetailsSection.getId());
+
+        ApplicationOverviewSectionViewModel supportingInformationSection = sectionIterator.next();
+        assertEquals("Supporting information", supportingInformationSection.getTitle());
+        assertEquals("This section is not scored but will provide background to your project.", supportingInformationSection.getSubTitle());
+        assertEquals((long) sections.get(3).getId(), supportingInformationSection.getId());
+
+        ApplicationOverviewSectionViewModel termsAndConditionsSection = sectionIterator.next();
+        assertEquals("Terms and conditions", termsAndConditionsSection.getTitle());
+        assertEquals("T&Cs description", termsAndConditionsSection.getSubTitle());
+        assertEquals((long) sections.get(4).getId(), termsAndConditionsSection.getId());
 
         verify(questionService).removeNotifications(questionStatuses);
     }
