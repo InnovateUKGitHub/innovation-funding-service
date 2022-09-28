@@ -80,7 +80,7 @@ public class HorizonWorkProgrammeServiceImpl implements HorizonWorkProgrammeServ
             }
         });
 
-        if(toAdd.size() > 0) {
+        if (!toAdd.isEmpty()) {
             competitionHorizonWorkProgrammeRepository.saveAll(toAdd);
         }
         return serviceSuccess();
