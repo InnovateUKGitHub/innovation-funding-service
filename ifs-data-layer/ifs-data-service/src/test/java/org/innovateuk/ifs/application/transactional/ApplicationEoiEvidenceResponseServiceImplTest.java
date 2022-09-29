@@ -142,7 +142,12 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
                 .organisation(newOrganisation().build())
                 .fileEntry(newFileEntry().build())
                 .build();
-        FileEntryResource fileEntryResource = newFileEntryResource().withId(applicationEoiEvidenceResponse.getFileEntry().getId()).withMediaType("PDF").build();
+        FileEntryResource fileEntryResource = newFileEntryResource().
+                withId(applicationEoiEvidenceResponse.getFileEntry().getId()).
+                withFilesizeBytes(1024).
+                withMediaType("application/pdf").
+                withName("eoi_Evidence_file").
+                build();
         Supplier<InputStream> inputStreamSupplier = () -> new ByteArrayInputStream(fileEntryResource.getName().getBytes());
         FileEntry fileEntry = new FileEntry();
         fileEntry.setId(fileEntryResource.getId());

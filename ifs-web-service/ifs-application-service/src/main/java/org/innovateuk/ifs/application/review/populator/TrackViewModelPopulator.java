@@ -13,6 +13,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.file.service.FileTypeRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,19 +56,34 @@ public class TrackViewModelPopulator {
     @Value("${ifs.early.metrics.url}")
     private String earlyMetricsUrl;
 
-    public TrackViewModel populate(long applicationId, boolean canReopenApplication, long userId) {
+    public TrackViewModel populate(long applicationId, boolean canReopenApplication, UserResource userResource) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        Optional<ApplicationEoiEvidenceResponseResource> eoiEvidence = applicationEoiEvidenceResponseRestService.findOneByApplicationId(applicationId).getSuccess();
-        String eoiEvidenceFileName = "";
-        if (eoiEvidence.isPresent() && eoiEvidence.get().getFileEntryId() != null) {
-            eoiEvidenceFileName = fileEntryRestService.findOne(eoiEvidence.get().getFileEntryId()).getSuccess().getName();
-        }
+        if (competition.isHorizonEuropeGuarantee() && competition.getCompetitionEoiEvidenceConfigResource() != null && competition.getCompetitionEoiEvidenceConfigResource().isEvidenceRequired()) {
 
-        if (competition.isHorizonEuropeGuarantee()) {
-            return getTrackViewModelHorizonEurope(applicationId, canReopenApplication, userId, application, competition, eoiEvidenceFileName);
+            Optional<ApplicationEoiEvidenceResponseResource> eoiEvidence = applicationEoiEvidenceResponseRestService.findOneByApplicationId(applicationId).getSuccess();
+            String eoiEvidenceFileName = "";
+            if (eoiEvidence.isPresent() && eoiEvidence.get().getFileEntryId() != null) {
+                eoiEvidenceFileName = fileEntryRestService.findOne(eoiEvidence.get().getFileEntryId()).getSuccess().getName();
+            }
+            List<String> getValidEoiEvidenceFileTypes = getValidEoiEvidenceFileTypes(competition.getId());
+            List<String> combinedMediaDisplayNameWithExtensions = getMediaDisplayNameWithExtensions(getValidEoiEvidenceFileTypes);
+
+            return new TrackViewModel(
+                    competition,
+                    application,
+                    earlyMetricsUrl,
+                    application.getCompletion(),
+                    canReopenApplication,
+                    getApplicationEoiEvidenceState(applicationId),
+                    eoiEvidenceFileName,
+                    combinedMediaDisplayNameWithExtensions,
+                    competition.getCompetitionEoiEvidenceConfigResource(),
+                    userFromLeadOrganisation(applicationId, userResource.getId()));
+
         } else {
+
             return new TrackViewModel(
                     competition,
                     application,
@@ -75,24 +91,6 @@ public class TrackViewModelPopulator {
                     application.getCompletion(),
                     canReopenApplication);
         }
-    }
-
-    private TrackViewModel getTrackViewModelHorizonEurope(long applicationId, boolean canReopenApplication, long userId, ApplicationResource application, CompetitionResource competition, String eoiEvidenceFileName) {
-
-        List<String> getValidEoiEvidenceFileTypes = getValidEoiEvidenceFileTypes(competition.getId());
-        List<String> combinedMediaDisplayNameWithExtensions = getMediaDisplayNameWithExtensions(getValidEoiEvidenceFileTypes);
-
-        return new TrackViewModel(
-                competition,
-                application,
-                earlyMetricsUrl,
-                application.getCompletion(),
-                canReopenApplication,
-                getApplicationEoiEvidenceState(applicationId),
-                eoiEvidenceFileName,
-                combinedMediaDisplayNameWithExtensions,
-                competition.getCompetitionEoiEvidenceConfigResource(),
-                userFromLeadOrganisation(applicationId, userId));
     }
 
     private List<String> getValidEoiEvidenceFileTypes(long competitionId) {
@@ -144,4 +142,5 @@ public class TrackViewModelPopulator {
     private ApplicationEoiEvidenceState getApplicationEoiEvidenceState(long applicationId) {
         return applicationEoiEvidenceResponseRestService.getApplicationEoiEvidenceState(applicationId).getSuccess().orElse(null);
     }
+
 }

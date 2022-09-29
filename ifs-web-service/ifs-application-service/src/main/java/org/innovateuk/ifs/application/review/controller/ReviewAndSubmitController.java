@@ -304,6 +304,7 @@ public class ReviewAndSubmitController {
 
     @PostMapping(value="/{applicationId}/track", params = "submit-eoi-evidence")
     @PreAuthorize("hasAuthority('applicant')")
+    @SecuredBySpring(value = "SUBMIT_EOI_EVIDENCE", description = "Lead applicant can submit eoi evidence")
     public String submitEoiEvidenceResponse(@PathVariable("applicationId") long applicationId,
                                             @ModelAttribute("form") EoiEvidenceForm form,
                                             @SuppressWarnings("unused") BindingResult bindingResult,
@@ -320,10 +321,10 @@ public class ReviewAndSubmitController {
         return String.format("redirect:/application/%s/track", applicationId);
     }
 
+    @SecuredBySpring(value = "DOWNLOAD_EOI_EVIDENCE", description = "Lead applicant can download eoi evidence")
+    @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/{applicationId}/view-eoi-evidence")
-    public
-    @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadEOIEvidenceFile(
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadEOIEvidenceFile(
             @PathVariable("applicationId") final Long applicationId) {
 
         final ByteArrayResource resource = applicationEoiEvidenceResponseRestService.getEvidenceByApplication(applicationId).getSuccess();
@@ -348,11 +349,11 @@ public class ReviewAndSubmitController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        if (competition.getCompetitionEoiEvidenceConfigResource().isEvidenceRequired()) {
+        if (competition.getCompetitionEoiEvidenceConfigResource()!=null && competition.getCompetitionEoiEvidenceConfigResource().isEvidenceRequired()) {
             eoiEvidenceFormPopulator.populate(applicationId);
         }
 
-        model.addAttribute("model", trackViewModelPopulator.populate(applicationId,canReopenApplication(application, user, competition), user.getId()));
+        model.addAttribute("model", trackViewModelPopulator.populate(applicationId,canReopenApplication(application, user, competition), user));
         return getTrackingPage(competition, application);
     }
 
