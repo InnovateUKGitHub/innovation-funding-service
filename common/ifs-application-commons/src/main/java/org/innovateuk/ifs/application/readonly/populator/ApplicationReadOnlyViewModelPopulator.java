@@ -133,7 +133,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
             settings.setIncludeAllSupporterFeedback(data.getFeedbackToApplicationSupport().size() > 0);
         }
 
-        settings.setIncludeEoiEvidence(shouldDisplayEoiEvidence(application));
+        settings.setIncludeEoiEvidence(shouldDisplayEoiEvidence(competition, application, processRoles, user));
 
         Set<ApplicationSectionReadOnlyViewModel> sectionViews = resolve(sectionsFuture)
                 .stream()
@@ -162,15 +162,25 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 data.getApplication().isEnabledForExpressionOfInterest(),
                 data.getApplication().isEoiFullApplication(),
                 settings.isIncludeEoiEvidence()
-                        ? Optional.of(eoiEvidenceReadOnlyViewModelPopulator.populate(application, user))
+                        ? Optional.of(eoiEvidenceReadOnlyViewModelPopulator.populate(application))
                         : Optional.empty()
         );
     }
 
-    private boolean shouldDisplayEoiEvidence(ApplicationResource application) {
-        return application.isSubmitted()
+    private boolean shouldDisplayEoiEvidence(CompetitionResource competition, ApplicationResource application,
+                                             List<ProcessRoleResource> processRoles, UserResource user) {
+
+        return competition.isEoiEvidenceRequired()
                 && application.isEnabledForExpressionOfInterest()
-                && (application.getApplicationEoiEvidenceResponseResource().getFileEntryId() != null);
+                && application.isSubmitted()
+                && (application.getApplicationEoiEvidenceResponseResource().getFileEntryId() != null)
+                && !isPartner(application, processRoles, user);
+    }
+
+    private boolean isPartner(ApplicationResource application, List<ProcessRoleResource> processRoles, UserResource user) {
+        return processRoles.stream()
+                .anyMatch(pr -> pr.getUser().equals(user.getId())
+                        && !pr.getOrganisationId().equals(application.getLeadOrganisationId()));
     }
 
     private boolean shouldDisplayKtpApplicationFeedback(CompetitionResource competition, UserResource user, List<ProcessRoleResource> processRoles) {

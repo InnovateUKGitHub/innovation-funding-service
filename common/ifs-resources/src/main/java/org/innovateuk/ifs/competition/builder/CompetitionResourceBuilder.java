@@ -325,9 +325,12 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
                 competitionResource.setEnabledForPreRegistration(enabledForExpressionOfInterest), enabledForExpressionOfInterests);
     }
 
+    public CompetitionResourceBuilder withCompetitionEoiEvidenceConfigResource(CompetitionEoiEvidenceConfigResource... competitionEoiEvidenceConfigResources) {
+        return withArray((competitionEoiEvidenceConfigResource, competition) -> competition.setCompetitionEoiEvidenceConfigResource(competitionEoiEvidenceConfigResource), competitionEoiEvidenceConfigResources);
+    }
+
     @Override
     protected CompetitionResource createInitial() {
         return new CompetitionResource();
     }
-
 }

@@ -15,11 +15,11 @@ import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionEoiEvidenceConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -501,13 +501,18 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         GrantTermsAndConditionsResource grantTermsAndConditionsResource = newGrantTermsAndConditionsResource()
                 .withName("Innovate UK")
                 .build();
+        CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource = CompetitionEoiEvidenceConfigResource.builder()
+                .evidenceRequired(true)
+                .build();
         CompetitionResource competition = newCompetitionResource()
                 .withFundingType(FundingType.GRANT)
                 .withTermsAndConditions(grantTermsAndConditionsResource)
+                .withCompetitionEoiEvidenceConfigResource(competitionEoiEvidenceConfigResource)
                 .build();
         ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = ApplicationEoiEvidenceResponseResource.builder()
                 .fileEntryId(fileEntryId)
                 .build();
+        OrganisationResource organisation = newOrganisationResource().build();
         ApplicationResource application = newApplicationResource()
                 .withId(applicationId)
                 .withCompetition(competition.getId())
@@ -515,6 +520,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .withApplicationState(ApplicationState.SUBMITTED)
                 .withSubmittedDate(ZonedDateTime.now())
                 .withApplicationEoiEvidenceResponseResource(applicationEoiEvidenceResponseResource)
+                .withLeadOrganisationId(organisation.getId())
                 .build();
         List<QuestionResource> questions = newQuestionResource()
                 .withQuestionSetupType(QuestionSetupType.APPLICATION_TEAM)
@@ -523,7 +529,6 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         List<QuestionStatusResource> questionStatuses = newQuestionStatusResource()
                 .withQuestion(questions.get(0).getId())
                 .build(1);
-        OrganisationResource organisation = newOrganisationResource().build();
         List<SectionResource> sections = newSectionResource()
                 .withName("Section with questions", "Finance section", "Score assessment")
                 .withChildSections(Collections.emptyList(), Collections.singletonList(1L), Collections.emptyList())
@@ -532,7 +537,11 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .withEnabledForPreRegistration(false)
                 .build(3);
 
-        ProcessRoleResource processRole = newProcessRoleResource().withRole(ProcessRoleType.LEADAPPLICANT).withUser(user).build();
+        ProcessRoleResource processRole = newProcessRoleResource()
+                .withRole(ProcessRoleType.LEADAPPLICANT)
+                .withUser(user)
+                .withOrganisation(organisation.getId())
+                .build();
 
         Map<Long, BigDecimal> scores = new HashMap<>();
         scores.put(1L, new BigDecimal("9"));
@@ -550,7 +559,6 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         EoiEvidenceReadOnlyViewModel eoiEvidenceReadOnlyViewModel  = EoiEvidenceReadOnlyViewModel.builder()
                 .applicationId(applicationId)
                 .expressionOfInterestApplication(true)
-                .partner(false)
                 .title(title)
                 .build();
         eoiEvidenceReadOnlyViewModel.setName(name);
@@ -574,7 +582,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(newArrayList(processRole)));
         when(assessorFormInputResponseRestService.getApplicationAssessment(applicationId, assessmentId)).thenReturn(restSuccess(assessorResponseFuture));
         when(horizonWorkProgrammeRestService.findSelected(applicationId)).thenReturn(restSuccess(workProgrammeFuture));
-        when(eoiEvidenceReadOnlyViewModelPopulator.populate(application, user)).thenReturn(eoiEvidenceReadOnlyViewModel);
+        when(eoiEvidenceReadOnlyViewModelPopulator.populate(application)).thenReturn(eoiEvidenceReadOnlyViewModel);
 
         when(mockPopulator.populate(questions.get(0), expectedData, settings)).thenReturn(expectedRowModel);
 

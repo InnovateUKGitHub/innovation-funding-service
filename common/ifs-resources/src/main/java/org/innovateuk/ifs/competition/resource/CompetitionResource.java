@@ -1144,5 +1144,9 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         return applicationState == ApplicationState.REJECTED;
     }
 
+    @JsonIgnore
+    public boolean isEoiEvidenceRequired() {
+        return competitionEoiEvidenceConfigResource != null && competitionEoiEvidenceConfigResource.isEvidenceRequired();
+    }
 }
 

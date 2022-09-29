@@ -196,17 +196,15 @@
 </th:block>
 
 <th:block th:fragment="eoi_evidence(model, toPrint)">
-    <th:block th:if="${model.shouldDisplayEoiEvidenceUpload()}">
-        <div class="govuk-form-group govuk-body" th:classappend="${toPrint} ? '' : 'download'">
-            <h3 class="govuk-heading-s govuk-!-margin-0" th:text="${model.title}">
-            Proof of success
-        </h3>
-            <a target="_blank"
-           class="govuk-link"
-           th:href="@{/application/{applicationId}/view-eoi-evidence(applicationId=${model.applicationId})}"
-           th:text="|${model.name}, ${model.getHumanReadableFileSize()} (opens in a new window)|">Eoi-evidance-plan.pdf, 438.00 KB</a>
-        </div>
-    </th:block>
+    <div class="govuk-form-group govuk-body" th:classappend="${toPrint} ? '' : 'download'">
+        <h3 class="govuk-heading-s govuk-!-margin-0" th:text="${model.title}">
+        Proof of success
+    </h3>
+        <a target="_blank"
+       class="govuk-link"
+       th:href="@{/application/{applicationId}/view-eoi-evidence(applicationId=${model.applicationId})}"
+       th:text="|${model.name}, ${model.getHumanReadableFileSize()} (opens in a new window)|">Eoi-evidance-plan.pdf, 438.00 KB</a>
+    </div>
 </th:block>
 
 <th:block th:fragment="supporter_feedback(model)">
