@@ -36,7 +36,7 @@ import java.io.InputStream;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static java.util.Arrays.asList;
+import static com.google.common.primitives.Longs.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -66,6 +66,9 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
     private ApplicationEoiEvidenceWorkflowHandler applicationEoiEvidenceWorkflowHandler;
 
     @Mock
+    private UserMapper userMapper;
+
+    @Mock
     private CompetitionRepository competitionRepository;
 
     @Mock
@@ -73,9 +76,6 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
 
     @Mock
     private FileTypeService fileTypeService;
-
-    @Mock
-    private UserMapper userMapper;
 
     private long applicationId;
     private long organisationId;
@@ -85,8 +85,6 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
     private ProcessRole processRole;
     private UserResource userResource;
     private Organisation organisation;
-    private FileEntryResource fileEntryResource;
-    private Supplier<InputStream> inputStreamSupplier;
 
     @Override
     protected ApplicationEoiEvidenceResponseServiceImpl supplyServiceUnderTest() {
@@ -145,7 +143,7 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
                 .fileEntry(newFileEntry().build())
                 .build();
         FileEntryResource fileEntryResource = newFileEntryResource().withId(applicationEoiEvidenceResponse.getFileEntry().getId()).withMediaType("PDF").build();
-        inputStreamSupplier = () -> new ByteArrayInputStream(fileEntryResource.getName().getBytes());
+        Supplier<InputStream> inputStreamSupplier = () -> new ByteArrayInputStream(fileEntryResource.getName().getBytes());
         FileEntry fileEntry = new FileEntry();
         fileEntry.setId(fileEntryResource.getId());
         fileEntry.setMediaType(fileEntryResource.getMediaType());
@@ -184,212 +182,183 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
         assertTrue(result.isSuccess());
     }
 
-//    @Test
-//    public void uploadThrowsApplicationNotFound() {
-//
-//        when(applicationRepository.findById(applicationId)).thenReturn(Optional.empty());
-//
-//        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationId, organisationId, userResource, null, null);
-//
-//        assertTrue(result.isFailure());
-//
-//        assertEquals(1, result.getErrors().size());
-//        assertEquals(HttpStatus.NOT_FOUND, result.getErrors().get(0).getStatusCode());
-//        assertEquals("GENERAL_NOT_FOUND", result.getErrors().get(0).getErrorKey());
-//    }
+    @Test
+    public void uploadThrowsApplicationNotFound() {
 
-//    @Test
-//    public void uploadThrowsApplicationNotSubmitted() {
-//
-//        Application application = newApplication()
-//                .withId(applicationId)
-//                .withActivityState(ApplicationState.OPENED)
-//                .build();
-//
-//        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
-//
-//        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationId, organisationId, userResource, null, null);
-//
-//        assertTrue(result.isFailure());
-//
-//        assertEquals(1, result.getErrors().size());
-//        assertEquals(HttpStatus.CONFLICT, result.getErrors().get(0).getStatusCode());
-//        assertEquals("APPLICATION_UNABLE_TO_UPLOAD_EOI_EVIDENCE_AS_APPLICATION_NOT_YET_SUBMITTED", result.getErrors().get(0).getErrorKey());
-//    }
+        FileEntry fileEntry = newFileEntry()
+                .withId(fileEntryId)
+                .build();
 
-//    @Test
-//    public void uploadThrowsEvidenceNotRequired() {
-//
-//        Application application = newApplication()
-//                .withId(applicationId)
-//                .withCompetition(newCompetition()
-//                        .withEnabledForExpressionOfInterest(true)
-//                        .build())
-//                .withActivityState(ApplicationState.SUBMITTED)
-//                .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig.builder()
-//                        .enabledForExpressionOfInterest(true)
-//                        .build())
-//                .build();
-//        ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = ApplicationEoiEvidenceResponse.builder()
-//                .application(newApplication().build())
-//                .organisation(newOrganisation().build())
-//                .fileEntry(newFileEntry().build())
-//                .build();
-//
-//        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
-//        when(applicationEoiEvidenceResponseMapper.mapToDomain(applicationEoiEvidenceResponseResource)).thenReturn(applicationEoiEvidenceResponse);
-//        when(applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponse);
-//
-//        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationId, organisationId, userResource, null, null);
-//
-//        assertTrue(result.isFailure());
-//
-//        assertEquals(1, result.getErrors().size());
-//        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getErrors().get(0).getStatusCode());
-//        assertEquals("APPLICATION_NOT_ENABLED_FOR_EOI_EVIDENCE_UPLOAD", result.getErrors().get(0).getErrorKey());
-//    }
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.empty());
 
-//    @Test
-//    public void uploadThrowsCompetitionNotEoiEnabled() {
-//
-//        Application application = newApplication()
-//                .withId(applicationId)
-//                .withCompetition(newCompetition()
-//                        .withEnabledForExpressionOfInterest(false)
-//                        .withCompetitionEoiEvidenceConfig(CompetitionEoiEvidenceConfig.builder()
-//                                .evidenceRequired(true)
-//                                .build())
-//                        .build())
-//                .withActivityState(ApplicationState.SUBMITTED)
-//                .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig.builder()
-//                        .enabledForExpressionOfInterest(true)
-//                        .build())
-//                .build();
-//        ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = ApplicationEoiEvidenceResponse.builder()
-//                .application(newApplication().build())
-//                .organisation(newOrganisation().build())
-//                .fileEntry(newFileEntry().build())
-//                .build();
-//
-//        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
-//        when(applicationEoiEvidenceResponseMapper.mapToDomain(applicationEoiEvidenceResponseResource)).thenReturn(applicationEoiEvidenceResponse);
-//        when(applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponse);
-//
-//        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationId, organisationId, userResource, null, null);
-//
-//        assertTrue(result.isFailure());
-//
-//        assertEquals(1, result.getErrors().size());
-//        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getErrors().get(0).getStatusCode());
-//        assertEquals("APPLICATION_NOT_ENABLED_FOR_EOI_EVIDENCE_UPLOAD", result.getErrors().get(0).getErrorKey());
-//    }
 
-//    @Test
-//    public void uploadThrowsApplicationNotEoiEnabled() {
-//        long eoiEvidenceConfigId = 8L;
-//        CompetitionEoiEvidenceConfig competitionEoiEvidenceConfig = new CompetitionEoiEvidenceConfig();
-//        competitionEoiEvidenceConfig.setId(eoiEvidenceConfigId);
-//        competitionEoiEvidenceConfig.setEvidenceRequired(true);
-//        competitionEoiEvidenceConfig.setEvidenceTitle("Evidence title");
-//        competitionEoiEvidenceConfig.setEvidenceGuidance("Evidence guidance");
-//        Competition competition = newCompetition()
-//                .withEnabledForExpressionOfInterest(true)
-//                .withCompetitionEoiEvidenceConfig(competitionEoiEvidenceConfig)
-//                .build();
-//        competitionEoiEvidenceConfig.setCompetition(competition);
-//        Application application = newApplication()
-//                .withId(applicationId)
-//                .withCompetition(competition)
-//                .withActivityState(ApplicationState.SUBMITTED)
-//                .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig.builder()
-//                        .enabledForExpressionOfInterest(false)
-//                        .build())
-//                .withProcessRole(processRole)
-//                .build();
-//        ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = ApplicationEoiEvidenceResponse.builder()
-//                .application(newApplication().build())
-//                .organisation(newOrganisation().build())
-//                .fileEntry(newFileEntry().build())
-//                .build();
-//        FileEntryResource fileEntryResource = newFileEntryResource().withId(applicationEoiEvidenceResponse.getFileEntry().getId()).withMediaType("PDF").build();
-//        inputStreamSupplier = () -> new ByteArrayInputStream(fileEntryResource.getName().getBytes());
-//        FileEntry fileEntry = new FileEntry();
-//        fileEntry.setId(fileEntryResource.getId());
-//        fileEntry.setMediaType(fileEntryResource.getMediaType());
-//
-//        CompetitionEoiDocumentResource competitionEoiDocumentResource1 = new CompetitionEoiDocumentResource(competitionEoiEvidenceConfig.getId(), 1L);
-//        CompetitionEoiDocumentResource competitionEoiDocumentResource3 = new CompetitionEoiDocumentResource(competitionEoiEvidenceConfig.getId(), 3L);
-//        CompetitionEoiDocumentResource competitionEoiDocumentResource4 = new CompetitionEoiDocumentResource(competitionEoiEvidenceConfig.getId(), 4L);
-//
-//        FileTypeResource fileTypeResource1 = new FileTypeResource();
-//        fileTypeResource1.setId(competitionEoiDocumentResource1.getFileTypeId());
-//        fileTypeResource1.setName("PDF");
-//        FileTypeResource fileTypeResource3 = new FileTypeResource();
-//        fileTypeResource3.setId(competitionEoiDocumentResource3.getFileTypeId());
-//        fileTypeResource3.setName("Spreadsheets");
-//        FileTypeResource fileTypeResource4 = new FileTypeResource();
-//        fileTypeResource4.setId(competitionEoiDocumentResource4.getFileTypeId());
-//        fileTypeResource4.setName("Text");
-//
-//        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
-//        when(applicationEoiEvidenceResponseMapper.mapToDomain(applicationEoiEvidenceResponseResource)).thenReturn(applicationEoiEvidenceResponse);
-//        when(applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponse);
-//        when(applicationEoiEvidenceWorkflowHandler.documentUploaded(applicationEoiEvidenceResponse, processRole, user)).thenReturn(true);
-//        when(applicationEoiEvidenceResponseMapper.mapToResource(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponseResource);
-//        when(userMapper.mapToDomain(userResource)).thenReturn(user);
-//        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
-//        when(competitionEoiEvidenceConfigService.getValidFileTypesIdsForEoiEvidence(eoiEvidenceConfigId)).thenReturn(serviceSuccess(asList(competitionEoiDocumentResource1.getFileTypeId(), competitionEoiDocumentResource3.getFileTypeId(), competitionEoiDocumentResource4.getFileTypeId())));
-//        when(fileServiceMock.createFile(any(FileEntryResource.class), any(Supplier.class))).thenReturn(serviceSuccess(fileEntry));
-//        when(fileTypeService.findOne(competitionEoiDocumentResource1.getFileTypeId())).thenReturn(serviceSuccess(fileTypeResource1));
-//        when(fileTypeService.findOne(competitionEoiDocumentResource3.getFileTypeId())).thenReturn(serviceSuccess(fileTypeResource3));
-//        when(fileTypeService.findOne(competitionEoiDocumentResource4.getFileTypeId())).thenReturn(serviceSuccess(fileTypeResource4));
-//        when(applicationEoiEvidenceResponseRepository.findOneByApplicationId(applicationId)).thenReturn(Optional.of(applicationEoiEvidenceResponse));
-//
-//        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationId, organisationId, userResource, fileEntryResource, inputStreamSupplier);
-//
-//        assertTrue(result.isFailure());
-//
-//        assertEquals(1, result.getErrors().size());
-//        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getErrors().get(0).getStatusCode());
-//        assertEquals("APPLICATION_NOT_ENABLED_FOR_EOI_EVIDENCE_UPLOAD", result.getErrors().get(0).getErrorKey());
-//    }
+        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationId, organisationId, userResource, fileEntry);
 
-//    @Test
-//    public void uploadThrowsUnableToInitialiseWorkflow() {
-//
-//        Application application = newApplication()
-//                .withId(applicationId)
-//                .withCompetition(newCompetition()
-//                        .withEnabledForExpressionOfInterest(true)
-//                        .withCompetitionEoiEvidenceConfig(CompetitionEoiEvidenceConfig.builder()
-//                                .evidenceRequired(true)
-//                                .build())
-//                        .build())
-//                .withActivityState(ApplicationState.SUBMITTED)
-//                .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig.builder()
-//                        .enabledForExpressionOfInterest(true)
-//                        .build())
-//                .withProcessRole(processRole)
-//                .build();
-//        ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = ApplicationEoiEvidenceResponse.builder()
-//                .application(newApplication().build())
-//                .organisation(newOrganisation().build())
-//                .fileEntry(newFileEntry().build())
-//                .build();
-//
-//        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
-//        when(applicationEoiEvidenceResponseMapper.mapToDomain(applicationEoiEvidenceResponseResource)).thenReturn(applicationEoiEvidenceResponse);
-//        when(applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponse);
-//        when(applicationEoiEvidenceWorkflowHandler.documentUploaded(applicationEoiEvidenceResponse, processRole, user)).thenReturn(false);
-//
-//        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationId, organisationId, userResource, null, null);
-//
-//        assertTrue(result.isFailure());
-//
-//        assertEquals(1, result.getErrors().size());
-//        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getErrors().get(0).getStatusCode());
-//        assertEquals("APPLICATION_UNABLE_TO_INITIALISE_EOI_EVIDENCE_UPLOAD", result.getErrors().get(0).getErrorKey());
-//    }
+        assertTrue(result.isFailure());
+
+        assertEquals(1, result.getErrors().size());
+        assertEquals(HttpStatus.NOT_FOUND, result.getErrors().get(0).getStatusCode());
+        assertEquals("GENERAL_NOT_FOUND", result.getErrors().get(0).getErrorKey());
+    }
+
+    @Test
+    public void uploadThrowsApplicationNotSubmitted() {
+
+        Application application = newApplication()
+                .withId(applicationId)
+                .withActivityState(ApplicationState.OPENED)
+                .build();
+
+        FileEntry fileEntry = newFileEntry()
+                .withId(fileEntryId)
+                .build();
+
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+
+        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationId, organisationId, userResource, fileEntry);
+
+        assertTrue(result.isFailure());
+
+        assertEquals(1, result.getErrors().size());
+        assertEquals(HttpStatus.CONFLICT, result.getErrors().get(0).getStatusCode());
+        assertEquals("APPLICATION_UNABLE_TO_UPLOAD_EOI_EVIDENCE_AS_APPLICATION_NOT_YET_SUBMITTED", result.getErrors().get(0).getErrorKey());
+    }
+
+    @Test
+    public void uploadThrowsEvidenceNotRequired() {
+
+        Application application = newApplication()
+                .withId(applicationId)
+                .withCompetition(newCompetition()
+                        .withEnabledForExpressionOfInterest(true)
+                        .build())
+                .withActivityState(ApplicationState.SUBMITTED)
+                .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig.builder()
+                        .enabledForExpressionOfInterest(true)
+                        .build())
+                .build();
+        ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = ApplicationEoiEvidenceResponse.builder()
+                .application(newApplication().build())
+                .organisation(newOrganisation().build())
+                .fileEntry(newFileEntry().build())
+                .build();
+
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+        when(applicationEoiEvidenceResponseMapper.mapToDomain(applicationEoiEvidenceResponseResource)).thenReturn(applicationEoiEvidenceResponse);
+        when(applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponse);
+
+        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationId, organisationId, userResource, applicationEoiEvidenceResponse.getFileEntry());
+
+        assertTrue(result.isFailure());
+
+        assertEquals(1, result.getErrors().size());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getErrors().get(0).getStatusCode());
+        assertEquals("APPLICATION_NOT_ENABLED_FOR_EOI_EVIDENCE_UPLOAD", result.getErrors().get(0).getErrorKey());
+    }
+
+    @Test
+    public void uploadThrowsCompetitionNotEoiEnabled() {
+
+        Application application = newApplication()
+                .withId(applicationId)
+                .withCompetition(newCompetition()
+                        .withEnabledForExpressionOfInterest(false)
+                        .withCompetitionEoiEvidenceConfig(CompetitionEoiEvidenceConfig.builder()
+                                .evidenceRequired(true)
+                                .build())
+                        .build())
+                .withActivityState(ApplicationState.SUBMITTED)
+                .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig.builder()
+                        .enabledForExpressionOfInterest(true)
+                        .build())
+                .build();
+        ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = ApplicationEoiEvidenceResponse.builder()
+                .application(newApplication().build())
+                .organisation(newOrganisation().build())
+                .fileEntry(newFileEntry().build())
+                .build();
+
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+        when(applicationEoiEvidenceResponseMapper.mapToDomain(applicationEoiEvidenceResponseResource)).thenReturn(applicationEoiEvidenceResponse);
+        when(applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponse);
+
+        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationId, organisationId, userResource, applicationEoiEvidenceResponse.getFileEntry());
+
+        assertTrue(result.isFailure());
+
+        assertEquals(1, result.getErrors().size());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getErrors().get(0).getStatusCode());
+        assertEquals("APPLICATION_NOT_ENABLED_FOR_EOI_EVIDENCE_UPLOAD", result.getErrors().get(0).getErrorKey());
+    }
+
+    @Test
+    public void uploadThrowsApplicationNotEoiEnabled() {
+
+        Application application = newApplication()
+                .withId(applicationId)
+                .withCompetition(newCompetition()
+                        .withEnabledForExpressionOfInterest(true)
+                        .withCompetitionEoiEvidenceConfig(CompetitionEoiEvidenceConfig.builder()
+                                .evidenceRequired(true)
+                                .build())
+                        .build())
+                .withActivityState(ApplicationState.SUBMITTED)
+                .build();
+        ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = ApplicationEoiEvidenceResponse.builder()
+                .application(newApplication().build())
+                .organisation(newOrganisation().build())
+                .fileEntry(newFileEntry().build())
+                .build();
+
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+        when(applicationEoiEvidenceResponseMapper.mapToDomain(applicationEoiEvidenceResponseResource)).thenReturn(applicationEoiEvidenceResponse);
+        when(applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponse);
+
+        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationId, organisationId, userResource, applicationEoiEvidenceResponse.getFileEntry());
+
+        assertTrue(result.isFailure());
+
+        assertEquals(1, result.getErrors().size());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getErrors().get(0).getStatusCode());
+        assertEquals("APPLICATION_NOT_ENABLED_FOR_EOI_EVIDENCE_UPLOAD", result.getErrors().get(0).getErrorKey());
+    }
+
+    @Test
+    public void uploadThrowsUnableToInitialiseWorkflow() {
+
+        Application application = newApplication()
+                .withId(applicationId)
+                .withCompetition(newCompetition()
+                        .withEnabledForExpressionOfInterest(true)
+                        .withCompetitionEoiEvidenceConfig(CompetitionEoiEvidenceConfig.builder()
+                                .evidenceRequired(true)
+                                .build())
+                        .build())
+                .withActivityState(ApplicationState.SUBMITTED)
+                .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig.builder()
+                        .enabledForExpressionOfInterest(true)
+                        .build())
+                .withProcessRole(processRole)
+                .build();
+        ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = ApplicationEoiEvidenceResponse.builder()
+                .application(newApplication().build())
+                .organisation(newOrganisation().build())
+                .fileEntry(newFileEntry().build())
+                .build();
+
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+        when(applicationEoiEvidenceResponseMapper.mapToDomain(applicationEoiEvidenceResponseResource)).thenReturn(applicationEoiEvidenceResponse);
+        when(applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponse);
+        when(applicationEoiEvidenceWorkflowHandler.documentUploaded(applicationEoiEvidenceResponse, processRole, user)).thenReturn(false);
+
+        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationId, organisationId, userResource, applicationEoiEvidenceResponse.getFileEntry());
+
+        assertTrue(result.isFailure());
+
+        assertEquals(1, result.getErrors().size());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getErrors().get(0).getStatusCode());
+        assertEquals("APPLICATION_UNABLE_TO_INITIALISE_EOI_EVIDENCE_UPLOAD", result.getErrors().get(0).getErrorKey());
+    }
 
     @Test
     public void remove() {
@@ -413,14 +382,14 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
                 .organisation(organisation)
                 .fileEntry(newFileEntry().build())
                 .build();
-        ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = uploadedEoiEvidenceResponse;
-        applicationEoiEvidenceResponse.setFileEntry(null);
+
+        uploadedEoiEvidenceResponse.setFileEntry(null);
 
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
         when(applicationEoiEvidenceResponseRepository.findOneByApplicationId (applicationId)).thenReturn(Optional.of(uploadedEoiEvidenceResponse));
-        when(applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponse);
-        when(applicationEoiEvidenceWorkflowHandler.documentRemoved(applicationEoiEvidenceResponse, processRole, user)).thenReturn(true);
-        when(applicationEoiEvidenceResponseMapper.mapToResource(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponseResource);
+        when(applicationEoiEvidenceResponseRepository.save(uploadedEoiEvidenceResponse)).thenReturn(uploadedEoiEvidenceResponse);
+        when(applicationEoiEvidenceWorkflowHandler.documentRemoved(uploadedEoiEvidenceResponse, processRole, user)).thenReturn(true);
+        when(applicationEoiEvidenceResponseMapper.mapToResource(uploadedEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponseResource);
         when(userMapper.mapToDomain(userResource)).thenReturn(user);
 
         ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.remove(applicationEoiEvidenceResponseResource, userResource);
@@ -494,13 +463,13 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
                 .organisation(organisation)
                 .fileEntry(newFileEntry().build())
                 .build();
-        ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = uploadedEoiEvidenceResponse;
-        applicationEoiEvidenceResponse.setFileEntry(null);
+
+        uploadedEoiEvidenceResponse.setFileEntry(null);
 
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
         when(applicationEoiEvidenceResponseRepository.findOneByApplicationId (applicationId)).thenReturn(Optional.of(uploadedEoiEvidenceResponse));
-        when(applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponse);
-        when(applicationEoiEvidenceWorkflowHandler.documentUploaded(applicationEoiEvidenceResponse, processRole, user)).thenReturn(false);
+        when(applicationEoiEvidenceResponseRepository.save(uploadedEoiEvidenceResponse)).thenReturn(uploadedEoiEvidenceResponse);
+        when(applicationEoiEvidenceWorkflowHandler.documentUploaded(uploadedEoiEvidenceResponse, processRole, user)).thenReturn(false);
         when(userMapper.mapToDomain(userResource)).thenReturn(user);
 
         ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.remove(applicationEoiEvidenceResponseResource, userResource);

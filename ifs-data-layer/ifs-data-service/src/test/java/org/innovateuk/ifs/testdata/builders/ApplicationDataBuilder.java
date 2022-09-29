@@ -21,7 +21,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -40,7 +40,7 @@ import static org.innovateuk.ifs.question.resource.QuestionSetupType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
- * Generates an Application for a Competition.  Additionally generates finances for each Organisation on the Application
+ * Generates an Application for a Competition.  Additionally, generates finances for each Organisation on the Application
  */
 public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, ApplicationDataBuilder> {
     private static final String KTA_EMAIL = "hermen.mermen@ktn-uk.test";
@@ -214,22 +214,19 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                 FileEntry fileEntry = fileEntryRepository.save(
                         new FileEntry(null, "eoi-evidence-file" + application.getId() + ".pdf", "application/pdf", 7945));
 
+                FileEntryResource fileEntryResource = new FileEntryResource();
+                fileEntryResource.setId(fileEntry.getId());
+
+                Supplier<InputStream> inputStreamSupplier = () -> new ByteArrayInputStream("The returned binary file data".getBytes());
+
                 ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = ApplicationEoiEvidenceResponseResource.builder()
                         .applicationId(application.getId())
                         .organisationId(application.getLeadOrganisationId())
                         .fileEntryId(fileEntry.getId())
                         .build();
-                FileEntryResource fileEntryResource = fileEntryService.findOne(applicationEoiEvidenceResponseResource.getFileEntryId()).getSuccess();
 
-                try {
-                    InputStream inputStream = new FileInputStream(fileEntryResource.getName());
-                    Supplier<InputStream> inputStreamSupplier = () -> inputStream;
-                    applicationEoiEvidenceResponseService.upload(application.getId(), application.getLeadOrganisationId(), data.getLeadApplicant(), fileEntryResource, inputStreamSupplier);
-                } catch (Exception e) {
-                    LOG.error("Unable to upload document file", e);
-                    throw new RuntimeException(e);
-                }
-                applicationEoiEvidenceResponseService.submit(data.getApplication().getApplicationEoiEvidenceResponseResource(), data.getLeadApplicant());
+                applicationEoiEvidenceResponseService.upload(application.getId(), applicationEoiEvidenceResponseResource.getOrganisationId(), data.getLeadApplicant(), fileEntryResource, inputStreamSupplier)
+                        .andOnSuccess((createdApplicationEoiEvidenceResponseResource) -> applicationEoiEvidenceResponseService.submit(createdApplicationEoiEvidenceResponseResource, data.getLeadApplicant()));
             }
         });
     }

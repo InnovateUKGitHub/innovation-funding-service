@@ -81,7 +81,7 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
                         ));
     }
 
-    private ServiceResult<ApplicationEoiEvidenceResponseResource> upload(Long applicationId, Long organisationId, UserResource userResource, FileEntry fileEntry) {
+    protected ServiceResult<ApplicationEoiEvidenceResponseResource> upload(Long applicationId, Long organisationId, UserResource userResource, FileEntry fileEntry) {
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
                 .andOnSuccess((application) -> {
                     if (application.isSubmitted()) {

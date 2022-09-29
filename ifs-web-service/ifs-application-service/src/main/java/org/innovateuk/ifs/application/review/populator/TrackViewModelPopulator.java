@@ -64,8 +64,24 @@ public class TrackViewModelPopulator {
         if (eoiEvidence.isPresent() && eoiEvidence.get().getFileEntryId() != null) {
             eoiEvidenceFileName = fileEntryRestService.findOne(eoiEvidence.get().getFileEntryId()).getSuccess().getName();
         }
+
+        if (competition.isHorizonEuropeGuarantee()) {
+            return getTrackViewModelHorizonEurope(applicationId, canReopenApplication, userId, application, competition, eoiEvidenceFileName);
+        } else {
+            return new TrackViewModel(
+                    competition,
+                    application,
+                    earlyMetricsUrl,
+                    application.getCompletion(),
+                    canReopenApplication);
+        }
+    }
+
+    private TrackViewModel getTrackViewModelHorizonEurope(long applicationId, boolean canReopenApplication, long userId, ApplicationResource application, CompetitionResource competition, String eoiEvidenceFileName) {
+
         List<String> getValidEoiEvidenceFileTypes = getValidEoiEvidenceFileTypes(competition.getId());
         List<String> combinedMediaDisplayNameWithExtensions = getMediaDisplayNameWithExtensions(getValidEoiEvidenceFileTypes);
+
         return new TrackViewModel(
                 competition,
                 application,
