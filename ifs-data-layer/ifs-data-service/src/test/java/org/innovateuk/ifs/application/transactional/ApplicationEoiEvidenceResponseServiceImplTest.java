@@ -13,6 +13,7 @@ import org.innovateuk.ifs.application.workflow.configuration.ApplicationEoiEvide
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.CompetitionEoiEvidenceConfig;
+import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -121,7 +122,7 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
         when(applicationEoiEvidenceResponseMapper.mapToResource(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponseResource);
         when(userMapper.mapToDomain(userResource)).thenReturn(user);
 
-        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationEoiEvidenceResponseResource, userResource);
+        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationId, organisationId, userResource, applicationEoiEvidenceResponse.getFileEntry());
 
         assertTrue(result.isSuccess());
     }
@@ -129,9 +130,14 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
     @Test
     public void uploadThrowsApplicationNotFound() {
 
+        FileEntry fileEntry = newFileEntry()
+                .withId(fileEntryId)
+                .build();
+
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.empty());
 
-        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationEoiEvidenceResponseResource, userResource);
+
+        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationId, organisationId, userResource, fileEntry);
 
         assertTrue(result.isFailure());
 
@@ -148,9 +154,13 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
                 .withActivityState(ApplicationState.OPENED)
                 .build();
 
+        FileEntry fileEntry = newFileEntry()
+                .withId(fileEntryId)
+                .build();
+
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
 
-        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationEoiEvidenceResponseResource, userResource);
+        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationId, organisationId, userResource, fileEntry);
 
         assertTrue(result.isFailure());
 
@@ -182,7 +192,7 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
         when(applicationEoiEvidenceResponseMapper.mapToDomain(applicationEoiEvidenceResponseResource)).thenReturn(applicationEoiEvidenceResponse);
         when(applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponse);
 
-        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationEoiEvidenceResponseResource, userResource);
+        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationId, organisationId, userResource, applicationEoiEvidenceResponse.getFileEntry());
 
         assertTrue(result.isFailure());
 
@@ -217,7 +227,7 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
         when(applicationEoiEvidenceResponseMapper.mapToDomain(applicationEoiEvidenceResponseResource)).thenReturn(applicationEoiEvidenceResponse);
         when(applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponse);
 
-        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationEoiEvidenceResponseResource, userResource);
+        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationId, organisationId, userResource, applicationEoiEvidenceResponse.getFileEntry());
 
         assertTrue(result.isFailure());
 
@@ -249,7 +259,7 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
         when(applicationEoiEvidenceResponseMapper.mapToDomain(applicationEoiEvidenceResponseResource)).thenReturn(applicationEoiEvidenceResponse);
         when(applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponse);
 
-        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationEoiEvidenceResponseResource, userResource);
+        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationId, organisationId, userResource, applicationEoiEvidenceResponse.getFileEntry());
 
         assertTrue(result.isFailure());
 
@@ -286,7 +296,7 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
         when(applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponse);
         when(applicationEoiEvidenceWorkflowHandler.documentUploaded(applicationEoiEvidenceResponse, processRole, user)).thenReturn(false);
 
-        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationEoiEvidenceResponseResource, userResource);
+        ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.upload(applicationId, organisationId, userResource, applicationEoiEvidenceResponse.getFileEntry());
 
         assertTrue(result.isFailure());
 
@@ -317,14 +327,14 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
                 .organisation(organisation)
                 .fileEntry(newFileEntry().build())
                 .build();
-        ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = uploadedEoiEvidenceResponse;
-        applicationEoiEvidenceResponse.setFileEntry(null);
+
+        uploadedEoiEvidenceResponse.setFileEntry(null);
 
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
         when(applicationEoiEvidenceResponseRepository.findOneByApplicationId (applicationId)).thenReturn(Optional.of(uploadedEoiEvidenceResponse));
-        when(applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponse);
-        when(applicationEoiEvidenceWorkflowHandler.documentRemoved(applicationEoiEvidenceResponse, processRole, user)).thenReturn(true);
-        when(applicationEoiEvidenceResponseMapper.mapToResource(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponseResource);
+        when(applicationEoiEvidenceResponseRepository.save(uploadedEoiEvidenceResponse)).thenReturn(uploadedEoiEvidenceResponse);
+        when(applicationEoiEvidenceWorkflowHandler.documentRemoved(uploadedEoiEvidenceResponse, processRole, user)).thenReturn(true);
+        when(applicationEoiEvidenceResponseMapper.mapToResource(uploadedEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponseResource);
         when(userMapper.mapToDomain(userResource)).thenReturn(user);
 
         ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.remove(applicationEoiEvidenceResponseResource, userResource);
@@ -398,13 +408,13 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
                 .organisation(organisation)
                 .fileEntry(newFileEntry().build())
                 .build();
-        ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = uploadedEoiEvidenceResponse;
-        applicationEoiEvidenceResponse.setFileEntry(null);
+
+        uploadedEoiEvidenceResponse.setFileEntry(null);
 
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
         when(applicationEoiEvidenceResponseRepository.findOneByApplicationId (applicationId)).thenReturn(Optional.of(uploadedEoiEvidenceResponse));
-        when(applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse)).thenReturn(applicationEoiEvidenceResponse);
-        when(applicationEoiEvidenceWorkflowHandler.documentUploaded(applicationEoiEvidenceResponse, processRole, user)).thenReturn(false);
+        when(applicationEoiEvidenceResponseRepository.save(uploadedEoiEvidenceResponse)).thenReturn(uploadedEoiEvidenceResponse);
+        when(applicationEoiEvidenceWorkflowHandler.documentUploaded(uploadedEoiEvidenceResponse, processRole, user)).thenReturn(false);
         when(userMapper.mapToDomain(userResource)).thenReturn(user);
 
         ServiceResult<ApplicationEoiEvidenceResponseResource> result = service.remove(applicationEoiEvidenceResponseResource, userResource);

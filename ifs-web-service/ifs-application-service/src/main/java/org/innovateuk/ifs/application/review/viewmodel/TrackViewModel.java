@@ -31,6 +31,18 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
                           ApplicationResource currentApplication,
                           String earlyMetricsUrl,
                           BigDecimal completedQuestionsPercentage,
+                          boolean reopenLinkVisible) {
+        this.currentCompetition = currentCompetition;
+        this.currentApplication = currentApplication;
+        this.earlyMetricsUrl = earlyMetricsUrl;
+        this.completedQuestionsPercentage = completedQuestionsPercentage;
+        this.reopenLinkVisible = reopenLinkVisible;
+    }
+
+    public TrackViewModel(CompetitionResource currentCompetition,
+                          ApplicationResource currentApplication,
+                          String earlyMetricsUrl,
+                          BigDecimal completedQuestionsPercentage,
                           boolean reopenLinkVisible,
                           ApplicationEoiEvidenceState applicationEoiEvidenceState,
                           String eoiEvidenceFileName,
