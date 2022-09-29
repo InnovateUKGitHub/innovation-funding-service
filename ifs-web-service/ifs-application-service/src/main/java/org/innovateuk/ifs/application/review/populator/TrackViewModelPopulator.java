@@ -83,7 +83,7 @@ public class TrackViewModelPopulator {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if (competition.getCompetitionEoiEvidenceConfigResource() != null) {
-            return competitionEoiEvidenceConfigRestService.getValidFileTypesIdsForEoiEvidence(competition.getCompetitionEoiEvidenceConfigResource().getId())
+            return competitionEoiEvidenceConfigRestService.getValidFileTypeIdsForEoiEvidence(competition.getCompetitionEoiEvidenceConfigResource().getId())
                     .getSuccess()
                     .stream()
                     .map(validId -> fileTypeRestService.findOne(validId).getSuccess().getName()).collect(Collectors.toList());

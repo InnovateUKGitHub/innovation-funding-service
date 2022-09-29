@@ -76,12 +76,10 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
         return find(competitionEoiEvidenceConfig(applicationId))
                 .andOnSuccess(config -> isValidFileEntryType(applicationId, fileEntryResource))
                 .andOnSuccess(() -> fileService.createFile(fileEntryResource, inputStreamSupplier)
-                        .andOnSuccessReturn(fileDetails -> {
-                             return upload(applicationId, organisationId , userResource, fileDetails).getSuccess();
-                        })
-                );
+                        .andOnSuccessReturn(fileDetails ->
+                                upload(applicationId, organisationId, userResource, fileDetails).getSuccess()
+                        ));
     }
-
 
     private ServiceResult<ApplicationEoiEvidenceResponseResource> upload(Long applicationId, Long organisationId, UserResource userResource, FileEntry fileEntry) {
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))

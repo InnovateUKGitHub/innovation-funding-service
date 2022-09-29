@@ -11,7 +11,6 @@ import org.innovateuk.ifs.competition.repository.CompetitionEoiDocumentRepositor
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionEoiDocumentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionEoiEvidenceConfigResource;
-import org.innovateuk.ifs.file.builder.FileTypeBuilder;
 import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
 import org.junit.Before;
@@ -19,9 +18,13 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.file.builder.FileTypeBuilder.newFileType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -49,6 +52,8 @@ public class CompetitionEoiEvidenceConfigServiceImplTest extends BaseServiceUnit
     private String evidenceGuidance = "guidance";
     private CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource;
     private CompetitionEoiDocumentResource competitionEoiDocumentResource;
+    private Competition competition;
+    private CompetitionEoiEvidenceConfig competitionEoiEvidenceConfig;
 
     @Override
     protected CompetitionEoiEvidenceConfigServiceImpl supplyServiceUnderTest() {
@@ -61,6 +66,7 @@ public class CompetitionEoiEvidenceConfigServiceImplTest extends BaseServiceUnit
         competitionId = 1L;
         fileTypeId = 2L;
         competitionEoiEvidenceConfigResource = CompetitionEoiEvidenceConfigResource.builder()
+                .id(3L)
                 .competitionId(competitionId)
                 .evidenceTitle(evidenceTitle)
                 .evidenceGuidance(evidenceGuidance)
@@ -68,20 +74,20 @@ public class CompetitionEoiEvidenceConfigServiceImplTest extends BaseServiceUnit
         competitionEoiDocumentResource = CompetitionEoiDocumentResource.builder()
                 .fileTypeId(fileTypeId)
                 .build();
-    }
-
-    @Test
-    public void create() {
-
-        Competition competition = newCompetition()
+        competition = newCompetition()
                 .withId(competitionId)
                 .build();
-        CompetitionEoiEvidenceConfig competitionEoiEvidenceConfig = CompetitionEoiEvidenceConfig.builder()
+        competitionEoiEvidenceConfig = CompetitionEoiEvidenceConfig.builder()
+                .id(2L)
                 .competition(competition)
                 .evidenceRequired(true)
                 .evidenceTitle(evidenceTitle)
                 .evidenceGuidance(evidenceGuidance)
                 .build();
+    }
+
+    @Test
+    public void create() {
 
         when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
         when(competitionEoiEvidenceConfigMapper.mapToDomain(competitionEoiEvidenceConfigResource)).thenReturn(competitionEoiEvidenceConfig);
@@ -109,7 +115,7 @@ public class CompetitionEoiEvidenceConfigServiceImplTest extends BaseServiceUnit
     @Test
     public void createDocument() {
 
-        FileType pdfFileType = FileTypeBuilder.newFileType()
+        FileType pdfFileType = newFileType()
                 .withName("PDF")
                 .withExtension(".pdf")
                 .build();
@@ -139,5 +145,39 @@ public class CompetitionEoiEvidenceConfigServiceImplTest extends BaseServiceUnit
         assertEquals(1, result.getErrors().size());
         assertEquals(HttpStatus.NOT_FOUND, result.getErrors().get(0).getStatusCode());
         assertEquals("GENERAL_NOT_FOUND", result.getErrors().get(0).getErrorKey());
+    }
+
+    @Test
+    public void findAllByCompetitionEoiDocumentResources() {
+        List<CompetitionEoiDocument> competitionEoiDocument = new ArrayList<>();
+        competitionEoiDocument.add(new CompetitionEoiDocument(1L, competitionEoiEvidenceConfig, newFileType().withName("PDF").build()));
+
+        competitionEoiDocumentResource.setCompetitionEoiEvidenceConfigId(competitionEoiEvidenceConfig.getId());
+        competitionEoiDocumentResource.setFileTypeId(competitionEoiDocument.get(0).getFileType().getId());
+
+        when(competitionEoiDocumentRepository.findByCompetitionEoiEvidenceConfigId(competitionEoiEvidenceConfig.getId())).thenReturn(competitionEoiDocument);
+        when(competitionEoiDocumentMapper.mapToResource(competitionEoiDocument)).thenReturn(Collections.singletonList(competitionEoiDocumentResource));
+
+        ServiceResult<List<CompetitionEoiDocumentResource>> result = service.findAllByCompetitionEoiDocumentResources(competitionEoiEvidenceConfig.getId());
+        assertTrue(result.isSuccess());
+
+        assertEquals(1, result.getSuccess().size());
+    }
+
+    @Test
+    public void getValidFileTypesIdsForEoiEvidence() {
+        List<CompetitionEoiDocument> competitionEoiDocument = new ArrayList<>();
+        competitionEoiDocument.add(new CompetitionEoiDocument(1L, competitionEoiEvidenceConfig, newFileType().withName("PDF").build()));
+
+        competitionEoiDocumentResource.setCompetitionEoiEvidenceConfigId(competitionEoiEvidenceConfig.getId());
+        competitionEoiDocumentResource.setFileTypeId(competitionEoiDocument.get(0).getFileType().getId());
+
+        when(competitionEoiDocumentRepository.findByCompetitionEoiEvidenceConfigId(competitionEoiEvidenceConfig.getId())).thenReturn(competitionEoiDocument);
+        when(competitionEoiDocumentMapper.mapToResource(competitionEoiDocument)).thenReturn(Collections.singletonList(competitionEoiDocumentResource));
+
+        ServiceResult<List<Long>> result = service.getValidFileTypesIdsForEoiEvidence(competitionEoiEvidenceConfig.getId());
+        assertTrue(result.isSuccess());
+
+        assertEquals(1, result.getSuccess().size());
     }
 }

@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface CompetitionEoiEvidenceConfigRestService {
 
-    RestResult<List<Long>> getValidFileTypesIdsForEoiEvidence(long competitionEoiEvidenceConfigId);
+    RestResult<List<Long>> getValidFileTypeIdsForEoiEvidence(long competitionEoiEvidenceConfigId);
 }

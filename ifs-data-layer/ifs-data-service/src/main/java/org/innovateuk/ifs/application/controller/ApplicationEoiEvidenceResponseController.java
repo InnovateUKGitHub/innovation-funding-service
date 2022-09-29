@@ -12,7 +12,6 @@ import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.controller.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.FileService;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -41,9 +40,6 @@ public class ApplicationEoiEvidenceResponseController {
 
     @Autowired
     private ApplicationEoiEvidenceResponseService applicationEoiEvidenceResponseService;
-
-    @Autowired
-    private FileService fileService;
 
     @Autowired
     private ApplicationService applicationService;
@@ -76,7 +72,7 @@ public class ApplicationEoiEvidenceResponseController {
     private final FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
 
-    @PostMapping(value = "/{applicationId}/eoi-evidence/{organisationId}/upload", produces = "application/json")
+    @PostMapping(value = "/{applicationId}/eoi-evidence-response/{organisationId}/upload", produces = "application/json")
     public RestResult<ApplicationEoiEvidenceResponseResource> uploadEoiEvidence(@RequestHeader(value = "Content-Type", required = false) String contentType,
                                                                                 @RequestHeader(value = "Content-Length", required = false) String contentLength,
                                                                                 @PathVariable("applicationId") long applicationId,

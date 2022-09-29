@@ -18,7 +18,7 @@ public class ApplicationEoiEvidenceResponseRestServiceImpl extends BaseRestServi
 
     @Override
     public RestResult<FileEntryResource> uploadEoiEvidence(long applicationId, long organisationId, long userId, String contentType, long contentLength, String originalFilename, byte[] file) {
-        String uploadURL = String.format("%s/%s/eoi-evidence/%s/upload?filename=%s", URL, applicationId, organisationId, originalFilename);
+        String uploadURL = String.format("%s/%s/eoi-evidence-response/%s/upload?filename=%s", URL, applicationId, organisationId, originalFilename);
 
         return postWithRestResult(uploadURL, file, createFileUploadHeader(contentType, contentLength), FileEntryResource.class);
     }

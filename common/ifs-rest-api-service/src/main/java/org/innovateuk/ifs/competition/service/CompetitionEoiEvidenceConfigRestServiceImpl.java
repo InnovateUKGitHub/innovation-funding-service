@@ -12,7 +12,7 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.lon
 public class CompetitionEoiEvidenceConfigRestServiceImpl extends BaseRestService implements CompetitionEoiEvidenceConfigRestService {
 
     @Override
-    public RestResult<List<Long>> getValidFileTypesIdsForEoiEvidence(long competitionEoiEvidenceConfigId){
+    public RestResult<List<Long>> getValidFileTypeIdsForEoiEvidence(long competitionEoiEvidenceConfigId){
         return getWithRestResultAnonymous("/competition-valid-file-type-ids/" + competitionEoiEvidenceConfigId, longsListType());
     }
 

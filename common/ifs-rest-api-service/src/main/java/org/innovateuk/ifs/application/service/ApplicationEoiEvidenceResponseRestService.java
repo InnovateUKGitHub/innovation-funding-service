@@ -22,5 +22,6 @@ public interface ApplicationEoiEvidenceResponseRestService {
     RestResult<Optional<ApplicationEoiEvidenceState>> getApplicationEoiEvidenceState(long applicationId);
 
     RestResult<ByteArrayResource> getEvidenceByApplication(Long applicationId);
+
     RestResult<FileEntryResource> getEvidenceDetailsByApplication(Long applicationId);
 }
