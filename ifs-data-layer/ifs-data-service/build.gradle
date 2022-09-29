@@ -62,7 +62,7 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3'
     implementation 'org.apache.commons:commons-compress:1.21'
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-    implementation 'com.docusign:docusign-esign-java:3.2.0'
+    implementation 'com.docusign:docusign-esign-java:3.21.0'
     implementation 'io.swagger:swagger-annotations:1.6.6'
     implementation 'javax.ws.rs:javax.ws.rs-api:2.0.1'
     implementation 'org.glassfish.jersey.core:jersey-common'
