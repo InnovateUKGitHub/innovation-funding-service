@@ -636,13 +636,15 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     public CompetitionDataBuilder withEoiEvidenceConfig(CompetitionLine line) {
+        String html = "<p>You need to upload a proof of success to your expression of interest application</p><br><p><b>Accepted file types</b></p><p>{$accepted_file_types}</p><p>It must be less. than 32MB in size.</p>";
+        String text = html.replace("{$accepted_file_types}", "<ul><li>PDF<li></ul>");
         return asCompAdmin(data -> {
             doCompetitionDetailsUpdate(data, competition -> {
                 if (line.isEoiEvidenceRequired()) {
                     CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource = CompetitionEoiEvidenceConfigResource.builder()
                             .evidenceRequired(true)
-                            .evidenceTitle("Eoi Evidence")
-                            .evidenceGuidance("Please upload Eoi Evidence file.")
+                            .evidenceTitle("Proof of success letter")
+                            .evidenceGuidance(text)
                             .competitionId(data.getCompetition().getId()).build();
                     competitionEoiEvidenceConfigService.create(competitionEoiEvidenceConfigResource).getSuccess();
                 }

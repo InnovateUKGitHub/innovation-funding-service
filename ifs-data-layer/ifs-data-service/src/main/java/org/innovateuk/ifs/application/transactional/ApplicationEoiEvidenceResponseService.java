@@ -18,10 +18,10 @@ public interface ApplicationEoiEvidenceResponseService {
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'CREATE_EOI_EVIDENCE_FILE_ENTRY')")
     ServiceResult<ApplicationEoiEvidenceResponseResource> upload(long applicationId, long organisationId, UserResource userResource, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
-    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'SUBMIT_EOI_EVIDENCE')")
+    @PreAuthorize("hasPermission(returnObject, 'SUBMIT_EOI_EVIDENCE')")
     ServiceResult<Void> submit(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource);
 
-    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'REMOVE_EOI_EVIDENCE')")
+    @PreAuthorize("hasPermission(returnObject, 'REMOVE_EOI_EVIDENCE')")
     ServiceResult<ApplicationEoiEvidenceResponseResource> remove(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'GET_EVIDENCE_FILE_CONTENTS')")
