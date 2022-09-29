@@ -1,13 +1,25 @@
 package org.innovateuk.ifs.application.forms.questions.generic.populator;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantQuestionStatusResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.application.forms.questions.generic.viewmodel.GenericQuestionApplicationViewModel;
 import org.innovateuk.ifs.application.populator.AssignButtonsPopulator;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -19,8 +31,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
-import static java.util.Collections.singleton;
+import static java.util.Collections.*;
 import static org.innovateuk.ifs.applicant.builder.ApplicantFormInputResourceBuilder.newApplicantFormInputResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantFormInputResponseResourceBuilder.newApplicantFormInputResponseResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
@@ -30,11 +43,14 @@ import static org.innovateuk.ifs.application.builder.ApplicationExpressionOfInte
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionApplicationConfigResourceBuilder.newCompetitionApplicationConfigResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.IMPACT_MANAGEMENT_SURVEY;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
@@ -52,9 +68,18 @@ public class GenericQuestionApplicationModelPopulatorTest {
     @Mock
     private AssignButtonsPopulator assignButtonsPopulator;
 
+    @Mock
+    private QuestionRestService questionRestService;
+
+    @Mock
+    private ProcessRoleRestService processRoleRestService;
+
+    @Mock
+    private QuestionStatusRestService questionStatusRestService;
+
     @Test
     public void populate() {
-        ZonedDateTime now = ZonedDateTime.now();
+        ZonedDateTime now = now();
         ApplicantQuestionResource applicantQuestion = newApplicantQuestionResource()
                 .withQuestion(
                         newQuestionResource()
@@ -205,7 +230,7 @@ public class GenericQuestionApplicationModelPopulatorTest {
 
     @Test
     public void populateForMultipleChoiceOptions() {
-        ZonedDateTime now = ZonedDateTime.now();
+        ZonedDateTime now = now();
         Long multipleChoiceOptionId = 1L;
         String multipleChoiceOptionText = "Yes";
         MultipleChoiceOptionResource multipleChoiceOption = new MultipleChoiceOptionResource(multipleChoiceOptionId, multipleChoiceOptionText);
@@ -310,7 +335,7 @@ public class GenericQuestionApplicationModelPopulatorTest {
 
     @Test
     public void populateForNoQuestionNumberShownForExpressionOfInterestApplication() {
-        ZonedDateTime now = ZonedDateTime.now();
+        ZonedDateTime now = now();
         long eoiApplicationId = 3L;
         ApplicantQuestionResource applicantQuestion = newApplicantQuestionResource()
                 .withQuestion(
@@ -463,5 +488,83 @@ public class GenericQuestionApplicationModelPopulatorTest {
         assertTrue(viewModel.isTextAreaActive());
         assertTrue(viewModel.isAppendixActive());
         assertTrue(viewModel.isTemplateDocumentActive());
+    }
+
+    @Test
+    public void populateForImpactManagementSurvey() {
+        ZonedDateTime now = now();
+        UserResource user = newUserResource().withId(3L).withFirstName("Steve").withLastName("Smith").build();
+        long questionId = 1L;
+        OrganisationResource organisation = newOrganisationResource().build();
+        ApplicationResource application = newApplicationResource().withLeadOrganisationId(organisation.getId()).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionApplicationConfig(
+                        newCompetitionApplicationConfigResource()
+                                .withIMSurveyRequired(true)
+                                .build())
+                .build();
+        ProcessRoleResource processRoleResource = newProcessRoleResource()
+                .withUser(user)
+                .withRole(LEADAPPLICANT)
+                .withOrganisation(organisation.getId())
+                .build();
+        ApplicantResource applicantResource = newApplicantResource()
+                .withOrganisation(organisation)
+                .withProcessRole(processRoleResource)
+                .build();
+        QuestionResource imQuestion = newQuestionResource()
+                .withQuestionNumber(String.valueOf(questionId))
+                .withDescription("Project impact survey description")
+                .withShortName("Project impact shortName")
+                .withName("Project impact name")
+                .withQuestionSetupType(QuestionSetupType.IMPACT_MANAGEMENT_SURVEY)
+                .build();
+        QuestionStatusResource questionStatusResource = newQuestionStatusResource()
+                .withQuestion(questionId)
+                .withMarkedAsComplete(true)
+                .withApplication(application)
+                .withMarkedAsCompleteByOrganisationId(organisation.getId())
+                .withMarkedAsCompleteByUserId(user.getId())
+                .withMarkedAsCompleteByUserName(user.getName())
+                .withMarkedAsCompleteOn(toUkTimeZone(now))
+                .build();
+        ApplicantQuestionStatusResource applicantQuestionStatusResource = newApplicantQuestionStatusResource()
+                .withStatus(questionStatusResource)
+                .build();
+
+        ApplicantQuestionResource applicantQuestion = newApplicantQuestionResource()
+                .withQuestion(imQuestion)
+                .withApplication(application)
+                .withCompetition(competition)
+                .withCurrentApplicant(applicantResource)
+                .withApplicants(singletonList(applicantResource))
+                .withCurrentUser(user)
+                .withApplicantQuestionStatuses(singletonList(applicantQuestionStatusResource))
+                .withApplicantFormInputs(emptyList())
+                .build();
+
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), IMPACT_MANAGEMENT_SURVEY)).thenReturn(restSuccess(imQuestion));
+        when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(processRoleResource));
+        when(questionStatusRestService.getMarkedAsCompleteByQuestionApplicationAndOrganisation(imQuestion.getId(), application.getId(), organisation.getId())).thenReturn(restSuccess(Optional.of(questionStatusResource)));
+        GenericQuestionApplicationViewModel viewModel = populator.populate(applicantQuestion, Optional.of(organisation.getId()));
+
+        assertEquals(applicantQuestion.getApplication().getId(), viewModel.getApplicationId());
+        assertEquals((long) applicantQuestion.getQuestion().getId(), viewModel.getQuestionId());
+        assertEquals((long) applicantQuestion.getCurrentUser().getId(), viewModel.getCurrentUser());
+
+        assertEquals(toUkTimeZone(now), viewModel.getLastUpdated());
+        assertEquals(user.getName(), viewModel.getLastUpdatedByName());
+        assertEquals(user.getId(), viewModel.getLastUpdatedBy());
+
+        assertFalse(viewModel.isOpen());
+        assertTrue(viewModel.isComplete());
+        assertTrue(viewModel.isLeadApplicant());
+
+        assertTrue(viewModel.isReadOnly());
+        assertTrue(viewModel.hasResponse());
+        assertTrue(viewModel.isRespondedByCurrentUser());
+        assertEquals(" by you", viewModel.getLastUpdatedText());
+        assertTrue(viewModel.isReadOnly());
+        assertFalse(viewModel.isTextAreaActive());
     }
 }

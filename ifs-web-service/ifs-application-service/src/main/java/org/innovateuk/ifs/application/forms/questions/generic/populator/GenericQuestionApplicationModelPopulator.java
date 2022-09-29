@@ -9,12 +9,16 @@ import org.innovateuk.ifs.application.forms.questions.generic.viewmodel.GenericQ
 import org.innovateuk.ifs.application.populator.AssignButtonsPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -30,6 +34,7 @@ import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.forms.questions.generic.viewmodel.GenericQuestionApplicationViewModel.GenericQuestionApplicationViewModelBuilder.aGenericQuestionApplicationViewModel;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.IMPACT_MANAGEMENT_SURVEY;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 
 @Component
@@ -38,12 +43,22 @@ public class GenericQuestionApplicationModelPopulator {
     @Autowired
     private AssignButtonsPopulator assignButtonsPopulator;
 
+    @Autowired
+    private QuestionStatusRestService questionStatusRestService;
+
+    @Autowired
+    private QuestionRestService questionRestService;
+
+    @Autowired
+    private ProcessRoleRestService processRoleRestService;
+
     @Value("${ifs.loan.partb.enabled}")
     private boolean ifsLoanPartBEnabled;
 
     @Value("${ifs.loans.salesforce.page.url}")
-    private String salesForceURL;
-
+    private String loansSalesForceCommunityURL;
+    @Value("${ifs.impact-management.salesforce.page.url}")
+    private String impactManagementSalesForceCommunityURL;
     @Value("${ifs.forminputresponse.max.filesize.bytes}")
     private Long maximumAppendixSize;
 
@@ -72,6 +87,17 @@ public class GenericQuestionApplicationModelPopulator {
                                                        .withLastUpdatedBy(response.getUpdatedByUser())
                                                        .withLastUpdatedByName(response.getUpdatedByUserName()));
 
+        boolean imSurveyQuestion = applicantQuestion.getQuestion().getQuestionSetupType() == IMPACT_MANAGEMENT_SURVEY;
+        if (imSurveyQuestion) {
+            long imQuestionId = questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), IMPACT_MANAGEMENT_SURVEY).getSuccess().getId();
+            long currentUserId = applicantQuestion.getCurrentUser().getId();
+            long currentUserOrganisationId = processRoleRestService.findProcessRole(currentUserId, application.getId()).getSuccess().getOrganisationId();
+            Optional<QuestionStatusResource> questionStatusResource = questionStatusRestService.getMarkedAsCompleteByQuestionApplicationAndOrganisation(imQuestionId, application.getId(), currentUserOrganisationId).getSuccess();
+            questionStatusResource.ifPresent(statusResource -> viewModelBuilder.withLastUpdated(toUkTimeZone(statusResource.getMarkedAsCompleteOn()))
+                    .withLastUpdatedBy(statusResource.getMarkedAsCompleteByUserId())
+                    .withLastUpdatedByName(statusResource.getMarkedAsCompleteByUserName()));
+        }
+
         boolean hideAssignButtons = !Boolean.TRUE.equals(question.isAssignEnabled());
 
         return viewModelBuilder.withApplicationId(application.getId())
@@ -93,9 +119,11 @@ public class GenericQuestionApplicationModelPopulator {
                 .withLeadOrganisationName(leadOrganisation.getName())
                 .withLeadOrganisationCompaniesHouseNumber(leadOrganisation.getCompaniesHouseNumber())
                 .withLoansPartBEnabled(ifsLoanPartBEnabled)
-                .withLoansFormQuestionsSalesForceURL(salesForceURL)
+                .withLoansFormQuestionsSalesForceURL(loansSalesForceCommunityURL)
                 .withCompetitionId(competition.getId())
                 .withIsExpressionOfInterestApplication(application.isEnabledForExpressionOfInterest())
+                .withIMSurveyQuestion(imSurveyQuestion)
+                .withImpactManagementSalesForceURL(impactManagementSalesForceCommunityURL)
                 .build();
     }
 

@@ -94,7 +94,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
         Optional<FormInputResponseResource> templateDocumentResponse = templateDocument
                 .map(input -> firstOrNull(formInputIdToFormInputResponses.get(input.getId())));
 
-        return new GenericQuestionReadOnlyViewModel(data, question, questionName(question, settings),
+        return new GenericQuestionReadOnlyViewModel(data, question, questionName(data, question, settings),
                 question.getName(),
                 multipleStatuses,
                 answer,
@@ -312,8 +312,10 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
         }
     }
 
-    private String questionName(QuestionResource question, ApplicationReadOnlySettings settings) {
-        return (question.getQuestionSetupType() == ASSESSED_QUESTION && settings.isIncludeQuestionNumber()) ?
+    private String questionName(ApplicationReadOnlyData data, QuestionResource question, ApplicationReadOnlySettings settings) {
+        return (question.getQuestionSetupType() == ASSESSED_QUESTION
+                && settings.isIncludeQuestionNumber()
+                && !data.getApplication().isEnabledForExpressionOfInterest()) ?
                 String.format("%s. %s", question.getQuestionNumber(), question.getShortName()) :
                 question.getShortName();
     }

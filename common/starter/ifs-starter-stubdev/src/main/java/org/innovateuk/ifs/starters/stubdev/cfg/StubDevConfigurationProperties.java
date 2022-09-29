@@ -43,6 +43,11 @@ public class StubDevConfigurationProperties {
     private String webCoreTemplates = "/ifs-web-service/ifs-web-core/src/main/resources/templates/";
 
     /**
+     * Use this to serve static files from the filesystem
+     */
+    private String assessmentCommonsTemplates = "/common/ifs-assessment-commons/src/main/resources/templates/";
+
+    /**
      * Enable trace logging in thymeleaf to log template calls
      */
     private boolean logThymeLeafTemplates;

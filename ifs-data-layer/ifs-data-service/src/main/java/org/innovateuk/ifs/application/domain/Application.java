@@ -299,6 +299,12 @@ public class Application implements ProcessActivity {
                 .collect(Collectors.toList());
     }
 
+    public List<ProcessRole> getProcessRolesByOrganisation(Long organisationId) {
+        return this.processRoles.stream()
+                .filter(processRole -> processRole.getOrganisationId().equals(organisationId))
+                .collect(Collectors.toList());
+    }
+
     public User getLeadApplicant() {
         return getLeadProcessRole().map(ProcessRole::getUser).orElse(null);
     }

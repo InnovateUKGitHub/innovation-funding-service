@@ -179,5 +179,9 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(competition.getCompetitionStatus());
     }
 
+    @PermissionRule(value = "EOI_EVIDENCE_SUBMITTED_NOTIFICATION", description = "A lead organisation member can send the notification of eoi evidence submission")
+    public boolean isLeadOrganisationMemberCanSendApplicationSubmittedNotification(final ApplicationResource applicationResource, final UserResource user) {
+        return checkHasAnyApplicantParticipantRole(applicationResource.getId(), applicationResource.getLeadOrganisationId(), user);
+    }
 }
 
