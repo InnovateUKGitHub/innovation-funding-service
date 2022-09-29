@@ -9,12 +9,14 @@ import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.status.StatusService;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.TriFunction;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
@@ -167,10 +169,10 @@ public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<Set
     @Test
     public void onlySuperAdminUserCanResetGrantOfferLetter() {
         allGlobalRoleUsers.forEach(userResource -> {
-            if (userResource.hasRole(Role.SUPER_ADMIN_USER)) {
-                assertTrue(rules.superAdminUserCanResetGrantOfferLetter(ProjectCompositeId.id(1L), userResource));
+            if (userResource.hasAuthority(Authority.IFS_ADMINISTRATOR)) {
+                assertTrue(rules.ifsAdminUserCanResetGrantOfferLetter(ProjectCompositeId.id(1L), userResource));
             } else {
-                assertFalse(rules.superAdminUserCanResetGrantOfferLetter(ProjectCompositeId.id(1L), userResource));
+                assertFalse(rules.ifsAdminUserCanResetGrantOfferLetter(ProjectCompositeId.id(1L), userResource));
             }
         });
     }
@@ -178,7 +180,7 @@ public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<Set
     @Test
     public void onlyIFSAdminCanApproveSpendProfile() {
 
-        assertTrue(stream(Role.values()).filter(role -> asList(Role.IFS_ADMINISTRATOR).contains(role))
+        assertTrue(stream(Role.values()).filter(role -> List.of(Role.IFS_ADMINISTRATOR).contains(role))
                 .map(this::doTestApproveDocumentsAccess)
                 .filter(Boolean.FALSE::equals)
                 .collect(Collectors.toList())
