@@ -21,14 +21,28 @@ public class ApplicationEoiEvidenceResponsePermissionRules extends BasePermissio
         return checkHasAnyApplicantParticipantRole(applicationResource.getId(), applicationResource.getLeadOrganisationId(), user);
     }
 
-    @PermissionRule(value = "UPLOAD_EOI_EVIDENCE", description = "Lead applicant can create the eoi evidence")
-    public boolean applicantCanCreateEoiEvidence(ApplicationResource applicationResource, UserResource user) {
-        return isLeadApplicant(applicationResource.getId(), user);
+    @PermissionRule(value = "SUBMIT_EOI_EVIDENCE", description = "Lead applicant can submit the eoi evidence.")
+    public boolean applicantCanSubmitEoiEvidence(ApplicationResource applicationResource, UserResource user) {
+        return checkHasAnyApplicantParticipantRole(applicationResource.getId(), applicationResource.getLeadOrganisationId(), user);
     }
 
-    @PermissionRule(value = "REMOVE_EOI_EVIDENCE", description = "Lead applicant can remove the eoi evidence")
+    @PermissionRule(value = "REMOVE_EOI_EVIDENCE", description = "Lead applicant can remove the eoi evidence.")
     public boolean applicantCanRemoveEoiEvidence(ApplicationResource applicationResource, UserResource user) {
-        return isLeadApplicant(applicationResource.getId(), user);
+        return checkHasAnyApplicantParticipantRole(applicationResource.getId(), applicationResource.getLeadOrganisationId(), user);
     }
 
+    @PermissionRule(value = "GET_EVIDENCE_FILE_CONTENTS", description = "Lead applicant can view the eoi evidence file.")
+    public boolean applicantCanViewEvidenceFileContents(ApplicationResource applicationResource, UserResource user) {
+        return checkHasAnyApplicantParticipantRole(applicationResource.getId(), applicationResource.getLeadOrganisationId(), user);
+    }
+
+    @PermissionRule(value = "GET_EVIDENCE_FILE_DETAILS", description = "Lead applicant can get eoi evidence file details.")
+    public boolean applicantCanGetEvidenceFileEntryDetails(ApplicationResource applicationResource, UserResource user) {
+        return checkHasAnyApplicantParticipantRole(applicationResource.getId(), applicationResource.getLeadOrganisationId(), user);
+    }
+
+    @PermissionRule(value = "FIND_APPLICATION_EOI_EVIDENCE", description = "Lead applicant get their application eoi evidence..")
+    public boolean applicantCanGetEvidenceForTheirApplication(ApplicationResource applicationResource, UserResource user) {
+        return checkHasAnyApplicantParticipantRole(applicationResource.getId(), applicationResource.getLeadOrganisationId(), user);
+    }
 }

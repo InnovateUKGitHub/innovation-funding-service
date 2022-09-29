@@ -18,25 +18,21 @@ public interface ApplicationEoiEvidenceResponseService {
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'CREATE_EOI_EVIDENCE_FILE_ENTRY')")
     ServiceResult<ApplicationEoiEvidenceResponseResource> upload(long applicationId, long organisationId, UserResource userResource, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
-    @PreAuthorize("hasAuthority('applicant')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'SUBMIT_EOI_EVIDENCE')")
     ServiceResult<Void> submit(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource);
 
-    @PreAuthorize("hasAuthority('applicant')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'REMOVE_EOI_EVIDENCE')")
     ServiceResult<ApplicationEoiEvidenceResponseResource> remove(ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource, UserResource userResource);
 
-    @PreAuthorize("hasAuthority('applicant')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'GET_EVIDENCE_FILE_CONTENTS')")
     ServiceResult<FileAndContents> getEvidenceFileContents(long applicationId);
 
-    @PreAuthorize("hasAuthority('applicant')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'GET_EVIDENCE_FILE_DETAILS')")
     ServiceResult<FileEntryResource> getEvidenceFileEntryDetails(Long applicationId);
 
-
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'FIND_APPLICATION_EOI_EVIDENCE')")
     ServiceResult<Optional<ApplicationEoiEvidenceResponseResource>> findOneByApplicationId(long applicationId);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<Optional<ApplicationEoiEvidenceState>> getApplicationEoiEvidenceState(long applicationId);
-
-
-
 }
