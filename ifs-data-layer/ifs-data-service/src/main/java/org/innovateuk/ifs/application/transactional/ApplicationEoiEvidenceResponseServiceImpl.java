@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationEoiEvidenceResponse;
 import org.innovateuk.ifs.application.mapper.ApplicationEoiEvidenceResponseMapper;
 import org.innovateuk.ifs.application.repository.ApplicationEoiEvidenceResponseRepository;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceResponseResource;
 import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceState;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationEoiEvidenceWorkflowHandler;
@@ -42,9 +41,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactionalService implements ApplicationEoiEvidenceResponseService{
-
-    @Autowired
-    private ApplicationRepository applicationRepository;
 
     @Autowired
     private ApplicationEoiEvidenceResponseRepository applicationEoiEvidenceResponseRepository;
