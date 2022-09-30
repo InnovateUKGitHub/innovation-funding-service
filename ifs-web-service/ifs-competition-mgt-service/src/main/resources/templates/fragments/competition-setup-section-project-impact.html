@@ -16,11 +16,11 @@
 
         <th:block th:if="${model.general.editable }">
             <div id="project-impact-survey-applicable" class="govuk-form-group"
-                 th:classappend="'govuk-form-group--error'">
+                 th:classappend="${#fields.hasErrors('projectImpactSurveyApplicable')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"
                             id="projectImpactSurveyApplicable">
-                        <h2 class="govuk-fieldset__heading">Does this competition has project impact surevy?</h2>
+                        <h2 class="govuk-fieldset__heading">Does this competition have a project impact survey  ?</h2>
                     </legend>
                     <span th:if="${#fields.hasErrors('projectImpactSurveyApplicable')}"
                           class="govuk-error-message"
@@ -49,21 +49,33 @@
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.projectImpactForm.projectImpactSurveyApplicable.required}"/>
                             <label class="govuk-radios__label"
-                                   for="comp-projectImpactSurveyApplicable-no"> No </label>
+                                   for="comp-projectImpactSurveyApplicable-no">
+                                No
+                            </label>
                         </div>
                     </div>
                 </fieldset>
-
             </div>
-            </fieldset>
+
+            <button class="govuk-button">Done</button>
         </th:block>
-        <th:block>
-            <button class="govuk-button">Save and continue</button>
-            <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button">Edit</button>
-        </th:block>
-        </div>
 
 
     </form>
-
+    <ul class="govuk-list pagination">
+        <li class="prev">
+            <a rel="prev" title="Navigate to previous part"
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='organisational-eligibility')}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Organisational Eligibility</span>
+            </a>
+        </li>
+        <li class="next">
+            <a rel="next" title="Navigate to next part"
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='application')}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Application</span>
+            </a>
+        </li>
+    </ul>
 </th:block>
