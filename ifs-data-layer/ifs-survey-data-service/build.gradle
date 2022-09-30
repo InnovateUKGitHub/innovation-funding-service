@@ -32,7 +32,6 @@ dependencies {
     implementation project(":common:ifs-survey-resources")
     implementation project(":common:ifs-security")
 
-    testImplementation project(":common:ifs-commons-test")
     testImplementation project(":common:ifs-security-test")
 
     testImplementation "junit:junit"

@@ -15,11 +15,10 @@ import java.math.BigInteger;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.generateUnsavedRowId;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
@@ -67,7 +66,7 @@ public class ApplicationProcurementMilestoneFormSaverTest {
 
         assertThat(result.isSuccess(), is(true));
 
-        verify(restService).create(argThat(lambdaMatches(milestone -> {
+        verify(restService).create(argThat(milestone -> {
             assertThat(milestone.getId(), is(nullValue()));
             assertThat(milestone.getMonth(), is(equalTo(unsavedMilestone.getMonth())));
             assertThat(milestone.getPayment(), is(equalTo(unsavedMilestone.getPayment())));
@@ -76,9 +75,9 @@ public class ApplicationProcurementMilestoneFormSaverTest {
             assertThat(milestone.getSuccessCriteria(), is(equalTo(unsavedMilestone.getSuccessCriteria())));
             assertThat(milestone.getTaskOrActivity(), is(equalTo(unsavedMilestone.getTaskOrActivity())));
             return true;
-        })));
+        }));
 
-        verify(restService).update(argThat(lambdaMatches(milestone -> {
+        verify(restService).update(argThat(milestone -> {
             assertThat(milestone.getId(), is(milestone.getId()));
             assertThat(milestone.getMonth(), is(equalTo(unsavedMilestone.getMonth())));
             assertThat(milestone.getPayment(), is(equalTo(unsavedMilestone.getPayment())));
@@ -87,6 +86,6 @@ public class ApplicationProcurementMilestoneFormSaverTest {
             assertThat(milestone.getSuccessCriteria(), is(equalTo(unsavedMilestone.getSuccessCriteria())));
             assertThat(milestone.getTaskOrActivity(), is(equalTo(unsavedMilestone.getTaskOrActivity())));
             return true;
-        })));
+        }));
     }
 }

@@ -54,6 +54,7 @@ import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatcher;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -61,7 +62,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.function.Predicate;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Boolean.TRUE;
@@ -71,7 +71,6 @@ import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
-import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.address.builder.AddressTypeBuilder.newAddressType;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -386,26 +385,26 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         verify(projectDetailsWorkflowHandlerMock).projectAddressAdded(any(), any());
 
-        Predicate<Project> matcher = p -> {
-            assertThat(p.getProjectUsers().size(), equalTo(5));
-            ProjectUser projectManager = p.getProjectUsers().stream().filter(pu -> pu.getRole() == PROJECT_MANAGER).findAny().get();
-            assertThat(projectManager.getUser().getId(), equalTo(leadPartnerProjectUser.getUser().getId()));
+        verify(projectMapperMock).mapToResource(argThat((ArgumentMatcher<Project>) p -> {
+                assertThat(p.getProjectUsers().size(), equalTo(5));
+                ProjectUser projectManager = p.getProjectUsers().stream().filter(pu -> pu.getRole() == PROJECT_MANAGER).findAny().get();
+                assertThat(projectManager.getUser().getId(), equalTo(leadPartnerProjectUser.getUser().getId()));
 
-            ProjectUser financeContact1 = p.getProjectUsers().stream().filter(pu -> pu.getRole() == PROJECT_FINANCE_CONTACT && pu.getOrganisation().getId().equals(organisation.getId())).findAny().get();
-            assertThat(financeContact1.getUser().getId(), equalTo(leadPartnerProjectUser.getUser().getId()));
+                ProjectUser financeContact1 = p.getProjectUsers().stream().filter(pu -> pu.getRole() == PROJECT_FINANCE_CONTACT && pu.getOrganisation().getId().equals(organisation.getId())).findAny().get();
+                assertThat(financeContact1.getUser().getId(), equalTo(leadPartnerProjectUser.getUser().getId()));
 
-            ProjectUser financeContact2 = p.getProjectUsers().stream().filter(pu -> pu.getRole() == PROJECT_FINANCE_CONTACT && pu.getOrganisation().getId().equals(partner.getId())).findAny().get();
-            assertThat(financeContact2.getUser().getId(), equalTo(partnerProcessRole.getUser().getId()));
+                ProjectUser financeContact2 = p.getProjectUsers().stream().filter(pu -> pu.getRole() == PROJECT_FINANCE_CONTACT && pu.getOrganisation().getId().equals(partner.getId())).findAny().get();
+                assertThat(financeContact2.getUser().getId(), equalTo(partnerProcessRole.getUser().getId()));
 
-            MonitoringOfficer monitoringOfficer = p.getProjectMonitoringOfficer().get();
-            assertThat(monitoringOfficer.getUser().getId(), equalTo(ktaRole.getUser().getId()));
+                MonitoringOfficer monitoringOfficer = p.getProjectMonitoringOfficer().get();
+                assertThat(monitoringOfficer.getUser().getId(), equalTo(ktaRole.getUser().getId()));
 
-            Address address = p.getAddress();
-            assertThat(address, equalTo(kbAddress.getAddress()));
-            return true;
-        };
-        verify(projectMapperMock).mapToResource(argThat(lambdaMatches(matcher)));
+                Address address = p.getAddress();
+                assertThat(address, equalTo(kbAddress.getAddress()));
+                return true;
+        }));
     }
+
     @Test
     public void createProjectFromApplication_alreadyExists() {
 

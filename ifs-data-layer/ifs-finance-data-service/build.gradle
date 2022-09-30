@@ -30,7 +30,6 @@ dependencies {
     implementation project(":common:ifs-error-util")
     implementation project(":common:ifs-rest-util")
 
-    testImplementation project(":common:ifs-commons-test")
     testImplementation project(":common:ifs-security-test")
 
     testImplementation "junit:junit"
