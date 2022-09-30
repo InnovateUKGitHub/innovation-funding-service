@@ -362,7 +362,8 @@ public abstract class BaseApplicationMigrationSetup extends BaseAuthenticationAw
                     .organisation(organisation)
                     .fileEntry(fileEntry)
                     .build();
-            applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse);
+            applicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse);
+            application.setApplicationEoiEvidenceResponse(applicationEoiEvidenceResponse);
         });
     }
 }
