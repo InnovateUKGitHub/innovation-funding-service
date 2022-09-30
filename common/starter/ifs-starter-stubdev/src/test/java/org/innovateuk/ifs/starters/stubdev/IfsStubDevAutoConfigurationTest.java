@@ -14,6 +14,7 @@ import org.junit.jupiter.api.parallel.ResourceLock;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.devtools.autoconfigure.LocalDevToolsAutoConfiguration;
+import org.springframework.boot.test.context.assertj.AssertableApplicationContext;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.ApplicationContext;
 import org.thymeleaf.templateresolver.ITemplateResolver;
@@ -21,8 +22,7 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 import static org.innovateuk.ifs.IfsProfileConstants.STUBDEV;
 import static org.innovateuk.ifs.starters.stubdev.cfg.StubDevConfigurationProperties.STUB_DEV_PROPS_PREFIX;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -32,7 +32,6 @@ class IfsStubDevAutoConfigurationTest {
     private static final List COMMON = ImmutableList.of(
             WarningLogger.class,
             StubUidSupplier.class,
-            ITemplateResolver.class,
             RewriteFilter.class,
             StubDevConfigurationProperties.class,
             IfsStubDevAutoConfiguration.class
@@ -59,6 +58,7 @@ class IfsStubDevAutoConfigurationTest {
                         AutoConfigurations.of(LocalDevToolsAutoConfiguration.class, IfsStubDevAutoConfiguration.class)
                 ).withBean(TimerAspect.class).run((context) -> {
                     assertFound(context, COMMON);
+                    assertNFound(context, ITemplateResolver.class, 2);
                     assertFound(context, UNCOMMON);
                 });
     }
@@ -88,9 +88,12 @@ class IfsStubDevAutoConfigurationTest {
                         AutoConfigurations.of(LocalDevToolsAutoConfiguration.class, IfsStubDevAutoConfiguration.class)
                 ).run((context) -> {
                     assertFound(context, COMMON);
+                    assertNFound(context, ITemplateResolver.class, 2);
                     assertNotFound(context, UNCOMMON);
                 });
     }
+
+
 
     @Test
     @ResourceLock("COMMON")
@@ -122,5 +125,9 @@ class IfsStubDevAutoConfigurationTest {
 
     private static void assertFound(ApplicationContext context, List<Class> clzs) {
         clzs.stream().forEach(clz -> assertThat(context.getBean(clz), is(notNullValue())));
+    }
+
+    private void assertNFound(AssertableApplicationContext context, Class clz, int howMany) {
+        assertThat(context.getBeansOfType(clz).size(), equalTo(howMany));
     }
 }
