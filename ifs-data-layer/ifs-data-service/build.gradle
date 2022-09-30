@@ -67,6 +67,7 @@ dependencies {
     implementation 'org.glassfish.jersey.media:jersey-media-multipart'
     implementation 'org.glassfish.jersey.core:jersey-client'
     implementation 'org.glassfish.jersey.media:jersey-media-json-jackson'
+    implementation 'org.glassfish.jersey.inject:jersey-hk2'
     implementation 'org.apache.oltu.oauth2:org.apache.oltu.oauth2.client:1.0.2'
     implementation 'com.auth0:java-jwt:4.0.0'
     implementation 'io.swagger:swagger-annotations:1.6.6'
