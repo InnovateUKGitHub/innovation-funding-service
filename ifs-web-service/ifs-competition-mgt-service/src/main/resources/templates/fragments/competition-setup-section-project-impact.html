@@ -1,0 +1,69 @@
+<!-- =================== Comp setup section - Project  Impact (14) ============================== -->
+<th:block th:fragment="section-content" xmlns:th="http://www.thymeleaf.org">
+    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert"
+         aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)"/>
+    </div>
+
+    <th:block th:insert="fragments/layout :: page-title"
+              th:with="pageTitle='Project Impact',size='govuk-heading-xl'"/>
+
+    <form th:action="@{(${model.general.editable} ? '' : 'project-impact/edit')}"
+          method="post"
+          th:object="${competitionSetupForm}"
+          novalidate="novalidate">
+
+        <th:block th:if="${model.general.editable }">
+            <div id="project-impact-survey-applicable" class="govuk-form-group"
+                 th:classappend="'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"
+                            id="projectImpactSurveyApplicable">
+                        <h2 class="govuk-fieldset__heading">Does this competition has project impact surevy?</h2>
+                    </legend>
+                    <span th:if="${#fields.hasErrors('projectImpactSurveyApplicable')}"
+                          class="govuk-error-message"
+                          th:each="err : ${#fields.errors('projectImpactSurveyApplicable')}" th:text="${err}"/>
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input type="radio"
+                                   class="govuk-radios__input"
+                                   id="comp-projectImpactSurveyApplicable-yes"
+                                   th:field="*{projectImpactSurveyApplicable}"
+                                   value="false"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.projectImpactForm.projectImpactSurveyApplicable.required}"/>
+                            <label class="govuk-radios__label"
+                                   for="comp-projectImpactSurveyApplicable-yes">
+                                Yes
+                            </label>
+                        </div>
+
+                        <div class="govuk-radios__item">
+                            <input type="radio"
+                                   class="govuk-radios__input"
+                                   id="comp-projectImpactSurveyApplicable-no"
+                                   th:field="*{projectImpactSurveyApplicable}"
+                                   value="false"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.projectImpactForm.projectImpactSurveyApplicable.required}"/>
+                            <label class="govuk-radios__label"
+                                   for="comp-projectImpactSurveyApplicable-no"> No </label>
+                        </div>
+                    </div>
+                </fieldset>
+
+            </div>
+            </fieldset>
+        </th:block>
+        <th:block>
+            <button class="govuk-button">Save and continue</button>
+            <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button">Edit</button>
+        </th:block>
+        </div>
+
+
+    </form>
+
+</th:block>
