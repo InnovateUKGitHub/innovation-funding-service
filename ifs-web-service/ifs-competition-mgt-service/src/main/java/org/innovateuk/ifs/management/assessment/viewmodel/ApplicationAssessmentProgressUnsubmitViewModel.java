@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.assessment.viewmodel;
 
+import lombok.Getter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType;
@@ -7,6 +8,7 @@ import org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType;
 /**
  * Holder of model attributes for the Application Progress view.
  */
+@Getter
 public class ApplicationAssessmentProgressUnsubmitViewModel {
 
     private long competitionId;
@@ -26,26 +28,6 @@ public class ApplicationAssessmentProgressUnsubmitViewModel {
         this.assessmentId = assessmentId;
         this.assessmentPeriodId = assessmentPeriodId;
         this.sortField = sortField;
-    }
-
-    public long getCompetitionId() {
-        return competitionId;
-    }
-
-    public long getApplicationId() {
-        return applicationId;
-    }
-
-    public long getAssessmentId() {
-        return assessmentId;
-    }
-
-    public long getAssessmentPeriodId() {
-        return assessmentPeriodId;
-    }
-
-    public AvailableAssessorsSortFieldType getSortField() {
-        return sortField;
     }
 
     @Override
