@@ -881,6 +881,11 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     }
 
     @JsonIgnore
+    public Boolean isImSurveyEnabled() {
+        return competitionApplicationConfigResource.isImSurveyRequired();
+    }
+
+    @JsonIgnore
     public boolean isCompetitionTermsUploaded() {
         return competitionTerms != null;
     }

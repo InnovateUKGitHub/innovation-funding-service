@@ -15,6 +15,8 @@ Documentation     IFS-9884 Auditor role: create role
 ...
 ...               IFS-10000 Auditor gets permission error when tries to open payment milestone
 ...
+...               IFS-12899 Super administrator - IFS admin changes in Manage users
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Administrator  CompAdmin
@@ -46,8 +48,28 @@ ${applicationName4}          A subsidy control application in project setup
 ${projectID4}                ${project_ids['${applicationName4}']}
 ${sbriApplicationName2}      SBRI application
 ${sbriProjectId}             ${project_ids['${sbriApplicationName2}']}
+${auditorEmail}              auditor@iuk.ukri.test
 
 *** Test Cases ***
+Super administrator can successfully invite a new auditor user
+    [Documentation]  IFS-12899
+    [Tags]  HappyPath
+    [Setup]  Log in as a different user                   &{superAdminCredentials}
+    Given the user navigates to the page                  ${server}/management/admin/users/active
+    When the super admin sends an invite to auditor       Auditor  User  Auditor  ${auditorEmail}
+    Then the user should see the element                  jQuery = td:contains("Auditor User") ~ td:contains("Auditor") ~ td:contains("${auditorEmail}")
+
+Auditor can create an account using invitation
+    [Documentation]  IFS-12899
+    When Auditor creates a new account
+    Then Super admin checks the auditor account details
+
+IFS Admin can invite new auditor
+    [Documentation]  IFS-12899
+    Given Log in as a different user        &{ifs_admin_user_credentials}
+    When the user navigates to the page     ${server}/management/admin/invite-user
+    Then the user should see the element    jQuery = option:contains("Auditor")
+
 Auditor can view correct number of competitions in live tab
     [Documentation]  IFS-9884  IFS-9885
     Given log in as a different user                           &{auditorCredentials}
@@ -276,3 +298,33 @@ the user sees the read only view of under review finance checks
 the user cannot click the review button
     ${pagination} =   Run Keyword And Ignore Error Without Screenshots   The user should see the element in the paginated list    jQuery = tr:nth-of-type(2) td:nth-of-type(5).status.action
     run keyword if    ${pagination} == 'PASS'   the element should be disabled       jQuery = tr:nth-of-type(2) td:nth-of-type(5).status.action:contains("Review")
+
+the super admin sends an invite to auditor
+    [Arguments]  ${first_name}  ${last_name}  ${user_role}  ${email}
+    the user navigates to the page                          ${server}/management/admin/invite-user
+    the user enters text to a text field                    id = firstName  ${first_name}
+    the user enters text to a text field                    id = lastName  ${last_name}
+    the user enters text to a text field                    id = emailAddress  ${email}
+    the user selects the option from the drop-down menu     ${user_role}  id = role
+    the user clicks the button/link                         jQuery = .govuk-button:contains("Send invitation")
+
+Auditor creates a new account
+    Logout as user
+    the user reads his email and clicks the link    ${auditorEmail}  Invitation to Innovation Funding Service  Your Innovation Funding Service account has been created.
+    the user enters text to a text field            name = firstName  New
+    the user enters text to a text field            name = lastName  Auditor
+    the user enters text to a text field            name = password  ${short_password}
+    the user clicks the button/link                 jQuery = .govuk-button:contains("Create account")
+    the user should see the element                 jQuery = h1:contains("Your account has been created")
+
+Super admin checks the auditor account details
+    the user clicks the button/link         jQuery = .govuk-button:contains("Sign into your account")
+    Logging in and Error Checking           bucky.barnes@innovateuk.test  ${short_password}
+    the user clicks the button/link         jQuery = a:contains("Manage users")
+    the user enters text to a text field    id = filter  ${auditorEmail}
+    the user clicks the button/link         css = input[type="submit"]
+    the user clicks the button/link         jQuery = .user-profile:contains("New Auditor") a:contains("Edit")
+    the user should see the element         jQuery = dt:contains("First name") ~ dd:contains("New")
+    the user should see the element         jQuery = dt:contains("Last name") ~ dd:contains("Auditor")
+    the user should see the element         jQuery = label:contains("Email") + input[value^="${auditorEmail}"]
+    the user should see the element         jQuery = td:contains("Auditor")+td:contains("Active")

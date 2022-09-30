@@ -31,8 +31,8 @@ public class EoiEvidenceReadOnlyViewModelPopulator {
     private FileEntryRestService fileEntryRestService;
 
     public EoiEvidenceReadOnlyViewModel populate(ApplicationResource application) {
-        CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource = competitionEoiEvidenceConfigRestService.findOneByCompetitionId(application.getCompetition()).getSuccess();
-        ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = applicationEoiEvidenceResponseRestService.findOneByApplicationId(application.getId()).getSuccess();
+        CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource = competitionEoiEvidenceConfigRestService.findByCompetitionId(application.getCompetition()).getSuccess();
+        ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = applicationEoiEvidenceResponseRestService.findOneByApplicationId(application.getId()).getSuccess().get();
         FileEntryResource fileEntryresource = fileEntryRestService.findOne(applicationEoiEvidenceResponseResource.getFileEntryId()).getSuccess();
 
         return new EoiEvidenceReadOnlyViewModel(application.getId(), application.isEnabledForExpressionOfInterest(), competitionEoiEvidenceConfigResource.getEvidenceTitle(), fileEntryresource);

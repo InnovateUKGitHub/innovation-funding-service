@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.config.thymeleaf.dialect;
 
 import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
+import org.jsoup.safety.Safelist;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.thymeleaf.IEngineConfiguration;
@@ -26,7 +26,7 @@ class EnhancedUtextProcessor extends AbstractAttributeTagProcessor {
 
     public static final int PRECEDENCE = 1400;
     public static final String ATTR_NAME = "utext";
-    public static final Whitelist WHITELIST = Whitelist.none()
+    public static final Safelist WHITELIST = Safelist.none()
             // Tags and attributes should be in alphabetical order for ease of lookup
             .addTags(
                     "a", "br", "caption", "h1", "h2", "h3", "div", "em", "li", "ol", "p", "span",

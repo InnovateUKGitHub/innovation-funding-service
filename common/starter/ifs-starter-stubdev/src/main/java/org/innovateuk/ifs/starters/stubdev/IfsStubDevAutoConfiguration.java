@@ -82,11 +82,24 @@ public class IfsStubDevAutoConfiguration {
      */
     @Bean
     public ITemplateResolver webCoreTemplateResolver() {
+        return buildITemplateResolver("WEB_CORE_TEMPLATE_RESOLVER",
+                stubDevConfigurationProperties.getProjectRootDirectory()
+                        + stubDevConfigurationProperties.getWebCoreTemplates());
+    }
+
+    @Bean
+    public ITemplateResolver assessmentCommonsResolver() {
+        return buildITemplateResolver("ASSESSMENT_COMMONS_TEMPLATE_RESOLVER",
+                stubDevConfigurationProperties.getProjectRootDirectory()
+                + stubDevConfigurationProperties.getAssessmentCommonsTemplates());
+    }
+
+    private ITemplateResolver buildITemplateResolver(String name, String templateDirectory) {
         SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
-        resolver.setName("WEB_CORE_TEMPLATE_RESOLVER");
+        resolver.setName(name);
         resolver.setApplicationContext(this.applicationContext);
         resolver.setPrefix(stubDevConfigurationProperties.getProjectRootDirectory()
-                + stubDevConfigurationProperties.getWebCoreTemplates());
+                + templateDirectory);
         resolver.setSuffix(".html");
         resolver.setTemplateMode(TemplateMode.HTML);
         resolver.setCharacterEncoding(StandardCharsets.UTF_8.name());

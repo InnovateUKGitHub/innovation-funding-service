@@ -179,23 +179,28 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(competition.getCompetitionStatus());
     }
 
-    @PermissionRule(value = "VIEW_EOI_EVIDENCE_RESPONSE", description = "Allowed for stakeholder assigned to the competition to view eoi evidence config")
+    @PermissionRule(value = "FIND_APPLICATION_EOI_EVIDENCE", description = "Allowed for stakeholder assigned to the competition to view eoi evidence config")
     public boolean stakeholderCanReadEoiEvidenceResponseForApplication(final ApplicationResource applicationResource, final UserResource user) {
         return userIsStakeholderInCompetition(applicationResource.getCompetition(), user.getId());
     }
 
-    @PermissionRule(value = "VIEW_EOI_EVIDENCE_RESPONSE", description = "Allowed for auditors to view eoi evidence config")
+    @PermissionRule(value = "FIND_APPLICATION_EOI_EVIDENCE", description = "Allowed for auditors to view eoi evidence config")
     public boolean auditorCanReadEoiEvidenceResponseForApplication(final ApplicationResource applicationResource, final UserResource user) {
         return isAuditor(user);
     }
 
-    @PermissionRule(value = "VIEW_EOI_EVIDENCE_RESPONSE", description = "Allowed for internal users to view eoi evidence response for application")
+    @PermissionRule(value = "FIND_APPLICATION_EOI_EVIDENCE", description = "Allowed for internal users to view eoi evidence response for application")
     public boolean internalUsersCanReadEoiEvidenceResponseForApplication(final ApplicationResource applicationResource, final UserResource user) {
         return isInternal(user);
     }
 
-    @PermissionRule(value = "VIEW_EOI_EVIDENCE_RESPONSE", description = "A lead organisation member can view eoi evidence response for application")
+    @PermissionRule(value = "FIND_APPLICATION_EOI_EVIDENCE", description = "A lead organisation member can view eoi evidence response for application")
     public boolean leadOrganisationMembersCanReadEoiEvidenceResponseForApplication(final ApplicationResource applicationResource, final UserResource user) {
+        return checkHasAnyApplicantParticipantRole(applicationResource.getId(), applicationResource.getLeadOrganisationId(), user);
+    }
+
+    @PermissionRule(value = "EOI_EVIDENCE_SUBMITTED_NOTIFICATION", description = "A lead organisation member can send the notification of eoi evidence submission")
+    public boolean isLeadOrganisationMemberCanSendApplicationSubmittedNotification(final ApplicationResource applicationResource, final UserResource user) {
         return checkHasAnyApplicantParticipantRole(applicationResource.getId(), applicationResource.getLeadOrganisationId(), user);
     }
 }

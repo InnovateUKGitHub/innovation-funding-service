@@ -6,18 +6,23 @@ import org.innovateuk.ifs.competition.transactional.CompetitionEoiEvidenceConfig
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/competition")
 public class CompetitionEoiEvidenceConfigController {
 
     @Autowired
     private CompetitionEoiEvidenceConfigService competitionEoiEvidenceConfigService;
 
-    @GetMapping("/{competitionId}/eoi-evidence-config")
-    public RestResult<CompetitionEoiEvidenceConfigResource> findOneByCompetitionId(@PathVariable("competitionId") long competitionId) {
+    @GetMapping("/competition/{competitionId}/eoi-evidence-config")
+    public RestResult<CompetitionEoiEvidenceConfigResource> findByCompetitionId(@PathVariable("competitionId") long competitionId) {
         return competitionEoiEvidenceConfigService.findOneByCompetitionId(competitionId).toGetResponse();
+    }
+
+    @GetMapping("/competition-valid-file-type-ids/{competitionEoiEvidenceConfigId}")
+    public RestResult<List<Long>> getValidFileTypesIdsForEoiEvidence(@PathVariable long competitionEoiEvidenceConfigId) {
+        return competitionEoiEvidenceConfigService.getValidFileTypesIdsForEoiEvidence(competitionEoiEvidenceConfigId).toGetResponse();
     }
 }

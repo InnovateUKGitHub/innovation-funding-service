@@ -16,7 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
@@ -63,5 +67,20 @@ public class CompetitionEoiEvidenceConfigServiceImpl extends BaseTransactionalSe
     public ServiceResult<CompetitionEoiEvidenceConfigResource> findOneByCompetitionId(long competitionId) {
         return find(competitionEoiEvidenceConfigRepository.findOneByCompetitionId(competitionId), notFoundError(CompetitionEoiEvidenceConfigResource.class, competitionId))
                 .andOnSuccessReturn(competitionEoiEvidenceConfigMapper::mapToResource);
+    }
+
+    @Override
+    public ServiceResult<List<CompetitionEoiDocumentResource>> findAllByCompetitionEoiDocumentResources(long competitionEoiEvidenceConfigId) {
+        return find(competitionEoiDocumentRepository.findByCompetitionEoiEvidenceConfigId(competitionEoiEvidenceConfigId), notFoundError(CompetitionEoiDocumentResource.class, competitionEoiEvidenceConfigId))
+                .andOnSuccessReturn(competitionEoiDocumentMapper::mapToResource);
+    }
+
+    @Override
+    public ServiceResult<List<Long>> getValidFileTypesIdsForEoiEvidence(long competitionEoiEvidenceConfigId) {
+        return serviceSuccess(findAllByCompetitionEoiDocumentResources(competitionEoiEvidenceConfigId)
+                .getSuccess()
+                .stream()
+                .map(CompetitionEoiDocumentResource::getFileTypeId)
+                .collect(Collectors.toList()));
     }
 }

@@ -326,7 +326,7 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
     }
 
     public CompetitionResourceBuilder withCompetitionEoiEvidenceConfigResource(CompetitionEoiEvidenceConfigResource... competitionEoiEvidenceConfigResources) {
-        return withArray((competitionEoiEvidenceConfigResource, competition) -> competition.setCompetitionEoiEvidenceConfigResource(competitionEoiEvidenceConfigResource), competitionEoiEvidenceConfigResources);
+        return withArraySetFieldByReflection("competitionEoiEvidenceConfigResource", competitionEoiEvidenceConfigResources);
     }
 
     @Override

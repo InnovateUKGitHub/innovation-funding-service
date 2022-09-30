@@ -98,6 +98,13 @@
                      ifs:utext="${model.questionGuidance}">Guidance
                 </div>
             </details>
+
+                <div th:if="${model.imSurveyQuestion}">
+                    <a class="govuk-button govuk-!-margin-top-6"
+                       th:href="@{${model.getImpactManagementSalesForceURL()}}"
+                       value="open-salesforce"
+                       type="Continue">Go to survey</a>
+                </div>
         </th:block>
 
         <th:block th:if="${model.isLoansPartBEnabled() and (model.questionType == model.getLoansBusinessAndFinancialInformation())}">
@@ -282,7 +289,7 @@
                 </div>
             </div>
 
-                <div class="form-footer govuk-!-margin-top-8">
+                <div th:unless="${model.imSurveyQuestion and !model.complete}" class="form-footer govuk-!-margin-top-8">
                     <div th:if="${model.open}" class="form-footer__actions">
                         <th:block th:unless="${model.complete or !model.assignButtonsViewModel.assignedToCurrentUser}">
                             <button th:if="${model.leadApplicant OR model.questionHasMultipleStatuses}"
@@ -296,22 +303,28 @@
                                     class="button-clear">Assign to lead for review
                             </button>
                         </th:block>
-                        <button th:if="${model.complete}" id="edit" type="submit" name="edit" class="button-clear">Edit</button>
+                        <div th:if="${model.complete}">
+                            <button th:unless="${model.imSurveyQuestion}" id="edit" type="submit" name="edit"
+                                    class="button-clear">Edit
+                            </button>
+                            <a th:if="${model.imSurveyQuestion}"
+                               th:href="@{${model.getLoansQuestionsFormSalesForceURL()}}" value="open-salesforce"
+                               type="Continue" class="button-clear">Review survey answers</a>
+                        </div>
                     </div>
                     <div class="form-footer__info" aria-live="polite" aria-atomic="true" role="status">
-                        <th:block th:if="${model.hasResponse()}">
-                            <span class="update-label">Last updated: </span>
+                        <th:block th:if="${model.hasResponse() or (model.imSurveyQuestion and model.complete)}">
+                            <span class="update-label" th:text="${model.imSurveyQuestion? 'Last completed:' : 'Last updated:'}">Last updated:</span>
                             <th:block th:insert="question-type/form-elements :: updateTimeDetails" th:with="updateDate=${model.lastUpdated},lastUpdatedText=${model.lastUpdatedText}, applicationId=${model.applicationId}" />
                         </th:block>
                     </div>
                 </div>
-
                 <div class="govuk-!-margin-top-6">
 
                     <a th:if="${model.readOnly}" th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}"
                        class="govuk-button govuk-button--secondary">Return to application overview
                     </a>
-                    <button class="govuk-button" th:unless="${model.readOnly}" type="submit">Save and return to application overview</button>
+                    <button class="govuk-button" th:unless="${model.readOnly or model.imSurveyQuestion}" type="submit">Save and return to application overview</button>
                 </div>
             </th:block>
         </form>

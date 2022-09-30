@@ -25,13 +25,24 @@ public class ApplicationEoiEvidenceWorkflow extends StateMachineConfigurerAdapte
     public void configure(StateMachineStateConfigurer<ApplicationEoiEvidenceState, ApplicationEoiEvidenceEvent> states) throws Exception {
         states.withStates()
                 .initial(ApplicationEoiEvidenceState.CREATED)
-                .states(EnumSet.of(ApplicationEoiEvidenceState.CREATED, ApplicationEoiEvidenceState.NOT_SUBMITTED, ApplicationEoiEvidenceState.SUBMITTED));
+                .states(EnumSet.of(ApplicationEoiEvidenceState.CREATED, ApplicationEoiEvidenceState.NOT_SUBMITTED, ApplicationEoiEvidenceState.REMOVED, ApplicationEoiEvidenceState.SUBMITTED));
     }
+
     @Override
     public void configure(StateMachineTransitionConfigurer<ApplicationEoiEvidenceState, ApplicationEoiEvidenceEvent> transitions) throws Exception {
         transitions
                 .withExternal()
                 .source(ApplicationEoiEvidenceState.CREATED)
+                .event(ApplicationEoiEvidenceEvent.UNSUBMIT)
+                .target(ApplicationEoiEvidenceState.NOT_SUBMITTED)
+                .and()
+                .withExternal()
+                .source(ApplicationEoiEvidenceState.NOT_SUBMITTED)
+                .event(ApplicationEoiEvidenceEvent.REMOVE)
+                .target(ApplicationEoiEvidenceState.REMOVED)
+                .and()
+                .withExternal()
+                .source(ApplicationEoiEvidenceState.REMOVED)
                 .event(ApplicationEoiEvidenceEvent.UNSUBMIT)
                 .target(ApplicationEoiEvidenceState.NOT_SUBMITTED)
                 .and()
