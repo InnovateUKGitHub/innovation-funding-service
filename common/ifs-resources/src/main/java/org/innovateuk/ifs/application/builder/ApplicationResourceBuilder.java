@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceResponseResource;
 import org.innovateuk.ifs.application.resource.ApplicationExpressionOfInterestConfigResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -140,5 +141,9 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
 
     public ApplicationResourceBuilder withApplicationExpressionOfInterestConfigResource(ApplicationExpressionOfInterestConfigResource... applicationExpressionOfInterestConfigResources) {
         return withArray((applicationExpressionOfInterestConfigResource, application) -> application.setApplicationExpressionOfInterestConfigResource(applicationExpressionOfInterestConfigResource), applicationExpressionOfInterestConfigResources);
+    }
+
+    public ApplicationResourceBuilder withApplicationEoiEvidenceResponseResource(ApplicationEoiEvidenceResponseResource... applicationEoiEvidenceResponseResources) {
+        return withArray((applicationEoiEvidenceResponseResource, application) -> application.setApplicationEoiEvidenceResponseResource(applicationEoiEvidenceResponseResource), applicationEoiEvidenceResponseResources);
     }
 }

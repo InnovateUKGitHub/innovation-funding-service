@@ -23,7 +23,9 @@ public class EoiEvidenceFormPopulator {
         EoiEvidenceForm eoiEvidenceForm = new EoiEvidenceForm();
 
         Optional<ApplicationEoiEvidenceResponseResource> eoiEvidence = applicationEoiEvidenceResponseRestService.findOneByApplicationId(applicationId).getSuccess();
-        if (eoiEvidence.isPresent() && (eoiEvidence.get().getFileEntryId() != null)) {
+        boolean hasUploadedEoiEvidenceFile = eoiEvidence.isPresent() && (eoiEvidence.get().getFileEntryId() != null);
+
+        if (hasUploadedEoiEvidenceFile) {
             FileEntryResource file = fileEntryRestService.findOne(eoiEvidence.get().getFileEntryId()).getSuccess();
             eoiEvidenceForm.setEvidenceFileEntryName(file.getName());
         }

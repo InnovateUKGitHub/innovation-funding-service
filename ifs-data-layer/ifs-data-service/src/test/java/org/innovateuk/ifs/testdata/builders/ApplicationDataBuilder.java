@@ -225,6 +225,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                 ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = ApplicationEoiEvidenceResponseResource.builder()
                         .applicationId(application.getId())
                         .organisationId(application.getLeadOrganisationId())
+                        .fileEntryId(fileEntry.getId())
                         .build();
 
                 applicationEoiEvidenceResponseService.upload(application.getId(), applicationEoiEvidenceResponseResource.getOrganisationId(), data.getLeadApplicant(), fileEntryResource, inputStreamSupplier)
