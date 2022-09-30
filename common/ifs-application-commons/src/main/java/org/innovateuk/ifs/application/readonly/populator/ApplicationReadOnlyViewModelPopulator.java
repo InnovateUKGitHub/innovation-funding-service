@@ -33,6 +33,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -173,8 +174,8 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         return competition.isEoiEvidenceRequired()
                 && application.isEnabledForExpressionOfInterest()
                 && application.isSubmitted()
-                && (application.getApplicationEoiEvidenceResponseResource().getFileEntryId() != null)
-                && !isPartner(application, processRoles, user);
+                && !isPartner(application, processRoles, user)
+                && (application.getApplicationEoiEvidenceResponseResource().getFileState() == State.SUBMITTED);
     }
 
     private boolean isPartner(ApplicationResource application, List<ProcessRoleResource> processRoles, UserResource user) {

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.resource;
 
 import lombok.*;
+import org.innovateuk.ifs.workflow.resource.State;
 
 import java.time.ZonedDateTime;
 
@@ -14,6 +15,7 @@ public class ApplicationEoiEvidenceResponseResource {
     private Long applicationId;
     private Long organisationId;
     private Long fileEntryId;
+    private State fileState;
 
     public ApplicationEoiEvidenceResponseResource(Long applicationId, Long organisationId, Long fileEntryId) {
         this.id = id;
