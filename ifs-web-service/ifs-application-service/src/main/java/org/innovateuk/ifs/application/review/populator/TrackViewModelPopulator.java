@@ -80,7 +80,8 @@ public class TrackViewModelPopulator {
                     eoiEvidenceFileName,
                     combinedMediaDisplayNameWithExtensions,
                     competition.getCompetitionEoiEvidenceConfigResource(),
-                    userFromLeadOrganisation(applicationId, userResource.getId()));
+                    userFromLeadOrganisation(applicationId, userResource.getId()),
+                    eoiEvidence.isEmpty());
 
         } else {
 

@@ -26,6 +26,7 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
     private List<String> validEoiEvidenceFileTypes;
     private CompetitionEoiEvidenceConfigResource eoiEvidenceConfigResource;
     private boolean userFromLeadOrganisation;
+    private boolean applicationEoiEvidenceResponseResourceIsEmpty;
 
     public TrackViewModel(CompetitionResource currentCompetition,
                           ApplicationResource currentApplication,
@@ -48,7 +49,8 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
                           String eoiEvidenceFileName,
                           List<String> validEoiEvidenceFileTypes,
                           CompetitionEoiEvidenceConfigResource eoiEvidenceConfigResource,
-                          boolean userFromLeadOrganisation) {
+                          boolean userFromLeadOrganisation,
+                          boolean applicationEoiEvidenceResponseResourceIsEmpty) {
         this.currentCompetition = currentCompetition;
         this.currentApplication = currentApplication;
         this.earlyMetricsUrl = earlyMetricsUrl;
@@ -59,6 +61,7 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
         this.validEoiEvidenceFileTypes = validEoiEvidenceFileTypes;
         this.eoiEvidenceConfigResource = eoiEvidenceConfigResource;
         this.userFromLeadOrganisation = userFromLeadOrganisation;
+        this.applicationEoiEvidenceResponseResourceIsEmpty = applicationEoiEvidenceResponseResourceIsEmpty;
     }
 
     @Override
@@ -144,8 +147,8 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
     }
 
     @JsonIgnore
-    public boolean isEoiEvidenceCreatedAndNotSubmitted() {
-        return applicationEoiEvidenceState == NOT_SUBMITTED;
+    public boolean disableSubmitButton() {
+        return applicationEoiEvidenceState == NOT_SUBMITTED || applicationEoiEvidenceResponseResourceIsEmpty;
     }
 
     @JsonIgnore

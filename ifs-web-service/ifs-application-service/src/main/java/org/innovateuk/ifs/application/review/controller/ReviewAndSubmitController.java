@@ -41,6 +41,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.lang.Boolean.TRUE;
@@ -311,13 +312,13 @@ public class ReviewAndSubmitController {
                                             ValidationHandler validationHandler,
                                             Model model,
                                             UserResource loggedInUser) {
-        if (applicationEoiEvidenceResponseRestService.findOneByApplicationId(applicationId).getSuccess().get().getFileEntryId() == null) {
+        Optional<ApplicationEoiEvidenceResponseResource> applicationEoiEvidenceResponseResource = applicationEoiEvidenceResponseRestService.findOneByApplicationId(applicationId).getSuccess();
+        boolean noEoiEvidenceToSubmit = (applicationEoiEvidenceResponseResource.isEmpty())|| (applicationEoiEvidenceResponseResource.get().getFileEntryId() == null);
+        if (noEoiEvidenceToSubmit) {
             bindingResult.rejectValue("eoiEvidenceFile", "validation.file.required");
             return applicationTrack(model, applicationId, form, loggedInUser);
         }
-
-        ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = applicationEoiEvidenceResponseRestService.findOneByApplicationId(applicationId).getSuccess().get();
-        applicationEoiEvidenceResponseRestService.submitEoiEvidence(applicationEoiEvidenceResponseResource, loggedInUser);
+        applicationEoiEvidenceResponseRestService.submitEoiEvidence(applicationEoiEvidenceResponseResource.get(), loggedInUser);
         return String.format("redirect:/application/%s/track", applicationId);
     }
 

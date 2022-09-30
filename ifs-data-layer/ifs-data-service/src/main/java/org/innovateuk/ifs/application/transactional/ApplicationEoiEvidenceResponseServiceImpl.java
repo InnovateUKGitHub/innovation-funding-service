@@ -69,8 +69,7 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
     @Override
     @Transactional
     public ServiceResult<ApplicationEoiEvidenceResponseResource> upload(long applicationId, long organisationId, UserResource userResource, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-        return find(competitionEoiEvidenceConfig(applicationId))
-                .andOnSuccess(config -> isValidFileEntryType(applicationId, fileEntryResource))
+        return competitionEoiEvidenceConfig(applicationId)
                 .andOnSuccess(() -> fileService.createFile(fileEntryResource, inputStreamSupplier)
                         .andOnSuccessReturn(fileDetails ->
                                 upload(applicationId, organisationId, userResource, fileDetails).getSuccess()

@@ -6,7 +6,6 @@ import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.competition.resource.CompetitionEoiEvidenceConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder;
@@ -212,20 +211,16 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                     && competitionEoiEvidenceConfigResource.isEvidenceRequired()) {
                 ApplicationResource application = data.getApplication();
 
-                FileEntry fileEntry = fileEntryRepository.save(
-                        new FileEntry(null, "eoi-evidence-file" + application.getId() + ".pdf", "application/pdf", 7945));
-
                 FileEntryResource fileEntryResource = new FileEntryResource();
-                fileEntryResource.setName(fileEntry.getName());
-                fileEntryResource.setMediaType(fileEntry.getMediaType());
-                fileEntryResource.setFilesizeBytes(fileEntry.getFilesizeBytes());
+                fileEntryResource.setName("eoi-evidence-file" + application.getId() + ".pdf");
+                fileEntryResource.setMediaType("application/pdf");
+                fileEntryResource.setFilesizeBytes(7945);
 
                 Supplier<InputStream> inputStreamSupplier = () -> new ByteArrayInputStream("The returned binary file data".getBytes());
 
                 ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = ApplicationEoiEvidenceResponseResource.builder()
                         .applicationId(application.getId())
                         .organisationId(application.getLeadOrganisationId())
-                        .fileEntryId(fileEntry.getId())
                         .build();
 
                 applicationEoiEvidenceResponseService.upload(application.getId(), applicationEoiEvidenceResponseResource.getOrganisationId(), data.getLeadApplicant(), fileEntryResource, inputStreamSupplier)
