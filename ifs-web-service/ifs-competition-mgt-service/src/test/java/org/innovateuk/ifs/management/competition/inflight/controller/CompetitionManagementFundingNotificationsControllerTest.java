@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.management.competition.inflight.controller;
 
 import org.apache.commons.lang3.CharEncoding;
+import org.assertj.core.matcher.AssertionMatcher;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.LambdaMatcher;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.ApplicationDecisionRestService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
@@ -179,22 +179,24 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     }
 
     private Matcher<ManageApplicationDecisionViewModel> manageFundingApplicationViewModelMatcher(ManageApplicationDecisionViewModel toMatch) {
-        return new LambdaMatcher<>(match -> {
-            assertEquals(toMatch.getCompetitionName(), match.getCompetitionName());
-            assertEquals(toMatch.getSortField(), match.getSortField());
-            assertEquals(toMatch.getCompetitionId(), match.getCompetitionId());
-            assertEquals(toMatch.getResults().getSize(), match.getResults().getSize());
-            assertEquals(toMatch.getResults().getContent().get(0).getId(), match.getResults().getContent().get(0).getId());
-            CompetitionInFlightStatsViewModel toMatchCompetitionInFlightViewModel = toMatch.getKeyStatistics();
-            CompetitionInFlightStatsViewModel matchCompetitionInFlightViewModel = match.getKeyStatistics();
-            assertEquals(toMatchCompetitionInFlightViewModel.getStatOne(), matchCompetitionInFlightViewModel.getStatOne());
-            assertEquals(toMatchCompetitionInFlightViewModel.getStatTwo(), matchCompetitionInFlightViewModel.getStatTwo());
-            assertEquals(toMatchCompetitionInFlightViewModel.getStatThree(), matchCompetitionInFlightViewModel.getStatThree());
-            assertEquals(toMatchCompetitionInFlightViewModel.getStatFour(), matchCompetitionInFlightViewModel.getStatFour());
-            assertEquals(toMatchCompetitionInFlightViewModel.getStatFive(), matchCompetitionInFlightViewModel.getStatFive());
-            assertEquals(toMatchCompetitionInFlightViewModel.isCanManageFundingNotifications(), matchCompetitionInFlightViewModel.isCanManageFundingNotifications());
-            return true;
-        });
+        return new AssertionMatcher<ManageApplicationDecisionViewModel>() {
+            @Override
+            public void assertion(ManageApplicationDecisionViewModel actual) throws AssertionError {
+                    assertEquals(toMatch.getCompetitionName(), actual.getCompetitionName());
+                    assertEquals(toMatch.getSortField(), actual.getSortField());
+                    assertEquals(toMatch.getCompetitionId(), actual.getCompetitionId());
+                    assertEquals(toMatch.getResults().getSize(), actual.getResults().getSize());
+                    assertEquals(toMatch.getResults().getContent().get(0).getId(), actual.getResults().getContent().get(0).getId());
+                    CompetitionInFlightStatsViewModel toMatchCompetitionInFlightViewModel = actual.getKeyStatistics();
+                    CompetitionInFlightStatsViewModel matchCompetitionInFlightViewModel = actual.getKeyStatistics();
+                    assertEquals(toMatchCompetitionInFlightViewModel.getStatOne(), matchCompetitionInFlightViewModel.getStatOne());
+                    assertEquals(toMatchCompetitionInFlightViewModel.getStatTwo(), matchCompetitionInFlightViewModel.getStatTwo());
+                    assertEquals(toMatchCompetitionInFlightViewModel.getStatThree(), matchCompetitionInFlightViewModel.getStatThree());
+                    assertEquals(toMatchCompetitionInFlightViewModel.getStatFour(), matchCompetitionInFlightViewModel.getStatFour());
+                    assertEquals(toMatchCompetitionInFlightViewModel.getStatFive(), matchCompetitionInFlightViewModel.getStatFive());
+                    assertEquals(toMatchCompetitionInFlightViewModel.isCanManageFundingNotifications(), matchCompetitionInFlightViewModel.isCanManageFundingNotifications());
+            }
+        };
     }
 
     @Test

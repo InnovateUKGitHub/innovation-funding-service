@@ -209,11 +209,11 @@ public class SupporterAssignmentServiceImplTest extends BaseServiceUnitTest<Supp
         ServiceResult<Void> result = service.decision(assignmentId, decision);
 
         assertThat(result.isSuccess(), equalTo(true));
-        verify(supporterAssignmentWorkflowHandler).reject(eq(supporterAssignment), argThat(lambdaMatches(outcome -> {
+        verify(supporterAssignmentWorkflowHandler).reject(eq(supporterAssignment), argThat(outcome -> {
             assertThat(outcome.getComment(), equalTo("Terrible"));
             assertThat(outcome.isFundingConfirmation(), equalTo(false));
             return true;
-        })));
+        }));
     }
 
     @Test
@@ -233,11 +233,11 @@ public class SupporterAssignmentServiceImplTest extends BaseServiceUnitTest<Supp
         ServiceResult<Void> result = service.decision(assignmentId, decision);
 
         assertThat(result.isSuccess(), equalTo(true));
-        verify(supporterAssignmentWorkflowHandler).accept(eq(supporterAssignment), argThat(lambdaMatches(outcome -> {
+        verify(supporterAssignmentWorkflowHandler).accept(eq(supporterAssignment), argThat(outcome -> {
             assertThat(outcome.getComment(), equalTo("Amazing"));
             assertThat(outcome.isFundingConfirmation(), equalTo(true));
             return true;
-        })));
+        }));
     }
 
     @Test

@@ -13,6 +13,8 @@ ext.isStubDevMode = { ->
     return false
 }
 
+ext['snakeyaml.version'] = '1.31'
+
 dependencies {
 
     // Enforced platform is composite of IFS libraries, spring boot and spring cloud

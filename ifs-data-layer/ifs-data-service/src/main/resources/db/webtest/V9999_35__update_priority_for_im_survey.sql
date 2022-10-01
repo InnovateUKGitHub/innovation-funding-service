@@ -1,0 +1,1 @@
+UPDATE section SET priority=4 WHERE name='Terms and conditions' AND competition_id=(SELECT id FROM competition WHERE name='Grant Competition With IM survey enabled');

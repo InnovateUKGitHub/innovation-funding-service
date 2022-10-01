@@ -17,7 +17,6 @@ import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
-import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -49,9 +48,9 @@ public class AbstractProcurementMilestoneServiceImplTest {
 
         ServiceResult<ResourceClazz> result = service.create(resource);
 
-        verify(repository).save(argThat(lambdaMatches(domain -> domain.getDeliverable().equals(resource.getDeliverable())
+        verify(repository).save(argThat(domain -> domain.getDeliverable().equals(resource.getDeliverable())
         && domain.getMonth().equals(resource.getMonth())
-        && domain.getPayment().equals(resource.getPayment()))));
+        && domain.getPayment().equals(resource.getPayment())));
 
         assertThat(result.isSuccess(), is(true));
         assertThat(result.getSuccess(), is(resource));

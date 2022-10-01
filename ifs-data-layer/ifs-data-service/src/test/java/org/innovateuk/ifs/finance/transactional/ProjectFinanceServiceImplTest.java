@@ -30,7 +30,6 @@ import org.mockito.Mock;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -156,11 +155,11 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     @Test
     public void addCost() {
 
-        ProjectFinance newFinanceExpectations = argThat(lambdaMatches(finance -> {
+        ProjectFinance newFinanceExpectations = argThat(finance -> {
             assertEquals(project, finance.getProject());
             assertEquals(organisation, finance.getOrganisation());
             return true;
-        }));
+        });
 
 
         ProjectFinanceResource expectedFinance = newProjectFinanceResource().

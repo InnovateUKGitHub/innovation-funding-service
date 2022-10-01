@@ -120,7 +120,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
             return validateExternalUserEmailDomain(invitedUser.getEmail(), role)
                     .andOnSuccess(() -> validateAndSaveInvite(invitedUser, role, organisation))
                     .andOnSuccess(this::inviteExternalUser);
-        } else if (internalRoles().contains(role)) {
+        } else if (internalInviteRoles().contains(role)) {
             return validateInternalUserEmailDomain(invitedUser.getEmail())
                     .andOnSuccess(() -> validateAndSaveInvite(invitedUser, role, organisation))
                     .andOnSuccess(this::inviteInternalUser);
@@ -318,7 +318,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
                 .andOnSuccess(invite -> {
                     if (externalRolesToInvite().contains(invite.getTarget())) {
                         return inviteExternalUser(invite);
-                    } else if (internalRoles().contains(invite.getTarget())) {
+                    } else if (internalInviteRoles().contains(invite.getTarget())) {
                         return inviteInternalUser(invite);
                     } else {
                         return serviceFailure(NOT_AN_INTERNAL_USER_ROLE);

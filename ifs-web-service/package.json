@@ -33,7 +33,9 @@
     "shelljs": ">=0.8.4",
     "merge": ">=2.1.1",
     "glob-parent": ">=5.1.2",
-    "table": "^6.8.0"
+    "table": "^6.8.0",
+    "acorn": "^7.1.1",
+    "front-matter": "^4.0.1"
   },
   "engines": {
     "node": ">=16.16.0",

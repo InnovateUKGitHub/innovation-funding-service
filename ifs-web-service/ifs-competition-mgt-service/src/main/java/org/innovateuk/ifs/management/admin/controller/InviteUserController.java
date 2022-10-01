@@ -76,23 +76,25 @@ public class InviteUserController {
     }
 
     @GetMapping("/invite-user")
-    public String inviteNewUser(Model model) {
+    public String inviteNewUser(Model model,
+                                UserResource loggedInUser) {
         InviteUserForm form = new InviteUserForm();
 
-        return doViewInviteNewUser(model, form, InviteUserView.INTERNAL_USER, Role.internalRoles());
+        return doViewInviteNewUser(model, form, InviteUserView.INTERNAL_USER, Role.internalInviteRoles(), loggedInUser);
     }
 
     @GetMapping("/invite-external-user")
     public String inviteNewExternalUser(@RequestParam(value = "role") Role role,
-                                        Model model) {
+                                        Model model,
+                                        UserResource loggedInUser) {
         InviteUserForm form = new InviteUserForm();
 
-        return doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, singleton(role));
+        return doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, singleton(role), loggedInUser);
     }
 
-    private String doViewInviteNewUser(Model model, InviteUserForm form, InviteUserView type, Set<Role> roles) {
+    private String doViewInviteNewUser(Model model, InviteUserForm form, InviteUserView type, Set<Role> roles, UserResource loggedInUser) {
 
-        InviteUserViewModel viewModel = inviteUserModelPopulator.populate(type, roles);
+        InviteUserViewModel viewModel = inviteUserModelPopulator.populate(type, roles, loggedInUser);
 
         model.addAttribute(FORM_ATTR_NAME, form);
         model.addAttribute(MODEL_ATTR_NAME, viewModel);
@@ -102,9 +104,9 @@ public class InviteUserController {
 
     @PostMapping("/invite-user")
     public String saveUserInvite(Model model, @Validated({Default.class, Primary.class}) @ModelAttribute(FORM_ATTR_NAME) InviteUserForm form,
-                                 @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
+                                 @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler, UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.INTERNAL_USER, Role.internalRoles());
+        Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.INTERNAL_USER, Role.internalInviteRoles(), loggedInUser);
 
         return saveInvite(form, validationHandler, failureView);
     }
@@ -124,9 +126,9 @@ public class InviteUserController {
 
     @PostMapping("/invite-external-user")
     public String saveExternalUserInvite(Model model, @Validated({Default.class, Primary.class}) @ModelAttribute(FORM_ATTR_NAME) InviteUserForm form,
-                                         @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
+                                         @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler, UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, singleton(form.getRole()));
+        Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, singleton(form.getRole()), loggedInUser);
 
         return saveInvite(form, validationHandler, failureView);
     }
