@@ -212,7 +212,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                     && competitionEoiEvidenceConfigResource.isEvidenceRequired()) {
                 ApplicationResource application = data.getApplication();
                 try {
-                    File file = new File(ApplicationDataBuilder.class.getResource("/eoievidence.pdf").toURI());
+                    File file = new File(ApplicationDataBuilder.class.getResource("/webtest.pdf").toURI());
                     InputStream inputStream = new FileInputStream(file);
                     Supplier<InputStream> inputStreamSupplier = () -> inputStream;
 
