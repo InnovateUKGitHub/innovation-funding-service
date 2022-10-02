@@ -66,11 +66,10 @@ public class ApplicationEoiEvidenceResponseController {
     @Qualifier("mediaTypeStringsFileValidator")
     private FilesizeAndTypeFileValidator<List<String>> fileValidator;
 
-    @Value("${ifs.data.service.file.storage.forminputresponse.max.filesize.bytes}")
-    private Long maxFilesizeBytesForEoiEvidenceResponse;
+    @Value("${ifs.data.service.file.storage.applicationEoiEvidenceResponse.max.filesize.bytes}")
+    private Long maxFilesizeBytesForApplicationEoiEvidenceResponse;
 
     private final FileControllerUtils fileControllerUtils = new FileControllerUtils();
-
 
     @PostMapping(value = "/{applicationId}/eoi-evidence-response/{organisationId}/upload", produces = "application/json")
     public RestResult<ApplicationEoiEvidenceResponseResource> uploadEoiEvidence(@RequestHeader(value = "Content-Type", required = false) String contentType,
@@ -85,11 +84,10 @@ public class ApplicationEoiEvidenceResponseController {
         List<Long> validFileTypesIdsForEoiEvidence = competitionEoiEvidenceConfigService.getValidFileTypesIdsForEoiEvidence(eoiEvidenceConfigId).getSuccess();
 
         return fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename,
-                fileValidator, getMediaMimeTypes(validFileTypesIdsForEoiEvidence), maxFilesizeBytesForEoiEvidenceResponse, request,
+                fileValidator, getMediaMimeTypes(validFileTypesIdsForEoiEvidence), maxFilesizeBytesForApplicationEoiEvidenceResponse, request,
                 (fileAttributes, inputStreamSupplier) ->
                         applicationEoiEvidenceResponseService.upload(applicationId, organisationId, userResource, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
-
 
     @PostMapping("/{applicationId}/eoi-evidence-response/remove/{userId}")
     public RestResult<ApplicationEoiEvidenceResponseResource> remove(@PathVariable("applicationId") long applicationId,

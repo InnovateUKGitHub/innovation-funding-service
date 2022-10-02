@@ -20,7 +20,8 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -210,21 +211,22 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
             if (competitionEoiEvidenceConfigResource != null
                     && competitionEoiEvidenceConfigResource.isEvidenceRequired()) {
                 ApplicationResource application = data.getApplication();
+                try {
+                    File file = new File(ApplicationDataBuilder.class.getResource("/eoievidence.pdf").toURI());
+                    InputStream inputStream = new FileInputStream(file);
+                    Supplier<InputStream> inputStreamSupplier = () -> inputStream;
 
-                FileEntryResource fileEntryResource = new FileEntryResource();
-                fileEntryResource.setName("eoi-evidence-file" + application.getId() + ".pdf");
-                fileEntryResource.setMediaType("application/pdf");
-                fileEntryResource.setFilesizeBytes(7945);
+                    FileEntryResource fileEntryResource = new FileEntryResource();
+                    fileEntryResource.setName("eoi-evidence-file" + application.getId() + ".pdf");
+                    fileEntryResource.setMediaType("application/pdf");
+                    fileEntryResource.setFilesizeBytes(7945);
 
-                Supplier<InputStream> inputStreamSupplier = () -> new ByteArrayInputStream("The returned binary file data".getBytes());
-
-                ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = ApplicationEoiEvidenceResponseResource.builder()
-                        .applicationId(application.getId())
-                        .organisationId(application.getLeadOrganisationId())
-                        .build();
-
-                applicationEoiEvidenceResponseService.upload(application.getId(), applicationEoiEvidenceResponseResource.getOrganisationId(), data.getLeadApplicant(), fileEntryResource, inputStreamSupplier)
-                        .andOnSuccess((createdApplicationEoiEvidenceResponseResource) -> applicationEoiEvidenceResponseService.submit(createdApplicationEoiEvidenceResponseResource, data.getLeadApplicant()));
+                    applicationEoiEvidenceResponseService.upload(application.getId(), application.getLeadOrganisationId(), data.getLeadApplicant(), fileEntryResource, inputStreamSupplier)
+                            .andOnSuccess((createdApplicationEoiEvidenceResponseResource) -> applicationEoiEvidenceResponseService.submit(createdApplicationEoiEvidenceResponseResource, data.getLeadApplicant()));
+                } catch (Exception e) {
+                    LOG.error("Unable to upload eoi evidence", e);
+                    throw new RuntimeException(e);
+                }
             }
         });
     }
