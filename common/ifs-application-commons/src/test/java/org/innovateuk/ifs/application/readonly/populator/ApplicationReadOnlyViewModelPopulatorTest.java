@@ -40,6 +40,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -510,7 +511,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .withCompetitionEoiEvidenceConfigResource(competitionEoiEvidenceConfigResource)
                 .build();
         ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = ApplicationEoiEvidenceResponseResource.builder()
-                .fileEntryId(fileEntryId)
+                .fileState(State.SUBMITTED)
                 .build();
         OrganisationResource organisation = newOrganisationResource().build();
         ApplicationResource application = newApplicationResource()

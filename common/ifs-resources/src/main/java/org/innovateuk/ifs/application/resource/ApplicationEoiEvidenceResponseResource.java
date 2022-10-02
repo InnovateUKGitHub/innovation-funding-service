@@ -18,7 +18,6 @@ public class ApplicationEoiEvidenceResponseResource {
     private State fileState;
 
     public ApplicationEoiEvidenceResponseResource(Long applicationId, Long organisationId, Long fileEntryId) {
-        this.id = id;
         this.applicationId = applicationId;
         this.organisationId = organisationId;
         this.fileEntryId = fileEntryId;

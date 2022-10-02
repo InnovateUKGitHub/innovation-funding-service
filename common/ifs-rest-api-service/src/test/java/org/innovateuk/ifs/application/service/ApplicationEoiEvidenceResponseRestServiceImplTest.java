@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceState;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -45,7 +46,7 @@ public class ApplicationEoiEvidenceResponseRestServiceImplTest extends BaseRestS
         long applicationId = 2L;
         long organisationId = 3L;
         long fileEntryId = 4L;
-        ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = new ApplicationEoiEvidenceResponseResource(id, applicationId, organisationId, fileEntryId);
+        ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = new ApplicationEoiEvidenceResponseResource(id, applicationId, organisationId, fileEntryId, State.NOT_SUBMITTED);
         UserResource userResource = newUserResource().build();
 
         String submitUrl = URL + "/" + applicationEoiEvidenceResponseResource.getApplicationId() + "/eoi-evidence-response/submit/" + userResource.getId();
@@ -62,7 +63,7 @@ public class ApplicationEoiEvidenceResponseRestServiceImplTest extends BaseRestS
         long applicationId = 2L;
         long organisationId = 3L;
         long fileEntryId = 4L;
-        ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = new ApplicationEoiEvidenceResponseResource(id, applicationId, organisationId, fileEntryId);
+        ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = new ApplicationEoiEvidenceResponseResource(id, applicationId, organisationId, fileEntryId, State.NOT_SUBMITTED);
         UserResource userResource = newUserResource().build();
 
         String removeUrl = URL + "/" + applicationEoiEvidenceResponseResource.getApplicationId() + "/eoi-evidence-response/remove/" + userResource.getId();
@@ -79,7 +80,7 @@ public class ApplicationEoiEvidenceResponseRestServiceImplTest extends BaseRestS
         long organisationId = 3L;
         long fileEntryId = 4L;
 
-        ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = new ApplicationEoiEvidenceResponseResource(id, applicationId, organisationId, fileEntryId);
+        ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = new ApplicationEoiEvidenceResponseResource(id, applicationId, organisationId, fileEntryId, State.SUBMITTED);
 
         String url = format("%s/%s/eoi-evidence-response", URL, applicationId);
         setupGetWithRestResultExpectations(url, ApplicationEoiEvidenceResponseResource.class, applicationEoiEvidenceResponseResource);
