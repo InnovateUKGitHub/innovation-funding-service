@@ -188,7 +188,11 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
     public ServiceResult<CompetitionSetupQuestionResource> update(CompetitionSetupQuestionResource competitionSetupQuestionResource) {
         Long questionId = competitionSetupQuestionResource.getQuestionId();
         Question question = questionRepository.findById(questionId).get();
+        Competition competition = question.getCompetition();
 
+        if (competition.isEnabledForPreRegistration()) {
+            question.setEnabledForPreRegistration(competitionSetupQuestionResource.getExpressionOfInterest());
+        }
 
         if (question.getQuestionSetupType() != QuestionSetupType.KTP_ASSESSMENT) {
 
