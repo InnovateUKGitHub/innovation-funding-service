@@ -69,9 +69,9 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
     @Override
     @Transactional
     public ServiceResult<ApplicationEoiEvidenceResponseResource> upload(long applicationId, long organisationId, UserResource userResource, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-        if (!isValidFileEntryType(applicationId, fileEntryResource).getSuccess()) {
-            return serviceFailure(CommonFailureKeys.APPLICATION_UNABLE_TO_INITIALISE_EOI_EVIDENCE_UPLOAD);
-        }
+//        if (!isValidFileEntryType(applicationId, fileEntryResource).getSuccess()) {
+//            return serviceFailure(CommonFailureKeys.APPLICATION_UNABLE_TO_INITIALISE_EOI_EVIDENCE_UPLOAD);
+//        }
         return competitionEoiEvidenceConfig(applicationId)
                 .andOnSuccess(() -> fileService.createFile(fileEntryResource, inputStreamSupplier)
                         .andOnSuccessReturn(fileDetails -> upload(applicationId, organisationId, userResource, fileDetails).getSuccess()));
