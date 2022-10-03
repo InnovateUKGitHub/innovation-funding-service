@@ -217,7 +217,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                     Supplier<InputStream> inputStreamSupplier = () -> inputStream;
 
                     FileEntryResource fileEntryResource = new FileEntryResource();
-                    fileEntryResource.setName("eoi-evidence-file" + application.getId() + ".pdf");
+                    fileEntryResource.setName("eoiEvidenceFile" + application.getId() + ".pdf");
                     fileEntryResource.setMediaType("application/pdf");
                     fileEntryResource.setFilesizeBytes(7945);
 
