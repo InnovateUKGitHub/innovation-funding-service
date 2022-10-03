@@ -23,7 +23,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class InternalProjectSetupRowPopulatorTest extends BaseUnitTest {
+public class InternalProjectSetupRowPopulatorTest {
 
     @InjectMocks
     private InternalProjectSetupRowPopulator populator;

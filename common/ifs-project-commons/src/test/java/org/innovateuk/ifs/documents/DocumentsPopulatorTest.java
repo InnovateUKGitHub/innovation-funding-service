@@ -44,7 +44,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class DocumentsPopulatorTest extends BaseUnitTest {
+public class DocumentsPopulatorTest {
 
     @InjectMocks
     private DocumentsPopulator populator;
@@ -80,8 +80,6 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
 
     @Before
     public void setup() {
-
-        super.setup();
 
         long documentConfigId2 = 12L;
         long collaborationAgreementId = 13L;

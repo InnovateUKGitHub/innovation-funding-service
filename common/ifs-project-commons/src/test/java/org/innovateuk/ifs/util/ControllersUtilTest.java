@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
 /**
  * unit test for {@link ControllersUtil}
  */
-public class ControllersUtilTest extends BaseUnitTest {
+public class ControllersUtilTest {
 
     @Mock
     private PartnerOrganisationRestService partnerOrganisationRestService;
