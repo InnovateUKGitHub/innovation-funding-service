@@ -30,7 +30,7 @@ public interface ApplicationEoiEvidenceResponseService {
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'GET_EVIDENCE_FILE_DETAILS')")
     ServiceResult<FileEntryResource> getEvidenceFileEntryDetails(Long applicationId);
 
-    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'FIND_APPLICATION_EOI_EVIDENCE')")
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<Optional<ApplicationEoiEvidenceResponseResource>> findOneByApplicationId(long applicationId);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)

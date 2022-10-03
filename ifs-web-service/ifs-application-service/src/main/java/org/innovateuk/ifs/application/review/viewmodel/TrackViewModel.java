@@ -148,7 +148,7 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
 
     @JsonIgnore
     public boolean disableSubmitButton() {
-        return applicationEoiEvidenceState == NOT_SUBMITTED || applicationEoiEvidenceResponseResourceIsEmpty;
+        return applicationEoiEvidenceState == REMOVED ||applicationEoiEvidenceResponseResourceIsEmpty;
     }
 
     @JsonIgnore
