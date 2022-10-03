@@ -43,7 +43,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
-public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest {
+public class ApplicationResearchCategoryModelPopulatorTest {
 
     @InjectMocks
     private ApplicationResearchCategoryModelPopulator populator;

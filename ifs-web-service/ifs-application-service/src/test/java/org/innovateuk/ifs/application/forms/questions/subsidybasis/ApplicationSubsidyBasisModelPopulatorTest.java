@@ -39,7 +39,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ApplicationSubsidyBasisModelPopulatorTest extends BaseUnitTest {
+public class ApplicationSubsidyBasisModelPopulatorTest {
 
     @Mock
     private ProcessRoleRestService processRoleRestService;

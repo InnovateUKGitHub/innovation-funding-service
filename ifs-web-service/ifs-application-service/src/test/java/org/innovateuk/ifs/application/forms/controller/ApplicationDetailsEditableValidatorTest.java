@@ -24,7 +24,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
+public class ApplicationDetailsEditableValidatorTest {
 
     @InjectMocks
     private ApplicationDetailsEditableValidator applicationDetailsEditableValidator;

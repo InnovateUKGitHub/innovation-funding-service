@@ -19,7 +19,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-public class UserProfilePopulatorTest extends BaseUnitTest {
+public class UserProfilePopulatorTest {
 
     @InjectMocks
     private UserProfilePopulator target;

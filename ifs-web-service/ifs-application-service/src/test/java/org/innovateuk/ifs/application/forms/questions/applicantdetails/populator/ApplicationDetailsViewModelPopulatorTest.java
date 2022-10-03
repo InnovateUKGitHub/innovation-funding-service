@@ -35,7 +35,7 @@ import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
-public class ApplicationDetailsViewModelPopulatorTest extends BaseUnitTest {
+public class ApplicationDetailsViewModelPopulatorTest {
 
     @InjectMocks
     private ApplicationDetailsViewModelPopulator populator;

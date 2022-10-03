@@ -62,7 +62,7 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
+public class ApplicationTermsModelPopulatorTest {
 
     @Mock
     private ApplicationRestService applicationRestService;

@@ -40,7 +40,7 @@ import static org.mockito.Mockito.when;
  * Testing populator {@link ApplicantDashboardPopulator}
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
+public class ApplicantDashboardPopulatorTest {
 
     @Mock
     private ApplicantRestService applicantRestService;

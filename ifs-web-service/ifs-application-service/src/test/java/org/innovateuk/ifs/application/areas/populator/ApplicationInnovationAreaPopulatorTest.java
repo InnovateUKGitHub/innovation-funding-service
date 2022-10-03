@@ -15,7 +15,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-public class ApplicationInnovationAreaPopulatorTest extends BaseUnitTest {
+public class ApplicationInnovationAreaPopulatorTest {
 
     @InjectMocks
     private ApplicationInnovationAreaPopulator populator;
