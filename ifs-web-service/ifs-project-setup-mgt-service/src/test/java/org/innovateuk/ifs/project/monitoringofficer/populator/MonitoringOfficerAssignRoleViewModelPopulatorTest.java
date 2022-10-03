@@ -17,7 +17,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
-public class MonitoringOfficerAssignRoleViewModelPopulatorTest extends BaseUnitTest {
+public class MonitoringOfficerAssignRoleViewModelPopulatorTest {
 
     @InjectMocks
     private MonitoringOfficerAssignRoleViewModelPopulator target;

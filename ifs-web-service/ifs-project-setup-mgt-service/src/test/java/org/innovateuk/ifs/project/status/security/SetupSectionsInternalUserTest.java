@@ -21,7 +21,7 @@ import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class SetupSectionsInternalUserTest extends BaseUnitTest {
+public class SetupSectionsInternalUserTest {
 
     @Mock
     private SetupProgressChecker setupProgressChecker;
