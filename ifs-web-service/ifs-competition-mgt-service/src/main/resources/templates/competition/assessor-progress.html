@@ -88,8 +88,7 @@
                             Submitted
                         </th>
                         <th scope="col"
-                            class="govuk-table__header width-100 aligncentre"
-                            th:if="${model.competitionInAssessment}">
+                            class="govuk-table__header width-100 aligncentre">
                             Action
                         </th>
                     </tr>
@@ -149,10 +148,12 @@
                                th:attr="data-modal-form-action=${removeAction}"
                                th:with="removeAction=@{/assessment/competition/{cId}/assessors/{assessorId}/withdraw/{asId}/period/{assessmentPeriodId}(cId=${model.competitionId}, asId=${app.assessmentId}, assessorId=${model.assessorId}, assessmentPeriodId=${model.assessmentPeriodId})},
                                        removeActionNonJs=@{/assessment/competition/{cId}/assessors/{assessorId}/withdraw/{asId}/period/{assessmentPeriodId}/confirm(cId=${model.competitionId}, assessorId=${model.assessorId}, asId=${app.assessmentId}, assessmentPeriodId=${model.assessmentPeriodId})}"
-                               th:unless="${app.submitted}">Remove</a>
+                               th:unless="${app.submitted}">Remove
+                            </a>
+
                             <form th:if="${!app.notified}" method="post"
                                   th:action="@{/assessment/competition/{cId}/assessors/{assessorId}/withdraw/{asId}/period/{assessmentPeriodId}(cId=${model.competitionId}, asId=${app.assessmentId}, assessorId=${model.assessorId}, assessmentPeriodId=${model.assessmentPeriodId})}">
-                                <button type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-0">Remove</button>
+                                <button type="submit" class="button-clear">Remove</button>
                             </form>
                         </td>
                     </tr>
