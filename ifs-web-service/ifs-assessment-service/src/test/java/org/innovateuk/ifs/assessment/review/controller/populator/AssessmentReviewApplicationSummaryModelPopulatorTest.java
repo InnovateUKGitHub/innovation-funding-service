@@ -29,7 +29,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class AssessmentReviewApplicationSummaryModelPopulatorTest extends BaseUnitTest {
+public class AssessmentReviewApplicationSummaryModelPopulatorTest {
 
     @InjectMocks
     private AssessmentReviewApplicationSummaryModelPopulator populator;
