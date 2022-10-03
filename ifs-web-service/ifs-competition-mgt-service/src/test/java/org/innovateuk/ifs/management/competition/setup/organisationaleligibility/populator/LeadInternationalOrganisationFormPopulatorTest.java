@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.competition.setup.organisationaleligibility.populator;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;

@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.forms.questions.researchcategory.populator;
 
 import com.google.common.collect.ImmutableSet;
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;

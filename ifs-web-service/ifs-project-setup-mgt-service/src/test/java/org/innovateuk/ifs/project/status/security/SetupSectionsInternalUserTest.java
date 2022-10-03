@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.status.security;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;

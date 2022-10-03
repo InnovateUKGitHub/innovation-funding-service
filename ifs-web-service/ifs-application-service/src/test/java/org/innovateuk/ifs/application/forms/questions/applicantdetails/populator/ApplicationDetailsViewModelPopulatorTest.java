@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.forms.questions.applicantdetails.populator;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.forms.questions.applicationdetails.model.ApplicationDetailsViewModel;
 import org.innovateuk.ifs.application.forms.questions.applicationdetails.populator.ApplicationDetailsViewModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;

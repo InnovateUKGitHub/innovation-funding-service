@@ -11,7 +11,9 @@ import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +30,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class SectionServiceImplTest extends BaseServiceUnitTest<SectionServiceImpl> {
 
     @Mock
@@ -48,7 +51,6 @@ public class SectionServiceImplTest extends BaseServiceUnitTest<SectionServiceIm
 
     @Before
     public void setUp() {
-        super.setup();
 
         competition = CompetitionResourceBuilder.newCompetitionResource().build();
         parentSection = newSectionResource().withCompetition(competition.getId()).build();

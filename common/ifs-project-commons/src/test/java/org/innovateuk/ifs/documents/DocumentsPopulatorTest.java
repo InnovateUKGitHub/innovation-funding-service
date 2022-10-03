@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.documents;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder;

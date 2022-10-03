@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.profile.populator;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.profile.viewmodel.UserProfileViewModel;
 import org.innovateuk.ifs.user.resource.EDIStatus;

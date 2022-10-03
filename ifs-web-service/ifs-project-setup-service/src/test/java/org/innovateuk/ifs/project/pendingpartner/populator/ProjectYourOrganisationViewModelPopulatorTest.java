@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.pendingpartner.populator;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.FormOption;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;

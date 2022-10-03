@@ -16,7 +16,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 /**
  * A base class for testing @PermissionRules-annotated classes
  */
-public abstract class BasePermissionRulesTest<T> extends BaseUnitTest {
+public abstract class BasePermissionRulesTest<T> {
 
     @InjectMocks
     protected T rules = supplyPermissionRulesUnderTest();

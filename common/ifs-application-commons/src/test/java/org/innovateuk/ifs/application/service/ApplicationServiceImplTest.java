@@ -13,9 +13,11 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -31,6 +33,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationService> {
 
     @Mock
@@ -51,7 +54,6 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
     @Before
     public void setUp() {
-        super.setup();
 
         userId = 1L;
 

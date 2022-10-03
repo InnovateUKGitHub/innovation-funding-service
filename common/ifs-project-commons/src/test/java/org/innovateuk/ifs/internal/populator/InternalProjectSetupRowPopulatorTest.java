@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.internal.populator;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.internal.InternalProjectSetupCell;
 import org.innovateuk.ifs.internal.InternalProjectSetupRow;

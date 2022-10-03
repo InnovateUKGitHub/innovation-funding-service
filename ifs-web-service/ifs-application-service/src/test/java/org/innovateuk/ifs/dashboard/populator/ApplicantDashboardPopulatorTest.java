@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.dashboard.populator;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.applicant.resource.dashboard.ApplicantDashboardResource;
 import org.innovateuk.ifs.applicant.resource.dashboard.DashboardEuGrantTransferRowResource;
 import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInProgressRowResource;

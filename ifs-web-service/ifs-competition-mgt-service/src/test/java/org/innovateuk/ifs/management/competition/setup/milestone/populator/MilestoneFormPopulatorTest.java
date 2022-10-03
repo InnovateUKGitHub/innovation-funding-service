@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.management.competition.setup.milestone.populator;
 
-import org.apache.commons.collections4.map.LinkedMap;
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;

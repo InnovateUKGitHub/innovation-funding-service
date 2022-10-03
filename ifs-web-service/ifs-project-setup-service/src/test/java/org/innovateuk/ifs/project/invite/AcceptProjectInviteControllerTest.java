@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.invite;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.forms.controller;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.forms.validator.ApplicationDetailsEditableValidator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;

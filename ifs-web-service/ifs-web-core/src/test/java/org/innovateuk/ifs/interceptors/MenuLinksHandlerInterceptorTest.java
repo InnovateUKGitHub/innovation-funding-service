@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.interceptors;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.navigation.PageHistoryService;

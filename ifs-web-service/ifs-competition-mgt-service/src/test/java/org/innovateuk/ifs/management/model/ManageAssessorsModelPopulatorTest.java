@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.model;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 import org.innovateuk.ifs.assessment.service.AssessmentPeriodService;

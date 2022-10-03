@@ -41,7 +41,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
  * This is the base class for testing Controllers using MockMVC in addition to standard Mockito mocks.  Using MockMVC
  * allows Controllers to be tested via their routes and their responses' HTTP responses tested also.
  */
-public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnitTest {
+public abstract class BaseControllerMockMVCTest<ControllerType> {
 
     @InjectMocks
     protected ControllerType controller = supplyControllerUnderTest();

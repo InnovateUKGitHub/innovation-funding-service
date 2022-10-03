@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.monitoringofficer.populator;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerAssignRoleViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;

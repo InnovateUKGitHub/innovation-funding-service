@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.util;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.junit.Test;

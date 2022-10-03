@@ -4,7 +4,6 @@ import com.google.common.cache.Cache;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.junit.Test;
 import org.mockito.InjectMocks;

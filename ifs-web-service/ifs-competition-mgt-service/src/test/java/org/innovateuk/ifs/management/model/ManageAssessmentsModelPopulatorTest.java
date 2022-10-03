@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.model;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.assessment.service.CompetitionKeyAssessmentStatisticsRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;

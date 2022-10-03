@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.analytics;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.analytics.service.GoogleAnalyticsDataLayerRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
