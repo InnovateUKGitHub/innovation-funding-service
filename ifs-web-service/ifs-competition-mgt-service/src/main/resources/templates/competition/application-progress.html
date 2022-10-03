@@ -127,7 +127,7 @@
                                     </a>
                                     <form th:unless="${assessor.notified}" method="post"
                                           th:action="@{/assessment/competition/{cId}/application/{apId}/period/{assessmentPeriodId}/assessors/withdraw/{asId}(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},assessmentPeriodId=${model.assessmentPeriodId})}">
-                                        <button type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-0">Remove</button>
+                                        <button type="submit" class="button-clear">Remove</button>
                                     </form>
                                 </td>
                             </tr>
@@ -308,7 +308,6 @@
                                     <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col">Total applications</th>
                                     <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col">Assigned</th>
                                     <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col">Submitted</th>
-                                    <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col">Action</th>
                                 </tr>
                             </thead>
                             <tbody class="govuk-table__body">
