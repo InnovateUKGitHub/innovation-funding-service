@@ -62,7 +62,6 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
 
     @Before
     public void setup() {
-        super.setup();
 
         grantClaim = newGrantClaimPercentage()
                 .withGrantClaimPercentage(BigDecimal.valueOf(100))

@@ -36,8 +36,6 @@ public class HorizonWorkProgrammeResourceCookieServiceTest extends BaseServiceUn
     public void setUp() {
         response = new MockHttpServletResponse();
         request = new MockHttpServletRequest();
-
-        super.setup();
     }
 
     @Test

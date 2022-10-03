@@ -57,7 +57,6 @@ public class OrganisationCreationTypeControllerTest extends BaseControllerMockMV
 
     @Before
     public void setup(){
-        super.setup();
         setupEncryptedCookieService(cookieUtil);
         HttpServletRequest request = mock(HttpServletRequest.class);
 

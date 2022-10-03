@@ -79,7 +79,6 @@ public class KtpOrganisationCreationTypeControllerTest extends BaseControllerMoc
 
     @Before
     public void setup(){
-        super.setup();
         setupEncryptedCookieService(cookieUtil);
 
         CompetitionOrganisationConfigResource competitionOrganisationConfigResource = new CompetitionOrganisationConfigResource();
