@@ -40,7 +40,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class AcceptProjectInviteControllerTest extends BaseUnitTest {
+public class AcceptProjectInviteControllerTest {
 
     @InjectMocks
     private AcceptProjectInviteController acceptProjectInviteController;

@@ -37,7 +37,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ProjectTermsModelPopulatorTest extends BaseUnitTest {
+public class ProjectTermsModelPopulatorTest {
 
     @Mock
     private ProjectRestService projectRestService;

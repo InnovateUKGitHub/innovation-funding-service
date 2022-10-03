@@ -13,7 +13,7 @@ import static org.innovateuk.ifs.sections.SectionAccess.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
+public class SetupSectionsPartnerAccessorTest {
 
     @Mock
     private SetupProgressChecker setupProgressCheckerMock;

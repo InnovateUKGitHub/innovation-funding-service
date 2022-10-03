@@ -42,7 +42,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ProjectYourOrganisationViewModelPopulatorTest extends BaseUnitTest {
+public class ProjectYourOrganisationViewModelPopulatorTest {
 
     @Mock
     private ProjectYourOrganisationRestService yourOrganisationRestService;

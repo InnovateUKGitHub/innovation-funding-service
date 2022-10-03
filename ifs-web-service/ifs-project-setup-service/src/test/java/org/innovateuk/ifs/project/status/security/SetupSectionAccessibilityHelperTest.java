@@ -15,7 +15,7 @@ import static org.innovateuk.ifs.sections.SectionAccess.NOT_ACCESSIBLE;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
+public class SetupSectionAccessibilityHelperTest {
 
     @Mock
     private SetupProgressChecker setupProgressChecker;

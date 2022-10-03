@@ -82,7 +82,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
+public class SetupStatusViewModelPopulatorTest {
 
     @InjectMocks
     private SetupStatusViewModelPopulator populator;
