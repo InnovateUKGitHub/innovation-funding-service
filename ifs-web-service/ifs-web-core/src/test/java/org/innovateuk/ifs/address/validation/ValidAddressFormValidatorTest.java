@@ -22,7 +22,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 @RunWith(MockitoJUnitRunner.class)
 @ContextConfiguration
-public class ValidAddressFormValidatorTest extends BaseUnitTest {
+public class ValidAddressFormValidatorTest {
 
     ValidAddressFormValidator validAddressFormValidator;
     AddressForm addressForm;

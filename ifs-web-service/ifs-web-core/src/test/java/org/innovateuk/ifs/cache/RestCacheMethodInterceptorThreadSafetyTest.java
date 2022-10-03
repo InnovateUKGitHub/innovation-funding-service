@@ -36,7 +36,7 @@ import static org.mockito.Mockito.when;
  * single Controller call can safely share cache results and add cache results to the existing set of results
  * between the various Threads its Futures execute within.
  */
-public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTest {
+public class RestCacheMethodInterceptorThreadSafetyTest {
 
     @InjectMocks
     private RestCacheMethodInterceptor interceptor;

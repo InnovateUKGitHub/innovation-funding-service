@@ -31,7 +31,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.web.servlet.HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE;
 
-public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
+public class GoogleAnalyticsDataLayerInterceptorTest {
 
     @Mock
     private GoogleAnalyticsDataLayerRestService googleAnalyticsDataLayerRestServiceMock;
@@ -50,7 +50,6 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        super.setup();
         mav = new ModelAndView();
         setAnonymousAuthentication();
         httpServletRequest = new MockHttpServletRequest();

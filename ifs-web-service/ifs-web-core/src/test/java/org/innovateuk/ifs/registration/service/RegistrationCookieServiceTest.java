@@ -39,8 +39,6 @@ public class RegistrationCookieServiceTest extends BaseServiceUnitTest<Registrat
     public void setUp() {
         response = new MockHttpServletResponse();
         request = new MockHttpServletRequest();
-
-        super.setup();
     }
 
     @Test

@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 
-public class ErrorControllerAdviceTest extends BaseUnitTest {
+public class ErrorControllerAdviceTest {
 
     @Mock
     private Environment env;
@@ -38,7 +38,6 @@ public class ErrorControllerAdviceTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        super.setup();
 
         ReflectionTestUtils.setField(errorControllerAdvice, "logoutUrl", "http://site/logout");
 
