@@ -14,7 +14,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-public class LeadInternationalOrganisationFormPopulatorTest extends BaseUnitTest {
+public class LeadInternationalOrganisationFormPopulatorTest {
 
     @InjectMocks
     private LeadInternationalOrganisationFormPopulator service;

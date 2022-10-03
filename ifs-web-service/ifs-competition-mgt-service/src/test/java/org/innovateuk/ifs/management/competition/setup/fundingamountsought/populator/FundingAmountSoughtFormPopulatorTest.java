@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class FundingAmountSoughtFormPopulatorTest extends BaseUnitTest {
+public class FundingAmountSoughtFormPopulatorTest {
 
     @InjectMocks
     private FundingAmountSoughtFormPopulator fundingAmountSoughtFormPopulator;

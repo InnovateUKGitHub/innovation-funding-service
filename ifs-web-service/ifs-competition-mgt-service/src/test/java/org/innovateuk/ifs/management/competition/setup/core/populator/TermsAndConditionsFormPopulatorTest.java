@@ -18,7 +18,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-public class TermsAndConditionsFormPopulatorTest extends BaseUnitTest {
+public class TermsAndConditionsFormPopulatorTest {
 
     @InjectMocks
     private TermsAndConditionsFormPopulator service;

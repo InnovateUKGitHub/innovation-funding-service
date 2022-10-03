@@ -27,7 +27,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-public class ManageAssessorsModelPopulatorTest extends BaseUnitTest {
+public class ManageAssessorsModelPopulatorTest {
 
     @Spy
     @InjectMocks

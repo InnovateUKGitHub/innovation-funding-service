@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-public class MilestoneFormPopulatorTest extends BaseUnitTest {
+public class MilestoneFormPopulatorTest {
 
     @InjectMocks
     private MilestonesFormPopulator service;

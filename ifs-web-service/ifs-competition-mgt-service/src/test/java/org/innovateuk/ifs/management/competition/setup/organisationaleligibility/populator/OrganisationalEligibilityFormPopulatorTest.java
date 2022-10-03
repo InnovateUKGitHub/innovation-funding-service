@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-public class OrganisationalEligibilityFormPopulatorTest extends BaseUnitTest {
+public class OrganisationalEligibilityFormPopulatorTest {
 
     @InjectMocks
     private OrganisationalEligibilityFormPopulator service;

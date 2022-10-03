@@ -22,7 +22,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-public class ManageAssessmentsModelPopulatorTest extends BaseUnitTest {
+public class ManageAssessmentsModelPopulatorTest {
 
     @InjectMocks
     @Spy
