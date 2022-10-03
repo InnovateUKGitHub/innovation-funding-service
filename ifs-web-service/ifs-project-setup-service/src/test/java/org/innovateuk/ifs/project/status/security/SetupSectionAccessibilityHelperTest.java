@@ -4,8 +4,10 @@ package org.innovateuk.ifs.project.status.security;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.function.BiFunction;
 
@@ -15,6 +17,7 @@ import static org.innovateuk.ifs.sections.SectionAccess.NOT_ACCESSIBLE;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class SetupSectionAccessibilityHelperTest {
 
     @Mock

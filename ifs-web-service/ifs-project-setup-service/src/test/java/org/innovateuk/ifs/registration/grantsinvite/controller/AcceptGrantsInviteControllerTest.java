@@ -7,7 +7,9 @@ import org.innovateuk.ifs.registration.grantsinvite.viewmodel.GrantsInviteViewMo
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -20,6 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+@RunWith(MockitoJUnitRunner.class)
 public class AcceptGrantsInviteControllerTest extends BaseControllerMockMVCTest<AcceptGrantsInviteController> {
 
     @Mock

@@ -4,8 +4,10 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -23,6 +25,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 
+@RunWith(MockitoJUnitRunner.class)
 public class ErrorControllerAdviceTest {
 
     @Mock

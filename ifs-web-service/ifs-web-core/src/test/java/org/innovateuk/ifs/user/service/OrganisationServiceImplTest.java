@@ -6,7 +6,9 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.*;
 
@@ -21,6 +23,7 @@ import static org.innovateuk.ifs.user.resource.ProcessRoleType.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class OrganisationServiceImplTest extends BaseServiceUnitTest<OrganisationService> {
 
     @Mock

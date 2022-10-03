@@ -6,7 +6,9 @@ import org.innovateuk.ifs.util.CompressedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -19,6 +21,7 @@ import static org.innovateuk.ifs.supporter.builder.SupporterAssignmentResourceBu
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class SupporterCookieServiceTest  extends BaseServiceUnitTest<SupporterCookieService> {
 
     @Mock

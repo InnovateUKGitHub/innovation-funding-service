@@ -11,7 +11,9 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +36,7 @@ import static org.mockito.Mockito.*;
 /**
  * Test Class for functionality in {@link UserServiceImpl}
  */
+@RunWith(MockitoJUnitRunner.class)
 public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     private static final String EMAIL_THAT_EXISTS_FOR_USER = "sample@me.com";
 
