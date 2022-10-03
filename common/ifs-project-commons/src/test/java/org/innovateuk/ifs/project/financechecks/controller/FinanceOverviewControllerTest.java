@@ -96,7 +96,6 @@ public class FinanceOverviewControllerTest extends BaseControllerMockMVCTest<Fin
         FinanceCheckEligibilityResource financeCheckEligibilityResource = newFinanceCheckEligibilityResource().withTotalCost(BigDecimal.valueOf(280009)).build();
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(partnerOrganisationResources));
         when(financeCheckServiceMock.getFinanceCheckOverview(projectId)).thenReturn(serviceSuccess(mockFinanceOverview()));
-        when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(projectId, organisationId)).thenReturn(financeCheckEligibilityResource);
         when(projectFinanceService.getProjectFinances(projectId)).thenReturn(restSuccess(emptyList()));
         ProjectResource projectResource = newProjectResource().withCompetition(competition.getId()).build();
         when(projectService.getById(projectId)).thenReturn(projectResource);
