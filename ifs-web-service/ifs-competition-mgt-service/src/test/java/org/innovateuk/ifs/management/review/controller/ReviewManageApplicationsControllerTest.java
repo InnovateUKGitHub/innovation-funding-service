@@ -10,9 +10,11 @@ import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.management.review.model.ManageReviewApplicationsModelPopulator;
 import org.innovateuk.ifs.management.review.viewmodel.ManagePanelApplicationsViewModel;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +28,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ReviewManageApplicationsControllerTest extends BaseControllerMockMVCTest<ReviewManageApplicationsController> {
 
     @InjectMocks

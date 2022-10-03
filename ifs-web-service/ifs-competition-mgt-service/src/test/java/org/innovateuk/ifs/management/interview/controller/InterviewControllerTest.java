@@ -10,9 +10,11 @@ import org.innovateuk.ifs.management.interview.model.InterviewModelPopulator;
 import org.innovateuk.ifs.interview.resource.InterviewStatisticsResource;
 import org.innovateuk.ifs.management.interview.viewmodel.InterviewViewModel;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -27,6 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+@RunWith(MockitoJUnitRunner.class)
 public class InterviewControllerTest extends BaseControllerMockMVCTest<InterviewController> {
 
     private CompetitionResource competitionResource;

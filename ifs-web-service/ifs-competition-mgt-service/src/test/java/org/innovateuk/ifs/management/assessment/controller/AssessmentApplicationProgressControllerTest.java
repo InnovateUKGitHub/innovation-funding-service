@@ -24,7 +24,9 @@ import org.innovateuk.ifs.pagination.PaginationViewModel;
 import org.innovateuk.ifs.util.CompressedCookieService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.*;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
@@ -54,6 +56,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class AssessmentApplicationProgressControllerTest extends BaseControllerMockMVCTest<AssessmentApplicationProgressController> {
 
     @Spy

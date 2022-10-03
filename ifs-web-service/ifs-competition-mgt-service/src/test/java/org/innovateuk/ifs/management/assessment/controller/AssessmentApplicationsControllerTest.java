@@ -12,14 +12,18 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.application.list.populator.ManageApplicationsModelPopulator;
 import org.innovateuk.ifs.management.application.list.viewmodel.ManageApplicationsViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationCountSummaryResourceBuilder.newApplicationCountSummaryResource;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.clearUniqueIds;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.AssessmentPeriodResourceBuilder.newAssessmentPeriodResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -30,6 +34,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class AssessmentApplicationsControllerTest extends BaseControllerMockMVCTest<AssessmentApplicationsController> {
 
     @Mock
@@ -44,6 +49,11 @@ public class AssessmentApplicationsControllerTest extends BaseControllerMockMVCT
     @InjectMocks
     @Spy
     private ManageApplicationsModelPopulator manageApplicationsPopulator;
+
+    @Before
+    public void resetBuilderIds() {
+        clearUniqueIds();
+    }
 
     @Override
     protected AssessmentApplicationsController supplyControllerUnderTest() {

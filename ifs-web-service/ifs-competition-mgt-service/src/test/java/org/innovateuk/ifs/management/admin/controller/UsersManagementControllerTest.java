@@ -9,7 +9,9 @@ import org.innovateuk.ifs.user.resource.ManageUserPageResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -22,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * A mock MVC test for user management controller
  */
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class UsersManagementControllerTest extends AbstractAsyncWaitMockMVCTest<UsersManagementController> {
 
     private ManageUserPageResource manageUserPageResource;

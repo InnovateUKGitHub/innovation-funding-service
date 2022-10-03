@@ -20,10 +20,12 @@ import org.innovateuk.ifs.management.assessor.viewmodel.OverviewAssessorRowViewM
 import org.innovateuk.ifs.util.CompressedCookieService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Arrays;
@@ -59,6 +61,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class InviteAssessorsOverviewControllerTest extends BaseControllerMockMVCTest<InviteAssessorsOverviewController> {
 
     @Spy
