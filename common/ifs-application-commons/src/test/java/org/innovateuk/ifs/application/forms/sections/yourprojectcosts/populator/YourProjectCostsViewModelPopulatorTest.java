@@ -136,9 +136,6 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         PublicContentItemResource publicContentItem = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
 
 
-        when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
-                .withOrganisation(organisation.getId())
-                .build()));
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));
@@ -197,9 +194,6 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         PublicContentResource publicContentResource = newPublicContentResource().build();
         PublicContentItemResource publicContentItem = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
 
-        when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
-                .withOrganisation(organisation.getId())
-                .build()));
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));
@@ -246,9 +240,6 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         PublicContentResource publicContentResource = newPublicContentResource().build();
         PublicContentItemResource publicContentItem = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
 
-        when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
-                .withOrganisation(organisation.getId())
-                .build()));
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));
@@ -293,9 +284,6 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         PublicContentResource publicContentResource = newPublicContentResource().build();
         PublicContentItemResource publicContentItem = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
 
-        when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
-                .withOrganisation(organisation.getId())
-                .build()));
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));

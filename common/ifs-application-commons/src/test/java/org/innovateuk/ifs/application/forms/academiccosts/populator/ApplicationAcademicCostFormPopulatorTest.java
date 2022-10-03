@@ -82,8 +82,6 @@ public class ApplicationAcademicCostFormPopulatorTest extends BaseServiceUnitTes
 
         when(applicationFinanceRestService.getFinanceDetails(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(finance));
 
-        when(fileEntryRestService.findOne(FILE_ENTRY_ID)).thenReturn(restFailure(new RestFailure(emptyList(), HttpStatus.NOT_FOUND)));
-
         service.populate(form, APPLICATION_ID, ORGANISATION_ID);
 
         verify(defaultFinanceRowRestService).create(argThat(i -> i.getName().equals("tsb_reference")));

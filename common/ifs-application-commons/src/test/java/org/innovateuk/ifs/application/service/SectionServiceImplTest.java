@@ -60,23 +60,14 @@ public class SectionServiceImplTest extends BaseServiceUnitTest<SectionServiceIm
 
         parentSection.setChildSections(singletonList(childSection1.getId()));
 
-        when(sectionRestService.getById(eq(childSection1.getId()))).thenReturn(restSuccess(childSection1));
-        when(sectionRestService.getById(eq(parentSection.getId()))).thenReturn(restSuccess(parentSection));
 
         when(sectionRestService.getByCompetition(anyLong())).thenReturn(restSuccess(asList(parentSection, childSection1)));
 
         QuestionResource question1 = QuestionResourceBuilder.newQuestionResource().build();
-        when(questionRestService.findById(eq(question1.getId()))).thenReturn(restSuccess(question1));
 
         QuestionResource question2 = QuestionResourceBuilder.newQuestionResource().build();
-        when(questionRestService.findById(eq(question2.getId()))).thenReturn(restSuccess(question2));
 
         childSection1.setQuestions(Arrays.asList(question1.getId(), question2.getId()));
-        when(questionRestService.findByCompetition(childSection1.getCompetition())).thenReturn(restSuccess(asList(question1, question2)));
-        when(formInputRestService.getById(formInputResource1.getId())).thenReturn(restSuccess(formInputResource1));
-        when(formInputRestService.getById(formInputResource2.getId())).thenReturn(restSuccess(formInputResource2));
-
-        when(formInputRestService.getByCompetitionIdAndScope(isA(Long.class), eq(APPLICATION))).thenReturn(restSuccess(asList(formInputResource1, formInputResource2)));
     }
 
     @Test
