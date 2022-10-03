@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.questionnaire.response.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireOptionRestService;
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireQuestionRestService;
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireRestService;
@@ -11,8 +12,11 @@ import org.innovateuk.ifs.questionnaire.response.populator.QuestionnaireQuestion
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireQuestionResponseRestService;
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireResponseRestService;
 import org.innovateuk.ifs.questionnaire.response.viewmodel.QuestionnaireQuestionViewModel;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
@@ -34,6 +38,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class QuestionnaireWebControllerTest extends BaseControllerMockMVCTest<QuestionnaireWebController> {
 
     @Mock
@@ -56,6 +61,11 @@ public class QuestionnaireWebControllerTest extends BaseControllerMockMVCTest<Qu
 
     @Mock
     private QuestionnaireQuestionViewModelPopulator questionnaireQuestionViewModelPopulator;
+
+    @Before
+    public void reset() {
+        BaseBuilderAmendFunctions.clearUniqueIds();
+    }
 
     @Test
     public void welcomeScreen() throws Exception {

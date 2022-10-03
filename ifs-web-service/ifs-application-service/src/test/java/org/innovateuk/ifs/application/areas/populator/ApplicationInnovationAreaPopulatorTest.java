@@ -6,8 +6,10 @@ import org.innovateuk.ifs.application.service.ApplicationInnovationAreaRestServi
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
@@ -15,6 +17,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ApplicationInnovationAreaPopulatorTest {
 
     @InjectMocks
@@ -61,7 +64,6 @@ public class ApplicationInnovationAreaPopulatorTest {
         InnovationAreaResource innovationAreaResource = newInnovationAreaResource().withId(innovationAreaId).withName("Innovation Area").build();
         ApplicationResource applicationWithInnovationArea = newApplicationResource().withInnovationArea(innovationAreaResource).withCompetitionName(competitionName).build();
 
-        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(applicationWithInnovationArea));
         when(applicationInnovationAreaRestService.getAvailableInnovationAreasForApplication(applicationId)).thenReturn(restSuccess(newInnovationAreaResource().build(5)));
 
         InnovationAreaViewModel innovationAreaViewModel = populator.populate(applicationResource, questionId);

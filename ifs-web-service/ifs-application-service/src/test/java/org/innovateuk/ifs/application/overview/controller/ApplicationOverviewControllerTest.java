@@ -6,9 +6,11 @@ import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewView
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -35,6 +37,11 @@ public class ApplicationOverviewControllerTest extends BaseControllerMockMVCTest
     private ProcessRoleRestService processRoleRestService;
     @Mock
     private ApplicationRestService applicationRestService;
+
+    @Before
+    public void reset() {
+        BaseBuilderAmendFunctions.clearUniqueIds();
+    }
 
     @Override
     protected ApplicationOverviewController supplyControllerUnderTest() {

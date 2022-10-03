@@ -18,6 +18,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
@@ -79,6 +80,7 @@ public class KtpOrganisationCreationTypeControllerTest extends BaseControllerMoc
 
     @Before
     public void setup(){
+        MockitoAnnotations.openMocks(this);
         setupEncryptedCookieService(cookieUtil);
 
         CompetitionOrganisationConfigResource competitionOrganisationConfigResource = new CompetitionOrganisationConfigResource();

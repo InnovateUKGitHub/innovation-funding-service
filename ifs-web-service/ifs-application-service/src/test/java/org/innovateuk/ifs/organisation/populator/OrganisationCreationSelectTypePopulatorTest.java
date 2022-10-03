@@ -7,10 +7,12 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.organisation.viewmodel.OrganisationCreationSelectTypeViewModel;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
@@ -45,6 +47,10 @@ public class OrganisationCreationSelectTypePopulatorTest extends BaseServiceUnit
         });
     }
 
+    @Before
+    public void init() {
+        MockitoAnnotations.openMocks(this);
+    }
     public OrganisationCreationSelectTypePopulatorTest(FundingType fundingType) {
         this.fundingType = fundingType;
     }

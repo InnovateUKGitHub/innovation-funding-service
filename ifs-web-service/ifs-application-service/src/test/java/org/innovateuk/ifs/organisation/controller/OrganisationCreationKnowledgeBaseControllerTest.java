@@ -15,7 +15,9 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationSearchRestService;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -32,6 +34,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class OrganisationCreationKnowledgeBaseControllerTest extends BaseControllerMockMVCTest<OrganisationCreationKnowledgeBaseController> {
 
     static final String BASE_URL = "/organisation/create";

@@ -15,7 +15,9 @@ import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
@@ -34,6 +36,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class OrganisationCreationTypeControllerTest extends BaseControllerMockMVCTest<OrganisationCreationTypeController> {
 
     private static final String BASE_URL = "/organisation/create";
