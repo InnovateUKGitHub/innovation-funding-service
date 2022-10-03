@@ -31,7 +31,6 @@ import java.util.Optional;
 import static com.google.common.collect.Sets.newLinkedHashSet;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
-import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -291,9 +290,9 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         assertEquals(multipleChoiceFormInput.getActive(), true);
         //create
-        verify(multipleChoiceOptionRepository).save(argThat(lambdaMatches(choice -> choice.getId() == null)));
+        verify(multipleChoiceOptionRepository).save(argThat(choice -> choice.getId() == null));
         //delete
-        verify(multipleChoiceOptionRepository).delete(argThat(lambdaMatches(choice -> choice.getId().equals(2L))));
+        verify(multipleChoiceOptionRepository).delete(argThat(choice -> choice.getId().equals(2L)));
         //update
         assertEquals(multipleChoiceFormInput.getMultipleChoiceOptions().stream()
                 .filter(choice -> choice.getId().equals(1L)).findAny().get().getText(), "Update");

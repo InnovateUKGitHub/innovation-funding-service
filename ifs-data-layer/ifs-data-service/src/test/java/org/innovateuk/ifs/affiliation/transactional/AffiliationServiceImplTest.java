@@ -2,7 +2,6 @@ package org.innovateuk.ifs.affiliation.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.user.domain.Affiliation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.AffiliationMapper;
@@ -10,6 +9,7 @@ import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.AffiliationListResource;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.junit.Test;
+import org.mockito.ArgumentMatcher;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 
@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.builder.AffiliationListResourceBuilder.newAffiliationListResource;
@@ -115,7 +114,7 @@ public class AffiliationServiceImplTest extends BaseServiceUnitTest<AffiliationS
         when(affiliationMapperMock.mapToDomain(affiliationResources)).thenReturn(affiliations);
 
 
-        when(userRepositoryMock.save(createUserExpectations(existingUser.getId(), affiliations))).thenReturn(newUser().build());
+        when(userRepositoryMock.save(existingUser)).thenReturn(newUser().build());
 
         ServiceResult<Void> response = service.updateUserAffiliations(userId, affiliationListResource);
         assertTrue(response.isSuccess());
@@ -123,7 +122,7 @@ public class AffiliationServiceImplTest extends BaseServiceUnitTest<AffiliationS
         InOrder inOrder = inOrder(userRepositoryMock, affiliationMapperMock);
         inOrder.verify(userRepositoryMock).findById(userId);
         inOrder.verify(affiliationMapperMock).mapToDomain(affiliationResources);
-        inOrder.verify(userRepositoryMock).save(createUserExpectations(existingUser.getId(), affiliations));
+        inOrder.verify(userRepositoryMock).save(argThat(hasIdAndAffiliations(existingUser.getId(), affiliations)));
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -138,17 +137,7 @@ public class AffiliationServiceImplTest extends BaseServiceUnitTest<AffiliationS
         verifyNoInteractions(affiliationMapperMock);
     }
 
-    private User createUserExpectations(Long userId, Profile profile) {
-        return createLambdaMatcher(user -> {
-            assertEquals(userId, user.getId());
-            assertEquals(profile.getId(), user.getProfileId());
-        });
-    }
-
-    private User createUserExpectations(Long userId, List<Affiliation> affiliations) {
-        return createLambdaMatcher(user -> {
-            assertEquals(userId, user.getId());
-            assertEquals(affiliations, user.getAffiliations());
-        });
+    private ArgumentMatcher<User> hasIdAndAffiliations(Long userId, List<Affiliation> affiliations) {
+        return u -> u.getId().equals(userId) && u.getAffiliations().equals(affiliations);
     }
 }

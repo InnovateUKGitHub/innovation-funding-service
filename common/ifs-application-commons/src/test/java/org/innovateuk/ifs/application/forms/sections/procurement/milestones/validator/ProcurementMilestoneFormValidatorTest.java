@@ -3,20 +3,18 @@ package org.innovateuk.ifs.application.forms.sections.procurement.milestones.val
 import com.google.common.collect.ImmutableMap;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestoneForm;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.core.Is.is;
-import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -55,11 +53,8 @@ public class ProcurementMilestoneFormValidatorTest {
 
         validator.validate(form, finance, validationHandler);
 
-        verify(validationHandler).addError(argThat(lambdaMatches(error -> {
-            assertThat(error.getErrorKey(), is(equalTo("validation.procurement.milestones.total.higher")));
-            assertThat(error.getFieldName(), is(equalTo("totalErrorHolder")));
-            return true;
-        })));
+        verify(validationHandler).addError(argThat(errorMatches(
+                "validation.procurement.milestones.total.higher", "totalErrorHolder")));
     }
 
     @Test
@@ -71,11 +66,8 @@ public class ProcurementMilestoneFormValidatorTest {
 
         validator.validate(form, finance, validationHandler);
 
-        verify(validationHandler).addError(argThat(lambdaMatches(error -> {
-            assertThat(error.getErrorKey(), is(equalTo("validation.procurement.milestones.total.lower")));
-            assertThat(error.getFieldName(), is(equalTo("totalErrorHolder")));
-            return true;
-        })));
+        verify(validationHandler).addError(argThat(errorMatches(
+                "validation.procurement.milestones.total.lower", "totalErrorHolder")));
     }
 
     @Test
@@ -91,11 +83,8 @@ public class ProcurementMilestoneFormValidatorTest {
 
         validator.validate(nullForm, finance, validationHandler);
 
-        verify(validationHandler).addError(argThat(lambdaMatches(error -> {
-            assertThat(error.getErrorKey(), is(equalTo("validation.procurement.milestones.total.lower")));
-            assertThat(error.getFieldName(), is(equalTo("totalErrorHolder")));
-            return true;
-        })));
+        verify(validationHandler).addError(argThat(errorMatches(
+                "validation.procurement.milestones.total.lower", "totalErrorHolder")));
     }
 
     @Test
@@ -112,10 +101,11 @@ public class ProcurementMilestoneFormValidatorTest {
 
         validator.validate(nullForm, finance, validationHandler);
 
-        verify(validationHandler).addError(argThat(lambdaMatches(error -> {
-            assertThat(error.getErrorKey(), is(equalTo("validation.procurement.milestones.total.lower")));
-            assertThat(error.getFieldName(), is(equalTo("totalErrorHolder")));
-            return true;
-        })));
+        verify(validationHandler).addError(argThat(errorMatches("validation.procurement.milestones.total.lower", "totalErrorHolder")));
+
+    }
+
+    private ArgumentMatcher<Error> errorMatches(String key, String name) {
+        return error -> error.getErrorKey().equals(key) && error.getFieldName().equals(name);
     }
 }

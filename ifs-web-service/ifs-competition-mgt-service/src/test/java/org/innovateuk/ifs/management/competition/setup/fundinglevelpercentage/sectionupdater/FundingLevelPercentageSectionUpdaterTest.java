@@ -21,7 +21,6 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -136,21 +135,21 @@ public class FundingLevelPercentageSectionUpdaterTest {
 
         assertTrue(result.isSuccess());
 
-        verify(grantClaimMaximumRestService).save(argThat(lambdaMatches(max -> max.getId().equals(100L)
+        verify(grantClaimMaximumRestService).save(argThat(max -> max.getId().equals(100L)
                 && max.getResearchCategory().equals(matchingResearchCategory)
                 && max.getOrganisationSize() == OrganisationSize.SMALL
                 && max.getMaximum().equals(10)
-        )));
-        verify(grantClaimMaximumRestService).save(argThat(lambdaMatches(max -> max.getId().equals(101L)
+        ));
+        verify(grantClaimMaximumRestService).save(argThat(max -> max.getId().equals(101L)
                 && max.getResearchCategory().equals(matchingResearchCategory)
                 && max.getOrganisationSize() == OrganisationSize.MEDIUM
                 && max.getMaximum().equals(20)
-        )));
-        verify(grantClaimMaximumRestService).save(argThat(lambdaMatches(max -> max.getId().equals(102L)
+        ));
+        verify(grantClaimMaximumRestService).save(argThat(max -> max.getId().equals(102L)
                 && max.getResearchCategory().equals(matchingResearchCategory)
                 && max.getOrganisationSize() == OrganisationSize.LARGE
                 && max.getMaximum().equals(30)
-        )));
+        ));
 
         verify(grantClaimMaximumRestService).save(missingGrantClaimMaxmimum);
         assertEquals(0, (int) missingGrantClaimMaxmimum.getMaximum());
@@ -195,21 +194,21 @@ public class FundingLevelPercentageSectionUpdaterTest {
 
         assertTrue(result.isSuccess());
 
-        verify(grantClaimMaximumRestService).save(argThat(lambdaMatches(max -> max.getId().equals(100L)
+        verify(grantClaimMaximumRestService).save(argThat(max -> max.getId().equals(100L)
                 && max.getResearchCategory().equals(matchingResearchCategory)
                 && max.getOrganisationSize() == OrganisationSize.SMALL
                 && max.getMaximum().equals(10)
-        )));
-        verify(grantClaimMaximumRestService).save(argThat(lambdaMatches(max -> max.getId().equals(101L)
+        ));
+        verify(grantClaimMaximumRestService).save(argThat(max -> max.getId().equals(101L)
                 && max.getResearchCategory().equals(matchingResearchCategory)
                 && max.getOrganisationSize() == OrganisationSize.MEDIUM
                 && max.getMaximum().equals(20)
-        )));
-        verify(grantClaimMaximumRestService).save(argThat(lambdaMatches(max -> max.getId().equals(102L)
+        ));
+        verify(grantClaimMaximumRestService).save(argThat(max -> max.getId().equals(102L)
                 && max.getResearchCategory().equals(matchingResearchCategory)
                 && max.getOrganisationSize() == OrganisationSize.LARGE
                 && max.getMaximum().equals(30)
-        )));
+        ));
 
         verify(grantClaimMaximumRestService).save(missingGrantClaimMaxmimum);
         assertEquals(0, (int) missingGrantClaimMaxmimum.getMaximum());
