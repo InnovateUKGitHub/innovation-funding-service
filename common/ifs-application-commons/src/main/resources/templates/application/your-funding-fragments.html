@@ -94,7 +94,7 @@
             <fieldset class="govuk-fieldset" id="otherFundingShowHideToggle">
                 <th:block th:unless="${ktpFundingType}">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                        <h1 class="govuk-fieldset__heading" th:text="${model.getFundingHeading()}">Other funding</h1>
+                        <h1 class="govuk-fieldset__heading" th:text="${model.isCompTypeOfgemAndFundingTypeThirdParty ? 'Contributions in kind' : 'Other funding'}">Other funding</h1>
                     </legend>
                 </th:block>
                 <th:block th:if="${ktpFundingType}">
@@ -157,16 +157,16 @@
             <dd th:text="|£${form.amount == null ? 0 : form.amount}|">10</dd>
         </dl>
         <th:block th:unless="${form.otherFunding}">
-            <p th:text="${model.getNoOtherFundingText()}" class="govuk-body">No other funding</p>
+            <p th:text="${model.isCompTypeOfgemAndFundingTypeThirdParty ? 'No contributions in kind' : 'No other funding'}" class="govuk-body">No other funding</p>
         </th:block>
         <th:block th:if="${form.otherFunding}">
             <div class="table-overflow">
                 <table class="govuk-table">
                     <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th th:text="${model.getSourceOfFundingText()}" id="other-funding-source" class="govuk-table__header" scope="col">Source of funding</th>
+                        <th th:text="${model.isCompTypeOfgemAndFundingTypeThirdParty ? 'Description and breakdown of contributions in kind' : 'Source of funding'}" id="other-funding-source" class="govuk-table__header" scope="col">Source of funding</th>
                         <th id="other-funding-date" class="width-150 govuk-table__header" scope="col">Date secured</th>
-                        <th th:text="${model.getFundingAmountText()}" id="other-funding-amount" th:class="${model.getFundingAmountWidth()}" scope="col">Funding amount</th>
+                        <th th:text="${model.isCompTypeOfgemAndFundingTypeThirdParty ? 'Contributions in kind value' : 'Funding amount'}" id="other-funding-amount" th:class="${model.getFundingAmountWidth()}" scope="col">Funding amount</th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
@@ -180,7 +180,7 @@
                     </tbody>
                     <tfoot>
                     <tr class="govuk-table__row">
-                        <th th:text="${model.getTotalText()}" class="govuk-table__header" scope="row" colspan="2">Total other funding</th>
+                        <th th:text="${model.isCompTypeOfgemAndFundingTypeThirdParty ? 'Total contributions in kind' : 'Total other funding'}" class="govuk-table__header" scope="row" colspan="2">Total other funding</th>
                         <td class="govuk-table__cell govuk-table__cell--numeric"
                             th:text="'£' + ${#numbers.formatInteger(form.otherFundingTotal, 0, 'DEFAULT')}"></td>
                     </tr>
@@ -229,7 +229,7 @@
                 <table class="govuk-table">
                     <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th th:text="${model.getSourceOfFundingText()}" class="govuk-table__header" th:classappend="${isCompTypeOfgemAndFundingTypeThirdParty} ? 'width-40-percent' : ''" scope="col" id="other-funding-source">Source of funding</th>
+                        <th th:text="${model.isCompTypeOfgemAndFundingTypeThirdParty ? 'Description and breakdown of contributions in kind' : 'Source of funding'}" class="govuk-table__header" th:classappend="${isCompTypeOfgemAndFundingTypeThirdParty} ? 'width-40-percent' : ''" scope="col" id="other-funding-source">Source of funding</th>
                         <th scope="col" id="other-funding-date" class="govuk-table__header width-150">Date secured</th>
                         <th th:text="${isCompTypeOfgemAndFundingTypeThirdParty ? 'Contributions in kind value (&pound;)' : 'Funding amount (&pound;)'}" scope="col" id="other-funding-amount"
                             class="govuk-table__header govuk-table__header--numeric width-200">Funding amount (&pound;)
@@ -251,13 +251,13 @@
                         name="add_row"
                         class="button-clear"
                         data-repeatable-rowcontainer="#other-funding-table tbody"
-                        th:text="${model.addAnotherSourceText()}"
+                        th:text="${model.isCompTypeOfgemAndFundingTypeThirdParty ? 'Add another contribution in kind' : 'Add another source of funding'}"
                 >Add another source of funding
                 </button>
             </p>
         </div>
         <div class="govuk-form-group alignright inline">
-            <label th:text="${model.getTotalText()}" class="govuk-label"
+            <label th:text="${model.isCompTypeOfgemAndFundingTypeThirdParty ? 'Total contributions in kind' : 'Total other funding'}" class="govuk-label"
                    for="other-funding-total">Total other funding</label>
             <input class="govuk-input govuk-input--width-10 alignright"
                    data-calculation-fields="[id*=fundingAmount]"
