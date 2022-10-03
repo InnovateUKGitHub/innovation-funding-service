@@ -16,9 +16,11 @@ import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
@@ -38,6 +40,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<ProjectTeamController> {
 
     @Override
@@ -149,12 +152,9 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
         projectUserInviteResource.setLeadOrganisationId(leadOrganisation.getId());
         projectUserInviteResource.setOrganisationName(organisationResource.getName());
 
-        when(expected.openAddTeamMemberForm(organisationResource.getId())).thenReturn(expected);
-        when(populator.populate(projectId, loggedInUser)).thenReturn(expected);
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisation);
         when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
-        when(projectInviteRestService.getInvitesByProject(projectId)).thenReturn(restSuccess(singletonList(projectUserInviteResource)));
         when(projectTeamRestService.inviteProjectMember(projectId, projectUserInviteResource)).thenReturn(restSuccess());
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/team", competitionId, projectId)

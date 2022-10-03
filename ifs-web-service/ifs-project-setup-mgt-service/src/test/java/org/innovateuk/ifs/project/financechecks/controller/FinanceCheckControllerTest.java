@@ -13,7 +13,9 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.financechecks.controller.FinanceCheckController;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
@@ -25,6 +27,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@RunWith(MockitoJUnitRunner.class)
 public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<FinanceCheckController> {
 
     @Mock

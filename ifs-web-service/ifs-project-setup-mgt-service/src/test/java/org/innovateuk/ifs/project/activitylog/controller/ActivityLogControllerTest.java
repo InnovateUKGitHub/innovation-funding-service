@@ -4,7 +4,9 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.activitylog.populator.ActivityLogViewModelPopulator;
 import org.innovateuk.ifs.project.activitylog.viewmodel.ActivityLogViewModel;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -12,6 +14,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ActivityLogControllerTest extends BaseControllerMockMVCTest<ActivityLogController> {
 
     @Mock

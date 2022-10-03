@@ -11,7 +11,9 @@ import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
@@ -30,6 +32,7 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ProjectAcademicCostFormPopulatorTest extends BaseServiceUnitTest<ProjectAcademicCostFormPopulator> {
 
     private static final long PROJECT_ID = 1L;

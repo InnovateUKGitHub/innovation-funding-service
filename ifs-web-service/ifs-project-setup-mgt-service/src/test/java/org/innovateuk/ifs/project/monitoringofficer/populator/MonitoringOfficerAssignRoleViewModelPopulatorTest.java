@@ -5,8 +5,10 @@ import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerA
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -17,6 +19,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class MonitoringOfficerAssignRoleViewModelPopulatorTest {
 
     @InjectMocks

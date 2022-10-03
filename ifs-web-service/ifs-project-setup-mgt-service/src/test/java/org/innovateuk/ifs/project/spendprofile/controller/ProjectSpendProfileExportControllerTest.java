@@ -9,7 +9,9 @@ import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.spendprofile.SpendProfileService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -30,6 +32,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ProjectSpendProfileExportControllerTest extends BaseControllerMockMVCTest<ProjectSpendProfileExportController> {
 
     @Mock
@@ -54,8 +57,6 @@ public class ProjectSpendProfileExportControllerTest extends BaseControllerMockM
 
         SpendProfileTableResource expectedTable = buildSpendProfileTableResource(projectResource);
         SpendProfileCSVResource expectedSpendProfileCSVResource = buildSpendProfileCSVResource(expectedTable);
-        when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
-        when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(expectedTable);
         when(spendProfileService.getSpendProfileCSV(projectResource.getId(), organisationId)).thenReturn(expectedSpendProfileCSVResource);
 
       mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-export/csv", projectResource.getId(), organisationId))

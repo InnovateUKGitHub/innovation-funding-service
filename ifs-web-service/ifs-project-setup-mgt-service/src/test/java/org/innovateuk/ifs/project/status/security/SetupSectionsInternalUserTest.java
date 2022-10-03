@@ -4,8 +4,10 @@ import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -21,6 +23,7 @@ import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class SetupSectionsInternalUserTest {
 
     @Mock

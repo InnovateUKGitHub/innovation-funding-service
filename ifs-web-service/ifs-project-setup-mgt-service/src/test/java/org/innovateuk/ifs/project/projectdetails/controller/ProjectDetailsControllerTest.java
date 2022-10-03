@@ -24,8 +24,10 @@ import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
@@ -55,6 +57,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<ProjectDetailsController> {
 
     @Mock
@@ -144,7 +147,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .build(2);
 
         when(projectService.getById(project.getId())).thenReturn(project);
-        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(partnerOrganisations));
@@ -225,7 +227,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .build(2);
 
         when(projectService.getById(project.getId())).thenReturn(project);
-        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(partnerOrganisations));
@@ -277,8 +278,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 build(1);
 
         when(projectService.getById(project.getId())).thenReturn(project);
-        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
-        when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/project/{projectId}/details/start-date", project.getCompetition(), project.getId()))
