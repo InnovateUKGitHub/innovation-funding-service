@@ -33,6 +33,8 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...
 ...               IFS-12839 Pre-registration - Internal view - Question numbers appearing in question overview
 ...
+...               IFS-12523 HECP Phase 2 - Document upload - Read only
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -166,7 +168,7 @@ Partner applicant should not see evidence required status instead should still v
     [Documentation]  IFS-12522
     Given log in as a different user                           ${collaborator1_credentials["email"]}  ${short_password}
     When the user clicks the application tile if displayed
-    Then the user should see the element                       jQuery = li:contains("${hecpPreregAppName}") .status-msg:contains("Expression of interest") + .status-msg:contains("Submitted")
+    Then the user should not see the element                   jQuery = li:contains("${hecpPreregAppName}") .status-msg:contains("Expression of interest") + .status-msg:contains("Submitted")
 
 Comp admin can not view mark as ineligible application link
     [Documentation]  IFS-12257
@@ -189,14 +191,28 @@ Internal users can see submitted expression of interest applications without che
 
 Lead organisation should get notified on submitting the EOI evidence
     [Documentation]  IFS-12569
-    When Update application evidence has uploaded       24  ${preregApplicationID}  200
-    Then the user reads his email                       ${lead_applicant_credentials["email"]}  ${evidenceSubmittedEmailSubject}  ${evidenceSubmittedEmailDescription}
+    When Lead applicant submits evidence for review    ${preregApplicationID}   ${contract_pdf}
+    Then the user should see the element               link = Contract.pdf (opens in a new window)
+    And the user reads his email                       ${lead_applicant_credentials["email"]}  ${evidenceSubmittedEmailSubject}  ${evidenceSubmittedEmailDescription}
+
+Lead applicant views read only evidence file submitted for review
+    [Documentation]  IFS-12523
+    When the user navigates to the page         ${server}/application/${preregApplicationID}/summary
+    Then the user checks file is downloaded     ${contract_pdf}
+    And the user should see the element         jQuery = h3:contains("Eoi Evidence")
+
+Partner applicant can not view read only evidence uploaded by lead applicant
+    [Documentation]  IFS-12523
+    Given log in as a different user             ${collaborator1_credentials["email"]}  ${short_password}
+    When the user navigates to the page          ${server}/application/${preregApplicationID}/summary
+    Then the user should not see the element     jQuery = h3:contains("Eoi Evidence")
+    And the user should see the element          jQuery = a:contains("${contract_pdf}")
 
 Internal user submit the EOI applications funding decision after evidence is uploaded
     [Documentation]  IFS-12265  IFS-12568
     Given Existing user creates and submits new application for unsuccessful EOI journey
     And Requesting application ID of unsuccessful prereg application
-    When Update application evidence has uploaded                                           25  ${unSuccessfulPreRegApplicationID}  201
+    When Lead applicant submits evidence for review                                         ${unSuccessfulPreRegApplicationID}   ${contract_pdf}
     And Log in as a different user                                                          &{Comp_admin1_credentials}
     And Internal user marks the EOI as successful/unsuccessful                              ${unSuccessPreregAppName}   EOI_REJECTED
     And Internal user marks the EOI as successful/unsuccessful                              ${hecpPreregAppName}   EOI_APPROVED
@@ -257,11 +273,12 @@ Lead applicant can view the answers provided in EOI applications in full applica
     And Lead applicant should see new questions added in full application
 
 Lead applicant can navigate to orginal EOI application from full application
-    [Documentation]  IFS-12382
-    Given the user clicks the button/link       link = Back to application overview
-    When the user clicks the button/link        link = Expression of interest
-    Then the user clicks the button/link        jQuery = h1:contains("Expression of interest overview")
-    And the user should see the element         jQuery = h2:contains("Congratulations, your application has been successful")
+    [Documentation]  IFS-12382  IFS-12523
+    Given the user clicks the button/link                    link = Back to application overview
+    When the user clicks the button/link                     link = Expression of interest
+    Then the user clicks the button/link                     jQuery = h1:contains("Expression of interest overview")
+    And the user should see the element                      jQuery = h2:contains("Congratulations, your application has been successful")
+    And Lead applicant can view and download evidence file   ${preregApplicationID}  ${contract_pdf}
 
 Partner completes project finances and terms and conditions in full application
     [Documentation]  IFS-12382
@@ -292,13 +309,21 @@ Internal user marks the full application as successful and sent a notification
     Then the user reads his email                                   steve.smith@empire.com  Important message about your application '${hecpPreregAppName}' for the competition '${hecpPreregCompName}'  ${fullApplicationSuccessfulEmail}
 
 Internal user can view EOI application from full application
-    [Documentation]   IFS-12380  IFS-12839
-    Given the user navigates to the page     ${server}/project-setup-management/competition/${preregCompetitionId}/status/all
-    And the user clicks the button/link      link = ${preregApplicationID}
-    When the user clicks the button/link     link = Expression of interest
-    Then the user clicks the button/link     jQuery = h1:contains("Expression of interest overview")
-    And the user should see the element      jQuery = h2:contains("Expression of interest questions")
-    And the user should see the element      jQuery = button:contains("Tell us where your organisation is based")
+    [Documentation]   IFS-12380  IFS-12839  IFS-12523
+    Given the user navigates to the page                    ${server}/project-setup-management/competition/${preregCompetitionId}/status/all
+    And the user clicks the button/link                     link = ${preregApplicationID}
+    When the user clicks the button/link                    link = Expression of interest
+    Then the user clicks the button/link                    jQuery = h1:contains("Expression of interest overview")
+    And the user should see the element                     jQuery = h2:contains("Expression of interest questions")
+    And the user should see the element                     jQuery = button:contains("Tell us where your organisation is based")
+    And Internal user can view and download evidence file   ${preregApplicationID}  ${contract_pdf}
+
+Auditor can view and download evidence file submitted
+    [Documentation]  IFS-12523
+    Given log in as a different user            &{auditorCredentials}
+    When the user navigates to the page         ${server}/management/competition/${preregCompetitionId}/application/${preregApplicationID}
+    Then the user checks file is downloaded     ${contract_pdf}
+    And the user should see the element         jQuery = h3:contains("Eoi Evidence")
 
 #Lead applicant can delete unsubmitted applications from dashboard
 #    [Documentation]  IFS-12265
@@ -511,6 +536,8 @@ the internal team mark the application as successful
 Update competition to have evidence required
     execute sql string    INSERT INTO `ifs`.`competition_eoi_evidence_config` (`id`, `evidence_required`, `evidence_title`, `evidence_guidance`) VALUES ('50', 1, 'Eoi Evidence 3', 'upload eoi 3');
     execute sql string    UPDATE `ifs`.`competition` SET `competition_eoi_evidence_config_id` = '50' WHERE id = '${preregCompetitionId}';
+    execute sql string    INSERT INTO `ifs`.`eoi_evidence_config_file_type` (`id`, `competition_eoi_evidence_config_id`, `file_type_id`) VALUES ('40', '50', '1');
+
 
 Partner applicant completes prereg project finances
     [Arguments]   ${application_title}  ${collaboratorEmail}  ${collaboratorPassword}
@@ -521,3 +548,29 @@ Partner applicant completes prereg project finances
 Update application evidence has uploaded
     [Arguments]  ${dbValue}  ${applicationID}  ${fileID}
     execute sql string    INSERT INTO `ifs`.`application_eoi_evidence_response` (`id`, `application_id`, `organisation_id`, `file_entry_id`) VALUES ('${dbValue}', '${applicationID}', '21', '${fileID}');
+
+Lead applicant submits evidence for review
+    [Arguments]  ${applicationId}  ${fileName}
+    Log in as a different user          &{lead_applicant_credentials}
+    the user navigates to the page      ${server}/application/${applicationId}/track
+    the user uploads the file           eoiEvidenceFile    ${fileName}
+    the user clicks the button/link     id = submit-eoi-evidence
+
+the user checks file is downloaded
+    [Arguments]  ${fileName}
+    the user clicks the button/link         jQuery = a:contains("${fileName}")
+    Select Window                           NEW
+    the user should not see internal server and forbidden errors
+    the user closes the last opened tab
+
+Internal user can view and download evidence file
+    [Arguments]  ${competitionID}  ${applicationID}  ${fileName}
+    the user navigates to the page          ${server}/management/competition/${competitionID}/application/${applicationID}
+    the user should see the element         jQuery = h3:contains("Eoi Evidence")
+    the user checks file is downloaded      ${fileName}
+
+Lead applicant can view and download evidence file
+    [Arguments]  ${applicationID}  ${fileName}
+    the user navigates to the page          ${server}/application/${applicationID}/summary
+    the user should see the element         jQuery = h3:contains("Eoi Evidence")
+    the user checks file is downloaded      ${fileName}
