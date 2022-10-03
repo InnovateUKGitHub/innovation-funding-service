@@ -4,7 +4,9 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.populator.CompetitionSearchPopulator;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionSearchViewModel;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -16,6 +18,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+@RunWith(MockitoJUnitRunner.class)
 public class CompetitionSearchControllerTest extends BaseControllerMockMVCTest<CompetitionSearchController> {
     @Mock
     private CompetitionSearchPopulator competitionSearchPopulatorMock;
