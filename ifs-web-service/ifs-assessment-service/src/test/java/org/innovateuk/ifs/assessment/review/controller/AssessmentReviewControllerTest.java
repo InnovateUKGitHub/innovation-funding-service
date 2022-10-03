@@ -85,7 +85,6 @@ public class AssessmentReviewControllerTest extends BaseControllerMockMVCTest<As
 
     @Before
     public void setup() {
-        super.setup();
 
         when(formInputResponseRestService.getByApplicationIdAndQuestionSetupType(APPLICATION_ID, PROJECT_SUMMARY))
                 .thenReturn(restSuccess(newFormInputResponseResource()

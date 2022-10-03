@@ -31,12 +31,6 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
     protected AssessmentService supplyServiceUnderTest() {
         return new AssessmentServiceImpl();
     }
-
-    @Before
-    public void setUp() {
-        super.setup();
-    }
-
     @Test
     public void getById() throws Exception {
         AssessmentResource expected = newAssessmentResource()

@@ -26,11 +26,6 @@ public class AssessorServiceImplTest extends BaseServiceUnitTest<AssessorService
         return new AssessorServiceImpl();
     }
 
-    @Before
-    public void setUp() {
-        super.setup();
-    }
-
     @Test
     public void createAssessorByInviteHash() {
         String hash = "hash";
