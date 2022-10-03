@@ -53,7 +53,6 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Before
     public void setUp() {
-        super.setup();
 
         applicationId = 123L;
         leadUser = newUserResource().withId(87L).build();

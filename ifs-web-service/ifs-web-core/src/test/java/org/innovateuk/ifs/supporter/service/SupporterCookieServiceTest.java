@@ -36,8 +36,6 @@ public class SupporterCookieServiceTest  extends BaseServiceUnitTest<SupporterCo
     public void setUp() {
         response = new MockHttpServletResponse();
         request = new MockHttpServletRequest();
-
-        super.setup();
     }
 
     @Test
