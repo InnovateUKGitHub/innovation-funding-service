@@ -3,7 +3,9 @@ package org.innovateuk.ifs.util;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -14,6 +16,7 @@ import static org.mockito.Mockito.when;
 /**
  * unit test for {@link ControllersUtil}
  */
+@RunWith(MockitoJUnitRunner.class)
 public class ControllersUtilTest {
 
     @Mock
