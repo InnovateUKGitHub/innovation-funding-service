@@ -152,7 +152,6 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
         OrganisationResource collaborator = newOrganisationResource().withId(18L).build();
 
         when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
-        when(organisationRestService.getOrganisationById(collaborator.getId())).thenReturn(restSuccess(collaborator));
 
         List<ProcessRoleResource> processRoleResources = newProcessRoleResource()
                 .withOrganisation(leadOrganisation.getId(),
@@ -179,7 +178,6 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
                 .build();
 
         when(userService.getLeadApplicantProcessRole(processRole.getApplicationId())).thenReturn(processRole);
-        when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
 
         OrganisationResource result = service.getLeadOrganisation(processRole.getApplicationId(), singletonList(leadOrganisation));
 
