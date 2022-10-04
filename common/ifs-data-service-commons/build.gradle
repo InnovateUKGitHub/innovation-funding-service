@@ -1,5 +1,7 @@
 apply from: rootProject.file("common/gradle-support/java.gradle")
 
+apply from: rootProject.file("gradle-support/jpa-metamodel.gradle")
+
 ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
 
 configurations {
