@@ -151,10 +151,6 @@ public class ApplicationSummaryResource {
     }
 
     public Boolean applicationDecisionIsChangeable() {
-        if (eoiEvidenceDocumentIsRequiredAndHasNotBeenUploaded()) {
-            return false;
-        }
-
         return (this.manageDecisionEmailDate == null || !decision.equals(Decision.FUNDED)) && !emailInQueue;
     }
 
