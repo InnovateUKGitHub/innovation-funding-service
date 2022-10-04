@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.competition.setup.projectimpact.controller;
 
-import org.innovateuk.ifs.application.service.SectionRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResource;
@@ -57,9 +56,9 @@ public class SupportingDocumentController {
 
 
     @GetMapping
-    public String organisationalEligibilityPageDetails(Model model,
-                                                       @PathVariable long competitionId,
-                                                       UserResource loggedInUser) {
+    public String supportingDocumentDetails(Model model,
+                                            @PathVariable long competitionId,
+                                            UserResource loggedInUser) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
@@ -74,12 +73,12 @@ public class SupportingDocumentController {
     }
 
     @PostMapping
-    public String submitOrganisationalEligibilitySectionDetails(@Valid @ModelAttribute("competitionSetupForm") ProjectImpactForm projectImpactForm,
-                                                                BindingResult bindingResult,
-                                                                ValidationHandler validationHandler,
-                                                                @PathVariable("competitionId") long competitionId,
-                                                                UserResource loggedInUser,
-                                                                Model model) {
+    public String submitSupportingDocumentDetails(@Valid @ModelAttribute("competitionSetupForm") ProjectImpactForm projectImpactForm,
+                                                  BindingResult bindingResult,
+                                                  ValidationHandler validationHandler,
+                                                  @PathVariable("competitionId") long competitionId,
+                                                  UserResource loggedInUser,
+                                                  Model model) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
