@@ -13,6 +13,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.format.support.DefaultFormattingConversionService;
@@ -179,7 +180,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> {
 
     @Before
     public void logInUserBeforeTests() {
-
+        MockitoAnnotations.openMocks(this);
         mockMvc = setupMockMvc(controller, this::getLoggedInUser, env, messageSource, additionalFormattingChanges());
 
         setLoggedInUser(loggedInUser);

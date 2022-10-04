@@ -4,6 +4,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
@@ -53,6 +54,7 @@ public abstract class BasePermissionRulesTest<T> {
 
     @Before
     public void setupSetsOfData() {
+        MockitoAnnotations.openMocks(this);
         allRolesResources = asList(Role.values());
         allGlobalRoleUsers = simpleMap(allRolesResources, role -> newUserResource().withRoleGlobal(role).build());
     }

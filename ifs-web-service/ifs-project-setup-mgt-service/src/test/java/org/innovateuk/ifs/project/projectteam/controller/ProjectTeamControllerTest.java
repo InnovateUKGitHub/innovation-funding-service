@@ -15,10 +15,12 @@ import org.innovateuk.ifs.projectteam.util.ProjectInviteHelper;
 import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
@@ -75,6 +77,11 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
     @Spy
     @InjectMocks
     private ProjectInviteHelper projectInviteHelper;
+
+    @Before
+    public void init() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     public void viewProjectTeam() throws Exception {

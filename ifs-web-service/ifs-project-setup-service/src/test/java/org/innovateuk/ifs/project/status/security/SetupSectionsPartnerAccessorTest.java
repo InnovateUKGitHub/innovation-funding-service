@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.function.Consumer;
@@ -25,6 +27,11 @@ public class SetupSectionsPartnerAccessorTest {
     private SetupSectionAccessibilityHelper accessor;
 
     private OrganisationResource organisation = newOrganisationResource().build();
+
+    @Before
+    public void init() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     public void checkAccessToCompaniesHouseSectionHappyPath() {
@@ -202,7 +209,6 @@ public class SetupSectionsPartnerAccessorTest {
         when(setupProgressCheckerMock.isOrganisationRequiringFunding(organisation)).thenReturn(false);
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isOfflineOrWithdrawn()).thenReturn(false);
 
         assertEquals(NOT_ACCESSIBLE, accessor.canAccessBankDetailsSection(organisation));
@@ -282,7 +288,6 @@ public class SetupSectionsPartnerAccessorTest {
         when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
         when(setupProgressCheckerMock.isProjectTeamCompleted()).thenReturn(false);
         when(setupProgressCheckerMock.isOfflineOrWithdrawn()).thenReturn(false);
-        when(setupProgressCheckerMock.isSpendProfileGenerated()).thenReturn(true);
 
         assertEquals(NOT_ACCESSIBLE, accessor.canAccessSpendProfileSection(organisation));
 
@@ -409,7 +414,6 @@ public class SetupSectionsPartnerAccessorTest {
     @Test
     public void checkAccessToGrantOfferLetterSectionSpendProfilesNotApproved() {
 
-        when(setupProgressCheckerMock.isDocumentsApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(false);
         when(setupProgressCheckerMock.isOfflineOrWithdrawn()).thenReturn(false);
 
