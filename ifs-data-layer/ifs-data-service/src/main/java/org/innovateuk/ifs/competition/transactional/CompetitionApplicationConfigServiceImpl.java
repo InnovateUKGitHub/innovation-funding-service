@@ -47,10 +47,7 @@ public class CompetitionApplicationConfigServiceImpl extends RootTransactionalSe
     public ServiceResult<Void> updateImpactSurvey(long competitionId, CompetitionApplicationConfigResource competitionApplicationConfigResource) {
         return find(competitionApplicationConfigRepository.findOneByCompetitionId(competitionId), notFoundError(CompetitionApplicationConfig.class, competitionId))
                 .andOnSuccessReturnVoid(config -> config.setImSurveyRequired(competitionApplicationConfigResource.isImSurveyRequired()));
-
     }
-
-
 
     private void updateMaximumFundingSought(CompetitionApplicationConfigResource competitionApplicationConfigResource, CompetitionApplicationConfig config) {
         config.setMaximumFundingSought(competitionApplicationConfigResource.getMaximumFundingSought());

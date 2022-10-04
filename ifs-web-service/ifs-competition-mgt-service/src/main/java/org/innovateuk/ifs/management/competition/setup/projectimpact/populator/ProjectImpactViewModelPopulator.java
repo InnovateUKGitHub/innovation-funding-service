@@ -8,7 +8,7 @@ import org.innovateuk.ifs.management.competition.setup.projectimpact.viewmodel.P
 import org.springframework.stereotype.Service;
 
 @Service
-public class SupportingDocumentViewModelPopulator implements CompetitionSetupSectionModelPopulator {
+public class ProjectImpactViewModelPopulator implements CompetitionSetupSectionModelPopulator {
 
     @Override
     public CompetitionSetupSection sectionToPopulateModel() {

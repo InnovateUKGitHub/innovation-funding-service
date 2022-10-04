@@ -38,16 +38,13 @@ public class SupportingDocumentController {
 
 
     private static final String MODEL = "model";
-
-    private final CompetitionRestService competitionRestService;
-
-    private final CompetitionSetupService competitionSetupService;
-    private final CompetitionApplicationConfigRestService competitionApplicationConfigRestService;
-
-    private final CompetitionSetupRestService competitionSetupRestService;
+    private CompetitionRestService competitionRestService;
+    private CompetitionSetupService competitionSetupService;
+    private CompetitionApplicationConfigRestService competitionApplicationConfigRestService;
+    private CompetitionSetupRestService competitionSetupRestService;
 
     @Autowired
-   public SupportingDocumentController(CompetitionRestService competitionRestService, CompetitionSetupService competitionSetupService, CompetitionApplicationConfigRestService competitionApplicationConfigRestService, CompetitionSetupRestService competitionSetupRestService) {
+    public SupportingDocumentController(CompetitionRestService competitionRestService, CompetitionSetupService competitionSetupService, CompetitionApplicationConfigRestService competitionApplicationConfigRestService, CompetitionSetupRestService competitionSetupRestService) {
         this.competitionRestService = competitionRestService;
         this.competitionSetupService = competitionSetupService;
         this.competitionApplicationConfigRestService = competitionApplicationConfigRestService;
@@ -89,7 +86,7 @@ public class SupportingDocumentController {
             return "competition/setup";
         };
         Supplier<String> successView = () -> {
-            model.addAttribute("model.general.editable",false);
+            model.addAttribute("model.general.editable", false);
             return validationHandler.addAnyErrors(saveImpactManagementConfig(competition, projectImpactForm), fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, () ->
                             format("redirect:/competition/setup/%d/section/%s", competition.getId(), PROJECT_IMPACT.getPostMarkCompletePath()));
@@ -98,7 +95,7 @@ public class SupportingDocumentController {
     }
 
     private ServiceResult<Void> saveImpactManagementConfig(CompetitionResource competition, @Valid ProjectImpactForm projectImpactForm) {
-        competitionSetupRestService.markSectionComplete(competition.getId(),PROJECT_IMPACT);
+        competitionSetupRestService.markSectionComplete(competition.getId(), PROJECT_IMPACT);
         CompetitionApplicationConfigResource competitionApplicationConfigResource = competitionApplicationConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess();
         competitionApplicationConfigResource.setImSurveyRequired(projectImpactForm.getProjectImpactSurveyApplicable());
         return competitionApplicationConfigRestService.updateImpactSurvey(competition.getId(), competitionApplicationConfigResource).toServiceResult().andOnSuccessReturnVoid();
