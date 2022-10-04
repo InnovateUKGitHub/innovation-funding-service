@@ -57,9 +57,6 @@ public class SurveyControllerTest extends BaseControllerMockMVCTest<SurveyContro
         surveyResource.setSatisfaction(null);
         surveyResource.setComments(null);
 
-        when(surveyRestService.save(surveyResource)).
-                thenReturn(restSuccess());
-
         mockMvc.perform(post("/{competitionId}/feedback", competitionId))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("survey/survey"));
