@@ -107,10 +107,5 @@ public class ApplicationEoiEvidenceResponsePermissionRulesTest extends BasePermi
         assertTrue(rules.applicantCanGetEvidenceFileEntryDetails(applicationResource, leadApplicant));
         assertFalse(rules.applicantCanGetEvidenceFileEntryDetails(applicationResource, collaborator));
     }
-
-    @Test
-    public void applicantCanFindEoiEvidence() {
-        assertTrue(rules.applicantCanGetEvidenceForTheirApplication(applicationResource, leadApplicant));
-        assertFalse(rules.applicantCanGetEvidenceForTheirApplication(applicationResource, collaborator));
-    }
+    
 }
