@@ -7,7 +7,7 @@ spec:
     - name: regcred
   containers:
     - name: anonymised-db-data
-      image: docker-ifs.devops.innovateuk.org/snapshots/ifs-proxysql:ARCHIVE-BUILDBASEIMAGES15-SKAFFOLDBUILD-3_375c4bbdbbeb3a49753f8ab56595e04ca46615d7
+      image: docker-ifs.devops.innovateuk.org/releases/ifs-proxysql:ARCHIVE-BUILDBASEIMAGES-SKAFFOLDBUILD-173_d02c2086487a3e7e1a51a2c8dfb921346ec51e44@sha256:613197c83ce16c74f22debec4fbdafa4c36448ea997b28c05cbc9428f196e3fd
       imagePullPolicy: Always
       envFrom:
         - secretRef:
