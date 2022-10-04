@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.management.competition.setup.projectimpact.populator;
 
+import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.service.CompetitionApplicationConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupFormPopulator;
@@ -18,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class SupportingDocumentFormPopulator implements CompetitionSetupFormPopulator {
 
     @Autowired
-    private CompetitionOrganisationConfigRestService competitionOrganisationConfigRestService;
+    private CompetitionApplicationConfigRestService competitionApplicationConfigRestService;
 
     @Override
     public CompetitionSetupSection sectionToFill() {
@@ -27,10 +29,11 @@ public class SupportingDocumentFormPopulator implements CompetitionSetupFormPopu
 
     @Override
     public CompetitionSetupForm populateForm(CompetitionResource competitionResource) {
-        CompetitionOrganisationConfigResource competitionOrganisationConfigResource = competitionOrganisationConfigRestService.findByCompetitionId(competitionResource.getId()).getSuccess();
+
+        CompetitionApplicationConfigResource competitionApplicationConfigResource = competitionApplicationConfigRestService.findOneByCompetitionId(competitionResource.getId()).getSuccess();
 
         ProjectImpactForm organisationalEligibilityForm = new ProjectImpactForm();
-        organisationalEligibilityForm.setProjectImpactSurveyApplicable(true);
+        organisationalEligibilityForm.setProjectImpactSurveyApplicable(competitionApplicationConfigResource.isImSurveyRequired());
         return organisationalEligibilityForm;
     }
 }
