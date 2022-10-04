@@ -98,7 +98,7 @@ public class ApplicationEoiEvidenceResponseController {
               ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseRes =  applicationEoiEvidenceResponseService.remove(applicationEoiEvidenceResponseResource.get(), userResource).getSuccess();
               return RestResult.restSuccess(applicationEoiEvidenceResponseRes);
           }
-          //TODO error handling
+
         return RestResult.restSuccess(new ApplicationEoiEvidenceResponseResource());
     }
 

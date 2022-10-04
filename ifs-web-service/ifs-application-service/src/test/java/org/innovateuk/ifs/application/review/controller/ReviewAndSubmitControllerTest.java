@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.review.populator.TrackViewModelPopulator;
 import org.innovateuk.ifs.application.review.viewmodel.TrackViewModel;
+import org.innovateuk.ifs.application.service.ApplicationEoiEvidenceResponseRestService;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
@@ -13,6 +14,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,6 +52,10 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
     private UserService userService;
     @Mock
     private TrackViewModelPopulator trackViewModelPopulator;
+    @Mock
+    private ProcessRoleRestService processRoleRestService;
+    @Mock
+    private ApplicationEoiEvidenceResponseRestService applicationEoiEvidenceResponseRestService;
 
     private static final String EARLY_METRICS_URL = "www.early-metrics.com" ;
 
@@ -348,5 +354,76 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
 
         assertFalse(model.isDisplayIfsAssessmentInformation());
     }
+
+//    @Test
+//    public void hecpEoiEvidenceResponseUpload() throws Exception {
+//        long competitionId = 1L;
+//        long competitionEoiEvidenceConfigResourceId = 1L;
+//        long applicationId = 2L;
+//        long organisationId = 8L;
+//        long fileEntryResourceId = 101L;
+//
+//        CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource = CompetitionEoiEvidenceConfigResource.builder()
+//                .evidenceRequired(true)
+//                .competitionId(competitionId)
+//                .id(competitionEoiEvidenceConfigResourceId)
+//                .build();
+//        CompetitionResource competition = newCompetitionResource()
+//                .withFundingType(FundingType.HECP)
+//                .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
+//                .withEnabledForExpressionOfInterest(true)
+//                .withCompetitionEoiEvidenceConfigResource(competitionEoiEvidenceConfigResource)
+//                .build();
+//        ApplicationResource application = newApplicationResource()
+//                .withId(applicationId)
+//                .withApplicationState(SUBMITTED)
+//                .withCompetition(competition.getId())
+//                .withLeadOrganisationId(organisationId)
+//                .build();
+//        ProcessRoleResource processRoleResource = newProcessRoleResource()
+//                .withRole(ProcessRoleType.LEADAPPLICANT)
+//                .withUser(loggedInUser)
+//                .withOrganisation(organisationId)
+//                .withApplication(applicationId)
+//                .build();
+//        FileEntryResource fileEntryResource = newFileEntryResource()
+//                .withId(fileEntryResourceId)
+//                .withFilesizeBytes(1234)
+//                .withMediaType("PDF")
+//                .withName("Evidence")
+//                .build();
+//        MockMultipartFile file = new MockMultipartFile("Evidence", "Evidence.pdf", "application/pdf", "My content!".getBytes());
+//
+//        when(processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(processRoleResource));
+//        when(applicationEoiEvidenceResponseRestService.uploadEoiEvidence(applicationId, organisationId, loggedInUser.getId(), "application/pdf", 1234, "Evidence.pdf", "My content!".getBytes())).thenReturn(restSuccess(fileEntryResource));
+//
+//        mockMvc.perform(
+//                        multipart("/application/" + application.getId() + "/track", applicationId)
+//                                .file(file)
+//                                .param("upload-eoi-evidence", "Evidence.pdf"))
+//                .andExpect(status().isOk())
+//                .andExpect(view().name("application-track"))
+//                .andReturn();
+//
+//        verify(applicationEoiEvidenceResponseRestService).uploadEoiEvidence(applicationId, organisationId, loggedInUser.getId(), "application/pdf", fileEntryResource.getFilesizeBytes(), fileEntryResource.getName(), "My content!".getBytes());
+//    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
