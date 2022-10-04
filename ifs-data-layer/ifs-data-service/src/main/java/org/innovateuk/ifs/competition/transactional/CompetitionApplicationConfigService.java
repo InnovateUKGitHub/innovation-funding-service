@@ -13,6 +13,6 @@ public interface CompetitionApplicationConfigService {
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> update(long competitionId, CompetitionApplicationConfigResource competitionApplicationConfigResource);
 
-    @Transactional
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> updateImpactSurvey(long competitionId, CompetitionApplicationConfigResource competitionApplicationConfigResource);
 }
