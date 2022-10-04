@@ -15,7 +15,6 @@ public class ProjectImpactForm extends CompetitionSetupForm {
     private Boolean projectImpactSurveyApplicable;
 
 
-
     public Boolean getProjectImpactSurveyApplicable() {
         return projectImpactSurveyApplicable;
     }
