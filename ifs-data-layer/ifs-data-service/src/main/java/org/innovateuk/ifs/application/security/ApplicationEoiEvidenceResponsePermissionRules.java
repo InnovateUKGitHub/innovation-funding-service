@@ -40,9 +40,4 @@ public class ApplicationEoiEvidenceResponsePermissionRules extends BasePermissio
     public boolean applicantCanGetEvidenceFileEntryDetails(ApplicationResource applicationResource, UserResource user) {
         return checkHasAnyApplicantParticipantRole(applicationResource.getId(), applicationResource.getLeadOrganisationId(), user);
     }
-
-    @PermissionRule(value = "FIND_APPLICATION_EOI_EVIDENCE", description = "Lead applicant get their application eoi evidence..")
-    public boolean applicantCanGetEvidenceForTheirApplication(ApplicationResource applicationResource, UserResource user) {
-        return checkHasAnyApplicantParticipantRole(applicationResource.getId(), applicationResource.getLeadOrganisationId(), user);
-    }
 }

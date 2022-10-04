@@ -4,21 +4,18 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationEoiEvidenceResponse;
 import org.innovateuk.ifs.application.mapper.ApplicationEoiEvidenceResponseMapper;
 import org.innovateuk.ifs.application.repository.ApplicationEoiEvidenceResponseRepository;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceResponseResource;
 import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceState;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationEoiEvidenceWorkflowHandler;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.CompetitionEoiEvidenceConfig;
-import org.innovateuk.ifs.competition.transactional.CompetitionEoiEvidenceConfigService;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.resource.BasicFileAndContents;
 import org.innovateuk.ifs.file.resource.FileAndContents;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileService;
-import org.innovateuk.ifs.file.service.FileTypeService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -29,22 +26,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.file.resource.FileTypeCategory.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactionalService implements ApplicationEoiEvidenceResponseService{
-
-    @Autowired
-    private ApplicationRepository applicationRepository;
 
     @Autowired
     private ApplicationEoiEvidenceResponseRepository applicationEoiEvidenceResponseRepository;
@@ -56,16 +47,10 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
     private ApplicationEoiEvidenceWorkflowHandler applicationEoiEvidenceWorkflowHandler;
 
     @Autowired
-    private CompetitionEoiEvidenceConfigService competitionEoiEvidenceConfigService;
-
-    @Autowired
     private FileService fileService;
 
     @Autowired
     private UserMapper userMapper;
-
-    @Autowired
-    private FileTypeService fileTypeService;
 
     @Autowired
     private FileEntryMapper fileEntryMapper;
@@ -73,12 +58,10 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
     @Override
     @Transactional
     public ServiceResult<ApplicationEoiEvidenceResponseResource> upload(long applicationId, long organisationId, UserResource userResource, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-        return find(competitionEoiEvidenceConfig(applicationId))
-                .andOnSuccess(config -> isValidFileEntryType(applicationId, fileEntryResource))
+
+        return competitionEoiEvidenceConfig(applicationId)
                 .andOnSuccess(() -> fileService.createFile(fileEntryResource, inputStreamSupplier)
-                        .andOnSuccessReturn(fileDetails ->
-                                upload(applicationId, organisationId, userResource, fileDetails).getSuccess()
-                        ));
+                        .andOnSuccessReturn(fileDetails -> upload(applicationId, organisationId, userResource, fileDetails).getSuccess()));
     }
 
     protected ServiceResult<ApplicationEoiEvidenceResponseResource> upload(Long applicationId, Long organisationId, UserResource userResource, FileEntry fileEntry) {
@@ -103,6 +86,7 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
                     }
                 });
     }
+
     private ServiceResult<ApplicationEoiEvidenceResponse> uploadApplicationEoiEvidenceWorkflow(Application application, ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse, UserResource userResource) {
         if (application.getCompetition().isEnabledForPreRegistration()
                 && application.getCompetition().isEoiEvidenceRequired()
@@ -122,33 +106,6 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
     private ServiceResult <CompetitionEoiEvidenceConfig> competitionEoiEvidenceConfig(long applicationId) {
         long competitionId = applicationRepository.findById(applicationId).get().getCompetition().getId();
         return serviceSuccess(competitionRepository.findById(competitionId).get().getCompetitionEoiEvidenceConfig());
-    }
-
-    private ServiceResult <Boolean> isValidFileEntryType(long applicationId, FileEntryResource fileEntryResource) {
-        long eoiEvidenceConfigId = competitionEoiEvidenceConfig(applicationId).getSuccess().getId();
-        List<String> validFileTypes = getMediaMimeTypes(competitionEoiEvidenceConfigService.getValidFileTypesIdsForEoiEvidence(eoiEvidenceConfigId).getSuccess());
-        return serviceSuccess(validFileTypes.contains(fileEntryResource.getMediaType()));
-    }
-
-    private List<String> getMediaMimeTypes(List<Long> fileTypeIds) {
-        List<String> validMediaTypes = new ArrayList<>();
-
-        for (Long fileTypeId : fileTypeIds) {
-            switch (fileTypeService.findOne(fileTypeId).getSuccess().getName()) {
-                case "PDF":
-                    validMediaTypes.addAll(PDF.getMimeTypes());
-                    break;
-                case "Spreadsheets":
-                    validMediaTypes.addAll(SPREADSHEET.getMimeTypes());
-                    break;
-                case "Text":
-                    validMediaTypes.addAll(DOCUMENT.getMimeTypes());
-                    break;
-                default:
-                    // do nothing
-            }
-        }
-        return validMediaTypes;
     }
 
     @Override

@@ -57,7 +57,7 @@ public class CompetitionEoiEvidenceConfigServiceImpl extends BaseTransactionalSe
     public ServiceResult<CompetitionEoiDocumentResource> createDocument(CompetitionEoiDocumentResource competitionEoiDocumentResource) {
         Long fileTypeId = competitionEoiDocumentResource.getFileTypeId();
         return find(fileTypeRepository.findById(fileTypeId), notFoundError(FileType.class, fileTypeId))
-                .andOnSuccessReturn((fileType) -> {
+                .andOnSuccessReturn(() -> {
                     CompetitionEoiDocument competitionEoiDocument = competitionEoiDocumentMapper.mapToDomain(competitionEoiDocumentResource);
                     return competitionEoiDocumentMapper.mapToResource(competitionEoiDocumentRepository.save(competitionEoiDocument));
                 });

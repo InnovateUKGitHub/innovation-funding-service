@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.review.controller;
 import org.innovateuk.ifs.application.forms.form.ApplicationReopenForm;
 import org.innovateuk.ifs.application.forms.form.ApplicationSubmitForm;
 import org.innovateuk.ifs.application.forms.form.EoiEvidenceForm;
-import org.innovateuk.ifs.application.forms.populator.EoiEvidenceFormPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceResponseResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.review.populator.ReviewAndSubmitViewModelPopulator;
@@ -41,6 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.lang.Boolean.TRUE;
@@ -74,8 +74,6 @@ public class ReviewAndSubmitController {
     private TrackViewModelPopulator trackViewModelPopulator;
     @Autowired
     private ApplicationEoiEvidenceResponseRestService applicationEoiEvidenceResponseRestService;
-    @Autowired
-    private EoiEvidenceFormPopulator eoiEvidenceFormPopulator;
 
     @SecuredBySpring(value = "READ", description = "Applicants can review and submit their applications")
     @PreAuthorize("hasAnyAuthority('applicant')")
@@ -311,13 +309,13 @@ public class ReviewAndSubmitController {
                                             ValidationHandler validationHandler,
                                             Model model,
                                             UserResource loggedInUser) {
-        if (applicationEoiEvidenceResponseRestService.findOneByApplicationId(applicationId).getSuccess().get().getFileEntryId() == null) {
+        Optional<ApplicationEoiEvidenceResponseResource> applicationEoiEvidenceResponseResource = applicationEoiEvidenceResponseRestService.findOneByApplicationId(applicationId).getSuccess();
+        boolean noEoiEvidenceToSubmit = (applicationEoiEvidenceResponseResource.isEmpty())|| (applicationEoiEvidenceResponseResource.get().getFileEntryId() == null);
+        if (noEoiEvidenceToSubmit) {
             bindingResult.rejectValue("eoiEvidenceFile", "validation.file.required");
             return applicationTrack(model, applicationId, form, loggedInUser);
         }
-
-        ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = applicationEoiEvidenceResponseRestService.findOneByApplicationId(applicationId).getSuccess().get();
-        applicationEoiEvidenceResponseRestService.submitEoiEvidence(applicationEoiEvidenceResponseResource, loggedInUser);
+        applicationEoiEvidenceResponseRestService.submitEoiEvidence(applicationEoiEvidenceResponseResource.get(), loggedInUser);
         return String.format("redirect:/application/%s/track", applicationId);
     }
 
@@ -342,15 +340,10 @@ public class ReviewAndSubmitController {
                                    @ModelAttribute("form") EoiEvidenceForm form,
                                    UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         if (!application.isSubmitted()) {
             return "redirect:/application/" + applicationId;
-        }
-
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-
-        if (competition.getCompetitionEoiEvidenceConfigResource()!=null && competition.getCompetitionEoiEvidenceConfigResource().isEvidenceRequired()) {
-            eoiEvidenceFormPopulator.populate(applicationId);
         }
 
         model.addAttribute("model", trackViewModelPopulator.populate(applicationId,canReopenApplication(application, user, competition), user));

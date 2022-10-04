@@ -15,6 +15,15 @@
               th:with="currentApplication=${model.currentApplication},linkTitle='Back to applications',linkUrl=@{/applicant/dashboard}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <div class="govuk-error-summary__body">
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+            </div>
+        </div>
 
         <th:block>
             <th:block th:insert="fragments/layout :: page-title"
@@ -58,6 +67,7 @@
                       method="post"
                       id="upload-document-form"
                       enctype="multipart/form-data"
+                      novalidate="novalidate"
                       th:with="viewmode=${model.isEoiEvidenceSubmitted() ? 'readonly' : 'edit'},
                            downloadUrl=@{/application/{applicationId}/view-eoi-evidence(applicationId=${model.currentApplication.id})},
                            filename=${model.eoiEvidenceFileName},
@@ -76,7 +86,7 @@
             <th:block th:unless="${model.isEoiEvidenceSubmitted()}">
                 <form th:action="@{/application/{applicationId}/track(applicationId=${model.currentApplication.id})}"
                       method="post">
-                    <button th:disabled="${!model.isEoiEvidenceCreatedAndNotSubmitted()}"
+                    <button th:disabled="${model.disableSubmitButton()}"
                             data-js-enabled-on-file-upload=""
                             id="submit-eoi-evidence"
                             type="submit" name="submit-eoi-evidence"
@@ -84,12 +94,8 @@
                     </button>
                 </form>
             </th:block>
-
-
-
         </th:block>
 
-<!--        temporary adding the feedback for partner org only-->
         <th:block
                 th:unless="${!model.showFeedBackSection()}">
             <div class="govuk-!-margin-top-6">
@@ -106,7 +112,6 @@
         </th:block>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
-
     </main>
 </div>
 

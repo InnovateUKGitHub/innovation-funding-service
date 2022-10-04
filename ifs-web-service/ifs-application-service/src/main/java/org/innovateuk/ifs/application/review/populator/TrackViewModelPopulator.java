@@ -59,8 +59,9 @@ public class TrackViewModelPopulator {
     public TrackViewModel populate(long applicationId, boolean canReopenApplication, UserResource userResource) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+        List<ProcessRoleResource> processRoleResource = processRoleRestService.findProcessRole(applicationId).getSuccess();
 
-        if (competition.isHorizonEuropeGuarantee() && competition.getCompetitionEoiEvidenceConfigResource() != null && competition.getCompetitionEoiEvidenceConfigResource().isEvidenceRequired()) {
+        if (shouldDisplayEoiEvidence(competition, application, processRoleResource, userResource)) {
 
             Optional<ApplicationEoiEvidenceResponseResource> eoiEvidence = applicationEoiEvidenceResponseRestService.findOneByApplicationId(applicationId).getSuccess();
             String eoiEvidenceFileName = "";
@@ -80,7 +81,8 @@ public class TrackViewModelPopulator {
                     eoiEvidenceFileName,
                     combinedMediaDisplayNameWithExtensions,
                     competition.getCompetitionEoiEvidenceConfigResource(),
-                    userFromLeadOrganisation(applicationId, userResource.getId()));
+                    userFromLeadOrganisation(applicationId, userResource.getId()),
+                    eoiEvidence.isEmpty());
 
         } else {
 
@@ -91,6 +93,21 @@ public class TrackViewModelPopulator {
                     application.getCompletion(),
                     canReopenApplication);
         }
+    }
+
+    private boolean shouldDisplayEoiEvidence(CompetitionResource competition, ApplicationResource application,
+                                             List<ProcessRoleResource> processRoles, UserResource user) {
+
+        return competition.isHorizonEuropeGuarantee()
+                && competition.getCompetitionEoiEvidenceConfigResource() != null
+                && competition.getCompetitionEoiEvidenceConfigResource().isEvidenceRequired()
+                && !isPartner(application, processRoles, user);
+    }
+
+    private boolean isPartner(ApplicationResource application, List<ProcessRoleResource> processRoles, UserResource user) {
+        return processRoles.stream()
+                .anyMatch(pr -> pr.getUser().equals(user.getId())
+                        && !pr.getOrganisationId().equals(application.getLeadOrganisationId()));
     }
 
     private List<String> getValidEoiEvidenceFileTypes(long competitionId) {

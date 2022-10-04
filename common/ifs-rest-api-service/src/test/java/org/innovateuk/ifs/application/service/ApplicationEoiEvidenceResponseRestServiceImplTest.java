@@ -32,7 +32,7 @@ public class ApplicationEoiEvidenceResponseRestServiceImplTest extends BaseRestS
         String requestBody = "content";
         long fileSizeBytes = 1000;
 
-        String url = format("%s/%s/eoi-evidence-response/%s/upload?filename=%s", URL, applicationId, organisationId, originalFilename);
+        String url = format("%s/%s/eoi-evidence-response/%s/%s/upload?filename=%s", URL, applicationId, organisationId, userId, originalFilename);
         FileEntryResource expectedFileEntryResource = newFileEntryResource().build();
         setupFileUploadWithRestResultExpectations(url, FileEntryResource.class, requestBody, contentType, fileSizeBytes, expectedFileEntryResource, OK);
         FileEntryResource result = service.uploadEoiEvidence(applicationId, organisationId, userId, contentType, fileSizeBytes, originalFilename, requestBody.getBytes()).getSuccess();

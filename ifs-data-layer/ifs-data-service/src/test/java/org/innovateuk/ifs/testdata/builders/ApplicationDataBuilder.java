@@ -6,7 +6,6 @@ import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.competition.resource.CompetitionEoiEvidenceConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder;
@@ -21,7 +20,8 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -211,24 +211,22 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
             if (competitionEoiEvidenceConfigResource != null
                     && competitionEoiEvidenceConfigResource.isEvidenceRequired()) {
                 ApplicationResource application = data.getApplication();
+                try {
+                    File file = new File(ApplicationDataBuilder.class.getResource("/webtest.pdf").toURI());
+                    InputStream inputStream = new FileInputStream(file);
+                    Supplier<InputStream> inputStreamSupplier = () -> inputStream;
 
-                FileEntry fileEntry = fileEntryRepository.save(
-                        new FileEntry(null, "eoi-evidence-file" + application.getId() + ".pdf", "application/pdf", 7945));
+                    FileEntryResource fileEntryResource = new FileEntryResource();
+                    fileEntryResource.setName("eoiEvidenceFile" + application.getId() + ".pdf");
+                    fileEntryResource.setMediaType("application/pdf");
+                    fileEntryResource.setFilesizeBytes(7945);
 
-                FileEntryResource fileEntryResource = new FileEntryResource();
-                fileEntryResource.setName(fileEntry.getName());
-                fileEntryResource.setMediaType(fileEntry.getMediaType());
-                fileEntryResource.setFilesizeBytes(fileEntry.getFilesizeBytes());
-
-                Supplier<InputStream> inputStreamSupplier = () -> new ByteArrayInputStream("The returned binary file data".getBytes());
-
-                ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = ApplicationEoiEvidenceResponseResource.builder()
-                        .applicationId(application.getId())
-                        .organisationId(application.getLeadOrganisationId())
-                        .build();
-
-                applicationEoiEvidenceResponseService.upload(application.getId(), applicationEoiEvidenceResponseResource.getOrganisationId(), data.getLeadApplicant(), fileEntryResource, inputStreamSupplier)
-                        .andOnSuccess((createdApplicationEoiEvidenceResponseResource) -> applicationEoiEvidenceResponseService.submit(createdApplicationEoiEvidenceResponseResource, data.getLeadApplicant()));
+                    applicationEoiEvidenceResponseService.upload(application.getId(), application.getLeadOrganisationId(), data.getLeadApplicant(), fileEntryResource, inputStreamSupplier)
+                            .andOnSuccess((createdApplicationEoiEvidenceResponseResource) -> applicationEoiEvidenceResponseService.submit(createdApplicationEoiEvidenceResponseResource, data.getLeadApplicant()));
+                } catch (Exception e) {
+                    LOG.error("Unable to upload eoi evidence", e);
+                    throw new RuntimeException(e);
+                }
             }
         });
     }

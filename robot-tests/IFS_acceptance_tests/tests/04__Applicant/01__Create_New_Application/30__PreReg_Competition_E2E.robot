@@ -33,7 +33,11 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...
 ...               IFS-12839 Pre-registration - Internal view - Question numbers appearing in question overview
 ...
+<<<<<<< HEAD
 ...               IFS-12523 HECP Phase 2 - Document upload - Read only
+=======
+...               IFS-12702 HECP Phase 2 - Document upload - Applicant document upload
+>>>>>>> feature/IFS-12702-hecp-phase-2-document-upload
 ...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -170,6 +174,35 @@ Partner applicant should not see evidence required status instead should still v
     When the user clicks the application tile if displayed
     Then the user should not see the element                   jQuery = li:contains("${hecpPreregAppName}") .status-msg:contains("Expression of interest") + .status-msg:contains("Submitted")
 
+Parter applicant can not view evidence upload section
+    [Documentation]  IFS-12702
+    Given the user clicks the button/link       link = ${hecpPreregAppName}
+    Then the user should not see the element    name = eoiEvidenceFile
+
+Internal users can see submitted expression of interest applications without checkbox when the eveidence is not uploaded
+    [Documentation]  IFS-12176  IFS-12568
+    Given log in as a different user            &{ifs_admin_user_credentials}
+    And the user navigates to the page          ${server}/management/competition/${preregCompetitionId}
+    And the user clicks the button/link         link = Applications: All, submitted, expression of interest, ineligible
+    When the user clicks the button/link        link = Expressions of interest
+    Then the user should see the element        jQuery = td:contains("${preregApplicationID}") + td:contains("${hecpPreregAppName}")
+    And the user should see the element         jQuery = .highlight-panel:contains("Expressions of interest") span:contains("1")
+    And the user should not see the element     jQuery = label[for = "app-row-1"]
+
+Expression of interest evidence upload validation : wrong file upload
+    [Documentation]  IFS-12702
+    Given log in as a different user                        &{lead_applicant_credentials}
+    And the user navigates to the page                      ${server}/application/${preregApplicationID}/track
+    When the user uploads the file                          eoiEvidenceFile    ${excel_file}
+    Then the user should not see a field error              Your upload must be a PDF.
+    And The user should see valid evidence upload content
+
+Applicant can remove the file uploaded
+    [Documentation]  IFS-12702
+    Given the user uploads the file             eoiEvidenceFile    ${contract_pdf}
+    When the user can remove the uploaded file  remove-eoi-evidence  ${contract_pdf}
+    Then the user should not see the element    jQuery = a:contains("${contract_pdf} (opens in a new window)")
+
 Comp admin can not view mark as ineligible application link
     [Documentation]  IFS-12257
     Given log in as a different user                &{ifs_admin_user_credentials}
@@ -182,6 +215,7 @@ Internal users can see expression of interest statistics
     When the user clicks the button/link        link = Applications: All, submitted, expression of interest, ineligible
     Then the user should see the element        jQuery = .highlight-panel:contains("Expressions of interest") span:contains("1")
 
+<<<<<<< HEAD
 Internal users can see submitted expression of interest applications without checkbox when the eveidence is not uploaded
     [Documentation]  IFS-12176  IFS-12568
     When the user clicks the button/link        link = Expressions of interest
@@ -207,12 +241,22 @@ Partner applicant can not view read only evidence uploaded by lead applicant
     When the user navigates to the page          ${server}/application/${preregApplicationID}/summary
     Then the user should not see the element     jQuery = h3:contains("Eoi Evidence")
     And the user should see the element          jQuery = a:contains("${contract_pdf}")
+=======
+Lead applicant submit the evidence file for review
+    [Documentation]  IFS-12702  IFS-12569
+    When Lead applicant submits evidence for review     ${preregApplicationID}  ${contract_pdf}
+    Then the user reads his email                       ${lead_applicant_credentials["email"]}  ${evidenceSubmittedEmailSubject}  ${evidenceSubmittedEmailDescription}
+>>>>>>> feature/IFS-12702-hecp-phase-2-document-upload
 
 Internal user submit the EOI applications funding decision after evidence is uploaded
-    [Documentation]  IFS-12265  IFS-12568
+    [Documentation]  IFS-12265  IFS-12568  IFS-12702
     Given Existing user creates and submits new application for unsuccessful EOI journey
     And Requesting application ID of unsuccessful prereg application
+<<<<<<< HEAD
     When Lead applicant submits evidence for review                                         ${unSuccessfulPreRegApplicationID}   ${contract_pdf}
+=======
+    When Lead applicant submits evidence for review                                         ${unSuccessfulPreRegApplicationID}  ${contract_pdf}
+>>>>>>> feature/IFS-12702-hecp-phase-2-document-upload
     And Log in as a different user                                                          &{Comp_admin1_credentials}
     And Internal user marks the EOI as successful/unsuccessful                              ${unSuccessPreregAppName}   EOI_REJECTED
     And Internal user marks the EOI as successful/unsuccessful                              ${hecpPreregAppName}   EOI_APPROVED
@@ -534,10 +578,13 @@ the internal team mark the application as successful
     the user clicks the button/link     css = [type="submit"][value="${decision}"]
 
 Update competition to have evidence required
-    execute sql string    INSERT INTO `ifs`.`competition_eoi_evidence_config` (`id`, `evidence_required`, `evidence_title`, `evidence_guidance`) VALUES ('50', 1, 'Eoi Evidence 3', 'upload eoi 3');
+    execute sql string    INSERT INTO `ifs`.`competition_eoi_evidence_config` (`id`, `evidence_required`, `evidence_title`, `evidence_guidance`) VALUES ('50', 1, 'Eoi Evidence', 'upload eoi evidence');
     execute sql string    UPDATE `ifs`.`competition` SET `competition_eoi_evidence_config_id` = '50' WHERE id = '${preregCompetitionId}';
     execute sql string    INSERT INTO `ifs`.`eoi_evidence_config_file_type` (`id`, `competition_eoi_evidence_config_id`, `file_type_id`) VALUES ('40', '50', '1');
+<<<<<<< HEAD
 
+=======
+>>>>>>> feature/IFS-12702-hecp-phase-2-document-upload
 
 Partner applicant completes prereg project finances
     [Arguments]   ${application_title}  ${collaboratorEmail}  ${collaboratorPassword}
@@ -549,11 +596,22 @@ Update application evidence has uploaded
     [Arguments]  ${dbValue}  ${applicationID}  ${fileID}
     execute sql string    INSERT INTO `ifs`.`application_eoi_evidence_response` (`id`, `application_id`, `organisation_id`, `file_entry_id`) VALUES ('${dbValue}', '${applicationID}', '21', '${fileID}');
 
+<<<<<<< HEAD
+=======
+The user should see valid evidence upload content
+    the user clicks the button/link   jQuery = span:contains("What should I include?")
+    the user should see the element   jQuery = p:contains("upload eoi evidence")
+    the user should see the element   jQuery = h2:contains("Eoi Evidence")
+    the user should see the element   jQuery = p:contains("Accepted file types")+ul:contains("PDF")
+    the user should see the element   jQuery = p:contains(" It must be less than 32MB in size.")
+
+>>>>>>> feature/IFS-12702-hecp-phase-2-document-upload
 Lead applicant submits evidence for review
     [Arguments]  ${applicationId}  ${fileName}
     Log in as a different user          &{lead_applicant_credentials}
     the user navigates to the page      ${server}/application/${applicationId}/track
     the user uploads the file           eoiEvidenceFile    ${fileName}
+<<<<<<< HEAD
     the user clicks the button/link     id = submit-eoi-evidence
 
 the user checks file is downloaded
@@ -574,3 +632,6 @@ Lead applicant can view and download evidence file
     the user navigates to the page          ${server}/application/${applicationID}/summary
     the user should see the element         jQuery = h3:contains("Eoi Evidence")
     the user checks file is downloaded      ${fileName}
+=======
+    the user clicks the button/link     id = submit-eoi-evidence
+>>>>>>> feature/IFS-12702-hecp-phase-2-document-upload
