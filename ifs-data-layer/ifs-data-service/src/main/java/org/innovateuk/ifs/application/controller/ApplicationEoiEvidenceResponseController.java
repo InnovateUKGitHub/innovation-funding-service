@@ -11,8 +11,6 @@ import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.controller.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,12 +44,6 @@ public class ApplicationEoiEvidenceResponseController {
 
     @Autowired
     private CompetitionEoiEvidenceConfigService competitionEoiEvidenceConfigService;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private UserMapper userMapper;
 
     @Autowired
     private FileTypeRepository fileTypeRepository;
@@ -126,8 +118,6 @@ public class ApplicationEoiEvidenceResponseController {
     public RestResult<FileEntryResource> getEvidenceDetailsByApplication(@PathVariable("applicationId") long applicationId) throws IOException {
         return applicationEoiEvidenceResponseService.getEvidenceFileEntryDetails(applicationId).toGetResponse();
     }
-
-
 
     @GetMapping ("/{applicationId}/eoi-evidence-response")
     public RestResult<Optional<ApplicationEoiEvidenceResponseResource>> findOneByApplicationId(@PathVariable("applicationId") long applicationId) {

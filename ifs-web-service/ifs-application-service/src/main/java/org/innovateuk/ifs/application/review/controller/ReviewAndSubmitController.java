@@ -299,7 +299,6 @@ public class ReviewAndSubmitController {
         return "redirect:/application/" + applicationId + "/track";
     }
 
-
     @PostMapping(value="/{applicationId}/track", params = "submit-eoi-evidence")
     @PreAuthorize("hasAuthority('applicant')")
     @SecuredBySpring(value = "SUBMIT_EOI_EVIDENCE", description = "Lead applicant can submit eoi evidence")
