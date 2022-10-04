@@ -122,6 +122,9 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
     @Autowired
     private ApplicationEoiEvidenceResponseRepository applicationEoiEvidenceResponseRepository;
 
+    @Autowired
+    private ApplicationEoiEvidenceProcessRepository applicationEoiEvidenceProcessRepository;
+
     @Override
     public ServiceResult<Optional<ApplicationMigration>> findByApplicationIdAndStatus(long applicationId, MigrationStatus status) {
         return serviceSuccess(applicationMigrationRepository.findByApplicationIdAndStatus(applicationId, status));
@@ -214,9 +217,9 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
 
     private void migrateApplicationEoiEvidence(Application application, Application migratedApplication) {
         applicationEoiEvidenceResponseRepository.findOneByApplicationId(application.getId()).ifPresent(
-                applicationEoiEvidence -> {
-                    applicationEoiEvidence.setApplication(migratedApplication);
-                    applicationEoiEvidenceResponseRepository.save(applicationEoiEvidence);
+                applicationEoiEvidenceResponse -> {
+                    applicationEoiEvidenceResponse.setApplication(migratedApplication);
+                    applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse);
                 }
         );
 
