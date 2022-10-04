@@ -29,7 +29,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 import static org.innovateuk.ifs.management.competition.setup.CompetitionSetupController.COMPETITION_SETUP_FORM_KEY;
 
 /**
- * Controller to manage the Organisational eligibility and Lead organisations in competition setup process
+ * Controller to manage the Project Impact in competition setup process
  */
 @Controller
 @RequestMapping("/competition/setup/{competitionId}/section/project-impact")
@@ -45,7 +45,7 @@ public class SupportingDocumentController {
     private final CompetitionSetupService competitionSetupService;
     private final CompetitionApplicationConfigRestService competitionApplicationConfigRestService;
 
-    private CompetitionSetupRestService competitionSetupRestService;
+    private final CompetitionSetupRestService competitionSetupRestService;
 
     @Autowired
    public SupportingDocumentController(CompetitionRestService competitionRestService, CompetitionSetupService competitionSetupService, CompetitionApplicationConfigRestService competitionApplicationConfigRestService, CompetitionSetupRestService competitionSetupRestService) {

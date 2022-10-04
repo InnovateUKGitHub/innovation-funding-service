@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 import static java.util.Objects.isNull;
 
 /**
- * Form for the organisational eligibility competition setup section.
+ * Form for the Project Impact competition setup section.
  */
 public class ProjectImpactForm extends CompetitionSetupForm {
 
