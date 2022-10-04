@@ -183,7 +183,13 @@ public class FinanceSummaryTableViewModelPopulator {
                                                      Map<Long, Set<Long>> completedSections, long leadOrganisationId, SectionResource financeSection,
                                                      ApplicationResource application, CompetitionResource competition, Optional<String> financeLink) {
         Optional<ApplicationFinanceResource> finance = ofNullable(finances.get(organisation.getId()));
+        if (finance.isPresent()) {
+            finance.get().setCompTypeOfgemAndFundingTypeThirdParty(competition.isCompTypeOfgemAndFundingTypeThirdParty());
+        }
         Optional<ApplicationFinanceResource> leadFinance = ofNullable(finances.get(leadOrganisationId));
+        if (leadFinance.isPresent()) {
+            leadFinance.get().setCompTypeOfgemAndFundingTypeThirdParty(competition.isCompTypeOfgemAndFundingTypeThirdParty());
+        }
         boolean lead = organisation.getId().equals(leadOrganisationId);
         BigDecimal calculateContributionToProjectPercentage = finance.map(ApplicationFinanceResource::getContributionToProjectPercentage).orElse(BigDecimal.ZERO);
         return new FinanceSummaryTableRow(
