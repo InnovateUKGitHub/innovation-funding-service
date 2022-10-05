@@ -15,6 +15,7 @@ import java.util.function.Predicate;
  *
  * @param <T>
  */
+@Deprecated
 public class LambdaMatcher<T> extends BaseMatcher<T> implements ArgumentMatcher<T> {
 
     private final Predicate<T> matcher;

@@ -19,7 +19,6 @@ dependencies {
     implementation "javax.servlet:javax.servlet-api"
     implementation "com.fasterxml.jackson.core:jackson-annotations"
 
-    testImplementation project(":common:ifs-commons-test")
     testImplementation project(":common:ifs-web-commons-test")
     testImplementation project(":common:ifs-security-test")
 

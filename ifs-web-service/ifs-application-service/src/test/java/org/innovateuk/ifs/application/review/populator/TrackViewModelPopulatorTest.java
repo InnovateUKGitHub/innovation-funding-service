@@ -158,10 +158,16 @@ public class TrackViewModelPopulatorTest {
                 .withCompetition(competition.getId())
                 .withLeadOrganisationId(organisation.getId())
                 .build();
-
+        ProcessRoleResource processRoleResource = newProcessRoleResource()
+                .withApplication(applicationId)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
+                .withUser(user)
+                .withOrganisation(organisationId)
+                .build();
 
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+        when(processRoleRestService.findProcessRole(applicationId)).thenReturn(restSuccess(singletonList(processRoleResource)));
 
         TrackViewModel model = populator.populate(applicationId, true, user);
 

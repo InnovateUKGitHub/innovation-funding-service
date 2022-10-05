@@ -40,7 +40,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -140,10 +139,10 @@ public class ApplicationInviteServiceImplTest {
                 .withOrganisationName("new organisation")
                 .build();
 
-        InviteOrganisation saveInviteOrganisationExpectations = argThat(lambdaMatches(inviteOrganisation -> {
+        InviteOrganisation saveInviteOrganisationExpectations = argThat(inviteOrganisation -> {
             assertThat(inviteOrganisation.getOrganisationName()).isEqualTo("new organisation");
             return true;
-        }));
+        });
 
         when(inviteOrganisationRepository.save(saveInviteOrganisationExpectations))
                 .thenReturn(saveInviteOrganisationExpectations);
@@ -154,11 +153,11 @@ public class ApplicationInviteServiceImplTest {
 
         List<ApplicationInvite> savedInvites = ApplicationInviteBuilder.newApplicationInvite().build(5);
 
-        List<ApplicationInvite> saveInvitesExpectations = argThat(lambdaMatches(invites -> {
+        List<ApplicationInvite> saveInvitesExpectations = argThat(invites -> {
             assertThat(invites).hasSize(5);
             assertThat(invites.get(0).getName()).isEqualTo("testname");
             return true;
-        }));
+        });
 
 
         when(applicationInviteRepository.saveAll(saveInvitesExpectations)).thenReturn(savedInvites);
