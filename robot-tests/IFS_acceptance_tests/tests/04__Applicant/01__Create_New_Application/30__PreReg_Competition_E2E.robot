@@ -606,11 +606,6 @@ the user checks file is downloaded
 Internal user can view and download evidence file
     [Arguments]  ${competitionID}  ${applicationID}  ${fileName}
     the user navigates to the page          ${server}/management/competition/${competitionID}/application/${applicationID}
-    the user should see the element         jQuery = h3:contains("Eoi Evidence")
-    the user checks file is downloaded      ${fileName}
-
-Lead applicant can view and download evidence file
-    [Arguments]  ${applicationID}  ${fileName}
-    the user navigates to the page          ${server}/application/${applicationID}/summary
+    the user clicks the button/link         link = Expression of interest
     the user should see the element         jQuery = h3:contains("Eoi Evidence")
     the user checks file is downloaded      ${fileName}
