@@ -6,7 +6,7 @@ public class CompetitionApplicationConfigResource {
 
     private BigDecimal maximumFundingSought;
     private boolean maximumFundingSoughtEnabled;
-    private boolean imSurveyRequired;
+    private Boolean imSurveyRequired;
 
     public CompetitionApplicationConfigResource() {
     }
@@ -31,11 +31,11 @@ public class CompetitionApplicationConfigResource {
         this.maximumFundingSoughtEnabled = maximumFundingSoughtEnabled;
     }
 
-    public boolean isImSurveyRequired() {
+    public Boolean isImSurveyRequired() {
         return imSurveyRequired;
     }
 
-    public void setImSurveyRequired(boolean imSurveyRequired) {
+    public void setImSurveyRequired(Boolean imSurveyRequired) {
         this.imSurveyRequired = imSurveyRequired;
     }
 }
