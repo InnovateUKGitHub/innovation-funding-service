@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.domain.CompetitionEoiEvidenceConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionEoiDocumentMapper;
 import org.innovateuk.ifs.competition.mapper.CompetitionEoiEvidenceConfigMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionEoiDocumentRepository;
+import org.innovateuk.ifs.competition.repository.CompetitionEoiEvidenceConfigRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionEoiDocumentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionEoiEvidenceConfigResource;
@@ -25,8 +26,7 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.file.builder.FileTypeBuilder.newFileType;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 public class CompetitionEoiEvidenceConfigServiceImplTest extends BaseServiceUnitTest<CompetitionEoiEvidenceConfigServiceImpl> {
@@ -45,6 +45,9 @@ public class CompetitionEoiEvidenceConfigServiceImplTest extends BaseServiceUnit
 
     @Mock
     private FileTypeRepository fileTypeRepository;
+
+    @Mock
+    private CompetitionEoiEvidenceConfigRepository competitionEoiEvidenceConfigRepository;
 
     private Long competitionId;
     private Long fileTypeId;
@@ -180,4 +183,36 @@ public class CompetitionEoiEvidenceConfigServiceImplTest extends BaseServiceUnit
 
         assertEquals(1, result.getSuccess().size());
     }
+
+    @Test
+    public void findOneByCompetitionId() {
+        CompetitionEoiEvidenceConfig competitionEoiEvidenceConfig = CompetitionEoiEvidenceConfig.builder()
+                .competition(competition)
+                .build();
+
+        CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource = CompetitionEoiEvidenceConfigResource.builder()
+                .competitionId(competitionId)
+                .build();
+
+        when(competitionEoiEvidenceConfigRepository.findOneByCompetitionId(competitionId)).thenReturn(Optional.of(competitionEoiEvidenceConfig));
+        when(competitionEoiEvidenceConfigMapper.mapToResource(competitionEoiEvidenceConfig)).thenReturn(competitionEoiEvidenceConfigResource);
+
+        ServiceResult<CompetitionEoiEvidenceConfigResource> result = service.findOneByCompetitionId(competitionId);
+        assertTrue(result.isSuccess());
+        assertNotNull(result.getSuccess());
+        assertEquals(competitionId, result.getSuccess().getCompetitionId());
+    }
+
+    @Test
+    public void findOneByCompetitionIdNotFound() {
+        when(competitionEoiEvidenceConfigRepository.findOneByCompetitionId(competitionId)).thenReturn(Optional.empty());
+
+        ServiceResult<CompetitionEoiEvidenceConfigResource> result = service.findOneByCompetitionId(competitionId);
+        assertTrue(result.isFailure());
+
+        assertEquals(1, result.getErrors().size());
+        assertEquals(HttpStatus.NOT_FOUND, result.getErrors().get(0).getStatusCode());
+        assertEquals("GENERAL_NOT_FOUND", result.getErrors().get(0).getErrorKey());
+    }
+
 }
