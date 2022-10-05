@@ -179,7 +179,7 @@
                th:value="${question.type}"/>
 
         <div class="question">
-            <!--            EXPRESSION OF INTEREST-->
+            <!--/* EXPRESSION OF INTEREST */-->
             <th:block th:if="${model.general.competition.enabledForPreRegistration}">
                 <th:block th:if="${question.expressionOfInterest != null or #fields.hasErrors('question.expressionOfInterest')}">
                     <div class="govuk-form-group"

@@ -66,6 +66,7 @@ public class CompetitionSetupQuestionResource {
     private List<MultipleChoiceOptionResource> choices = new ArrayList<>();
 
     /* Expression of interest */
+    @NotNull(message = "{validation.field.must.not.be.blank}", groups = TextAreaValidationGroup.class)
     private Boolean expressionOfInterest;
 
     /* appendix */
