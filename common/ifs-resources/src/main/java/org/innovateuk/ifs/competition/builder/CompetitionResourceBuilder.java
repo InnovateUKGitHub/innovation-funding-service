@@ -333,4 +333,5 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
     protected CompetitionResource createInitial() {
         return new CompetitionResource();
     }
+
 }
