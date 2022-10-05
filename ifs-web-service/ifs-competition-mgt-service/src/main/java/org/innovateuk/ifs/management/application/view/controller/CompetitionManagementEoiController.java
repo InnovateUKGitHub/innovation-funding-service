@@ -27,8 +27,7 @@ public class CompetitionManagementEoiController {
     @SecuredBySpring(value = "DOWNLOAD_EOI_EVIDENCE", description = "internal user can download eoi evidence")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'support', 'innovation_lead', 'stakeholder', 'super_admin_user', 'auditor', 'ifs_administrator', 'project_finance')")
     @GetMapping("/application/{applicationId}/view-eoi-evidence")
-    public @ResponseBody ResponseEntity<ByteArrayResource> downloadEOIEvidenceFile(
-            @PathVariable("applicationId") final Long applicationId) {
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadEOIEvidenceFile(@PathVariable("applicationId") final Long applicationId) {
 
         final ByteArrayResource resource = applicationEoiEvidenceResponseRestService.getEvidenceByApplication(applicationId).getSuccess();
         final FileEntryResource fileDetails = applicationEoiEvidenceResponseRestService.getEvidenceDetailsByApplication(applicationId).getSuccess();

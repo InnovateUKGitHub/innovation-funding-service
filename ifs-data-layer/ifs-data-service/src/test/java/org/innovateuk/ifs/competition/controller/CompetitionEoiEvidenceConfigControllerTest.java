@@ -45,7 +45,6 @@ public class CompetitionEoiEvidenceConfigControllerTest extends BaseControllerMo
     @Test
     public void findByCompetitionId() throws Exception {
         long competitionId = 1L;
-        List<Long> fileTypeIds = asList(1L, 3L, 4L);
 
         CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource = CompetitionEoiEvidenceConfigResource.builder()
                 .competitionId(competitionId)
