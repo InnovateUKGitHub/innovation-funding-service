@@ -21,11 +21,6 @@ public interface OrganisationRepository extends PagingAndSortingRepository<Organ
     List<Organisation> findByCompaniesHouseNumberOrderById(String companiesHouseNumber);
     Organisation findByProcessRolesUserIdAndProcessRolesApplicationId(long userId, long applicationId);
 
-    @Query("SELECT o FROM Organisation o " +
-            "JOIN ProjectUser pu ON o.id = pu.organisation.id " +
-            "WHERE pu.user.id = :userId " +
-            "AND pu.project.id = :projectId")
-    Organisation findByUserAndProjectId(long userId, long projectId);
     List<Organisation> findAllById(Iterable<Long> ids);
     long countDistinctByProcessRolesApplicationId(long applicationId);
 

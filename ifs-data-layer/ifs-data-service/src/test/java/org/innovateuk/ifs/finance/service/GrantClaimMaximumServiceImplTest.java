@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryBuilder.newResearchCategory;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -114,35 +113,35 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
 
         assertTrue(result.isSuccess());
 
-        verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(feasability.getId())
+        verify(grantClaimMaximumRepository).save(argThat(max -> max.getResearchCategory().getId().equals(feasability.getId())
                 && max.getOrganisationSize() == OrganisationSize.SMALL
-                && max.getMaximum() == 70)));
-        verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(feasability.getId())
+                && max.getMaximum() == 70));
+        verify(grantClaimMaximumRepository).save(argThat(max -> max.getResearchCategory().getId().equals(feasability.getId())
                 && max.getOrganisationSize() == OrganisationSize.MEDIUM
-                && max.getMaximum() == 60)));
-        verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(feasability.getId())
+                && max.getMaximum() == 60));
+        verify(grantClaimMaximumRepository).save(argThat(max -> max.getResearchCategory().getId().equals(feasability.getId())
                 && max.getOrganisationSize() == OrganisationSize.LARGE
-                && max.getMaximum() == 50)));
+                && max.getMaximum() == 50));
 
-        verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(industrial.getId())
+        verify(grantClaimMaximumRepository).save(argThat(max -> max.getResearchCategory().getId().equals(industrial.getId())
                 && max.getOrganisationSize() == OrganisationSize.SMALL
-                && max.getMaximum() == 70)));
-        verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(industrial.getId())
+                && max.getMaximum() == 70));
+        verify(grantClaimMaximumRepository).save(argThat(max -> max.getResearchCategory().getId().equals(industrial.getId())
                 && max.getOrganisationSize() == OrganisationSize.MEDIUM
-                && max.getMaximum() == 60)));
-        verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(industrial.getId())
+                && max.getMaximum() == 60));
+        verify(grantClaimMaximumRepository).save(argThat(max -> max.getResearchCategory().getId().equals(industrial.getId())
                 && max.getOrganisationSize() == OrganisationSize.LARGE
-                && max.getMaximum() == 50)));
+                && max.getMaximum() == 50));
 
-        verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(experimental.getId())
+        verify(grantClaimMaximumRepository).save(argThat(max -> max.getResearchCategory().getId().equals(experimental.getId())
                 && max.getOrganisationSize() == OrganisationSize.SMALL
-                && max.getMaximum() == 45)));
-        verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(experimental.getId())
+                && max.getMaximum() == 45));
+        verify(grantClaimMaximumRepository).save(argThat(max -> max.getResearchCategory().getId().equals(experimental.getId())
                 && max.getOrganisationSize() == OrganisationSize.MEDIUM
-                && max.getMaximum() == 35)));
-        verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(experimental.getId())
+                && max.getMaximum() == 35));
+        verify(grantClaimMaximumRepository).save(argThat(max -> max.getResearchCategory().getId().equals(experimental.getId())
                 && max.getOrganisationSize() == OrganisationSize.LARGE
-                && max.getMaximum() == 25)));
+                && max.getMaximum() == 25));
     }
 
     @Test
@@ -168,35 +167,35 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
         assertTrue(result.isSuccess());
 
 
-        verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(feasability.getId())
+        verify(grantClaimMaximumRepository).save(argThat(max -> max.getResearchCategory().getId().equals(feasability.getId())
                 && max.getOrganisationSize() == OrganisationSize.SMALL
-                && max.getMaximum() == null)));
-        verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(feasability.getId())
+                && max.getMaximum() == null));
+        verify(grantClaimMaximumRepository).save(argThat(max -> max.getResearchCategory().getId().equals(feasability.getId())
                 && max.getOrganisationSize() == OrganisationSize.MEDIUM
-                && max.getMaximum() == null)));
-        verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(feasability.getId())
+                && max.getMaximum() == null));
+        verify(grantClaimMaximumRepository).save(argThat(max -> max.getResearchCategory().getId().equals(feasability.getId())
                 && max.getOrganisationSize() == OrganisationSize.LARGE
-                && max.getMaximum() == null)));
+                && max.getMaximum() == null));
 
-        verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(industrial.getId())
+        verify(grantClaimMaximumRepository).save(argThat(max -> max.getResearchCategory().getId().equals(industrial.getId())
                 && max.getOrganisationSize() == OrganisationSize.SMALL
-                && max.getMaximum() == null)));
-        verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(industrial.getId())
+                && max.getMaximum() == null));
+        verify(grantClaimMaximumRepository).save(argThat(max -> max.getResearchCategory().getId().equals(industrial.getId())
                 && max.getOrganisationSize() == OrganisationSize.MEDIUM
-                && max.getMaximum() == null)));
-        verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(industrial.getId())
+                && max.getMaximum() == null));
+        verify(grantClaimMaximumRepository).save(argThat(max -> max.getResearchCategory().getId().equals(industrial.getId())
                 && max.getOrganisationSize() == OrganisationSize.LARGE
-                && max.getMaximum() == null)));
+                && max.getMaximum() == null));
 
-        verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(experimental.getId())
+        verify(grantClaimMaximumRepository).save(argThat(max -> max.getResearchCategory().getId().equals(experimental.getId())
                 && max.getOrganisationSize() == OrganisationSize.SMALL
-                && max.getMaximum() == null)));
-        verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(experimental.getId())
+                && max.getMaximum() == null));
+        verify(grantClaimMaximumRepository).save(argThat(max -> max.getResearchCategory().getId().equals(experimental.getId())
                 && max.getOrganisationSize() == OrganisationSize.MEDIUM
-                && max.getMaximum() == null)));
-        verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(experimental.getId())
+                && max.getMaximum() == null));
+        verify(grantClaimMaximumRepository).save(argThat(max -> max.getResearchCategory().getId().equals(experimental.getId())
                 && max.getOrganisationSize() == OrganisationSize.LARGE
-                && max.getMaximum() == null)));
+                && max.getMaximum() == null));
     }
 
     @Test

@@ -4,6 +4,7 @@ import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;
@@ -63,6 +64,9 @@ public class Organisation implements Serializable {
     @OneToMany(mappedBy="organisation",cascade = CascadeType.ALL,
             orphanRemoval = true)
     private List<ExecutiveOfficer> executiveOfficers = new ArrayList<>();
+
+    @OneToMany(mappedBy="organisation", fetch = FetchType.LAZY)
+    private List<ProjectUser> projectUsers = new ArrayList<>();
 
     @Column
     private String businessType;

@@ -11,10 +11,7 @@ import org.springframework.http.MediaType;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.function.Consumer;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.builder.FinanceCostTotalResourceBuilder.newFinanceCostTotalResource;
 import static org.mockito.Mockito.verify;
@@ -41,11 +38,7 @@ public class CostTotalControllerTest extends MockMvcTest<CostTotalController> {
                 1L
         );
 
-        Consumer<FinanceCostTotalResource> matchesExpectedResource = (resource) -> {
-            assertThat(resource).isEqualToComparingFieldByField(financeCostTotalResource);
-        };
-
-        when(costTotalService.saveCostTotal(createLambdaMatcher(matchesExpectedResource))).thenReturn(serviceSuccess());
+        when(costTotalService.saveCostTotal(financeCostTotalResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(
                 post("/cost-total")
@@ -54,7 +47,7 @@ public class CostTotalControllerTest extends MockMvcTest<CostTotalController> {
         )
                 .andExpect(status().isCreated());
 
-        verify(costTotalService).saveCostTotal(createLambdaMatcher(matchesExpectedResource));
+        verify(costTotalService).saveCostTotal(financeCostTotalResource);
     }
 
     @Test
@@ -66,19 +59,15 @@ public class CostTotalControllerTest extends MockMvcTest<CostTotalController> {
                 .withTotal(new BigDecimal("999.999999"), new BigDecimal("1999.999999"))
                 .build(2);
 
-        Consumer<List<FinanceCostTotalResource>> matchesExpectedResources = (resources) -> {
-            assertThat(resources).usingFieldByFieldElementComparator().containsAll(financeCostTotalResources);
-        };
-
-        when(costTotalService.saveCostTotals(createLambdaMatcher(matchesExpectedResources))).thenReturn(serviceSuccess());
+        when(costTotalService.saveCostTotals(financeCostTotalResources)).thenReturn(serviceSuccess());
 
         mockMvc.perform(
                 post("/cost-totals")
                         .content(json(financeCostTotalResources))
                         .contentType(MediaType.APPLICATION_JSON)
-        )
-                .andExpect(status().isCreated());
+        ).andExpect(status().isCreated());
 
-        verify(costTotalService).saveCostTotals(createLambdaMatcher(matchesExpectedResources));
+        verify(costTotalService).saveCostTotals(financeCostTotalResources);
     }
+
 }
