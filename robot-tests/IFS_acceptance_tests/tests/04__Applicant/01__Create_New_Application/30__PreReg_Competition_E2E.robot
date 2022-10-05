@@ -310,7 +310,8 @@ Lead applicant can navigate to orginal EOI application from full application
     When the user clicks the button/link                     link = Expression of interest
     Then the user clicks the button/link                     jQuery = h1:contains("Expression of interest overview")
     And the user should see the element                      jQuery = h2:contains("Congratulations, your application has been successful")
-    And Lead applicant can view and download evidence file   ${preregApplicationID}  ${contract_pdf}
+    And the user should see the element                      jQuery = h3:contains("Eoi Evidence")
+    And the user checks file is downloaded                   ${contract_pdf}
 
 Partner completes project finances and terms and conditions in full application
     [Documentation]  IFS-12382
@@ -348,12 +349,13 @@ Internal user can view EOI application from full application
     Then the user clicks the button/link                    jQuery = h1:contains("Expression of interest overview")
     And the user should see the element                     jQuery = h2:contains("Expression of interest questions")
     And the user should see the element                     jQuery = button:contains("Tell us where your organisation is based")
-    And Internal user can view and download evidence file   ${preregApplicationID}  ${contract_pdf}
+    And Internal user can view and download evidence file   ${preregCompetitionId}  ${preregApplicationID}  ${contract_pdf}
 
 Auditor can view and download evidence file submitted
     [Documentation]  IFS-12523
     Given log in as a different user            &{auditorCredentials}
     When the user navigates to the page         ${server}/management/competition/${preregCompetitionId}/application/${preregApplicationID}
+    And the user clicks the button/link         link = Expression of interest
     Then the user checks file is downloaded     ${contract_pdf}
     And the user should see the element         jQuery = h3:contains("Eoi Evidence")
 
