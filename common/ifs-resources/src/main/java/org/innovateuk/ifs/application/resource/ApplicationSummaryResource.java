@@ -25,6 +25,7 @@ public class ApplicationSummaryResource {
     private boolean emailInQueue;
     private boolean eoiEvidenceDocumentRequired;
     private boolean eoiEvidenceDocumentReceived;
+    private boolean enabledForExpressionOfInterest;
 
     public ZonedDateTime getManageDecisionEmailDate() {
         return manageDecisionEmailDate;
@@ -151,11 +152,17 @@ public class ApplicationSummaryResource {
     }
 
     public Boolean applicationDecisionIsChangeable() {
+        if (eoiEvidenceDocumentIsRequiredAndHasNotBeenUploaded()) {
+            return false;
+        }
+
         return (this.manageDecisionEmailDate == null || !decision.equals(Decision.FUNDED)) && !emailInQueue;
     }
 
     private boolean eoiEvidenceDocumentIsRequiredAndHasNotBeenUploaded() {
-        return isEoiEvidenceDocumentRequired() && !isEoiEvidenceDocumentReceived();
+        return isEoiEvidenceDocumentRequired()
+                && isEnabledForExpressionOfInterest()
+                && !isEoiEvidenceDocumentReceived();
     }
 
     public boolean isEoiEvidenceDocumentRequired() {
@@ -172,6 +179,14 @@ public class ApplicationSummaryResource {
 
     public void setEoiEvidenceDocumentReceived(boolean eoiEvidenceDocumentReceived) {
         this.eoiEvidenceDocumentReceived = eoiEvidenceDocumentReceived;
+    }
+
+    public boolean isEnabledForExpressionOfInterest() {
+        return enabledForExpressionOfInterest;
+    }
+
+    public void setEnabledForExpressionOfInterest(boolean enabledForExpressionOfInterest) {
+        this.enabledForExpressionOfInterest = enabledForExpressionOfInterest;
     }
 
     public String emailStatus() {
