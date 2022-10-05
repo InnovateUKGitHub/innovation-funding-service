@@ -73,6 +73,7 @@ public class EoiEvidenceReadOnlyViewModelPopulatorTest {
 
         FileEntryResource fileEntryResource = newFileEntryResource()
                 .withName(fileName)
+                .withFilesizeBytes(4380)
                 .build();
 
         when(competitionEoiEvidenceConfigRestService.findByCompetitionId(competitionId)).thenReturn(restSuccess(competitionEoiEvidenceConfigResource));
@@ -86,5 +87,6 @@ public class EoiEvidenceReadOnlyViewModelPopulatorTest {
         assertEquals(title, viewModel.getTitle());
         assertEquals(applicationId, viewModel.getApplicationId());
         assertEquals(fileName, viewModel.getName());
+        assertEquals("4KB", viewModel.getHumanReadableFileSize());
     }
 }
