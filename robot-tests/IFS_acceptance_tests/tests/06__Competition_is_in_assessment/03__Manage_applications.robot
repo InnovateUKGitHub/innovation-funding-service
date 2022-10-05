@@ -87,8 +87,8 @@ Accepting the application changes the Accepted column
 
 Remove an assigned application (Notified)
     [Documentation]    INFUND-1079
-    Given the user clicks the button/link        jQuery = td:contains("${Molecular_id}") ~ td:contains("Yes") ~ td:contains("Remove")
-    When the user clicks the button/link         link = Remove
+    Given the user should see the element        jQuery = td:contains("${Molecular_id}") ~ td:contains("Yes") ~ td:contains("Remove")
+    Execute JavaScript                           document.evaluate("//button[normalize-space()='Remove']",document.body,null,9,null).singleNodeValue.click();
     And the user clicks the button/link          jQuery = button:contains("Remove assessor")
     Then the user should not see the element     jQuery = td:contains("${Molecular_id}") ~ td:contains("Yes") ~ td:contains("Remove")
     And the user should see the element          jQuery = h2:contains("Previously assigned") ~ div td:contains("${Molecular_id}") + td:contains("Molecular tree breeding") ~ td:contains("Reassign")
@@ -156,7 +156,7 @@ Remove an assigned user (Not notified)
     [Documentation]    INFUND-7230
     [Tags]
     Given the user clicks the button/link  jQuery = td:contains("Living with Cryptocurrencies") ~ td:contains("View progress")
-    Then the user clicks the button/link   jQuery = td:contains("Maureen Moore") ~ td:contains("Remove")
+    Execute JavaScript                     document.evaluate("//button[normalize-space()='Remove']",document.body,null,9,null).singleNodeValue.click();
 
 Notify an assigned user
     [Documentation]    INFUND-7050
@@ -292,11 +292,10 @@ the comp admin notify an assessor2
 the user removes assessor from assigned application and notify
     the user clicks the button/link          jQuery = td:contains("Living with Cryptocurrencies") ~ td:contains("View progress")
     the user should see the element          jQuery = td:contains("Maureen Moore") ~ td:contains("Remove")
-    the user clicks the button/link          link = Remove
+    Execute JavaScript                       document.evaluate("//button[normalize-space()='Remove']",document.body,null,9,null).singleNodeValue.click();
     the user clicks the button/link          jQuery = .button-clear:contains("Cancel")
-    the user should not see the element      jQuery = button:contains("Remove assessor")
     the user should see the element          jQuery = td:contains("Maureen Moore") ~ td:contains("Remove")
-    the user clicks the button/link          link = Remove
+    Execute JavaScript                       document.evaluate("//button[normalize-space()='Remove']",document.body,null,9,null).singleNodeValue.click();
     the user clicks the button/link          jQuery = button:contains("Remove assessor")
     the user should see the element          jQuery = h2:contains("Previously assigned (1)")
 
