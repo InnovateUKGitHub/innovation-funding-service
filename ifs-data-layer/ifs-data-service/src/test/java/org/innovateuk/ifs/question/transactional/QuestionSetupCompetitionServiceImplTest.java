@@ -239,8 +239,13 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                 .withWrittenFeedback(true)
                 .build();
 
-        Question question = newQuestion().
-                withShortName(newShortTitle).build();
+        Question question = newQuestion()
+                .withShortName(newShortTitle)
+                .withCompetition(
+                        newCompetition()
+                                .withEnabledForExpressionOfInterest(false)
+                                .build())
+                .build();
 
         FormInput questionFormInput = newFormInput().build();
         FormInput appendixFormInput = newFormInput().build();
@@ -474,10 +479,15 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                 .withScored(true)
                 .withScoreTotal(scoreTotal)
                 .withWrittenFeedback(true)
+                .withExpressionOfInterest(true)
                 .build();
 
-        Question question = newQuestion().
-                withShortName(oldShortTitle)
+        Question question = newQuestion()
+                .withShortName(oldShortTitle)
+                .withCompetition(
+                        newCompetition()
+                                .withEnabledForExpressionOfInterest(false)
+                                .build())
                 .withQuestionSetupType(QuestionSetupType.APPLICATION_DETAILS).build();
 
         FormInput questionFormInput = newFormInput().build();
@@ -510,8 +520,16 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     private void setMocksForSuccessfulUpdate() {
         when(guidanceRowMapper.mapToDomain(anyList())).thenReturn(new ArrayList<>());
 
-        Question question = newQuestion().
-                withShortName(QuestionSetupType.SCOPE.getShortName()).build();
+        Competition competition = newCompetition()
+                .withId(1L)
+                .withEnabledForExpressionOfInterest(false)
+                .build();
+
+        Question question = newQuestion()
+                .withId(1L)
+                .withShortName(QuestionSetupType.SCOPE.getShortName())
+                .withCompetition(competition)
+                .build();
 
         FormInput questionFormInput = newFormInput().build();
         FormInput appendixFormInput = newFormInput().withWordCount(0).withActive(false).build();
