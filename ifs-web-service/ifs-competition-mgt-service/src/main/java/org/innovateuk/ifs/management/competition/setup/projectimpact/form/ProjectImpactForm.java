@@ -6,8 +6,6 @@ import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetu
 
 import javax.validation.constraints.NotNull;
 
-import static java.util.Objects.isNull;
-
 /**
  * Form for the Project Impact competition setup section.
  */
