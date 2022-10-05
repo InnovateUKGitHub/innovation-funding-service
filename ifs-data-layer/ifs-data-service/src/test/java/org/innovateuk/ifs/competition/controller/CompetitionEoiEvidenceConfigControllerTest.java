@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.competition.resource.CompetitionEoiEvidenceConfigResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionEoiEvidenceConfigService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -39,5 +40,23 @@ public class CompetitionEoiEvidenceConfigControllerTest extends BaseControllerMo
 
         verify(competitionEoiEvidenceConfigService).getValidFileTypesIdsForEoiEvidence(competitionEoiEvidenceConfigId);
 
+    }
+
+    @Test
+    public void findByCompetitionId() throws Exception {
+        long competitionId = 1L;
+        List<Long> fileTypeIds = asList(1L, 3L, 4L);
+
+        CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource = CompetitionEoiEvidenceConfigResource.builder()
+                .competitionId(competitionId)
+                .build();
+
+        when(competitionEoiEvidenceConfigService.findOneByCompetitionId(competitionId)).thenReturn(serviceSuccess(competitionEoiEvidenceConfigResource));
+
+        mockMvc.perform(get("/competition/{competitionId}/eoi-evidence-config", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(competitionEoiEvidenceConfigResource)));
+
+        verify(competitionEoiEvidenceConfigService).findOneByCompetitionId(competitionId);
     }
 }
