@@ -1,5 +1,6 @@
 package org.innovateuk.ifs;
 
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.mapper.ExternalFinanceRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
@@ -70,6 +71,9 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
 
     @Mock
     protected SupporterAssignmentRepository supporterAssignmentRepository;
+
+    @Mock
+    protected ApplicationRepository applicationRepository;
 
     protected void setUpUserAsProjectManager(ProjectResource projectResource, UserResource user) {
 
