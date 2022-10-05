@@ -206,4 +206,5 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
     public ServiceResult<Optional<ApplicationEoiEvidenceState>> getApplicationEoiEvidenceState(long applicationId) {
         return serviceSuccess(applicationEoiEvidenceResponseRepository.findOneByApplicationId(applicationId).map(eoiEvidence -> eoiEvidence.getApplicationEoiEvidenceProcess().getProcessState()));
     }
+
 }
