@@ -64,7 +64,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
     @Override
     public ServiceResult<CompetitionSetupQuestionResource> getByQuestionId(long questionId) {
         return find(questionRepository.findById(questionId), notFoundError(Question.class, questionId))
-                .andOnSuccess(question -> mapQuestionToSuperQuestionResource(question));
+                .andOnSuccess(this::mapQuestionToSuperQuestionResource);
     }
 
     private ServiceResult<CompetitionSetupQuestionResource> mapQuestionToSuperQuestionResource(Question question) {
@@ -86,6 +86,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         setupResource.setSubTitle2(question.getDescription2());
         setupResource.setQuestionId(question.getId());
         setupResource.setType(question.getQuestionSetupType());
+        setupResource.setExpressionOfInterest(question.isEnabledForPreRegistration());
 
         return serviceSuccess(setupResource);
     }
