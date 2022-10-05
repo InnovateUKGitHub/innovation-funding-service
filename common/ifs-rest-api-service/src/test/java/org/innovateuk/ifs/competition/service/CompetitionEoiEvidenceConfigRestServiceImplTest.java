@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.resource.CompetitionEoiEvidenceConfigResource;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
@@ -25,6 +26,21 @@ public class CompetitionEoiEvidenceConfigRestServiceImplTest extends BaseRestSer
 
         assertTrue(result.isSuccess());
         assertEquals(fileTypeIds, result.getSuccess());
+    }
+
+    @Test
+    public void findByCompetitionId() {
+        long competitionId = 1L;
+
+        CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource = CompetitionEoiEvidenceConfigResource.builder()
+                .competitionId(competitionId)
+                .build();
+
+        String url = format("/competition/%s/eoi-evidence-config", competitionId);
+        setupGetWithRestResultExpectations(url, CompetitionEoiEvidenceConfigResource.class, competitionEoiEvidenceConfigResource);
+        RestResult <CompetitionEoiEvidenceConfigResource> result = service.findByCompetitionId(competitionId);
+
+        assertEquals(competitionEoiEvidenceConfigResource, result.getSuccess());
     }
 
     @Override
