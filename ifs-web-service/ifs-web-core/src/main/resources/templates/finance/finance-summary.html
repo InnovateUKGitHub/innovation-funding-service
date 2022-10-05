@@ -111,9 +111,8 @@
                     <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.fundingSought, 0, 'DEFAULT')}"/>
                     <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${contributionToProjectPercentage}"/>
                 </th:block>
-                <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.contribution, 0, 'DEFAULT')}"/>
-
                 <td th:if="${table.ktp}" class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.contributionPercentage, 0, 'DEFAULT')}"/>
+                <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.contribution, 0, 'DEFAULT')}"/>
                 <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.otherFunding, 0, 'DEFAULT')}"/>
             </tr>
             <tr class="govuk-table__row" th:if="${table.rows.size() > 1}">
