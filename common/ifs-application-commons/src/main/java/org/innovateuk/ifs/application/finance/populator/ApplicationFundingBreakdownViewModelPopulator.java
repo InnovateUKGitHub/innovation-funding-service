@@ -135,9 +135,6 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                                                 long leadOrganisationId, List<ProcessRoleResource> processRoles, UserResource user,
                                                 ApplicationResource application, CompetitionResource competition, boolean canIncludeFinanceLink) {
         Optional<BaseFinanceResource> finance = Optional.ofNullable(finances.get(organisation.getId()));
-        if (finance.isPresent()) {
-            finance.get().setCompTypeOfgemAndFundingTypeThirdParty(competition.isCompTypeOfgemAndFundingTypeThirdParty());
-        }
         Optional<String> financeLink;
         if (canIncludeFinanceLink) {
             financeLink = financeLinksUtil.financesLink(organisation, processRoles, user, application, competition);

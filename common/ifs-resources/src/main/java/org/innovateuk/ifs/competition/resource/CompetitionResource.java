@@ -118,6 +118,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private CompetitionApplicationConfigResource competitionApplicationConfigResource;
     private CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource;
     private boolean enabledForPreRegistration;
+    private boolean compTypeOfgemAndFundingTypeThirdParty;
 
     public CompetitionResource() {
     }
@@ -222,7 +223,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     }
 
     public boolean isCompTypeOfgemAndFundingTypeThirdParty() {
-        return competitionTypeEnum == CompetitionTypeEnum.OFGEM && THIRDPARTY.equals(fundingType);
+        return compTypeOfgemAndFundingTypeThirdParty;
     }
 
     @JsonIgnore
