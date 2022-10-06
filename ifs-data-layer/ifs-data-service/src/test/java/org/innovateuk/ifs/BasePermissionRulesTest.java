@@ -72,9 +72,6 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
     @Mock
     protected SupporterAssignmentRepository supporterAssignmentRepository;
 
-    @Mock
-    protected ApplicationRepository applicationRepository;
-
     protected void setUpUserAsProjectManager(ProjectResource projectResource, UserResource user) {
 
         List<ProjectUser> projectManagerUser = newProjectUser().build(1);
