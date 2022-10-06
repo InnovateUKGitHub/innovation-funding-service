@@ -12,7 +12,7 @@ IFS.core.finance = (function () {
         }
         return x / y
       },
-      'negativeRoundUp': function (x, y) { return x < 0 ? 0 : x } // jshint ignore:line
+      negativeRoundUp: function (x, y) { return x < 0 ? 0 : x } // jshint ignore:line
     },
     init: function () {
       IFS.core.finance.bindCalculationActionToFields() // Bind calculations

@@ -31,7 +31,6 @@ import java.util.function.Supplier;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
-import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.*;
@@ -636,11 +635,11 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     }
 
     private FormInputResponseFileEntryId fileEntryExpectations() {
-        return argThat(lambdaMatches(fileEntryId -> {
+        return argThat(fileEntryId -> {
             assertEquals(formInputId, fileEntryId.getFormInputId());
             assertEquals(456L, fileEntryId.getApplicationId());
             assertEquals(789L, fileEntryId.getProcessRoleId());
             return true;
-        }));
+        });
     }
 }

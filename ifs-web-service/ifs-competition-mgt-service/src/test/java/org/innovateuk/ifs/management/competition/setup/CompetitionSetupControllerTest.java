@@ -46,7 +46,6 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
-import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_DUPLICATE_FUNDERS;
@@ -932,9 +931,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 eq(CompetitionSetupSection.COMPLETION_STAGE));
 
         verify(competitionSetupService, times(1)).saveCompetitionSetupSection(
-                createLambdaMatcher(form -> {
-                    assertThat(((CompletionStageForm) form).getSelectedCompletionStage()).isEqualTo(CompetitionCompletionStage.COMPETITION_CLOSE);
-                }),
+                any(CompletionStageForm.class),
                 eq(competition),
                 eq(CompetitionSetupSection.COMPLETION_STAGE),
                 eq(loggedInUser));
@@ -1013,9 +1010,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 eq(CompetitionSetupSection.APPLICATION_SUBMISSION));
 
         verify(competitionSetupService, times(1)).saveCompetitionSetupSection(
-                createLambdaMatcher(form -> {
-                    assertThat(((ApplicationSubmissionForm) form).getAlwaysOpen()).isEqualTo(true);
-                }),
+                any(ApplicationSubmissionForm.class),
                 eq(competition),
                 eq(CompetitionSetupSection.APPLICATION_SUBMISSION),
                 eq(loggedInUser));

@@ -23,7 +23,6 @@ include("common:starter:ifs-starter-swagger-ui")
 
 // Commons - can be split and deprecated
 include("common:ifs-commons")
-include("common:ifs-commons-test")
 include("common:ifs-error-util")
 
 // API model classes mostly

@@ -159,6 +159,9 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
             case FINANCES:
                 messageCode = getFinanceSectionSubTitle(competition);
                 break;
+            case SUPPORTING_INFORMATION:
+                messageCode = "ifs.section.supportingInformation.description";
+                break;
             case PROJECT_DETAILS:
                 if (competition.isKtp()) {
                     messageCode = "ifs.section.projectDetails.ktp.description";

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.cfg.BaseFullStackIntegrationTest;
 import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapperImpl;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapperImpl;
 import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapperImpl;
+import org.innovateuk.ifs.organisation.repository.OrganisationCriteriaRepository;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -43,6 +44,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
         AddressMapperImpl.class,
         AddressTypeMapperImpl.class,
         OrganisationTypeMapperImpl.class,
+        OrganisationCriteriaRepository.class,
         UserMapperImpl.class
 })
 public class OrganisationControllerFullIntegrationTest extends BaseFullStackIntegrationTest {

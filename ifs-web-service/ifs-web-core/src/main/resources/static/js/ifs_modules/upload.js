@@ -58,7 +58,7 @@ IFS.core.upload = (function () {
       var file = fileInput.get(0).files[0]
       IFS.core.upload.clearMessages(wrapper, 'li.error')
       IFS.core.upload.findMatchingDataAttrs(wrapper, s.toggleOnBanner).hide()
-      var pendingRow = IFS.core.upload.addMessage(wrapper, IFS.core.template.replaceInTemplate(s.pendingRow, {text: file.name}))
+      var pendingRow = IFS.core.upload.addMessage(wrapper, IFS.core.template.replaceInTemplate(s.pendingRow, { text: file.name }))
 
       var formData = new window.FormData(wrapper.closest('form').get(0))
       formData.append(submitButton.attr('name'), submitButton.attr('value') || '')
