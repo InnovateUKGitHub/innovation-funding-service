@@ -52,6 +52,7 @@ public class EoiEvidenceReadOnlyViewModelPopulatorTest {
         String fileName = "Filename";
 
         ApplicationResource applicationResource = newApplicationResource()
+                .withId(applicationId)
                 .withCompetition(competitionId)
                 .withApplicationExpressionOfInterestConfigResource(newApplicationExpressionOfInterestConfigResource()
                         .withEnabledForExpressionOfInterest(true)
