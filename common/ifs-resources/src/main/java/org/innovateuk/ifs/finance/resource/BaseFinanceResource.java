@@ -245,6 +245,12 @@ public abstract class BaseFinanceResource {
     }
 
     @JsonIgnore
+    public BigDecimal getTotalContributionsInKind() {
+        FinanceRowCostCategory otherFundingCategory = getFinanceOrganisationDetails(FinanceRowType.OTHER_FUNDING);
+        return otherFundingCategory != null ? otherFundingCategory.getTotal() : ZERO;
+    }
+
+    @JsonIgnore
     public BigDecimal getTotalPreviousFunding() {
         FinanceRowCostCategory otherFundingCategory = getFinanceOrganisationDetails(FinanceRowType.PREVIOUS_FUNDING);
         return otherFundingCategory != null ? otherFundingCategory.getTotal() : ZERO;
