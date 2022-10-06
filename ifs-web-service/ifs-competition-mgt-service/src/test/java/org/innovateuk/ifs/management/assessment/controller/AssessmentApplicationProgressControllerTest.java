@@ -14,7 +14,6 @@ import org.innovateuk.ifs.assessment.service.AssessmentPeriodService;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
-import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessment.form.AvailableAssessorForm;
@@ -135,6 +134,8 @@ public class AssessmentApplicationProgressControllerTest extends BaseControllerM
                 "",
                 Sort.ASSESSOR,
                 expectedPaginationModel,
+                false,
+                false,
                 false
         );
 
@@ -263,6 +264,48 @@ public class AssessmentApplicationProgressControllerTest extends BaseControllerM
                 .andExpect(model().attribute("model", expectedModel))
                 .andExpect(model().attributeExists("model"))
                 .andExpect(view().name("competition/application-progress-remove-confirm"));
+    }
+
+    @Test
+    public void unsubmitAssessment() throws Exception {
+        Long competitionId = 1L;
+        Long applicationId = 2L;
+        long assessmentId = 3L;
+        Long assessmentPeriodId = 4L;
+
+        when(assessmentRestService.unsubmitAssessment(assessmentId)).thenReturn(restSuccess());
+
+        mockMvc.perform(
+                        post("/assessment/competition/{competitionId}/application/{applicationId}/period/{assessmentPeriodId}/assessors/unsubmit/{assessmentId}", competitionId, applicationId, assessmentPeriodId, assessmentId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/assessment/competition/%s/application/%s/period/%s/assessors", competitionId, applicationId, assessmentPeriodId)));
+
+        InOrder inOrder = inOrder(assessmentRestService);
+        inOrder.verify(assessmentRestService).unsubmitAssessment(assessmentId);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void unsubmitAssessmentConfirm() throws Exception {
+        long competitionId = 1L;
+        long applicationId = 2L;
+        long assessmentId = 3L;
+        long assessmentPeriodId = 4L;
+
+        ApplicationAssessmentProgressUnsubmitViewModel expectedModel = new ApplicationAssessmentProgressUnsubmitViewModel(
+                competitionId,
+                applicationId,
+                assessmentId,
+                assessmentPeriodId,
+                TITLE
+        );
+
+        mockMvc.perform(
+                        get("/assessment/competition/{competitionId}/application/{applicationId}/period/{assessmentPeriodId}/assessors/unsubmit/{assessmentId}/confirm", competitionId, applicationId, assessmentPeriodId, assessmentId))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedModel))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("competition/application-progress-unsubmit-confirm"));
     }
 
     private ApplicationAssessmentSummaryResource setupApplicationAssessmentSummaryResource(Long competitionId, Long applicationId) {
