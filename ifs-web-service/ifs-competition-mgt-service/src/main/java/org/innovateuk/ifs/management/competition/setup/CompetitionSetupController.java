@@ -387,6 +387,7 @@ public class CompetitionSetupController {
         Supplier<String> failureView = () -> initCompetitionSetupSection(model, competitionId, competitionSetupSummaryForm, bindingResult, loggedInUser);
 
         ServiceResult<Void> updateResult = competitionSetupService.setCompetitionAsReadyToOpen(competitionId);
+        //competitionSetupService.saveCompetitionSetupSection()
 
         return validationHandler.addAnyErrors(updateResult, asGlobalErrors())
                 .failNowOrSucceedWith(failureView, () -> format("redirect:/competition/setup/%d", competitionId));

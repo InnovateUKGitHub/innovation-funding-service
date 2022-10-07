@@ -94,5 +94,6 @@ public interface CompetitionService {
     @NotSecured(value = "Anyone can check if competition has EDI questions", mustBeSecuredByOtherServices = false)
     ServiceResult<Boolean> hasEDIQuestion(long competitionId);
 
-
+    @NotSecured(value = "Anyone can check if competition has EDI questions", mustBeSecuredByOtherServices = false)
+    ServiceResult<Void> updateImpactManagementForCompetition(long competitionId, boolean projectImpactSurveyApplicable);
 }

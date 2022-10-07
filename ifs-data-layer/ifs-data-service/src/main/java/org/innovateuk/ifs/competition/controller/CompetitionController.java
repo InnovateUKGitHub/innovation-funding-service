@@ -69,4 +69,9 @@ public class CompetitionController {
     public ResponseEntity<Object> downloadTerms(@PathVariable("id") long competitionId) {
         return fileControllerUtils.handleFileDownload(() -> competitionService.downloadTerms(competitionId));
     }
+
+    @PutMapping("/{id}/update-impact-management/{projectImpactSurveyApplicable}")
+    public RestResult<Void> updateImpactManagementForCompetition(@PathVariable("id") final long competitionId,@PathVariable("projectImpactSurveyApplicable")boolean projectImpactSurveyApplicable) {
+        return competitionService.updateImpactManagementForCompetition(competitionId, projectImpactSurveyApplicable).toPutResponse();
+    }
 }

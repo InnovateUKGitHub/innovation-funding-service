@@ -77,6 +77,10 @@ public class CompetitionRestServiceImpl extends BaseRestService implements Compe
     @Override
     public RestResult<Boolean> hasEDIQuestion(Long competitionId) {
         return getWithRestResult(format("%s/%s/%s", COMPETITION_REST_SERVICE,  competitionId,"has-edi"), Boolean.class);
+    }
 
+    @Override
+    public RestResult<Void> updateImpactManagementForCompetition(long competitionId, boolean projectImpactSurveyApplicable) {
+        return putWithRestResult(format("%s/%d/%s/%b", COMPETITION_REST_SERVICE, competitionId, "update-impact-management",projectImpactSurveyApplicable), Void.class);
     }
 }
