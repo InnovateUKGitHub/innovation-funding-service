@@ -1,5 +1,4 @@
-
-<!-- ================= Section: Application assessment (16) =========================== -->
+<!-- ================= Section: Application expression of interest (17) =========================== -->
 <th:block th:fragment="section-content"  xmlns:th="http://www.w3.org/1999/html">
     <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
         <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
@@ -11,29 +10,29 @@
               method="post"
               th:object="${competitionSetupForm}"
               novalidate="novalidate">
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('assessmentStage')} ? 'govuk-form-group--error'">
-                <fieldset class="govuk-fieldset" aria-describedby="application-assessment">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('expressionOfInterest')} ? 'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset" aria-describedby="application-expression-of-interest">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
                         <h1 class="govuk-fieldset__heading">
-                            Application assessment
+                            Application expression of interest
                         </h1>
                     </legend>
                     <span id="completion-stage-hint" class="govuk-hint">
-                        Will this competition be assessed?
+                        Will there be an expression of interest stage for this competition?
                     </span>
-                    <span th:if="${#fields.hasErrors('assessmentStage')}" class="govuk-error-message"
-                          th:each="err : ${#fields.errors('assessmentStage')}" th:text="${err}"/>
+                    <span th:if="${#fields.hasErrors('expressionOfInterest')}" class="govuk-error-message"
+                          th:each="err : ${#fields.errors('expressionOfInterest')}" th:text="${err}"/>
                     <div class="govuk-radios">
                         <div class="govuk-radios__item" th:each="value, iteration : ${ {true, false} }">
                             <input type="radio"
                                    class="govuk-radios__input"
                                    required="required"
                                    th:value="${value}"
-                                   name="assessmentStage"
-                                   th:checked="${competitionSetupForm.assessmentStage == value}"
-                                   th:id="|application-assessment-${iteration.count}|"/>
+                                   name="expressionOfInterest"
+                                   th:checked="${competitionSetupForm.expressionOfInterest == value}"
+                                   th:id="|application-expression-of-interest-${iteration.count}|"/>
                             <label class="govuk-label govuk-radios__label selection-button-radio"
-                                   th:for="|application-assessment-${iteration.count}|"
+                                   th:for="|application-expression-of-interest-${iteration.count}|"
                                    th:text="${value} ? 'Yes' : 'No'"></label>
                         </div>
                     </div>
@@ -49,11 +48,11 @@
     </th:block>
 
     <th:block th:unless="${model.general.editable}">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application assessment',size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application expression of interest',size='govuk-heading-xl'" />
         <p class="govuk-body">
-            <strong>Will this competition be assessed?</strong> &emsp; <th:block th:text="${competitionSetupForm.assessmentStage} ? 'Yes' : 'No'"></th:block>
+            <strong>Will there be an expression of interest stage for this competition?</strong> &emsp; <th:block th:text="${competitionSetupForm.expressionOfInterest} ? 'Yes' : 'No'"></th:block>
         </p>
-        <form th:action="@{('application-assessment/edit')}" method="post">
+        <form th:action="@{('application-expression-of-interest/edit')}" method="post">
             <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button">Edit</button>
         </form>
     </th:block>
@@ -61,15 +60,15 @@
     <ul class="govuk-list pagination">
         <li class="prev">
             <a rel="prev" title="Navigate to previous part"
-               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='application-expression-of-interest')}">
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='application-submission')}">
                 <span class="pagination-label">Previous</span>
-                <span class="pagination-part-title">Application expression of interest</span>
+                <span class="pagination-part-title">Application submission</span>
             </a>
         </li>
         <li class="next" th:if="${!model.general.editable}">
-            <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='milestones')}">
+            <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath=${model.general.competition.alwaysOpen && model.general.isAssessmentStageEnabled ? 'application-assessment' :'milestones'})}">
                 <span class="pagination-label">Next</span>
-                <span class="pagination-part-title">Milestones</span>
+                <span class="pagination-part-title" th:text="${model.general.competition.alwaysOpen && model.general.isAssessmentStageEnabled ? 'Application assessment' : 'Milestones'}">Application assessment</span>
             </a>
         </li>
     </ul>

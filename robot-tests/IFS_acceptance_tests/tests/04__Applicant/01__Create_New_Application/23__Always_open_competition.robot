@@ -360,12 +360,13 @@ Custom Suite teardown
     Disconnect from database
 
 the user completes milestones section
-    the user clicks the button/link                    link = Milestones
-    the user clicks the button twice                   jQuery = label:contains("Project setup")
-    the user clicks the button/link                    jQuery = button:contains("Done")
-    the user completes application submission page     Yes
-    the user inputs application assessment decision    Yes
-    the user clicks the button/link                    jQuery = button:contains("Done")
+    the user clicks the button/link                     link = Milestones
+    the user clicks the button twice                    jQuery = label:contains("Project setup")
+    the user clicks the button/link                     jQuery = button:contains("Done")
+    the user completes application submission page      Yes
+    the user inputs application expression of interest  No
+    the user inputs application assessment decision     Yes
+    the user clicks the button/link                     jQuery = button:contains("Done")
 
 comp admin sends invite to assesor
     the user clicks the button/link          link = Invite assessors to assess the competition
