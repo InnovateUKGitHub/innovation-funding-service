@@ -365,9 +365,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     public ServiceResult<Void> markAsSetup(Long competitionId) {
         Competition competition = competitionRepository.findById(competitionId).get();
         competition.setSetupComplete(true);
-        if(competition.isHorizonEuropeGuarantee()) {
-            horizonWorkProgrammeService.initWorkProgrammesForCompetition(competitionId);
-        }
         return serviceSuccess();
     }
 

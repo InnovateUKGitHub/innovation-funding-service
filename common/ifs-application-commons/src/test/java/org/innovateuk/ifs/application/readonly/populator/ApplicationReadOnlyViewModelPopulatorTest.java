@@ -6,10 +6,7 @@ import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationQuestionRead
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationSectionReadOnlyViewModel;
 import org.innovateuk.ifs.application.readonly.viewmodel.FinanceReadOnlyViewModel;
-import org.innovateuk.ifs.application.resource.ApplicationExpressionOfInterestConfigResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
@@ -18,6 +15,7 @@ import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionEoiEvidenceConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
@@ -42,6 +40,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,6 +49,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -129,6 +129,9 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
     @Mock
     private HorizonWorkProgrammeRestService horizonWorkProgrammeRestService;
 
+    @Mock
+    private EoiEvidenceReadOnlyViewModelPopulator eoiEvidenceReadOnlyViewModelPopulator;
+
     private final long applicationId = 1L;
     private final long assessmentId = 2L;
     private final long eoiApplicationId = 3L;
@@ -137,7 +140,6 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
     private List<FormInputResponseResource> responses = new ArrayList<>();
     private List<ApplicationHorizonWorkProgrammeResource> workProgrammeFuture = new ArrayList<>();
 
-
     @Before
     public void setupExpectations() {
         setupAsyncExpectations(futuresGeneratorMock);
@@ -145,7 +147,6 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         formInputs = newFormInputResource().withQuestion(2L).build(1);
         responses = newFormInputResponseResource().withFormInputs(formInputs.get(0).getId()).build(1);
         workProgrammeFuture = singletonList(new ApplicationHorizonWorkProgrammeResource());
-
     }
 
     @Test
@@ -237,6 +238,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         assertEquals(financeSection.getQuestions().iterator().next(), expectedFinanceSummary);
 
         assertFalse(viewModel.isKtpCompetition());
+        assertFalse(viewModel.isExpressionOfInterestApplication());
 
         verify(mockPopulator).populate(questions.get(0), expectedData, settings);
     }
@@ -383,6 +385,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         assertEquals(1, viewModel.getPendingCount());
 
         assertTrue(viewModel.isKtpCompetition());
+        assertFalse(viewModel.isExpressionOfInterestApplication());
 
         verify(mockPopulator).populate(questions.get(0), expectedData, settings);
     }
@@ -466,11 +469,19 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
 
         assertEquals(workProgrammeFuture, expectedData.getApplicationHorizonWorkProgrammeResource().get());
 
+        assertFalse(viewModel.isExpressionOfInterestApplication());
+
         verify(mockPopulator).populate(questions.get(0), expectedData, settings);
     }
 
     @Test
     public void populateEOI() {
+        String title = "Eoi Evidence";
+        String name = "eoi_evidence.pdf";
+        int filesizeBytes = 4380;
+        String mediaType = ".pdf";
+        long fileEntryId = 1234L;
+
         UserResource user = newUserResource()
                 .withRoleGlobal(Role.APPLICANT)
                 .build();
@@ -491,14 +502,26 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         GrantTermsAndConditionsResource grantTermsAndConditionsResource = newGrantTermsAndConditionsResource()
                 .withName("Innovate UK")
                 .build();
+        CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource = CompetitionEoiEvidenceConfigResource.builder()
+                .evidenceRequired(true)
+                .build();
         CompetitionResource competition = newCompetitionResource()
                 .withFundingType(FundingType.GRANT)
                 .withTermsAndConditions(grantTermsAndConditionsResource)
+                .withCompetitionEoiEvidenceConfigResource(competitionEoiEvidenceConfigResource)
                 .build();
+        ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = ApplicationEoiEvidenceResponseResource.builder()
+                .fileState(State.SUBMITTED)
+                .build();
+        OrganisationResource organisation = newOrganisationResource().build();
         ApplicationResource application = newApplicationResource()
                 .withId(applicationId)
                 .withCompetition(competition.getId())
                 .withApplicationExpressionOfInterestConfigResource(applicationExpressionOfInterestConfig)
+                .withApplicationState(ApplicationState.SUBMITTED)
+                .withSubmittedDate(ZonedDateTime.now())
+                .withApplicationEoiEvidenceResponseResource(applicationEoiEvidenceResponseResource)
+                .withLeadOrganisationId(organisation.getId())
                 .build();
         List<QuestionResource> questions = newQuestionResource()
                 .withQuestionSetupType(QuestionSetupType.APPLICATION_TEAM)
@@ -507,7 +530,6 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         List<QuestionStatusResource> questionStatuses = newQuestionStatusResource()
                 .withQuestion(questions.get(0).getId())
                 .build(1);
-        OrganisationResource organisation = newOrganisationResource().build();
         List<SectionResource> sections = newSectionResource()
                 .withName("Section with questions", "Finance section", "Score assessment")
                 .withChildSections(Collections.emptyList(), Collections.singletonList(1L), Collections.emptyList())
@@ -516,7 +538,11 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .withEnabledForPreRegistration(false)
                 .build(3);
 
-        ProcessRoleResource processRole = newProcessRoleResource().withRole(ProcessRoleType.LEADAPPLICANT).withUser(user).build();
+        ProcessRoleResource processRole = newProcessRoleResource()
+                .withRole(ProcessRoleType.LEADAPPLICANT)
+                .withUser(user)
+                .withOrganisation(organisation.getId())
+                .build();
 
         Map<Long, BigDecimal> scores = new HashMap<>();
         scores.put(1L, new BigDecimal("9"));
@@ -530,6 +556,15 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .withScores(scores)
                 .withFeedback(feedback)
                 .build();
+
+        EoiEvidenceReadOnlyViewModel eoiEvidenceReadOnlyViewModel  = EoiEvidenceReadOnlyViewModel.builder()
+                .applicationId(applicationId)
+                .expressionOfInterestApplication(true)
+                .title(title)
+                .build();
+        eoiEvidenceReadOnlyViewModel.setName(name);
+        eoiEvidenceReadOnlyViewModel.setFilesizeBytes(filesizeBytes);
+        eoiEvidenceReadOnlyViewModel.setMediaType(mediaType);
 
         ApplicationReadOnlyData expectedData = new ApplicationReadOnlyData(application, competition, user, newArrayList(processRole),
                 questions, formInputs, responses, questionStatuses, singletonList(assessorResponseFuture), emptyList(), Optional.of(workProgrammeFuture));
@@ -548,6 +583,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(newArrayList(processRole)));
         when(assessorFormInputResponseRestService.getApplicationAssessment(applicationId, assessmentId)).thenReturn(restSuccess(assessorResponseFuture));
         when(horizonWorkProgrammeRestService.findSelected(applicationId)).thenReturn(restSuccess(workProgrammeFuture));
+        when(eoiEvidenceReadOnlyViewModelPopulator.populate(application)).thenReturn(eoiEvidenceReadOnlyViewModel);
 
         when(mockPopulator.populate(questions.get(0), expectedData, settings)).thenReturn(expectedRowModel);
 
@@ -556,6 +592,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         assertEquals(viewModel.getSettings(), settings);
         assertEquals(viewModel.getSections().size(), 2);
         assertFalse(viewModel.isEoiFullApplication());
+        assertTrue(viewModel.isExpressionOfInterestApplication());
 
         Iterator<ApplicationSectionReadOnlyViewModel> iterator = viewModel.getSections().iterator();
         ApplicationSectionReadOnlyViewModel sectionWithQuestion = iterator.next();
@@ -564,11 +601,19 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         assertEquals(sectionWithQuestion.isVisible(), false);
         assertEquals(sectionWithQuestion.getQuestions().size(), 0);
 
-
         ApplicationSectionReadOnlyViewModel financeSection = iterator.next();
         assertEquals(financeSection.getName(), "Finance section");
         assertEquals(financeSection.isVisible(), false);
         assertEquals(financeSection.getQuestions().iterator().next(), expectedFinanceSummary);
+
+        EoiEvidenceReadOnlyViewModel eoiViewModel = viewModel.getEoiEvidenceReadOnlyViewModel();
+
+        assertNotNull(eoiViewModel);
+        assertEquals(applicationId, eoiViewModel.getApplicationId().longValue());
+        assertEquals(title, eoiViewModel.getTitle());
+        assertEquals(name, eoiViewModel.getName());
+        assertEquals(filesizeBytes, eoiViewModel.getFilesizeBytes());
+        assertEquals(mediaType, eoiViewModel.getMediaType());
     }
 
     @Test
@@ -657,5 +702,6 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         ApplicationReadOnlyViewModel viewModel = populator.populate(applicationId, user, settings);
 
         assertTrue(viewModel.isEoiFullApplication());
+        assertFalse(viewModel.isExpressionOfInterestApplication());
     }
 }

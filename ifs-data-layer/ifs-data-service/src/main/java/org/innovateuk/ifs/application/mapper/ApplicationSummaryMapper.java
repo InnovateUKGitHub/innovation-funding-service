@@ -84,6 +84,7 @@ public abstract class ApplicationSummaryMapper {
         result.setInAssessmentPanel(source.isInAssessmentReviewPanel());
         result.setEoiEvidenceDocumentRequired(source.expressionOfInterestEvidenceDocumentRequired());
         result.setEoiEvidenceDocumentReceived(source.isApplicationExpressionOfInterestEvidenceResponseReceived());
+        result.setEnabledForExpressionOfInterest(source.isEnabledForExpressionOfInterest());
 
         return result;
     }

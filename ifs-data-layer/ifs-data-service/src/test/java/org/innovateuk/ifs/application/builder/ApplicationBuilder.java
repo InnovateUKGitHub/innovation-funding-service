@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationEoiEvidenceResponse;
 import org.innovateuk.ifs.application.domain.ApplicationExpressionOfInterestConfig;
 import org.innovateuk.ifs.application.domain.ApplicationProcess;
 import org.innovateuk.ifs.application.resource.*;
@@ -162,5 +163,9 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
 
     public ApplicationBuilder withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig... applicationExpressionOfInterestConfigs) {
         return withArray((applicationExpressionOfInterestConfig, application) -> application.setApplicationExpressionOfInterestConfig(applicationExpressionOfInterestConfig), applicationExpressionOfInterestConfigs);
+    }
+
+    public ApplicationBuilder withApplicationEoiEvidenceResponse(ApplicationEoiEvidenceResponse... applicationEoiEvidenceResponses) {
+        return withArray((applicationEoiEvidenceResponse, application) -> application.setApplicationEoiEvidenceResponse(applicationEoiEvidenceResponse), applicationEoiEvidenceResponses);
     }
 }

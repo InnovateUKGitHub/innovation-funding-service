@@ -24,7 +24,8 @@ public abstract class ApplicationEoiEvidenceResponseMapper extends BaseMapper<Ap
     @Mappings({
             @Mapping(source = "application.id", target = "applicationId"),
             @Mapping(source = "organisation.id", target = "organisationId"),
-            @Mapping(source = "fileEntry.id", target = "fileEntryId")
+            @Mapping(source = "fileEntry.id", target = "fileEntryId"),
+            @Mapping(source = "applicationEoiEvidenceProcess.processState", target = "fileState"),
     })
     @Override
     public abstract ApplicationEoiEvidenceResponseResource mapToResource(ApplicationEoiEvidenceResponse domain);
@@ -32,7 +33,8 @@ public abstract class ApplicationEoiEvidenceResponseMapper extends BaseMapper<Ap
     @Mappings({
             @Mapping(source = "applicationId", target = "application"),
             @Mapping(source = "organisationId", target = "organisation"),
-            @Mapping(source = "fileEntryId", target = "fileEntry")
+            @Mapping(source = "fileEntryId", target = "fileEntry"),
+            @Mapping(target = "applicationEoiEvidenceProcess", ignore = true),
     })
     @Override
     public abstract ApplicationEoiEvidenceResponse mapToDomain(ApplicationEoiEvidenceResponseResource resource);

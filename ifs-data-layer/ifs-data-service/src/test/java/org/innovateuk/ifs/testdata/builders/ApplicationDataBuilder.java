@@ -6,7 +6,7 @@ import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.competition.resource.CompetitionEoiEvidenceConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
@@ -16,18 +16,20 @@ import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
-import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 import static java.util.Arrays.asList;
@@ -38,7 +40,7 @@ import static org.innovateuk.ifs.question.resource.QuestionSetupType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
- * Generates an Application for a Competition.  Additionally generates finances for each Organisation on the Application
+ * Generates an Application for a Competition.  Additionally, generates finances for each Organisation on the Application
  */
 public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, ApplicationDataBuilder> {
     private static final String KTA_EMAIL = "hermen.mermen@ktn-uk.test";
@@ -209,18 +211,22 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
             if (competitionEoiEvidenceConfigResource != null
                     && competitionEoiEvidenceConfigResource.isEvidenceRequired()) {
                 ApplicationResource application = data.getApplication();
-                ProcessRole processRole = processRoleRepository.findOneByApplicationIdAndRole(application.getId(), ProcessRoleType.LEADAPPLICANT);
-                FileEntry fileEntry = fileEntryRepository.save(
-                        new FileEntry(null, "eoi-evidence-file" + application.getId() + ".pdf", "application/pdf", 7945));
+                try {
+                    File file = new File(ApplicationDataBuilder.class.getResource("/webtest.pdf").toURI());
+                    InputStream inputStream = new FileInputStream(file);
+                    Supplier<InputStream> inputStreamSupplier = () -> inputStream;
 
-                ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = ApplicationEoiEvidenceResponseResource.builder()
-                        .applicationId(application.getId())
-                        .organisationId(application.getLeadOrganisationId())
-                        .fileEntryId(fileEntry.getId())
-                        .build();
+                    FileEntryResource fileEntryResource = new FileEntryResource();
+                    fileEntryResource.setName("eoiEvidenceFile" + application.getId() + ".pdf");
+                    fileEntryResource.setMediaType("application/pdf");
+                    fileEntryResource.setFilesizeBytes(7945);
 
-                applicationEoiEvidenceResponseService.create(applicationEoiEvidenceResponseResource)
-                        .andOnSuccess((createdApplicationEoiEvidenceResponseResource) -> applicationEoiEvidenceResponseService.submit(createdApplicationEoiEvidenceResponseResource, data.getLeadApplicant()));
+                    applicationEoiEvidenceResponseService.upload(application.getId(), application.getLeadOrganisationId(), data.getLeadApplicant(), fileEntryResource, inputStreamSupplier)
+                            .andOnSuccess((createdApplicationEoiEvidenceResponseResource) -> applicationEoiEvidenceResponseService.submit(createdApplicationEoiEvidenceResponseResource, data.getLeadApplicant()));
+                } catch (Exception e) {
+                    LOG.error("Unable to upload eoi evidence", e);
+                    throw new RuntimeException(e);
+                }
             }
         });
     }
