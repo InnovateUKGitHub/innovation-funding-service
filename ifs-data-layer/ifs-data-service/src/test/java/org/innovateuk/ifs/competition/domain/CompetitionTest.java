@@ -308,4 +308,16 @@ public class CompetitionTest {
 
         assertTrue(competition.isThirdPartyOfgem());
     }
+
+    @Test
+    public void isCompTypeOfgemAndFundingTypeThirdParty_forThirdPartyFundingType_forOfgemCompetitionType() {
+        CompetitionType competitionType = newCompetitionType()
+                .withName("Ofgem")
+                .build();
+
+        competition.setFundingType(FundingType.THIRDPARTY);
+        competition.setCompetitionType(competitionType);
+
+        assertTrue(competition.isCompTypeOfgemAndFundingTypeThirdParty());
+    }
 }

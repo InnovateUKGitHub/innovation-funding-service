@@ -325,6 +325,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
                 competitionResource.setEnabledForPreRegistration(enabledForExpressionOfInterest), enabledForExpressionOfInterests);
     }
 
+    public CompetitionResourceBuilder withCompTypeOfgemAndFundingTypeThirdParty(boolean... compTypeOfgemAndFundingTypeThirdParty) {
+        return withArraySetFieldByReflection("compTypeOfgemAndFundingTypeThirdParty", compTypeOfgemAndFundingTypeThirdParty);
+    }
+
     @Override
     protected CompetitionResource createInitial() {
         return new CompetitionResource();

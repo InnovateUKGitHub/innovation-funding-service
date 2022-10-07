@@ -3,6 +3,7 @@ package org.innovateuk.ifs.finance.domain;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -16,10 +17,10 @@ import static org.hamcrest.core.Is.is;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryBuilder.newResearchCategory;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.finance.domain.builder.GrantClaimMaximumBuilder.newGrantClaimMaximum;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
@@ -199,6 +200,21 @@ public class FinanceTest {
 
         assertEquals(77, finance.getMaximumFundingLevel());
         assertEquals(true, finance.isFixedFundingLevel());
+    }
+
+    @Test
+    public void isCompTypeOfgemAndFundingTypeThirdParty() {
+        Competition competition = spy(newCompetition()
+                .withFundingType(FundingType.THIRDPARTY)
+                .withCompetitionType(newCompetitionType().withName("Ofgem").build())
+                .build());
+        Application application = newApplication()
+                .withCompetition(competition)
+                .build();
+
+        TestFinance finance = new TestFinance(application);
+
+        assertTrue(finance.isCompTypeOfgemAndFundingTypeThirdParty());
     }
 
     private static class TestFinance extends Finance {
