@@ -373,6 +373,9 @@ Milestones: Page should contain the correct fields
     And the user clicks the button/link           jQuery = button:contains("Done")
     And the user clicks the button twice          jQuery = label:contains("No")
     And the user clicks the button/link           jQuery = button:contains("Save and continue")
+    # Application expression of interest
+    And the user clicks the button twice          jQuery = label:contains("No")
+    And the user clicks the button/link           jQuery = button:contains("Save and continue")
     Then the pre-field date should be correct
 
 Milestones: Edit completition stage selection
