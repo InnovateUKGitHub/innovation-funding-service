@@ -2,6 +2,7 @@ package org.innovateuk.ifs.fundingdecision.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationEoiEvidenceResponse;
 import org.innovateuk.ifs.application.domain.ApplicationExpressionOfInterestConfig;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -16,6 +17,7 @@ import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseServ
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionAssessmentConfig;
+import org.innovateuk.ifs.competition.domain.CompetitionEoiEvidenceConfig;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
@@ -726,6 +728,44 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
                 .withCompetition(competition)
                 .withDecision(DecisionStatus.UNDECIDED)
                 .withApplicationState(ApplicationState.OPENED)
+                .build();
+
+        when(applicationRepository.findAllowedApplicationsForCompetition(new HashSet<>(singletonList(applicationId)), competitionId))
+                .thenReturn(singletonList(application1));
+
+        Map<Long, Decision> applicationDecisions = asMap(applicationId, FUNDED);
+        ServiceResult<Void> result = service.saveDecisionData(competitionId, applicationDecisions);
+
+        Map<Long, Decision> changedApplicationDecisions = asMap(applicationId, UNFUNDED);
+        ServiceResult<Void> changedResult = service.saveDecisionData(competitionId, changedApplicationDecisions);
+
+        assertTrue(result.isSuccess());
+        assertTrue(changedResult.isSuccess());
+        verify(applicationRepository, times(2)).findAllowedApplicationsForCompetition(new HashSet<>(singletonList(applicationId)), competitionId);
+        verify(applicationService, times(2)).setApplicationFundingEmailDateTime(applicationId, null);
+        verifyNoInteractions(applicationWorkflowHandler);
+
+        assertEquals(DecisionStatus.UNFUNDED, application1.getDecision());
+    }
+
+    @Test
+    public void saveDecisionDataWhenDecisionIsChangedForPreRegistration() {
+        Long applicationId = 1L;
+        Long competitionId = competition.getId();
+
+        competition.setCompetitionEoiEvidenceConfig(CompetitionEoiEvidenceConfig.builder()
+                .evidenceRequired(true)
+                .build());
+
+        Application application1 = newApplication()
+                .withId(applicationId)
+                .withCompetition(competition)
+                .withDecision(DecisionStatus.UNDECIDED)
+                .withApplicationState(ApplicationState.OPENED)
+                .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig.builder()
+                        .enabledForExpressionOfInterest(true)
+                        .build())
+                .withApplicationEoiEvidenceResponse(ApplicationEoiEvidenceResponse.builder().build())
                 .build();
 
         when(applicationRepository.findAllowedApplicationsForCompetition(new HashSet<>(singletonList(applicationId)), competitionId))

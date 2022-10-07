@@ -322,6 +322,10 @@ public class ApplicationMigrationServiceIntegrationTest extends BaseApplicationM
                     assertEquals(eoiApplication.getId(), applicationExpressionOfInterestConfig.getApplication().getId());
                 });
 
+        ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = eoiApplication.getApplicationEoiEvidenceResponse();
+        assertNotNull(applicationEoiEvidenceResponse);
+        assertEquals(eoiApplication.getId(), applicationEoiEvidenceResponse.getApplication().getId());
+
         Optional<Application> oldApplication = applicationRepository.findById(applicationId);
         assertTrue(oldApplication.isPresent());
     }

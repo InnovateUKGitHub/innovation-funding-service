@@ -10,10 +10,7 @@ import org.innovateuk.ifs.application.readonly.viewmodel.SupporterAssignmentRead
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.application.service.QuestionRestService;
-import org.innovateuk.ifs.application.service.QuestionStatusRestService;
-import org.innovateuk.ifs.application.service.SectionRestService;
+import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
@@ -36,6 +33,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -93,6 +91,9 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
     @Autowired
     private HorizonWorkProgrammeRestService horizonWorkProgrammeRestService;
 
+    @Autowired
+    private EoiEvidenceReadOnlyViewModelPopulator eoiEvidenceReadOnlyViewModelPopulator;
+
     private Map<QuestionSetupType, QuestionReadOnlyViewModelPopulator<?>> populatorMap;
 
     @Autowired
@@ -133,6 +134,8 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
             settings.setIncludeAllSupporterFeedback(data.getFeedbackToApplicationSupport().size() > 0);
         }
 
+        settings.setIncludeEoiEvidence(shouldDisplayEoiEvidence(competition, application, processRoles, user));
+
         Set<ApplicationSectionReadOnlyViewModel> sectionViews = resolve(sectionsFuture)
                 .stream()
                 .filter(section -> section.getParentSection() == null)
@@ -158,8 +161,27 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 competition.getCompetitionThirdPartyConfigResource(),
                 isLoanPartBEnabled,
                 data.getApplication().isEnabledForExpressionOfInterest(),
-                data.getApplication().isEoiFullApplication()
+                data.getApplication().isEoiFullApplication(),
+                settings.isIncludeEoiEvidence()
+                        ? Optional.of(eoiEvidenceReadOnlyViewModelPopulator.populate(application))
+                        : Optional.empty()
         );
+    }
+
+    private boolean shouldDisplayEoiEvidence(CompetitionResource competition, ApplicationResource application,
+                                             List<ProcessRoleResource> processRoles, UserResource user) {
+
+        return competition.isEoiEvidenceRequired()
+                && application.isEnabledForExpressionOfInterest()
+                && application.isSubmitted()
+                && !isPartner(application, processRoles, user)
+                && (application.getApplicationEoiEvidenceResponseResource().getFileState() == State.SUBMITTED);
+    }
+
+    private boolean isPartner(ApplicationResource application, List<ProcessRoleResource> processRoles, UserResource user) {
+        return processRoles.stream()
+                .anyMatch(pr -> pr.getUser().equals(user.getId())
+                        && !pr.getOrganisationId().equals(application.getLeadOrganisationId()));
     }
 
     private boolean shouldDisplayKtpApplicationFeedback(CompetitionResource competition, UserResource user, List<ProcessRoleResource> processRoles) {

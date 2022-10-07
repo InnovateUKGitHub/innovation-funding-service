@@ -21,9 +21,8 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.granttransfer.repository.EuGrantTransferRepository;
 import org.innovateuk.ifs.horizon.repository.ApplicationHorizonWorkProgrammeRepository;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
+import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -208,10 +207,8 @@ public class ApplicationEoiServiceImpl implements ApplicationEoiService {
     private void populateProcessRole(Application application, Application migratedApplication) {
         processRoleRepository.findByApplicationId(migratedApplication.getId()).stream()
                 .forEach(processRole -> {
-                    em.detach(processRole);
-                    processRole.setId(null);
-                    processRole.setApplicationId(application.getId());
-                    processRoleRepository.save(processRole);
+                    processRoleRepository.save(new ProcessRole(processRole.getUser(), application.getId(),
+                            processRole.getRole(), processRole.getOrganisationId()));
                 });
 
         log.debug("Populate process role for application : " + application.getId());

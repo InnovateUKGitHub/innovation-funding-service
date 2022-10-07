@@ -1,29 +1,41 @@
 package org.innovateuk.ifs.competition.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResultItem;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.ProjectParticipantRole;
+import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Authority;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.competition.builder.LiveCompetitionSearchResultItemBuilder.newLiveCompetitionSearchResultItem;
 import static org.innovateuk.ifs.competition.builder.PreviousCompetitionSearchResultItemBuilder.newPreviousCompetitionSearchResultItem;
 import static org.innovateuk.ifs.competition.builder.ProjectSetupCompetitionSearchResultItemBuilder.newProjectSetupCompetitionSearchResultItem;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_USER_ROLES;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
@@ -39,6 +51,9 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
 
     @Mock
     private InnovationLeadRepository innovationLeadRepository;
+
+    @Mock
+    protected ApplicationRepository applicationRepository;
 
     @Override
     protected CompetitionPermissionRules supplyPermissionRulesUnderTest() {
@@ -336,4 +351,84 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
         assertTrue(rules.auditorCanViewAllCompetitions(competitionSearchPreviousResultItem, audtior));
 
     }
+
+    @Test
+    public void stakeholderCanReadEoiEvidenceConfigForCompetition() {
+        long competitionId = 43L;
+        CompetitionResource competition = newCompetitionResource()
+                .withId(competitionId)
+                .build();
+        UserResource user = stakeholderUser();
+        UserResource systemRegistrationUser = systemRegistrationUser();
+
+        when(stakeholderRepository.existsByCompetitionIdAndUserId(competition.getId(), user.getId())).thenReturn(true);
+        assertTrue(rules.stakeholderCanReadEoiEvidenceConfigForCompetition(competition, user));
+
+        when(stakeholderRepository.existsByCompetitionIdAndUserId(competition.getId(), systemRegistrationUser.getId())).thenReturn(false);
+        assertFalse(rules.stakeholderCanReadEoiEvidenceConfigForCompetition(competition, systemRegistrationUser));
+    }
+
+    @Test
+    public void auditorCanReadEoiEvidenceConfigForCompetition() {
+        long competitionId = 43L;
+        CompetitionResource competition = newCompetitionResource()
+                .withId(competitionId)
+                .build();
+        UserResource user = auditorUser();
+        UserResource systemRegistrationUser = systemRegistrationUser();
+
+        assertTrue(rules.auditorCanReadEoiEvidenceConfigForCompetition(competition, user));
+        assertFalse(rules.auditorCanReadEoiEvidenceConfigForCompetition(competition, systemRegistrationUser));
+    }
+
+    @Test
+    public void internalUsersCanReadEoiEvidenceConfigForCompetition() {
+        allGlobalRoleUsers.forEach(user -> {
+            if (allInternalUsers.contains(user)) {
+                assertTrue(rules.internalUsersCanReadEoiEvidenceConfigForCompetition(newCompetitionResource().build(), user));
+            } else {
+                assertFalse(rules.internalUsersCanReadEoiEvidenceConfigForCompetition(newCompetitionResource().build(), user));
+            }
+        });
+    }
+
+    @Test
+    public void leadOrganisationMembersCanReadEoiEvidenceConfigForCompetition() {
+        long competitionId = 43L;
+        long organisationId = 151112L;
+        long userId = 91017L;
+
+        CompetitionResource competition = newCompetitionResource()
+                .withId(competitionId)
+                .build();
+        User user = newUser()
+                .withId(userId)
+                .withRoles(new HashSet<>(asList(Role.APPLICANT)))
+                .build();
+        Organisation organisation = newOrganisation()
+                .withId(organisationId)
+                .build();
+        ProcessRole leadProcessRole = newProcessRole()
+                .withOrganisation(organisation)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
+                .withUser(user)
+                .build();
+        Application application = newApplication()
+                .withProcessRole(leadProcessRole)
+                .build();
+
+        UserResource leadApplicant = newUserResource()
+                .withId(userId)
+                .withRoleGlobal(APPLICANT)
+                .build();
+
+        when(applicationRepository.findByCompetitionId(competition.getId())).thenReturn(Collections.singletonList(application));
+        when(processRoleRepository.findByApplicationIdAndOrganisationId(application.getId(), organisationId))
+                .thenReturn(Collections.singletonList(leadProcessRole));
+        assertTrue(rules.leadOrganisationMembersCanReadEoiEvidenceConfigForCompetition(competition, leadApplicant));
+
+        when(processRoleRepository.findByApplicationIdAndOrganisationId(application.getId(), organisationId)).thenReturn(Collections.emptyList());
+        assertFalse(rules.stakeholderCanReadEoiEvidenceConfigForCompetition(competition, leadApplicant));
+    }
+
 }
