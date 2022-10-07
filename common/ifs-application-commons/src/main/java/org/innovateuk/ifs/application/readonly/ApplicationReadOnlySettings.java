@@ -12,6 +12,7 @@ public class ApplicationReadOnlySettings {
     private boolean includeAllSupporterFeedback = false;
     private boolean includeTeamMember = true;
     private Long assessmentId = null;
+    private boolean includeEoiEvidence = false;
 
     private ApplicationReadOnlySettings() {}
 
@@ -86,6 +87,15 @@ public class ApplicationReadOnlySettings {
         return this;
     }
 
+    public boolean isIncludeEoiEvidence() {
+        return includeEoiEvidence;
+    }
+
+    public ApplicationReadOnlySettings setIncludeEoiEvidence(boolean includeEoiEvidence) {
+        this.includeEoiEvidence = includeEoiEvidence;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -98,6 +108,7 @@ public class ApplicationReadOnlySettings {
                 .append(includeStatuses, settings.includeStatuses)
                 .append(includeQuestionLinks, settings.includeQuestionLinks)
                 .append(assessmentId, settings.assessmentId)
+                .append(includeEoiEvidence, settings.includeEoiEvidence)
                 .isEquals();
     }
 
@@ -107,6 +118,7 @@ public class ApplicationReadOnlySettings {
                 .append(includeStatuses)
                 .append(includeQuestionLinks)
                 .append(assessmentId)
+                .append(includeEoiEvidence)
                 .toHashCode();
     }
 }

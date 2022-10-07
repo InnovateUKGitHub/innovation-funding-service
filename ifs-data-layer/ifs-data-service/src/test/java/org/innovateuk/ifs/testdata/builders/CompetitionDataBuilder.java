@@ -641,8 +641,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 if (line.isEoiEvidenceRequired()) {
                     CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource = CompetitionEoiEvidenceConfigResource.builder()
                             .evidenceRequired(true)
-                            .evidenceTitle("Eoi Evidence")
-                            .evidenceGuidance("Please upload Eoi Evidence file.")
+                            .evidenceTitle("Proof of success letter")
+                            .evidenceGuidance("You need to upload a proof of success to your expression of interest application")
                             .competitionId(data.getCompetition().getId()).build();
                     competitionEoiEvidenceConfigService.create(competitionEoiEvidenceConfigResource).getSuccess();
                 }

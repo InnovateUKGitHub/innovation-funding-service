@@ -101,4 +101,22 @@ public class CompetitionResourceTest {
 
         assertTrue(competition.isKtpOnly());
     }
+
+    @Test
+    public void isEoiEvidenceRequired() {
+        CompetitionResource competition = newCompetitionResource()
+                .build();
+
+        assertFalse(competition.isEoiEvidenceRequired());
+
+        competition.setCompetitionEoiEvidenceConfigResource(CompetitionEoiEvidenceConfigResource.builder().build());
+
+        assertFalse(competition.isEoiEvidenceRequired());
+
+        competition.setCompetitionEoiEvidenceConfigResource(CompetitionEoiEvidenceConfigResource.builder()
+                .evidenceRequired(true)
+                .build());
+
+        assertTrue(competition.isEoiEvidenceRequired());
+    }
 }

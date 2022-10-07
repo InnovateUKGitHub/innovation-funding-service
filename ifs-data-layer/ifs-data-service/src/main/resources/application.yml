@@ -129,6 +129,10 @@ ifs:
                         valid:
                             media:
                                 types: application/pdf
+                    applicationEoiEvidenceResponse:
+                        max:
+                            filesize:
+                                bytes: 33554432
                     publiccontentattachment:
                         max:
                             filesize:
