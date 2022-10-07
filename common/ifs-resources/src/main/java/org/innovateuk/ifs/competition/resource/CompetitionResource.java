@@ -222,10 +222,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         return competitionTypeEnum == CompetitionTypeEnum.OFGEM;
     }
 
-    public boolean isCompTypeOfgemAndFundingTypeThirdParty() {
-        return compTypeOfgemAndFundingTypeThirdParty;
-    }
-
     @JsonIgnore
     public boolean onlyOneOrgAllowedPerApplication() {
         return isH2020() || isProcurement();
@@ -938,6 +934,14 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     public void setCompetitionEoiEvidenceConfigResource(CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource) {
         this.competitionEoiEvidenceConfigResource = competitionEoiEvidenceConfigResource;
+    }
+
+    public boolean isCompTypeOfgemAndFundingTypeThirdParty() {
+        return compTypeOfgemAndFundingTypeThirdParty;
+    }
+
+    public void setCompTypeOfgemAndFundingTypeThirdParty(boolean compTypeOfgemAndFundingTypeThirdParty) {
+        this.compTypeOfgemAndFundingTypeThirdParty = compTypeOfgemAndFundingTypeThirdParty;
     }
 
     @Override
