@@ -138,7 +138,7 @@ the competition admin creates fast track competition
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingRule}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}  ${isOpenComp}
     the user selects the Terms and Conditions               ${compType}  ${fundingRule}
     the user fills in the CS Funding Information
-    the user completes project impact section               no
+    the user completes project impact section               No
     the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user selects the organisational eligibility to no   false
     the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}  ${isOpenComp}

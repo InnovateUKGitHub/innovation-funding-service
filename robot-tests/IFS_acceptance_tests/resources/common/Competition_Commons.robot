@@ -16,7 +16,7 @@ The competition admin creates competition
     Run Keyword If  '${fundingType}' == 'PROCUREMENT' and "${fundingRule}" != "SUBSIDY_CONTROL"  the user selects procurement Terms and Conditions
     ...  ELSE  the user selects the Terms and Conditions    ${compType}  ${fundingRule}
     the user fills in the CS Funding Information
-    the user completes project impact section               no
+    the user completes project impact section               No
     the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 50%
     the user fills in the CS funding eligibility            ${researchCategory}  ${compType}   ${fundingRule}
     the user selects the organisational eligibility to no   false
@@ -835,7 +835,7 @@ the user inputs application expression of interest
 the user completes project impact section
     [Arguments]  ${projectImpact}
     the user clicks the button/link     link = Project impact
-    the user clicks the button twice    css = label[for="comp-projectImpactSurveyApplicable-${projectImpact}"]
+    the user clicks the button twice    css = label:contains("${projectImpact}")
     the user clicks the button/link     jQuery = button:contains("Done")
     the user should see the element     jQuery = dt:contains("Does this competition have a project impact survey?")+dd:contains("${projectImpact}")
     the user clicks the button/link     link = Back to competition details

@@ -279,7 +279,7 @@ Requesting project ID of this project
 comp admin creates ofgem competition
     the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}    100   false   single-or-collaborative
     the user fills in the CS funding eligibility            false   Ofgem   STATE_AID
-    the user completes project impact section               no
+    the user completes project impact section               No
     the user selects the organisational eligibility to no   false
     the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}  No
     the user marks the Application as done                  no   Ofgem   ${thirdPartyOfgemCompetitionName}
