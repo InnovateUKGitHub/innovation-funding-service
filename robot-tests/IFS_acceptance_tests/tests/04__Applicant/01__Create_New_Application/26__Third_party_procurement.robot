@@ -186,6 +186,7 @@ requesting application ID of this application
 comp admin creates procurement competition
     the user fills in the CS Project eligibility              ${BUSINESS_TYPE_ID}    100   false   single-or-collaborative
     the user fills in the CS funding eligibility              false   Programme   NOT_AID
+    the user completes project impact section                 no
     the user selects the organisational eligibility to no     false
     the user fills in the CS Milestones                       RELEASE_FEEDBACK   ${month}   ${nextyear}  No
     the user marks the procurement application as done        no   Programme

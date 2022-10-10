@@ -426,6 +426,7 @@ the competition admin creates open ended competition
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingRule}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user selects the Terms and Conditions               ${compType}  ${fundingRule}
     the user fills in the CS Funding Information
+    the user completes project impact section               no
     the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user fills in the CS funding eligibility            ${researchCategory}  ${compType}   ${fundingRule}
     the user selects the organisational eligibility to no   false
