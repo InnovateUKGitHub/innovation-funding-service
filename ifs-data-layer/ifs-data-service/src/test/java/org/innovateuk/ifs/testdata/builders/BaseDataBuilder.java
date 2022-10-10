@@ -30,6 +30,7 @@ import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigR
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupFinanceService;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
+import org.innovateuk.ifs.file.service.FileEntryService;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -212,6 +213,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected QuestionRepository questionRepository;
     protected FormInputRepository formInputRepository;
     protected FileEntryRepository fileEntryRepository;
+    protected FileEntryService fileEntryService;
     protected ProjectDocumentRepository projectDocumentRepository;
     protected DocumentsService documentsService;
     protected ProjectRepository projectRepository;
@@ -343,6 +345,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         questionSetupAddAndRemoveService = serviceLocator.getBean(QuestionSetupAddAndRemoveService.class);
         formInputRepository = serviceLocator.getBean(FormInputRepository.class);
         fileEntryRepository = serviceLocator.getBean(FileEntryRepository.class);
+        fileEntryService = serviceLocator.getBean(FileEntryService.class);
         documentsService = serviceLocator.getBean(DocumentsService.class);
         projectDocumentRepository = serviceLocator.getBean(ProjectDocumentRepository.class);
         projectRepository = serviceLocator.getBean(ProjectRepository.class);

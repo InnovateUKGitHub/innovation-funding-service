@@ -1,26 +1,36 @@
 package org.innovateuk.ifs.application.review.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceResponseResource;
 import org.innovateuk.ifs.application.resource.ApplicationExpressionOfInterestConfigResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.review.populator.TrackViewModelPopulator;
 import org.innovateuk.ifs.application.review.viewmodel.TrackViewModel;
+import org.innovateuk.ifs.application.service.ApplicationEoiEvidenceResponseRestService;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationExpressionOfInterestConfigResourceBuilder.newApplicationExpressionOfInterestConfigResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -29,8 +39,8 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
 import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.*;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -48,6 +58,14 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
     private CookieFlashMessageFilter cookieFlashMessageFilter;
     @Mock
     private UserService userService;
+    @Mock
+    private TrackViewModelPopulator trackViewModelPopulator;
+    @Mock
+    private ProcessRoleRestService processRoleRestService;
+    @Mock
+    private ApplicationEoiEvidenceResponseRestService applicationEoiEvidenceResponseRestService;
+
+    private static final String EARLY_METRICS_URL = "www.early-metrics.com" ;
 
     @Override
     protected ReviewAndSubmitController supplyControllerUnderTest() {
@@ -109,17 +127,18 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
                 .withCompetitionStatus(CompetitionStatus.OPEN)
                 .build();
 
+        TrackViewModel model = new TrackViewModel(competition, application,  EARLY_METRICS_URL, application.getCompletion(), false);
+
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(userService.isLeadApplicant(loggedInUser.getId(), application)).thenReturn(true);
-
+        when(trackViewModelPopulator.populate(application.getId(), false, loggedInUser)).thenReturn(model);
         when(applicationRestService.applicationHasAssessment(application.getId()))
                 .thenReturn(restSuccess(true));
 
-        MvcResult mvcResult = mockMvc.perform(get("/application/" + application.getId() + "/track"))
+        mockMvc.perform(get("/application/" + application.getId() + "/track"))
                 .andExpect(view().name("always-open-track"))
                 .andReturn();
-        TrackViewModel model = (TrackViewModel) mvcResult.getModelAndView().getModel().get("model");
         assertFalse(model.isReopenLinkVisible());
     }
 
@@ -134,14 +153,16 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
                 .withCompetition(competition.getId())
                 .build();
 
+        TrackViewModel model = new TrackViewModel(competition, application,  EARLY_METRICS_URL, application.getCompletion(), false);
+
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(userService.isLeadApplicant(loggedInUser.getId(), application)).thenReturn(true);
+        when(trackViewModelPopulator.populate(application.getId(), false, loggedInUser)).thenReturn(model);
 
-        MvcResult mvcResult = mockMvc.perform(get("/application/" + application.getId() + "/track"))
+        mockMvc.perform(get("/application/" + application.getId() + "/track"))
                 .andExpect(view().name("always-open-track"))
                 .andReturn();
-        TrackViewModel model = (TrackViewModel) mvcResult.getModelAndView().getModel().get("model");
         assertFalse(model.isReopenLinkVisible());
     }
 
@@ -158,14 +179,16 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
                 .withCompetition(competition.getId())
                 .build();
 
+        TrackViewModel model = new TrackViewModel(competition, application,  EARLY_METRICS_URL, application.getCompletion(), false);
+
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(userService.isLeadApplicant(loggedInUser.getId(), application)).thenReturn(true);
+        when(trackViewModelPopulator.populate(application.getId(), false, loggedInUser)).thenReturn(model);
 
-        MvcResult mvcResult = mockMvc.perform(get("/application/" + application.getId() + "/track"))
+        mockMvc.perform(get("/application/" + application.getId() + "/track"))
                 .andExpect(view().name("horizon-europe-guarantee-application-track"))
                 .andReturn();
-        TrackViewModel model = (TrackViewModel) mvcResult.getModelAndView().getModel().get("model");
         assertFalse(model.isReopenLinkVisible());
     }
 
@@ -187,15 +210,17 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
                 .withCompetitionStatus(CompetitionStatus.OPEN)
                 .withCompetition(competition.getId())
                 .build();
+        TrackViewModel model = new TrackViewModel(competition, application,  EARLY_METRICS_URL, application.getCompletion(), false);
 
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(userService.isLeadApplicant(loggedInUser.getId(), application)).thenReturn(true);
+        when(trackViewModelPopulator.populate(application.getId(), false, loggedInUser)).thenReturn(model);
 
-        MvcResult mvcResult = mockMvc.perform(get("/application/" + application.getId() + "/track"))
+         mockMvc.perform(get("/application/" + application.getId() + "/track"))
                 .andExpect(view().name("horizon-europe-guarantee-eoi-application-track"))
                 .andReturn();
-        TrackViewModel model = (TrackViewModel) mvcResult.getModelAndView().getModel().get("model");
+
         assertFalse(model.isReopenLinkVisible());
     }
 
@@ -211,15 +236,17 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
                 .withCompetitionStatus(CompetitionStatus.OPEN)
                 .withCompetition(competition.getId())
                 .build();
+        TrackViewModel model = new TrackViewModel(competition, application,  EARLY_METRICS_URL, application.getCompletion(), true);
 
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(userService.isLeadApplicant(loggedInUser.getId(), application)).thenReturn(true);
+        when(trackViewModelPopulator.populate(application.getId(), true, loggedInUser)).thenReturn(model);
 
-        MvcResult mvcResult = mockMvc.perform(get("/application/" + application.getId() + "/track"))
+        mockMvc.perform(get("/application/" + application.getId() + "/track"))
                 .andExpect(view().name("third-party-ofgem-application-track"))
                 .andReturn();
-        TrackViewModel model = (TrackViewModel) mvcResult.getModelAndView().getModel().get("model");
+
         assertTrue(model.isReopenLinkVisible());
     }
 
@@ -277,11 +304,19 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
 
     @Test
     public void notSubmittedApplicationTrack() throws Exception {
+
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.KTP)
+                .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
+                .build();
+
         ApplicationResource application = newApplicationResource()
                 .withApplicationState(ApplicationState.OPENED)
+                .withCompetition(competition.getId())
                 .build();
-        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
 
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
 
         mockMvc.perform(get("/application/" + application.getId() + "/track"))
                 .andExpect(status().is3xxRedirection())
@@ -299,14 +334,15 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
                 .withApplicationState(SUBMITTED)
                 .withCompetition(competition.getId())
                 .build();
+        TrackViewModel model = new TrackViewModel(competition, application,  EARLY_METRICS_URL, application.getCompletion(), true);
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(trackViewModelPopulator.populate(application.getId(), true, loggedInUser)).thenReturn(model);
 
-        MvcResult result = mockMvc.perform(get("/application/" + application.getId() + "/track"))
+        mockMvc.perform(get("/application/" + application.getId() + "/track"))
                 .andExpect(view().name("application-track"))
+                .andExpect(status().isOk())
                 .andReturn();
-
-        TrackViewModel model = (TrackViewModel) result.getModelAndView().getModel().get("model");
 
         assertFalse(model.isDisplayIfsAssessmentInformation());
     }
@@ -322,16 +358,129 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
                 .withApplicationState(SUBMITTED)
                 .withCompetition(competition.getId())
                 .build();
+        TrackViewModel model = new TrackViewModel(competition, application,  EARLY_METRICS_URL, application.getCompletion(), false);
+
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(trackViewModelPopulator.populate(application.getId(), true, loggedInUser)).thenReturn(model);
 
-        MvcResult result = mockMvc.perform(get("/application/" + application.getId() + "/track"))
+        mockMvc.perform(get("/application/" + application.getId() + "/track"))
                 .andExpect(view().name("application-track"))
                 .andReturn();
 
-        TrackViewModel model = (TrackViewModel) result.getModelAndView().getModel().get("model");
-
         assertFalse(model.isDisplayIfsAssessmentInformation());
     }
+
+    @Test
+    public void removeEoiEvidenceResponse() throws Exception {
+        long competitionId = 1L;
+        long applicationId = 2L;
+        long organisationId = 8L;
+        long fileId = 101L;
+
+        ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = ApplicationEoiEvidenceResponseResource.builder()
+                .id(3L)
+                .applicationId(applicationId)
+                .organisationId(organisationId)
+                .fileEntryId(fileId)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withId(applicationId)
+                .withApplicationState(SUBMITTED)
+                .withCompetition(competitionId)
+                .withLeadOrganisationId(organisationId)
+                .withApplicationEoiEvidenceResponseResource(applicationEoiEvidenceResponseResource)
+                .build();
+
+        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
+        when(applicationEoiEvidenceResponseRestService.remove(applicationEoiEvidenceResponseResource, loggedInUser)).thenReturn(restSuccess(applicationEoiEvidenceResponseResource));
+
+        mockMvc.perform(post("/application/" + applicationId + "/track")
+                        .param("remove-eoi-evidence", String.valueOf(fileId)))
+                .andExpect(redirectedUrl("/application/" + applicationId + "/track"));
+    }
+
+    @Test
+    public void submitEoiEvidenceResponse() throws Exception {
+        long competitionId = 1L;
+        long applicationId = 2L;
+        long organisationId = 8L;
+        long fileId = 101L;
+
+        ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = ApplicationEoiEvidenceResponseResource.builder()
+                .id(3L)
+                .applicationId(applicationId)
+                .organisationId(organisationId)
+                .fileEntryId(fileId)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withId(applicationId)
+                .withApplicationState(SUBMITTED)
+                .withCompetition(competitionId)
+                .withLeadOrganisationId(organisationId)
+                .withApplicationEoiEvidenceResponseResource(applicationEoiEvidenceResponseResource)
+                .build();
+
+        when(applicationEoiEvidenceResponseRestService.findOneByApplicationId(applicationId)).thenReturn(restSuccess(Optional.of(applicationEoiEvidenceResponseResource)));
+        when(applicationEoiEvidenceResponseRestService.submitEoiEvidence(applicationEoiEvidenceResponseResource, loggedInUser)).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/application/" + applicationId + "/track")
+                        .param("submit-eoi-evidence", String.valueOf(fileId)))
+                .andExpect(redirectedUrl("/application/" + applicationId + "/track"));
+    }
+
+    @Test
+    public void downloadEOIEvidenceFile() throws Exception {
+        long competitionId = 1L;
+        long applicationId = 2L;
+        long organisationId = 8L;
+        long fileId = 101L;
+        MultipartFile file = new MockMultipartFile("Evidence", "Evidence response".getBytes());
+        ByteArrayResource byteArrayResource = new ByteArrayResource(file.getBytes());
+        FileEntryResource fileEntryResource = newFileEntryResource().withId(fileId).build();
+
+        ApplicationEoiEvidenceResponseResource applicationEoiEvidenceResponseResource = ApplicationEoiEvidenceResponseResource.builder()
+                .id(3L)
+                .applicationId(applicationId)
+                .organisationId(organisationId)
+                .fileEntryId(fileId)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withId(applicationId)
+                .withApplicationState(SUBMITTED)
+                .withCompetition(competitionId)
+                .withLeadOrganisationId(organisationId)
+                .withApplicationEoiEvidenceResponseResource(applicationEoiEvidenceResponseResource)
+                .build();
+
+        when(applicationEoiEvidenceResponseRestService.getEvidenceByApplication(applicationId)).thenReturn(restSuccess(byteArrayResource));
+        when(applicationEoiEvidenceResponseRestService.getEvidenceDetailsByApplication(applicationId)).thenReturn(restSuccess(fileEntryResource));
+
+        MvcResult result = mockMvc.perform(get("/application/" + applicationId + "/view-eoi-evidence"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        assertEquals("Evidence response", response.getContentAsString());
+        assertEquals(200, response.getStatus());
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

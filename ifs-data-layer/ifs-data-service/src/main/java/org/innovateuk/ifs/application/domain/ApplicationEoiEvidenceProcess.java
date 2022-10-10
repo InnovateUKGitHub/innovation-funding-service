@@ -3,8 +3,6 @@ package org.innovateuk.ifs.application.domain;
 import lombok.*;
 import org.innovateuk.ifs.application.repository.ApplicationEoiEvidenceStateConverter;
 import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceState;
-import org.innovateuk.ifs.application.repository.ApplicationStateConverter;
-import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.workflow.domain.Process;
 
@@ -14,6 +12,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@Builder
 @EqualsAndHashCode(callSuper = true)
 public class ApplicationEoiEvidenceProcess extends Process<ProcessRole, ApplicationEoiEvidenceResponse, ApplicationEoiEvidenceState> {
 

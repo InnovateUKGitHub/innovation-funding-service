@@ -13,14 +13,17 @@ import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingrules.SubsidyControlTemplate;
-import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.GrantTemplate;
-import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.KtpTemplate;
-import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.LoanTemplate;
-import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.ProcurementTemplate;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.*;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.template.HorizonEuropeGuaranteeTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.template.ProgrammeTemplate;
 import org.innovateuk.ifs.competitionsetup.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
+import org.innovateuk.ifs.horizon.domain.CompetitionHorizonWorkProgramme;
+import org.innovateuk.ifs.horizon.domain.HorizonWorkProgramme;
+import org.innovateuk.ifs.horizon.mapper.CompetitionHorizonWorkProgrammeMapper;
+import org.innovateuk.ifs.horizon.repository.CompetitionHorizonWorkProgrammeRepository;
+import org.innovateuk.ifs.horizon.transactional.HorizonWorkProgrammeService;
 import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,8 +37,10 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
+import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.HORIZON_EUROPE_GUARANTEE;
 import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.PROGRAMME;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder.aSection;
+import static org.innovateuk.ifs.horizon.builder.HorizonWorkProgrammeBuilder.newHorizonWorkProgramme;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -69,6 +74,9 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
     private ProgrammeTemplate programmeTemplate;
 
     @Mock
+    private HorizonEuropeGuaranteeTemplate horizonEuropeGuaranteeTemplate;
+
+    @Mock
     private LoanTemplate loanTemplate;
 
     @Mock
@@ -81,22 +89,36 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
     private ProcurementTemplate procurementTemplate;
 
     @Mock
+    private HecpTemplate hecpTemplate;
+
+    @Mock
     private SubsidyControlTemplate subsidyControlTemplate;
     @Mock
     private QuestionPriorityOrderService questionPriorityOrderService;
 
     private ArgumentCaptor<Competition> competitionArgumentCaptor;
 
+    @Mock
+    private HorizonWorkProgrammeService horizonWorkProgrammeService;
+
+    @Mock
+    private CompetitionHorizonWorkProgrammeMapper competitionHorizonWorkProgrammeMapper;
+
+    @Mock
+    private CompetitionHorizonWorkProgrammeRepository competitionHorizonWorkProgrammeRepository;
+
     @Before
     public void setup() {
         when(programmeTemplate.type()).thenReturn(PROGRAMME);
+        when(horizonEuropeGuaranteeTemplate.type()).thenReturn(HORIZON_EUROPE_GUARANTEE);
         when(loanTemplate.type()).thenReturn(FundingType.LOAN);
         when(grantTemplate.type()).thenReturn(FundingType.GRANT);
         when(ktpTemplate.type()).thenReturn(FundingType.KTP);
         when(procurementTemplate.type()).thenReturn(FundingType.PROCUREMENT);
+        when(hecpTemplate.type()).thenReturn(FundingType.HECP);
         when(subsidyControlTemplate.type()).thenReturn(FundingRules.SUBSIDY_CONTROL);
-        service.setCompetitionTemplates(newArrayList(programmeTemplate));
-        service.setFundingTypeTemplates(newArrayList(loanTemplate, grantTemplate, ktpTemplate, procurementTemplate));
+        service.setCompetitionTemplates(newArrayList(programmeTemplate, horizonEuropeGuaranteeTemplate));
+        service.setFundingTypeTemplates(newArrayList(loanTemplate, grantTemplate, ktpTemplate, procurementTemplate, hecpTemplate));
         service.setFundingRulesTemplates(newArrayList(subsidyControlTemplate));
     }
 
@@ -291,6 +313,58 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         assertNull(toBeCreatedCompetition.getCompetitionThirdPartyConfig());
 
         verify(programmeTemplate).copyTemplatePropertiesToCompetition(competition);
+    }
+
+    @Test
+    public void initializeCompetitionByCompetitionTemplate_competitionHorizonEuropeConfig() {
+        competitionArgumentCaptor = ArgumentCaptor.forClass(Competition.class);
+
+        CompetitionType competitionType = newCompetitionType()
+                .withName(HORIZON_EUROPE_GUARANTEE.getText())
+                .withId(1L)
+                .build();
+
+        Competition competition = newCompetition()
+                .withId(3L)
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withFundingType(FundingType.HECP)
+                .withFundingRules(FundingRules.NOT_AID)
+                .build();
+
+        HorizonWorkProgramme horizonWorkProgramme = newHorizonWorkProgramme()
+                .withId(1L)
+                .withName("CL2")
+                .withEnabled(true)
+                .build();
+
+
+        CompetitionHorizonWorkProgramme competitionHorizonWorkProgramme = new CompetitionHorizonWorkProgramme();
+        competitionHorizonWorkProgramme.setCompetitionId(competition.getId());
+        competitionHorizonWorkProgramme.setWorkProgramme(horizonWorkProgramme);
+
+        when(horizonEuropeGuaranteeTemplate.sections()).thenReturn(newArrayList(aSection()));
+        when(hecpTemplate.sections(any())).thenReturn(newArrayList(aSection()));
+        when(hecpTemplate.initialiseFinanceTypes(any())).thenReturn(competition);
+        when(hecpTemplate.initialiseProjectSetupColumns(any())).thenReturn(competition);
+        when(hecpTemplate.overrideTermsAndConditions(any())).thenReturn(competition);
+        when(hecpTemplate.setGolTemplate(any())).thenReturn(competition);
+        when(competitionTypeRepository.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
+        when(assessorCountOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId()))
+                .thenReturn(Optional.empty());
+        when(horizonWorkProgrammeService.initWorkProgrammesForCompetition(competition.getId())).thenReturn(ServiceResult.serviceSuccess());
+        when(competitionHorizonWorkProgrammeMapper.mapIdAndWorkProgrammeToDomain(competition.getId(), horizonWorkProgramme)).thenReturn(competitionHorizonWorkProgramme);
+
+        ServiceResult<Competition> result = service.initializeCompetitionByCompetitionTemplate(competition.getId(), competitionType.getId());
+
+        assertTrue(result.isSuccess());
+
+        verify(competitionRepository).save(competitionArgumentCaptor.capture());
+
+        Competition toBeCreatedCompetition = competitionArgumentCaptor.getValue();
+        assertNotNull(toBeCreatedCompetition);
+
+        verify(horizonEuropeGuaranteeTemplate).copyTemplatePropertiesToCompetition(competition);
     }
 
     @Test

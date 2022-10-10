@@ -1,11 +1,13 @@
 package org.innovateuk.ifs.application.readonly.viewmodel;
 
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
+import org.innovateuk.ifs.application.resource.EoiEvidenceReadOnlyViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public class ApplicationReadOnlyViewModel {
@@ -22,6 +24,7 @@ public class ApplicationReadOnlyViewModel {
     private final boolean isLoanPartBEnabled;
     private final boolean isExpressionOfInterestApplication;
     private boolean eoiFullApplication;
+    private Optional<EoiEvidenceReadOnlyViewModel> optionalEoiEvidenceReadOnlyViewModel;
 
     public ApplicationReadOnlyViewModel(ApplicationReadOnlySettings settings,
                                         Set<ApplicationSectionReadOnlyViewModel> sections,
@@ -34,7 +37,8 @@ public class ApplicationReadOnlyViewModel {
                                         CompetitionThirdPartyConfigResource thirdPartyConfig,
                                         boolean isLoanPartBEnabled,
                                         boolean isExpressionOfInterestApplication,
-                                        boolean eoiFullApplication) {
+                                        boolean eoiFullApplication,
+                                        Optional<EoiEvidenceReadOnlyViewModel> optionalEoiEvidenceReadOnlyViewModel) {
         this.settings = settings;
         this.sections = sections;
         this.applicationScore = applicationScore;
@@ -47,6 +51,7 @@ public class ApplicationReadOnlyViewModel {
         this.isLoanPartBEnabled = isLoanPartBEnabled;
         this.isExpressionOfInterestApplication = isExpressionOfInterestApplication;
         this.eoiFullApplication = eoiFullApplication;
+        this.optionalEoiEvidenceReadOnlyViewModel = optionalEoiEvidenceReadOnlyViewModel;
     }
 
     public List<String> getOverallFeedbacks() {
@@ -113,5 +118,9 @@ public class ApplicationReadOnlyViewModel {
 
     public boolean isEoiFullApplication() {
         return eoiFullApplication;
+    }
+
+    public EoiEvidenceReadOnlyViewModel getEoiEvidenceReadOnlyViewModel() {
+        return optionalEoiEvidenceReadOnlyViewModel.isPresent() ? optionalEoiEvidenceReadOnlyViewModel.get() : null;
     }
 }

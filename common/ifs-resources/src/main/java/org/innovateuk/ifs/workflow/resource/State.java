@@ -25,5 +25,6 @@ public enum State {
     HANDLED_OFFLINE,
     COMPLETED_OFFLINE,
     ON_HOLD,
-    NOT_SUBMITTED
+    NOT_SUBMITTED,
+    REMOVED
 }

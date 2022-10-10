@@ -70,6 +70,7 @@ Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     Given the user should see the element               jQuery = div:contains("Milestones") ~ .task-status-complete
     When the user clicks the button/link                link = Milestones
     And the user clicks the button/link                 jQuery = a:contains("Next")
+    And the user clicks the button/link                 jQuery = span:contains("Application expression of interest")
     And the user clicks the button/link                 jQuery = span:contains("Milestones")
     Then the user should see the element                jQuery = button:contains("Edit")
     And the user should see the dates in full format
