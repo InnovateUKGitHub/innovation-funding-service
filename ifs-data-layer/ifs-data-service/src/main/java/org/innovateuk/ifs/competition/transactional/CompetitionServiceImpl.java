@@ -326,13 +326,13 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                 competition.getSections().stream()
                         .filter(section -> SectionType.TERMS_AND_CONDITIONS.equals(section.getType()))
                         .findFirst()
-                        .ifPresentOrElse(section -> tAndCPriority.set(section.getPriority() - 1), // under assumption, T&C section would always be present
+                        .ifPresentOrElse(section -> tAndCPriority.set(section.getPriority()), // under assumption, T&C section would always be present
                                 () -> {
                                     throw new IllegalStateException(String.format("Cannot continue, section: %s is missing", SectionType.TERMS_AND_CONDITIONS));
                                 });
 
                 Section supportingInformation = CommonBuilders.supportingInformation().build();
-                supportingInformation.setPriority(tAndCPriority.get());
+                supportingInformation.setPriority(tAndCPriority.get()-1);
                 supportingInformation.setCompetition(competition);
 
                 Section savedSupportingInformation = sectionRepository.save(supportingInformation);
