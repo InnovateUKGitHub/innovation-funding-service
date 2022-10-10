@@ -20,7 +20,7 @@ public final class SectionBuilder {
     private boolean displayInAssessmentApplicationSummary = false;
     private SectionType type = SectionType.GENERAL;
     private boolean preRegistration = true;
-    private int priority;
+
     private SectionBuilder() {
     }
 
@@ -78,11 +78,6 @@ public final class SectionBuilder {
         return this;
     }
 
-    public SectionBuilder withPriority(int priority) {
-        this.priority = priority;
-        return this;
-    }
-
     public SectionBuilder withPreRegistration(boolean preRegistration) {
         this.preRegistration = preRegistration;
         return this;
@@ -123,7 +118,6 @@ public final class SectionBuilder {
         section.setChildSections(childSections.stream().map(SectionBuilder::build).collect(Collectors.toList()));
         section.setDisplayInAssessmentApplicationSummary(displayInAssessmentApplicationSummary);
         section.setType(type);
-        section.setPriority(priority);
         section.setEnabledForPreRegistration(preRegistration);
         return section;
     }
@@ -139,7 +133,6 @@ public final class SectionBuilder {
         section.setChildSections(childSections.stream().map(SectionBuilder::buildWithoutEDI).collect(Collectors.toList()));
         section.setDisplayInAssessmentApplicationSummary(displayInAssessmentApplicationSummary);
         section.setType(type);
-        section.setPriority(priority);
         section.setEnabledForPreRegistration(preRegistration);
         return section;
     }
