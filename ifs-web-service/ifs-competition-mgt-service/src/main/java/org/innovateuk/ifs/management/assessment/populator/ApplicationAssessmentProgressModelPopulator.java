@@ -14,6 +14,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessment.viewmodel.*;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
+import org.innovateuk.ifs.user.resource.Authority;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -43,7 +45,7 @@ public class ApplicationAssessmentProgressModelPopulator {
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    public ApplicationAssessmentProgressViewModel populateModel(Long applicationId, long assessmentPeriodId, String assessorNameFilter, int page, Sort sort) {
+    public ApplicationAssessmentProgressViewModel populateModel(Long applicationId, long assessmentPeriodId, String assessorNameFilter, int page, Sort sort, UserResource loggedInUser) {
         ApplicationAssessmentSummaryResource applicationAssessmentSummary = applicationAssessmentSummaryRestService
                 .getApplicationAssessmentSummary(applicationId).getSuccess();
 
@@ -71,7 +73,9 @@ public class ApplicationAssessmentProgressModelPopulator {
                 assessorNameFilter,
                 sort,
                 new PaginationViewModel(availableAssessors),
-                availableAssessors.getTotalElements() > SELECTION_LIMIT);
+                availableAssessors.getTotalElements() > SELECTION_LIMIT,
+                loggedInUser.hasAuthority(Authority.SUPER_ADMIN_USER),
+                applicationAssessmentSummary.isAssessmentClosed());
     }
 
     private List<InnovationSectorResource> getInnovationSectors() {

@@ -11,7 +11,9 @@ import org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType;
 import org.innovateuk.ifs.management.assessment.form.AvailableAssessorForm;
 import org.innovateuk.ifs.management.assessment.populator.ApplicationAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.assessment.viewmodel.ApplicationAssessmentProgressRemoveViewModel;
+import org.innovateuk.ifs.management.assessment.viewmodel.ApplicationAssessmentProgressUnsubmitViewModel;
 import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -66,9 +68,10 @@ public class AssessmentApplicationProgressController extends CompetitionManageme
                                       @RequestParam(value = "assessorNameFilter", defaultValue = "") String filter,
                                       @RequestParam(value = "sort", defaultValue = "ASSESSOR") Sort sort,
                                       HttpServletRequest request,
-                                      HttpServletResponse response) {
+                                      HttpServletResponse response,
+                                      UserResource loggedInUser) {
         updateSelectionForm(request, response, competitionId, applicationId, selectionForm, filter);
-        return doProgressView(model, applicationId, assessmentPeriodId, filter, page - 1, sort);
+        return doProgressView(model, applicationId, assessmentPeriodId, filter, page - 1, sort, loggedInUser);
     }
 
     @PostMapping
@@ -115,8 +118,35 @@ public class AssessmentApplicationProgressController extends CompetitionManageme
         return "competition/application-progress-remove-confirm";
     }
 
-    private String doProgressView(Model model, Long applicationId, long assessmentPeriodId, String assessorNameFilter, int page, Sort sort) {
-        model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, assessmentPeriodId, assessorNameFilter, page, sort));
+    @PostMapping("/unsubmit/{assessmentId}")
+    public String unsubmitAssessment(@PathVariable("competitionId") Long competitionId,
+                                     @PathVariable("applicationId") Long applicationId,
+                                     @PathVariable("assessmentId") Long assessmentId,
+                                     @PathVariable long assessmentPeriodId) {
+        assessmentRestService.unsubmitAssessment(assessmentId).getSuccess();
+        return redirectToProgress(competitionId, applicationId, assessmentPeriodId);
+    }
+
+    @GetMapping(value = "/unsubmit/{assessmentId}/confirm")
+    public String unsubmitAssessmentConfirm(
+            Model model,
+            @PathVariable("competitionId") Long competitionId,
+            @PathVariable("applicationId") Long applicationId,
+            @PathVariable("assessmentId") Long assessmentId,
+            @PathVariable long assessmentPeriodId,
+            @RequestParam(value = "sortField", defaultValue = "TITLE") String sortField) {
+        model.addAttribute("model", new ApplicationAssessmentProgressUnsubmitViewModel(
+                competitionId,
+                applicationId,
+                assessmentId,
+                assessmentPeriodId,
+                AvailableAssessorsSortFieldType.valueOf(sortField)
+        ));
+        return "competition/application-progress-unsubmit-confirm";
+    }
+
+    private String doProgressView(Model model, Long applicationId, long assessmentPeriodId, String assessorNameFilter, int page, Sort sort, UserResource loggedInUser) {
+        model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, assessmentPeriodId, assessorNameFilter, page, sort, loggedInUser));
 
         return "competition/application-progress";
     }

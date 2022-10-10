@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface CompetitionEoiEvidenceConfigRepository extends CrudRepository<CompetitionEoiEvidenceConfig, Long>  {
 
+    Optional<CompetitionEoiEvidenceConfig> findOneByCompetitionId(long competitionId);
 }

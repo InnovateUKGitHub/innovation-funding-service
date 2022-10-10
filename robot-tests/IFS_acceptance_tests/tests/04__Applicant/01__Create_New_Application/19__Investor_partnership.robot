@@ -66,9 +66,9 @@ T&c's can be confirmed
 Applicant is able to see correct T&C's
     [Documentation]  IFS-7213
     Given Log in as a different user         ${peter_styles_email}  ${short_password}
-    when the user clicks the button/link     link = Investor partnership
+    When the user clicks the button/link     link = Investor partnership
     And the user clicks the button/link      link = ${tandcLink}
-    Then the user should see the element     jQuery = h2:contains("Terms and conditions of an Innovate UK investor partnerships competition")
+    Then the user should see the element     jQuery = h1:contains("Terms and conditions for Investor Partners")
 
 Applicant can confirm t&c's
     [Documentation]  IFS-7235

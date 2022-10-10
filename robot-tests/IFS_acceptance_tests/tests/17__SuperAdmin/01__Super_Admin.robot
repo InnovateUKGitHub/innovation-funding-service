@@ -32,9 +32,9 @@ Super admin can unsubmit assessment of an application already submitted
     And the user clicks the button/link         link = Manage assessors
     When internal user filters the assessor
     And the user clicks the button/link         link = View progress
-    And the user clicks the button/link         jQuery = td:contains("${assessmentResetApplicationName}") ~ td:contains("Unsubmit")
+    And The user should see the element         jQuery = td:contains("${assessmentResetApplicationName}") ~ td:contains("Unsubmit")
+    And the user clicks the button/link         link = Unsubmit
     And the user clicks the button/link         jQuery = button:contains("Unsubmit assessment")
-    Then the user should see the element        jQuery = td:contains("${assessmentResetApplicationName}") ~ td:nth-child(8):contains("-") ~ td:contains("Remove")
 
 Assessor can resubmit the assessment
     [Documentation]  IFS-9604

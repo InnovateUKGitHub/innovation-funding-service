@@ -47,7 +47,20 @@ public class ApplicationEoiEvidenceWorkflowHandlerIntegrationTest extends BaseWo
 
     @Test
     public void documentUploaded() {
-        assertStateChangeOnWorkflowHandlerCall(ApplicationEoiEvidenceState.CREATED, ApplicationEoiEvidenceState.NOT_SUBMITTED, applicationEoiEvidenceWorkflowHandler::documentUploaded);
+        assertStateChangeOnWorkflowHandlerCall(ApplicationEoiEvidenceState.CREATED, ApplicationEoiEvidenceState.NOT_SUBMITTED,
+                applicationEoiEvidenceResponse -> applicationEoiEvidenceWorkflowHandler.documentUploaded(applicationEoiEvidenceResponse, createProcessRole(), createUser()));
+    }
+
+    @Test
+    public void documentRemoved() {
+        assertStateChangeOnWorkflowHandlerCall(ApplicationEoiEvidenceState.NOT_SUBMITTED, ApplicationEoiEvidenceState.REMOVED,
+                applicationEoiEvidenceResponse -> applicationEoiEvidenceWorkflowHandler.documentRemoved(applicationEoiEvidenceResponse, createProcessRole(), createUser()));
+    }
+
+    @Test
+    public void documentReUploaded() {
+        assertStateChangeOnWorkflowHandlerCall(ApplicationEoiEvidenceState.REMOVED, ApplicationEoiEvidenceState.NOT_SUBMITTED,
+                applicationEoiEvidenceResponse -> applicationEoiEvidenceWorkflowHandler.documentUploaded(applicationEoiEvidenceResponse, createProcessRole(), createUser()));
     }
 
     private ProcessRole createProcessRole() {

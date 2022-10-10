@@ -14,6 +14,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -26,6 +27,7 @@ import org.mockito.Mock;
 
 import java.util.*;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -36,6 +38,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newC
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -467,4 +470,161 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         assertTrue(rules.isLeadOrganisationMemberCanSendApplicationSubmittedNotification(applicationResource1, leadOnApplication1));
         assertFalse(rules.isLeadOrganisationMemberCanSendApplicationSubmittedNotification(applicationResource1, user2));
     }
+
+    @Test
+    public void stakeholderCanReadEoiEvidenceResponseForApplication() {
+        long competitionId = 43L;
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competitionId)
+                .build();
+        UserResource user = stakeholderUser();
+        UserResource systemRegistrationUser = systemRegistrationUser();
+
+        when(stakeholderRepository.existsByCompetitionIdAndUserId(competitionId, user.getId())).thenReturn(true);
+        assertTrue(rules.stakeholderCanReadEoiEvidenceResponseForApplication(application, user));
+
+        when(stakeholderRepository.existsByCompetitionIdAndUserId(competitionId, systemRegistrationUser.getId())).thenReturn(false);
+        assertFalse(rules.stakeholderCanReadEoiEvidenceResponseForApplication(application, systemRegistrationUser));
+    }
+
+    @Test
+    public void auditorCanReadEoiEvidenceResponseForApplication() {
+        long competitionId = 43L;
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competitionId)
+                .build();
+        UserResource user = auditorUser();
+        UserResource systemRegistrationUser = systemRegistrationUser();
+
+        assertTrue(rules.auditorCanReadEoiEvidenceResponseForApplication(application, user));
+        assertFalse(rules.auditorCanReadEoiEvidenceResponseForApplication(application, systemRegistrationUser));
+    }
+
+    @Test
+    public void internalUsersCanReadEoiEvidenceResponseForApplication() {
+        allGlobalRoleUsers.forEach(user -> {
+            if (allInternalUsers.contains(user)) {
+                assertTrue(rules.internalUsersCanReadEoiEvidenceResponseForApplication(newApplicationResource().build(), user));
+            } else {
+                assertFalse(rules.internalUsersCanReadEoiEvidenceResponseForApplication(newApplicationResource().build(), user));
+            }
+        });
+    }
+
+    @Test
+    public void leadOrganisationMembersCanReadEoiEvidenceResponseForApplication() {
+        long applicationId = 43L;
+        long organisationId = 151112L;
+        long userId = 91017L;
+
+        ApplicationResource applicationResource = newApplicationResource()
+                .withId(applicationId)
+                .withLeadOrganisationId(organisationId)
+                .build();
+        User user = newUser()
+                .withId(userId)
+                .withRoles(new HashSet<>(asList(Role.APPLICANT)))
+                .build();
+        Organisation organisation = newOrganisation()
+                .withId(organisationId)
+                .build();
+        ProcessRole leadProcessRole = newProcessRole()
+                .withOrganisation(organisation)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
+                .withUser(user)
+                .build();
+
+        UserResource leadApplicant = newUserResource()
+                .withId(userId)
+                .withRoleGlobal(APPLICANT)
+                .build();
+
+        when(processRoleRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId))
+                .thenReturn(Collections.singletonList(leadProcessRole));
+        assertTrue(rules.leadOrganisationMembersCanReadEoiEvidenceResponseForApplication(applicationResource, leadApplicant));
+
+        when(processRoleRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId)).thenReturn(Collections.emptyList());
+        assertFalse(rules.leadOrganisationMembersCanReadEoiEvidenceResponseForApplication(applicationResource, leadApplicant));
+    }
+
+    @Test
+    public void stakeholderCanDownloadEoiEvidenceFileForApplication() {
+        long competitionId = 43L;
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competitionId)
+                .build();
+        UserResource user = stakeholderUser();
+        UserResource systemRegistrationUser = systemRegistrationUser();
+
+        when(stakeholderRepository.existsByCompetitionIdAndUserId(competitionId, user.getId())).thenReturn(true);
+        assertTrue(rules.stakeholderCanDownloadEoiEvidenceFileForApplication(application, user));
+
+        when(stakeholderRepository.existsByCompetitionIdAndUserId(competitionId, systemRegistrationUser.getId())).thenReturn(false);
+        assertFalse(rules.stakeholderCanDownloadEoiEvidenceFileForApplication(application, systemRegistrationUser));
+    }
+
+    @Test
+    public void auditorCanDownloadEoiEvidenceFileForApplication() {
+        long competitionId = 43L;
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competitionId)
+                .build();
+        UserResource user = auditorUser();
+        UserResource systemRegistrationUser = systemRegistrationUser();
+
+        assertTrue(rules.auditorCanDownloadEoiEvidenceFileForApplication(application, user));
+        assertFalse(rules.auditorCanDownloadEoiEvidenceFileForApplication(application, systemRegistrationUser));
+    }
+
+    @Test
+    public void internalUsersCanDownloadEoiEvidenceFileForApplication() {
+        allGlobalRoleUsers.forEach(user -> {
+            if (allInternalUsers.contains(user)) {
+                assertTrue(rules.internalUsersCanDownloadEoiEvidenceFileForApplication(newApplicationResource().build(), user));
+            } else {
+                assertFalse(rules.internalUsersCanDownloadEoiEvidenceFileForApplication(newApplicationResource().build(), user));
+            }
+        });
+    }
+
+    @Test
+    public void stakeholderCanGetEoiEvidenceFileDetailsForApplication() {
+        long competitionId = 43L;
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competitionId)
+                .build();
+        UserResource user = stakeholderUser();
+        UserResource systemRegistrationUser = systemRegistrationUser();
+
+        when(stakeholderRepository.existsByCompetitionIdAndUserId(competitionId, user.getId())).thenReturn(true);
+        assertTrue(rules.stakeholderCanGetEoiEvidenceFileDetailsForApplication(application, user));
+
+        when(stakeholderRepository.existsByCompetitionIdAndUserId(competitionId, systemRegistrationUser.getId())).thenReturn(false);
+        assertFalse(rules.stakeholderCanGetEoiEvidenceFileDetailsForApplication(application, systemRegistrationUser));
+    }
+
+    @Test
+    public void auditorCanGetEoiEvidenceFileDetailsForApplication() {
+        long competitionId = 43L;
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competitionId)
+                .build();
+        UserResource user = auditorUser();
+        UserResource systemRegistrationUser = systemRegistrationUser();
+
+        assertTrue(rules.auditorCanGetEoiEvidenceFileDetailsForApplication(application, user));
+        assertFalse(rules.auditorCanGetEoiEvidenceFileDetailsForApplication(application, systemRegistrationUser));
+    }
+
+    @Test
+    public void internalUsersCanGetEoiEvidenceFileDetailsForApplication() {
+        allGlobalRoleUsers.forEach(user -> {
+            if (allInternalUsers.contains(user)) {
+                assertTrue(rules.internalUsersCanGetEoiEvidenceFileDetailsForApplication(newApplicationResource().build(), user));
+            } else {
+                assertFalse(rules.internalUsersCanGetEoiEvidenceFileDetailsForApplication(newApplicationResource().build(), user));
+            }
+        });
+    }
+
 }

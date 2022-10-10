@@ -35,6 +35,8 @@ public class ApplicationAssessmentProgressViewModel {
     private final long assessmentPeriodId;
     private final String assessmentPeriodName;
     private final boolean competitionAlwaysOpen;
+    private final boolean isSuperAdmin;
+    private final boolean isAssessmentClosed;
 
     public ApplicationAssessmentProgressViewModel(long applicationId,
                                                   String applicationName,
@@ -55,7 +57,9 @@ public class ApplicationAssessmentProgressViewModel {
                                                   String assessorNameFilter,
                                                   Sort currentSort,
                                                   PaginationViewModel pagination,
-                                                  boolean selectAllDisabled) {
+                                                  boolean selectAllDisabled,
+                                                  boolean isSuperAdmin,
+                                                  boolean isAssessmentClosed) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.applicationInnovationArea = applicationInnovationArea;
@@ -76,6 +80,8 @@ public class ApplicationAssessmentProgressViewModel {
         this.assessmentPeriodId = assessmentPeriodId;
         this.assessmentPeriodName = assessmentPeriodName;
         this.competitionAlwaysOpen = competitionAlwaysOpen;
+        this.isSuperAdmin = isSuperAdmin;
+        this.isAssessmentClosed = isAssessmentClosed;
     }
 
 
@@ -162,6 +168,14 @@ public class ApplicationAssessmentProgressViewModel {
 
     public boolean isCompetitionAlwaysOpen() {
         return competitionAlwaysOpen;
+    }
+
+    public boolean isSuperAdmin() {
+        return isSuperAdmin;
+    }
+
+    public boolean isAssessmentClosed() {
+        return isAssessmentClosed;
     }
 
     @JsonIgnore
