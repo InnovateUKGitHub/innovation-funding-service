@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.finance.viewmodel.BreakdownTableRow;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -91,6 +92,7 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
                 .withId(competitionId)
                 .withFundingType(GRANT)
                 .withFinanceRowTypes(Collections.singletonList(FinanceRowType.FINANCE))
+                .withCompetitionTypeEnum(CompetitionTypeEnum.GENERIC)
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withId(applicationId)
@@ -153,6 +155,7 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
                 .withId(competitionId)
                 .withFundingType(GRANT)
                 .withFinanceRowTypes(Collections.singletonList(FinanceRowType.FINANCE))
+                .withCompetitionTypeEnum(CompetitionTypeEnum.GENERIC)
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withId(applicationId)
