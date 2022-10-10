@@ -47,6 +47,9 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
     private ApplicationEoiEvidenceWorkflowHandler applicationEoiEvidenceWorkflowHandler;
 
     @Autowired
+    private ApplicationNotificationService applicationNotificationService;
+
+    @Autowired
     private FileService fileService;
 
     @Autowired
@@ -155,12 +158,18 @@ public class ApplicationEoiEvidenceResponseServiceImpl extends BaseTransactional
                         ProcessRole processRole = application.getLeadApplicantProcessRole();
                         User user = userMapper.mapToDomain(userResource);
                         return applicationEoiEvidenceWorkflowHandler.submit(applicationEoiEvidenceResponse, processRole, user)
-                                ? serviceSuccess()
+                                ? sendEoiEvidenceUploadNotification(applicationId)
                                 : serviceFailure(CommonFailureKeys.APPLICATION_UNABLE_TO_SUBMIT_EOI_EVIDENCE_UPLOAD);
                     } else {
                         return serviceFailure(CommonFailureKeys.APPLICATION_UNABLE_TO_FIND_UPLOADED_EOI_EVIDENCE);
                     }
                 });
+    }
+
+    private ServiceResult<Void> sendEoiEvidenceUploadNotification(Long applicationId) {
+        return applicationNotificationService.sendNotificationEoiEvidenceSubmitted(applicationId)
+                .andOnSuccess(() -> serviceSuccess())
+                .andOnFailure(() -> serviceFailure(CommonFailureKeys.APPLICATION_UNABLE_TO_SEND_EOI_EVIDENCE_UPLOADED_NOTIFICATION));
     }
 
     @Override
