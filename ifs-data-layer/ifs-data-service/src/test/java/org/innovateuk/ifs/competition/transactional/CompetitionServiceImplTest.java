@@ -16,12 +16,20 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;
 import org.innovateuk.ifs.crm.transactional.CrmService;
+import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.form.repository.QuestionRepository;
+import org.innovateuk.ifs.form.repository.SectionRepository;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.sil.SilPayloadKeyType;
+import org.innovateuk.ifs.sil.SilPayloadType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -47,6 +55,8 @@ import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newC
 import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsBuilder.newGrantTermsAndConditions;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
+import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
@@ -54,8 +64,7 @@ import static org.innovateuk.ifs.project.resource.ProjectState.*;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionServiceImpl> {
 
@@ -66,7 +75,10 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Mock
     private CompetitionRepository competitionRepository;
-
+    @Mock
+    private SectionRepository sectionRepository;
+    @Mock
+    private QuestionRepository questionRepository;
     @Mock
     private AssessmentPeriodRepository assessmentPeriodRepository;
 
@@ -453,7 +465,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Test
     public void getCompetitionOrganisationTypesById() {
-        List<OrganisationType> organisationTypes  = newOrganisationType().build(2);
+        List<OrganisationType> organisationTypes = newOrganisationType().build(2);
         List<OrganisationTypeResource> organisationTypeResources = newOrganisationTypeResource().build(2);
         Competition competition = new Competition();
         competition.setLeadApplicantTypes(organisationTypes);
@@ -579,5 +591,149 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(GrantTermsAndConditions.class,
                 termsAndConditionsId)));
+    }
+
+    @Test
+    public void updateImpactManagementForCompetitionWithEnabledSurveyAsTrue() {
+        int tAndCPriority = 3;
+
+        List<Question> questions = newQuestion()
+                .withMultipleStatuses(true)
+                .build(1);
+
+        Section financeOverviewSection = newSection()
+                .withSectionType(SectionType.OVERVIEW_FINANCES)
+                .withQuestions(questions)
+                .withPriority(1)
+                .build();
+        Section tAndCSection = newSection()
+                .withQuestions(questions)
+                .withSectionType(SectionType.TERMS_AND_CONDITIONS)
+                .withEnabledForPreRegistration(true)
+                .withPriority(tAndCPriority)
+                .build();
+
+
+        Competition competition = newCompetition()
+                .withId(competitionId)
+                .withSections(asList(financeOverviewSection, tAndCSection))
+                .build();
+
+        Section supportingInformation = CommonBuilders.supportingInformation().build();
+        supportingInformation.setPriority(tAndCPriority - 1);
+        supportingInformation.setCompetition(competition);
+
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
+        when(sectionRepository.save(supportingInformation)).thenReturn(supportingInformation);
+        when(questionRepository.save(supportingInformation.getQuestions().stream().findAny().get()))
+                .thenReturn(supportingInformation.getQuestions().stream().findFirst().get());
+
+
+        ServiceResult<Void> result = service.updateImpactManagementForCompetition(competitionId, true);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void updateIMForCompetitionWithEnabledSurveyAsFalseWithNoIMSectionConfigured() {
+        int tAndCPriority = 3;
+
+        List<Question> questions = newQuestion()
+                .withMultipleStatuses(true)
+                .build(1);
+
+        Section financeOverviewSection = newSection()
+                .withSectionType(SectionType.OVERVIEW_FINANCES)
+                .withQuestions(questions)
+                .withPriority(1)
+                .build();
+        Section tAndCSection = newSection()
+                .withQuestions(questions)
+                .withSectionType(SectionType.TERMS_AND_CONDITIONS)
+                .withEnabledForPreRegistration(true)
+                .withPriority(tAndCPriority)
+                .build();
+
+
+        Competition competition = newCompetition()
+                .withId(competitionId)
+                .withSections(asList(financeOverviewSection, tAndCSection))
+                .build();
+
+        Section supportingInformation = CommonBuilders.supportingInformation().build();
+        supportingInformation.setPriority(tAndCPriority - 1);
+        supportingInformation.setCompetition(competition);
+
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
+
+
+        ServiceResult<Void> result = service.updateImpactManagementForCompetition(competitionId, false);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void updateIMForCompetitionWithEnabledSurveyAsFalseWithIMSectionConfigured() {
+        int tAndCPriority = 3;
+
+        List<Question> questions = newQuestion()
+                .withId(100L)
+                .withMultipleStatuses(true)
+                .build(1);
+
+        Section financeOverviewSection = newSection()
+                .withSectionType(SectionType.OVERVIEW_FINANCES)
+                .withQuestions(questions)
+                .withPriority(1)
+                .build();
+        Section tAndCSection = newSection()
+                .withQuestions(questions)
+                .withSectionType(SectionType.TERMS_AND_CONDITIONS)
+                .withEnabledForPreRegistration(true)
+                .withPriority(tAndCPriority)
+                .build();
+
+        Section supportingInformation = newSection()
+                .withId(200L)
+                .withSectionType(SectionType.SUPPORTING_INFORMATION)
+                .withQuestions(questions)
+                .withPriority(1)
+                .build();
+        Competition competition = newCompetition()
+                .withId(competitionId)
+                .withSections(asList(financeOverviewSection, tAndCSection,supportingInformation))
+                .build();
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
+
+        doNothing().when(questionRepository).deleteUsingId(supportingInformation.getQuestions().stream().findAny().get().getId());
+        doNothing().when(sectionRepository).deleteUsingId(supportingInformation.getId());
+
+        ServiceResult<Void> result = service.updateImpactManagementForCompetition(competitionId, false);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void updateIMForCompetitionWithEnabledSurveyAsTrueWithoutTnCSectionConfigured() {
+
+        List<Question> questions = newQuestion()
+                .withId(100L)
+                .withMultipleStatuses(true)
+                .build(1);
+
+        Section financeOverviewSection = newSection()
+                .withSectionType(SectionType.OVERVIEW_FINANCES)
+                .withQuestions(questions)
+                .withPriority(1)
+                .build();
+
+
+        Competition competition = newCompetition()
+                .withId(competitionId)
+                .withSections(asList(financeOverviewSection))
+                .build();
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
+
+
+
+        ServiceResult<Void> result = service.updateImpactManagementForCompetition(competitionId, true);
+        assertTrue(result.isFailure());
     }
 }

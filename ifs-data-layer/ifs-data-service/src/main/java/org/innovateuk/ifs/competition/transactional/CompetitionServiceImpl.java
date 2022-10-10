@@ -34,6 +34,7 @@ import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.question.transactional.QuestionSetupCompetitionService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +42,7 @@ import java.math.BigInteger;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -51,6 +53,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_REOPEN_ASSESSMENT_PERIOD;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.resource.ProjectState.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -318,22 +321,25 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<Void> updateImpactManagementForCompetition(long competitionId, boolean projectImpactSurveyApplicable) {
         Competition competition = getCompetition(competitionId).getSuccess();
-        AtomicInteger tAndCPriority = new AtomicInteger();
+
 
         if (projectImpactSurveyApplicable) {
             boolean supportingInformationSectionPresent = competition.getSections().stream().anyMatch(section -> SectionType.SUPPORTING_INFORMATION.equals(section.getType()));
             if (!supportingInformationSectionPresent) {
-                competition.getSections().stream()
-                        .filter(section -> SectionType.TERMS_AND_CONDITIONS.equals(section.getType()))
-                        .findFirst()
-                        .ifPresentOrElse(section -> tAndCPriority.set(section.getPriority()), // under assumption, T&C section would always be present
-                                () -> {
-                                    throw new IllegalStateException(String.format("Cannot continue, section: %s is missing", SectionType.TERMS_AND_CONDITIONS));
-                                });
+
+                Optional<Section> tAndCSupportingInformation =
+                        competition.getSections().stream()
+                                .filter(section -> SectionType.TERMS_AND_CONDITIONS.equals(section.getType()))
+                                .findFirst();
 
                 Section supportingInformation = CommonBuilders.supportingInformation().build();
-                supportingInformation.setPriority(tAndCPriority.get()-1);
-                supportingInformation.setCompetition(competition);
+                if (tAndCSupportingInformation.isEmpty()) {
+                    return serviceFailure(new Error(String.format("Cannot continue, section: %s is missing", SectionType.TERMS_AND_CONDITIONS), HttpStatus.BAD_REQUEST));
+                } else {
+                    supportingInformation.setPriority(tAndCSupportingInformation.get().getPriority() - 1);
+                    supportingInformation.setCompetition(competition);
+                }
+
 
                 Section savedSupportingInformation = sectionRepository.save(supportingInformation);
                 AtomicInteger supportDocumentQuestionPriority = new AtomicInteger(0);
