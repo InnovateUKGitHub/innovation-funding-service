@@ -835,7 +835,7 @@ the user inputs application expression of interest
 the user completes project impact section
     [Arguments]  ${projectImpact}
     the user clicks the button/link     link = Project impact
-    the user clicks the button twice    css = label:contains("${projectImpact}")
+    the user clicks the button twice    jQuery = label:contains("${projectImpact}")
     the user clicks the button/link     jQuery = button:contains("Done")
     the user should see the element     jQuery = dt:contains("Does this competition have a project impact survey?")+dd:contains("${projectImpact}")
     the user clicks the button/link     link = Back to competition details
