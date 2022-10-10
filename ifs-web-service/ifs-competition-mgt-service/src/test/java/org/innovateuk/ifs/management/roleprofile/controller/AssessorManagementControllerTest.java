@@ -8,7 +8,9 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.RoleProfileStatusRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
@@ -26,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * A mock MVC test for user management controller
  */
+@RunWith(MockitoJUnitRunner.class)
 public class AssessorManagementControllerTest extends BaseControllerMockMVCTest<AssessorManagementController> {
 
     @Override

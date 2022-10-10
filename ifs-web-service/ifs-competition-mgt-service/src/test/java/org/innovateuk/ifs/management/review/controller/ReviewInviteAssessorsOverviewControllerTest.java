@@ -18,10 +18,12 @@ import org.innovateuk.ifs.review.service.ReviewInviteRestService;
 import org.innovateuk.ifs.util.CompressedCookieService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
@@ -52,6 +54,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ReviewInviteAssessorsOverviewControllerTest extends BaseControllerMockMVCTest<ReviewInviteAssessorsOverviewController> {
 
     @Spy

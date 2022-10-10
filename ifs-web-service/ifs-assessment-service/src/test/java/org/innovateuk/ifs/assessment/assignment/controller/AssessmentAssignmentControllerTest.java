@@ -106,7 +106,6 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
 
     @Before
     public void setup() {
-        super.setup();
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(newCompetitionResource().build()));
 

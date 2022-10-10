@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.forms.questions.researchcategory.populator;
 
 import com.google.common.collect.ImmutableSet;
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
@@ -19,8 +18,10 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
@@ -44,7 +45,8 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
-public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest {
+@RunWith(MockitoJUnitRunner.class)
+public class ApplicationResearchCategoryModelPopulatorTest {
 
     @InjectMocks
     private ApplicationResearchCategoryModelPopulator populator;

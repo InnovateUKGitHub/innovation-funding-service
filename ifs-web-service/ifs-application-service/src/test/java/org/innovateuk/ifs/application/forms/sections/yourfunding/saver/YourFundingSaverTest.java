@@ -11,9 +11,11 @@ import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -37,6 +39,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> {
     private static final long APPLICATION_ID = 1L;
     private static final long ORGANISATION_ID = 2L;

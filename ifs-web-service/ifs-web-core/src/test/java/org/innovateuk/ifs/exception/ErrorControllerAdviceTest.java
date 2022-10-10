@@ -1,12 +1,13 @@
 package org.innovateuk.ifs.exception;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -24,7 +25,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 
-public class ErrorControllerAdviceTest extends BaseUnitTest {
+@RunWith(MockitoJUnitRunner.class)
+public class ErrorControllerAdviceTest {
 
     @Mock
     private Environment env;
@@ -39,7 +41,6 @@ public class ErrorControllerAdviceTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        super.setup();
 
         ReflectionTestUtils.setField(errorControllerAdvice, "logoutUrl", "http://site/logout");
 

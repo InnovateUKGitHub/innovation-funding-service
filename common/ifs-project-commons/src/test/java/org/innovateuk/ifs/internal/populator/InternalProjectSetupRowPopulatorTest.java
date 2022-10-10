@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.internal.populator;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.internal.InternalProjectSetupCell;
 import org.innovateuk.ifs.internal.InternalProjectSetupRow;
@@ -9,7 +8,9 @@ import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 import java.util.Set;
@@ -24,7 +25,8 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class InternalProjectSetupRowPopulatorTest extends BaseUnitTest {
+@RunWith(MockitoJUnitRunner.class)
+public class InternalProjectSetupRowPopulatorTest {
 
     @InjectMocks
     private InternalProjectSetupRowPopulator populator;

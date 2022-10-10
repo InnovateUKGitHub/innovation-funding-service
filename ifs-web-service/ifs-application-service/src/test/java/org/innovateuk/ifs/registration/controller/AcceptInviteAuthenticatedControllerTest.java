@@ -12,8 +12,10 @@ import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.organisation.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
@@ -31,6 +33,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class AcceptInviteAuthenticatedControllerTest extends AbstractApplicationMockMVCTest<AcceptInviteAuthenticatedController> {
 
     @Mock
@@ -81,7 +84,6 @@ public class AcceptInviteAuthenticatedControllerTest extends AbstractApplication
                 newInviteOrganisationResource()
                         .withOrganisation(organisation.getId())
                         .build()));
-        when(inviteRestService.acceptInvite (applicationInviteAccepted)).thenReturn(restSuccess());
 
         when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
         when(confirmOrganisationInviteModelPopulator.populate(applicationInvite, organisation, "/accept-invite" +

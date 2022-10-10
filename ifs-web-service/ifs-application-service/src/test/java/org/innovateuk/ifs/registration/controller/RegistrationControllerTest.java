@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.AbstractInviteMockMVCTest;
+import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.exception.GeneralUnexpectedErrorException;
 import org.innovateuk.ifs.commons.exception.InvalidURLException;
@@ -108,7 +109,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
 
     @Before
     public void setUpCommonExpectations() {
-
+        BaseBuilderAmendFunctions.clearUniqueIds();
         MockitoAnnotations.initMocks(this);
         setupInvites();
         setupEncryptedCookieService(cookieUtil);

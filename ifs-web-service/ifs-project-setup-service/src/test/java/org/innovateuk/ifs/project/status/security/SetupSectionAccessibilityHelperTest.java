@@ -1,12 +1,15 @@
 package org.innovateuk.ifs.project.status.security;
 
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.sections.SectionAccess;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.function.BiFunction;
 
@@ -16,7 +19,8 @@ import static org.innovateuk.ifs.sections.SectionAccess.NOT_ACCESSIBLE;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
+@RunWith(MockitoJUnitRunner.Silent.class)
+public class SetupSectionAccessibilityHelperTest {
 
     @Mock
     private SetupProgressChecker setupProgressChecker;
@@ -25,6 +29,11 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
     private SetupSectionAccessibilityHelper helper;
 
     private OrganisationResource organisation = newOrganisationResource().build();
+
+    @Before
+    public void init() {
+        MockitoAnnotations.initMocks(this);
+    }
 
     @Test
     public void leadCanAccessProjectManagerPageWhenCompaniesHouseDetailsNotComplete() {

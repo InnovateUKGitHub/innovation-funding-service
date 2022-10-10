@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.pendingpartner.populator;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
@@ -38,7 +37,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ProjectTermsModelPopulatorTest extends BaseUnitTest {
+public class ProjectTermsModelPopulatorTest {
 
     @Mock
     private ProjectRestService projectRestService;

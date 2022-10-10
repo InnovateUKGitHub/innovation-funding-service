@@ -18,9 +18,11 @@ import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.service.StatusRestService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.ZonedDateTime;
@@ -43,6 +45,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+@RunWith(MockitoJUnitRunner.class)
 public class PreviousCompetitionControllerTest extends BaseControllerMockMVCTest<PreviousCompetitionController> {
 
     @Mock

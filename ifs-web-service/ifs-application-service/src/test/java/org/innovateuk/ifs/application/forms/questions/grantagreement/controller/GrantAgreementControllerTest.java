@@ -9,7 +9,9 @@ import org.innovateuk.ifs.granttransfer.service.EuGrantTransferRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockMultipartFile;
 
@@ -23,6 +25,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class GrantAgreementControllerTest extends BaseControllerMockMVCTest<GrantAgreementController> {
 
     @Mock

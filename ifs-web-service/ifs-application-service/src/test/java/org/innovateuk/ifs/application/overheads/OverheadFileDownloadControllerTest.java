@@ -5,7 +5,9 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
@@ -18,6 +20,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@RunWith(MockitoJUnitRunner.class)
 public class OverheadFileDownloadControllerTest extends BaseControllerMockMVCTest<OverheadFileDownloadController> {
 
     @Mock

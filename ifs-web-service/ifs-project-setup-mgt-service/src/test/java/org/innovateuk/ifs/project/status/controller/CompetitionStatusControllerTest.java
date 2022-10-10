@@ -14,8 +14,10 @@ import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusViewModel;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -38,6 +40,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<CompetitionStatusController> {
 
     @Mock

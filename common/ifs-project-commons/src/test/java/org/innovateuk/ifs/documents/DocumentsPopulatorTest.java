@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.documents;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder;
@@ -24,8 +23,10 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -45,7 +46,8 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class DocumentsPopulatorTest extends BaseUnitTest {
+@RunWith(MockitoJUnitRunner.class)
+public class DocumentsPopulatorTest {
 
     @InjectMocks
     private DocumentsPopulator populator;
@@ -81,8 +83,6 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
 
     @Before
     public void setup() {
-
-        super.setup();
 
         long documentConfigId2 = 12L;
         long collaborationAgreementId = 13L;
