@@ -82,8 +82,7 @@ ${emailInviteSubject}                    Invitation to Innovation Funding Servic
 ${ktpEmailInviteSubject}                 You have been invited to become a knowledge transfer adviser
 ${applicantKTACredentials}               john.fenton@ktn-uk.test
 ${newApplicantCredentials}               joe.adams@ktn-uk.test
-${assessorCredntials}                    apc-assessor-user1@example.com
-${AssessmentCompID}                      ${competition_ids["Sustainable living models for the future, in assessment"]}
+${AssessmentCompID}                      ${competition_ids["Sustainable living models for the future"]}
 
 *** Test Cases ***
 Project finance user cannot navigate to manage users page
@@ -481,15 +480,15 @@ Comp Admin should be able to see the details of assessor with new role profile o
     Then the user should see the element        jQuery = td:contains("Knowledge transfer adviser") ~ td:contains("Active")
     And the user should not see the element     jQuery = button:contains("Save and return")
 
-Comp Admin can unsubmit the assessment from the assessor progress page
+IFS Admin can unsubmit the assessment from the assessor progress page
     [Documentation]  IFS-12973
-    [Setup]  log in as a different user            &{Comp_admin1_credentials}
+    [Setup]  log in as a different user            &{ifs_admin_user_credentials}
     Given The user navigates to the page           ${server}/management/assessment/competition/${AssessmentCompID}/assessors/
     When The user clicks the button/link           jQuery = td:contains("Alexis Colon") ~ td:contains("View progress")
     And The user clicks the button/link            jQuery = td:contains("134") ~ td a:contains("Unsubmit")
     Then the user unsubmits the assessment
 
-Comp Admin can unsubmit the assessment from the application progress page
+IFS Admin can unsubmit the assessment from the application progress page
     [Documentation]  IFS-12973
     Given The user navigates to the page           ${server}/management/assessment/competition/${AssessmentCompID}/applications/
     When The user clicks the button/link           jQuery = td:contains(134) ~ td:contains("View progress")
