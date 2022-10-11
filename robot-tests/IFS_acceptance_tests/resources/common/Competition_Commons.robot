@@ -413,17 +413,6 @@ the user marks each question as complete
     Run Keyword If  '${question_link}' in ["Technical approach", "Innovation"]   the user selects the checkbox         question.allowedAppendixResponseFileTypes2
     Run Keyword If  '${question_link}' in ["Technical approach", "Innovation"]   the user selects the checkbox         question.allowedAppendixResponseFileTypes1
     Run Keyword If  '${question_link}' in ["Technical approach", "Innovation"]   the user enters text to a text field    css = label[for="question.appendixGuidance"] + * .editor  You may include an appendix of additional information to provide details of the specific expertise and track record of each project partner and each subcontractor.
-#    #EOI Question selection
-#    Run Keyword If  '${question_link}' == 'Tell us where your organisation is based'                                                            the user clicks the button twice   jQuery = label[for=expression-of-interest-yes]
-#    Run Keyword If  '${question_link}' == 'What EIC call have you been successfully evaluated for?'                                             the user clicks the button twice   jQuery = label[for=expression-of-interest-yes]
-#    Run Keyword If  '${question_link}' == 'Application reference number'                                                                        the user clicks the button twice   jQuery = label[for=expression-of-interest-yes]
-#    Run Keyword If  '${question_link}' == 'UK Funding contribution applied for (GBP)'                                                           the user clicks the button twice   jQuery = label[for=expression-of-interest-yes]
-#    Run Keyword If  '${question_link}' == 'If this amount has changed please tell us how?'                                                      the user clicks the button twice   jQuery = label[for=expression-of-interest-yes]
-#    Run Keyword If  '${question_link}' == 'If so, how many PhD students will be employed at your institution on this project?'                  the user clicks the button twice   jQuery = label[for=expression-of-interest-yes]
-#    Run Keyword If  '${question_link}' == 'How much budget is allocated for PhD students employed at your institution on this project?'         the user clicks the button twice   jQuery = label[for=expression-of-interest-yes]
-#    Run Keyword If  '${question_link}' == 'Have the tasks assigned to your institution changed significantly since the original application?'   the user clicks the button twice   jQuery = label[for=expression-of-interest-yes]
-#    Run Keyword If  '${question_link}' == 'Will you, as a UK institution, be employing PhD students as part of this project?'                   the user clicks the button twice   jQuery = label[for=expression-of-interest-yes]
-#    Run Keyword If  '${question_link}' == 'Participating Organisation project region'                                                           the user clicks the button twice   jQuery = label[for=expression-of-interest-yes]
     the user clicks the button/link  jQuery = button:contains('Done')
     the user should see the element  jQuery = li:contains("${question_link}") .task-status-complete
 
