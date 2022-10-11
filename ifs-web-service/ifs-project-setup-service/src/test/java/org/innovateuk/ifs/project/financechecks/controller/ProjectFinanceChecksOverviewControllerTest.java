@@ -16,7 +16,9 @@ import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -36,6 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Unit tests for finance check overview page for external users
  */
+@RunWith(MockitoJUnitRunner.class)
 public class ProjectFinanceChecksOverviewControllerTest extends BaseControllerMockMVCTest<ProjectFinanceChecksOverviewController> {
 
     @Mock

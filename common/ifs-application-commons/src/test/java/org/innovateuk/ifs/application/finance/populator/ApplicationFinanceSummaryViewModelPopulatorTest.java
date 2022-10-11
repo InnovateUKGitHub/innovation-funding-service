@@ -9,9 +9,12 @@ import org.innovateuk.ifs.application.service.SectionRestService;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.service.CompetitionApplicationConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
+import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -34,6 +37,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -41,13 +45,16 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionApplicationConfigResourceBuilder.newCompetitionApplicationConfigResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.*;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
+import static org.innovateuk.ifs.finance.builder.OtherFundingCostBuilder.newOtherFunding;
+import static org.innovateuk.ifs.finance.builder.OtherFundingCostCategoryBuilder.newOtherFundingCostCategory;
+import static org.innovateuk.ifs.finance.resource.category.BaseOtherFundingCostCategory.OTHER_FUNDING;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
@@ -150,6 +157,76 @@ public class ApplicationFinanceSummaryViewModelPopulatorTest {
     }
 
     @Test
+    public void populateFinanceLinksForThirdPartyOfgemApplication() {
+        setField(populator, "financeSummaryTableViewModelPopulator", financeSummaryTableViewModelPopulator);
+        long applicationId = 1L;
+        long competitionId = 2L;
+        long organisationId = 3L;
+        long userId = 4L;
+
+        UserResource user = newUserResource()
+                .withId(userId)
+                .withRoleGlobal(Role.APPLICANT)
+                .build();
+        CompetitionResource competition = newCompetitionResource()
+                .withId(competitionId)
+                .withFundingType(THIRDPARTY)
+                .withCompetitionTypeEnum(CompetitionTypeEnum.OFGEM)
+                .withFinanceRowTypes(Collections.singletonList(FinanceRowType.FINANCE))
+                .withCompTypeOfgemAndFundingTypeThirdParty(true)
+                .build();
+        ApplicationResource application = newApplicationResource()
+                .withId(applicationId)
+                .withCompetition(competition.getId())
+                .build();
+        OrganisationResource organisation = newOrganisationResource().withId(organisationId).build();
+        ProcessRoleResource processRole = newProcessRoleResource()
+                .withUserId(userId)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
+                .withOrganisation(organisationId)
+                .build();
+        OtherFundingCostCategory otherFundingCostCategory = newOtherFundingCostCategory().withCosts(
+                        newOtherFunding().
+                                withOtherPublicFunding("Yes", "").
+                                withFundingSource(OTHER_FUNDING, "other funding").
+                                withFundingAmount(null, BigDecimal.valueOf(1000)).
+                                build(2)).
+                build();
+        otherFundingCostCategory.calculateTotal();
+        Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = asMap(
+                FinanceRowType.OTHER_FUNDING, otherFundingCostCategory
+        );
+        ApplicationFinanceResource applicationFinance = newApplicationFinanceResource()
+                .withOrganisation(organisationId)
+                .withFinanceOrganisationDetails(financeOrganisationDetails)
+                .build();
+        SectionResource section = newSectionResource().build();
+        CompetitionApplicationConfigResource competitionApplicationConfig = newCompetitionApplicationConfigResource().build();
+
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
+        when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(Collections.singletonList(processRole)));
+        when(applicationFinanceRestService.getFinanceTotals(application.getId())).thenReturn(restSuccess(Collections.singletonList(applicationFinance)));
+        when(organisationRestService.getOrganisationsByApplicationId(application.getId())).thenReturn(restSuccess(Collections.singletonList(organisation)));
+        when(sectionStatusRestService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(restSuccess(new HashMap<>()));
+        when(sectionRestService.getSectionsByCompetitionIdAndType(competitionId, SectionType.FINANCE)).thenReturn(restSuccess(Collections.singletonList(section)));
+        when(competitionApplicationConfigRestService.findOneByCompetitionId(competitionId)).thenReturn(restSuccess(competitionApplicationConfig));
+
+        ApplicationFinanceSummaryViewModel model = populator.populate(applicationId, user);
+
+        assertNotNull(model);
+        assertEquals(1, model.getFinanceSummaryTableViewModel().getRows().size());
+
+        FinanceSummaryTableRow row = model.getFinanceSummaryTableViewModel().getRows().get(0);
+
+        assertNotNull(row);
+        assertNotNull(row.getOtherFunding());
+        assertEquals(new BigDecimal("1000"), row.getOtherFunding());
+
+        verify(financeLinksUtil, times(0)).financesLink(organisation, Collections.singletonList(processRole), user, application, competition);
+    }
+
+    @Test
     public void populateFinanceLinksForKtpApplication() {
         setField(populator, "financeSummaryTableViewModelPopulator", financeSummaryTableViewModelPopulator);
         long applicationId = 1L;
@@ -230,7 +307,6 @@ public class ApplicationFinanceSummaryViewModelPopulatorTest {
         assertEquals(BigDecimal.ZERO, partnerRow.getFundingSought());
         assertEquals(BigDecimal.ZERO, partnerRow.getClaimPercentage());
         assertEquals(BigDecimal.ZERO, partnerRow.getOtherFunding());
-
     }
 
 }

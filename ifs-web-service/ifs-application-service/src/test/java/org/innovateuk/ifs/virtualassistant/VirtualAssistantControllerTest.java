@@ -2,7 +2,9 @@ package org.innovateuk.ifs.virtualassistant;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.innovateuk.ifs.virtualassistant.VirtualAssistantController.THYMELEAF_MAPPING;
 import static org.innovateuk.ifs.virtualassistant.VirtualAssistantModel.NO_REMOTE_SERVER_MSG;
@@ -12,6 +14,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+@RunWith(MockitoJUnitRunner.class)
 public class VirtualAssistantControllerTest extends BaseControllerMockMVCTest<VirtualAssistantController> {
 
     @Mock

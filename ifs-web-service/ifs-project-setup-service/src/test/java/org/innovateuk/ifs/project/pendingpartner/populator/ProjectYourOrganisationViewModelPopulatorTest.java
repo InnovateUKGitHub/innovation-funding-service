@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.pendingpartner.populator;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.FormOption;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
@@ -43,7 +42,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ProjectYourOrganisationViewModelPopulatorTest extends BaseUnitTest {
+public class ProjectYourOrganisationViewModelPopulatorTest {
 
     @Mock
     private ProjectYourOrganisationRestService yourOrganisationRestService;

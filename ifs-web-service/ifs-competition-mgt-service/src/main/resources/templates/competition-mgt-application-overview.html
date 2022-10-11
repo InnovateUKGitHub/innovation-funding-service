@@ -198,6 +198,10 @@
             </th:block>
         </th:block>
 
+        <div class="govuk-body govuk-!-margin-top-8">
+            <th:block th:insert="application/readonly/application-read-only :: eoi_evidence_view (${model.applicationReadOnlyViewModel})" ></th:block>
+        </div>
+
         <details class="govuk-details"
                  th:if="${model.canMarkAsIneligible}">
             <summary class="govuk-details__summary">

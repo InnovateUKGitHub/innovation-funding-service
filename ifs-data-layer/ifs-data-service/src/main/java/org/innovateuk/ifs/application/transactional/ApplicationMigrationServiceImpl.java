@@ -26,8 +26,6 @@ import org.innovateuk.ifs.project.core.repository.ProjectToBeCreatedRepository;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -121,6 +119,12 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
     @Autowired
     private ApplicationExpressionOfInterestConfigRepository applicationExpressionOfInterestConfigRepository;
 
+    @Autowired
+    private ApplicationEoiEvidenceResponseRepository applicationEoiEvidenceResponseRepository;
+
+    @Autowired
+    private ApplicationEoiEvidenceProcessRepository applicationEoiEvidenceProcessRepository;
+
     @Override
     public ServiceResult<Optional<ApplicationMigration>> findByApplicationIdAndStatus(long applicationId, MigrationStatus status) {
         return serviceSuccess(applicationMigrationRepository.findByApplicationIdAndStatus(applicationId, status));
@@ -184,6 +188,8 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
 
                     migrateApplicationKtaInvite(application, migratedApplication);
 
+                    migrateApplicationEoiEvidence(application, migratedApplication);
+
                     deleteApplicationDependency(application);
 
                     if (isDeleteApplication) {
@@ -207,6 +213,17 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
         applicationExpressionOfInterestConfigRepository.deleteByApplicationId(application.getId());
 
         log.debug("Deleted application dependency for application : " + application.getId());
+    }
+
+    private void migrateApplicationEoiEvidence(Application application, Application migratedApplication) {
+        applicationEoiEvidenceResponseRepository.findOneByApplicationId(application.getId()).ifPresent(
+                applicationEoiEvidenceResponse -> {
+                    applicationEoiEvidenceResponse.setApplication(migratedApplication);
+                    applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse);
+                }
+        );
+
+        log.debug("Migrated application eoi evidence for application : " + application.getId());
     }
 
     private void migrateApplicationKtaInvite(Application application, Application migratedApplication) {

@@ -22,6 +22,8 @@ import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.repository.AverageAssessorScoreRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder;
 import org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder;
 import org.innovateuk.ifs.finance.builder.FinanceRowMetaFieldBuilder;
@@ -85,6 +87,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 
 public abstract class BaseApplicationMigrationSetup extends BaseAuthenticationAwareIntegrationTest {
 
@@ -193,7 +197,14 @@ public abstract class BaseApplicationMigrationSetup extends BaseAuthenticationAw
     @Autowired
     protected ApplicationHorizonWorkProgrammeRepository applicationHorizonWorkProgrammeRepository;
 
+    @Autowired
+    protected FileEntryRepository fileEntryRepository;
+
+    @Autowired
+    protected ApplicationEoiEvidenceResponseRepository applicationEoiEvidenceResponseRepository;
+
     protected Long applicationId;
+    protected Organisation organisation;
 
     protected void prepareData() {
         loginIfsAdmin();
@@ -214,7 +225,7 @@ public abstract class BaseApplicationMigrationSetup extends BaseAuthenticationAw
         application = applicationRepository.save(application);
         applicationId = application.getId();
 
-        Organisation organisation = organisationRepository.save(OrganisationBuilder.newOrganisation().build());
+        organisation = organisationRepository.save(OrganisationBuilder.newOrganisation().build());
 
         ProcessRole processRole = processRoleRepository.save(ProcessRoleBuilder.newProcessRole()
                 .withApplication(application)
@@ -339,6 +350,20 @@ public abstract class BaseApplicationMigrationSetup extends BaseAuthenticationAw
                     .build();
             applicationExpressionOfInterestConfigRepository.save(applicationExpressionOfInterestConfig);
             application.setApplicationExpressionOfInterestConfig(applicationExpressionOfInterestConfig);
+
+            FileEntry fileEntry = newFileEntry()
+                    .withFilesizeBytes(7945)
+                    .withMediaType("application/pdf")
+                    .build();
+            fileEntry = fileEntryRepository.save(fileEntry);
+
+            ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = ApplicationEoiEvidenceResponse.builder()
+                    .application(application)
+                    .organisation(organisation)
+                    .fileEntry(fileEntry)
+                    .build();
+            applicationEoiEvidenceResponse = applicationEoiEvidenceResponseRepository.save(applicationEoiEvidenceResponse);
+            application.setApplicationEoiEvidenceResponse(applicationEoiEvidenceResponse);
         });
     }
 }

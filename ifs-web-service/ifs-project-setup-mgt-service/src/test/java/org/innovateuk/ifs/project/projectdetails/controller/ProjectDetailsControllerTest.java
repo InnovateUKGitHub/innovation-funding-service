@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -483,7 +484,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     private void performUpdateProjectDurationFailurePost(long competitionId, long projectId, String durationInMonths) throws Exception {
-
         mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/duration")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("durationInMonths", durationInMonths))

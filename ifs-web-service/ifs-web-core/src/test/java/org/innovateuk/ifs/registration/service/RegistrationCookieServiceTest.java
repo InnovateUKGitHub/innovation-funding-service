@@ -8,7 +8,9 @@ import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -19,6 +21,7 @@ import static org.innovateuk.ifs.registration.service.RegistrationCookieService.
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class RegistrationCookieServiceTest extends BaseServiceUnitTest<RegistrationCookieService>{
 
     @Mock
@@ -39,8 +42,6 @@ public class RegistrationCookieServiceTest extends BaseServiceUnitTest<Registrat
     public void setUp() {
         response = new MockHttpServletResponse();
         request = new MockHttpServletRequest();
-
-        super.setup();
     }
 
     @Test

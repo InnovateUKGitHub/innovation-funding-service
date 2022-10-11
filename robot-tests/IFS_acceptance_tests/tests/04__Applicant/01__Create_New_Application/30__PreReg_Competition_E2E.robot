@@ -33,6 +33,12 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...
 ...               IFS-12839 Pre-registration - Internal view - Question numbers appearing in question overview
 ...
+...               IFS-12523 HECP Phase 2 - Document upload - Read only
+...
+...               IFS-12702 HECP Phase 2 - Document upload - Applicant document upload
+...
+...               IFS-12876 Pre-registration - The ability to enable EOI questions on an EOI competition
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -54,14 +60,30 @@ ${evidenceSubmittedEmailDescription}            You have successfully submitted 
 
 *** Test Cases ***
 Comp Admin creates a prereg competition
-    [Documentation]  IFS-12065
+    [Documentation]  IFS-12065  IFS-12876
     Given The user logs-in in new browser                    &{Comp_admin1_credentials}
     Then the competition admin creates prereg competition    ${BUSINESS_TYPE_ID}  ${hecpPreregCompName}  Pre Registration  ${compType_HESTA}  NOT_AID  HECP  PROJECT_SETUP  no  50  false  single-or-collaborative
 
+Com admin can see readonly view of expression of intrest question selection
+    [Documentation]  IFS-12876
+    [Setup]  Get competitions id and set it as suite variable     ${hecpPreregCompName}
+    Given the user navigates to the page                          ${server}/management/competition/setup/${preregCompetitionId}/section/application/landing-page
+    When the user clicks the button/link                          link = 2. Participating Organisation project region
+    Then the user should see the element                          jQuery = dt:contains("Is this also an expression of interest question?") + dd:contains("Yes")
+
+Comp admin can edit the expression of interest question selection
+    [Documentation]  IFS-12876
+    Given the user clicks the button/link   jQuery = a:contains("Edit this question")
+    When the user clicks the button twice   jQuery = label[for=expression-of-interest-no]
+    And the user clicks the button/link     jQuery = button:contains("Done")
+    And the user clicks the button/link     link = 2. Participating Organisation project region
+    Then the user should see the element    jQuery = dt:contains("Is this also an expression of interest question?") + dd:contains("No")
+    [Teardown]  the user marks the competition application section as complete
+
 Applicants should view prereg related content when competition is opened
     [Documentation]  IFS-12065
-    Given Comp admin set the competion as prereg comp and hide the question, section and subsection
-    And Update competition to have evidence required
+    [Setup]  Comp admin set the competion as prereg comp and hide the question, section and subsection
+    Given Update competition to have evidence required
     When the user navigates to the page                 ${frontDoor}
     And the user enters text to a text field            id = keywords   Pre Registration
     And the user clicks the button/link                 id = update-competition-results-button
@@ -166,7 +188,36 @@ Partner applicant should not see evidence required status instead should still v
     [Documentation]  IFS-12522
     Given log in as a different user                           ${collaborator1_credentials["email"]}  ${short_password}
     When the user clicks the application tile if displayed
-    Then the user should see the element                       jQuery = li:contains("${hecpPreregAppName}") .status-msg:contains("Expression of interest") + .status-msg:contains("Submitted")
+    Then the user should see the element                   jQuery = li:contains("${hecpPreregAppName}") .status-msg:contains("Expression of interest") + .status-msg:contains("Submitted")
+
+Parter applicant can not view evidence upload section
+    [Documentation]  IFS-12702
+    Given the user clicks the button/link       link = ${hecpPreregAppName}
+    Then the user should not see the element    name = eoiEvidenceFile
+
+Internal users can see submitted expression of interest applications without checkbox when the eveidence is not uploaded
+    [Documentation]  IFS-12176  IFS-12568
+    Given log in as a different user            &{ifs_admin_user_credentials}
+    And the user navigates to the page          ${server}/management/competition/${preregCompetitionId}
+    And the user clicks the button/link         link = Applications: All, submitted, expression of interest, ineligible
+    When the user clicks the button/link        link = Expressions of interest
+    Then the user should see the element        jQuery = td:contains("${preregApplicationID}") + td:contains("${hecpPreregAppName}")
+    And the user should see the element         jQuery = .highlight-panel:contains("Expressions of interest") span:contains("1")
+    And the user should not see the element     jQuery = label[for = "app-row-1"]
+
+Expression of interest evidence upload validation : wrong file upload
+    [Documentation]  IFS-12702
+    Given log in as a different user                        &{lead_applicant_credentials}
+    And the user navigates to the page                      ${server}/application/${preregApplicationID}/track
+    When the user uploads the file                          eoiEvidenceFile    ${excel_file}
+    Then the user should not see a field error              Your upload must be a PDF.
+    And The user should see valid evidence upload content
+
+Applicant can remove the file uploaded
+    [Documentation]  IFS-12702
+    Given the user uploads the file             eoiEvidenceFile    ${contract_pdf}
+    When the user can remove the uploaded file  remove-eoi-evidence  ${contract_pdf}
+    Then the user should not see the element    jQuery = a:contains("${contract_pdf} (opens in a new window)")
 
 Comp admin can not view mark as ineligible application link
     [Documentation]  IFS-12257
@@ -180,23 +231,30 @@ Internal users can see expression of interest statistics
     When the user clicks the button/link        link = Applications: All, submitted, expression of interest, ineligible
     Then the user should see the element        jQuery = .highlight-panel:contains("Expressions of interest") span:contains("1")
 
-Internal users can see submitted expression of interest applications without checkbox when the eveidence is not uploaded
-    [Documentation]  IFS-12176  IFS-12568
-    When the user clicks the button/link        link = Expressions of interest
-    Then the user should see the element        jQuery = td:contains("${preregApplicationID}") + td:contains("${hecpPreregAppName}")
-    And the user should see the element         jQuery = .highlight-panel:contains("Expressions of interest") span:contains("1")
-    And the user should not see the element     jQuery = label[for = "app-row-1"]
-
 Lead organisation should get notified on submitting the EOI evidence
     [Documentation]  IFS-12569
-    When Update application evidence has uploaded       24  ${preregApplicationID}  200
-    Then the user reads his email                       ${lead_applicant_credentials["email"]}  ${evidenceSubmittedEmailSubject}  ${evidenceSubmittedEmailDescription}
+    When Lead applicant submits evidence for review    ${preregApplicationID}   ${contract_pdf}
+    Then the user should see the element               link = Contract.pdf (opens in a new window)
+    And the user reads his email                       ${lead_applicant_credentials["email"]}  ${evidenceSubmittedEmailSubject}  ${evidenceSubmittedEmailDescription}
+
+Lead applicant views read only evidence file submitted for review
+    [Documentation]  IFS-12523
+    When the user navigates to the page         ${server}/application/${preregApplicationID}/summary
+    Then the user checks file is downloaded     ${contract_pdf}
+    And the user should see the element         jQuery = h3:contains("Eoi Evidence")
+
+Partner applicant can not view read only evidence uploaded by lead applicant
+    [Documentation]  IFS-12523
+    Given log in as a different user             ${collaborator1_credentials["email"]}  ${short_password}
+    When the user navigates to the page          ${server}/application/${preregApplicationID}/summary
+    Then the user should not see the element     jQuery = h3:contains("Eoi Evidence")
+    And the user should not see the element      jQuery = a:contains("${contract_pdf}")
 
 Internal user submit the EOI applications funding decision after evidence is uploaded
-    [Documentation]  IFS-12265  IFS-12568
+    [Documentation]  IFS-12265  IFS-12568  IFS-12702
     Given Existing user creates and submits new application for unsuccessful EOI journey
     And Requesting application ID of unsuccessful prereg application
-    When Update application evidence has uploaded                                           25  ${unSuccessfulPreRegApplicationID}  201
+    When Lead applicant submits evidence for review                                         ${unSuccessfulPreRegApplicationID}   ${contract_pdf}
     And Log in as a different user                                                          &{Comp_admin1_credentials}
     And Internal user marks the EOI as successful/unsuccessful                              ${unSuccessPreregAppName}   EOI_REJECTED
     And Internal user marks the EOI as successful/unsuccessful                              ${hecpPreregAppName}   EOI_APPROVED
@@ -224,24 +282,25 @@ Internal user sends a successful notification of an EOI application
     And the user clicks the button/link                     jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
     And the user refreshes until element appears on page    jQuery = td:contains("${hecpPreregAppName}") ~ td:contains("Sent")
     Then the user reads his email                           steve.smith@empire.com  Notification regarding your expression of interest application '${hecpPreregAppName}' for the competition '${hecpPreregCompName}'  ${preRegApplicationSuccessfulEmail}
+    And the user navigates to the page                      ${server}/management/competition/${preregCompetitionId}/applications/all
+    And the user should see the element                     jQuery = td:contains("${preregApplicationID}")+td:contains("${hecpPreregAppName}")
 
 Internal user sends a unsuccessful notification of an EOI application
     [Documentation]    IFS-12262
-    Given the user selects the checkbox                     app-row-${unSuccessfulPreRegApplicationID}
+    Given the user navigates to the page                    ${server}/management/competition/${preregCompetitionId}/eoi/notification
+    And the user selects the checkbox                       app-row-${unSuccessfulPreRegApplicationID}
     When the user clicks the button/link                    jQuery = button:contains("Write and send email")
     And the user clicks the button/link                     jQuery = button:contains("Send notification")[data-js-modal = "send-to-all-applicants-modal"]
     And the user clicks the button/link                     jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
     And the user refreshes until element appears on page    jQuery = td:contains("${unSuccessPreregAppName}") ~ td:contains("Sent")
     Then the user reads his email                           steve.smith@empire.com  Notification regarding your expression of interest application '${unSuccessPreregAppName}' for the competition '${hecpPreregCompName}'  ${preRegApplicationUnsuccessfulEmail}
-    And the user navigates to the page                      ${server}/management/competition/${preregCompetitionId}/applications/all
-    And the user should see the element                     jQuery = td:contains("${preregApplicationID}")+td:contains("${hecpPreregAppName}")
 
 Lead applicant views unsuccessful applications in previous dashboard
     [Documentation]  IFS-12265
-    Given log in as a different user                                            &{lead_applicant_credentials}
+    Given log in as a different user                            &{lead_applicant_credentials}
     When the user clicks the application tile if displayed
-    Then the user should see the element                                        jQuery = li:contains("${unSuccessPreregAppName}") .status-msg:contains("Unsuccessful")
-    And the user should see the element                                         jQuery = li:contains("${unSuccessPreregAppName}") .status-msg:contains("Expression of interest")
+    Then the user should see the element                        jQuery = li:contains("${unSuccessPreregAppName}") .status-msg:contains("Unsuccessful")
+    And the user should see the element                         jQuery = li:contains("${unSuccessPreregAppName}") .status-msg:contains("Expression of interest")
 
 Lead applicant can view full application details in dashboard
     [Documentation]  IFS-12521
@@ -257,11 +316,13 @@ Lead applicant can view the answers provided in EOI applications in full applica
     And Lead applicant should see new questions added in full application
 
 Lead applicant can navigate to orginal EOI application from full application
-    [Documentation]  IFS-12382
-    Given the user clicks the button/link       link = Back to application overview
-    When the user clicks the button/link        link = Expression of interest
-    Then the user clicks the button/link        jQuery = h1:contains("Expression of interest overview")
-    And the user should see the element         jQuery = h2:contains("Congratulations, your application has been successful")
+    [Documentation]  IFS-12382  IFS-12523
+    Given the user clicks the button/link                    link = Back to application overview
+    When the user clicks the button/link                     link = Expression of interest
+    Then the user clicks the button/link                     jQuery = h1:contains("Expression of interest overview")
+    And the user should see the element                      jQuery = h2:contains("Congratulations, your application has been successful")
+    And the user should see the element                      jQuery = h3:contains("Eoi Evidence")
+    And the user checks file is downloaded                   ${contract_pdf}
 
 Partner completes project finances and terms and conditions in full application
     [Documentation]  IFS-12382
@@ -292,13 +353,22 @@ Internal user marks the full application as successful and sent a notification
     Then the user reads his email                                   steve.smith@empire.com  Important message about your application '${hecpPreregAppName}' for the competition '${hecpPreregCompName}'  ${fullApplicationSuccessfulEmail}
 
 Internal user can view EOI application from full application
-    [Documentation]   IFS-12380  IFS-12839
-    Given the user navigates to the page     ${server}/project-setup-management/competition/${preregCompetitionId}/status/all
-    And the user clicks the button/link      link = ${preregApplicationID}
-    When the user clicks the button/link     link = Expression of interest
-    Then the user clicks the button/link     jQuery = h1:contains("Expression of interest overview")
-    And the user should see the element      jQuery = h2:contains("Expression of interest questions")
-    And the user should see the element      jQuery = button:contains("Tell us where your organisation is based")
+    [Documentation]   IFS-12380  IFS-12839  IFS-12523
+    Given the user navigates to the page                    ${server}/project-setup-management/competition/${preregCompetitionId}/status/all
+    And the user clicks the button/link                     link = ${preregApplicationID}
+    When the user clicks the button/link                    link = Expression of interest
+    Then the user clicks the button/link                    jQuery = h1:contains("Expression of interest overview")
+    And the user should see the element                     jQuery = h2:contains("Expression of interest questions")
+    And the user should see the element                     jQuery = button:contains("Tell us where your organisation is based")
+    And Internal user can view and download evidence file   ${preregCompetitionId}  ${preregApplicationID}  ${contract_pdf}
+
+Auditor can view and download evidence file submitted
+    [Documentation]  IFS-12523
+    Given log in as a different user            &{auditorCredentials}
+    When the user navigates to the page         ${server}/management/competition/${preregCompetitionId}/application/${preregApplicationID}
+    And the user clicks the button/link         link = Expression of interest
+    Then the user checks file is downloaded     ${contract_pdf}
+    And the user should see the element         jQuery = h3:contains("Eoi Evidence")
 
 #Lead applicant can delete unsubmitted applications from dashboard
 #    [Documentation]  IFS-12265
@@ -401,6 +471,7 @@ the user completes milestones with out assessment
     the user clicks the button twice                    jQuery = label:contains("Project setup")
     the user clicks the button/link                     jQuery = button:contains("Done")
     the user completes application submission page      Yes
+    the user inputs application expression of interest  Yes
     the user inputs application assessment decision     No
     the user clicks the button/link                     jQuery = button:contains("Done")
     the user clicks the button/link                     link = Back to competition details
@@ -417,9 +488,6 @@ the user should not see subsection
     the user should not see the element     link = ${subSectionName}
 
 Comp admin set the competion as prereg comp and hide the question, section and subsection
-    Get competitions id and set it as suite variable     ${hecpPreregCompName}
-    set competition as pre reg                           ${preregCompetitionId}
-    set question as hidden in pre reg application        ${preregCompetitionId}
     set subsection as hidden in pre reg application      ${preregCompetitionId}
     set section as hidden in pre reg application         ${preregCompetitionId}
     update milestone to yesterday                        ${preregCompetitionId}  OPEN_DATE
@@ -509,8 +577,9 @@ the internal team mark the application as successful
     the user clicks the button/link     css = [type="submit"][value="${decision}"]
 
 Update competition to have evidence required
-    execute sql string    INSERT INTO `ifs`.`competition_eoi_evidence_config` (`id`, `evidence_required`, `evidence_title`, `evidence_guidance`) VALUES ('50', 1, 'Eoi Evidence 3', 'upload eoi 3');
+    execute sql string    INSERT INTO `ifs`.`competition_eoi_evidence_config` (`id`, `evidence_required`, `evidence_title`, `evidence_guidance`) VALUES ('50', 1, 'Eoi Evidence', 'upload eoi evidence');
     execute sql string    UPDATE `ifs`.`competition` SET `competition_eoi_evidence_config_id` = '50' WHERE id = '${preregCompetitionId}';
+    execute sql string    INSERT INTO `ifs`.`eoi_evidence_config_file_type` (`id`, `competition_eoi_evidence_config_id`, `file_type_id`) VALUES ('40', '50', '1');
 
 Partner applicant completes prereg project finances
     [Arguments]   ${application_title}  ${collaboratorEmail}  ${collaboratorPassword}
@@ -521,3 +590,35 @@ Partner applicant completes prereg project finances
 Update application evidence has uploaded
     [Arguments]  ${dbValue}  ${applicationID}  ${fileID}
     execute sql string    INSERT INTO `ifs`.`application_eoi_evidence_response` (`id`, `application_id`, `organisation_id`, `file_entry_id`) VALUES ('${dbValue}', '${applicationID}', '21', '${fileID}');
+
+The user should see valid evidence upload content
+    the user clicks the button/link   jQuery = span:contains("What should I include?")
+    the user should see the element   jQuery = p:contains("upload eoi evidence")
+    the user should see the element   jQuery = h2:contains("Eoi Evidence")
+    the user should see the element   jQuery = p:contains("Accepted file types")+ul:contains("PDF")
+    the user should see the element   jQuery = p:contains(" It must be less than 32MB in size.")
+
+Lead applicant submits evidence for review
+    [Arguments]  ${applicationId}  ${fileName}
+    Log in as a different user          &{lead_applicant_credentials}
+    the user navigates to the page      ${server}/application/${applicationId}/track
+    the user uploads the file           eoiEvidenceFile    ${fileName}
+    the user clicks the button/link     id = submit-eoi-evidence
+
+the user checks file is downloaded
+    [Arguments]  ${fileName}
+    the user clicks the button/link         jQuery = a:contains("${fileName}")
+    Select Window                           NEW
+    the user should not see internal server and forbidden errors
+    the user closes the last opened tab
+
+Internal user can view and download evidence file
+    [Arguments]  ${competitionID}  ${applicationID}  ${fileName}
+    the user navigates to the page          ${server}/management/competition/${competitionID}/application/${applicationID}
+    the user clicks the button/link         link = Expression of interest
+    the user should see the element         jQuery = h3:contains("Eoi Evidence")
+    the user checks file is downloaded      ${fileName}
+
+the user marks the competition application section as complete
+    the user clicks the button/link  link = Back to application
+    the user clicks the button/link  jQuery = button:contains("Done")

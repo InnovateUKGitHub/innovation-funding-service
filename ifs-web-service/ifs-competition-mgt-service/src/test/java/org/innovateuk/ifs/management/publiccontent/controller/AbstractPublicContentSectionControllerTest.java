@@ -12,7 +12,9 @@ import org.innovateuk.ifs.management.publiccontent.modelpopulator.PublicContentV
 import org.innovateuk.ifs.management.publiccontent.saver.PublicContentFormSaver;
 import org.innovateuk.ifs.management.publiccontent.service.PublicContentService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -28,6 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class AbstractPublicContentSectionControllerTest extends
         BaseControllerMockMVCTest<AbstractPublicContentSectionControllerTest.TestPublicContentSectionControllerTest> {
 

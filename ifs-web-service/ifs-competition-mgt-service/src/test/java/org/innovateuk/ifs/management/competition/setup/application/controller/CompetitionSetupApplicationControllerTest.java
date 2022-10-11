@@ -473,7 +473,9 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         Long questionId = 4L;
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withEnabledForExpressionOfInterest(false)
                 .build();
+
         CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
         question.setQuestionId(questionId);
         question.setType(ASSESSED_QUESTION);
@@ -507,6 +509,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("question.assessmentMaxWords", "200")
                 .param("guidanceRows[0].scoreFrom", "1")
                 .param("guidanceRows[0].scoreTo", "10")
+                .param("question.expressionOfInterest", "false")
                 .param("guidanceRows[0].justification", "My justification"))
                 .andExpect(model().hasNoErrors())
                 .andExpect(status().is3xxRedirection())

@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
  * This is the base class for testing Services with mock components.
  *
  */
-public abstract class BaseServiceUnitTest<ServiceType> extends BaseUnitTest {
+public abstract class BaseServiceUnitTest<ServiceType> {
 
     @InjectMocks
     protected ServiceType service = supplyServiceUnderTest();

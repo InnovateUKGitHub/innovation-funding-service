@@ -250,7 +250,8 @@ the user fills in the CS Milestones
     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  jQuery = a:contains("Next")
     Run Keyword If  '${status}' == 'FAIL'  run keywords   the user selects the radio button   selectedCompletionStage  ${completionStage}
     ...                                             AND   the user clicks the button/link  jQuery = button:contains("Done")
-    Run Keyword If   "${completionStage}" == "RELEASE_FEEDBACK" or "${completionStage}" == "PROJECT_SETUP"  the user completes application submission page   ${isOpenComp}
+    Run Keyword If   "${completionStage}" == "RELEASE_FEEDBACK" or "${completionStage}" == "PROJECT_SETUP"  run keywords  the user completes application submission page   ${isOpenComp}
+    ...                                                         AND    the user inputs application expression of interest    No
     ${i} =  Set Variable   1
      :FOR   ${ELEMENT}   IN    @{milestones}
       \    the user enters text to a text field  jQuery = th:contains("${ELEMENT}") ~ td.day input  ${i}
@@ -779,9 +780,7 @@ the user completes application submission page
     the user clicks the button/link       jQuery = span:contains("Application submission")
     the user should see the element       jQuery = p:contains("${isOpenComp}") strong:contains("Will this be an open-ended competition?")
     the user should see the element       jQuery = button:contains("Edit")
-    ${status} =   Run Keyword and return status    the user should see the element    jQuery = span:contains("Application assessment")
-    Run Keyword If    '${status}' == 'True'   the user clicks the button/link    jQuery = span:contains("Application assessment")
-    ...                ELSE                   the user clicks the button/link    jQuery = span:contains("Milestones")
+    the user clicks the button/link       jQuery = span:contains("Application expression of interest")
 
 the user inputs application assessment decision
     [Arguments]  ${isAssessed}
@@ -816,3 +815,18 @@ the user completes milestones section
     the user completes application submission page     Yes
     the user inputs application assessment decision    Yes
     the user clicks the button/link                    jQuery = button:contains("Done")
+
+the user inputs application expression of interest
+    [Arguments]  ${isExpressionOfInterest}
+    the user should see the element    jQuery = h1:contains("Application expression of interest")
+    the user clicks the button twice   jQuery = label:contains("${isExpressionOfInterest}")
+    the user clicks the button/link    jQuery = button:contains("Save and continue")
+    ${status} =   Run Keyword and return status     the user should see the element                  jQuery = span:contains("Application submission")
+    Run Keyword If    '${status}' == 'True'         run keywords  the user clicks the button/link    jQuery = span:contains("Application submission")
+    ...                AND                          the user clicks the button/link                  jQuery = span:contains("Application expression of interest")
+    ...                ELSE                         the user clicks the button/link                  jQuery = span:contains("Application expression of interest")
+    the user should see the element    jQuery = p:contains("${isExpressionOfInterest}") strong:contains("Will there be an expression of interest stage for this competition?")
+    the user should see the element    jQuery = button:contains("Edit")
+    ${status} =   Run Keyword and return status    the user should see the element    jQuery = span:contains("Application assessment")
+    Run Keyword If    '${status}' == 'True'   the user clicks the button/link    jQuery = span:contains("Application assessment")
+    ...                ELSE                   the user clicks the button/link    jQuery = span:contains("Milestones")

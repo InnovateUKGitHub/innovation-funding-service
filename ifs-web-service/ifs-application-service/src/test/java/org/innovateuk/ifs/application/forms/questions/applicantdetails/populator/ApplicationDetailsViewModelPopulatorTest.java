@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.forms.questions.applicantdetails.populator;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.forms.questions.applicationdetails.model.ApplicationDetailsViewModel;
 import org.innovateuk.ifs.application.forms.questions.applicationdetails.populator.ApplicationDetailsViewModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -15,8 +14,10 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
 
@@ -36,7 +37,8 @@ import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
-public class ApplicationDetailsViewModelPopulatorTest extends BaseUnitTest {
+@RunWith(MockitoJUnitRunner.class)
+public class ApplicationDetailsViewModelPopulatorTest {
 
     @InjectMocks
     private ApplicationDetailsViewModelPopulator populator;
@@ -87,7 +89,6 @@ public class ApplicationDetailsViewModelPopulatorTest extends BaseUnitTest {
         when(organisationRestService.getByUserAndApplicationId(user.getId(), application.getId())).thenReturn(restSuccess(organisation));
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(leadRole));
         when(questionStatusRestService.getMarkedAsComplete(application.getId(), organisation.getId())).thenReturn(completedFuture(singleton(questionId)));
-        when(applicationProcurementMilestoneRestService.findMaxByApplicationId(application.getId())).thenReturn(restSuccess(empty()));
 
         ApplicationDetailsViewModel viewModel = populator.populate(application, questionId, user);
 

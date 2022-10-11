@@ -12,7 +12,9 @@ import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileController> {
 
     @Override
@@ -87,9 +90,6 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
     @Test
     public void userServiceSaveMethodIsCalledWhenSubmittingValidDetailsForm() throws Exception {
 
-        when(userService.updateDetails(user.getId(), user.getEmail(), "newfirstname", "newlastname",
-                "Mrs", "0987654321", false))
-                .thenReturn(ServiceResult.serviceSuccess(newUserResource().build()));
         mockMvc.perform(post("/profile/edit")
                 .param("title", Mrs.getDisplayName())
                 .param("firstName", "newfirstname")

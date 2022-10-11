@@ -15,7 +15,9 @@ import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
@@ -37,6 +39,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+@RunWith(MockitoJUnitRunner.class)
 public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<MonitoringOfficerController> {
 
 
@@ -64,24 +67,18 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
     @Test
     public void viewAllKtp() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/monitoring-officer/view-all?ktp=true")).andReturn();
-        when(monitoringOfficerViewAllViewModelPopulator.populate(true))
-                .thenReturn(new MonitoringOfficerViewAllViewModel(new ArrayList<>()));
         assertEquals("project/monitoring-officer-view-all", mvcResult.getModelAndView().getViewName());
     }
 
     @Test
     public void viewAllNonKtp() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/monitoring-officer/view-all?ktp=false")).andReturn();
-        when(monitoringOfficerViewAllViewModelPopulator.populate(false))
-                .thenReturn(new MonitoringOfficerViewAllViewModel(new ArrayList<>()));
         assertEquals("project/monitoring-officer-view-all", mvcResult.getModelAndView().getViewName());
     }
 
     @Test
     public void viewAll() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/monitoring-officer/view-all")).andReturn();
-        when(monitoringOfficerViewAllViewModelPopulator.populate())
-                .thenReturn(new MonitoringOfficerViewAllViewModel(new ArrayList<>()));
         assertEquals("project/monitoring-officer-view-all", mvcResult.getModelAndView().getViewName());
     }
 
@@ -119,7 +116,6 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
                 "lastName",
                 emailAddress,
                 null);
-        when(monitoringOfficerAssignRoleViewModelPopulator.populate(anyLong())).thenReturn(viewModel);
         MvcResult mvcResult = mockMvc.perform(post("/monitoring-officer/search-by-email")
                 .param("emailAddress", emailAddress))
                 .andReturn();
@@ -195,7 +191,6 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
                 "lastName",
                 userResource.getEmail(),
                 null);
-        when(monitoringOfficerAssignRoleViewModelPopulator.populate(anyLong())).thenReturn(viewModel);
         MvcResult mvcResult = mockMvc.perform(get("/monitoring-officer/" + userResource.getId() + "/assign-role"))
                 .andReturn();
 
@@ -217,8 +212,6 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
                 .withPhoneNumber("01234567890")
                 .build();
         when(userRestService.retrieveUserById(999L)).thenReturn(restSuccess(userResource));
-        when(userService.updateDetails(anyLong(), anyString(), anyString(), anyString(), anyString(), anyString(), anyBoolean()))
-                .thenReturn(ServiceResult.serviceSuccess(userResource));
         when(userRestService.grantRole(userResource.getId(), MONITORING_OFFICER)).thenReturn(restSuccess());
 
         MvcResult mvcResult = mockMvc.perform(post("/monitoring-officer/" + userResource.getId() + "/assign-role")
@@ -233,7 +226,6 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         UserResource userResource = newUserResource()
                 .withId(999L)
                 .build();
-        when(userRestService.retrieveUserById(999L)).thenReturn(restSuccess(userResource));
         when(userRestService.grantRole(userResource.getId(), MONITORING_OFFICER)).thenReturn(restSuccess());
 
         MvcResult mvcResult = mockMvc

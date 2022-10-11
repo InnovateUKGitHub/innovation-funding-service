@@ -17,6 +17,7 @@ import org.innovateuk.ifs.management.competition.inflight.populator.CompetitionI
 import org.innovateuk.ifs.management.competition.inflight.populator.CompetitionInFlightStatsModelPopulator;
 import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightViewModel;
 import org.innovateuk.ifs.util.NavigationUtils;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -35,6 +36,7 @@ import java.util.List;
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInAssessmentKeyAssessmentStatisticsResourceBuilder.newCompetitionInAssessmentKeyAssessmentStatisticsResource;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.clearUniqueIds;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionAssessmentConfigResourceBuilder.newCompetitionAssessmentConfigResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -82,6 +84,11 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
 
     @Spy
     private NavigationUtils navigationUtilsMock;
+
+    @Before
+    public void resetBuilderIds() {
+        clearUniqueIds();
+    }
 
     @Override
     protected CompetitionManagementCompetitionController supplyControllerUnderTest() {

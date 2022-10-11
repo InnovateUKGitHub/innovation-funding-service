@@ -25,9 +25,11 @@ import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
@@ -58,6 +60,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockMVCTest<FinanceChecksNotesAddNoteController> {
 
     private Long projectId = 3L;
@@ -103,7 +106,6 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(organisationRestService.getOrganisationById(applicantOrganisationId)).thenReturn(restSuccess(leadOrganisationResource));
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisationResource);
-        when(projectService.getProjectUsersForProject(projectId)).thenReturn(singletonList(projectUser));
         when(partnerOrganisationRestService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(restSuccess(partnerOrg));
     }
 
@@ -199,8 +201,6 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     public void testSaveNewNoteNoOriginCookie() throws Exception {
 
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
-        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(restSuccess(projectFinanceResource));
-        when(financeCheckServiceMock.saveNote(any(NoteResource.class))).thenReturn(ServiceResult.serviceSuccess(1L));
 
         FinanceChecksNotesAddNoteForm formIn = new FinanceChecksNotesAddNoteForm();
         Cookie formCookie = createFormCookie(formIn);
@@ -528,8 +528,6 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         Cookie originCookie = createOriginCookie();
 
         AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L, null);
-
-        when(financeCheckServiceMock.getAttachment(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
 
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note")
                 .param("removeAttachment", "2")

@@ -25,7 +25,9 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.math.BigDecimal;
@@ -53,6 +55,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<YourProjectCostsViewModelPopulator> {
     private static final long APPLICATION_ID = 1L;
     private static final long SECTION_ID = 2L;
@@ -133,9 +136,6 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         PublicContentItemResource publicContentItem = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
 
 
-        when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
-                .withOrganisation(organisation.getId())
-                .build()));
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));
@@ -194,9 +194,6 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         PublicContentResource publicContentResource = newPublicContentResource().build();
         PublicContentItemResource publicContentItem = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
 
-        when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
-                .withOrganisation(organisation.getId())
-                .build()));
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));
@@ -243,9 +240,6 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         PublicContentResource publicContentResource = newPublicContentResource().build();
         PublicContentItemResource publicContentItem = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
 
-        when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
-                .withOrganisation(organisation.getId())
-                .build()));
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));
@@ -290,9 +284,6 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         PublicContentResource publicContentResource = newPublicContentResource().build();
         PublicContentItemResource publicContentItem = newPublicContentItemResource().withPublicContentResource(publicContentResource).build();
 
-        when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
-                .withOrganisation(organisation.getId())
-                .build()));
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));

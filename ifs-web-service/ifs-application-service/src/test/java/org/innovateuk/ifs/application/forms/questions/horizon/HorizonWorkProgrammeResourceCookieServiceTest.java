@@ -7,7 +7,9 @@ import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -19,6 +21,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class HorizonWorkProgrammeResourceCookieServiceTest extends BaseServiceUnitTest<HorizonWorkProgrammeCookieService> {
 
     @Mock
@@ -36,8 +39,6 @@ public class HorizonWorkProgrammeResourceCookieServiceTest extends BaseServiceUn
     public void setUp() {
         response = new MockHttpServletResponse();
         request = new MockHttpServletRequest();
-
-        super.setup();
     }
 
     @Test

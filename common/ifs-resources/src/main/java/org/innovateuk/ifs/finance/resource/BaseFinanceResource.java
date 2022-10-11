@@ -33,6 +33,7 @@ public abstract class BaseFinanceResource {
     private Long fecFileEntry;
     private LocalDate fecCertExpiryDate;
     private boolean isFixedFundingLevel;
+    private boolean compTypeOfgemAndFundingTypeThirdParty;
 
     public BaseFinanceResource(BaseFinanceResource originalFinance) {
         if (originalFinance != null) {
@@ -43,6 +44,7 @@ public abstract class BaseFinanceResource {
             this.fecFileEntry = originalFinance.getFecFileEntry();
             this.fecModelEnabled = originalFinance.getFecModelEnabled();
             this.fecCertExpiryDate = originalFinance.getFecCertExpiryDate();
+            this.compTypeOfgemAndFundingTypeThirdParty = originalFinance.isCompTypeOfgemAndFundingTypeThirdParty();
         }
     }
 
@@ -230,18 +232,20 @@ public abstract class BaseFinanceResource {
 
     @JsonIgnore
     public BigDecimal getContributionToProjectPercentage() {
-        if ((ZERO.compareTo(getTotal()) == 0 ) ||  ZERO.compareTo(getTotalFundingSought()) == 0  ) {
+        if (ZERO.compareTo(getTotalContribution()) == 0 || getTotalContribution() == null) {
             return BigDecimal.ZERO;
         }
-         return
-                 getTotal().subtract(getTotalFundingSought())
-                         .multiply(new BigDecimal(100))
-                         .divide(getTotal(), 2, RoundingMode.HALF_UP);
-
+        return getTotalContribution().multiply(new BigDecimal("100")).divide(getTotal(), 2, RoundingMode.HALF_UP);
     }
 
     @JsonIgnore
     public BigDecimal getTotalOtherFunding() {
+        FinanceRowCostCategory otherFundingCategory = getFinanceOrganisationDetails(FinanceRowType.OTHER_FUNDING);
+        return (otherFundingCategory != null && !compTypeOfgemAndFundingTypeThirdParty) ? otherFundingCategory.getTotal() : ZERO;
+    }
+
+    @JsonIgnore
+    public BigDecimal getTotalContributionsInKind() {
         FinanceRowCostCategory otherFundingCategory = getFinanceOrganisationDetails(FinanceRowType.OTHER_FUNDING);
         return otherFundingCategory != null ? otherFundingCategory.getTotal() : ZERO;
     }
@@ -307,5 +311,13 @@ public abstract class BaseFinanceResource {
 
     public void setFixedFundingLevel(boolean fixedFundingLevel) {
         isFixedFundingLevel = fixedFundingLevel;
+    }
+
+    public boolean isCompTypeOfgemAndFundingTypeThirdParty() {
+        return compTypeOfgemAndFundingTypeThirdParty;
+    }
+
+    public void setCompTypeOfgemAndFundingTypeThirdParty(boolean compTypeOfgemAndFundingTypeThirdParty) {
+        this.compTypeOfgemAndFundingTypeThirdParty = compTypeOfgemAndFundingTypeThirdParty;
     }
 }
