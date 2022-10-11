@@ -4,5 +4,5 @@ Dear ${notificationTarget.name},
 You have successfully submitted your evidence file to ${competitionName} competition.
 If you have any queries about your submission please contact our customer support services at support@iuk.ukri.org or 0300 321 4357.
 Yours sincerely,
-<@layout.hestaSenderPlainText />
+<@layout.eoiSenderPlainText />
 </@layout.defaultPlainText>
