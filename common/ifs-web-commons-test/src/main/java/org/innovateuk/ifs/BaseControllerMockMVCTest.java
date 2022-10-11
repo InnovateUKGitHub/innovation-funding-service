@@ -13,6 +13,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.format.support.DefaultFormattingConversionService;
@@ -41,7 +42,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
  * This is the base class for testing Controllers using MockMVC in addition to standard Mockito mocks.  Using MockMVC
  * allows Controllers to be tested via their routes and their responses' HTTP responses tested also.
  */
-public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnitTest {
+public abstract class BaseControllerMockMVCTest<ControllerType> {
 
     @InjectMocks
     protected ControllerType controller = supplyControllerUnderTest();
@@ -179,7 +180,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
 
     @Before
     public void logInUserBeforeTests() {
-
+        MockitoAnnotations.openMocks(this);
         mockMvc = setupMockMvc(controller, this::getLoggedInUser, env, messageSource, additionalFormattingChanges());
 
         setLoggedInUser(loggedInUser);

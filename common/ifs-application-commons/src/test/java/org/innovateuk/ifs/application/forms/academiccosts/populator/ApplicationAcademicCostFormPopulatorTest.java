@@ -8,7 +8,9 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
@@ -25,6 +27,7 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ApplicationAcademicCostFormPopulatorTest extends BaseServiceUnitTest<ApplicationAcademicCostFormPopulator> {
 
     private static final long APPLICATION_ID = 1L;
@@ -78,8 +81,6 @@ public class ApplicationAcademicCostFormPopulatorTest extends BaseServiceUnitTes
                 .withFinanceOrganisationDetails(emptyMap()).build();
 
         when(applicationFinanceRestService.getFinanceDetails(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(finance));
-
-        when(fileEntryRestService.findOne(FILE_ENTRY_ID)).thenReturn(restFailure(new RestFailure(emptyList(), HttpStatus.NOT_FOUND)));
 
         service.populate(form, APPLICATION_ID, ORGANISATION_ID);
 

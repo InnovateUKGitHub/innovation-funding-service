@@ -5,7 +5,9 @@ import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.bankdetails.viewmodel.CompetitionPendingBankDetailsApprovalsViewModel;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
@@ -18,6 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+@RunWith(MockitoJUnitRunner.class)
 public class CompetitionsBankDetailsControllerTest extends BaseControllerMockMVCTest<CompetitionsBankDetailsController> {
     @Mock
     private BankDetailsRestService bankDetailsRestService;

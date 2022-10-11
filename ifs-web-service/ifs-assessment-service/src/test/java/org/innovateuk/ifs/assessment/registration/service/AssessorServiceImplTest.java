@@ -8,7 +8,9 @@ import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -16,6 +18,7 @@ import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBu
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class AssessorServiceImplTest extends BaseServiceUnitTest<AssessorService> {
 
     @Mock
@@ -24,11 +27,6 @@ public class AssessorServiceImplTest extends BaseServiceUnitTest<AssessorService
     @Override
     protected AssessorService supplyServiceUnderTest() {
         return new AssessorServiceImpl();
-    }
-
-    @Before
-    public void setUp() {
-        super.setup();
     }
 
     @Test

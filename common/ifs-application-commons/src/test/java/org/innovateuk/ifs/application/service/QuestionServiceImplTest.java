@@ -11,7 +11,9 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.*;
 import java.util.concurrent.Future;
@@ -23,6 +25,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService> {
 
     @Mock

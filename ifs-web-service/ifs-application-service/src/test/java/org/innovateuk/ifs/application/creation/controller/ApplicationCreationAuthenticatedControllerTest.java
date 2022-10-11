@@ -7,13 +7,16 @@ import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestS
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ApplicationCreationAuthenticatedControllerTest extends BaseControllerMockMVCTest<ApplicationCreationAuthenticatedController> {
 
     @Mock
@@ -54,7 +57,6 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
 
     @Test
     public void postEmptyFormShouldThrowError() throws Exception {
-        when(competitionOrganisationConfigRestService.findByCompetitionId(1L)).thenReturn(RestResult.restSuccess(new CompetitionOrganisationConfigResource(false, false)));
         mockMvc.perform(post("/application/create-authenticated/1"))
                 .andExpect(status().isOk())
                 .andExpect(model().hasErrors())
@@ -77,8 +79,6 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
 
     @Test
     public void postNoNewApplication() throws Exception {
-        when(competitionOrganisationConfigRestService.findByCompetitionId(1L)).thenReturn(RestResult.restSuccess(new CompetitionOrganisationConfigResource(false, false)));
-        // This should just redirect to the dashboard.
         mockMvc.perform(post("/application/create-authenticated/1").param("createNewApplication", "0"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));

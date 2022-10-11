@@ -7,8 +7,10 @@ import org.innovateuk.ifs.content.form.NewSiteTermsAndConditionsForm;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
@@ -24,6 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class SiteTermsControllerTest extends BaseControllerMockMVCTest<SiteTermsController> {
 
     @Mock

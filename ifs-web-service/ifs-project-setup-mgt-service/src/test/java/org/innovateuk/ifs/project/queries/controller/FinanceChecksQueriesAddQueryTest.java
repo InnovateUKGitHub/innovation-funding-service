@@ -28,9 +28,11 @@ import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
@@ -62,6 +64,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<FinanceChecksQueriesAddQueryController> {
 
     @Mock
@@ -483,8 +486,6 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
         attachmentIds.add(1L);
         Cookie ck = createAttachmentsCookie(attachmentIds);
         AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L, null);
-
-        when(financeCheckServiceMock.getAttachment(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
 
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query?query_section=Eligibility")
                 .param("removeAttachment", "2")

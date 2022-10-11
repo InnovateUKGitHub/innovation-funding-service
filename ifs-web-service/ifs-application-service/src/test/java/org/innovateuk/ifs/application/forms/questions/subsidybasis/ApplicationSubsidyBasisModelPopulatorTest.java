@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.forms.questions.subsidybasis;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.common.populator.ApplicationSubsidyBasisModelPopulator;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationSubsidyBasisViewModel;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
@@ -40,7 +39,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ApplicationSubsidyBasisModelPopulatorTest extends BaseUnitTest {
+public class ApplicationSubsidyBasisModelPopulatorTest {
 
     @Mock
     private ProcessRoleRestService processRoleRestService;

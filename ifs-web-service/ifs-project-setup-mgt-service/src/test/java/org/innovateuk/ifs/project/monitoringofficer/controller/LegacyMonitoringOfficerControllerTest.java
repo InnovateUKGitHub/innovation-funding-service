@@ -21,7 +21,9 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
@@ -53,6 +55,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+@RunWith(MockitoJUnitRunner.class)
 public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVCTest<LegacyMonitoringOfficerController> {
 
     private long projectId = 123L;

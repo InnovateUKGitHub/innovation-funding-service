@@ -17,8 +17,10 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.validation.Validator;
 
 import java.time.LocalDate;
@@ -46,6 +48,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<ApplicationDetailsController> {
 
     @Mock
@@ -306,7 +309,6 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
                 .withCompetition(competition.getId())
                 .build();
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
-        when(applicationRestService.saveApplication(any(ApplicationResource.class))).thenReturn(restSuccess(ValidationMessages.noErrors()));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
 
         mockMvc.perform(

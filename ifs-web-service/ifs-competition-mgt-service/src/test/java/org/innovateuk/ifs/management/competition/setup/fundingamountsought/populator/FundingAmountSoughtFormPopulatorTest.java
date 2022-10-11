@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.competition.setup.fundingamountsought.populator;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
@@ -23,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class FundingAmountSoughtFormPopulatorTest extends BaseUnitTest {
+public class FundingAmountSoughtFormPopulatorTest {
 
     @InjectMocks
     private FundingAmountSoughtFormPopulator fundingAmountSoughtFormPopulator;

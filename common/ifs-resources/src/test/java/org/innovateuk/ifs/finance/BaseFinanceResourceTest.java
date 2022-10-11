@@ -2,6 +2,7 @@ package org.innovateuk.ifs.finance;
 
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
+import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.category.VatCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.junit.Before;
@@ -20,8 +21,11 @@ import static org.innovateuk.ifs.finance.builder.ExcludedCostCategoryBuilder.new
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
+import static org.innovateuk.ifs.finance.builder.OtherFundingCostBuilder.newOtherFunding;
+import static org.innovateuk.ifs.finance.builder.OtherFundingCostCategoryBuilder.newOtherFundingCostCategory;
 import static org.innovateuk.ifs.finance.builder.VATCategoryBuilder.newVATCategory;
 import static org.innovateuk.ifs.finance.builder.VATCostBuilder.newVATCost;
+import static org.innovateuk.ifs.finance.resource.category.BaseOtherFundingCostCategory.OTHER_FUNDING;
 import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.VAT;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -320,5 +324,27 @@ public class BaseFinanceResourceTest {
         baseFinanceResource.setFinanceOrganisationDetails(asMap(VAT, vatCostCategoryRegisteredFalseRateNotNull));
         // Method under test
         assertEquals(ZERO, baseFinanceResource.getVatRate());
+    }
+
+    @Test
+    public void getTotalContributionsInKind() {
+
+        OtherFundingCostCategory otherFundingCostCategory = newOtherFundingCostCategory().withCosts(
+                        newOtherFunding().
+                                withOtherPublicFunding("Yes", "").
+                                withFundingSource(OTHER_FUNDING, "other funding").
+                                withFundingAmount(null, BigDecimal.valueOf(1000)).
+                                build(2)).
+                build();
+        otherFundingCostCategory.calculateTotal();
+
+        Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = asMap(
+                FinanceRowType.OTHER_FUNDING, otherFundingCostCategory
+        );
+
+        baseFinanceResource.setFinanceOrganisationDetails(financeOrganisationDetails);
+
+        BigDecimal totalContributionsInKind = baseFinanceResource.getTotalContributionsInKind();
+        assertEquals(new BigDecimal("1000"), totalContributionsInKind);
     }
 }

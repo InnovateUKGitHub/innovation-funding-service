@@ -1,12 +1,16 @@
 package org.innovateuk.ifs.project.status.security;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -22,13 +26,19 @@ import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class SetupSectionsInternalUserTest extends BaseUnitTest {
+@RunWith(MockitoJUnitRunner.Silent.class)
+public class SetupSectionsInternalUserTest {
 
     @Mock
     private SetupProgressChecker setupProgressChecker;
 
     @InjectMocks
     private SetupSectionInternalUser internalUser;
+
+    @Before
+    public void init() {
+        MockitoAnnotations.initMocks(this);
+    }
 
     @Test
     public void checkAccessToProjectDetailsSectionButProjectDetailsSectionIncomplete() {

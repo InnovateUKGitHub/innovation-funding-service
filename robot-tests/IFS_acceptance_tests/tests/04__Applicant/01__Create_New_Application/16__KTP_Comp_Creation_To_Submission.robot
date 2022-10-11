@@ -1410,18 +1410,21 @@ the user can see project cost breakdown of lead organisation
     the user should see the element     jQuery = th:contains("Total") ~ td:contains("2,369")
 
 the user can view lead and partner finance summary calculations
-    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("2,369")
-    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("10.00")
-    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("237")
-    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("20,000")
-    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("2,132")
-    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("90")
-    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("20,000")
-    the user should see the element     jQuery = th:contains("Total") ~ td:contains("2,369")
-    the user should see the element     jQuery = th:contains("Total") ~ td:contains("90")
-    the user should see the element     jQuery = th:contains("Total") ~ td:contains("40,000")
-    the user should see the element     jQuery = th:contains("Total") ~ td:contains("237")
-    the user should see the element     jQuery = th:contains("Total") ~ td:contains("2,132")
+#    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("2,369")
+#    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("10.00")
+#    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("237")
+#    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("20,000")
+#    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("2,132")
+#    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("90")
+#    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("20,000")
+#    the user should see the element     jQuery = th:contains("Total") ~ td:contains("2,369")
+#    the user should see the element     jQuery = th:contains("Total") ~ td:contains("90")
+#    the user should see the element     jQuery = th:contains("Total") ~ td:contains("40,000")
+#    the user should see the element     jQuery = th:contains("Total") ~ td:contains("237")
+#    the user should see the element     jQuery = th:contains("Total") ~ td:contains("2,132")
+    the user should see the element    jQuery = th:contains("${ktpOrgName}")+td:contains("2,369")+td:contains("10.00")+td:contains("237")+td:contains("0")+td:contains("0")+td:contains("20,000")
+    the user should see the element    jQuery = th:contains("${newPartnerOrgName}")+td:contains("0")+td:contains("0.00")+td:contains("0")+td:contains("90")+td:contains("2,132")+td:contains("20,000")
+    the user should see the element    jQuery = th:contains("Total")+td:contains("£2,369")+td+td:contains("237")+td:contains("90")+td:contains("2,132")+td:contains("40,000")
 
 the user marks the questions as complete
     the user clicks the button/link     link = Back to project exploitation

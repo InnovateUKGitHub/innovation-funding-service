@@ -6,7 +6,9 @@ import org.innovateuk.ifs.competition.service.CompetitionAssessmentConfigRestSer
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 
@@ -17,6 +19,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<AssessmentPermissionRules> {
 
     @Mock
@@ -71,7 +74,6 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
                     .build();
 
             when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-            when(competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionAssessmentConfigResource));
 
             switch (competitionStatus) {
                 case ASSESSOR_FEEDBACK: case PROJECT_SETUP: case PREVIOUS:

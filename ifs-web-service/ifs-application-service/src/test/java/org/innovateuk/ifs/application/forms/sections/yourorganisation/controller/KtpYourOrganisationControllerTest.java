@@ -1,13 +1,16 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -38,6 +41,11 @@ public class KtpYourOrganisationControllerTest extends BaseControllerMockMVCTest
         return Arrays.asList(new Object[] [] {
                 {KTP}, {KTP_AKT}
         });
+    }
+
+    @Before
+    public void reset() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Override

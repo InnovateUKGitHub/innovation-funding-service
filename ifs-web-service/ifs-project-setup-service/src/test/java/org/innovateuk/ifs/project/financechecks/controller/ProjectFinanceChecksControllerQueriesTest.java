@@ -43,9 +43,11 @@ import org.innovateuk.ifs.util.JsonUtil;
 import org.innovateuk.ifs.util.MultipartFileAssertionUtil;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -81,6 +83,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SuppressWarnings("unchecked")
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMockMVCTest<ProjectFinanceChecksController> {
 
     private Long projectId = 123L;

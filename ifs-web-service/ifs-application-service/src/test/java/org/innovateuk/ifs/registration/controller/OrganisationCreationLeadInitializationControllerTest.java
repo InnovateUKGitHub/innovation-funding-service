@@ -9,7 +9,9 @@ import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
@@ -21,6 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+@RunWith(MockitoJUnitRunner.class)
 public class OrganisationCreationLeadInitializationControllerTest extends BaseControllerMockMVCTest<OrganisationCreationLeadInitializationController> {
     protected OrganisationCreationLeadInitializationController supplyControllerUnderTest() {
         return new OrganisationCreationLeadInitializationController();

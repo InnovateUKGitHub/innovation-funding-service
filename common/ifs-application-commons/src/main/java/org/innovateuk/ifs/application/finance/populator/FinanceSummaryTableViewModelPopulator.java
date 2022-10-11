@@ -208,7 +208,10 @@ public class FinanceSummaryTableViewModelPopulator {
     private BigDecimal calculateOtherFundingColumn(CompetitionResource competition, Optional<ApplicationFinanceResource> finance) {
         if (competition.isKtp()) {
             return finance.map(ApplicationFinanceResource::getTotalPreviousFunding).orElse(BigDecimal.ZERO);
-        } else {
+        } else if (competition.isCompTypeOfgemAndFundingTypeThirdParty()) {
+            return finance.map(ApplicationFinanceResource::getTotalContributionsInKind).orElse(BigDecimal.ZERO);
+        }
+        else {
             return finance.map(ApplicationFinanceResource::getTotalOtherFunding).orElse(BigDecimal.ZERO);
         }
     }
@@ -224,9 +227,7 @@ public class FinanceSummaryTableViewModelPopulator {
             } else {
                 return BigDecimal.ZERO;
             }
-        } else   if (competition.isCompTypeOfgemAndFundingTypeThirdParty()) {
-            return  finance.map(appRes->appRes.getTotal().subtract(appRes.getTotalFundingSought())).orElse(BigDecimal.ZERO);
-        }{
+        } else {
             return finance.map(ApplicationFinanceResource::getTotalContribution).orElse(BigDecimal.ZERO);
         }
     }

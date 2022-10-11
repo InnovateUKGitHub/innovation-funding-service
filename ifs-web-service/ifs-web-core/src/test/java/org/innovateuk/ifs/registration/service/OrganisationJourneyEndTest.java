@@ -17,7 +17,9 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.core.task.TaskDecorator;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 
@@ -41,6 +43,7 @@ import static org.mockito.Mockito.when;
 /**
  * Test Class for functionality in {@link OrganisationJourneyEnd}
  */
+@RunWith(MockitoJUnitRunner.class)
 public class OrganisationJourneyEndTest extends BaseServiceUnitTest<OrganisationJourneyEnd> {
 
     @Mock
@@ -91,11 +94,6 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
         OrganisationResource organisation = newOrganisationResource().withId(organisationId).withCompaniesHouseNumber("1").build();
         OrganisationSearchResult organisationSearchResult  = new OrganisationSearchResult();
 
-        when(organisationRestService.getOrganisationById(organisationId))
-                .thenReturn(restSuccess(organisation));
-        when(companiesHouseRestService.getOrganisationById("1"))
-                .thenReturn(restSuccess(organisationSearchResult));
-
         String result = service.completeProcess(request, response, user, organisationId);
 
         assertEquals(result, "redirect:/registration/register");
@@ -110,11 +108,6 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
 
         OrganisationResource organisation = newOrganisationResource().withId(organisationId).withCompaniesHouseNumber("1").build();
         OrganisationSearchResult organisationSearchResult  = new OrganisationSearchResult();
-
-        when(organisationRestService.getOrganisationById(organisationId))
-                .thenReturn(restSuccess(organisation));
-        when(companiesHouseRestService.getOrganisationById("1"))
-                .thenReturn(restSuccess(organisationSearchResult));
 
         ApplicationResource application = newApplicationResource().withCompetition(competitionId).build();
 
@@ -141,11 +134,6 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
         OrganisationResource organisation = newOrganisationResource().withId(organisationId).withCompaniesHouseNumber("1").build();
         OrganisationSearchResult organisationSearchResult  = new OrganisationSearchResult();
 
-        when(organisationRestService.getOrganisationById(organisationId))
-                .thenReturn(restSuccess(organisation));
-        when(companiesHouseRestService.getOrganisationById("1"))
-                .thenReturn(restSuccess(organisationSearchResult));
-
         ApplicationResource application = newApplicationResource().withCompetition(competitionId).build();
 
         when(registrationCookieService.isCollaboratorJourney(request)).thenReturn(false);
@@ -169,16 +157,10 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
         OrganisationResource organisation = newOrganisationResource().withId(organisationId).withCompaniesHouseNumber("1").build();
         OrganisationSearchResult organisationSearchResult  = new OrganisationSearchResult();
 
-        when(organisationRestService.getOrganisationById(organisationId))
-                .thenReturn(restSuccess(organisation));
-        when(companiesHouseRestService.getOrganisationById("1"))
-                .thenReturn(restSuccess(organisationSearchResult));
-
         String inviteHash = "inviteHash";
         ApplicationInviteResource invite = newApplicationInviteResource().withApplication(applicationId).build();
 
         when(registrationCookieService.isCollaboratorJourney(request)).thenReturn(true);
-        when(registrationCookieService.isLeadJourney(request)).thenReturn(false);
         when(registrationCookieService.getInviteHashCookieValue(request)).thenReturn(Optional.of(inviteHash));
         when(inviteRestService.getInviteByHash(inviteHash)).thenReturn(restSuccess(invite));
         when(inviteRestService.acceptInvite(inviteHash, user.getId(), organisationId)).thenReturn(restSuccess());
@@ -198,11 +180,6 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
 
         OrganisationResource organisation = newOrganisationResource().withId(organisationId).withCompaniesHouseNumber("1").build();
         OrganisationSearchResult organisationSearchResult  = new OrganisationSearchResult();
-
-        when(organisationRestService.getOrganisationById(organisationId))
-                .thenReturn(restSuccess(organisation));
-        when(companiesHouseRestService.getOrganisationById("1"))
-                .thenReturn(restSuccess(organisationSearchResult));
 
         ApplicationResource application = newApplicationResource().withCompetition(competitionId).build();
 

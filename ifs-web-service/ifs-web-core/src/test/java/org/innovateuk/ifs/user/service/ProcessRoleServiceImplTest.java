@@ -6,7 +6,9 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -16,6 +18,7 @@ import static org.mockito.Mockito.*;
 /**
  * Testing FormInputServiceImpl and its interactions with its mock rest service.
  */
+@RunWith(MockitoJUnitRunner.class)
 public class ProcessRoleServiceImplTest extends BaseServiceUnitTest<ProcessRoleService> {
 
     @Mock

@@ -4,8 +4,10 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.survey.controller.SurveyController;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -15,6 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+@RunWith(MockitoJUnitRunner.class)
 public class SurveyControllerTest extends BaseControllerMockMVCTest<SurveyController> {
 
     @Mock
@@ -53,9 +56,6 @@ public class SurveyControllerTest extends BaseControllerMockMVCTest<SurveyContro
         surveyResource.setTargetId(competitionId);
         surveyResource.setSatisfaction(null);
         surveyResource.setComments(null);
-
-        when(surveyRestService.save(surveyResource)).
-                thenReturn(restSuccess());
 
         mockMvc.perform(post("/{competitionId}/feedback", competitionId))
                 .andExpect(status().is2xxSuccessful())

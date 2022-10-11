@@ -8,12 +8,15 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class CompetitionSetupPermissionRulesTest extends BasePermissionRulesTest<CompetitionSetupPermissionRules> {
 
     @Mock
@@ -31,7 +34,6 @@ public class CompetitionSetupPermissionRulesTest extends BasePermissionRulesTest
 
         UserResource loggedInUser = new UserResource();
 
-        when(competitionRestService.getCompetitionById(competitionId.id())).thenReturn(restSuccess(competitionResource));
         when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId.id())).thenReturn(true);
         assertTrue(rules.manageInnovationLead(competitionId, loggedInUser));
     }

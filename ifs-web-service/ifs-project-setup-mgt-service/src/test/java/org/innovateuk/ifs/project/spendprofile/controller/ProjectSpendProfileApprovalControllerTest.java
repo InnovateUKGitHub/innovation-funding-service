@@ -16,7 +16,9 @@ import org.innovateuk.ifs.spendprofile.SpendProfileService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Collections;
@@ -35,6 +37,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ProjectSpendProfileApprovalControllerTest extends BaseControllerMockMVCTest<ProjectSpendProfileApprovalController> {
 
     @Mock
@@ -97,7 +100,6 @@ public class ProjectSpendProfileApprovalControllerTest extends BaseControllerMoc
         partnerOrganisationResource.setOrganisationName(partnerOrganisations.get(0).getName());
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(projectService.getLeadOrganisation(organisationId)).thenReturn(partnerOrganisations.get(0));
         when(applicationSummaryRestService.getCompetitionSummary(competitionId)).thenReturn(restSuccess(competitionSummary));
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(userRestService.retrieveUserById(userId)).thenReturn(restSuccess(user));
@@ -137,7 +139,6 @@ public class ProjectSpendProfileApprovalControllerTest extends BaseControllerMoc
         partnerOrganisationResource.setOrganisationName(partnerOrganisations.get(0).getName());
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(projectService.getLeadOrganisation(organisationId)).thenReturn(partnerOrganisations.get(0));
         when(applicationSummaryRestService.getCompetitionSummary(competitionId)).thenReturn(restSuccess(competitionSummary));
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(userRestService.retrieveUserById(userId)).thenReturn(restSuccess(user));

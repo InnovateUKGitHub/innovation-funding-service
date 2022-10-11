@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.PostcodeAndTownResource;
+import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -462,6 +463,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
     @Test
     public void updatePartnerProjectLocationWhenUpdateFails() throws Exception {
+
+        BaseBuilderAmendFunctions.clearUniqueIds();
 
         long projectId = 1L;
         long organisationId = 2L;

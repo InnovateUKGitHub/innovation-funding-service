@@ -329,6 +329,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("competitionEoiEvidenceConfigResource", competitionEoiEvidenceConfigResources);
     }
 
+    public CompetitionResourceBuilder withCompTypeOfgemAndFundingTypeThirdParty(boolean... compTypeOfgemAndFundingTypeThirdParty) {
+        return withArraySetFieldByReflection("compTypeOfgemAndFundingTypeThirdParty", compTypeOfgemAndFundingTypeThirdParty);
+    }
+
     @Override
     protected CompetitionResource createInitial() {
         return new CompetitionResource();
