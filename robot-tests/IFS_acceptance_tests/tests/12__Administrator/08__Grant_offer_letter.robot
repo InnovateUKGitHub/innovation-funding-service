@@ -12,7 +12,6 @@ ${HighSpeedProjectID}         ${project_ids["${HighSpeedProjectName}"]}
 *** Test Cases ***
 IFS Admin user can reset GOL in project setup
     [Documentation]  IFS-12952
-    [Setup]  Requesting Project ID of this Project
     Given the user navigates to the page                 ${server}/project-setup-management/project/${HighSpeedProjectID}/grant-offer-letter/send
     When Admin resets the GOL
     Then the user should see the element                jQuery = h2:contains("Grant offer letter upload") +* p:contains("No files have been uploaded yet.")
@@ -33,7 +32,6 @@ PM uploads the signed offer letter
 
 IFS Admin user can reject and reset GOL in project setup
     [Documentation]  IFS-12952
-    [Setup]  Requesting Project ID of this Project
     Given Admin rejects the GOL
     When Admin resets the GOL
     Then the user should not see the element              jQuery = .warning-alert p:contains("These documents have been reviewed and rejected. We have returned them to the Project Manager.")
