@@ -7,7 +7,7 @@
     </div>
 
     <th:block th:insert="fragments/layout :: page-title"
-              th:with="pageTitle='Project Impact',size='govuk-heading-xl'"/>
+              th:with="pageTitle='Project impact',size='govuk-heading-xl'"/>
 
     <form th:action="@{(${model.general.editable} ? '' : 'project-impact/edit')}"
           method="post"

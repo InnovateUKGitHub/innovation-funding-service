@@ -13,7 +13,9 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.TriFunction;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.stream.Collectors;
 
@@ -29,6 +31,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 
+@RunWith(MockitoJUnitRunner.class)
 public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<SetupSectionsPermissionRules> {
 
     @Mock
@@ -71,7 +74,6 @@ public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<Set
         ProjectUserResource projectUser = newProjectUserResource().withRole(ProjectParticipantRole.PROJECT_FINANCE_CONTACT).withOrganisation(2L).build();
         ProjectStatusResource projectStatus = newProjectStatusResource().withBankDetailsStatus(ProjectActivityStates.COMPLETE).withProjectDetailStatus(ProjectActivityStates.COMPLETE).withFinanceChecksStatus(ProjectActivityStates.COMPLETE).build();
         when(projectService.getProjectUsersForProject(1L)).thenReturn(singletonList(projectUser));
-        when(statusService.getProjectStatus(1L)).thenReturn(projectStatus);
         assertFalse(rules.internalCanAccessFinanceChecksAddQuery(new ProjectOrganisationCompositeId(1L, 2L), user));
     }
 

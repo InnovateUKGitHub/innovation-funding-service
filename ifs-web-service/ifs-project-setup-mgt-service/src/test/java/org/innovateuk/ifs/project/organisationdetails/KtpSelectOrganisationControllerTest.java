@@ -11,10 +11,12 @@ import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Arrays;
@@ -62,6 +64,11 @@ public class KtpSelectOrganisationControllerTest extends BaseControllerMockMVCTe
         return Arrays.asList(new Object[] [] {
                 {KTP}, {KTP_AKT}
         });
+    }
+
+    @Before
+    public void init() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Override

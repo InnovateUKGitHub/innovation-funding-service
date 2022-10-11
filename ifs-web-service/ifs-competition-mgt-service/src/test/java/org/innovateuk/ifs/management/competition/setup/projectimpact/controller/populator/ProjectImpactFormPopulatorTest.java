@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.competition.setup.projectimpact.controller.populator;
 
-import org.innovateuk.ifs.BaseUnitTest;
+
 import org.innovateuk.ifs.competition.builder.CompetitionApplicationConfigResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -8,16 +8,18 @@ import org.innovateuk.ifs.competition.service.CompetitionApplicationConfigRestSe
 import org.innovateuk.ifs.management.competition.setup.projectimpact.form.ProjectImpactForm;
 import org.innovateuk.ifs.management.competition.setup.projectimpact.populator.ProjectImpactFormPopulator;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
-
-public class ProjectImpactFormPopulatorTest extends BaseUnitTest {
+@RunWith(MockitoJUnitRunner.Silent.class)
+public class ProjectImpactFormPopulatorTest {
 
     @InjectMocks
     private ProjectImpactFormPopulator service;

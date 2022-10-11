@@ -13,9 +13,11 @@ import org.innovateuk.ifs.management.assessor.populator.ManageAssessorsModelPopu
 import org.innovateuk.ifs.management.assessor.viewmodel.ManageAssessorsViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +33,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class AssessmentAssessorsControllerTest extends BaseControllerMockMVCTest<AssessmentAssessorsController> {
 
     @Mock
@@ -79,8 +82,6 @@ public class AssessmentAssessorsControllerTest extends BaseControllerMockMVCTest
                 .build(2);
 
         AssessorCountSummaryPageResource expectedPageResource = new AssessorCountSummaryPageResource(41, 3, summaryResources, pageNumber, pageSize);
-
-        when(assessmentPeriodRestService.getAssessmentPeriodByCompetitionId(competitionResource.getId())).thenReturn(restSuccess(Collections.emptyList()));
 
         when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(newInnovationSectorResource().build(2)));
 

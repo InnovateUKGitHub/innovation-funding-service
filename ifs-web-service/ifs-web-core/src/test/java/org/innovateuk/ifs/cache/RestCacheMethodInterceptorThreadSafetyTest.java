@@ -4,11 +4,12 @@ import com.google.common.cache.Cache;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.lang.reflect.Method;
@@ -37,7 +38,8 @@ import static org.mockito.Mockito.when;
  * single Controller call can safely share cache results and add cache results to the existing set of results
  * between the various Threads its Futures execute within.
  */
-public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTest {
+@RunWith(MockitoJUnitRunner.class)
+public class RestCacheMethodInterceptorThreadSafetyTest {
 
     @InjectMocks
     private RestCacheMethodInterceptor interceptor;

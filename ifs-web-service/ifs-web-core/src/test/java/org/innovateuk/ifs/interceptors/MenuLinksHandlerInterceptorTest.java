@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.interceptors;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.navigation.PageHistoryService;
@@ -30,7 +29,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class MenuLinksHandlerInterceptorTest extends BaseUnitTest {
+public class MenuLinksHandlerInterceptorTest {
 
     private static final String USER_DASHBOARD_LINK = "userDashboardLink";
     private static final String USER_PROFILE_LINK = "userProfileLink";

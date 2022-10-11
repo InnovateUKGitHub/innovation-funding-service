@@ -5,7 +5,9 @@ import org.innovateuk.ifs.project.setupcomplete.SetupCompleteController;
 import org.innovateuk.ifs.project.setupcomplete.populator.SetupCompleteViewModelPopulator;
 import org.innovateuk.ifs.project.setupcomplete.viewmodel.SetupCompleteViewModel;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -13,6 +15,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+@RunWith(MockitoJUnitRunner.class)
 public class SetupCompleteControllerTest extends BaseControllerMockMVCTest<SetupCompleteController> {
 
     @Mock

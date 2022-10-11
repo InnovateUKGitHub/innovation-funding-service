@@ -11,7 +11,9 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
@@ -25,6 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ApplicationTeamAddressControllerTest extends BaseControllerMockMVCTest<ApplicationTeamAddressController> {
 
     @Override
@@ -92,7 +95,6 @@ public class ApplicationTeamAddressControllerTest extends BaseControllerMockMVCT
         OrganisationResource organisation = newOrganisationResource().build();
         long questionId = 40L;
 
-        when(applicationOrganisationAddressRestService.getAddress(application.getId(), organisation.getId(), OrganisationAddressType.INTERNATIONAL)).thenReturn(restSuccess(address));
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
 

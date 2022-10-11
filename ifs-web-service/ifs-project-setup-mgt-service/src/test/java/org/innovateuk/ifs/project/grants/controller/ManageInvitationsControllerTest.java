@@ -7,7 +7,9 @@ import org.innovateuk.ifs.grantsinvite.resource.SentGrantsInviteResource;
 import org.innovateuk.ifs.project.grants.populator.ManageInvitationsModelPopulator;
 import org.innovateuk.ifs.project.grants.viewmodel.ManageInvitationsViewModel;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ManageInvitationsControllerTest  extends BaseControllerMockMVCTest<ManageInvitationsController> {
 
     @Mock
@@ -47,7 +50,6 @@ public class ManageInvitationsControllerTest  extends BaseControllerMockMVCTest<
         long projectId = 123L;
 
         List<SentGrantsInviteResource> grants = new ArrayList<>();
-        when(grantsInviteRestService.getAllForProject(projectId)).thenReturn(restSuccess(grants));
 
         ManageInvitationsViewModel viewModel = new ManageInvitationsViewModel(competitionId, null, projectId, null, applicationId, grants);
         when(manageInvitationsModelPopulator.populateManageInvitationsViewModel(projectId)).thenReturn(viewModel);

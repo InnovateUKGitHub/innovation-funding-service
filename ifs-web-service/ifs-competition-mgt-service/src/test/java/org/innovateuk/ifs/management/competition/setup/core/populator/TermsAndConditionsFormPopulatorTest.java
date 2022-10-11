@@ -1,14 +1,15 @@
 package org.innovateuk.ifs.management.competition.setup.core.populator;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.management.competition.setup.core.form.TermsAndConditionsForm;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -19,7 +20,8 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-public class TermsAndConditionsFormPopulatorTest extends BaseUnitTest {
+@RunWith(MockitoJUnitRunner.class)
+public class TermsAndConditionsFormPopulatorTest {
 
     @InjectMocks
     private TermsAndConditionsFormPopulator service;
@@ -33,7 +35,6 @@ public class TermsAndConditionsFormPopulatorTest extends BaseUnitTest {
         CompetitionResource competition = newCompetitionResource()
                 .withTermsAndConditions(termsAndConditions).build();
 
-        when(termsAndConditionsRestService.getById(any())).thenReturn(restSuccess(termsAndConditions));
         TermsAndConditionsForm result = service.populateForm(competition);
 
         assertNotNull(result.getTermsAndConditionsId());

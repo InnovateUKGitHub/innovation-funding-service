@@ -10,7 +10,9 @@ import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class LoginControllerTest extends BaseControllerMockMVCTest<LoginController> {
 
     @Override
@@ -57,7 +60,6 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
 
         setLoggedInUser(null);
         String email = "test@test.nl";
-        when(userRestServiceMock.sendPasswordResetNotification(eq(email))).thenReturn(completedFuture(restSuccess()));
 
         mockMvc.perform(
                 post("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD)
@@ -73,7 +75,6 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
 
         setLoggedInUser(null);
         String email = "testtest.nl";
-        when(userRestServiceMock.sendPasswordResetNotification(eq(email))).thenReturn(completedFuture(restSuccess()));
 
         mockMvc.perform(
                 post("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD)
@@ -155,7 +156,6 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
         String password = "letm3In";
 
         when(userRestServiceMock.checkPasswordResetHash(hash)).thenReturn(restSuccess());
-        when(userRestServiceMock.resetPassword(eq(hash), eq(password))).thenReturn(restSuccess());
 
         mockMvc.perform(
                 post("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD + "/hash/" + hash)

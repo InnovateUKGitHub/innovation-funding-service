@@ -182,7 +182,6 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
 
     @Before
     public void setup() {
-        super.setup();
         String termsTemplate = "terms-template";
         GrantTermsAndConditionsResource grantTermsAndConditions =
                 new GrantTermsAndConditionsResource("name", termsTemplate, 1);

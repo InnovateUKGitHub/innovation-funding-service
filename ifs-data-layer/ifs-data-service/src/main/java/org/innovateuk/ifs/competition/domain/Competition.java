@@ -37,6 +37,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.Comparator.comparing;
 import static java.util.Optional.*;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.THIRDPARTY;
 import static org.innovateuk.ifs.competition.resource.CompetitionResource.H2020_TYPE_NAME;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.ASSESSMENT_ONLY;
@@ -1171,4 +1172,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     public boolean isEoiEvidenceRequired() {
         return competitionEoiEvidenceConfig != null ? competitionEoiEvidenceConfig.isEvidenceRequired() : false;
     }
+
+    @Transient
+    public boolean isCompTypeOfgemAndFundingTypeThirdParty() {
+        return getCompetitionTypeEnum() == CompetitionTypeEnum.OFGEM && THIRDPARTY.equals(fundingType);
+    }
+
 }

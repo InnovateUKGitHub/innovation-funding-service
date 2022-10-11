@@ -8,6 +8,13 @@
                 </legend>
 
                 <dl class="govuk-list application-question-list govuk-grid-row">
+                    <th:block th:if="${model.general.competition.enabledForPreRegistration}">
+                        <th:block th:if="${question.expressionOfInterest != null}">
+                            <dt class="govuk-grid-column-one-third">Is this also an expression of interest question?</dt>
+                            <dd class="govuk-grid-column-two-thirds" th:text="${question.expressionOfInterest ? 'Yes' : 'No'}"></dd>
+                        </th:block>
+                    </th:block>
+
                     <dt class="govuk-grid-column-one-third">Question heading</dt>
                     <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.shortTitle)}">None</dd>
                     <dd class="govuk-grid-column-two-thirds" th:unless="${#strings.isEmpty(question.shortTitle)}"
@@ -172,6 +179,51 @@
                th:value="${question.type}"/>
 
         <div class="question">
+            <!--/* EXPRESSION OF INTEREST */-->
+            <th:block th:if="${model.general.competition.enabledForPreRegistration}">
+                <th:block th:if="${question.expressionOfInterest != null or #fields.hasErrors('question.expressionOfInterest')}">
+                    <div class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('question.expressionOfInterest')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="question.expressionOfInterest">
+                                <h2 class="govuk-fieldset__heading">Is this also an expression of interest question?</h2>
+                            </legend>
+                            <th:block th:if="${#fields.hasErrors('question.expressionOfInterest')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('question.expressionOfInterest')}"
+                                  th:text="${err}"></span>
+                            </th:block>
+                            <div class="govuk-radios govuk-radios--inline"
+                                 th:with="checked=${question.expressionOfInterest != null and question.expressionOfInterest}">
+                                <div class="govuk-radios__item"
+                                     data-target-clear-form="true">
+                                    <input id="expression-of-interest-yes"
+                                           class="govuk-radios__input"
+                                           th:name="question.expressionOfInterest"
+                                           th:checked="${checked}"
+                                           value="1"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                           type="radio"/>
+                                    <label for="expression-of-interest-yes"
+                                           class="govuk-label govuk-radios__label">Yes</label>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input id="expression-of-interest-no"
+                                           class="govuk-radios__input"
+                                           th:name="question.expressionOfInterest"
+                                           th:checked="${!checked}"
+                                           value="0"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                           type="radio"/>
+                                    <label for="expression-of-interest-no"
+                                           class="govuk-label govuk-radios__label">No</label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </th:block>
+            </th:block>
 
             <th:block
                 th:if="${competitionSetupForm.question.type != competitionSetupForm.question.getKTPAssessmentQuestionType()}">
@@ -551,6 +603,7 @@
                     </div>
                 </div>
             </th:block>
+
 
             <!--/* TEMPLATE DOCUMENT */-->
             <th:block th:if="${question.templateDocument != null or #fields.hasErrors('question.templateDocument')}">

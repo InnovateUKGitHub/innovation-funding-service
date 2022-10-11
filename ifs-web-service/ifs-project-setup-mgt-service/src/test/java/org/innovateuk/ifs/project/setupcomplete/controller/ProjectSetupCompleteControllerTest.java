@@ -9,7 +9,9 @@ import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.service.ProjectStateRestService;
 import org.innovateuk.ifs.project.setupcomplete.viewmodel.ProjectSetupCompleteViewModel;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
@@ -24,6 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ProjectSetupCompleteControllerTest extends BaseControllerMockMVCTest<ProjectSetupCompleteController> {
 
     @Mock
@@ -82,8 +85,6 @@ public class ProjectSetupCompleteControllerTest extends BaseControllerMockMVCTes
 
     @Test
     public void saveProjectState_success() throws Exception {
-        when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
-        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(projectStateRestService.markAsSuccessful(projectId)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/setup-complete", competitionId, projectId)
@@ -97,7 +98,6 @@ public class ProjectSetupCompleteControllerTest extends BaseControllerMockMVCTes
     @Test
     public void saveProjectStateLoanStartAndSetupComplete_success() throws Exception {
         when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
-        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(projectStateRestService.markAsSuccessful(projectId, null)).thenReturn(restSuccess());
         mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/loan-setup-complete", competitionId, projectId)
                 .param("successful", "true")
@@ -114,7 +114,6 @@ public class ProjectSetupCompleteControllerTest extends BaseControllerMockMVCTes
     public void saveProjectStateLoanNewTargetStartDate_success() throws Exception {
         LocalDate newTargetDate = projectStartDate.plusMonths(1).withDayOfMonth(1);
         when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
-        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(projectStateRestService.markAsSuccessful(projectId, newTargetDate)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/loan-setup-complete", competitionId, projectId)

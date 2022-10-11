@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.model;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.assessment.service.CompetitionKeyAssessmentStatisticsRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -11,9 +10,11 @@ import org.innovateuk.ifs.management.assessment.populator.ManageAssessmentsModel
 import org.innovateuk.ifs.management.assessment.viewmodel.ManageAssessmentsViewModel;
 import org.innovateuk.ifs.management.assessmentperiod.populator.AssessmentPeriodFormPopulator;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInAssessmentKeyAssessmentStatisticsResourceBuilder.newCompetitionInAssessmentKeyAssessmentStatisticsResource;
@@ -23,7 +24,8 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-public class ManageAssessmentsModelPopulatorTest extends BaseUnitTest {
+@RunWith(MockitoJUnitRunner.class)
+public class ManageAssessmentsModelPopulatorTest {
 
     @InjectMocks
     @Spy

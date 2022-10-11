@@ -11,7 +11,9 @@ import org.innovateuk.ifs.management.nonifs.modelpopulator.NonIfsDetailsViewMode
 import org.innovateuk.ifs.management.nonifs.saver.NonIfsDetailsFormSaver;
 import org.innovateuk.ifs.management.nonifs.viewmodel.NonIfsDetailsViewModel;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
@@ -27,6 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.validation.BindingResultUtils.getBindingResult;
 
+@RunWith(MockitoJUnitRunner.class)
 public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<NonIfsCompetitionController> {
 
     @Mock
@@ -126,7 +129,6 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
         CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).withNonIfs(true).build();
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
-        when(nonIfsDetailsFormSaver.save(any(), any())).thenReturn(serviceSuccess());
 
         MvcResult mvcResult = mockMvc.perform(post("/non-ifs-competition/setup/"+competitionId)
                 .param("title", "")
@@ -169,7 +171,6 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
         CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).withNonIfs(true).build();
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
-        when(nonIfsDetailsFormSaver.save(any(), any())).thenReturn(serviceSuccess());
 
         MvcResult mvcResult = mockMvc.perform(post("/non-ifs-competition/setup/"+competitionId))
                 .andExpect(status().is2xxSuccessful())
@@ -197,7 +198,6 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
         CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).withNonIfs(true).build();
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
-        when(nonIfsDetailsFormSaver.save(any(), any())).thenReturn(serviceSuccess());
 
         MvcResult mvcResult = mockMvc.perform(post("/non-ifs-competition/setup/"+competitionId)
                 .param("openDate.year", "1999")
@@ -232,7 +232,6 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
         CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).withNonIfs(true).build();
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
-        when(nonIfsDetailsFormSaver.save(any(), any())).thenReturn(serviceSuccess());
 
         MvcResult mvcResult = mockMvc.perform(post("/non-ifs-competition/setup/"+competitionId)
                 .param("openDate.year", "01")

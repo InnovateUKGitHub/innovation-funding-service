@@ -9,13 +9,17 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationResearchCategoryRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletResponse;
@@ -33,6 +37,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<ResearchCategoryController> {
 
     @Override
@@ -60,6 +65,11 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
 
     @Mock
     private ApplicationResearchCategoryFormPopulator researchCategoryFormPopulator;
+
+    @Before
+    public void reset() {
+        BaseBuilderAmendFunctions.clearUniqueIds();
+    }
 
     @Test
     public void getResearchCategories() throws Exception {

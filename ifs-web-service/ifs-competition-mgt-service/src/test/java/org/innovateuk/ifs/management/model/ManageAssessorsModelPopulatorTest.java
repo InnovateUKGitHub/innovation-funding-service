@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.model;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 import org.innovateuk.ifs.assessment.service.AssessmentPeriodService;
@@ -13,9 +12,11 @@ import org.innovateuk.ifs.management.assessor.viewmodel.ManageAssessorsRowViewMo
 import org.innovateuk.ifs.management.assessor.viewmodel.ManageAssessorsViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
@@ -28,7 +29,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-public class ManageAssessorsModelPopulatorTest extends BaseUnitTest {
+@RunWith(MockitoJUnitRunner.class)
+public class ManageAssessorsModelPopulatorTest {
 
     @Spy
     @InjectMocks

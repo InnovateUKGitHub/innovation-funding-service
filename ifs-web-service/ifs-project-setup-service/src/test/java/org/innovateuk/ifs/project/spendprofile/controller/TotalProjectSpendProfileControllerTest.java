@@ -18,8 +18,10 @@ import org.innovateuk.ifs.project.spendprofile.viewmodel.TotalProjectSpendProfil
 import org.innovateuk.ifs.project.spendprofile.viewmodel.TotalSpendProfileViewModel;
 import org.innovateuk.ifs.spendprofile.SpendProfileService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -41,6 +43,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
+@RunWith(MockitoJUnitRunner.class)
 public class TotalProjectSpendProfileControllerTest extends BaseControllerMockMVCTest<TotalProjectSpendProfileController> {
     @Mock
     public SpendProfileCostValidator spendProfileCostValidator;

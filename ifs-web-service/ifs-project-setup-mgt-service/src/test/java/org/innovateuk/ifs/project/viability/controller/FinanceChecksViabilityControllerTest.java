@@ -24,7 +24,9 @@ import org.innovateuk.ifs.project.viability.viewmodel.FinanceChecksViabilityView
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
@@ -59,6 +61,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCTest<FinanceChecksViabilityController> {
     @Mock
     private OrganisationRestService organisationRestService;
@@ -197,10 +200,8 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         when(projectFinanceService.isCreditReportConfirmed(project.getId(), industrialOrganisation.getId())).thenReturn(restSuccess(false));
 
         when(projectService.getById(project.getId())).thenReturn(project);
-        when(applicationService.getById(456L)).thenReturn(app);
 
         GrantOfferLetterStateResource grantOfferLetterStateResource = GrantOfferLetterStateResource.stateInformationForPartnersView(GrantOfferLetterState.PENDING, null);
-        when(grantOfferLetterService.getGrantOfferLetterState(project.getId())).thenReturn(serviceSuccess(grantOfferLetterStateResource));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/viability",
                 project.getId(), industrialOrganisation.getId())).
@@ -249,7 +250,6 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         when(projectFinanceService.isCreditReportConfirmed(project.getId(), academicOrganisation.getId())).thenReturn(restSuccess(true));
         when(projectService.getById(project.getId())).thenReturn(project);
         GrantOfferLetterStateResource grantOfferLetterStateResource = GrantOfferLetterStateResource.stateInformationForPartnersView(GrantOfferLetterState.PENDING, null);
-        when(grantOfferLetterService.getGrantOfferLetterState(project.getId())).thenReturn(serviceSuccess(grantOfferLetterStateResource));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/viability",
                 project.getId(), academicOrganisation.getId())).
@@ -345,11 +345,9 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(competitionResource));
         when(projectFinanceService.getProjectFinances(project.getId())).thenReturn(restSuccess(projectFinances));
         when(financeCheckRestService.getViability(project.getId(), academicOrganisation.getId())).thenReturn(restSuccess(viability));
-        when(projectFinanceService.isCreditReportConfirmed(project.getId(), academicOrganisation.getId())).thenReturn(restSuccess(true));
         when(projectService.getById(project.getId())).thenReturn(project);
 
         GrantOfferLetterStateResource grantOfferLetterStateResource = GrantOfferLetterStateResource.stateInformationForPartnersView(GrantOfferLetterState.PENDING, null);
-        when(grantOfferLetterService.getGrantOfferLetterState(project.getId())).thenReturn(serviceSuccess(grantOfferLetterStateResource));
 
         mockMvc.perform(
                 post("/project/{projectId}/finance-check/organisation/{organisationId}/viability", projectId, organisationId).
