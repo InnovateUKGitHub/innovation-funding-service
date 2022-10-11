@@ -23,6 +23,7 @@ public class ApplicationSubmissionSectionUpdater extends AbstractSectionUpdater 
 
     @Value("${ifs.assessment.stage.competition.enabled}")
     private boolean isAssessmentStageEnabled;
+
     @Value("${ifs.expression.of.interest.enabled}")
     private boolean isExpressionOfInterestEnabled;
 
