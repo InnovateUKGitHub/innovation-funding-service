@@ -488,9 +488,6 @@ the user should not see subsection
     the user should not see the element     link = ${subSectionName}
 
 Comp admin set the competion as prereg comp and hide the question, section and subsection
-    #Get competitions id and set it as suite variable     ${hecpPreregCompName}
-    #set competition as pre reg                           ${preregCompetitionId}
-    #set question as hidden in pre reg application        ${preregCompetitionId}
     set subsection as hidden in pre reg application      ${preregCompetitionId}
     set section as hidden in pre reg application         ${preregCompetitionId}
     update milestone to yesterday                        ${preregCompetitionId}  OPEN_DATE
