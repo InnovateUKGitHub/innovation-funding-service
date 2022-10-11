@@ -76,6 +76,9 @@ public class CompetitionSetupQuestionResourceBuilder extends BaseBuilder<Competi
         return with(competition -> competition.setChoices(choices));
     }
 
+    public CompetitionSetupQuestionResourceBuilder withExpressionOfInterest(Boolean expressionOfInterest) {
+        return with(competition -> competition.setExpressionOfInterest(expressionOfInterest));
+    }
     public CompetitionSetupQuestionResourceBuilder withAppendix(Boolean appendix) {
         return with(competition -> competition.setAppendix(appendix));
     }
