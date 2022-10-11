@@ -167,6 +167,7 @@ public class ProjectEligibilityModelPopulatorTest {
                 CompetitionSetupSection.values(),
                 Boolean.TRUE,
                 Boolean.FALSE,
+                true,
                 true
         );
     }
