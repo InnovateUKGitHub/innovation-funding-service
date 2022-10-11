@@ -83,7 +83,7 @@ ${ktpEmailInviteSubject}                 You have been invited to become a knowl
 ${applicantKTACredentials}               john.fenton@ktn-uk.test
 ${newApplicantCredentials}               joe.adams@ktn-uk.test
 ${assessorCredntials}                    apc-assessor-user1@example.com
-${AssessmentCompID}                      ${competition_ids["Assessment is awesome 2"]}
+${AssessmentCompID}                      ${competition_ids["Sustainable living models for the future, in assessment"]}
 
 *** Test Cases ***
 Project finance user cannot navigate to manage users page
@@ -485,18 +485,16 @@ Comp Admin can unsubmit the assessment from the assessor progress page
     [Documentation]  IFS-12973
     [Setup]  log in as a different user            &{Comp_admin1_credentials}
     Given The user navigates to the page           ${server}/management/assessment/competition/${AssessmentCompID}/assessors/
-    When The user clicks the button/link           jQuery = td:contains("Raoul de Chagny") ~ td:contains("View progress")
-    And The user clicks the button/link            jQuery = td:contains("216") ~ td a:contains("Unsubmit")
+    When The user clicks the button/link           jQuery = td:contains("Alexis Colon") ~ td:contains("View progress")
+    And The user clicks the button/link            jQuery = td:contains("134") ~ td a:contains("Unsubmit")
     Then the user unsubmits the assessment
 
-#Comp Admin can unsubmit the assessment from the application progress page
- #   [Documentation]  IFS-12973
-  #  Given The user navigates to the page           ${server}/management/assessment/competition/${AssessmentCompID}/applications/
-   # When The user clicks the button/link           jQuery = td:contains(217) ~ td:contains("View progress")
-   # And The user clicks the button/link            jQuery = td:contains("Raoul de Chagny") ~ td:contains("Unsubmit")
-   # Then The user should see the notification      Are you sure you want to unsubmit this assessment from the application?
-   # And The user clicks the button/link            jQuery = button:contains("Unsubmit assessment")
-
+Comp Admin can unsubmit the assessment from the application progress page
+    [Documentation]  IFS-12973
+    Given The user navigates to the page           ${server}/management/assessment/competition/${AssessmentCompID}/applications/
+    When The user clicks the button/link           jQuery = td:contains(134) ~ td:contains("View progress")
+    And The user clicks the button/link            jQuery = td:contains("Anita Ruiz") ~ td:contains("Unsubmit")
+    Then the user unsubmits the assessment
 *** Keywords ***
 the KTA should see all relevant links on assessment dashboard
     the user should see the element     link = your skills
@@ -791,8 +789,3 @@ the user fills invite a new external user fields
 the user unsubmits the assessment
     Then The user should see the notification      Are you sure you want to unsubmit this assessment from the application?
     And The user clicks the button/link            jQuery = button:contains("Unsubmit assessment")
-
-#Assessor submits the assessment
- #   Log in as a different user            ${assessorCredntials}    ${short_password}
-  #  The user navigates to the page        ${server}/assessment/assessor/dashboard/competition/${AssessmentCompID}
-   # the user selects the checkbox
