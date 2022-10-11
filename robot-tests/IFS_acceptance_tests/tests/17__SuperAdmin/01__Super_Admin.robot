@@ -91,17 +91,6 @@ Super admin can edit application questions when the competition is open
     Then the user enters text into subtitle     jQuery = label[for="question.subTitle"] +* .editor       Business opportunity guidance
     And the user clicks the button/link         jQuery = button:contains("Done")
 
-IFS admin can unsubmit assessment of an application already submitted
-    [Documentation]  IFS-9604
-    Given Logging in and Error Checking         &{superAdminCredentials}
-    And the user navigates to the page          ${server}/management/assessment/competition/${assessmentResetCompetitionID}
-    And the user clicks the button/link         link = Manage assessors
-    When internal user filters the assessor
-    And the user clicks the button/link         link = View progress
-    And The user should see the element         jQuery = td:contains("${assessmentResetApplicationName}") ~ td:contains("Unsubmit")
-    And the user clicks the button/link         link = Unsubmit
-    And the user clicks the button/link         jQuery = button:contains("Unsubmit assessment")
-
 *** Keywords ***
 Custom Suite Setup
     Set predefined date variables
