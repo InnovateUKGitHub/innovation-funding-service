@@ -124,7 +124,7 @@ public class QuestionPriorityOrderService {
 
     private void adjustPriority(int si, Section section) {
         if (SectionType.TERMS_AND_CONDITIONS.equals(section.getType())) {
-            si++;
+            si++; // make room for Impact Management section
         }
         section.setPriority(si);
     }
