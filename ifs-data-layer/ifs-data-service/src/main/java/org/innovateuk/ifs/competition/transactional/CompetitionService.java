@@ -97,5 +97,5 @@ public interface CompetitionService {
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     @SecuredBySpring(value = "UPDATE_IMPACT_MANAGEMENT_STATE", securedType = CompetitionResource.class,
             description = "Only Comp Admins are able to update impact management for the given competitions")
-    ServiceResult<Void> updateImpactManagementForCompetition(long competitionId, boolean projectImpactSurveyApplicable);
+    ServiceResult<Void> includeSupportingInformationSectionForCompetition(long competitionId, boolean projectImpactSurveyApplicable);
 }

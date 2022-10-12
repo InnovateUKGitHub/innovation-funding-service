@@ -319,7 +319,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<Void> updateImpactManagementForCompetition(long competitionId, boolean projectImpactSurveyApplicable) {
+    public ServiceResult<Void> includeSupportingInformationSectionForCompetition(long competitionId, boolean projectImpactSurveyApplicable) {
         Competition competition = getCompetition(competitionId).getSuccess();
 
 

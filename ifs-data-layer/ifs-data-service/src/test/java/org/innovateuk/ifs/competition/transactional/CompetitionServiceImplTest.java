@@ -28,8 +28,6 @@ import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
-import org.innovateuk.ifs.sil.SilPayloadKeyType;
-import org.innovateuk.ifs.sil.SilPayloadType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -629,7 +627,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
                 .thenReturn(supportingInformation.getQuestions().stream().findFirst().get());
 
 
-        ServiceResult<Void> result = service.updateImpactManagementForCompetition(competitionId, true);
+        ServiceResult<Void> result = service.includeSupportingInformationSectionForCompetition(competitionId, true);
         assertTrue(result.isSuccess());
     }
 
@@ -666,7 +664,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
 
 
-        ServiceResult<Void> result = service.updateImpactManagementForCompetition(competitionId, false);
+        ServiceResult<Void> result = service.includeSupportingInformationSectionForCompetition(competitionId, false);
         assertTrue(result.isSuccess());
     }
 
@@ -706,7 +704,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         doNothing().when(questionRepository).deleteUsingId(supportingInformation.getQuestions().stream().findAny().get().getId());
         doNothing().when(sectionRepository).deleteUsingId(supportingInformation.getId());
 
-        ServiceResult<Void> result = service.updateImpactManagementForCompetition(competitionId, false);
+        ServiceResult<Void> result = service.includeSupportingInformationSectionForCompetition(competitionId, false);
         assertTrue(result.isSuccess());
     }
 
@@ -733,7 +731,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
 
 
-        ServiceResult<Void> result = service.updateImpactManagementForCompetition(competitionId, true);
+        ServiceResult<Void> result = service.includeSupportingInformationSectionForCompetition(competitionId, true);
         assertTrue(result.isFailure());
     }
 }

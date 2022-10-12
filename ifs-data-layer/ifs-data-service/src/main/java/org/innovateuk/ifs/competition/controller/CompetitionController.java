@@ -72,6 +72,6 @@ public class CompetitionController {
 
     @PutMapping("/{id}/update-impact-management/{projectImpactSurveyApplicable}")
     public RestResult<Void> updateImpactManagementForCompetition(@PathVariable("id") final long competitionId,@PathVariable("projectImpactSurveyApplicable")boolean projectImpactSurveyApplicable) {
-        return competitionService.updateImpactManagementForCompetition(competitionId, projectImpactSurveyApplicable).toPutResponse();
+        return competitionService.includeSupportingInformationSectionForCompetition(competitionId, projectImpactSurveyApplicable).toPutResponse();
     }
 }
