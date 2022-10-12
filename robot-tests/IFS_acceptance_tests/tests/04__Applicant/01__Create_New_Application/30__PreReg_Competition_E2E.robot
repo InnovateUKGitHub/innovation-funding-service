@@ -37,6 +37,8 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...
 ...               IFS-12702 HECP Phase 2 - Document upload - Applicant document upload
 ...
+...               IFS-13009 Pre-registration - Evidence required status on applicants dashboard
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -213,18 +215,17 @@ Internal users can see expression of interest statistics
     When the user clicks the button/link        link = Applications: All, submitted, expression of interest, ineligible
     Then the user should see the element        jQuery = .highlight-panel:contains("Expressions of interest") span:contains("1")
 
-#Internal users can see submitted expression of interest applications without checkbox when the eveidence is not uploaded
-#    [Documentation]  IFS-12176  IFS-12568
-#    When the user clicks the button/link        link = Expressions of interest
-#    Then the user should see the element        jQuery = td:contains("${preregApplicationID}") + td:contains("${hecpPreregAppName}")
-#    And the user should see the element         jQuery = .highlight-panel:contains("Expressions of interest") span:contains("1")
-#    And the user should not see the element     jQuery = label[for = "app-row-1"]
-
 Lead organisation should get notified on submitting the EOI evidence
     [Documentation]  IFS-12569
     When Lead applicant submits evidence for review    ${preregApplicationID}   ${contract_pdf}
     Then the user should see the element               link = Contract.pdf (opens in a new window)
     And the user reads his email                       ${lead_applicant_credentials["email"]}  ${evidenceSubmittedEmailSubject}  ${evidenceSubmittedEmailDescription}
+
+Lead applicant views status of the application changed to submitted on evidnece submitted for review
+    [Documentation]  IFS-13009
+    Given the user navigates to the page                    ${server}/applicant/dashboard
+    When the user clicks the application tile if displayed
+    Then the user should see the element                    jQuery = li:contains("${hecpPreregAppName}") .status-msg:contains("Expression of interest") + .status-msg:contains("Submitted")
 
 Lead applicant views read only evidence file submitted for review
     [Documentation]  IFS-12523
