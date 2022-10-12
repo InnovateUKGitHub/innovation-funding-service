@@ -82,7 +82,6 @@ ${emailInviteSubject}                    Invitation to Innovation Funding Servic
 ${ktpEmailInviteSubject}                 You have been invited to become a knowledge transfer adviser
 ${applicantKTACredentials}               john.fenton@ktn-uk.test
 ${newApplicantCredentials}               joe.adams@ktn-uk.test
-${AssessmentCompID}                      ${competition_ids["Sustainable living models for the future"]}
 
 *** Test Cases ***
 Project finance user cannot navigate to manage users page
@@ -479,21 +478,6 @@ Comp Admin should be able to see the details of assessor with new role profile o
     When the user clicks the button/link        link = View details
     Then the user should see the element        jQuery = td:contains("Knowledge transfer adviser") ~ td:contains("Active")
     And the user should not see the element     jQuery = button:contains("Save and return")
-
-IFS Admin can unsubmit the assessment from the assessor progress page
-    [Documentation]  IFS-12973
-    [Setup]  log in as a different user            &{ifs_admin_user_credentials}
-    Given The user navigates to the page           ${server}/management/assessment/competition/${AssessmentCompID}/assessors/
-    When The user clicks the button/link           jQuery = td:contains("Alexis Colon") ~ td:contains("View progress")
-    And The user clicks the button/link            jQuery = td:contains("134") ~ td a:contains("Unsubmit")
-    Then the user unsubmits the assessment
-
-IFS Admin can unsubmit the assessment from the application progress page
-    [Documentation]  IFS-12973
-    Given The user navigates to the page           ${server}/management/assessment/competition/${AssessmentCompID}/applications/
-    When The user clicks the button/link           jQuery = td:contains(134) ~ td:contains("View progress")
-    And The user clicks the button/link            jQuery = td:contains("Anita Ruiz") ~ td:contains("Unsubmit")
-    Then the user unsubmits the assessment
 *** Keywords ***
 the KTA should see all relevant links on assessment dashboard
     the user should see the element     link = your skills
@@ -784,7 +768,3 @@ the user fills invite a new external user fields
     the user enters text to a text field     id = firstName  ${firstName}
     the user enters text to a text field     id = lastName  ${lastName}
     the user enters text to a text field     id = emailAddress  ${emailAddress}
-
-the user unsubmits the assessment
-    Then The user should see the notification      Are you sure you want to unsubmit this assessment from the application?
-    And The user clicks the button/link            jQuery = button:contains("Unsubmit assessment")
