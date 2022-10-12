@@ -108,7 +108,7 @@ IFS admin can unsubmit assessment of an application already submitted through as
 
 IFS admin can unsubmit assessment of an application already submitted through application page
     [Documentation]  IFS-12973
-    Given The user logs-in in new browser        &{ifs_admin_user_credentials}
+    Given The user logs-in in new browser         &{ifs_admin_user_credentials}
     And the user navigates to the page            ${server}/management/assessment/competition/${assessmentResetCompetitionID}
     And the user clicks the button/link           link = Manage applications
     When internal user filters the application    134
