@@ -121,9 +121,9 @@ IFS admin cannot unsubmit the assessment if the assessment is not submitted
     [Documentation]  IFS-12973
     Given The user navigates to the page          ${server}/management/assessment/competition/${assessmentResetCompetitionID}
     And the user clicks the button/link           link = Manage assessors
-    When internal user filters the assessor       Malone
+    When internal user filters the assessor       Colon
     And the user clicks the button/link           link = View progress
-    Then The user should not see the element      jQuery = td:contains("${assessmentResetApplicationName}") ~ td:contains("Unsubmit")
+    Then The user should not see the element      jQuery = td:contains("${assessmentApplicationName2}") ~ td:contains("Unsubmit")
 
 *** Keywords ***
 Custom Suite Setup
