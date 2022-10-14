@@ -140,7 +140,7 @@ public class ApplicationFundingNotificationBulkServiceImplTest {
                 .build();
         long successfulApplicationId = 1L;
         long unsuccessfulApplicationId = 2L;
-        Map<Long, Decision> decisions = ImmutableMap.<Long, Decision> builder()
+        Map<Long, Decision> decisions = ImmutableMap.<Long, Decision>builder()
                 .put(successfulApplicationId, FUNDED)
                 .put(unsuccessfulApplicationId, UNFUNDED)
                 .build();
@@ -148,12 +148,16 @@ public class ApplicationFundingNotificationBulkServiceImplTest {
 
         when(competitionService.getCompetitionByApplicationId(successfulApplicationId)).thenReturn(serviceSuccess(competition));
         when(applicationFundingService.notifyApplicantsOfDecisions(resource)).thenReturn(serviceSuccess());
+        when(applicationService.getApplicationById(successfulApplicationId)).thenReturn(serviceSuccess(newApplicationResource().withId(successfulApplicationId).build()));
+        when(applicationService.getApplicationById(unsuccessfulApplicationId)).thenReturn(serviceSuccess(newApplicationResource().withId(unsuccessfulApplicationId).build()));
 
         ServiceResult<Void> result = service.sendBulkFundingNotifications(resource);
 
         assertTrue(result.isSuccess());
 
-        verify(applicationFundingService).notifyApplicantsOfDecisions(resource);
+        verify(applicationFundingService, times(2)).notifyApplicantsOfDecisions(resource);
+        verify(applicationService).getApplicationById(successfulApplicationId);
+        verify(applicationService).getApplicationById(unsuccessfulApplicationId);
     }
 
 }
