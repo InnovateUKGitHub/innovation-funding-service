@@ -37,6 +37,8 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...
 ...               IFS-12702 HECP Phase 2 - Document upload - Applicant document upload
 ...
+...              IFS-13041 Pre-registration - EOI application can be marked as successful / unsuccessful when evidence document submitted for review
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -177,8 +179,8 @@ Parter applicant can not view evidence upload section
     Given the user clicks the button/link       link = ${hecpPreregAppName}
     Then the user should not see the element    name = eoiEvidenceFile
 
-Internal users can see submitted expression of interest applications without checkbox when the eveidence is not uploaded
-    [Documentation]  IFS-12176  IFS-12568
+Internal users can see submitted expression of interest applications without checkbox when the eveidence is not submitted
+    [Documentation]  IFS-12176  IFS-12568  IFS-13041
     Given log in as a different user            &{ifs_admin_user_credentials}
     And the user navigates to the page          ${server}/management/competition/${preregCompetitionId}
     And the user clicks the button/link         link = Applications: All, submitted, expression of interest, ineligible
@@ -212,13 +214,6 @@ Internal users can see expression of interest statistics
     Given the user navigates to the page        ${server}/management/competition/${preregCompetitionId}
     When the user clicks the button/link        link = Applications: All, submitted, expression of interest, ineligible
     Then the user should see the element        jQuery = .highlight-panel:contains("Expressions of interest") span:contains("1")
-
-#Internal users can see submitted expression of interest applications without checkbox when the eveidence is not uploaded
-#    [Documentation]  IFS-12176  IFS-12568
-#    When the user clicks the button/link        link = Expressions of interest
-#    Then the user should see the element        jQuery = td:contains("${preregApplicationID}") + td:contains("${hecpPreregAppName}")
-#    And the user should see the element         jQuery = .highlight-panel:contains("Expressions of interest") span:contains("1")
-#    And the user should not see the element     jQuery = label[for = "app-row-1"]
 
 Lead organisation should get notified on submitting the EOI evidence
     [Documentation]  IFS-12569
