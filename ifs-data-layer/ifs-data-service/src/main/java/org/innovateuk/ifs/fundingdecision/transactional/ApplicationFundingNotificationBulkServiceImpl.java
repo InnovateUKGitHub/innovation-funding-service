@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.fundingdecision.transactional;
 
+import org.innovateuk.ifs.Application;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.Decision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationEoiService;
@@ -41,7 +43,8 @@ public class ApplicationFundingNotificationBulkServiceImpl implements Applicatio
     @Override
     public ServiceResult<Void> sendBulkFundingNotifications(FundingNotificationResource fundingNotificationResource) {
         if (!fundingNotificationTriggersProjectSetup(fundingNotificationResource.getDecisions())) {
-            return applicationFundingService.notifyApplicantsOfDecisions(fundingNotificationResource);
+            return notifyWithFullApplicationCreation(fundingNotificationResource);
+
         } else {
             Map<Long, Decision> successfulDecisions = fundingNotificationResource.getDecisions()
                     .entrySet().stream()
@@ -62,6 +65,8 @@ public class ApplicationFundingNotificationBulkServiceImpl implements Applicatio
             return result;
         }
     }
+
+
 
     private boolean filterSuccessfulDecisions(Map.Entry<Long, Decision> entry) {
         return entry.getValue() == Decision.FUNDED
@@ -87,9 +92,17 @@ public class ApplicationFundingNotificationBulkServiceImpl implements Applicatio
     private boolean fundingNotificationTriggersProjectSetup(Map<Long, Decision> decisions) {
         return decisions.keySet().stream().findFirst().map(applicationId -> {
             CompetitionResource competition = competitionService.getCompetitionByApplicationId(applicationId).getSuccess();
-            return CompetitionCompletionStage.PROJECT_SETUP.equals(competition.getCompletionStage())
-                    && !competition.isKtp();
+            return CompetitionCompletionStage.PROJECT_SETUP.equals(competition.getCompletionStage())  && !competition.isKtp();
         }).orElse(false);
     }
 
+    private ServiceResult<Void> notifyWithFullApplicationCreation(FundingNotificationResource fundingNotificationResource) {
+        return aggregate(fundingNotificationResource.getDecisions().keySet().stream()
+                .map(applicationId -> applicationService.getApplicationById(applicationId).getSuccess())
+                .map(application -> application.isEnabledForExpressionOfInterest()
+                        ? sendEoiNotificationAndCreateFullApplication(application.getId(), fundingNotificationResource.getMessageBody())
+                        : applicationFundingService.notifyApplicantsOfDecisions(fundingNotificationResource))
+                .collect(toList()))
+                .andOnSuccessReturnVoid();
+    }
 }
