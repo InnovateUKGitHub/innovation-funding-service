@@ -123,7 +123,11 @@
                                         Return and edit
                                     </button>
                                 </th:block>
-                                <th:block th:unless="${model.isLoanPartBEnabled() and (question.questionType == question.getLoansBusinessAndFinancialInformation())}">
+                                <th:block th:unless="${
+                                model.isLoanPartBEnabled()
+                                and (question.questionType == question.getLoansBusinessAndFinancialInformation())
+                                or (question.questionType == question.getImpactManagementSurvey())
+                                }">
                                     <button class="govuk-button button-clear"
                                             type="submit"
                                             name="complete"
