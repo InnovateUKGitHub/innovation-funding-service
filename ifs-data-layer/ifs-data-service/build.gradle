@@ -88,6 +88,8 @@ dependencies {
         exclude group: "commons-logging", module: "commons-logging"
     }
 
+    implementation 'org.flywaydb:flyway-mysql'
+
     testImplementation project(":common:ifs-security-test")
     testImplementation project(":common:ifs-data-service-commons-test")
     testImplementation project(":common:ifs-data-service-notifications-test")

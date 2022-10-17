@@ -36,7 +36,7 @@ spring:
     datasource:
         password: password
         test-on-borrow: false
-        url: jdbc:mysql://ifs-database:3306/ifs_test?characterEncoding=utf8&useMysqlMetadata=true
+        url: jdbc:mysql://ifs-database:3306/ifs_test?characterEncoding=utf8&useMysqlMetadata=true&permitMysqlScheme
         username: root
     flyway:
         locations: db/migration,db/reference,db/setup,db/integration
