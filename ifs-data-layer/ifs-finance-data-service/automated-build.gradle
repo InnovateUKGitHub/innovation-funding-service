@@ -1,7 +1,7 @@
 ext.activeProfile="environment"
 
 def jdbcUrl = "jdbc:mysql://ifs-database:3306"
-def mariaDbFlywayWorkaround = "characterEncoding=utf8&useMysqlMetadata=true"
+def mariaDbFlywayWorkaround = "characterEncoding=utf8&useMysqlMetadata=true&permitMysqlScheme"
 
 ext.testIfsDatasourceUrl="$jdbcUrl/ifs_finance_test?$mariaDbFlywayWorkaround"
 ext.testIfsDatasourceUsername="ifs"
