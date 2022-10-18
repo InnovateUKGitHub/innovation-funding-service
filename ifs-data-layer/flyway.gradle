@@ -9,4 +9,3 @@ dependencies {
     implementation "org.mariadb.jdbc:mariadb-java-client"
     testImplementation "com.h2database:h2" //1.4.200
 }
-
