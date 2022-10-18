@@ -56,7 +56,7 @@ ${preRegApplicationSuccessfulEmail}             We are pleased to inform you tha
 ${preregApplicationSubmissionEmail}             You have successfully submitted an application for funding to
 ${fullApplicationSuccessfulEmail}               We are pleased to inform you that your application for the Horizon Europe collaborative competition has been successful and passed the technical assessment phase.
 ${evidenceSubmittedEmailSubject}                Evidence file submitted
-${evidenceSubmittedEmailDescription}            You have successfully submitted your evidence file to Innovate UK’s ${hecpPreregCompName} competition.
+${evidenceSubmittedEmailDescription}            You have successfully submitted your evidence file to ${hecpPreregCompName} competition.
 
 *** Test Cases ***
 Comp Admin creates a prereg competition
