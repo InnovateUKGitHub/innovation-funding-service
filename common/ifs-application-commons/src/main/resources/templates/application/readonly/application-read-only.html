@@ -107,7 +107,7 @@
                               method="post"
                               th:if="${model.settings.includeQuestionLinks && question.shouldDisplayActions()}">
 
-                            <div class="form-footer govuk-!-margin-top-6">
+                            <div class="form-footer govuk-!-margin-top-6" th:unless="${question.questionType == question.getImpactManagementSurvey()}">
                                 <th:block th:if="${model.isLoanPartBEnabled() and (question.questionType == question.getLoansBusinessAndFinancialInformation())}">
                                     <button class="govuk-button button-clear"
                                             type="submit"
@@ -123,12 +123,8 @@
                                         Return and edit
                                     </button>
                                 </th:block>
-                                <th:block th:unless="${
-                                model.isLoanPartBEnabled()
-                                and (question.questionType == question.getLoansBusinessAndFinancialInformation())
-                                or (question.questionType == question.getImpactManagementSurvey())
-                                }">
-                                    <button class="govuk-button button-clear"
+                                <th:block th:unless="${model.isLoanPartBEnabled() and (question.questionType == question.getLoansBusinessAndFinancialInformation())}">
+                                <button class="govuk-button button-clear"
                                             type="submit"
                                             name="complete"
                                             th:if="${question.shouldDisplayMarkAsComplete()}"
