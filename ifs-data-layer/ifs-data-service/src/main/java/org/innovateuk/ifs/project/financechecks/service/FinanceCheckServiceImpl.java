@@ -159,6 +159,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         BigDecimal fundingAppliedFor = calculateTotalForAllOrganisations(applicationFinanceResourceList, BaseFinanceResource::getTotalFundingSought);
         BigDecimal totalOtherFunding = calculateTotalForAllOrganisations(projectFinanceResourceList, BaseFinanceResource::getTotalOtherFunding);
         BigDecimal totalPercentageGrant = calculateGrantPercentage(totalProjectCost, totalFundingSought).setScale(MAX_DECIMAL_PLACES, ROUND_HALF_UP);
+        BigDecimal totalContributionToProjectPercentage = calculateTotalPercentageForAllOrganisations(projectFinanceResourceList, BaseFinanceResource::getContributionToProjectPercentage);;
+        BigDecimal totalContributionToProject = calculateTotalForAllOrganisations(projectFinanceResourceList, BaseFinanceResource::getTotalContribution);;
+        BigDecimal totalContributionsInKind = calculateTotalForAllOrganisations(projectFinanceResourceList, BaseFinanceResource::getTotalContributionsInKind);
 
         ServiceResult<Double> researchParticipationPercentage = projectFinanceService.getResearchParticipationPercentageFromProject(project.getId());
         BigDecimal researchParticipationPercentageValue = getResearchParticipationPercentage(researchParticipationPercentage);
@@ -166,7 +169,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         BigDecimal competitionMaximumResearchPercentage = valueOf(competition.getMaxResearchRatio());
 
         return serviceSuccess(new FinanceCheckOverviewResource(projectId, project.getName(), project.getTargetStartDate(), project.getDurationInMonths().intValue(),
-                totalProjectCost, totalFundingSought, fundingAppliedFor, totalOtherFunding, totalPercentageGrant, researchParticipationPercentageValue, competitionMaximumResearchPercentage));
+                totalProjectCost, totalFundingSought, fundingAppliedFor, totalOtherFunding, totalPercentageGrant, researchParticipationPercentageValue, competitionMaximumResearchPercentage,
+                totalContributionToProjectPercentage, totalContributionToProject, totalContributionsInKind));
     }
 
     @Override
@@ -341,6 +345,10 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private <F extends BaseFinanceResource> BigDecimal calculateTotalForAllOrganisations(List<F> financeResources, Function<BaseFinanceResource, BigDecimal> keyExtractor) {
         return financeResources.stream().map(keyExtractor).reduce(ZERO, BigDecimal::add).setScale(0, HALF_EVEN);
+    }
+
+    private <F extends BaseFinanceResource> BigDecimal calculateTotalPercentageForAllOrganisations(List<F> financeResources, Function<BaseFinanceResource, BigDecimal> keyExtractor) {
+        return financeResources.stream().map(keyExtractor).reduce(ZERO, BigDecimal::add);
     }
 
     private BigDecimal calculateGrantPercentage(BigDecimal projectTotal, BigDecimal totalFundingSought) {

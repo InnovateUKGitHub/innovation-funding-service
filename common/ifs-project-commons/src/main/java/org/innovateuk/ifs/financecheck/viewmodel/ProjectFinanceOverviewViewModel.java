@@ -19,6 +19,9 @@ public class ProjectFinanceOverviewViewModel {
     private BigDecimal totalPercentageGrant;
     private BigDecimal researchParticipationPercentage;
     private BigDecimal competitionMaximumResearchPercentage;
+    private BigDecimal totalContributionToProjectPercentage;
+    private BigDecimal totalContributionToProject;
+    private BigDecimal totalContributionsInKind;
 
     private ProjectFinanceOverviewViewModel() {}
 
@@ -33,6 +36,9 @@ public class ProjectFinanceOverviewViewModel {
         this.totalPercentageGrant = overviewResource.getTotalPercentageGrant();
         this.researchParticipationPercentage = overviewResource.getResearchParticipationPercentage();
         this.competitionMaximumResearchPercentage = overviewResource.getCompetitionMaximumResearchPercentage();
+        this.totalContributionToProjectPercentage = overviewResource.getTotalContributionToProjectPercentage();
+        this.totalContributionToProject = overviewResource.getTotalContributionToProject();
+        this.totalContributionsInKind = overviewResource.getTotalContributionsInKind();
     }
 
     public Long getProjectId() {
@@ -117,5 +123,17 @@ public class ProjectFinanceOverviewViewModel {
 
     public int getTotalPercentageGrantIntValue() {
         return totalPercentageGrant.intValue();
+    }
+
+    public BigDecimal getTotalContributionToProjectPercentage() {
+        return totalContributionToProjectPercentage;
+    }
+
+    public BigDecimal getTotalContributionToProject() {
+        return totalContributionToProject;
+    }
+
+    public BigDecimal getTotalContributionsInKind() {
+        return totalContributionsInKind;
     }
 }
