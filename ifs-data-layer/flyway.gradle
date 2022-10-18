@@ -1,21 +1,6 @@
-apply plugin: org.flywaydb.gradle.FlywayPlugin
-
-buildscript {
-    repositories {
-        maven { url "https://repo.spring.io/milestone" }
-        maven { url "https://plugins.gradle.org/m2/"}
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'org.flywaydb:flyway-gradle-plugin:8.5.0'
-        classpath 'org.flywaydb:flyway-core:8.5.0'
-        classpath 'org.flywaydb:flyway-mysql:8.5.0'
-    }
-}
 
 dependencies {
-    implementation enforcedPlatform("org.flywaydb:flyway-core:8.5.0") {
+    implementation enforcedPlatform("org.flywaydb:flyway-core") {
         exclude group: "commons-logging", module: "commons-logging"
     }
     implementation enforcedPlatform("com.h2database:h2:1.4.199")
