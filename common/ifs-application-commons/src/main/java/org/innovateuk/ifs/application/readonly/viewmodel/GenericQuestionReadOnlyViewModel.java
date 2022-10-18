@@ -206,6 +206,11 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
                 isComplete();
     }
 
+    public boolean isIMQuestion() {
+        return
+                QuestionSetupType.IMPACT_MANAGEMENT_SURVEY == questionResource.getQuestionSetupType();
+    }
+
     public boolean isInCompleteLoanBusinessAndFinancialInformation() {
         return isLoanPartBEnabled &&
                 questionResource != null &&

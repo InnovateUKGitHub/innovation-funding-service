@@ -61,7 +61,7 @@
                             <thead class="govuk-table__head">
                             <tr class="govuk-table__row">
                                 <th scope="col" class="govuk-table__header">Partner</th>
-                                <th scope="col" class="govuk-table__header">Answer</th>
+                                <th scope="col" class="govuk-table__header"   th:text="${model.isIMQuestion()?'Status' : 'Answer'}">Answer</th>
                             </tr>
                             </thead>
                             <tbody class="govuk-table__body">
