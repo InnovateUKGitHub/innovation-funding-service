@@ -37,6 +37,8 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...
 ...               IFS-12702 HECP Phase 2 - Document upload - Applicant document upload
 ...
+...               IFS-13009 Pre-registration - Evidence required status on applicants dashboard
+...
 ...               IFS-12876 Pre-registration - The ability to enable EOI questions on an EOI competition
 ...
 Suite Setup       Custom suite setup
@@ -236,6 +238,12 @@ Lead organisation should get notified on submitting the EOI evidence
     When Lead applicant submits evidence for review    ${preregApplicationID}   ${contract_pdf}
     Then the user should see the element               link = Contract.pdf (opens in a new window)
     And the user reads his email                       ${lead_applicant_credentials["email"]}  ${evidenceSubmittedEmailSubject}  ${evidenceSubmittedEmailDescription}
+
+Lead applicant views status of the application changed to submitted on evidnece submitted for review
+    [Documentation]  IFS-13009
+    Given the user navigates to the page                    ${server}/applicant/dashboard
+    When the user clicks the application tile if displayed
+    Then the user should see the element                    jQuery = li:contains("${hecpPreregAppName}") .status-msg:contains("Expression of interest") + .status-msg:contains("Submitted")
 
 Lead applicant views read only evidence file submitted for review
     [Documentation]  IFS-12523
