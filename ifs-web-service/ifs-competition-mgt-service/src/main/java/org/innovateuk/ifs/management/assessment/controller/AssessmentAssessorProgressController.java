@@ -80,7 +80,7 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
                 page - 1,
                 sort,
                 filter,
-                loggedInUser.hasAuthority(Authority.SUPER_ADMIN_USER)));
+                loggedInUser.hasAuthority(Authority.IFS_ADMINISTRATOR)));
         return "competition/assessor-progress";
     }
 

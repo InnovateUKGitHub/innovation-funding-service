@@ -37,7 +37,9 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...
 ...               IFS-12702 HECP Phase 2 - Document upload - Applicant document upload
 ...
-...              IFS-13041 Pre-registration - EOI application can be marked as successful / unsuccessful when evidence document submitted for review
+...               IFS-13041 Pre-registration - EOI application can be marked as successful / unsuccessful when evidence document submitted for review
+...
+...               IFS-12876 Pre-registration - The ability to enable EOI questions on an EOI competition
 ...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -56,18 +58,34 @@ ${preRegApplicationSuccessfulEmail}             We are pleased to inform you tha
 ${preregApplicationSubmissionEmail}             You have successfully submitted an application for funding to
 ${fullApplicationSuccessfulEmail}               We are pleased to inform you that your application for the Horizon Europe collaborative competition has been successful and passed the technical assessment phase.
 ${evidenceSubmittedEmailSubject}                Evidence file submitted
-${evidenceSubmittedEmailDescription}            You have successfully submitted your evidence file to Innovate UK’s ${hecpPreregCompName} competition.
+${evidenceSubmittedEmailDescription}            You have successfully submitted your evidence file to ${hecpPreregCompName} competition.
 
 *** Test Cases ***
 Comp Admin creates a prereg competition
-    [Documentation]  IFS-12065
+    [Documentation]  IFS-12065  IFS-12876
     Given The user logs-in in new browser                    &{Comp_admin1_credentials}
     Then the competition admin creates prereg competition    ${BUSINESS_TYPE_ID}  ${hecpPreregCompName}  Pre Registration  ${compType_HESTA}  NOT_AID  HECP  PROJECT_SETUP  no  50  false  single-or-collaborative
 
+Com admin can see readonly view of expression of intrest question selection
+    [Documentation]  IFS-12876
+    [Setup]  Get competitions id and set it as suite variable     ${hecpPreregCompName}
+    Given the user navigates to the page                          ${server}/management/competition/setup/${preregCompetitionId}/section/application/landing-page
+    When the user clicks the button/link                          link = 2. Participating Organisation project region
+    Then the user should see the element                          jQuery = dt:contains("Is this also an expression of interest question?") + dd:contains("Yes")
+
+Comp admin can edit the expression of interest question selection
+    [Documentation]  IFS-12876
+    Given the user clicks the button/link   jQuery = a:contains("Edit this question")
+    When the user clicks the button twice   jQuery = label[for=expression-of-interest-no]
+    And the user clicks the button/link     jQuery = button:contains("Done")
+    And the user clicks the button/link     link = 2. Participating Organisation project region
+    Then the user should see the element    jQuery = dt:contains("Is this also an expression of interest question?") + dd:contains("No")
+    [Teardown]  the user marks the competition application section as complete
+
 Applicants should view prereg related content when competition is opened
     [Documentation]  IFS-12065
-    Given Comp admin set the competion as prereg comp and hide the question, section and subsection
-    And Update competition to have evidence required
+    [Setup]  Comp admin set the competion as prereg comp and hide the question, section and subsection
+    Given Update competition to have evidence required
     When the user navigates to the page                 ${frontDoor}
     And the user enters text to a text field            id = keywords   Pre Registration
     And the user clicks the button/link                 id = update-competition-results-button
@@ -472,9 +490,6 @@ the user should not see subsection
     the user should not see the element     link = ${subSectionName}
 
 Comp admin set the competion as prereg comp and hide the question, section and subsection
-    Get competitions id and set it as suite variable     ${hecpPreregCompName}
-    set competition as pre reg                           ${preregCompetitionId}
-    set question as hidden in pre reg application        ${preregCompetitionId}
     set subsection as hidden in pre reg application      ${preregCompetitionId}
     set section as hidden in pre reg application         ${preregCompetitionId}
     update milestone to yesterday                        ${preregCompetitionId}  OPEN_DATE
@@ -605,3 +620,7 @@ Internal user can view and download evidence file
     the user clicks the button/link         link = Expression of interest
     the user should see the element         jQuery = h3:contains("Eoi Evidence")
     the user checks file is downloaded      ${fileName}
+
+the user marks the competition application section as complete
+    the user clicks the button/link  link = Back to application
+    the user clicks the button/link  jQuery = button:contains("Done")

@@ -69,7 +69,7 @@ public interface GrantOfferLetterService {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'DELETE_SIGNED_GRANT_OFFER')")
     ServiceResult<Void> removeSignedAdditionalContractFileEntry(long projectId);
 
-    @PreAuthorize("hasAnyAuthority('system_maintainer' , 'super_admin_user')")
+    @PreAuthorize("hasAnyAuthority('system_maintainer' , 'ifs_administrator')")
     @SecuredBySpring(value = "RESET_GRANT_OFFER_LETTER", securedType = ProjectResource.class, description = "Only super admin user or system maintenance user are able to reset a GOL" )
     @Activity(projectId = "projectId", type = ActivityType.GRANT_OFFER_LETTER_RESET)
     ServiceResult<Void> resetGrantOfferLetter(Long projectId);

@@ -308,7 +308,7 @@ public class GrantOfferLetterController {
                 project.getGrantOfferLetterRejectionReason(),
                 project.getProjectState(),
                 project.isUseDocusignForGrantOfferLetter(),
-                loggedInUser.hasAuthority(Authority.SUPER_ADMIN_USER),
+                loggedInUser.hasAuthority(Authority.IFS_ADMINISTRATOR),
                 loggedInUser.hasAuthority(Authority.AUDITOR));
     }
 

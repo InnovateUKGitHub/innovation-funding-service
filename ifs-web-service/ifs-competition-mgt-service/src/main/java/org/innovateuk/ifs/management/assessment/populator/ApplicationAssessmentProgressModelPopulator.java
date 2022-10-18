@@ -74,7 +74,7 @@ public class ApplicationAssessmentProgressModelPopulator {
                 sort,
                 new PaginationViewModel(availableAssessors),
                 availableAssessors.getTotalElements() > SELECTION_LIMIT,
-                loggedInUser.hasAuthority(Authority.SUPER_ADMIN_USER),
+                loggedInUser.hasAuthority(Authority.IFS_ADMINISTRATOR),
                 applicationAssessmentSummary.isAssessmentClosed());
     }
 
