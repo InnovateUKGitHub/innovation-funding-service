@@ -184,7 +184,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                         projectFinance.getTotalOtherFunding(),
                         getTotalContribution(project, projectFinance),
                         hasAnyApplicationFinances(application, projectFinance),
-                        calculateContributionPercentage(project, projectFinance))
+                        calculateContributionPercentage(project, projectFinance),
+                        projectFinance.getContributionToProjectPercentage(),
+                        projectFinance.getTotalContributionsInKind())
         );
     }
 

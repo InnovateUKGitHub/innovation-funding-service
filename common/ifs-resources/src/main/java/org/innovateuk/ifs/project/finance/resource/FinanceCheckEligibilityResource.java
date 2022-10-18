@@ -16,6 +16,8 @@ public class FinanceCheckEligibilityResource {
     private BigDecimal contributionToProject;
     private boolean hasApplicationFinances;
     private BigDecimal contributionPercentage;
+    private BigDecimal contributionToProjectPercentage;
+    private BigDecimal contributionsInKind;
 
     public FinanceCheckEligibilityResource() {
 
@@ -30,7 +32,9 @@ public class FinanceCheckEligibilityResource {
                                            BigDecimal otherPublicSectorFunding,
                                            BigDecimal contributionToProject,
                                            boolean hasApplicationFinances,
-                                           BigDecimal contributionPercentage) {
+                                           BigDecimal contributionPercentage,
+                                           BigDecimal contributionToProjectPercentage,
+                                           BigDecimal contributionsInKind) {
         this.projectId = projectId;
         this.organisationId = organisationId;
         this.durationInMonths = durationInMonths;
@@ -41,6 +45,8 @@ public class FinanceCheckEligibilityResource {
         this.contributionToProject = contributionToProject;
         this.hasApplicationFinances = hasApplicationFinances;
         this.contributionPercentage = contributionPercentage;
+        this.contributionToProjectPercentage = contributionToProjectPercentage;
+        this.contributionsInKind = contributionsInKind;
     }
 
     public Long getProjectId() {
@@ -85,5 +91,13 @@ public class FinanceCheckEligibilityResource {
 
     public void setContributionPercentage(BigDecimal contributionPercentage) {
         this.contributionPercentage = contributionPercentage;
+    }
+
+    public BigDecimal getContributionToProjectPercentage() {
+        return contributionToProjectPercentage;
+    }
+
+    public BigDecimal getContributionsInKind() {
+        return contributionsInKind;
     }
 }

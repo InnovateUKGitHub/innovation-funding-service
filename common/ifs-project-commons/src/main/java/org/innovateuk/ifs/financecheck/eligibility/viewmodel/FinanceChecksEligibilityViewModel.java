@@ -52,6 +52,7 @@ public class FinanceChecksEligibilityViewModel {
     private final boolean isReadOnly;
     private final boolean isThirdPartyOfgem;
     private final boolean hecpCompetition;
+    private final boolean compTypeOfgemAndFundingTypeThirdParty;
 
     public FinanceChecksEligibilityViewModel(ProjectResource project,
                                              CompetitionResource competition,
@@ -76,7 +77,8 @@ public class FinanceChecksEligibilityViewModel {
                                              boolean canEditProjectCosts,
                                              boolean isReadOnly,
                                              boolean isThirdPartyOfgem,
-                                             boolean hecpCompetition) {
+                                             boolean hecpCompetition,
+                                             boolean compTypeOfgemAndFundingTypeThirdParty) {
         this.projectName = project.getName();
         this.applicationId = project.getApplication();
         this.projectId = project.getId();
@@ -109,6 +111,7 @@ public class FinanceChecksEligibilityViewModel {
         this.isReadOnly = isReadOnly;
         this.isThirdPartyOfgem = isThirdPartyOfgem;
         this.hecpCompetition = hecpCompetition;
+        this.compTypeOfgemAndFundingTypeThirdParty = compTypeOfgemAndFundingTypeThirdParty;
     }
 
     public boolean isApproved() {
@@ -322,5 +325,9 @@ public class FinanceChecksEligibilityViewModel {
 
     public boolean isHecpCompetition() {
         return hecpCompetition;
+    }
+
+    public boolean isCompTypeOfgemAndFundingTypeThirdParty() {
+        return compTypeOfgemAndFundingTypeThirdParty;
     }
 }
