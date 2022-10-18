@@ -168,9 +168,9 @@ public class SetupSectionsPermissionRules {
         return isMOJourneyUpdateEnabled ? (hasIFSAdminAuthority(user) || isMonitoringOfficer(user)) : (hasCompetitionAdministratorAuthority(user) || hasIFSAdminAuthority(user));
     }
 
-    @PermissionRule(value = "RESET_GRANT_OFFER_LETTER", description = "Super admin user can reset the grant offer letter section")
-    public boolean superAdminUserCanResetGrantOfferLetter(ProjectCompositeId projectCompositeId, UserResource user) {
-        return SecurityRuleUtil.hasSuperAdminAuthority(user);
+    @PermissionRule(value = "RESET_GRANT_OFFER_LETTER", description = "IFS administrator can reset the grant offer letter section.")
+    public boolean ifsAdminUserCanResetGrantOfferLetter(ProjectCompositeId projectCompositeId, UserResource user) {
+        return SecurityRuleUtil.hasIFSAdminAuthority(user);
     }
 
     @PermissionRule(value = "ACCESS_GRANT_OFFER_LETTER_SEND_SECTION", description = "An internal user can access the Grant Offer Letter send " +
