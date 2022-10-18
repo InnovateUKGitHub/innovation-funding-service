@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -64,7 +65,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
     @Override
     public ServiceResult<CompetitionSetupQuestionResource> getByQuestionId(long questionId) {
         return find(questionRepository.findById(questionId), notFoundError(Question.class, questionId))
-                .andOnSuccess(question -> mapQuestionToSuperQuestionResource(question));
+                .andOnSuccess(this::mapQuestionToSuperQuestionResource);
     }
 
     private ServiceResult<CompetitionSetupQuestionResource> mapQuestionToSuperQuestionResource(Question question) {
@@ -86,6 +87,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         setupResource.setSubTitle2(question.getDescription2());
         setupResource.setQuestionId(question.getId());
         setupResource.setType(question.getQuestionSetupType());
+        setupResource.setExpressionOfInterest(question.isEnabledForPreRegistration());
 
         return serviceSuccess(setupResource);
     }
@@ -188,7 +190,13 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
     public ServiceResult<CompetitionSetupQuestionResource> update(CompetitionSetupQuestionResource competitionSetupQuestionResource) {
         Long questionId = competitionSetupQuestionResource.getQuestionId();
         Question question = questionRepository.findById(questionId).get();
+        Competition competition = question.getCompetition();
 
+        if (competition.isEnabledForPreRegistration()) {
+            question.setEnabledForPreRegistration(competitionSetupQuestionResource.getExpressionOfInterest());
+
+            markApplicationQuestionsSectionAsActiveOrInactive(competition.getId());
+        }
 
         if (question.getQuestionSetupType() != QuestionSetupType.KTP_ASSESSMENT) {
 
@@ -212,6 +220,24 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         markScopeAsActiveOrInactive(questionId, competitionSetupQuestionResource);
 
         return serviceSuccess(competitionSetupQuestionResource);
+    }
+
+    private void markApplicationQuestionsSectionAsActiveOrInactive(Long competitionId) {
+        List<Question> assessedQuestions = questionRepository.findByCompetitionIdAndSectionTypeOrderByPriorityAsc(competitionId,
+                SectionType.APPLICATION_QUESTIONS);
+
+        setSectionAsEnabledForExpressionOfInterest(assessedQuestions, !assessedQuestions.stream().allMatch(allAssessedQuestionTypeApplicationQuestionsNotEnabledForEOI()));
+    }
+
+    private void setSectionAsEnabledForExpressionOfInterest(List<Question> assessedQuestions, boolean isActive) {
+        for (Question questions : assessedQuestions) {
+            Section section = questions.getSection();
+            section.setEnabledForPreRegistration(isActive);
+        }
+    }
+
+    private Predicate<Question> allAssessedQuestionTypeApplicationQuestionsNotEnabledForEOI() {
+        return a -> !a.isEnabledForPreRegistration() && a.getQuestionSetupType() == QuestionSetupType.ASSESSED_QUESTION;
     }
 
     private void markMultipleChoiceAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource) {

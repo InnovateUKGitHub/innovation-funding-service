@@ -12,10 +12,12 @@ import org.innovateuk.ifs.project.grantofferletter.populator.KtpGrantOfferLetter
 import org.innovateuk.ifs.project.grantofferletter.template.resource.GolTemplateResource;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.KtpGrantOfferLetterTemplateViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -58,6 +60,11 @@ public class KtpGrantOfferLetterControllerTest extends BaseControllerMockMVCTest
         return Arrays.asList(new Object[] [] {
                 {KTP}, {KTP_AKT}
         });
+    }
+
+    @Before
+    public void init() {
+        MockitoAnnotations.openMocks(this);
     }
 
     public KtpGrantOfferLetterControllerTest(FundingType fundingType) {

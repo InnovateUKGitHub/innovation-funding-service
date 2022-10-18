@@ -259,4 +259,8 @@ public abstract class Finance {
 
         return false;
     }
+
+    public boolean isCompTypeOfgemAndFundingTypeThirdParty() {
+        return getCompetition().isCompTypeOfgemAndFundingTypeThirdParty();
+    }
 }

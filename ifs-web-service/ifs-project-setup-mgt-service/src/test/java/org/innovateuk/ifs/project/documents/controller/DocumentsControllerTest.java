@@ -13,7 +13,9 @@ import org.innovateuk.ifs.project.documents.service.DocumentsRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -35,6 +37,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class DocumentsControllerTest extends BaseControllerMockMVCTest<DocumentsController> {
 
     @Mock
@@ -136,7 +139,6 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
                 false,
                 true);
 
-        when(populator.populateViewDocument(projectId, ifsAdmin,  documentConfigId)).thenReturn(viewModel);
         mockMvc.perform(get("/project/" + projectId + "/document/config/" + documentConfigId))
                 .andExpect(view().name("project/document"))
                 .andExpect(model().attribute("form", form))

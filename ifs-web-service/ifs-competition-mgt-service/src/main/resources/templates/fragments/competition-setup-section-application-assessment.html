@@ -59,13 +59,27 @@
     </th:block>
 
     <ul class="govuk-list pagination">
-        <li class="prev">
-            <a rel="prev" title="Navigate to previous part"
-               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='application-submission')}">
-                <span class="pagination-label">Previous</span>
-                <span class="pagination-part-title">Application submission</span>
-            </a>
-        </li>
+
+        <th:block th:if="${model.general.isExpressionOfInterestEnabled}">
+            <li class="prev">
+                <a rel="prev" title="Navigate to previous part"
+                   th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='application-expression-of-interest')}">
+                    <span class="pagination-label">Previous</span>
+                    <span class="pagination-part-title">Application expression of interest</span>
+                </a>
+            </li>
+        </th:block>
+
+        <th:block th:unless="${model.general.isExpressionOfInterestEnabled}">
+            <li class="prev">
+                <a rel="prev" title="Navigate to previous part"
+                   th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='application-submission')}">
+                    <span class="pagination-label">Previous</span>
+                    <span class="pagination-part-title">Application submission</span>
+                </a>
+            </li>
+        </th:block>
+
         <li class="next" th:if="${!model.general.editable}">
             <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='milestones')}">
                 <span class="pagination-label">Next</span>

@@ -1,26 +1,25 @@
 package org.innovateuk.ifs.project.eligibility.populator;
 
-import org.hamcrest.Matcher;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
 import org.innovateuk.ifs.commons.rest.RestFailure;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
-import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
@@ -29,10 +28,11 @@ import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.n
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ProjectAcademicCostFormPopulatorTest extends BaseServiceUnitTest<ProjectAcademicCostFormPopulator> {
 
     private static final long PROJECT_ID = 1L;
@@ -113,21 +113,18 @@ public class ProjectAcademicCostFormPopulatorTest extends BaseServiceUnitTest<Pr
 
         service.populate(form, PROJECT_ID, ORGANISATION_ID);
 
-        verify(defaultFinanceRowRestService).create(argThat(hasName("tsb_reference")));
-        verify(defaultFinanceRowRestService).create(argThat(hasName("incurred_staff")));
-        verify(defaultFinanceRowRestService).create(argThat(hasName("incurred_travel_subsistence")));
-        verify(defaultFinanceRowRestService).create(argThat(hasName("incurred_other_costs")));
-        verify(defaultFinanceRowRestService).create(argThat(hasName("allocated_investigators")));
-        verify(defaultFinanceRowRestService).create(argThat(hasName("allocated_estates_costs")));
-        verify(defaultFinanceRowRestService).create(argThat(hasName("allocated_other_costs")));
-        verify(defaultFinanceRowRestService).create(argThat(hasName("indirect_costs")));
-        verify(defaultFinanceRowRestService).create(argThat(hasName("exceptions_staff")));
-        verify(defaultFinanceRowRestService).create(argThat(hasName("exceptions_other_costs")));
+        verify(defaultFinanceRowRestService).create(argThat(ac -> ac.getName().equals("tsb_reference")));
+        verify(defaultFinanceRowRestService).create(argThat(ac -> ac.getName().equals("incurred_staff")));
+        verify(defaultFinanceRowRestService).create(argThat(ac -> ac.getName().equals("incurred_travel_subsistence")));
+        verify(defaultFinanceRowRestService).create(argThat(ac -> ac.getName().equals("incurred_other_costs")));
+        verify(defaultFinanceRowRestService).create(argThat(ac -> ac.getName().equals("allocated_investigators")));
+        verify(defaultFinanceRowRestService).create(argThat(ac -> ac.getName().equals("allocated_estates_costs")));
+        verify(defaultFinanceRowRestService).create(argThat(ac -> ac.getName().equals("allocated_other_costs")));
+        verify(defaultFinanceRowRestService).create(argThat(ac -> ac.getName().equals("indirect_costs")));
+        verify(defaultFinanceRowRestService).create(argThat(ac -> ac.getName().equals("exceptions_staff")));
+        verify(defaultFinanceRowRestService).create(argThat(ac -> ac.getName().equals("exceptions_other_costs")));
 
         assertNull(form.getFilename());
     }
 
-    private Matcher<AcademicCost> hasName(String name) {
-        return lambdaMatches(cost -> cost.getName().equals(name));
-    }
 }

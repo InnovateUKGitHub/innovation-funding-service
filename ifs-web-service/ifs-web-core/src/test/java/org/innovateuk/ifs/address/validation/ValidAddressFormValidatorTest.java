@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
 import javax.validation.ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderCustomizableContext;
-import org.innovateuk.ifs.BaseUnitTest;
+
 import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.junit.Before;
@@ -22,7 +22,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 @RunWith(MockitoJUnitRunner.class)
 @ContextConfiguration
-public class ValidAddressFormValidatorTest extends BaseUnitTest {
+public class ValidAddressFormValidatorTest {
 
     ValidAddressFormValidator validAddressFormValidator;
     AddressForm addressForm;

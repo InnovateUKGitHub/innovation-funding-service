@@ -126,12 +126,12 @@ public class QuestionnaireResponseLinkServiceImplTest {
         assertThat(service.getResponseIdByApplicationIdAndOrganisationIdAndQuestionnaireId(applicationId, organisationId, questionnaireId).getSuccess(),
                 is(responseId));
 
-        verify(applicationOrganisationQuestionnaireResponseRepository).save(argThat(lambdaMatches(aoqr -> {
+        verify(applicationOrganisationQuestionnaireResponseRepository).save(argThat(aoqr -> {
             assertThat(aoqr.getApplication(), is(application));
             assertThat(aoqr.getOrganisation(), is(organisation));
             assertThat(aoqr.getQuestionnaireResponse().getQuestionnaire(), is(questionnaire));
             return true;
-        })));
+        }));
     }
 
     @Test
@@ -160,11 +160,11 @@ public class QuestionnaireResponseLinkServiceImplTest {
         assertThat(service.getResponseIdByProjectIdAndOrganisationIdAndQuestionnaireId(projectId, organisationId, questionnaireId).getSuccess(),
                 is(responseId));
 
-        verify(projectOrganisationQuestionnaireResponseRepository).save(argThat(lambdaMatches(poqr -> {
+        verify(projectOrganisationQuestionnaireResponseRepository).save(argThat(poqr -> {
             assertThat(poqr.getProject(), is(project));
             assertThat(poqr.getOrganisation(), is(organisation));
             assertThat(poqr.getQuestionnaireResponse().getQuestionnaire(), is(questionnaire));
             return true;
-        })));
+        }));
     }
 }

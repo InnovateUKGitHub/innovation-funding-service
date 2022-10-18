@@ -13,7 +13,9 @@ import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Optional;
 
@@ -25,6 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class OrganisationCreationInternationalControllerTest extends BaseControllerMockMVCTest<OrganisationCreationInternationalController> {
 
     @Mock
@@ -54,9 +57,6 @@ public class OrganisationCreationInternationalControllerTest extends BaseControl
         OrganisationInternationalForm organisationInternationalForm = new OrganisationInternationalForm();
         organisationInternationalForm.setInternational(true);
 
-        when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.of(1L));
-        when(organisationRestService.getAllByUserId(anyLong())).thenReturn(RestResult.restSuccess(emptyList()));
-
         mockMvc.perform(
                 post("/organisation/create/international-organisation")
                         .flashAttr("organisationForm", organisationInternationalForm)
@@ -68,7 +68,6 @@ public class OrganisationCreationInternationalControllerTest extends BaseControl
 
     @Test
     public void getInternationalOrganisationDetails() throws Exception {
-        when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.of(1L));
 
         mockMvc.perform(
                 get("/organisation/create/international-organisation/details")
@@ -85,9 +84,6 @@ public class OrganisationCreationInternationalControllerTest extends BaseControl
         organisationInternationalDetailsForm.setAddressLine1("line 1");
         organisationInternationalDetailsForm.setTown("Bristol");
         organisationInternationalDetailsForm.setCountry("France");
-
-        when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.of(1L));
-        when(organisationRestService.getAllByUserId(anyLong())).thenReturn(RestResult.restSuccess(emptyList()));
 
         mockMvc.perform(
                 post("/organisation/create/international-organisation/details")
@@ -118,7 +114,6 @@ public class OrganisationCreationInternationalControllerTest extends BaseControl
         organisationTypeResource.setDescription("great description");
         organisationTypeResource.setName("Greatest resource");
 
-        when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.of(1L));
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationInternationalDetailsValue(any())).thenReturn(Optional.of(organisationInternationalDetailsForm));
         when(organisationTypeRestService.findOne(1L)).thenReturn(RestResult.restSuccess(organisationTypeResource));

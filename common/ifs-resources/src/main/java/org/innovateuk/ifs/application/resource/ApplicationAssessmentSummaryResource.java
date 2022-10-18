@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -96,6 +97,11 @@ public class ApplicationAssessmentSummaryResource {
 
     public void setPartnerOrganisations(List<String> partnerOrganisations) {
         this.partnerOrganisations = partnerOrganisations;
+    }
+
+    @JsonIgnore
+    public boolean isAssessmentClosed() {
+        return competitionStatus != null && (competitionStatus.isLaterThan(CompetitionStatus.IN_ASSESSMENT));
     }
 
     @Override

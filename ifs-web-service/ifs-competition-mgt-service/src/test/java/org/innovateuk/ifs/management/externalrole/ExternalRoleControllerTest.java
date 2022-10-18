@@ -6,8 +6,10 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.mockito.Mockito.when;
@@ -15,6 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ExternalRoleControllerTest extends BaseControllerMockMVCTest<ExternalRoleController> {
 
     @Override

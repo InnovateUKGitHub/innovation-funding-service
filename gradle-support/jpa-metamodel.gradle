@@ -1,0 +1,7 @@
+apply plugin: 'java'
+
+dependencies {
+    // This is used in common so needs versioning here - ideally it would track spring-data
+    annotationProcessor('org.hibernate:hibernate-jpamodelgen:5.6.11.Final')
+    compileOnly('org.hibernate:hibernate-jpamodelgen:5.6.11.Final')
+}

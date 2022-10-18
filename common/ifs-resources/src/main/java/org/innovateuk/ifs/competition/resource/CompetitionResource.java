@@ -118,6 +118,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private CompetitionApplicationConfigResource competitionApplicationConfigResource;
     private CompetitionEoiEvidenceConfigResource competitionEoiEvidenceConfigResource;
     private boolean enabledForPreRegistration;
+    private boolean compTypeOfgemAndFundingTypeThirdParty;
 
     public CompetitionResource() {
     }
@@ -219,10 +220,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     @JsonIgnore
     public boolean isThirdPartyOfgem() {
         return competitionTypeEnum == CompetitionTypeEnum.OFGEM;
-    }
-
-    public boolean isCompTypeOfgemAndFundingTypeThirdParty() {
-        return competitionTypeEnum == CompetitionTypeEnum.OFGEM && THIRDPARTY.equals(fundingType);
     }
 
     @JsonIgnore
@@ -939,6 +936,14 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.competitionEoiEvidenceConfigResource = competitionEoiEvidenceConfigResource;
     }
 
+    public boolean isCompTypeOfgemAndFundingTypeThirdParty() {
+        return compTypeOfgemAndFundingTypeThirdParty;
+    }
+
+    public void setCompTypeOfgemAndFundingTypeThirdParty(boolean compTypeOfgemAndFundingTypeThirdParty) {
+        this.compTypeOfgemAndFundingTypeThirdParty = compTypeOfgemAndFundingTypeThirdParty;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -1149,5 +1154,9 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         return applicationState == ApplicationState.REJECTED;
     }
 
+    @JsonIgnore
+    public boolean isEoiEvidenceRequired() {
+        return competitionEoiEvidenceConfigResource != null && competitionEoiEvidenceConfigResource.isEvidenceRequired();
+    }
 }
 

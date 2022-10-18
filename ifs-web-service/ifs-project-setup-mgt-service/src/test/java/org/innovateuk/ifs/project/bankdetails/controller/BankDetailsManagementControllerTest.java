@@ -18,7 +18,9 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -42,6 +44,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTest<BankDetailsManagementController> {
     private ProjectResource project;
     private OrganisationResource organisationResource;
@@ -142,7 +145,6 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
         when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
         when(projectService.getById(project.getId())).thenReturn(project);
-        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(bankDetailsReviewModelPopulator.populateBankDetailsReviewViewModel(organisationResource, project, bankDetailsResource)).thenReturn(bankDetailsReviewViewModel);
         MvcResult result = mockMvc.perform(get("/project/" + project.getId() + "/organisation/" + organisationResource.getId() + "/review-bank-details")).
                 andExpect(view().name("project/review-bank-details")).
@@ -159,7 +161,6 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
         when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
         when(projectService.getById(project.getId())).thenReturn(project);
-        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(bankDetailsReviewModelPopulator.populateBankDetailsReviewViewModel(organisationResource, project, bankDetailsResource)).thenReturn(bankDetailsReviewViewModel);
         bankDetailsReviewViewModel.setApprovedManually(true);
 
@@ -181,7 +182,6 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
         when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
         when(projectService.getById(project.getId())).thenReturn(project);
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
-        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(bankDetailsReviewModelPopulator.populateBankDetailsReviewViewModel(organisationResource, project, bankDetailsResource)).thenReturn(bankDetailsReviewViewModel);
 
         MvcResult result = mockMvc.perform(get("/project/" + project.getId() + "/organisation/" + organisationResource.getId() + "/review-bank-details/change")).
@@ -199,7 +199,6 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
         when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
         when(projectService.getById(project.getId())).thenReturn(project);
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
-        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(bankDetailsRestService.updateBankDetails(project.getId(), updatedBankDetailsResource)).thenReturn(restSuccess());
         when(organisationRestService.updateNameAndRegistration(organisationResource)).thenReturn(restSuccess(organisationResource));
 
@@ -228,7 +227,6 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
         when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
         when(projectService.getById(project.getId())).thenReturn(project);
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
-        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(bankDetailsRestService.updateBankDetails(project.getId(), updatedAddressBankDetailsResource)).thenReturn(restSuccess());
         when(organisationRestService.updateNameAndRegistration(organisationResource)).thenReturn(restSuccess(organisationResource));
 
@@ -257,7 +255,6 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
         when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
         when(projectService.getById(project.getId())).thenReturn(project);
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
-        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(bankDetailsRestService.updateBankDetails(project.getId(), notUpdatedBankDetailsResource)).thenReturn(restSuccess());
         when(organisationRestService.updateNameAndRegistration(organisationResource)).thenReturn(restSuccess(organisationResource));
 

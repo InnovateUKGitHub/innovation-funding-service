@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.questionnaire.response.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireOptionRestService;
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireQuestionRestService;
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireRestService;
@@ -11,13 +12,21 @@ import org.innovateuk.ifs.questionnaire.response.populator.QuestionnaireQuestion
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireQuestionResponseRestService;
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireResponseRestService;
 import org.innovateuk.ifs.questionnaire.response.viewmodel.QuestionnaireQuestionViewModel;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.UUID;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.questionnaire.builder.QuestionnaireOptionResourceBuilder.newQuestionnaireOptionResource;
 import static org.innovateuk.ifs.questionnaire.builder.QuestionnaireQuestionResponseResourceBuilder.newQuestionnaireQuestionResponseResource;
@@ -29,6 +38,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class QuestionnaireWebControllerTest extends BaseControllerMockMVCTest<QuestionnaireWebController> {
 
     @Mock
@@ -51,6 +61,11 @@ public class QuestionnaireWebControllerTest extends BaseControllerMockMVCTest<Qu
 
     @Mock
     private QuestionnaireQuestionViewModelPopulator questionnaireQuestionViewModelPopulator;
+
+    @Before
+    public void reset() {
+        BaseBuilderAmendFunctions.clearUniqueIds();
+    }
 
     @Test
     public void welcomeScreen() throws Exception {
@@ -106,10 +121,10 @@ public class QuestionnaireWebControllerTest extends BaseControllerMockMVCTest<Qu
                 .andExpect(status().isOk())
                 .andExpect(view().name("questionnaire/question"))
                 .andExpect(model().attribute("model", viewModel))
-                .andExpect(model().attribute("form", lambdaMatches(f -> ((QuestionnaireQuestionForm)f).getOption().equals(2L))))
+                .andExpect(model().attribute("form", new QuestionnaireQuestionForm(2L, 1L)))
                 .andReturn();
-
     }
+
 
     @Test
     public void saveQuestionResponse() throws Exception {
@@ -132,7 +147,7 @@ public class QuestionnaireWebControllerTest extends BaseControllerMockMVCTest<Qu
                 .andExpect(redirectedUrl(String.format("/questionnaire/%s/question/%d", id.toString(), nextQuestionId)))
                 .andReturn();
 
-        verify(questionnaireQuestionResponseRestService).create(argThat(lambdaMatches(r -> r.getOption().equals(option.getId()))));
+        verify(questionnaireQuestionResponseRestService).create(argThat(r -> r.getOption().equals(option.getId())));
     }
 
     @Test

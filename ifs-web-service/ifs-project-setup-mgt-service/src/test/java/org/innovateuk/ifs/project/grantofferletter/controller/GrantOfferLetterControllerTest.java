@@ -26,7 +26,9 @@ import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.util.MultipartFileAssertionUtil;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
@@ -66,6 +68,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<GrantOfferLetterController> {
     @Mock
     private ProjectService projectService;
@@ -400,7 +403,6 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         Long projectId = 1L;
 
         when(grantOfferLetterService.getAdditionalContractFile(projectId)).thenReturn(Optional.empty());
-        when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/grant-offer-letter/additional-contract"))
                 .andExpect(status().isNoContent())
@@ -448,20 +450,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationResource).build();
         Optional<FileEntryResource> annexFileEntryResource = Optional.of(FileEntryResourceBuilder.newFileEntryResource().withName("1").withMediaType("application/pdf").withFilesizeBytes(20).build());
 
-        // when the model is re-loaded after uploading
-        when(projectService.getById(projectId)).thenReturn(projectResource);
-
-        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
-
         CompetitionResource competition = newCompetitionResource().withId(competitionId).build();
-        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
-
-        when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
-        when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(annexFileEntryResource);
-        when(grantOfferLetterService.getGrantOfferLetterState(projectId)).thenReturn(golState(PENDING));
-        when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
-
-        when(grantOfferLetterService.sendGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
 
         MockMultipartFile uploadedFile = new MockMultipartFile("annex", "annex.pdf", "application/pdf", "My content!".getBytes());
         FileEntryResource createdFileDetails = newFileEntryResource().withName("1").withMediaType("application/pdf").withFilesizeBytes(20).build();
@@ -505,8 +494,6 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
         when(grantOfferLetterService.getGrantOfferLetterState(projectId)).thenReturn(golState(PENDING));
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
-
-        when(grantOfferLetterService.sendGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
 
         MockMultipartFile uploadedFile = new MockMultipartFile("annex", "annex.pdf", "application/pdf", "My content!".getBytes());
 

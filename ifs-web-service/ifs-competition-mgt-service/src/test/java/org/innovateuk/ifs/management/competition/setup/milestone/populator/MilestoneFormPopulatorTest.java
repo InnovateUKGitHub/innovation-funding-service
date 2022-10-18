@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.management.competition.setup.milestone.populator;
 
-import org.apache.commons.collections4.map.LinkedMap;
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
@@ -11,8 +9,10 @@ import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetu
 import org.innovateuk.ifs.management.competition.setup.core.form.GenericMilestoneRowForm;
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestonesForm;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,8 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-public class MilestoneFormPopulatorTest extends BaseUnitTest {
+@RunWith(MockitoJUnitRunner.class)
+public class MilestoneFormPopulatorTest {
 
     @InjectMocks
     private MilestonesFormPopulator service;

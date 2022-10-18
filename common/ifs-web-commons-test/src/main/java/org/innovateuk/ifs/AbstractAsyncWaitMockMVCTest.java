@@ -10,7 +10,10 @@ import org.innovateuk.ifs.async.generation.handler.CompletableFutureTupleNHandle
 import org.innovateuk.ifs.commons.service.ExceptionThrowingFunction;
 import org.innovateuk.ifs.util.*;
 import org.junit.Before;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import java.util.List;
@@ -23,6 +26,7 @@ import java.util.function.Function;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -42,6 +46,7 @@ public abstract class AbstractAsyncWaitMockMVCTest<ControllerType> extends BaseC
      */
     @Before
     public void setUpFutureExpectations() {
+        MockitoAnnotations.openMocks(this);
         setAsyncMethodExpectations();
         setupAwaitAllMethodExpectations();
     }
@@ -64,7 +69,7 @@ public abstract class AbstractAsyncWaitMockMVCTest<ControllerType> extends BaseC
             return CompletableFuture.completedFuture(null);
         };
 
-        when(futuresGeneratorMock.async(isA(ExceptionThrowingSupplier.class))).thenAnswer(futureSupplierAnswer);
+        when(futuresGeneratorMock.async(any(ExceptionThrowingSupplier.class))).thenAnswer(futureSupplierAnswer);
         when(futuresGeneratorMock.async(isA(String.class), isA(ExceptionThrowingSupplier.class))).thenAnswer(futureSupplierAnswer);
         when(futuresGeneratorMock.async(isA(ExceptionThrowingRunnable.class))).thenAnswer(futureConsumerAnswer);
         when(futuresGeneratorMock.async(isA(String.class), isA(ExceptionThrowingRunnable.class))).thenAnswer(futureConsumerAnswer);

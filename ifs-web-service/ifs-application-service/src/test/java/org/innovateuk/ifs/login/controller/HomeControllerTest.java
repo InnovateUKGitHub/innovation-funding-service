@@ -13,8 +13,10 @@ import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
@@ -32,6 +34,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController> {
 
     @Mock

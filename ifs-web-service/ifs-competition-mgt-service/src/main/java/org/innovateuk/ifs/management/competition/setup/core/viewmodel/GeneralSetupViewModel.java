@@ -39,6 +39,7 @@ public class GeneralSetupViewModel {
     private CompetitionStateSetupViewModel state;
     private boolean ifsAdmin;
     private boolean isAssessmentStageEnabled;
+    private boolean isExpressionOfInterestEnabled;
 
     public GeneralSetupViewModel(boolean editable,
                                  boolean firstTimeInForm,
@@ -47,7 +48,8 @@ public class GeneralSetupViewModel {
                                  CompetitionSetupSection[] allSections,
                                  boolean isInitialComplete,
                                  boolean ifsAdmin,
-                                 boolean isAssessmentStageEnabled) {
+                                 boolean isAssessmentStageEnabled,
+                                 boolean isExpressionOfInterestEnabled) {
         this.editable = editable;
         this.firstTimeInForm = firstTimeInForm;
         this.competition = competition;
@@ -56,6 +58,7 @@ public class GeneralSetupViewModel {
         this.isInitialComplete = isInitialComplete;
         this.ifsAdmin = ifsAdmin;
         this.isAssessmentStageEnabled = isAssessmentStageEnabled;
+        this.isExpressionOfInterestEnabled = isExpressionOfInterestEnabled;
     }
 
     public void setCurrentSectionFragment(String currentSectionFragment) {
@@ -110,6 +113,10 @@ public class GeneralSetupViewModel {
         return isAssessmentStageEnabled;
     }
 
+    public boolean isExpressionOfInterestEnabled() {
+        return isExpressionOfInterestEnabled;
+    }
+
     public static List<CompetitionSetupSection> getPublishSections() {
         return PUBLISH_SECTIONS;
     }
@@ -153,7 +160,7 @@ public class GeneralSetupViewModel {
     }
 
     @JsonIgnore
-    public MilestoneTime getTwlevePMMilestoneTime() {
+    public MilestoneTime getTwelvePMMilestoneTime() {
         return MilestoneTime.TWELVE_PM;
     }
 

@@ -24,6 +24,7 @@ import org.innovateuk.ifs.competitionsetup.repository.AssessorCountOptionReposit
 import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
 import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
+import org.innovateuk.ifs.horizon.transactional.HorizonWorkProgrammeService;
 import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -71,6 +72,9 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
     @Autowired
     private QuestionPriorityOrderService questionPriorityOrderService;
+
+    @Autowired
+    private HorizonWorkProgrammeService horizonWorkProgrammeService;
 
     private Map<CompetitionTypeEnum, CompetitionTemplate> templates;
     private Map<FundingType, FundingTypeTemplate> fundingTypeTemplates;
@@ -133,6 +137,10 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         competition = fundingTypeTemplate.setGolTemplate(competition);
         if (fundingRulesTemplate.isPresent()) {
             sectionBuilders = fundingRulesTemplate.get().sections(competition, sectionBuilders);
+        }
+
+        if (competition.isHorizonEuropeGuarantee()) {
+            horizonWorkProgrammeService.initWorkProgrammesForCompetition(competitionId);
         }
 
         questionPriorityOrderService.persistAndPrioritiseSections(competition, sectionBuilders

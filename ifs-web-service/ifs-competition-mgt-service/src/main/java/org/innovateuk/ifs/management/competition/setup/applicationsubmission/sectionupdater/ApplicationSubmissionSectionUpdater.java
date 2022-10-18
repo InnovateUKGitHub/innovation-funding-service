@@ -24,6 +24,9 @@ public class ApplicationSubmissionSectionUpdater extends AbstractSectionUpdater 
     @Value("${ifs.assessment.stage.competition.enabled}")
     private boolean isAssessmentStageEnabled;
 
+    @Value("${ifs.expression.of.interest.enabled}")
+    private boolean isExpressionOfInterestEnabled;
+
     @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
 
@@ -49,10 +52,14 @@ public class ApplicationSubmissionSectionUpdater extends AbstractSectionUpdater 
 
         String sectionPath;
 
-        if (competition.isAlwaysOpen() && isAssessmentStageEnabled) {
-            sectionPath = CompetitionSetupSection.APPLICATION_ASSESSMENT.getPath();
+        if (isExpressionOfInterestEnabled) {
+            sectionPath = CompetitionSetupSection.APPLICATION_EXPRESSION_OF_INTEREST.getPath();
         } else {
-            sectionPath = CompetitionSetupSection.MILESTONES.getPath();
+            if (competition.isAlwaysOpen() && isAssessmentStageEnabled) {
+                sectionPath = CompetitionSetupSection.APPLICATION_ASSESSMENT.getPath();
+            } else {
+                sectionPath = CompetitionSetupSection.MILESTONES.getPath();
+            }
         }
 
         return format("redirect:/competition/setup/%d/section/%s", competition.getId(), sectionPath);

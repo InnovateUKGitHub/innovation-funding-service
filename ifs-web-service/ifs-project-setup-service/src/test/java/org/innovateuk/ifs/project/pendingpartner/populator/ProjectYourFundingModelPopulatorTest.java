@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.pendingpartner.populator;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
@@ -32,7 +31,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
-import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -50,7 +48,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ProjectYourFundingModelPopulatorTest extends BaseUnitTest {
+public class ProjectYourFundingModelPopulatorTest {
 
     @Mock
     private ProjectRestService projectRestService;

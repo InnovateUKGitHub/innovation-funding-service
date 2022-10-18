@@ -164,6 +164,8 @@ Milestones: Server side validations, submission time is default
     And the user clicks the button/link                           jQuery = button:contains("Done")
     And the user clicks the button twice                          jQuery = label:contains("No")
     And the user clicks the button/link                           jQuery = button:contains("Save and continue")
+    And the user clicks the button twice                          jQuery = label:contains("No")
+    And the user clicks the button/link                           jQuery = button:contains("Save and continue")
     And the user fills the milestones with invalid data
     And the user clicks the button/link                           jQuery = button:contains(Done)
     Then Validation summary should be visible
@@ -184,7 +186,8 @@ Milestones: Autosave
     [Tags]
     When the user clicks the button/link              link = Milestones
     ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = a:contains("Next")
-    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  jQuery = a:contains("Next")
+    Run Keyword If  '${status}' == 'PASS'  run keywords  the user clicks the button/link  jQuery = a:contains("Next")
+    ...                             AND    the user clicks the button/link  jQuery = a:contains("Next")
     Run Keyword If  '${status}' == 'FAIL'  the user selects the radio button  selectedCompletionStage  PROJECT_SETUP
     Run Keyword If  '${status}' == 'FAIL'  the user clicks the button/link  jQuery = button:contains("Done")
     Then the user should see the correct inputs in the Milestones form
@@ -415,9 +418,12 @@ the user should see the group of errors
 
 the user completes completition stage and application submissions
     ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = a:contains("Next")
-    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  jQuery = a:contains("Next")
+    Run Keyword If  '${status}' == 'PASS'  run keywords   the user clicks the button/link  jQuery = a:contains("Next")
+    ...                            AND                    the user clicks the button/link  jQuery = span:contains("Application expression of interest")
     Run Keyword If  '${status}' == 'FAIL'  run keywords   the user selects the radio button   selectedCompletionStage   PROJECT_SETUP
     ...                                             AND   the user clicks the button/link  jQuery = button:contains("Done")
+    ...                                             AND   the user clicks the button/link  jQuery = span:contains("Application expression of interest")
+    ...                                             AND   the user clicks the button/link  jQuery = button:contains("Save and continue")
     the user clicks the button/link  jQuery = span:contains("Milestones")
     ${i} =  Set Variable   1
      :FOR   ${ELEMENT}   IN    @{milestones}

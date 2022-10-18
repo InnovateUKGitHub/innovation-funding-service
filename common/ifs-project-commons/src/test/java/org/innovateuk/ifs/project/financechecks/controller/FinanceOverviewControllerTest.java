@@ -16,7 +16,9 @@ import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
@@ -40,6 +42,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+@RunWith(MockitoJUnitRunner.class)
 public class FinanceOverviewControllerTest extends BaseControllerMockMVCTest<FinanceOverviewController> {
 
     @Mock
@@ -93,7 +96,6 @@ public class FinanceOverviewControllerTest extends BaseControllerMockMVCTest<Fin
         FinanceCheckEligibilityResource financeCheckEligibilityResource = newFinanceCheckEligibilityResource().withTotalCost(BigDecimal.valueOf(280009)).build();
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(partnerOrganisationResources));
         when(financeCheckServiceMock.getFinanceCheckOverview(projectId)).thenReturn(serviceSuccess(mockFinanceOverview()));
-        when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(projectId, organisationId)).thenReturn(financeCheckEligibilityResource);
         when(projectFinanceService.getProjectFinances(projectId)).thenReturn(restSuccess(emptyList()));
         ProjectResource projectResource = newProjectResource().withCompetition(competition.getId()).build();
         when(projectService.getById(projectId)).thenReturn(projectResource);

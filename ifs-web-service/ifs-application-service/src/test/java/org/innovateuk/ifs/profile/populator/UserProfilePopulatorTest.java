@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.profile.populator;
 
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.profile.viewmodel.UserProfileViewModel;
 import org.innovateuk.ifs.user.resource.EDIStatus;
@@ -8,8 +7,10 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.TimeMachine;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -20,7 +21,8 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-public class UserProfilePopulatorTest extends BaseUnitTest {
+@RunWith(MockitoJUnitRunner.class)
+public class UserProfilePopulatorTest {
 
     @InjectMocks
     private UserProfilePopulator target;

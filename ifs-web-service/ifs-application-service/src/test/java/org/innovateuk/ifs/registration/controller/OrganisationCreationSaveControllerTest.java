@@ -17,7 +17,9 @@ import org.innovateuk.ifs.user.service.OrganisationSearchRestService;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.validation.Validator;
 
@@ -40,6 +42,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class OrganisationCreationSaveControllerTest extends BaseControllerMockMVCTest<OrganisationCreationSaveController> {
 
     private static final String COMPANY_NAME = "organisation name";
@@ -129,7 +132,7 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
     @Test
     public void saveOrganisation_lead() throws Exception {
         ReflectionTestUtils.setField(controller, "isNewOrganisationSearchEnabled", false);
-        when(registrationCookieService.isCollaboratorJourney(any())).thenReturn(false);
+
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
         when(organisationRestService.createOrMatch(any())).thenReturn(restSuccess(newOrganisationResource().withId(2L).build()));
@@ -147,7 +150,7 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
     @Test
     public void saveOrganisation_WithSicCodes() throws Exception {
         ReflectionTestUtils.setField(controller, "isNewOrganisationSearchEnabled", true);
-        when(registrationCookieService.isCollaboratorJourney(any())).thenReturn(false);
+
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
         when(organisationRestService.createOrMatch(any())).thenReturn(restSuccess(newOrganisationResource().withId(2L).build()));
@@ -169,7 +172,7 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
         organisationForm.setOrganisationAddress(null);
 
         ReflectionTestUtils.setField(controller, "isNewOrganisationSearchEnabled", true);
-        when(registrationCookieService.isCollaboratorJourney(any())).thenReturn(false);
+
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
         when(organisationRestService.createOrMatch(any())).thenReturn(restSuccess(newOrganisationResource().withId(2L).build()));
@@ -191,7 +194,7 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
         organisationForm.setOrganisationAddress(null);
 
         ReflectionTestUtils.setField(controller, "isNewOrganisationSearchEnabled", true);
-        when(registrationCookieService.isCollaboratorJourney(any())).thenReturn(false);
+
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
         when(organisationRestService.createOrMatch(any())).thenReturn(restSuccess(newOrganisationResource().withId(2L).build()));
@@ -218,7 +221,7 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
         organisationForm.setSelectedExistingOrganisationId(existingOrganisationId);
 
 
-        when(registrationCookieService.isCollaboratorJourney(any())).thenReturn(false);
+
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
         when(organisationRestService.createOrMatch(any())).thenReturn(restSuccess(newOrganisationResource().withId(existingOrganisationId).build()));
@@ -237,8 +240,8 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
     @Test
     public void saveOrganisation_collaborator() throws Exception {
         ReflectionTestUtils.setField(controller, "isNewOrganisationSearchEnabled", false);
-        when(registrationCookieService.isCollaboratorJourney(any())).thenReturn(true);
-        when(registrationCookieService.getInviteHashCookieValue(any())).thenReturn(Optional.of(INVITE_HASH));
+
+
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
         when(organisationRestService.createOrMatch(any())).thenReturn(restSuccess(newOrganisationResource().withId(2L).build()));

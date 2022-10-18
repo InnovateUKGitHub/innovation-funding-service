@@ -11,9 +11,11 @@ import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 import org.innovateuk.ifs.review.service.ReviewRestService;
 import org.innovateuk.ifs.management.review.viewmodel.ReviewViewModel;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -32,6 +34,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ReviewControllerTest extends BaseControllerMockMVCTest<ReviewController> {
 
     @Mock

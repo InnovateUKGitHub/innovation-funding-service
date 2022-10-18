@@ -9,6 +9,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+import java.util.List;
+
 @Mapper(
         config = GlobalMapperConfig.class,
         uses = {
@@ -31,6 +33,8 @@ public abstract class CompetitionEoiDocumentMapper extends BaseMapper<Competitio
     })
     @Override
     public abstract CompetitionEoiDocument mapToDomain(CompetitionEoiDocumentResource resource);
+
+    public abstract List<CompetitionEoiDocumentResource> mapToResource(List<CompetitionEoiDocument> competitionEoiDocuments);
 
     public Long mapCompetitionEoiDocumentToId(CompetitionEoiDocument object) {
         if (object == null) {

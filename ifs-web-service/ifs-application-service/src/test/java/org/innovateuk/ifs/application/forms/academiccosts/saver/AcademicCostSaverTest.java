@@ -13,18 +13,20 @@ import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 
 import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectations;
-import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
-import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class AcademicCostSaverTest extends BaseServiceUnitTest<AcademicCostSaver> {
 
     private static final long APPLICATION_ID = 1L;
@@ -98,10 +100,11 @@ public class AcademicCostSaverTest extends BaseServiceUnitTest<AcademicCostSaver
         verifyNoMoreInteractions(financeRowRestService);
     }
 
-    private Matcher<AcademicCost> hasNameAndCost(String name, BigDecimal value) {
-        return lambdaMatches(cost -> cost.getName().equals(name) && cost.getCost().equals(value));
+    private ArgumentMatcher<AcademicCost> hasNameAndCost(String name, BigDecimal value) {
+        return cost -> cost != null && cost.getName().equals(name) && cost.getCost().equals(value);
     }
-    private Matcher<AcademicCost> hasNameAndItem(String name, String item) {
-        return lambdaMatches(cost -> cost.getName().equals(name) && cost.getItem().equals(item));
+    private ArgumentMatcher<AcademicCost> hasNameAndItem(String name, String item) {
+        return cost -> cost != null && cost.getName().equals(name) && cost.getItem().equals(item);
     }
+
 }

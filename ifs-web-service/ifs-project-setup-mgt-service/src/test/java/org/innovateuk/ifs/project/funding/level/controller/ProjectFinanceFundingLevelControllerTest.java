@@ -17,7 +17,9 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
@@ -39,6 +41,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMockMVCTest<ProjectFinanceFundingLevelController> {
 
     private static final long projectId = 1L;
@@ -188,10 +191,6 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
     @Test
     public void saveFundingLevels_validZeroFundingLevel() throws Exception {
         when(projectFinanceRestService.getProjectFinances(projectId)).thenReturn(restSuccess(asList(industrialFinances, academicFinances)));
-        when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
-        when(projectRestService.getLeadOrganisationByProject(projectId)).thenReturn(restSuccess(newOrganisationResource().withId(1L).build()));
-        when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(competition));
-        when(applicationFinanceRestService.getFinanceTotals(project.getApplication())).thenReturn(restSuccess(asList(applicationIndustrialFinances, applicationAcademicFinances)));
         when(financeRowRestService.update(any())).thenReturn(restSuccess(ValidationMessages.noErrors()));
 
         mockMvc.perform(post("/project/{projectId}/funding-level", projectId)

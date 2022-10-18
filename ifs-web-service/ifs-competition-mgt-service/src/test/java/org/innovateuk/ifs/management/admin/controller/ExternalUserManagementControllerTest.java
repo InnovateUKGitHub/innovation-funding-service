@@ -7,7 +7,9 @@ import org.innovateuk.ifs.management.admin.form.SearchExternalUsersForm;
 import org.innovateuk.ifs.user.resource.SearchCategory;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -19,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * A mock MVC test for user management controller
  */
+@RunWith(MockitoJUnitRunner.class)
 public class ExternalUserManagementControllerTest extends BaseControllerMockMVCTest<ExternalUserManagementController> {
 
     @Mock

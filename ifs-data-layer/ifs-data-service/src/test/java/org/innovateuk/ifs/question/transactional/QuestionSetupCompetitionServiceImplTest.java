@@ -31,7 +31,6 @@ import java.util.Optional;
 import static com.google.common.collect.Sets.newLinkedHashSet;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
-import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -46,6 +45,8 @@ import static org.innovateuk.ifs.form.builder.MultipleChoiceOptionBuilder.newMul
 import static org.innovateuk.ifs.form.builder.MultipleChoiceOptionResourceBuilder.newMultipleChoiceOptionResource;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
+import static org.innovateuk.ifs.form.resource.SectionType.APPLICATION_QUESTIONS;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.ASSESSED_QUESTION;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -60,23 +61,23 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         return new QuestionSetupCompetitionServiceImpl();
     }
 
-    private static String number = "number";
-    private static String shortTitle = QuestionSetupType.SCOPE.getShortName();
-    private static String newShortTitle = "ScopeTwo";
-    private static String title = "title";
-    private static String subTitle = "subTitle";
-    private static String guidanceTitle = "guidanceTitle";
-    private static String guidance = "guidance";
-    private static String fileUploadGuidance = "fileUploadGuidance";
-    private static Integer maxWords = 1;
-    private static String assessmentGuidanceAnswer = "assessmentGuidance";
-    private static String assessmentGuidanceTitle = "assessmentGuidanceTitle";
-    private static Integer assessmentMaxWords = 2;
-    private static Integer scoreTotal = 10;
-    private static QuestionSetupType questionSetupType = QuestionSetupType.SCOPE;
+    private static final String number = "number";
+    private static final String shortTitle = QuestionSetupType.SCOPE.getShortName();
+    private static final String newShortTitle = "ScopeTwo";
+    private static final String title = "title";
+    private static final String subTitle = "subTitle";
+    private static final String guidanceTitle = "guidanceTitle";
+    private static final String guidance = "guidance";
+    private static final String fileUploadGuidance = "fileUploadGuidance";
+    private static final Integer maxWords = 1;
+    private static final String assessmentGuidanceAnswer = "assessmentGuidance";
+    private static final String assessmentGuidanceTitle = "assessmentGuidanceTitle";
+    private static final Integer assessmentMaxWords = 2;
+    private static final Integer scoreTotal = 10;
+    private static final QuestionSetupType questionSetupType = QuestionSetupType.SCOPE;
 
     @Mock
-    private CompetitionRepository competitionRepositoryMock;
+    private CompetitionRepository competitionRepository;
 
     @Mock
     private QuestionRepository questionRepository;
@@ -161,7 +162,6 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                                 .withActive(true)
                                 .build()
                         )
-
                 )
                 .withQuestionNumber(number)
                 .withAssessorMaximumScore(scoreTotal)
@@ -182,29 +182,29 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         CompetitionSetupQuestionResource resource = result.getSuccess();
 
-        assertEquals(resource.getAppendix(), true);
-        assertEquals(resource.getScored(), true);
-        assertEquals(resource.getWrittenFeedback(), true);
-        assertEquals(resource.getScope(), true);
-        assertEquals(resource.getResearchCategoryQuestion(), true);
-        assertEquals(resource.getAssessmentGuidance(), assessmentGuidanceAnswer);
-        assertEquals(resource.getAssessmentGuidanceTitle(), assessmentGuidanceTitle);
-        assertEquals(resource.getAssessmentMaxWords(), assessmentMaxWords);
-        assertEquals(resource.getGuidanceTitle(), guidanceTitle);
-        assertEquals(resource.getMaxWords(), maxWords);
+        assertEquals(true, resource.getAppendix());
+        assertEquals(true, resource.getScored());
+        assertEquals(true, resource.getWrittenFeedback());
+        assertEquals(true, resource.getScope());
+        assertEquals(true, resource.getResearchCategoryQuestion());
+        assertEquals(assessmentGuidanceAnswer, resource.getAssessmentGuidance());
+        assertEquals(assessmentGuidanceTitle, resource.getAssessmentGuidanceTitle());
+        assertEquals(assessmentMaxWords, resource.getAssessmentMaxWords());
+        assertEquals(guidanceTitle, resource.getGuidanceTitle());
+        assertEquals(maxWords, resource.getMaxWords());
         assertEquals(resource.getTextArea(), true);
-        assertEquals(resource.getScoreTotal(), scoreTotal);
-        assertEquals(resource.getNumber(), number);
+        assertEquals(scoreTotal, resource.getScoreTotal());
+        assertEquals(number, resource.getNumber());
         assertEquals(resource.getQuestionId(), questionId);
-        assertEquals(resource.getSubTitle(), subTitle);
-        assertEquals(resource.getShortTitle(), shortTitle);
-        assertEquals(resource.getTitle(), title);
-        assertEquals(resource.getGuidance(), guidance);
-        assertEquals(resource.getType(), QuestionSetupType.SCOPE);
-        assertEquals(resource.getAppendixGuidance(), fileUploadGuidance);
+        assertEquals(subTitle, resource.getSubTitle());
+        assertEquals(shortTitle, resource.getShortTitle());
+        assertEquals(title, resource.getTitle());
+        assertEquals(guidance, resource.getGuidance());
+        assertEquals(QuestionSetupType.SCOPE, resource.getType());
+        assertEquals(fileUploadGuidance, resource.getAppendixGuidance());
         assertEquals(resource.getAllowedAppendixResponseFileTypes(), ImmutableSet.of(PDF, SPREADSHEET));
-        assertEquals(resource.getTemplateDocument(), true);
-        assertEquals(resource.getMultipleChoice(), true);
+        assertEquals(true, resource.getTemplateDocument());
+        assertEquals(true, resource.getMultipleChoice());
         assertEquals(resource.getChoices().size(), 2);
         verify(guidanceRowMapper).mapToResource(guidanceRows);
     }
@@ -240,8 +240,13 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                 .withWrittenFeedback(true)
                 .build();
 
-        Question question = newQuestion().
-                withShortName(newShortTitle).build();
+        Question question = newQuestion()
+                .withShortName(newShortTitle)
+                .withCompetition(
+                        newCompetition()
+                                .withEnabledForExpressionOfInterest(false)
+                                .build())
+                .build();
 
         FormInput questionFormInput = newFormInput().build();
         FormInput appendixFormInput = newFormInput().build();
@@ -274,34 +279,34 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         assertTrue(result.isSuccess());
         assertNotEquals(question.getQuestionNumber(), number);
-        assertEquals(question.getDescription(), subTitle);
-        assertEquals(question.getName(), title);
-        assertEquals(questionFormInput.getGuidanceTitle(), guidanceTitle);
-        assertEquals(questionFormInput.getGuidanceAnswer(), guidance);
-        assertEquals(questionFormInput.getWordCount(), maxWords);
-        assertEquals(writtenFeedbackFormInput.getGuidanceAnswer(), assessmentGuidanceAnswer);
-        assertEquals(writtenFeedbackFormInput.getGuidanceTitle(), assessmentGuidanceTitle);
-        assertEquals(question.getShortName(), newShortTitle);
+        assertEquals(subTitle, question.getDescription());
+        assertEquals(title, question.getName());
+        assertEquals(guidanceTitle, questionFormInput.getGuidanceTitle());
+        assertEquals(guidance, questionFormInput.getGuidanceAnswer());
+        assertEquals(maxWords, questionFormInput.getWordCount());
+        assertEquals(assessmentGuidanceAnswer, writtenFeedbackFormInput.getGuidanceAnswer());
+        assertEquals(assessmentGuidanceTitle, writtenFeedbackFormInput.getGuidanceTitle());
+        assertEquals(newShortTitle, question.getShortName());
 
-        assertEquals(appendixFormInput.getActive(), true);
-        assertEquals(appendixFormInput.getGuidanceAnswer(), null);
+        assertTrue(appendixFormInput.getActive());
+        assertNull(appendixFormInput.getGuidanceAnswer());
 
-        assertEquals(templateFormInput.getActive(), true);
+        assertTrue(templateFormInput.getActive());
         assertEquals(templateFormInput.getDescription(), "Template");
 
-        assertEquals(multipleChoiceFormInput.getActive(), true);
+        assertTrue(multipleChoiceFormInput.getActive());
         //create
-        verify(multipleChoiceOptionRepository).save(argThat(lambdaMatches(choice -> choice.getId() == null)));
+        verify(multipleChoiceOptionRepository).save(argThat(choice -> choice.getId() == null));
         //delete
-        verify(multipleChoiceOptionRepository).delete(argThat(lambdaMatches(choice -> choice.getId().equals(2L))));
+        verify(multipleChoiceOptionRepository).delete(argThat(choice -> choice.getId().equals(2L)));
         //update
         assertEquals(multipleChoiceFormInput.getMultipleChoiceOptions().stream()
                 .filter(choice -> choice.getId().equals(1L)).findAny().get().getText(), "Update");
 
-        assertEquals(researchCategoryQuestionFormInput.getActive(), true);
-        assertEquals(scopeQuestionFormInput.getActive(), true);
-        assertEquals(scoredQuestionFormInput.getActive(), true);
-        assertEquals(writtenFeedbackFormInput.getActive(), true);
+        assertTrue(researchCategoryQuestionFormInput.getActive());
+        assertTrue(scopeQuestionFormInput.getActive());
+        assertTrue(scoredQuestionFormInput.getActive());
+        assertTrue(writtenFeedbackFormInput.getActive());
 
         verify(guidanceRowMapper).mapToDomain(guidanceRows);
     }
@@ -335,7 +340,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.update(resource);
 
-        assertEquals(true, result.isSuccess());
+        assertTrue(result.isSuccess());
         assertNotEquals(appendixEnabled, appendixFormInput.getActive());
         assertNull(appendixFormInput.getAllowedFileTypes());
         assertNotEquals(guidanceAnswer, appendixFormInput.getGuidanceAnswer());
@@ -369,7 +374,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.update(resource);
 
-        assertEquals(true, result.isSuccess());
+        assertTrue(result.isSuccess());
         assertFalse(appendixFormInput.getActive());
         assertNull(appendixFormInput.getAllowedFileTypes());
         assertNull(appendixFormInput.getGuidanceAnswer());
@@ -450,6 +455,86 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
+    public void update_shouldUpdateExpressionOfInterest() {
+
+        Competition competition = newCompetition()
+                .withId(1L)
+                .withEnabledForExpressionOfInterest(true)
+                .build();
+
+        Section section = newSection()
+                .withCompetition(competition)
+                .withSectionType(APPLICATION_QUESTIONS)
+                .withEnabledForPreRegistration(true)
+                .build();
+
+        List<Question> existingQuestions = newQuestion()
+                .withId(1L, 2L, 4L, 3L)
+                .withPriority(1, 2, 3, 4)
+                .withQuestionNumber("1", "6", "3", "4")
+                .withCompetition(competition)
+                .withEnabledForPreRegistration(false, true, true, true)
+                .withQuestionSetupType(ASSESSED_QUESTION)
+                .withSection(section)
+                .build(4);
+
+        CompetitionSetupQuestionResource resource = newCompetitionSetupQuestionResource()
+                .withQuestionId(existingQuestions.get(0).getId())
+                .withExpressionOfInterest(true)
+                .build();
+
+        when(questionRepository.findById(existingQuestions.get(0).getId())).thenReturn(Optional.of(existingQuestions.get(0)));
+        when(questionRepository.findByCompetitionIdAndSectionTypeOrderByPriorityAsc(competition.getId(), APPLICATION_QUESTIONS))
+                .thenReturn(existingQuestions);
+
+        ServiceResult<CompetitionSetupQuestionResource> result = service.update(resource);
+
+        assertTrue(result.isSuccess());
+        assertTrue(existingQuestions.get(0).isEnabledForPreRegistration());
+        assertTrue(section.isEnabledForPreRegistration());
+    }
+
+    @Test
+    public void update_noActiveExpressionOfInterestApplicationQuestionsTurnsOffSection() {
+
+        Competition competition = newCompetition()
+                .withId(1L)
+                .withEnabledForExpressionOfInterest(true)
+                .build();
+
+        Section section = newSection()
+                .withCompetition(competition)
+                .withSectionType(APPLICATION_QUESTIONS)
+                .withEnabledForPreRegistration(true)
+                .build();
+
+        List<Question> existingQuestions = newQuestion()
+                .withId(1L, 2L, 4L, 3L)
+                .withPriority(1, 2, 3, 4)
+                .withQuestionNumber("1", "6", "3", "4")
+                .withCompetition(competition)
+                .withEnabledForPreRegistration(true, false, false, false)
+                .withQuestionSetupType(ASSESSED_QUESTION)
+                .withSection(section)
+                .build(4);
+
+        CompetitionSetupQuestionResource resource = newCompetitionSetupQuestionResource()
+                .withQuestionId(existingQuestions.get(0).getId())
+                .withExpressionOfInterest(false)
+                .build();
+
+        when(questionRepository.findById(existingQuestions.get(0).getId())).thenReturn(Optional.of(existingQuestions.get(0)));
+        when(questionRepository.findByCompetitionIdAndSectionTypeOrderByPriorityAsc(competition.getId(), APPLICATION_QUESTIONS))
+                .thenReturn(existingQuestions);
+
+        ServiceResult<CompetitionSetupQuestionResource> result = service.update(resource);
+
+        assertTrue(result.isSuccess());
+        assertFalse(existingQuestions.get(0).isEnabledForPreRegistration());
+        assertFalse(section.isEnabledForPreRegistration());
+    }
+
+    @Test
     public void update_shouldNotUpdateApplicationDetailsHeading() {
         long questionId = 1L;
         String oldShortTitle = "Application details";
@@ -475,10 +560,15 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                 .withScored(true)
                 .withScoreTotal(scoreTotal)
                 .withWrittenFeedback(true)
+                .withExpressionOfInterest(true)
                 .build();
 
-        Question question = newQuestion().
-                withShortName(oldShortTitle)
+        Question question = newQuestion()
+                .withShortName(oldShortTitle)
+                .withCompetition(
+                        newCompetition()
+                                .withEnabledForExpressionOfInterest(false)
+                                .build())
                 .withQuestionSetupType(QuestionSetupType.APPLICATION_DETAILS).build();
 
         FormInput questionFormInput = newFormInput().build();
@@ -511,8 +601,16 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     private void setMocksForSuccessfulUpdate() {
         when(guidanceRowMapper.mapToDomain(anyList())).thenReturn(new ArrayList<>());
 
-        Question question = newQuestion().
-                withShortName(QuestionSetupType.SCOPE.getShortName()).build();
+        Competition competition = newCompetition()
+                .withId(1L)
+                .withEnabledForExpressionOfInterest(false)
+                .build();
+
+        Question question = newQuestion()
+                .withId(1L)
+                .withShortName(QuestionSetupType.SCOPE.getShortName())
+                .withCompetition(competition)
+                .build();
 
         FormInput questionFormInput = newFormInput().build();
         FormInput appendixFormInput = newFormInput().withWordCount(0).withActive(false).build();
@@ -548,7 +646,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     public void createByCompetitionId() {
         Competition competition = newCompetition().build();
         Question newlyCreatedQuestion = newQuestion().build();
-        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(questionSetupAddAndRemoveService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceSuccess(newlyCreatedQuestion));
         when(questionRepository.findById(newlyCreatedQuestion.getId())).thenReturn(Optional.of(newlyCreatedQuestion));
 
@@ -562,7 +660,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     @Test
     public void createByCompetitionId_withNonExistentCompId() {
         Long competitionId = 22L;
-        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.empty());
+        when(competitionRepository.findById(competitionId)).thenReturn(Optional.empty());
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competitionId);
         assertTrue(result.isFailure());
@@ -572,7 +670,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     @Test
     public void createByCompetitionId_whenDefaultCreationFails() {
         Competition competition = newCompetition().build();
-        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(questionSetupAddAndRemoveService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceFailure(COMPETITION_NOT_EDITABLE));
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competition.getId());
@@ -586,7 +684,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         Section section = newSection().build();
         Question createdQuestion = newQuestion().build();
 
-        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(sectionRepository.findByTypeAndCompetitionId(SectionType.PROJECT_DETAILS, competition.getId()))
                 .thenReturn(Optional.of(section));
         when(questionRepository.save(createResearchCategoryQuestionExpectations(competition, section)))
@@ -596,7 +694,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         assertTrue(result.isSuccess());
 
-        verify(competitionRepositoryMock).findById(competition.getId());
+        verify(competitionRepository).findById(competition.getId());
         verify(sectionRepository).findByTypeAndCompetitionId(SectionType.PROJECT_DETAILS, competition.getId());
         verify(questionRepository).save(createResearchCategoryQuestionExpectations(competition, section));
         verify(questionPriorityOrderService).prioritiseResearchCategoryQuestionAfterCreation(createdQuestion);
@@ -618,6 +716,29 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                 .withAssessmentGuidanceTitle(assessmentGuidanceTitle)
                 .withAssessmentMaxWords(assessmentMaxWords)
                 .withGuidanceRows(newFormInputGuidanceRowResourceBuilder().build(1))
+                .withScored(true)
+                .withScoreTotal(scoreTotal)
+                .withWrittenFeedback(true)
+                .build();
+    }
+
+    private CompetitionSetupQuestionResource createValidQuestionResourceWithExpressionOfInterest() {
+        return newCompetitionSetupQuestionResource()
+                .withAppendix(false)
+                .withNumberOfUploads(0)
+                .withGuidance(guidance)
+                .withGuidanceTitle(guidanceTitle)
+                .withMaxWords(maxWords)
+                .withNumber(number)
+                .withTitle(title)
+                .withShortTitle(newShortTitle)
+                .withSubTitle(subTitle)
+                .withQuestionId(1L)
+                .withAssessmentGuidance(assessmentGuidanceAnswer)
+                .withAssessmentGuidanceTitle(assessmentGuidanceTitle)
+                .withAssessmentMaxWords(assessmentMaxWords)
+                .withGuidanceRows(newFormInputGuidanceRowResourceBuilder().build(1))
+                .withExpressionOfInterest(true)
                 .withScored(true)
                 .withScoreTotal(scoreTotal)
                 .withWrittenFeedback(true)

@@ -94,7 +94,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
             if (competition.isEnabledForPreRegistration()) {
                 applications = applications
                         .stream()
-                        .filter(a -> !a.applicationEoiEvidenceIsRequiredAndNotReceived())
+                        .filter(a -> !a.isEnabledForExpressionOfInterest() || !a.applicationEoiEvidenceIsRequiredAndNotReceived())
                         .collect(toList());
             }
 
