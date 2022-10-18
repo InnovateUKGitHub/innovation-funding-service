@@ -92,7 +92,8 @@ public class ProjectFinanceChecksOverviewController {
                 competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE),
                 applicationFundingBreakdownViewModel,
                 competition.isThirdPartyOfgem(),
-                competition.isHorizonEuropeGuarantee());
+                competition.isHorizonEuropeGuarantee(),
+                competition.isCompTypeOfgemAndFundingTypeThirdParty());
     }
 
     private FinanceCheckSummariesViewModel getProjectFinanceSummaries(ProjectResource project, List<PartnerOrganisationResource> partnerOrgs, CompetitionResource competition) {
