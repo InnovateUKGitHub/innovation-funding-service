@@ -72,7 +72,7 @@
                                 data-time="12"
                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
                                 th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
-                                th:value="${model.general.getTwlevePMMilestoneTime()}">
+                                th:value="${model.general.getTwelvePMMilestoneTime()}">
                           </th:block>
                       </td>
                       <td class="govuk-table__cell js-addWeekDay" th:id="'milestoneWeekdayEntry-' + ${milestoneEntry.key}" th:text="${milestoneEntry.value.dayOfWeek}"></td>
@@ -175,12 +175,23 @@
                 <span class="pagination-part-title" th:text="${model.applicationSubmissionEnabled ? 'Application assessment' : 'Completion stage'}">Completion stage</span>
             </a>
 
-            <a rel="prev" title="Navigate to previous part"
-               th:unless="${model.general.competition.alwaysOpen && model.general.isAssessmentStageEnabled}"
-               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath=${model.applicationSubmissionEnabled ? 'application-expression-of-interest' : 'completion-stage'})}">
-                <span class="pagination-label">Previous</span>
-                <span class="pagination-part-title" th:text="${model.applicationSubmissionEnabled ? 'Application expression of interest' : 'Completion stage'}">Completion stage</span>
-            </a>
+            <th:block th:if="${model.general.isExpressionOfInterestEnabled}">
+                <a rel="prev" title="Navigate to previous part"
+                   th:unless="${model.general.competition.alwaysOpen && model.general.isAssessmentStageEnabled}"
+                   th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath=${model.applicationSubmissionEnabled ? 'application-expression-of-interest' : 'completion-stage'})}">
+                    <span class="pagination-label">Previous</span>
+                    <span class="pagination-part-title" th:text="${model.applicationSubmissionEnabled ? 'Application expression of interest' : 'Completion stage'}">Completion stage</span>
+                </a>
+            </th:block>
+
+            <th:block th:unless="${model.general.isExpressionOfInterestEnabled}">
+                <a rel="prev" title="Navigate to previous part"
+                   th:unless="${model.general.competition.alwaysOpen && model.general.isAssessmentStageEnabled}"
+                   th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath=${model.applicationSubmissionEnabled ? 'application-submission' : 'completion-stage'})}">
+                    <span class="pagination-label">Previous</span>
+                    <span class="pagination-part-title" th:text="${model.applicationSubmissionEnabled ? 'Application submission' : 'Completion stage'}">Completion stage</span>
+                </a>
+            </th:block>
         </li>
         <li class="next">
             <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{sectionPath}/{competitionId}(competitionId=${model.general.competition.id},sectionPath='public-content')}">

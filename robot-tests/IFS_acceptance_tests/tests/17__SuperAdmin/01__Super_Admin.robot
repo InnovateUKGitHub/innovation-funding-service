@@ -5,6 +5,8 @@ Documentation     IFS-9604 IFS Expert user can return assessment to assessor
 ...
 ...               IFS-9996 Super Admin can update application questions when the competition is open.
 ...
+...               IFS-12973 'Unsubmit assessment' functionality to be released to IFS administrator
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Administrator  CompAdmin
@@ -18,6 +20,8 @@ ${assessmentResetCompetitionName}     Sustainable living models for the future
 ${assessmentResetCompetitionID}       ${competition_ids["${assessmentResetCompetitionName}"]}
 ${assessmentResetApplicationName}     Living with Augmented Reality
 ${assessmentResetApplicationName}     ${application_ids["${assessmentResetApplicationName}"]}
+${assessmentApplicationName2}         Plastic reprocessing with zero waste
+${assessmentApplicationNameID}        ${application_ids["${assessmentApplicationName2}"]}
 ${projectName}                        Energy efficient home device
 ${projectID}                          ${project_ids["${projectName}"]}
 &{leadApplicantCredentials}           email=ron.spencer@gmail.com     password=${short_password}
@@ -30,7 +34,7 @@ Super admin can unsubmit assessment of an application already submitted
     Given Logging in and Error Checking         &{superAdminCredentials}
     And the user navigates to the page          ${server}/management/assessment/competition/${assessmentResetCompetitionID}
     And the user clicks the button/link         link = Manage assessors
-    When internal user filters the assessor
+    When internal user filters the assessor     Wilson
     And the user clicks the button/link         link = View progress
     And The user should see the element         jQuery = td:contains("${assessmentResetApplicationName}") ~ td:contains("Unsubmit")
     And the user clicks the button/link         link = Unsubmit
@@ -52,7 +56,7 @@ Super admin can not unsubmit the assessment once assessment is closed
     When the user clicks the button/link       id = close-assessment-button
     And the user navigates to the page         ${server}/management/assessment/competition/${assessmentResetCompetitionID}
     And the user clicks the button/link        link = Allocate assessors
-    And internal user filters the assessor
+    And internal user filters the assessor     Wilson
     And the user clicks the button/link        link = Assign
     Then the user should see the element       jQuery = td:contains("${assessmentResetApplicationName}") ~ td:nth-child(8):contains("Yes") ~ td:contains("${EMPTY}")
 
@@ -90,6 +94,36 @@ Super admin can edit application questions when the competition is open
     When the user clicks the button/link        jQuery = a:contains("Edit this question")
     Then the user enters text into subtitle     jQuery = label[for="question.subTitle"] +* .editor       Business opportunity guidance
     And the user clicks the button/link         jQuery = button:contains("Done")
+
+IFS admin can unsubmit assessment of an application already submitted through assessors page
+    [Documentation]  IFS-12973
+    Given The user logs-in in new browser       &{ifs_admin_user_credentials}
+    And the user navigates to the page          ${server}/management/assessment/competition/${assessmentResetCompetitionID}
+    And the user clicks the button/link         link = Manage assessors
+    When internal user filters the assessor     Colon
+    And the user clicks the button/link         link = View progress
+    Then the user should see the element        jQuery = td:contains("${assessmentResetApplicationName}") ~ td:contains("Unsubmit")
+    And the user clicks the button/link         link = Unsubmit
+    And the user clicks the button/link         jQuery = button:contains("Unsubmit assessment")
+
+IFS admin can unsubmit assessment of an application already submitted through application page
+    [Documentation]  IFS-12973
+    Given The user logs-in in new browser         &{ifs_admin_user_credentials}
+    And the user navigates to the page            ${server}/management/assessment/competition/${assessmentResetCompetitionID}
+    And the user clicks the button/link           link = Manage applications
+    When internal user filters the application    134
+    And the user clicks the button/link           link = View progress
+    Then The user should see the element          jQuery = td:contains("Anita Ruiz") ~ td:contains("Unsubmit")
+    And the user clicks the button/link           link = Unsubmit
+    And the user clicks the button/link           jQuery = button:contains("Unsubmit assessment")
+
+IFS admin cannot unsubmit the assessment if the assessment is not submitted
+    [Documentation]  IFS-12973
+    Given The user navigates to the page          ${server}/management/assessment/competition/${assessmentResetCompetitionID}
+    And the user clicks the button/link           link = Manage assessors
+    When internal user filters the assessor       Colon
+    And the user clicks the button/link           link = View progress
+    Then The user should not see the element      jQuery = td:contains("${assessmentApplicationName2}") ~ td:contains("Unsubmit")
 
 *** Keywords ***
 Custom Suite Setup
@@ -130,7 +164,8 @@ assessor re submits the assessment
     the user should see the element          jQuery = li:contains("${applicationName}") strong:contains("Recommended")
 
 internal user filters the assessor
-    the user enters text to a text field     id = assessorNameFilter   Wilson
+    [Arguments]  ${assessorName}
+    the user enters text to a text field     id = assessorNameFilter  ${assessorName}
     the user clicks the button/link          jQuery = .govuk-button:contains("Filter")
 
 the user rejects the document
@@ -168,3 +203,8 @@ compAdmin user approves the GOL
     the user clicks the button/link      jQuery = button:contains("Submit")
     the user clicks the button/link      jQuery = button[type = "submit"]:contains("Accept signed grant offer letter")
     the user should see the element      jQuery = .success-alert h2:contains("These documents have been approved.")
+
+internal user filters the application
+    [Arguments]  ${assessmentApplicationNameID}
+    the user enters text to a text field     id = filterSearch   ${assessmentApplicationNameID}
+    the user clicks the button/link          jQuery = .govuk-button:contains("Filter")
