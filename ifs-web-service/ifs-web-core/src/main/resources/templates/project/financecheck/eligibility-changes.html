@@ -57,15 +57,15 @@
                     </tr>
                     <tr class="govuk-table__row" th:each="entry : ${summaryModel.entries}">
                         <th class="govuk-table__header" scope="row" th:text="${entry.section}" />
-                        <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatDecimal(entry.applicationCost,1,'DEFAULT',0,'DEFAULT')}"/></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${entry.section == 'Contribution to project (%)' ? #numbers.formatDecimal(entry.applicationCost,1,'DEFAULT',2,'DEFAULT') + '%' : #numbers.formatDecimal(entry.applicationCost,1,'DEFAULT',0,'DEFAULT')}"/></td>
                         <td class="govuk-table__cell govuk-table__cell--numeric">
                             <th:block th:if="${entry.projectCostDifferent}">
-                                <th:block th:text="${#numbers.formatDecimal(entry.projectCost, 1,'DEFAULT',0,'DEFAULT')}"/>
+                                <th:block th:text="${entry.section == 'Contribution to project (%)' ? #numbers.formatDecimal(entry.projectCost,1,'DEFAULT',2,'DEFAULT') + '%' : #numbers.formatDecimal(entry.projectCost, 1,'DEFAULT',0,'DEFAULT')}"/>
                             </th:block>
                         </td>
                         <td class="govuk-table__cell govuk-table__cell--numeric">
                             <th:block th:if="${entry.projectCostDifferent}">
-                                <th:block th:text="${entry.varianceDirection}"/> <th:block th:text="${#numbers.formatDecimal(entry.variance, 1,'DEFAULT',0,'DEFAULT')}"/>
+                                <th:block th:text="${entry.varianceDirection}"/> <th:block th:text="${entry.section == 'Contribution to project (%)' ? #numbers.formatDecimal(entry.variance,1,'DEFAULT',2,'DEFAULT') + '%' : #numbers.formatDecimal(entry.variance, 1,'DEFAULT',0,'DEFAULT')}"/>
                             </th:block>
                         </td>
                     </tr>
