@@ -164,6 +164,8 @@ Applicant submits the expression of interest application
     And the user should see the element         jQuery = h1:contains("Expression of interest status")
     And the user should see the element         link = View expression of interest
     And the user should see the element         link = Print expression of interest
+    And The user should see the element         jQuery = p:contains("Your submission will now be evaluated by our team.")
+    And The user should see the element          jQuery = p:contains("If the evidence you provided is satisfactory, you will progress to the full application.")
     And the user reads his email                steve.smith@empire.com  ${preregApplicationID}: Successful submission of expression of interest   You have successfully submitted an expression of interest for funding to Innovate UK’s ${hecpPreregCompName}.
 
 Applicant can not view hidden question, section and subsection in print application
