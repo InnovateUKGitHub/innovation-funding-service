@@ -1,15 +1,13 @@
 package org.innovateuk.ifs.application.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceState;
-import org.innovateuk.ifs.application.resource.EoiEvidenceStatus;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
-import org.innovateuk.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;
-import java.time.ZonedDateTime;
 
 @Builder
 @Entity

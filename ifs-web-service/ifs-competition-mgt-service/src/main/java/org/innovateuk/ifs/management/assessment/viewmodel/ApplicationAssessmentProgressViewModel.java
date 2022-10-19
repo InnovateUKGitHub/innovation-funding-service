@@ -35,7 +35,7 @@ public class ApplicationAssessmentProgressViewModel {
     private final long assessmentPeriodId;
     private final String assessmentPeriodName;
     private final boolean competitionAlwaysOpen;
-    private final boolean isSuperAdmin;
+    private final boolean isIfsAdministrator;
     private final boolean isAssessmentClosed;
 
     public ApplicationAssessmentProgressViewModel(long applicationId,
@@ -58,7 +58,7 @@ public class ApplicationAssessmentProgressViewModel {
                                                   Sort currentSort,
                                                   PaginationViewModel pagination,
                                                   boolean selectAllDisabled,
-                                                  boolean isSuperAdmin,
+                                                  boolean isIfsAdministrator,
                                                   boolean isAssessmentClosed) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
@@ -80,7 +80,7 @@ public class ApplicationAssessmentProgressViewModel {
         this.assessmentPeriodId = assessmentPeriodId;
         this.assessmentPeriodName = assessmentPeriodName;
         this.competitionAlwaysOpen = competitionAlwaysOpen;
-        this.isSuperAdmin = isSuperAdmin;
+        this.isIfsAdministrator = isIfsAdministrator;
         this.isAssessmentClosed = isAssessmentClosed;
     }
 
@@ -170,8 +170,8 @@ public class ApplicationAssessmentProgressViewModel {
         return competitionAlwaysOpen;
     }
 
-    public boolean isSuperAdmin() {
-        return isSuperAdmin;
+    public boolean isIfsAdministrator() {
+        return isIfsAdministrator;
     }
 
     public boolean isAssessmentClosed() {

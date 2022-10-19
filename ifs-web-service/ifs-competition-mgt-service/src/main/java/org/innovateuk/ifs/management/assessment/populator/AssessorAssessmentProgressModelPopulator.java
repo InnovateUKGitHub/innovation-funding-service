@@ -46,7 +46,7 @@ public class AssessorAssessmentProgressModelPopulator {
                                                              int page,
                                                              Sort sort,
                                                              String filter,
-                                                             boolean isSuperAdmin) {
+                                                             boolean isIfsAdministrator) {
         AssessorCompetitionSummaryResource summaryResource = assessorCompetitionSummaryRestService
                 .getAssessorSummary(assessorId, competitionId)
                 .getSuccess();
@@ -102,7 +102,7 @@ public class AssessorAssessmentProgressModelPopulator {
                 rejected,
                 previouslyAssigned,
                 applicationsViewModel,
-                isSuperAdmin
+                isIfsAdministrator
         );
     }
 

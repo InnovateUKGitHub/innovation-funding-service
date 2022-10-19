@@ -127,7 +127,7 @@
                             Yes
                         </td>
                         <td class="govuk-table__cell aligncentre">
-                            <th:block th:if="${model.isSuperAdmin()}">
+                            <th:block th:if="${model.isIfsAdministrator()}">
                                 <th:block th:unless="${model.isAssessmentClosed()}">
                                     <a th:if="${app.submitted}"
                                        class="govuk-link govuk-!-margin-0"
