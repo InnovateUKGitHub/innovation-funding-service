@@ -671,6 +671,7 @@ the user completes all categories except organisational eligibility category
     [Arguments]    ${orgType}  ${extraKeyword}  ${compType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}  ${fundingRule}   ${isOpenComp}
     the user selects the Terms and Conditions               ${compType}            ${fundingRule}
     the user fills in the CS Funding Information
+    the user completes project impact section               No
     the user fills in the CS Project eligibility            ${orgType}             ${researchParticipation}    ${researchCategory}  ${collaborative}
     the user fills in the CS funding eligibility            ${researchCategory}    ${compType}                 ${fundingRule}
     the user fills in the CS Milestones                     ${completionStage}     ${month}                    ${nextyear}          ${isOpenComp}

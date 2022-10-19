@@ -8,4 +8,5 @@ public interface CompetitionApplicationConfigRestService {
 
     RestResult<CompetitionApplicationConfigResource> update(long competitionId, CompetitionApplicationConfigResource competitionApplicationConfigResource);
 
+    RestResult<CompetitionApplicationConfigResource> updateImpactSurvey(long competitionId, CompetitionApplicationConfigResource competitionApplicationConfigResource);
 }

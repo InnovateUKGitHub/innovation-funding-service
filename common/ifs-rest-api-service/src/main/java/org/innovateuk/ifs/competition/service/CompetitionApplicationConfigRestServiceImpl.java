@@ -20,4 +20,9 @@ public class CompetitionApplicationConfigRestServiceImpl extends BaseRestService
     public RestResult<CompetitionApplicationConfigResource> update(long competitionId, CompetitionApplicationConfigResource competitionApplicationConfigResource) {
         return putWithRestResult(COMPETITION_APPLICATION_CONFIG_URL + "/" + competitionId, competitionApplicationConfigResource, CompetitionApplicationConfigResource.class);
     }
+
+    @Override
+    public RestResult<CompetitionApplicationConfigResource> updateImpactSurvey(long competitionId, CompetitionApplicationConfigResource competitionApplicationConfigResource) {
+        return putWithRestResult(COMPETITION_APPLICATION_CONFIG_URL + "/" + competitionId+"/impact-survey", competitionApplicationConfigResource, CompetitionApplicationConfigResource.class);
+    }
 }
