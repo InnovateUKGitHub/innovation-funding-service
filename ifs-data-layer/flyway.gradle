@@ -1,3 +1,17 @@
+apply plugin: org.flywaydb.gradle.FlywayPlugin
+
+buildscript {
+    repositories {
+        maven { url "https://repo.spring.io/milestone" }
+        maven { url "https://plugins.gradle.org/m2/"}
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'org.flywaydb:flyway-gradle-plugin:8.5.13'
+        classpath 'org.flywaydb:flyway-core:8.5.13'
+    }
+}
 
 dependencies {
     implementation enforcedPlatform("org.flywaydb:flyway-core") {
