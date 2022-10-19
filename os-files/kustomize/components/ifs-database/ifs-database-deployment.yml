@@ -33,10 +33,12 @@ spec:
               mountPath: /etc/mysql/my.cnf
               subPath: my.cnf
           resources:
-            requests:
-              memory: 600M
             limits:
-              memory: 1500M
+              cpu: 2000m
+              memory: 1000Mi
+            requests:
+              cpu: 250m
+              memory: 600Mi
       volumes:
         - name: mysql-tmp-storage
           emptyDir: {}
