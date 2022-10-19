@@ -9,8 +9,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.negate;
-
 public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyViewModel {
 
     private final String displayName;
@@ -206,9 +204,8 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
                 isComplete();
     }
 
-    public boolean isIMQuestion() {
-        return
-                QuestionSetupType.IMPACT_MANAGEMENT_SURVEY == questionResource.getQuestionSetupType();
+    public boolean isImpactManagementQuestion() {
+        return QuestionSetupType.IMPACT_MANAGEMENT_SURVEY == questionResource.getQuestionSetupType();
     }
 
     public boolean isInCompleteLoanBusinessAndFinancialInformation() {
