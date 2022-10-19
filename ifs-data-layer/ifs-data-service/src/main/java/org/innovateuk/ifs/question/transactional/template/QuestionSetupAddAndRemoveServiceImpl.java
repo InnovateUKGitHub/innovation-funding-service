@@ -110,7 +110,7 @@ public class QuestionSetupAddAndRemoveServiceImpl implements QuestionSetupAddAnd
     }
 
     private boolean sectionIsValidForDeletion(SectionType sectionType) {
-        return sectionType == SectionType.PROJECT_DETAILS || sectionType == SectionType.APPLICATION_QUESTIONS;
+        return sectionType == SectionType.PROJECT_DETAILS || sectionType == SectionType.APPLICATION_QUESTIONS|| sectionType == SectionType.SUPPORTING_INFORMATION;
     }
 
     private boolean loggedInUserIsSuperAdmin() {

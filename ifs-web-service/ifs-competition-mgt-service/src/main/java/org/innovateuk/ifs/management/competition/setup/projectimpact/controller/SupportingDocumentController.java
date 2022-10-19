@@ -95,6 +95,7 @@ public class SupportingDocumentController {
     }
 
     private ServiceResult<Void> saveImpactManagementConfig(CompetitionResource competition, @Valid ProjectImpactForm projectImpactForm) {
+        competitionRestService.updateImpactManagementForCompetition(competition.getId(),projectImpactForm.getProjectImpactSurveyApplicable());
         competitionSetupRestService.markSectionComplete(competition.getId(), PROJECT_IMPACT);
         CompetitionApplicationConfigResource competitionApplicationConfigResource = competitionApplicationConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess();
         competitionApplicationConfigResource.setImSurveyRequired(projectImpactForm.getProjectImpactSurveyApplicable());
