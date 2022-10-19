@@ -27,7 +27,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
     private boolean hasAssessmentStage;
     private boolean alwaysOpen;
     private boolean expressionOfInterest;
-    private Boolean evidenceUploaded;
+    private Boolean evidenceUploadedAndSubmittedForReview;
 
     // Private constructor to enforce immutability
     private DashboardInProgressRowResource() {
@@ -81,9 +81,11 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
     public boolean isExpressionOfInterest() {
         return expressionOfInterest;
     }
-    public Boolean getEvidenceUploaded() {
-        return evidenceUploaded;
+
+    public Boolean getEvidenceUploadedAndSubmittedForReview() {
+        return evidenceUploadedAndSubmittedForReview;
     }
+
     public boolean isLeadOrganisation() {
         return leadOrganisation;
     }
@@ -153,16 +155,18 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
         private boolean showReopenLink;
         private boolean alwaysOpen;
         private boolean expressionOfInterest;
-        private Boolean evidenceUploaded;
+        private Boolean evidenceUploadedAndSubmittedForReview;
 
         public DashboardApplicationInProgressResourceBuilder withTitle(String title) {
             this.title = title;
             return this;
         }
-        public DashboardApplicationInProgressResourceBuilder withEvidenceUploaded(Boolean evidenceUploaded) {
-            this.evidenceUploaded = evidenceUploaded;
+
+        public DashboardApplicationInProgressResourceBuilder withEvidenceUploadedAndSubmittedForReview(Boolean evidenceUploadedAndSubmittedForReview) {
+            this.evidenceUploadedAndSubmittedForReview = evidenceUploadedAndSubmittedForReview;
             return this;
         }
+
         public DashboardApplicationInProgressResourceBuilder withLeadOrganisation(Boolean leadOrganisation) {
             this.leadOrganisation = leadOrganisation;
             return this;
@@ -259,7 +263,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
             result.alwaysOpen = this.alwaysOpen;
             result.hasAssessmentStage = this.hasAssessmentStage;
             result.expressionOfInterest = this.expressionOfInterest;
-            result.evidenceUploaded = this.evidenceUploaded;
+            result.evidenceUploadedAndSubmittedForReview = this.evidenceUploadedAndSubmittedForReview;
             result.leadOrganisation = this.leadOrganisation;
             return result;
         }

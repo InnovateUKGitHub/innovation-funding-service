@@ -101,7 +101,7 @@
                                     <span th:remove="${assessor.submitted} ? 'tag' : 'all'" class="yes">Yes</span>
                                 </td>
                                 <td class="govuk-table__cell aligncentre">
-                                    <th:block th:if="${model.isSuperAdmin()}">
+                                    <th:block th:if="${model.isIfsAdministrator()}">
                                         <th:block th:unless="${model.isAssessmentClosed()}">
                                             <a th:if="${assessor.submitted}"
                                                class="govuk-link govuk-!-margin-0"

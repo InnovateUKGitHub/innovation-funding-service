@@ -1,13 +1,10 @@
 package org.innovateuk.ifs.application.domain;
 
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.CompanyAge;
-import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
-import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
-import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
@@ -597,7 +594,11 @@ public class Application implements ProcessActivity {
     }
 
     public boolean isApplicationExpressionOfInterestEvidenceResponseReceived() {
-        return getApplicationEoiEvidenceResponse() != null;
+        return getApplicationEoiEvidenceResponse() != null && evidenceResponseSubmittedForReview();
+    }
+
+    public boolean evidenceResponseSubmittedForReview() {
+        return applicationEoiEvidenceResponse.getApplicationEoiEvidenceProcess().getProcessState() == ApplicationEoiEvidenceState.SUBMITTED;
     }
 
     public boolean applicationEoiEvidenceIsRequiredAndNotReceived() {

@@ -65,6 +65,9 @@ public class CompetitionSetupQuestionResource {
     @Size(min = 2, max = 30, groups = MultipleChoiceValidationGroup.class)
     private List<MultipleChoiceOptionResource> choices = new ArrayList<>();
 
+    /* Expression of interest */
+    private Boolean expressionOfInterest;
+
     /* appendix */
     private Boolean appendix;
     private Integer numberOfUploads;
@@ -353,6 +356,14 @@ public class CompetitionSetupQuestionResource {
         this.multipleChoice = multipleChoice;
     }
 
+    public Boolean getExpressionOfInterest() {
+        return expressionOfInterest;
+    }
+
+    public void setExpressionOfInterest(Boolean expressionOfInterest) {
+        this.expressionOfInterest = expressionOfInterest;
+    }
+
     @JsonIgnore
     public boolean isGuidanceRequired() {
         return QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION != type
@@ -413,6 +424,7 @@ public class CompetitionSetupQuestionResource {
                 .append(maxWords, that.maxWords)
                 .append(multipleChoice, that.multipleChoice)
                 .append(choices, that.choices)
+                .append(expressionOfInterest, that.expressionOfInterest)
                 .append(appendix, that.appendix)
                 .append(numberOfUploads, that.numberOfUploads)
                 .append(allowedAppendixResponseFileTypes, that.allowedAppendixResponseFileTypes)
@@ -450,6 +462,7 @@ public class CompetitionSetupQuestionResource {
                 .append(maxWords)
                 .append(multipleChoice)
                 .append(choices)
+                .append(expressionOfInterest)
                 .append(appendix)
                 .append(numberOfUploads)
                 .append(allowedAppendixResponseFileTypes)

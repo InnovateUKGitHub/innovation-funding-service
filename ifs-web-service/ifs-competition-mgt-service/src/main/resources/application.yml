@@ -45,6 +45,10 @@ ifs:
     thirdparty:
         ofgem:
             enabled: true
+    expression:
+        of:
+            interest:
+                enabled: true
 server:
     servlet:
         context-path: /management
