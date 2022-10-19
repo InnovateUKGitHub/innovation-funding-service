@@ -10,6 +10,7 @@ buildscript {
     dependencies {
         classpath 'org.flywaydb:flyway-gradle-plugin:8.5.13'
         classpath 'org.flywaydb:flyway-core:8.5.13'
+        classpath 'org.flywaydb:flyway-mysql:8.5.13'
     }
 }
 

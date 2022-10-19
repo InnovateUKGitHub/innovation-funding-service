@@ -49,3 +49,4 @@ spring:
         table: flyway_schema_history
         url: jdbc:mysql://ifs-database:3306/ifs_test?characterEncoding=utf8&useMysqlMetadata=true&permitMysqlScheme
         user: root
+        schemas: ifs_test
