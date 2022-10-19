@@ -1,12 +1,14 @@
 package org.innovateuk.ifs.application.domain;
 
+import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceState;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionEoiEvidenceConfig;
+import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.fundingdecision.domain.DecisionStatus;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,6 +21,8 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.application.resource.ApplicationState.CREATED;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
@@ -30,6 +34,8 @@ public class ApplicationTest {
     private Application application;
 
     private Competition competition;
+    private Competition expressionOfInterestCompetitionEvidenceRequired;
+    private Competition expressionOfInterestCompetitionNoEvidenceRequired;
     private String name;
     private List<ProcessRole> processRoles;
     private ApplicationState applicationState;
@@ -41,7 +47,32 @@ public class ApplicationTest {
         id = 0L;
         name = "testApplicationName";
         applicationState = CREATED;
-        competition = new Competition();
+        competition = newCompetition().build();
+
+        long eoiEvidenceConfigIdEvidenceRequired = 8L;
+        CompetitionEoiEvidenceConfig competitionEoiEvidenceConfigEvidenceRequired = new CompetitionEoiEvidenceConfig();
+        competitionEoiEvidenceConfigEvidenceRequired.setId(eoiEvidenceConfigIdEvidenceRequired);
+        competitionEoiEvidenceConfigEvidenceRequired.setEvidenceRequired(true);
+        competitionEoiEvidenceConfigEvidenceRequired.setEvidenceTitle("Evidence title");
+        competitionEoiEvidenceConfigEvidenceRequired.setEvidenceGuidance("Evidence guidance");
+
+        expressionOfInterestCompetitionEvidenceRequired = newCompetition()
+                .withEnabledForExpressionOfInterest(true)
+                .withCompetitionEoiEvidenceConfig(competitionEoiEvidenceConfigEvidenceRequired)
+                .build();
+
+        long eoiEvidenceConfigIdNoEvidenceRequired = 8L;
+        CompetitionEoiEvidenceConfig competitionEoiEvidenceConfigNoEvidenceRequired = new CompetitionEoiEvidenceConfig();
+        competitionEoiEvidenceConfigNoEvidenceRequired.setId(eoiEvidenceConfigIdNoEvidenceRequired);
+        competitionEoiEvidenceConfigNoEvidenceRequired.setEvidenceRequired(false);
+        competitionEoiEvidenceConfigNoEvidenceRequired.setEvidenceTitle("Evidence title");
+        competitionEoiEvidenceConfigNoEvidenceRequired.setEvidenceGuidance("Evidence guidance");
+
+        expressionOfInterestCompetitionNoEvidenceRequired = newCompetition()
+                .withEnabledForExpressionOfInterest(true)
+                .withCompetitionEoiEvidenceConfig(competitionEoiEvidenceConfigNoEvidenceRequired)
+                .build();
+
         applicationFinances = new ArrayList<>();
 
         processRoles = new ArrayList<>();
@@ -55,12 +86,12 @@ public class ApplicationTest {
 
     @Test
     public void applicationShouldReturnCorrectAttributeValues() {
-        Assert.assertEquals(application.getId(), id);
-        Assert.assertEquals(application.getName(), name);
-        Assert.assertEquals(application.getApplicationProcess().getProcessState(), applicationState);
-        Assert.assertEquals(application.getProcessRoles(), processRoles);
-        Assert.assertEquals(application.getCompetition(), competition);
-        Assert.assertEquals(application.getApplicationFinances(), applicationFinances);
+        assertEquals(application.getId(), id);
+        assertEquals(application.getName(), name);
+        assertEquals(application.getApplicationProcess().getProcessState(), applicationState);
+        assertEquals(application.getProcessRoles(), processRoles);
+        assertEquals(application.getCompetition(), competition);
+        assertEquals(application.getApplicationFinances(), applicationFinances);
     }
     @Test
     public void addFormInputResponse() {
@@ -124,39 +155,52 @@ public class ApplicationTest {
 
     @Test(expected=IllegalStateException.class)
     public void addingInnovationAreaAndThenNotApplicableShouldResultInIllegalStateException() {
-        Application application = new Application();
-        application.setInnovationArea(newInnovationArea().build());
-        application.setNoInnovationAreaApplicable(true);
+
+        newApplication()
+                .withInnovationArea(newInnovationArea().build())
+                .withNoInnovationAreaApplicable(true)
+                .build();
     }
 
     @Test(expected=IllegalStateException.class)
     public void addingNotApplicableAndThenInnovationAreaShouldResultInIllegalStateException() {
-        Application application = new Application();
-        application.setNoInnovationAreaApplicable(true);
-        application.setInnovationArea(newInnovationArea().build());
+
+        newApplication()
+                .withNoInnovationAreaApplicable(true)
+                .withInnovationArea(newInnovationArea().build())
+                .build();
     }
 
     @Test
     public void applicationDecisionIsNotChangeable() {
-        Application application = new Application();
-        application.setDecision(DecisionStatus.FUNDED);
-        application.setManageDecisionEmailDate(ZonedDateTime.now());
+
+        Application application = newApplication()
+                .withDecision(DecisionStatus.FUNDED)
+                .withManageDecisionEmailDate(ZonedDateTime.now())
+                .build();
+
         assertFalse(application.applicationDecisionIsChangeable());
     }
 
     @Test
     public void applicationDecisionIsChangeableNotFunded() {
-        Application application = new Application();
-        application.setManageDecisionEmailDate(ZonedDateTime.now());
-        application.setDecision(DecisionStatus.ON_HOLD);
+
+        Application application = newApplication()
+                .withManageDecisionEmailDate(ZonedDateTime.now())
+                .withDecision(DecisionStatus.ON_HOLD)
+                .build();
+
         assertTrue(application.applicationDecisionIsChangeable());
     }
 
     @Test
     public void applicationDecisionIsChangeableNoFundingEmail() {
-        Application application = new Application();
-        application.setManageDecisionEmailDate(null);
-        application.setDecision(DecisionStatus.FUNDED);
+
+        Application application = newApplication()
+                .withManageDecisionEmailDate(null)
+                .withDecision(DecisionStatus.FUNDED)
+                .build();
+
         assertTrue(application.applicationDecisionIsChangeable());
     }
 
@@ -167,7 +211,10 @@ public class ApplicationTest {
 
     @Test
     public void applicationGetMaxMilestoneMonthEmptyWhenNoMilestones() {
-        Application application  = new Application();
+
+        Application application = newApplication()
+                .build();
+
         assertFalse(application.getMaxMilestoneMonth().isPresent());
     }
 
@@ -187,7 +234,63 @@ public class ApplicationTest {
                                 newApplicationProcurementMilestone().withMonth(0).build()
                         )).build()
                 )).build();
+
         assertTrue(application.getMaxMilestoneMonth().isPresent());
         assertEquals(application.getMaxMilestoneMonth().get(), maxMilestoneMonth);
+    }
+
+    @Test
+    public void applicationExpressionOfInterestEvidenceNotRequired() {
+
+        Application application = newApplication()
+                .withCompetition(expressionOfInterestCompetitionNoEvidenceRequired)
+                .build();
+
+        assertFalse(application.expressionOfInterestEvidenceDocumentRequired());
+    }
+
+    @Test
+    public void applicationExpressionOfInterestEvidenceUploadedAndNotSubmitted() {
+
+        FileEntry fileEntry = newFileEntry().build();
+
+        long eoiEvidenceConfigId = 8L;
+        CompetitionEoiEvidenceConfig competitionEoiEvidenceConfig = new CompetitionEoiEvidenceConfig();
+        competitionEoiEvidenceConfig.setId(eoiEvidenceConfigId);
+        competitionEoiEvidenceConfig.setEvidenceRequired(true);
+        competitionEoiEvidenceConfig.setEvidenceTitle("Evidence title");
+        competitionEoiEvidenceConfig.setEvidenceGuidance("Evidence guidance");
+
+        Application application = newApplication()
+                .withCompetition(expressionOfInterestCompetitionEvidenceRequired)
+                .withApplicationEoiEvidenceResponse(
+                        ApplicationEoiEvidenceResponse.builder()
+                                .fileEntry(fileEntry)
+                                .applicationEoiEvidenceProcess(ApplicationEoiEvidenceProcess.builder()
+                                        .processState(ApplicationEoiEvidenceState.CREATED)
+                                        .build())
+                                .build())
+                .build();
+
+        assertFalse(application.isApplicationExpressionOfInterestEvidenceResponseReceived());
+    }
+
+    @Test
+    public void applicationExpressionOfInterestEvidenceUploadedAndSubmitted() {
+
+        FileEntry fileEntry = newFileEntry().build();
+
+        Application application = newApplication()
+                .withCompetition(expressionOfInterestCompetitionEvidenceRequired)
+                .withApplicationEoiEvidenceResponse(
+                        ApplicationEoiEvidenceResponse.builder()
+                                .fileEntry(fileEntry)
+                                .applicationEoiEvidenceProcess(ApplicationEoiEvidenceProcess.builder()
+                                        .processState(ApplicationEoiEvidenceState.SUBMITTED)
+                                        .build())
+                                .build())
+                .build();
+
+        assertTrue(application.isApplicationExpressionOfInterestEvidenceResponseReceived());
     }
 }

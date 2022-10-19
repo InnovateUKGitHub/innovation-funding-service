@@ -37,6 +37,8 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...
 ...               IFS-12702 HECP Phase 2 - Document upload - Applicant document upload
 ...
+...               IFS-13041 Pre-registration - EOI application can be marked as successful / unsuccessful when evidence document submitted for review
+...
 ...               IFS-13009 Pre-registration - Evidence required status on applicants dashboard
 ...
 ...               IFS-12876 Pre-registration - The ability to enable EOI questions on an EOI competition
@@ -197,8 +199,8 @@ Parter applicant can not view evidence upload section
     Given the user clicks the button/link       link = ${hecpPreregAppName}
     Then the user should not see the element    name = eoiEvidenceFile
 
-Internal users can see submitted expression of interest applications without checkbox when the eveidence is not uploaded
-    [Documentation]  IFS-12176  IFS-12568
+Internal users can see submitted expression of interest applications without checkbox when the eveidence is not submitted
+    [Documentation]  IFS-12176  IFS-12568  IFS-13041
     Given log in as a different user            &{ifs_admin_user_credentials}
     And the user navigates to the page          ${server}/management/competition/${preregCompetitionId}
     And the user clicks the button/link         link = Applications: All, submitted, expression of interest, ineligible
