@@ -176,6 +176,6 @@ public class LandingModelPopulatorTest {
     }
 
     private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionResource competition) {
-        return new GeneralSetupViewModel(Boolean.FALSE, false, competition, CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSection.values(), Boolean.TRUE, Boolean.FALSE, true);
+        return new GeneralSetupViewModel(Boolean.FALSE, false, competition, CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSection.values(), Boolean.TRUE, Boolean.FALSE, true, true);
     }
 }

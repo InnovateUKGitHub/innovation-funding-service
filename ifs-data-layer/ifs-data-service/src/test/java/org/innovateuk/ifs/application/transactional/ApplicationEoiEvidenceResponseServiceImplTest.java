@@ -38,6 +38,8 @@ import java.util.function.Supplier;
 
 import static com.google.common.primitives.Longs.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
@@ -73,6 +75,9 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
 
     @Mock
     private CompetitionEoiEvidenceConfigService competitionEoiEvidenceConfigService;
+
+    @Mock
+    private ApplicationNotificationService applicationNotificationService;
 
     @Mock
     private FileTypeService fileTypeService;
@@ -513,6 +518,7 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
         when(applicationEoiEvidenceResponseRepository.findOneByApplicationId (applicationId)).thenReturn(Optional.of(applicationEoiEvidenceResponse));
         when(userMapper.mapToDomain(userResource)).thenReturn(user);
         when(applicationEoiEvidenceWorkflowHandler.submit(applicationEoiEvidenceResponse, processRole, user)).thenReturn(true);
+        when(applicationNotificationService.sendNotificationEoiEvidenceSubmitted(applicationId)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.submit(applicationEoiEvidenceResponseResource, userResource);
 
@@ -601,4 +607,43 @@ public class ApplicationEoiEvidenceResponseServiceImplTest extends BaseServiceUn
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getErrors().get(0).getStatusCode());
         assertEquals("APPLICATION_UNABLE_TO_SUBMIT_EOI_EVIDENCE_UPLOAD", result.getErrors().get(0).getErrorKey());
     }
+
+    @Test
+    public void submitThrowsUnableToSendNotification() {
+
+        Application application = newApplication()
+                .withId(applicationId)
+                .withCompetition(newCompetition()
+                        .withEnabledForExpressionOfInterest(true)
+                        .withCompetitionEoiEvidenceConfig(CompetitionEoiEvidenceConfig.builder()
+                                .evidenceRequired(true)
+                                .build())
+                        .build())
+                .withActivityState(ApplicationState.SUBMITTED)
+                .withApplicationExpressionOfInterestConfig(ApplicationExpressionOfInterestConfig.builder()
+                        .enabledForExpressionOfInterest(true)
+                        .build())
+                .withProcessRole(processRole)
+                .build();
+        ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = ApplicationEoiEvidenceResponse.builder()
+                .application(newApplication().build())
+                .organisation(newOrganisation().build())
+                .fileEntry(newFileEntry().build())
+                .build();
+
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+        when(applicationEoiEvidenceResponseRepository.findOneByApplicationId (applicationId)).thenReturn(Optional.of(applicationEoiEvidenceResponse));
+        when(userMapper.mapToDomain(userResource)).thenReturn(user);
+        when(applicationEoiEvidenceWorkflowHandler.submit(applicationEoiEvidenceResponse, processRole, user)).thenReturn(true);
+        when(applicationNotificationService.sendNotificationEoiEvidenceSubmitted(applicationId)).thenReturn(serviceFailure(internalServerErrorError()));
+
+        ServiceResult<Void> result = service.submit(applicationEoiEvidenceResponseResource, userResource);
+
+        assertTrue(result.isFailure());
+
+        assertEquals(1, result.getErrors().size());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getErrors().get(0).getStatusCode());
+        assertEquals("APPLICATION_UNABLE_TO_SEND_EOI_EVIDENCE_UPLOADED_NOTIFICATION", result.getErrors().get(0).getErrorKey());
+    }
+
 }

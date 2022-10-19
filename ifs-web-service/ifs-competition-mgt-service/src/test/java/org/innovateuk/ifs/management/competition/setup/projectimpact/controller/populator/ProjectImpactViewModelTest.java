@@ -17,7 +17,9 @@ public class ProjectImpactViewModelTest {
     public void populateModel() {
 
         CompetitionResource competition = newCompetitionResource().build();
-        GeneralSetupViewModel generalSetupViewModel = new GeneralSetupViewModel(true, false, competition, PROJECT_IMPACT, CompetitionSetupSection.values(), true, false, true);
+        GeneralSetupViewModel generalSetupViewModel = new GeneralSetupViewModel(true, false, competition, PROJECT_IMPACT, CompetitionSetupSection.values(), true, false, true,true);
+
+
         ProjectImpactViewModel viewModel = new ProjectImpactViewModel(generalSetupViewModel);
 
         assertEquals(PROJECT_IMPACT, viewModel.getGeneral().getCurrentSection());
