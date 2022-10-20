@@ -58,6 +58,7 @@ Comp Admin starts a new Competition
     Then the user fills in the CS Initial details               ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  GRANT
     And the user selects temporary framework terms and conditions
     And the user fills in the CS Funding Information
+    And the user completes project impact section               No
     And the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}  50  true  collaborative
     And the user fills in the CS funding eligibility            true   ${compType_Programme}  ${fundingRule}
     And the user selects the organisational eligibility to no   false
@@ -142,6 +143,7 @@ Once the project growth table is selected
     Then the user fills in the Open-All Initial details         ${compWithGrowth}  ${month}  ${nextyear}  ${fundingRule}
     And the user selects temporary framework terms and conditions
     And the user fills in the CS Funding Information
+    And the user completes project impact section               No
     And the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}  50  true  collaborative
     And the user fills in the CS funding eligibility            true   ${compType_Programme}  ${fundingRule}
     And the user selects the organisational eligibility to no   false

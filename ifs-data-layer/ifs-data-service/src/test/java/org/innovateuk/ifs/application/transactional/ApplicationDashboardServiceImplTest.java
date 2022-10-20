@@ -5,6 +5,7 @@ import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInProgressRowRes
 import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInSetupRowResource;
 import org.innovateuk.ifs.applicant.resource.dashboard.DashboardRowResource;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationEoiEvidenceProcess;
 import org.innovateuk.ifs.application.domain.ApplicationEoiEvidenceResponse;
 import org.innovateuk.ifs.application.domain.ApplicationExpressionOfInterestConfig;
 import org.innovateuk.ifs.application.repository.ApplicationEoiEvidenceResponseRepository;
@@ -32,6 +33,7 @@ import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceState.SUBMITTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
@@ -61,6 +63,8 @@ public class ApplicationDashboardServiceImplTest {
     private ApplicationRepository applicationRepository;
     @Mock
     private AssessmentService assessmentService;
+    @Mock
+    private ApplicationEoiEvidenceResponseService applicationEoiEvidenceResponseService;
 
     private final Competition closedCompetition = newCompetition().withSetupComplete(true)
             .withStartDate(ZonedDateTime.now().minusDays(2))
@@ -119,6 +123,7 @@ public class ApplicationDashboardServiceImplTest {
                 .thenReturn(applications);
 
         when(applicationEoiEvidenceResponseRepository.findOneByApplicationId(eoiApplicationWithoutEvidence.getId())).thenReturn(Optional.empty());
+        when(applicationEoiEvidenceResponseService.getApplicationEoiEvidenceState(eoiApplicationWithoutEvidence.getId())).thenReturn(serviceSuccess(Optional.empty()));
 
         ApplicationEoiEvidenceResponse applicationEoiEvidenceResponse = ApplicationEoiEvidenceResponse.builder()
                 .application(newApplication().build())
@@ -126,6 +131,13 @@ public class ApplicationDashboardServiceImplTest {
                 .fileEntry(newFileEntry().build())
                 .build();
         when(applicationEoiEvidenceResponseRepository.findOneByApplicationId(eoiApplicationWithEvidence.getId())).thenReturn(Optional.of(applicationEoiEvidenceResponse));
+
+        ApplicationEoiEvidenceProcess applicationEoiEvidenceProcess = ApplicationEoiEvidenceProcess.builder()
+                .processState(SUBMITTED)
+                .target(applicationEoiEvidenceResponse)
+                .build();
+
+        when(applicationEoiEvidenceResponseService.getApplicationEoiEvidenceState(eoiApplicationWithEvidence.getId())).thenReturn(serviceSuccess(Optional.of(applicationEoiEvidenceProcess.getProcessState())));
 
 
         ApplicantDashboardResource dashboardResource = applicationDashboardService.getApplicantDashboard(USER_ID).getSuccess();
@@ -161,12 +173,12 @@ public class ApplicationDashboardServiceImplTest {
                 .isExpressionOfInterest());
 
         List<DashboardInProgressRowResource> inProgressRowResourceList = dashboardResource.getInProgress();
-        assertNull(inProgressRowResourceList.get(0).getEvidenceUploaded());
-        assertNull(inProgressRowResourceList.get(1).getEvidenceUploaded());
-        assertNull(inProgressRowResourceList.get(2).getEvidenceUploaded());
-        assertNull(inProgressRowResourceList.get(3).getEvidenceUploaded());
-        assertFalse(inProgressRowResourceList.get(4).getEvidenceUploaded());
-        assertTrue(inProgressRowResourceList.get(5).getEvidenceUploaded());
+        assertNull(inProgressRowResourceList.get(0).getEvidenceUploadedAndSubmittedForReview());
+        assertNull(inProgressRowResourceList.get(1).getEvidenceUploadedAndSubmittedForReview());
+        assertNull(inProgressRowResourceList.get(2).getEvidenceUploadedAndSubmittedForReview());
+        assertNull(inProgressRowResourceList.get(3).getEvidenceUploadedAndSubmittedForReview());
+        assertFalse(inProgressRowResourceList.get(4).getEvidenceUploadedAndSubmittedForReview());
+        assertTrue(inProgressRowResourceList.get(5).getEvidenceUploadedAndSubmittedForReview());
     }
 
     private Application inProgressAlwaysOpenCompApplication() {

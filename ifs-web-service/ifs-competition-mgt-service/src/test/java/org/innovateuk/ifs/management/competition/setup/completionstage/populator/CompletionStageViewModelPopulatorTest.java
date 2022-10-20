@@ -40,7 +40,7 @@ public class CompletionStageViewModelPopulatorTest {
                 build();
 
         GeneralSetupViewModel generalSetupViewModel = new GeneralSetupViewModel(false, false, competition,
-                CompetitionSetupSection.COMPLETION_STAGE, null, false, false, true);
+                CompetitionSetupSection.COMPLETION_STAGE, null, false, false, true, true);
 
         when(completionStageUtils.isApplicationSubmissionEnabled(CompetitionCompletionStage.RELEASE_FEEDBACK)).thenReturn(true);
 
@@ -50,8 +50,8 @@ public class CompletionStageViewModelPopulatorTest {
         assertThat(viewModel.getCompetitionCloseCompletionStage()).isEqualTo(CompetitionCompletionStage.COMPETITION_CLOSE);
         assertThat(viewModel.getReleaseFeedbackCompletionStage()).isEqualTo(CompetitionCompletionStage.RELEASE_FEEDBACK);
         assertThat(viewModel.getProjectSetupCompletionStage()).isEqualTo(CompetitionCompletionStage.PROJECT_SETUP);
-        assertThat(viewModel.isAlwaysOpenCompetitionEnabled()).isEqualTo(true);
-        assertThat(viewModel.isApplicationSubmissionEnabled()).isEqualTo(true);
+        assertThat(viewModel.isAlwaysOpenCompetitionEnabled()).isTrue();
+        assertThat(viewModel.isApplicationSubmissionEnabled()).isTrue();
     }
 
     @Test
@@ -62,7 +62,7 @@ public class CompletionStageViewModelPopulatorTest {
                 build();
 
         GeneralSetupViewModel generalSetupViewModel = new GeneralSetupViewModel(false, false, competition,
-                CompetitionSetupSection.COMPLETION_STAGE, null, false, false, true);
+                CompetitionSetupSection.COMPLETION_STAGE, null, false, false, true, true);
 
         when(completionStageUtils.isApplicationSubmissionEnabled(CompetitionCompletionStage.COMPETITION_CLOSE)).thenReturn(false);
 
@@ -72,8 +72,8 @@ public class CompletionStageViewModelPopulatorTest {
         assertThat(viewModel.getCompetitionCloseCompletionStage()).isEqualTo(CompetitionCompletionStage.COMPETITION_CLOSE);
         assertThat(viewModel.getReleaseFeedbackCompletionStage()).isEqualTo(CompetitionCompletionStage.RELEASE_FEEDBACK);
         assertThat(viewModel.getProjectSetupCompletionStage()).isEqualTo(CompetitionCompletionStage.PROJECT_SETUP);
-        assertThat(viewModel.isAlwaysOpenCompetitionEnabled()).isEqualTo(true);
-        assertThat(viewModel.isApplicationSubmissionEnabled()).isEqualTo(false);
+        assertThat(viewModel.isAlwaysOpenCompetitionEnabled()).isTrue();
+        assertThat(viewModel.isApplicationSubmissionEnabled()).isFalse();
     }
 
     @Test

@@ -10,6 +10,7 @@ import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetu
 import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.CompetitionSetupSectionUpdater;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import static java.lang.String.format;
@@ -19,6 +20,12 @@ import static java.lang.String.format;
  */
 @Service
 public class ApplicationSubmissionSectionUpdater extends AbstractSectionUpdater implements CompetitionSetupSectionUpdater  {
+
+    @Value("${ifs.assessment.stage.competition.enabled}")
+    private boolean isAssessmentStageEnabled;
+
+    @Value("${ifs.expression.of.interest.enabled}")
+    private boolean isExpressionOfInterestEnabled;
 
     @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
@@ -43,7 +50,17 @@ public class ApplicationSubmissionSectionUpdater extends AbstractSectionUpdater 
     @Override
     public String getNextSection(CompetitionSetupForm competitionSetupForm, CompetitionResource competition, CompetitionSetupSection section) {
 
-        String sectionPath = CompetitionSetupSection.APPLICATION_EXPRESSION_OF_INTEREST.getPath();
+        String sectionPath;
+
+        if (isExpressionOfInterestEnabled) {
+            sectionPath = CompetitionSetupSection.APPLICATION_EXPRESSION_OF_INTEREST.getPath();
+        } else {
+            if (competition.isAlwaysOpen() && isAssessmentStageEnabled) {
+                sectionPath = CompetitionSetupSection.APPLICATION_ASSESSMENT.getPath();
+            } else {
+                sectionPath = CompetitionSetupSection.MILESTONES.getPath();
+            }
+        }
 
         return format("redirect:/competition/setup/%d/section/%s", competition.getId(), sectionPath);
     }

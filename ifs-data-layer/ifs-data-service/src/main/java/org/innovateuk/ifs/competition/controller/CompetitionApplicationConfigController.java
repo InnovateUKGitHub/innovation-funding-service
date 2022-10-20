@@ -23,4 +23,9 @@ public class CompetitionApplicationConfigController {
     public RestResult<Void> update(@PathVariable final long competitionId, @RequestBody CompetitionApplicationConfigResource competitionApplicationConfigResource) {
         return competitionApplicationConfigService.update(competitionId, competitionApplicationConfigResource).toPutResponse();
     }
+
+    @PutMapping("/{competitionId}/impact-survey")
+    public RestResult<Void> updateImpactSurvey(@PathVariable final long competitionId, @RequestBody CompetitionApplicationConfigResource competitionApplicationConfigResource) {
+        return competitionApplicationConfigService.updateImpactSurvey(competitionId, competitionApplicationConfigResource).toPutResponse();
+    }
 }

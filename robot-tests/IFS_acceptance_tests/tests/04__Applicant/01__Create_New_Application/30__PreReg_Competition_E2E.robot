@@ -37,6 +37,10 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...
 ...               IFS-12702 HECP Phase 2 - Document upload - Applicant document upload
 ...
+...               IFS-13041 Pre-registration - EOI application can be marked as successful / unsuccessful when evidence document submitted for review
+...
+...               IFS-13009 Pre-registration - Evidence required status on applicants dashboard
+...
 ...               IFS-12876 Pre-registration - The ability to enable EOI questions on an EOI competition
 ...
 ...               IFS-13062 Pre-registration - Conditional content about evidence document for the Horizon Europe expression of interest status page
@@ -58,7 +62,7 @@ ${preRegApplicationSuccessfulEmail}             We are pleased to inform you tha
 ${preregApplicationSubmissionEmail}             You have successfully submitted an application for funding to
 ${fullApplicationSuccessfulEmail}               We are pleased to inform you that your application for the Horizon Europe collaborative competition has been successful and passed the technical assessment phase.
 ${evidenceSubmittedEmailSubject}                Evidence file submitted
-${evidenceSubmittedEmailDescription}            You have successfully submitted your evidence file to Innovate UK’s ${hecpPreregCompName} competition.
+${evidenceSubmittedEmailDescription}            You have successfully submitted your evidence file to ${hecpPreregCompName} competition.
 
 *** Test Cases ***
 Comp Admin creates a prereg competition
@@ -199,8 +203,8 @@ Parter applicant can not view evidence upload section
     Given the user clicks the button/link       link = ${hecpPreregAppName}
     Then the user should not see the element    name = eoiEvidenceFile
 
-Internal users can see submitted expression of interest applications without checkbox when the eveidence is not uploaded
-    [Documentation]  IFS-12176  IFS-12568
+Internal users can see submitted expression of interest applications without checkbox when the eveidence is not submitted
+    [Documentation]  IFS-12176  IFS-12568  IFS-13041
     Given log in as a different user            &{ifs_admin_user_credentials}
     And the user navigates to the page          ${server}/management/competition/${preregCompetitionId}
     And the user clicks the button/link         link = Applications: All, submitted, expression of interest, ineligible
@@ -240,6 +244,12 @@ Lead organisation should get notified on submitting the EOI evidence
     When Lead applicant submits evidence for review    ${preregApplicationID}   ${contract_pdf}
     Then the user should see the element               link = Contract.pdf (opens in a new window)
     And the user reads his email                       ${lead_applicant_credentials["email"]}  ${evidenceSubmittedEmailSubject}  ${evidenceSubmittedEmailDescription}
+
+Lead applicant views status of the application changed to submitted on evidnece submitted for review
+    [Documentation]  IFS-13009
+    Given the user navigates to the page                    ${server}/applicant/dashboard
+    When the user clicks the application tile if displayed
+    Then the user should see the element                    jQuery = li:contains("${hecpPreregAppName}") .status-msg:contains("Expression of interest") + .status-msg:contains("Submitted")
 
 Lead applicant views read only evidence file submitted for review
     [Documentation]  IFS-12523
@@ -446,6 +456,7 @@ the competition admin creates prereg competition
     the user fills in the CS Initial details                    ${competition}  ${month}  ${nextyear}  ${compType_HESTA}  ${fundingRule}  HECP
     the user selects the Terms and Conditions                   ${compType}  ${fundingRule}
     the user fills in the CS Funding Information
+    the user completes project impact section                   No
     the user fills in the CS Project eligibility                ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user fills in the CS funding eligibility                false   ${compType_HESTA}  ${fundingRule}
     the user selects the organisational eligibility to no       false

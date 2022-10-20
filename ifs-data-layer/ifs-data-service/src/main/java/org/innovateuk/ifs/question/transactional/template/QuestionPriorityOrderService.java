@@ -99,27 +99,34 @@ public class QuestionPriorityOrderService {
 
     @NotSecured("Must be secured by other services.")
     public void persistAndPrioritiseSections(Competition competition, List<Section> sections, Section parent) {
-            FormValidator notEmptyValidator = formValidatorRepository.findByClazzName(NotEmptyValidator.class.getName());
-            FormValidator wordCountValidator = formValidatorRepository.findByClazzName(WordCountValidator.class.getName());
-            FormValidator researchCategoryValidator = formValidatorRepository.findByClazzName(ResearchCategoryValidator.class.getName());
-            FormValidator assessorScopeValidator = formValidatorRepository.findByClazzName(AssessorScopeValidator.class.getName());
-            FormValidator assessorScoreValidator = formValidatorRepository.findByClazzName(AssessorScoreValidator.class.getName());
-            FormValidator requiredFileValidator = formValidatorRepository.findByClazzName(RequiredFileValidator.class.getName());
-            FormValidator requiredMultipleChoiceValidator = formValidatorRepository.findByClazzName(RequiredMultipleChoiceValidator.class.getName());
+        FormValidator notEmptyValidator = formValidatorRepository.findByClazzName(NotEmptyValidator.class.getName());
+        FormValidator wordCountValidator = formValidatorRepository.findByClazzName(WordCountValidator.class.getName());
+        FormValidator researchCategoryValidator = formValidatorRepository.findByClazzName(ResearchCategoryValidator.class.getName());
+        FormValidator assessorScopeValidator = formValidatorRepository.findByClazzName(AssessorScopeValidator.class.getName());
+        FormValidator assessorScoreValidator = formValidatorRepository.findByClazzName(AssessorScoreValidator.class.getName());
+        FormValidator requiredFileValidator = formValidatorRepository.findByClazzName(RequiredFileValidator.class.getName());
+        FormValidator requiredMultipleChoiceValidator = formValidatorRepository.findByClazzName(RequiredMultipleChoiceValidator.class.getName());
 
-            int si = 0;
-            for (Section section : sections) {
-                competition.getSections().add(section);
-                section.setCompetition(competition);
-                section.setParentSection(parent);
-                section.setPriority(si);
-                si++;
-                Section savedSection = sectionRepository.save(section);
-                persistAndPrioritiseSections(competition, section.getChildSections(), savedSection);
-                peristAndPrioritiesQuestions(competition, section.getQuestions(), savedSection,
-                        notEmptyValidator, wordCountValidator, researchCategoryValidator, assessorScopeValidator, assessorScoreValidator, requiredFileValidator,
-                        requiredMultipleChoiceValidator);
+        int si = 0;
+        for (Section section : sections) {
+            competition.getSections().add(section);
+            section.setCompetition(competition);
+            section.setParentSection(parent);
+            adjustPriority(si, section);
+            si++;
+            Section savedSection = sectionRepository.save(section);
+            persistAndPrioritiseSections(competition, section.getChildSections(), savedSection);
+            peristAndPrioritiesQuestions(competition, section.getQuestions(), savedSection,
+                    notEmptyValidator, wordCountValidator, researchCategoryValidator, assessorScopeValidator, assessorScoreValidator, requiredFileValidator,
+                    requiredMultipleChoiceValidator);
         }
+    }
+
+    private void adjustPriority(int si, Section section) {
+        if (SectionType.TERMS_AND_CONDITIONS.equals(section.getType())) {
+            si++; // make room for Impact Management section
+        }
+        section.setPriority(si);
     }
 
     @NotSecured("Must be secured by other services.")
@@ -137,11 +144,11 @@ public class QuestionPriorityOrderService {
     }
 
     @NotSecured("Must be secured by other services.")
-    public List<Question>  peristAndPrioritiesQuestions(Competition competition, List<Question> questions, Section parent,
-                                             FormValidator notEmptyValidator, FormValidator wordCountValidator,
-                                             FormValidator researchCategoryValidator, FormValidator assessorScopeValidator,
-                                             FormValidator assessorScoreValidator, FormValidator requiredFileValidator,
-                                             FormValidator requiredMultipleChoiceValidator) {
+    public List<Question> peristAndPrioritiesQuestions(Competition competition, List<Question> questions, Section parent,
+                                                       FormValidator notEmptyValidator, FormValidator wordCountValidator,
+                                                       FormValidator researchCategoryValidator, FormValidator assessorScopeValidator,
+                                                       FormValidator assessorScoreValidator, FormValidator requiredFileValidator,
+                                                       FormValidator requiredMultipleChoiceValidator) {
         List<Question> savedQuestions = new ArrayList<>();
         int qi = 0;
         for (Question question : questions) {
