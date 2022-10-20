@@ -20,7 +20,7 @@ public class CompetitionApplicationConfig {
     private boolean maximumFundingSoughtEnabled = false;
 
     @Column(name="im_survey_required")
-    private boolean imSurveyRequired = false;
+    private Boolean imSurveyRequired = null;
 
     public CompetitionApplicationConfig() {
     }
@@ -67,11 +67,11 @@ public class CompetitionApplicationConfig {
         this.maximumFundingSoughtEnabled = maximumFundingSoughtEnabled;
     }
 
-    public boolean isImSurveyRequired() {
+    public Boolean isImSurveyRequired() {
         return imSurveyRequired;
     }
 
-    public void setImSurveyRequired(boolean imSurveyRequired) {
+    public void setImSurveyRequired(Boolean imSurveyRequired) {
         this.imSurveyRequired = imSurveyRequired;
     }
 }

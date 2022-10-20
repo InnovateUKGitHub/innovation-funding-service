@@ -247,6 +247,7 @@ public class CompetitionSetupServiceImplTest {
                 CompetitionSetupSection.ASSESSORS, Optional.of(Boolean.FALSE),
                 CompetitionSetupSection.CONTENT, Optional.of(Boolean.TRUE),
                 CompetitionSetupSection.TERMS_AND_CONDITIONS, Optional.of(Boolean.TRUE),
+                CompetitionSetupSection.PROJECT_IMPACT, Optional.of(Boolean.TRUE),
                 CompetitionSetupSection.FUNDING_ELIGIBILITY, Optional.of(Boolean.TRUE)
         );
 
@@ -303,7 +304,10 @@ public class CompetitionSetupServiceImplTest {
         testSectionStatus.put(CompetitionSetupSection.CONTENT, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.TERMS_AND_CONDITIONS, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.FUNDING_ELIGIBILITY, Optional.of(Boolean.TRUE));
+        testSectionStatus.put(CompetitionSetupSection.PROJECT_IMPACT, Optional.of(Boolean.TRUE));
+
         testSectionStatus.put(CompetitionSetupSection.FUNDING_LEVEL_PERCENTAGE, Optional.of(Boolean.TRUE));
+
         testSectionStatus.put(CompetitionSetupSection.FUNDING_AMOUNT_SOUGHT, Optional.of(Boolean.TRUE));
 
         CompetitionResource competitionResource = newCompetitionResource()

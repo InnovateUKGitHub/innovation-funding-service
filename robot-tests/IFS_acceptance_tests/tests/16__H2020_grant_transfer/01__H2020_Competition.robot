@@ -15,6 +15,8 @@ Documentation  IFS-5158 - Competition Template
 ...
 ...            IFS-9579 MO documents: Change of internal approve/reject authority
 ...
+...            IFS-12942 Impact Management - Competition setup
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
 Resource          ../../resources/defaultResources.robot
@@ -75,6 +77,15 @@ User can complete Organisational eligibility
     And the user clicks the button/link                       jQuery = button:contains("Save and continue")
     And the user clicks the button/link                       link = Back to competition details
     Then the user should see the element                      jQuery = li:contains("Organisational eligibility") .task-status-complete
+
+the user completes project impact section for H2020
+    [Documentation]     IFS-12942
+    Given the user clicks the button/link   link = Project impact
+    When the user clicks the button twice   jQuery = label:contains("No")
+    And the user clicks the button/link     jQuery = button:contains("Done")
+    And the user should see the element     jQuery = dt:contains("Does this competition have a project impact survey?")+dd:contains("No")
+    And the user clicks the button/link     link = Back to competition details
+    Then the user should see the element    jQuery = div:contains("Project impact") ~ .task-status-complete
 
 User can finish setting up the grant transfer
     [Documentation]  IFS-5158
