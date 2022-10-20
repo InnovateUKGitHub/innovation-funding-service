@@ -23,6 +23,7 @@ import org.mockito.Mock;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import static java.time.ZonedDateTime.now;
 import java.util.Set;
 
 import static org.hamcrest.core.Is.is;
@@ -48,6 +49,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
             "  \"appID\" : 2,\n" +
             "  \"appName\" : \"IM Application\",\n" +
             "  \"appStartDate\" : \"2022-08-14T23:00:00Z\",\n" +
+            "  \"appSubmittedDate\" : \"2023-08-14T23:00:00Z\",\n" +
             "  \"compID\" : \"1\",\n" +
             "  \"fundingDecision\" : null,\n" +
             "  \"durationInMonths\" : null,\n" +
@@ -62,6 +64,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
             "    \"companiesHouseNo\" : \"0123456789\",\n" +
             "    \"internationalRegistrationNumber\" : null,\n" +
             "    \"organisationSize\" : \"Medium\",\n" +
+            "    \"organisationType\" : \"Business\",\n" +
             "    \"internationalLocation\" : null,\n" +
             "    \"workPostcode\" : \"RH6 0NT\"\n" +
             "  } ]\n" +
@@ -118,6 +121,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
                 .withId(applicationId)
                 .withName("IM Application")
                 .withStartDate(LocalDate.now())
+                .withSubmittedDate(now())
                 .withCompetition(competition.getId())
                 .withLeadOrganisationId(organisationId)
                 .build();
@@ -146,7 +150,11 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
                 .withFundingType(GRANT)
                 .build();
 
-        Set<OrganisationResource> organisationResourceSet = organisationResourceBuilder.buildSet(1);
+        Set<OrganisationResource> organisationResourceSet = organisationResourceBuilder
+                .withId(1L)
+                .withOrganisationType(1L)
+                .withOrganisationTypeName("Business")
+                .buildSet(1);
         Long organisationId = getOrganisationId(organisationResourceSet);
 
         ApplicationResource application = newApplicationResource()
@@ -178,13 +186,14 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(jsonPath("compID", is(Long.toString(competitionId))))
                 .andExpect(jsonPath("organisations[0].organisationID", is(organisationId.intValue())))
                 .andExpect(jsonPath("organisations[0].organisationSize", is("Medium")))
+                .andExpect(jsonPath("organisations[0].organisationType", is("Business")))
                 .andExpect(jsonPath("organisations[0].workPostcode", is("RH6 0NT")));
     }
 
 
     private Long getOrganisationId(Set<OrganisationResource> organisationResourceSet) {
         for (OrganisationResource org : organisationResourceSet) {
-            return org.getId();
+              return org.getId();
         }
         return 0L;
     }
