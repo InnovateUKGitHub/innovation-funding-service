@@ -346,6 +346,7 @@ spring:
         password: password
         placeholders: ['ifs.system.user.uuid': 'c0d02979-e66e-11e7-ac43-0242ac120002']
         baseline-on-migrate: false
+        schemas: ifs
     jpa:
         database-platform: org.hibernate.dialect.MySQL57Dialect
         generate-ddl: false
