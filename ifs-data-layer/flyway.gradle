@@ -1,4 +1,4 @@
-apply plugin: "org.flywaydb.flyway"
+apply plugin: org.flywaydb.gradle.FlywayPlugin
 
 buildscript {
     repositories {
