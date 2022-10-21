@@ -57,8 +57,6 @@
                         </th:block>
                         <th:block th:if="${model.isCompTypeOfgemAndFundingTypeThirdParty()}">
                             <th scope="col" class="govuk-table__header govuk-table__header--numeric">Funding sought (&pound;)</th>
-                            <th scope="col" class="govuk-table__header govuk-table__header--numeric">Contribution to project (%)</th>
-                            <th scope="col" class="govuk-table__header govuk-table__header--numeric">Contribution to project (&pound;)</th>
                             <th scope="col" class="govuk-table__header govuk-table__header--numeric">Contributions in kind (&pound;)</th>
                         </th:block>
                         <th th:unless="${model.loanCompetition}" class="govuk-table__header govuk-table__header--numeric" scope="col">Total % grant</th>
@@ -77,11 +75,6 @@
                         <th:block th:if="${model.isCompTypeOfgemAndFundingTypeThirdParty()}">
                             <td class="govuk-table__cell govuk-table__cell--numeric"
                                 th:text="${#numbers.formatInteger(overview.getGrantAppliedFor(),1,'DEFAULT')}">0</td>
-                            <!--td class="govuk-table__cell govuk-table__cell--numeric"
-                                th:text="|${#numbers.formatDecimal(overview.getTotalContributionToProjectPercentage(),1,'DEFAULT',2,'DEFAULT')}%|">0&percnt;</td-->
-                            <td class="govuk-table__cell govuk-table__cell--numeric"/>
-                            <td class="govuk-table__cell govuk-table__cell--numeric"
-                                th:text="${#numbers.formatInteger(overview.getTotalContributionToProject(),1,'DEFAULT')}">0</td>
                             <td class="govuk-table__cell govuk-table__cell--numeric"
                                 th:text="${#numbers.formatInteger(overview.getTotalContributionsInKind(),1,'DEFAULT')}">0</td>
                         </th:block>
@@ -148,8 +141,6 @@
                         <th:block th:if="${model.isCompTypeOfgemAndFundingTypeThirdParty()}">
                             <td class="govuk-table__cell govuk-table__cell--numeric"
                                 th:text="${#numbers.formatInteger(summaries.getTotalFundingSought(),1,'DEFAULT')}">0</td>
-                            <!--td class="govuk-table__cell govuk-table__cell--numeric"
-                                th:text="|${#numbers.formatDecimal(summaries.getTotalContributionToProjectPercentage(),1,'DEFAULT',2,'DEFAULT')}%|">0&percnt;</td-->
                             <td class="govuk-table__cell govuk-table__cell--numeric"/>
                             <td class="govuk-table__cell govuk-table__cell--numeric"
                                 th:text="${#numbers.formatInteger(summaries.getTotalContributionToProject(),1,'DEFAULT')}">0</td>
