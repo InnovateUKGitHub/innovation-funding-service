@@ -1,5 +1,16 @@
-
 apply plugin: "org.flywaydb.flyway"
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'org.flywaydb:flyway-gradle-plugin:8.5.13'
+        classpath 'org.flywaydb:flyway-core:8.5.13'
+        classpath 'org.flywaydb:flyway-mysql:8.5.13'
+    }
+}
 
 dependencies {
     implementation enforcedPlatform("org.flywaydb:flyway-core") {
