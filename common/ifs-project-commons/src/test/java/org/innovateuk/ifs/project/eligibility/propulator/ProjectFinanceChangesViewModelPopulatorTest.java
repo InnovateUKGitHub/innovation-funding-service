@@ -2,7 +2,9 @@ package org.innovateuk.ifs.project.eligibility.propulator;
 
 import org.innovateuk.ifs.application.finance.viewmodel.MilestoneChangeViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -228,5 +230,47 @@ public class ProjectFinanceChangesViewModelPopulatorTest {
         assertThat(diff.getMonthSubmitted()).isEqualTo(2);
         assertThat(diff.getMonthUpdated()).isEqualTo(3);
         assertThat(diff.isUpdated()).isTrue();
+    }
+
+    @Test
+    public void getFinanceSummaryViewModelForOfgemCompetition() {
+
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withCompTypeOfgemAndFundingTypeThirdParty(true)
+                .build();
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
+
+        ProjectResource project = newProjectResource().withId(projectId).withApplication(applicationId).withCompetition(competitionId).build();
+        OrganisationResource organisation = newOrganisationResource().withId(organisationId).build();
+
+
+        ProjectFinanceChangesViewModel result = populator.getProjectFinanceChangesViewModel(true, project, organisation);
+
+        assertThat(result.getFinanceSummary().getEntries()).hasSize(4);
+        assertThat(result.getFinanceSummary().getEntries().get(0).getSection()).isEqualTo("Funding sought (£)");
+        assertThat(result.getFinanceSummary().getEntries().get(1).getSection()).isEqualTo("Contribution to project (%)");
+        assertThat(result.getFinanceSummary().getEntries().get(2).getSection()).isEqualTo("Contribution to project (£)");
+        assertThat(result.getFinanceSummary().getEntries().get(3).getSection()).isEqualTo("Contributions in kind (£)");
+    }
+
+    @Test
+    public void getFinanceSummaryViewModelForNonOfgemCompetition() {
+
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withCompTypeOfgemAndFundingTypeThirdParty(false)
+                .build();
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
+
+        ProjectResource project = newProjectResource().withId(projectId).withApplication(applicationId).withCompetition(competitionId).build();
+        OrganisationResource organisation = newOrganisationResource().withId(organisationId).build();
+
+
+        ProjectFinanceChangesViewModel result = populator.getProjectFinanceChangesViewModel(true, project, organisation);
+
+        assertThat(result.getFinanceSummary().getEntries()).hasSize(4);
+        assertThat(result.getFinanceSummary().getEntries().get(0).getSection()).isEqualTo("Funding level (%)");
+        assertThat(result.getFinanceSummary().getEntries().get(1).getSection()).isEqualTo("Funding sought (£)");
+        assertThat(result.getFinanceSummary().getEntries().get(2).getSection()).isEqualTo("Other funding (£)");
+        assertThat(result.getFinanceSummary().getEntries().get(3).getSection()).isEqualTo("Contribution to project (£)");
     }
 }
