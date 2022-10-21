@@ -43,6 +43,8 @@ Documentation     IFS-12065 Pre-Registration (Applicant Journey) Apply to an exp
 ...
 ...               IFS-12876 Pre-registration - The ability to enable EOI questions on an EOI competition
 ...
+...               IFS-13062 Pre-registration - Conditional content about evidence document for the Horizon Europe expression of interest status page
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -162,12 +164,14 @@ Applicant can not view hidden question, section and subsection in application su
     And the user should see the element         link = Expression of interest overview
 
 Applicant submits the expression of interest application
-    [Documentation]  IFS-12079  IFS-12081
+    [Documentation]  IFS-12079  IFS-12081  IFS-13062
     When the user clicks the button/link        id = submit-application-button
     Then the user should see the element        jQuery = h2:contains("Expression of interest submitted")
     And the user should see the element         jQuery = h1:contains("Expression of interest status")
     And the user should see the element         link = View expression of interest
     And the user should see the element         link = Print expression of interest
+    And The user should see the element         jQuery = p:contains("Your submission will now be evaluated by our team.")
+    And The user should see the element         jQuery = p:contains("If the evidence you provided is satisfactory, you will progress to the full application.")
     And the user reads his email                steve.smith@empire.com  ${preregApplicationID}: Successful submission of expression of interest   You have successfully submitted an expression of interest for funding to Innovate UK’s ${hecpPreregCompName}.
 
 Applicant can not view hidden question, section and subsection in print application
