@@ -37,8 +37,8 @@
         <h2 class="govuk-heading-l">What happens next?</h2>
 
         <p class="govuk-body">
-            Your submission will now be evaluated by our team. If the evidence you provided is satisfactory, you will
-            progress to the full application.
+            Your submission will now be evaluated by our team.
+            <th:block th:if="${model.currentCompetition.competitionEoiEvidenceConfigResource.evidenceRequired}"> If the evidence you provided is satisfactory, you will progress to the full application.</th:block>
         </p>
 
         <th:block th:if="${model.currentCompetition.competitionEoiEvidenceConfigResource.evidenceRequired && model.userFromLeadOrganisation}"

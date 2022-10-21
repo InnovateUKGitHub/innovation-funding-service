@@ -12,6 +12,15 @@ project.getConfigurations().all { config ->
                     [details.requested.group, details.requested.version]))
         }
 
+        if (details.requested.name.equalsIgnoreCase("commons-text") && details.requested.version != "1.10.0") {
+            println 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+            println 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+            println 'commons-text uplift to 1.10.0'
+            println 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+            println 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+            details.useTarget group: 'org.apache.commons', name: 'commons-text', version: '1.10.0'
+        }
+
         if (details.requested.name.equalsIgnoreCase("commons-io") && details.requested.version != "2.11.0") {
             throw new GradleException(sprintf("commons-io found %s.%s",
                     [details.requested.group, details.requested.version]))
