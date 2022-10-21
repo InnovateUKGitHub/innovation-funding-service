@@ -118,6 +118,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               IFS-12292 Maximum funding amount - comp setup
 ...
+...               IFS-12942 Impact Management - Competition setup
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -644,6 +646,15 @@ Organisational eligibility is required for a Competition to be setup
     And the user clicks the button/link                       jQuery = button:contains("Save and continue")
     And the user clicks the button/link                       link = Back to competition details
     Then the user should see the element                      jQuery = li:contains("Organisational eligibility") .task-status-complete
+
+Project impact section is required for competition setup to be completed
+    [Documentation]     IFS-12942
+    Given the user clicks the button/link   link = Project impact
+    When the user clicks the button twice   jQuery = label:contains("No")
+    And the user clicks the button/link     jQuery = button:contains("Done")
+    And the user should see the element     jQuery = dt:contains("Does this competition have a project impact survey?")+dd:contains("No")
+    And the user clicks the button/link     link = Back to competition details
+    Then the user should see the element    jQuery = div:contains("Project impact") ~ .task-status-complete
 
 Complete button disabled when sections are edited
     [Documentation]  IFs-648

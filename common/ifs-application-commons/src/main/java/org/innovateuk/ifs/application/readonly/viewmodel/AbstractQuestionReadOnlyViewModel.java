@@ -109,6 +109,10 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
     public QuestionSetupType getLoansBusinessAndFinancialInformation() {
         return QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION;
     }
+    public QuestionSetupType getImpactManagementSurvey() {
+        return QuestionSetupType.IMPACT_MANAGEMENT_SURVEY;
+    }
+
 
     @Override
     public boolean isEnabledForPreRegistration() {

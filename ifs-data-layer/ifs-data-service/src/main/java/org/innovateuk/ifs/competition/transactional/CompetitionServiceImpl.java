@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.transactional;
 
+import lombok.extern.log4j.Log4j2;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
@@ -11,13 +12,18 @@ import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;
 import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.BasicFileAndContents;
 import org.innovateuk.ifs.file.resource.FileAndContents;
 import org.innovateuk.ifs.file.service.FileEntryService;
 import org.innovateuk.ifs.file.service.FileService;
+import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.form.repository.QuestionRepository;
+import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
@@ -25,8 +31,10 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.transactional.ProjectToBeCreatedService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.innovateuk.ifs.question.transactional.QuestionSetupCompetitionService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +42,8 @@ import java.math.BigInteger;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
@@ -43,6 +53,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_REOPEN_ASSESSMENT_PERIOD;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.resource.ProjectState.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -52,6 +63,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  */
 @SuppressWarnings("unchecked")
 @Service
+@Log4j2
 public class CompetitionServiceImpl extends BaseTransactionalService implements CompetitionService {
 
     @Autowired
@@ -85,6 +97,12 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private CrmService crmService;
 
+    @Autowired
+    private SectionRepository sectionRepository;
+    @Autowired
+    private QuestionRepository questionRepository;
+    @Autowired
+    private QuestionSetupCompetitionService questionSetupCompetitionService;
     public static final String EQUALITY_DIVERSITY_AND_INCLUSION = "Equality, diversity and inclusion";
 
     @Override
@@ -298,6 +316,51 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private boolean isEDIQuestion(QuestionResource question) {
         return (QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION.equals(question.getQuestionSetupType()))
                 || (question.getShortName() != null && question.getShortName().contains(EQUALITY_DIVERSITY_AND_INCLUSION));
+    }
+
+    @Override
+    public ServiceResult<Void> includeSupportingInformationSectionForCompetition(long competitionId, boolean projectImpactSurveyApplicable) {
+        Competition competition = getCompetition(competitionId).getSuccess();
+
+
+        if (projectImpactSurveyApplicable) {
+            boolean supportingInformationSectionPresent = competition.getSections().stream().anyMatch(section -> SectionType.SUPPORTING_INFORMATION.equals(section.getType()));
+            if (!supportingInformationSectionPresent) {
+
+                Optional<Section> tAndCSupportingInformation =
+                        competition.getSections().stream()
+                                .filter(section -> SectionType.TERMS_AND_CONDITIONS.equals(section.getType()))
+                                .findFirst();
+
+                Section supportingInformation = CommonBuilders.supportingInformation().build();
+                if (tAndCSupportingInformation.isEmpty()) {
+                    return serviceFailure(new Error(String.format("Cannot continue, section: %s is missing", SectionType.TERMS_AND_CONDITIONS), HttpStatus.BAD_REQUEST));
+                } else {
+                    supportingInformation.setPriority(tAndCSupportingInformation.get().getPriority() - 1);
+                    supportingInformation.setCompetition(competition);
+                }
+
+
+                Section savedSupportingInformation = sectionRepository.save(supportingInformation);
+                AtomicInteger supportDocumentQuestionPriority = new AtomicInteger(0);
+                savedSupportingInformation.getQuestions().forEach(question -> {
+                    question.setPriority(supportDocumentQuestionPriority.getAndIncrement());
+                    question.setCompetition(competition);
+                    question.setSection(savedSupportingInformation);
+                    questionRepository.save(question);
+                });
+            } else {
+                log.info("Section:{} already configured, do nothing", SectionType.SUPPORTING_INFORMATION);
+            }
+        } else {
+            competition.getSections().stream().filter(section -> SectionType.SUPPORTING_INFORMATION.equals(section.getType())).findFirst().ifPresentOrElse(section -> {
+                        section.getQuestions().forEach(question -> questionRepository.deleteUsingId(question.getId()));
+                        sectionRepository.deleteUsingId(section.getId());
+                    },
+                    () -> log.info("Nothing to delete, section:{} not configured", SectionType.SUPPORTING_INFORMATION));
+        }
+
+        return serviceSuccess();
     }
 }
 

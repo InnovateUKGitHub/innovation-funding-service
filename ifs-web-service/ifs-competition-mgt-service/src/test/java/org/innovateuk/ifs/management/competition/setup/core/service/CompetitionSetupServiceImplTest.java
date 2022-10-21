@@ -247,6 +247,7 @@ public class CompetitionSetupServiceImplTest {
                 CompetitionSetupSection.ASSESSORS, Optional.of(Boolean.FALSE),
                 CompetitionSetupSection.CONTENT, Optional.of(Boolean.TRUE),
                 CompetitionSetupSection.TERMS_AND_CONDITIONS, Optional.of(Boolean.TRUE),
+                CompetitionSetupSection.PROJECT_IMPACT, Optional.of(Boolean.TRUE),
                 CompetitionSetupSection.FUNDING_ELIGIBILITY, Optional.of(Boolean.TRUE)
         );
 
@@ -303,7 +304,10 @@ public class CompetitionSetupServiceImplTest {
         testSectionStatus.put(CompetitionSetupSection.CONTENT, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.TERMS_AND_CONDITIONS, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.FUNDING_ELIGIBILITY, Optional.of(Boolean.TRUE));
+        testSectionStatus.put(CompetitionSetupSection.PROJECT_IMPACT, Optional.of(Boolean.TRUE));
+
         testSectionStatus.put(CompetitionSetupSection.FUNDING_LEVEL_PERCENTAGE, Optional.of(Boolean.TRUE));
+
         testSectionStatus.put(CompetitionSetupSection.FUNDING_AMOUNT_SOUGHT, Optional.of(Boolean.TRUE));
 
         CompetitionResource competitionResource = newCompetitionResource()
@@ -466,7 +470,7 @@ public class CompetitionSetupServiceImplTest {
     }
 
     private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionSetupSection section, CompetitionResource competition) {
-        GeneralSetupViewModel generalSetupView = new GeneralSetupViewModel(Boolean.TRUE, false, competition, section, CompetitionSetupSection.values(), Boolean.FALSE, Boolean.FALSE, true);
+        GeneralSetupViewModel generalSetupView = new GeneralSetupViewModel(Boolean.TRUE, false, competition, section, CompetitionSetupSection.values(), Boolean.FALSE, Boolean.FALSE, true, true);
         generalSetupView.setCurrentSectionFragment("section-" + section.getPath());
         generalSetupView.setState(new CompetitionStateSetupViewModel(Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, CompetitionStatus.COMPETITION_SETUP));
 
