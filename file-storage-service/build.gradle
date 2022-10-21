@@ -19,7 +19,7 @@ dependencies {
         exclude group: "commons-logging", module: "commons-logging"
     }
 
-    implementation 'org.flywaydb:flyway-core7.2.1'
+    implementation 'org.flywaydb:flyway-core:7.2.1'
 
     implementation 'com.diluv.clamchowder:Clam-Chowder:1.0.0'
 
