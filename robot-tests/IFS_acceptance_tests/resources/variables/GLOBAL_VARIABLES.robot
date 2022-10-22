@@ -54,7 +54,7 @@ ${fundingEligibilityTitle}                                  Funding eligibility
 ${organisationalEligibilityTitle}                           Organisational eligibility
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}     Aerospace technology investment sector
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}          ${competition_ids['${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}']}
-${hestaCompetitionName}                                     Hesta competition
+${horizonCompetitionName}                                   Horizon Europe competition
 # Using double quotes below, cause there's an apostrophe in the title
 ${OPEN_COMPETITION_APPLICATION_NAME}                            Climate science the history of Greenland\'s ice
 ${OPEN_COMPETITION_APPLICATION_1_NUMBER}                        ${application_ids["${OPEN_COMPETITION_APPLICATION_NAME}"]}
@@ -307,7 +307,7 @@ ${compType_APC}        Advanced Propulsion Centre
 ${compType_ATI}        Aerospace Technology Institute
 ${compType_PT}         The Prince's Trust
 ${compType_H2020}      Horizon 2020
-${compType_HESTA}      Horizon Europe Guarantee
+${compType_HORIZON_EUROPE}      Horizon Europe Guarantee
 ${compType_DirectAward}  Direct award
 
 # Competition and Applicant lists

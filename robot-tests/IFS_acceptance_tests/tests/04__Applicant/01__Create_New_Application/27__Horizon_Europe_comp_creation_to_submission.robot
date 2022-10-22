@@ -1,11 +1,11 @@
 *** Settings ***
-Documentation     IFS-10694 Hesta - Email notification content for application submission
+Documentation     IFS-10694 Horizon Europe - Email notification content for application submission
 ...
-...               IFS-10688 Hesta - Create competition type hesta
+...               IFS-10688 Horizon Europe - Create competition type Horizon Europe
 ...
-...               IFS-10695 Hesta - Email notification content for unsuccessfull application
+...               IFS-10695 Horizon Europe - Email notification content for unsuccessful application
 ...
-...               IFS-10697 Hesta - Application Submission confirmation page
+...               IFS-10697 Horizon Europe - Application Submission confirmation page
 ...
 ...               IFS-11269 HECP Phase 2 - Changes to cost categories
 ...
@@ -45,43 +45,43 @@ Resource          ../../../resources/common/PS_Common.robot
 Resource          ../../../resources/common/Competition_Commons.robot
 
 *** Variables ***
-${hestaCompTypeSelector}                        dt:contains("Competition type") ~ dd:contains("${compType_HESTA}")
-${hestaApplicationName}                         Hesta application
-${newHestaApplicationName}                      NEW Hesta application
+${horizonCompTypeSelector}                dt:contains("Competition type") ~ dd:contains("${compType_HORIZON_EUROPE}")
+${horizonApplicationName}                 Horizon Europe application
+${newHorizonApplicationName}              NEW Horizon Europe application
 ${leadApplicantEmail}                           tim.timmy@heukar.com
 ${newLeadApplicantEmail}                        barry.barrington@heukar.com
-${hestaApplicationSubmissionEmailSubject}       Successful submission of application
-${hestaApplicationSubmissionEmail}              You have successfully submitted an application for funding to
-${hestaApplicationSuccessfulEmail}              We are pleased to inform you that your application for the Horizon Europe collaborative competition has been successful and passed the technical assessment phase.
-${hestaApplicationUnsuccessfulEmail}            Thank you for submitting your application to Innovate UK for the competition
-${hestaApplicationUnsuccessfulEmailSubject}     update about your Horizon Europe Guarantee application
+${horizonApplicationSubmissionEmailSubject}     Successful submission of application
+${horizonApplicationSubmissionEmail}            You have successfully submitted an application for funding to
+${horizonApplicationSuccessfulEmail}            We are pleased to inform you that your application for the Horizon Europe collaborative competition has been successful and passed the technical assessment phase.
+${horizonApplicationUnsuccessfulEmail}          Thank you for submitting your application to Innovate UK for the competition
+${horizonApplicationUnsuccessfulEmailSubject}   update about your Horizon Europe Guarantee application
 ${assessorEmail}                                another.person@gmail.com
 ${webTestAssessor}                              Angel Witt
 ${webTestAssessorEmailAddress}                  angel.witt@gmail.com
 
 *** Test Cases ***
-Comp admin can select the competition type option Hesta in Initial details on competition setup
+Comp admin can select the competition type option Horizon Europe in Initial details on competition setup
     [Documentation]  IFS-10688
     Given the user logs-in in new browser             &{Comp_admin1_credentials}
     When the user navigates to the page               ${CA_UpcomingComp}
     And the user clicks the button/link               jQuery = .govuk-button:contains("Create competition")
-    Then the user fills in the CS Initial details     ${hestaCompetitionName}  ${month}  ${nextyear}  ${compType_HESTA}  STATE_AID  HECP
+    Then the user fills in the CS Initial details     ${horizonCompetitionName}  ${month}  ${nextyear}  ${compType_HORIZON_EUROPE}  STATE_AID  HECP
 
-Comp admin can view Hesta competition type in Initial details read only view
+Comp admin can view Horizon Europe competition type in Initial details read only view
     [Documentation]  IFS-10688
     Given the user clicks the button/link    link = Initial details
-    Then the user can view Hesta competition type in Initial details read only view
+    Then the user can view Horizon Europe competition type in Initial details read only view
 
-Comp admin creates Hesta competition
+Comp admin creates Horizon Europe competition
     [Documentation]  IFS-8751  IFS-11486
     Given the user clicks the button/link                            link = Back to competition details
-    Then the competition admin creates Hesta competition             ${BUSINESS_TYPE_ID}  ${hestaCompetitionName}  ${compType_HESTA}  ${compType_HESTA}  STATE_AID  HECP  PROJECT_SETUP  no  50  false  single-or-collaborative
-    [Teardown]  Get competition id and set open date to yesterday    ${hestaCompetitionName}
+    Then the competition admin creates Horizon Europe competition    ${BUSINESS_TYPE_ID}  ${horizonCompetitionName}  ${compType_HORIZON_EUROPE}  ${compType_HORIZON_EUROPE}  STATE_AID  HECP  PROJECT_SETUP  no  50  false  single-or-collaborative
+    [Teardown]  Get competition id and set open date to yesterday    ${horizonCompetitionName}
 
-the lead applicant can view answer yet to be provodied when work programme question is incomplete in readonly view
+the lead applicant can view answer yet to be provided when work programme question is incomplete in readonly view
     [Documentation]  IFS-11686
     Given the user logs out if they are logged in
-    And the user applys to the competition          tim   timmy   ${leadApplicantEmail}   ${hestaApplicationName}
+    And the user applys to the competition          tim   timmy   ${leadApplicantEmail}   ${horizonApplicationName}
     When the user clicks the button/link            link = Review and submit
     And the user clicks the button/link             jQuery = button:contains("Work programme")
     Then the user should see the element            jQuery = p:contains("Answer yet to be provided")
@@ -109,21 +109,21 @@ Lead applicant can view funding conversion tool in project costs
 Lead applicant completes project finances and submits an application
     [Documentation]  IFS-8751  IFS-11269  IFS-11618  IFS-11366
     When the user clicks the button/link                                        link = Your project finances
-    And the user completes hecp project finances                                ${hestaApplicationName}  no
+    And the user completes hecp project finances                                ${horizonApplicationName}  no
     Then the user see the print view of the application
     And the user can submit the application
 
 Lead applicant should get a confirmation email after application submission
     [Documentation]    IFS-10694
-    Given Requesting IDs of this application    ${hestaApplicationName}
-    Then the user reads his email               ${leadApplicantEmail}  ${ApplicationID}: ${hestaApplicationSubmissionEmailSubject}  ${hestaApplicationSubmissionEmail}
+    Given Requesting IDs of this application    ${horizonApplicationName}
+    Then the user reads his email               ${leadApplicantEmail}  ${ApplicationID}: ${horizonApplicationSubmissionEmailSubject}  ${horizonApplicationSubmissionEmail}
 
 Applicant receives successful message of an application
     [Documentation]  IFS-11554
     Given Log in as a different user                                                &{Comp_admin1_credentials}
-    And The user clicks the button/link                                             link = ${hestaCompetitionName}
+    And The user clicks the button/link                                             link = ${horizonCompetitionName}
     When Internal user notifies the applicant on status of application
-    Then the user reads his email                                                   ${leadApplicantEmail}  Important message about your application '${hestaApplicationName}' for the competition '${hestaCompetitionName}'  ${hestaApplicationSuccessfulEmail}
+    Then the user reads his email                                                   ${leadApplicantEmail}  Important message about your application '${horizonApplicationName}' for the competition '${horizonCompetitionName}'  ${horizonApplicationSuccessfulEmail}
 
 The Application Summary page must not include the Reopen Application link when the internal team mark the application as successful / unsuccessful
     [Documentation]  IFS-10697  IFS-11406  IFS-11486
@@ -135,19 +135,19 @@ The Application Summary page must not include the Reopen Application link when t
 Lead applicant receives email notifiction when internal user marks application unsuccessful
     [Documentation]  IFS-10695  IFS-11341  IFS-11486
     Given the user logs out if they are logged in
-    And Requesting IDs of this competition                                          ${hestaCompetitionName}
-    And the user applys to the competition                                          barry   barrington   ${newLeadApplicantEmail}   ${newHestaApplicationName}
+    And Requesting IDs of this competition                                          ${horizonCompetitionName}
+    And the user applys to the competition                                          barry   barrington   ${newLeadApplicantEmail}   ${newHorizonApplicationName}
     And the user successfully completes application
     And the user clicks the button/link                                             link = Your project finances
-    And the user completes hecp project finances                                    ${hestaApplicationName}  no
+    And the user completes hecp project finances                                    ${horizonApplicationName}  no
     And the user can submit the application
     And Log in as a different user                                                  &{Comp_admin1_credentials}
-    And The user clicks the button/link                                             link = ${hestaCompetitionName}
-    When the internal team mark the application as successful / unsuccessful        ${newHestaApplicationName}   UNFUNDED
+    And The user clicks the button/link                                             link = ${horizonCompetitionName}
+    When the internal team mark the application as successful / unsuccessful        ${newHorizonApplicationName}   UNFUNDED
     And the user clicks the button/link                                             link = Competition
-    And Requesting IDs of this application                                          ${newHestaApplicationName}
+    And Requesting IDs of this application                                          ${newHorizonApplicationName}
     And the internal team notifies all applicants                                   ${ApplicationID}
-    Then the user reads his email                                                   ${newLeadApplicantEmail}  Important message about your application '${newHestaApplicationName}' for the competition '${hestaCompetitionName}'  ${hestaApplicationUnsuccessfulEmail}
+    Then the user reads his email                                                   ${newLeadApplicantEmail}  Important message about your application '${newHorizonApplicationName}' for the competition '${horizonCompetitionName}'  ${horizonApplicationUnsuccessfulEmail}
 
 the user should not see any references to assessment and release feedback on close competition page
     [Documentation]  IFS-11486
@@ -177,12 +177,12 @@ Internal users can view workp programmes section in view application
     [Documentation]  IFS-11686
     Given log in as a different user            &{internal_finance_credentials}
     And Requesting Project ID of this Project
-    When the user navigates to the page         ${server}/management/competition/${competitionId}/application/${hestaApplicationID}
+    When the user navigates to the page         ${server}/management/competition/${competitionId}/application/${horizonApplicationID}
     Then the user can see the read only view of work programme
 
 Internal users can edit the project costs
     [Documentation]  IFS-11407
-    When the user navigates to the page         ${server}/project-setup-management/project/${hestaProjectID}/finance-check/organisation/${asosId}/eligibility
+    When the user navigates to the page         ${server}/project-setup-management/project/${horizonProjectID}/finance-check/organisation/${asosId}/eligibility
     And the user clicks the button/link         name = edit-project-costs
     And the user enters text to a text field    id = hecpIndirectCosts  10000
     And the user enters text to a text field    id = travel  20000
@@ -193,18 +193,18 @@ Internal users can edit the project costs
 
 Lead applicant views hecp project cost categories in spendprofile
     [Documentation]  IFS-11695  IFS-11551
-    Given project finance approves eligibility and generates the Spend Profile      ${asosId}  ${hestaProjectID}
-    And internal user assigns MO to application                                     ${hestaApplicationID}    ${hestaApplicationName}    Orvill  Orville Gibbs
+    Given project finance approves eligibility and generates the Spend Profile      ${asosId}  ${horizonProjectID}
+    And internal user assigns MO to application                                     ${horizonApplicationID}    ${horizonApplicationName}    Orvill  Orville Gibbs
     And Internal user reviews and approves documents
     And Internal user approves bank details
     When Log in as a different user                                                 ${leadApplicantEmail}    ${short_password}
-    And the user navigates to the page                                              ${server}/project-setup/project/${hestaProjectID}/partner-organisation/${asosId}/spend-profile/review
+    And the user navigates to the page                                              ${server}/project-setup/project/${horizonProjectID}/partner-organisation/${asosId}/spend-profile/review
     Then the user should see hecp project cost categories
     And the user should see the element                                             jQuery = p:contains("We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners ​which estimates how you think costs will be spread out over the duration of your project")
     And the user should see the element                                             jQuery = p:contains("If you require further assistance in filling out your spend profile, contact your monitoring officer.")
     And the user should see the element                                             jQuery = p:contains("You need to mark this section as complete. You can then send completed spend profiles to Innovate UK.")
 
-Lead applicant views hecp project cost categories on validation and edit spendprofile
+Lead applicant views Horizon project cost categories on validation and edit spend profile
     [Documentation]  IFS-11695  IFS-11758
     When the user clicks the button/link                                    link = Edit spend profile
     And the user edit the spend profile mothly values                       616  616  247  370  247  493  124
@@ -213,37 +213,37 @@ Lead applicant views hecp project cost categories on validation and edit spendpr
     And the user should see hecp project cost categories
     [Teardown]   the user reverted the edited values in spend profile
 
-Lead applicant submits spen profile to internal user for review
+Lead applicant submits spend profile to internal user for review
     [Documentation]  IFS-11551
     Given the user clicks the button/link   jQuery = button:contains("Save and return to spend profile overview")
     And the user clicks the button/link     id = spend-profile-mark-as-complete-button
     And the user clicks the button/link     link = Review and submit project spend profile
     And the user clicks the button/link     id = submit-project-spend-profile-button
     When the user clicks the button/link    id = submit-send-all-spend-profiles
-    And the user navigates to the page      ${server}/project-setup/project/${hestaProjectID}/partner-organisation/${asosId}/spend-profile/review
+    And the user navigates to the page      ${server}/project-setup/project/${horizonProjectID}/partner-organisation/${asosId}/spend-profile/review
     Then the user should see the element    jQuery = p:contains("We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners ​which estimates how you think costs will be spread out over the duration of your project")
 
-Internal user can view hecp GOL template
+Internal user can view Horizon GOL template
     [Documentation]  IFS-11299
-    Given ifs admin approves the spend profiles for hestaApplication    ${hestaProjectID}
+    Given ifs admin approves the spend profiles for horizonApplication    ${horizonProjectID}
     When the user clicks the button/link                                jQuery = td:contains("Review")
     And user clicks on View the grant offer letter page
     And Select Window                                                   NEW
     Then the user should see the element                                xpath = //h2[text()='Annex 1: acceptance of award']
     [Teardown]  the user closes the last opened tab
 
-Lead Applicant can view banner message for a successfull application
+Lead Applicant can view banner message for a successful application
     [Documentation]  IFS-11511
     Given log in as a different user         ${leadApplicantEmail}  ${short_password}
-    When the user clicks the button/link     link = ${hestaApplicationName}
+    When the user clicks the button/link     link = ${horizonApplicationName}
     And the user clicks the button/link      link = view application
     Then the user should see the element     jQuery = h2:contains("Congratulations, your application has been successful")
     And the user should see the element      jQuery = p:contains("You have been successful in this round of funding.")
 
-Lead Applicant can view banner message for a unsuccessfull application
+Lead Applicant can view banner message for a unsuccessful application
     [Documentation]  IFS-11511
     Given log in as a different user         ${newLeadApplicantEmail}  ${short_password}
-    When the user clicks the button/link     link = ${newHestaApplicationName}
+    When the user clicks the button/link     link = ${newHorizonApplicationName}
     Then the user should see the element     jQuery = h2:contains("Your application has not been successful in this competition.")
 
 *** Keywords ***
@@ -269,33 +269,33 @@ The user fills in bank details
 
 Internal user reviews and approves documents
     log in as a different user        &{ifs_admin_user_credentials}
-    the user navigates to the page    ${server}/project-setup-management/project/${hestaProjectID}/document/all
+    the user navigates to the page    ${server}/project-setup-management/project/${horizonProjectID}/document/all
     the user clicks the button/link   link = Test document type
     the user clicks the button/link   id = radio-review-approve
     the user clicks the button/link   id = submit-button
     the user clicks the button/link   id = accept-document
 
 Internal user approves bank details
-    the user navigates to the page      ${server}/project-setup-management/project/${hestaProjectID}/organisation/${asosId}/review-bank-details
+    the user navigates to the page      ${server}/project-setup-management/project/${horizonProjectID}/organisation/${asosId}/review-bank-details
     the user clicks the button/link     jQuery = button:contains("Approve bank account details")
     the user clicks the button/link     id = submit-approve-bank-details
 
-the user can view Hesta competition type in Initial details read only view
-    the user should see the element     jQuery = ${hestaCompTypeSelector}
+the user can view Horizon competition type in Initial details read only view
+    the user should see the element     jQuery = ${horizonCompTypeSelector}
     the user clicks the button/link     jQuery = button:contains("Edit")
-    the user should see the element     jQuery = ${hestaCompTypeSelector}
+    the user should see the element     jQuery = ${horizonCompTypeSelector}
     the user clicks the button/link     jQuery = button:contains("Done")
 
-the competition admin creates Hesta competition
+the competition admin creates Horizon competition
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingRule}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user selects the Terms and Conditions                   ${compType}  ${fundingRule}
     the user fills in the CS Funding Information
     the user completes project impact section                   No
     the user fills in the CS Project eligibility                ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
-    the user fills in the CS funding eligibility                true   ${compType_HESTA}  ${fundingRule}
+    the user fills in the CS funding eligibility                true   ${compType_HORIZON_EUROPE}  ${fundingRule}
     the user selects the organisational eligibility to no       false
     the user completes milestones section
-    the user marks the Hesta application question as done
+    the user marks the Horizon application question as done
     the user fills in the CS Documents in other projects
     the user clicks the button/link                             link = Public content
     the user fills in the Public content and publishes          ${extraKeyword}
@@ -311,12 +311,12 @@ Requesting IDs of this application
     Set suite variable    ${ApplicationID}
 
 Requesting Project ID of this Project
-    ${hestaProjectID} =  get project id by name    ${hestaApplicationName}
-    Set suite variable    ${hestaProjectID}
+    ${horizonProjectID} =  get project id by name    ${horizonApplicationName}
+    Set suite variable    ${horizonProjectID}
 
-Requesting IDs of this Hesta application
-    ${hestaApplicationID} =  get application id by name    ${hestaApplicationName}
-    Set suite variable    ${hestaApplicationID}
+Requesting IDs of this Horizon application
+    ${horizonApplicationID} =  get application id by name    ${horizonApplicationName}
+    Set suite variable    ${horizonApplicationID}
 
 Requesting IDs of this Asos Organisation
     ${asosId} =    get organisation id by name     ${asosName}
@@ -324,7 +324,7 @@ Requesting IDs of this Asos Organisation
 
 Requesting IDs of this competition
     [Arguments]  ${competitionName}
-    ${competitionId} =  get comp id from comp title  ${hestaCompetitionName}
+    ${competitionId} =  get comp id from comp title  ${horizonCompetitionName}
     Set suite variable  ${competitionId}
 
 user selects where is organisation based
@@ -332,9 +332,9 @@ user selects where is organisation based
     the user selects the radio button     international  ${org_type}
     the user clicks the button/link       id = international-organisation-cta
 
-the user applys to the competition
+the user applies to the competition
     [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
-    the user select the competition and starts application          ${hestaCompetitionName}
+    the user select the competition and starts application          ${horizonCompetitionName}
     the user clicks the button/link                                 link = Continue and create an account
     the user selects the radio button                               organisationTypeId    radio-1
     the user clicks the button/link                                 jQuery = .govuk-button:contains("Save and continue")
@@ -364,7 +364,7 @@ the user successfully completes application
 
 the user successfully completes applications
     [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
-    the user select the competition and starts application          ${hestaCompetitionName}
+    the user select the competition and starts application          ${horizonCompetitionName}
     the user clicks the button/link                                 link = Continue and create an account
     the user selects the radio button                               organisationTypeId    radio-1
     the user clicks the button/link                                 jQuery = .govuk-button:contains("Save and continue")
@@ -412,7 +412,7 @@ the application summary page must not include the reopen application link
     the user navigates to the page          ${server}/application/${ApplicationID}/track
     the user should not see the element     link = Reopen application
 
-the user marks the Hesta application question as done
+the user marks the Horizon application question as done
     the user clicks the button/link                                 link = Application
     the user marks each question as complete                        Application details
     the assessed questions are marked complete(HECP type)
@@ -446,7 +446,7 @@ Custom Suite Setup
 
 the assessor accepts an invite to an application
     logging in and error checking         ${webTestAssessorEmailAddress}   ${short_password}
-    the user clicks the button/link       link = ${hestaCompetitionName}
+    the user clicks the button/link       link = ${horizonCompetitionName}
     the user selects the radio button     acceptInvitation  true
     the user clicks the button/link       jQuery = button:contains("Confirm")
 
@@ -456,7 +456,7 @@ Custom Suite Teardown
 
 the user completes hecp project finances
     [Arguments]  ${Application}   ${Project_growth_table}
-    The user is able to complete hecp project costs
+    The user is able to complete Horizon project costs
     the user enters the project location
     Run Keyword if  '${Project_growth_table}' == 'no'    the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
     Run Keyword if  '${Project_growth_table}' == 'yes'  the user fills the organisation details with Project growth table  ${Application}  ${SMALL_ORGANISATION_SIZE}
@@ -474,7 +474,7 @@ the user completes hecp project finances
     the user should see the element  jQuery = th:contains("Indirect costs (£)")
     the user clicks the button/link  link = Application overview
 
-The user is able to complete hecp project costs
+The user is able to complete Horizon project costs
     the user clicks the button/link           link = Your project costs
     the user should see the element           jQuery = h1:contains("Your project costs")
     the user should see hecp project cost categories
@@ -488,7 +488,7 @@ The user is able to complete hecp project costs
     the user clicks the button/link           jQuery = button:contains("Mark")
     the user should see the element           jQuery = li:contains("Your project costs") > .task-status-complete
 
-The user is able to complete hecp public description section
+The user is able to complete Horizon public description section
     the user clicks the button/link           jQuery = a:contains("Public description")
     the user should see the element           jQuery = h1:contains("Public description")
     the user enters text to a text field      css=.textarea-wrapped .editor    This is some random text
@@ -496,7 +496,7 @@ The user is able to complete hecp public description section
     the user clicks the button/link           jQuery = a:contains("Return to application overview")
     the user should see the element           jQuery = li:contains("Public description") > .task-status-complete
 
-the user fills in the CS Application section hecp question
+the user fills in the CS Application section Horizon question
     [Arguments]  ${question_link}
     the user clicks the button/link         jQuery = h4 a:contains("${question_link}")
     the user enters text to a text field    id = question.guidanceTitle  Innovation is crucial to the continuing success of any organization.
@@ -510,7 +510,7 @@ the lead applicant marks the application question as complete
     the user clicks the button/link     id = application-question-complete
     the user clicks the button/link     link = Back to application overview
 
-ifs admin approves the spend profiles for hestaApplication
+ifs admin approves the spend profiles for horizonApplication
     [Arguments]  ${project}
     log in as a different user       &{ifs_admin_user_credentials}
     the user navigates to the page   ${server}/project-setup-management/project/${project}/spend-profile/approval
@@ -519,24 +519,24 @@ ifs admin approves the spend profiles for hestaApplication
 
 Internal user notifies the applicant on status of application
     Requesting IDs of this Asos Organisation
-    the internal team mark the application as successful / unsuccessful         ${hestaApplicationID}  FUNDED
+    the internal team mark the application as successful / unsuccessful         ${horizonApplicationID}  FUNDED
     the user clicks the button/link                                             link = Competition
-    the internal team notifies all applicants                                   ${hestaApplicationID}
-    the user refreshes until element appears on page                            jQuery = td:contains("${hestaApplicationID}") ~ td:contains("Sent")
+    the internal team notifies all applicants                                   ${horizonApplicationID}
+    the user refreshes until element appears on page                            jQuery = td:contains("${horizonApplicationID}") ~ td:contains("Sent")
 
 the applicant navigates to project set up
     log in as a different user                                                  ${leadApplicantEmail}    ${short_password}
-    the user clicks the button/link                                             link = ${hestaApplicationName}
+    the user clicks the button/link                                             link = ${horizonApplicationName}
 
-the user completes all project setup sections except spendprofile
+the user completes all project setup sections except spend profile
     the user is able to complete project details section
     the user completes the project team details
     the user is able to complete the Documents section
     the user fills in bank details
     log in as a different user                                                  &{internal_finance_credentials}
     Requesting Project ID of this Project
-    internal user assigns MO to application                                     ${hestaApplicationID}    ${hestaApplicationName}    Orvill  Orville Gibbs
-    project finance approves eligibility and generates the Spend Profile        ${asosId}  ${hestaProjectID}
+    internal user assigns MO to application                                     ${horizonApplicationID}    ${horizonApplicationName}    Orvill  Orville Gibbs
+    project finance approves eligibility and generates the Spend Profile        ${asosId}  ${horizonProjectID}
     Internal user reviews and approves documents
     Internal user approves bank details
 
@@ -575,8 +575,8 @@ the user can mark the question as complete for work programme
     the user clicks the button/link     link = Back to application overview
 
 the user see the print view of the application
-    Requesting IDs of this Hesta application
-    the user navigates to the page without the usual headers      ${SERVER}/application/${hestaApplicationID}/print?noprint
+    Requesting IDs of this Horizon application
+    the user navigates to the page without the usual headers      ${SERVER}/application/${horizonApplicationID}/print?noprint
     the user should see the element                               xpath = //*[contains(text(),'Personnel costs (£)')]
     the user should see the element                               xpath = //*[contains(text(),'Subcontracting (£)')]
     the user should see the element                               xpath = //*[contains(text(),'Travel and subsistence (£)')]
@@ -588,7 +588,7 @@ the user see the print view of the application
     the user should see the element                               xpath = //*[contains(text(),'Culture, Creativity and Inclusive Society (CL2)')]
     the user should see the element                               xpath = //*[contains(text(),'Select the call you applied to.')]
     the user should see the element                               xpath = //*[contains(text(),'HORIZON-CL2-2021-DEMOCRACY-01')]
-    the user navigates to the page                                ${SERVER}/application/${hestaApplicationID}
+    the user navigates to the page                                ${SERVER}/application/${horizonApplicationID}
 
 the user should see read only view of work program part
     the user should see the element    jQuery = h1:contains("Select the Horizon Europe Work programme Part")
@@ -650,7 +650,7 @@ the user edit the spend profile mothly values
 
 the user reverted the edited values in spend profile
     the user clicks the button/link                 link = Edit spend profile
-    the user edit the spend profile mothly values   615  615  246  369  246  492  123
+    the user edit the spend profile monthly values   615  615  246  369  246  492  123
 
 the user should see Participating Organisation project region
     the user clicks the button/link  jQuery = a:contains("Participating Organisation project region")

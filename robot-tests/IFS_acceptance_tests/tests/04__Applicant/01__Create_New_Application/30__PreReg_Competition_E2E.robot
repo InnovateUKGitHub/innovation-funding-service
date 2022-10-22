@@ -68,7 +68,7 @@ ${evidenceSubmittedEmailDescription}            You have successfully submitted 
 Comp Admin creates a prereg competition
     [Documentation]  IFS-12065  IFS-12876
     Given The user logs-in in new browser                    &{Comp_admin1_credentials}
-    Then the competition admin creates prereg competition    ${BUSINESS_TYPE_ID}  ${hecpPreregCompName}  Pre Registration  ${compType_HESTA}  NOT_AID  HECP  PROJECT_SETUP  no  50  false  single-or-collaborative
+    Then the competition admin creates prereg competition    ${BUSINESS_TYPE_ID}  ${hecpPreregCompName}  Pre Registration  ${compType_HORIZON_EUROPE}  NOT_AID  HECP  PROJECT_SETUP  no  50  false  single-or-collaborative
 
 Com admin can see readonly view of expression of intrest question selection
     [Documentation]  IFS-12876
@@ -453,12 +453,12 @@ the competition admin creates prereg competition
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingRule}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user navigates to the page                              ${CA_UpcomingComp}
     the user clicks the button/link                             jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details                    ${competition}  ${month}  ${nextyear}  ${compType_HESTA}  ${fundingRule}  HECP
+    the user fills in the CS Initial details                    ${competition}  ${month}  ${nextyear}  ${compType_HORIZON_EUROPE}  ${fundingRule}  HECP
     the user selects the Terms and Conditions                   ${compType}  ${fundingRule}
     the user fills in the CS Funding Information
     the user completes project impact section                   No
     the user fills in the CS Project eligibility                ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
-    the user fills in the CS funding eligibility                false   ${compType_HESTA}  ${fundingRule}
+    the user fills in the CS funding eligibility                false   ${compType_HORIZON_EUROPE}  ${fundingRule}
     the user selects the organisational eligibility to no       false
     the user completes milestones with out assessment
     the user marks the prereg application question as done
