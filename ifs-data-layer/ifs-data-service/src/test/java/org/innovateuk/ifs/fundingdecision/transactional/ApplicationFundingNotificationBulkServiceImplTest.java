@@ -140,6 +140,13 @@ public class ApplicationFundingNotificationBulkServiceImplTest {
                 .build();
         long successfulApplicationId = 1L;
         long unsuccessfulApplicationId = 2L;
+
+        ApplicationResource application = newApplicationResource()
+                .withId(successfulApplicationId)
+                .withApplicationExpressionOfInterestConfigResource(ApplicationExpressionOfInterestConfigResource.builder()
+                        .enabledForExpressionOfInterest(false)
+                        .build())
+                .build();
         Map<Long, Decision> decisions = ImmutableMap.<Long, Decision> builder()
                 .put(successfulApplicationId, FUNDED)
                 .put(unsuccessfulApplicationId, UNFUNDED)
@@ -148,16 +155,13 @@ public class ApplicationFundingNotificationBulkServiceImplTest {
 
         when(competitionService.getCompetitionByApplicationId(successfulApplicationId)).thenReturn(serviceSuccess(competition));
         when(applicationFundingService.notifyApplicantsOfDecisions(resource)).thenReturn(serviceSuccess());
-        when(applicationService.getApplicationById(successfulApplicationId)).thenReturn(serviceSuccess(newApplicationResource().withId(successfulApplicationId).build()));
-        when(applicationService.getApplicationById(unsuccessfulApplicationId)).thenReturn(serviceSuccess(newApplicationResource().withId(unsuccessfulApplicationId).build()));
+        when(applicationService.getApplicationById(successfulApplicationId)).thenReturn(serviceSuccess(application));
 
         ServiceResult<Void> result = service.sendBulkFundingNotifications(resource);
 
         assertTrue(result.isSuccess());
 
-        verify(applicationFundingService, times(2)).notifyApplicantsOfDecisions(resource);
-        verify(applicationService).getApplicationById(successfulApplicationId);
-        verify(applicationService).getApplicationById(unsuccessfulApplicationId);
+        verify(applicationFundingService).notifyApplicantsOfDecisions(resource);
     }
 
     @Test
@@ -235,5 +239,6 @@ public class ApplicationFundingNotificationBulkServiceImplTest {
         verify(applicationEoiService).createFullApplicationFromEoi(successfulApplicationId);
         verifyNoInteractions(projectToBeCreatedService);
     }
+
 
 }
