@@ -231,7 +231,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                             // Create Section
                             Section section = new Section();
                             section.setCompetition(comp);
-                            section.setName("Supporting Information");
+                            section.setName("Supporting information");
                             section.setType(SectionType.SUPPORTING_INFORMATION);
                             section.setPriority(3);
                             section.setEnabledForPreRegistration(true);
