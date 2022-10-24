@@ -281,7 +281,7 @@ Lead applicant view ofgem finance overview in the finance checks
     And the user should see the element                                                 jQuery = th:contains("ROYAL MAIL PLC") +td:contains("£0")+td:contains("250")+td:contains("0.00%")+td:contains("0")+td:contains("20,000")
     And the user should see the element                                                 jQuery = th:contains("Total") +td:contains("£54,220")+td:contains("25,928")+td+td:contains("28,542")+td:contains("40,000")
 
-Lead applicant view ofgem finance overview in the finance checks
+Lead applicant view ofgem finance summary in the finance checks
     [Documentation]  IFS-13073
     When the user navigates to the page     ${server}/project-setup/project/${thirdPartyProjId}/finance-check/eligibility
     Then the user should see the element    jQuery = th:contains("Project duration") +th:contains("Total costs")+th:contains("Funding sought (£)")+th:contains("Contribution to project (%)")+th:contains("Contribution to project (£)")+th:contains("Contributions in kind (£)")
