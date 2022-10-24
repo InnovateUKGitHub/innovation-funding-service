@@ -489,7 +489,83 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
         GenericQuestionReadOnlyViewModel viewModel = populator.populate(question, data, settings);
 
         assertNotNull(viewModel);
+        assertTrue(viewModel.isComplete());
+        assertEquals("GenericQuestionAnswerRowReadOnlyViewModel should be populated with true", "Complete", viewModel.getAnswers().get(0).getAnswer());
+    }
+    @Test
+    public void populateImpactManagementApplicationWithIncompleteAndCompleteStatus() {
+        Long questionId = 1L;
+
+        ApplicationExpressionOfInterestConfigResource applicationExpressionOfInterestConfig = newApplicationExpressionOfInterestConfigResource()
+                .withEnabledForExpressionOfInterest(false)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withResearchCategory(newResearchCategoryResource()
+                        .withName("Research category")
+                        .build())
+                .withApplicationExpressionOfInterestConfigResource(applicationExpressionOfInterestConfig)
+                .build();
+        CompetitionResource competition = newCompetitionResource()
+                .build();
+        QuestionResource question = newQuestionResource()
+                .withId(questionId)
+                .withMultipleStatuses(true)
+                .withShortName("Question short name 1")
+                .withQuestionSetupType(QuestionSetupType.IMPACT_MANAGEMENT_SURVEY)
+                .withEnabledForPreRegistration(false)
+                .build();
+
+
+        UserResource userResource = newUserResource().build();
+        UserResource userResource2 = newUserResource().build();
+        List<ProcessRoleResource> processRoleResources = newProcessRoleResource()
+                .withOrganisation(1L,2L)
+                .withUserId(userResource.getId(),userResource2.getId())
+                .withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR)
+                .build(2);
+
+
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, userResource,
+                processRoleResources, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), Optional.empty());
+
+        ApplicationReadOnlySettings settings = defaultSettings()
+                .setIncludeAllAssessorFeedback(true)
+                .setIncludeQuestionNumber(true);
+
+
+        OrganisationResource organisation = new OrganisationResource();
+        organisation.setName("A2");
+        organisation.setId(1L);
+
+        OrganisationResource organisation2 = new OrganisationResource();
+        organisation2.setName("A4");
+        organisation2.setId(2L);
+
+        when(organisationRestService.getOrganisationById(1L)).thenReturn(restSuccess(organisation));
+        when(organisationRestService.getOrganisationById(2L)).thenReturn(restSuccess(organisation2));
+
+        QuestionStatusResource status = new QuestionStatusResource();
+        status.setQuestion(question.getId());
+        status.setApplication(application.getId());
+        status.setId(1L);
+        status.setMarkedAsComplete(true);
+
+        QuestionStatusResource status2 = new QuestionStatusResource();
+        status2.setQuestion(question.getId());
+        status2.setApplication(application.getId());
+        status2.setId(2L);
+        status2.setMarkedAsComplete(false);
+
+
+        when(questionStatusRestService.findByQuestionAndApplicationAndOrganisation(questionId, application.getId(), organisation.getId())).thenReturn(restSuccess(Lists.newArrayList(status)));
+        when(questionStatusRestService.findByQuestionAndApplicationAndOrganisation(questionId, application.getId(), organisation2.getId())).thenReturn(restSuccess(Lists.newArrayList(status2)));
+
+        GenericQuestionReadOnlyViewModel viewModel = populator.populate(question, data, settings);
+
+        assertNotNull(viewModel);
         assertFalse(viewModel.isComplete());
         assertEquals("GenericQuestionAnswerRowReadOnlyViewModel should be populated with true", "Complete", viewModel.getAnswers().get(0).getAnswer());
+        assertEquals("GenericQuestionAnswerRowReadOnlyViewModel should be populated with false", "Incomplete", viewModel.getAnswers().get(1).getAnswer());
     }
 }

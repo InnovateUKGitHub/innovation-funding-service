@@ -41,8 +41,9 @@
 
                     <th:block th:if="${model.hasAnswerNotMarkedAsComplete()}">
                         <div class="warning-alert">
-                            <p class="govuk-body">The following organisations have not yet marked this question as
-                                complete:</p>
+                            <p class="govuk-body"  th:if="${model.isImpactManagementQuestion()}">These organisations have not completed project impact survey:</p>
+                            <p class="govuk-body"  th:unless="${model.isImpactManagementQuestion()}">The following organisations have not yet marked this question as complete:</p>
+
                             <ul class="govuk-list govuk-list--bullet">
                                 <th:block
                                         th:each="nonMarkedAsCompletePartner : ${model.nonMarkedAsCompletePartners}">

@@ -10,12 +10,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyViewModel {
-
+    private final List<QuestionSetupType> eligibleForOverAllStatus = List.of(QuestionSetupType.IMPACT_MANAGEMENT_SURVEY);
     private final String displayName;
     private final String question;
     private final boolean multipleStatuses;
     private final String answer;
-    private final List<GenericQuestionAnswerRowReadOnlyViewModel>  answers;
+    private final List<GenericQuestionAnswerRowReadOnlyViewModel> answers;
     private final List<ApplicationHorizonWorkProgrammeResource> workProgrammeAnswers;
     private final boolean statusDetailPresent;
     private final List<GenericQuestionFileViewModel> appendices;
@@ -74,9 +74,13 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
         this.isWorkProgrammeQuestionMarkedAsComplete = isWorkProgrammeQuestionMarkedAsComplete;
     }
 
-    public int getInScope() { return inScope; }
+    public int getInScope() {
+        return inScope;
+    }
 
-    public int getTotalScope() { return totalScope; }
+    public int getTotalScope() {
+        return totalScope;
+    }
 
     public String getDisplayName() {
         return displayName;
@@ -140,6 +144,18 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     }
 
     @Override
+    public boolean isComplete() {
+        return handleOverallState();
+
+    }
+
+    private boolean handleOverallState() {
+        if (eligibleForOverAllStatus.contains(QuestionSetupType.IMPACT_MANAGEMENT_SURVEY) && questionResource.hasMultipleStatuses()) {
+            return !hasAnswerNotMarkedAsComplete();
+        } else return super.isComplete();
+    }
+
+    @Override
     public String getFragment() {
         return "generic";
     }
@@ -149,7 +165,9 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     }
 
     @Override
-    public boolean hasScore() { return !scores.isEmpty(); }
+    public boolean hasScore() {
+        return !scores.isEmpty();
+    }
 
     public boolean hasScope() {
         return hasScope;
@@ -159,9 +177,13 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
         return hasFeedback() && hasScore();
     }
 
-    public boolean isLoanPartBEnabled() { return isLoanPartBEnabled; }
+    public boolean isLoanPartBEnabled() {
+        return isLoanPartBEnabled;
+    }
 
-    public QuestionResource getQuestionResource() { return questionResource; }
+    public QuestionResource getQuestionResource() {
+        return questionResource;
+    }
 
     public boolean isHecpCompetition() {
         return isHecpCompetition;
@@ -176,7 +198,7 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     }
 
     public int getAssessorMaximumScore() {
-        if(!hasScore()) {
+        if (!hasScore()) {
             return 0;
         }
         return questionResource.getAssessorMaximumScore();
@@ -184,7 +206,7 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     
     public BigDecimal getAverageScore() {
         BigDecimal totalScore = BigDecimal.ZERO;
-        for (int i = 0; i < scores.size(); i++){
+        for (int i = 0; i < scores.size(); i++) {
             totalScore = totalScore.add(scores.get(i));
         };
 
