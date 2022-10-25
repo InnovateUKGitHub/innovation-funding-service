@@ -25,7 +25,7 @@ server:
 spring:
     datasource:
         password: password
-        url: jdbc:mysql://ifs-database:3306/ifs?useLegacyDatetimeCode=false&serverTimezone=UTC
+        url: jdbc:mysql://ifs-database:3306/ifs?useLegacyDatetimeCode=false&serverTimezone=UTC&permitMysqlScheme
         username: root
     flyway:
         enabled: false
@@ -37,5 +37,5 @@ spring:
                     user:
                         uuid: c0d02979-e66e-11e7-ac43-0242ac120002
         table: schema_version
-        url: jdbc:mysql://ifs-database:3306/ifs?useMysqlMetadata=true
+        url: jdbc:mysql://ifs-database:3306/ifs?useMysqlMetadata=true&permitMysqlScheme
         user: root
