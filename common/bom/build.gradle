@@ -27,7 +27,7 @@ dependencies {
         api("net.logstash.logback:logstash-logback-encoder:6.6")
 
         // only used in -test modules
-        api("com.opencsv:opencsv:5.5.2")
+        api("com.opencsv:opencsv:5.7.1")
         api("net.sf.opencsv:opencsv:2.3")
 
         // version must match gradle-support/java.gradle
