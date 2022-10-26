@@ -322,14 +322,15 @@ spec:
               name: flyway-config
               key: FLYWAY_TABLE
         - name: JAVA_TOOL_OPTIONS
-          value: -Xms1500m -Xmx1500m -javaagent:/newrelic.jar
+          value: -Xms1250m -Xmx1250m -javaagent:/newrelic.jar
         - name: NEW_RELIC_APP_NAME
           value: 'ifs-$(NEW_RELIC_ENV)-data-service'
         ports:
           - containerPort: 8080
         resources:
           limits:
-            cpu: 2000m
+            cpu: 3000m
+            memory: 2000Mi
           requests:
-            cpu: 400m
-            memory: 1500M
+            cpu: 500m
+            memory: 1600Mi

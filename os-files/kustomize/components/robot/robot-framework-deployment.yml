@@ -36,9 +36,9 @@ spec:
               value: BAMBOO_TESTSUITE_VAR
           resources:
             limits:
-              cpu: 2000m
-              memory: 2000M
+              cpu: 1000m
+              memory: 700Mi
             requests:
-              cpu: 100m
-              memory: 400M
+              cpu: 250m
+              memory: 500Mi
 

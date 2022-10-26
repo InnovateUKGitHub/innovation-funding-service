@@ -106,6 +106,8 @@ spec:
             - containerPort: 9080
           resources:
             limits:
-              memory: 600Mi
+              cpu: 1000m
+              memory: 700Mi
             requests:
-              memory: 300Mi
+              cpu: 250m
+              memory: 500Mi
