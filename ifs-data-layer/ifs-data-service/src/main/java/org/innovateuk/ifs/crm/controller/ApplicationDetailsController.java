@@ -136,6 +136,7 @@ public class ApplicationDetailsController {
 
             String orgSize = Optional.ofNullable(applicationFinanceResource.getOrganisationSize()).map(OrganisationSize::getDescription).orElse(null);
             silOrganisationLocation.setOrganisationSize(orgSize);
+            silOrganisationLocation.setOrganisationType(org.getOrganisationTypeName());
             String internationalLoc = Optional.ofNullable(applicationFinanceResource.getInternationalLocation()).orElse(null);
             silOrganisationLocation.setInternationalLocation(internationalLoc);
             silOrganisationLocation.setWorkPostcode(applicationFinanceResource.getWorkPostcode());
@@ -150,6 +151,8 @@ public class ApplicationDetailsController {
         silIMApplicationLocationInfo.setApplicationName(applicationResource.getName());
         LocalDate appStartDate = Optional.ofNullable(applicationResource.getStartDate()).orElse(null);
         silIMApplicationLocationInfo.setApplicationStartDate(appStartDate != null ? appStartDate.atStartOfDay(ZoneId.systemDefault()) : null);
+
+        silIMApplicationLocationInfo.setApplicationSubmittedDate(applicationResource.getSubmittedDate());
 
         CompetitionResource competitionResource = applicationService.
                 getCompetitionByApplicationId(applicationId).getSuccess();
