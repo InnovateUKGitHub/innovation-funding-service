@@ -506,14 +506,49 @@ Project is automatically sent to ACC if set up for the competition
     When the user refreshes until element appears on page   id = dashboard-link-LIVE_PROJECTS_USER
     Then the user should see the element                    id = dashboard-link-LIVE_PROJECTS_USER
 
-IFS Expert user can reset GOL in project setup
-    [Documentation]  IFS-9611
+SuperAdmin user can reset GOL in project setup
+    [Documentation]  IFS-12952
     [Setup]  Requesting Project ID of this Project
     Given Log in as a different user                    &{superAdminCredentials}
     When the user navigates to the page                 ${server}/project-setup-management/project/${HighSpeedProjectID}/grant-offer-letter/send
-    And the expert user resets the GOL
+    And SuperAdmin resets the GOL
     Then the user should see the element                jQuery = h2:contains("Grant offer letter upload") +* p:contains("No files have been uploaded yet.")
-    
+
+SuperAdmin uploads the GOL and sends Grand offer letter
+    [Documentation]  IFS-12952
+    Given SuperAdmin uploads the GOL
+    And the user selects the checkbox                 confirmation
+    And the user clicks the button/link               id = send-gol
+    And the user clicks the button/link               jQuery = .modal-accept-send-gol .govuk-button:contains("Send grant offer letter")
+    And the user should not see the element           css = [name = "removeGrantOfferLetterClicked"]
+    Then the user should see the element              jQuery = a:contains("Reset grant offer letter")
+
+PM uploads the signed offer letter
+    [Documentation]  IFS-12952
+    Given Log in as a different user                 &{Research_lead_applicant_credentials}
+    When the user clicks the button/link             link = ${HighSpeedProjectName}
+    Then the user should see the element             css = li.require-action:last-of-type
+    When the user clicks the button/link             link = Grant offer letter
+    Then the user should see the element             jQuery = p:contains("The grant offer letter (GOL) has been created using the information provided during project setup.")
+    And the user should see the element              jQuery = label:contains(Upload)
+    When the user uploads a file                      signedGrantOfferLetter    ${valid_pdf}
+    And the user clicks the button/link              css = .govuk-button[data-js-modal="modal-confirm-grant-offer-letter"]
+    And the user clicks the button/link              id = submit-gol-for-review
+    Then the user should see the element             jQuery = li:contains("Grant offer letter") .status-waiting
+
+SuperAdmin user can reject and reset GOL in project setup
+    [Documentation]  IFS-12952
+    [Setup]  Requesting Project ID of this Project
+    Given Log in as a different user                     &{superAdminCredentials}
+    When the user navigates to the page                  ${server}/project-setup-management/project/${HighSpeedProjectID}/grant-offer-letter/send
+    And the user selects the radio button                REJECTED  rejectGOL
+    And the user enters text to a text field             id = gol-reject-reason   Rejected
+    And the user clicks the button/link                  id = submit-button
+    And the user clicks the button/link                  jQuery = button:contains("Reject signed grant offer letter")
+    And the user should see the element                  jQuery = .warning-alert p:contains("These documents have been reviewed and rejected. We have returned them to the Project Manager.")
+    SuperAdmin resets the GOL
+    And the user should not see the element              jQuery = .warning-alert p:contains("These documents have been reviewed and rejected. We have returned them to the Project Manager.")
+
 *** Keywords ***
 the user uploads a file
     [Arguments]  ${name}  ${file}
@@ -524,18 +559,18 @@ Requesting Project ID of this Project
     ${HighSpeedProjectID} =  get project id by name   ${HighSpeedProjectName}
     Set suite variable    ${HighSpeedProjectID}
 
-the expert user resets the GOL
+SuperAdmin resets the GOL
     the user clicks the button/link         jQuery = a:contains("Reset grant offer letter")
     the user clicks the button/link         jQuery = button:contains("Reset grant offer letter")
 
-the expert user uploads the GOL
+SuperAdmin uploads the GOL
     the user navigates to the page     ${server}/project-setup-management/project/${HighSpeedProjectID}/grant-offer-letter/send
     the user uploads the file          grantOfferLetter  ${gol_pdf}
     the user should see the element    jQuery = a:contains("GOL_template.pdf (opens in a new window)")
     #horrible hack but we need to wait for virus scanning
     sleep  5s
 
-the IFS expert user rejects the GOL
+SuperAdmin rejects the GOL
     [Arguments]  ${projectID}
     log in as a different user            &{ifs_expert_user_credentials}
     the user navigates to the page        ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send

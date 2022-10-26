@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.util;
 
-import org.apache.commons.text.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Safelist;
 
 import static java.util.Optional.ofNullable;
+import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 import static org.apache.commons.lang3.StringUtils.stripToNull;
 
 /**
@@ -47,7 +47,7 @@ public final class StringFunctions {
      * @return the given content with characters escaped by HTML entities and line breaks replaced with HTML line break elements.
      */
     public static String plainTextToHtml(String content) {
-        String escaped = StringEscapeUtils.escapeHtml4(content);
+        String escaped = escapeHtml4(content);
         if (escaped != null) {
             return escaped.replaceAll("\\R", "<br/>");
         }

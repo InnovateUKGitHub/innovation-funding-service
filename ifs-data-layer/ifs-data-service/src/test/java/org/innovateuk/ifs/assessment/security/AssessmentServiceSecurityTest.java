@@ -219,6 +219,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         long assessmentId = 1L;
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.unsubmitAssessment(assessmentId),
+                IFS_ADMINISTRATOR,
                 SUPER_ADMIN_USER
         );
     }

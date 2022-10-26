@@ -22,7 +22,7 @@ spring:
   application:
     name: IFS Finance Data Service
   datasource:
-    url: jdbc:mysql://ifs-database:3306/ifs_finance
+    url: jdbc:mysql://ifs-database:3306/ifs_finance?permitMysqlScheme
     username: root
     password: password
     test-on-borrow: true

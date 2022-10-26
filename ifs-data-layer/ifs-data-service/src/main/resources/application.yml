@@ -333,13 +333,20 @@ spring:
         driver-class-name: org.mariadb.jdbc.Driver
         password: password
         test-on-borrow: true
-        url: jdbc:mysql://ifs-database:3306/ifs
+        url: jdbc:mysql://ifs-database:3306/ifs?permitMysqlScheme
         username: root
         validation-query: SELECT 1
     flyway:
-        check-location: false
         driver-class-name: org.mariadb.jdbc.Driver
         enabled: true
+        table: schema_version
+        locations: ['classpath:db/migration', 'classpath:db/reference', 'classpath:db/setup', 'classpath:db/webtest']
+        url: jdbc:mysql://ifs-database:3306/ifs?permitMysqlScheme
+        user: root
+        password: password
+        placeholders: ['ifs.system.user.uuid': 'c0d02979-e66e-11e7-ac43-0242ac120002']
+        baseline-on-migrate: false
+        schemas: ifs
     jpa:
         database-platform: org.hibernate.dialect.MySQL57Dialect
         generate-ddl: false

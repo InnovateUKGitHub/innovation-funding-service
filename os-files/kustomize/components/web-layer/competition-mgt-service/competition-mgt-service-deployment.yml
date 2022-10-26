@@ -132,8 +132,13 @@ spec:
               configMapKeyRef:
                 name: feature-toggle-config
                 key: IFS_KTP_AKT_ENABLED
+          - name: IFS_EXPRESSION_OF_INTEREST_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: feature-toggle-config
+                key: IFS_EXPRESSION_OF_INTEREST_ENABLED
           - name: JAVA_TOOL_OPTIONS
-            value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
+            value: -Xms400m -Xmx400m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
             value: 'ifs-$(NEW_RELIC_ENV)-competition-mgt-service'
         ports:
@@ -141,6 +146,7 @@ spec:
         resources:
           limits:
             cpu: 1000m
+            memory: 700Mi
           requests:
-            cpu: 100m
-            memory: 1G
+            cpu: 250m
+            memory: 500Mi

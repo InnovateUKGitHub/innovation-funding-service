@@ -4,6 +4,7 @@ import org.innovateuk.ifs.applicant.resource.dashboard.*;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationEoiEvidenceResponseRepository;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceState;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -28,6 +29,7 @@ import static org.innovateuk.ifs.applicant.resource.dashboard.ApplicantDashboard
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardInProgressRowResource.DashboardApplicationInProgressResourceBuilder;
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardInSetupRowResource.DashboardInSetupRowResourceBuilder.aDashboardInSetupRowResource;
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.*;
+import static org.innovateuk.ifs.application.resource.ApplicationEoiEvidenceState.SUBMITTED;
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE_INFORMED;
 import static org.innovateuk.ifs.application.resource.ApplicationState.inProgressStates;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -50,6 +52,9 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
     private ApplicationRepository applicationRepository;
     @Autowired
     private ApplicationEoiEvidenceResponseRepository applicationEoiEvidenceResponseRepository;
+
+    @Autowired
+    private ApplicationEoiEvidenceResponseService applicationEoiEvidenceResponseService;
 
 
     @Override
@@ -174,15 +179,18 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
                 .filter(pr -> pr.getUser().getId().equals(userId))
                 .findFirst();
         boolean invitedToInterview = interviewAssignmentService.isApplicationAssigned(application.getId()).getSuccess();
-        Boolean evidenceUploaded = null;
+        Boolean evidenceUploadedAndSubmittedForReview = null;
 
         if (application.getCompetition().isEnabledForPreRegistration()
                 && application.getCompetition().isEoiEvidenceRequired()
                 && application.isEnabledForExpressionOfInterest()) {
 
-            evidenceUploaded = applicationEoiEvidenceResponseRepository
+            boolean evidenceUploaded = applicationEoiEvidenceResponseRepository
                     .findOneByApplicationId(application.getId())
                     .isPresent();
+
+            ApplicationEoiEvidenceState applicationEoiEvidenceState = getApplicationEoiEvidenceState(application.getId());
+            evidenceUploadedAndSubmittedForReview = evidenceUploaded && applicationEoiEvidenceState == SUBMITTED;
         }
 
 
@@ -203,8 +211,12 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
                 .withShowReopenLink(showReopenLinkVisible(application, userId))
                 .withAlwaysOpen(application.getCompetition().isAlwaysOpen())
                 .withExpressionOfInterest(application.isEnabledForExpressionOfInterest())
-                .withEvidenceUploaded(evidenceUploaded)
+                .withEvidenceUploadedAndSubmittedForReview(evidenceUploadedAndSubmittedForReview)
                 .build();
+    }
+
+    private ApplicationEoiEvidenceState getApplicationEoiEvidenceState(long applicationId) {
+        return applicationEoiEvidenceResponseService.getApplicationEoiEvidenceState(applicationId).getSuccess().orElse(null);
     }
 
     private DashboardEuGrantTransferRowResource toEuGrantResource(Application application, long userId) {

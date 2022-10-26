@@ -25,6 +25,9 @@ public class DatabaseTestHelper {
     @Value("${spring.flyway.password}")
     private String databasePassword;
 
+    @Value("${spring.flyway.schemas}")
+    private String databaseSchemas;
+
     /**
      * Assert that no database changes occur during the running of the given action
      */
@@ -60,7 +63,7 @@ public class DatabaseTestHelper {
     private String getDatabaseContents() throws SQLException {
         Connection connection = DriverManager.getConnection(databaseUrl, databaseUser, databasePassword);
         DatabaseMetaData schemaMetadata = connection.getMetaData();
-        ResultSet schemaResults = schemaMetadata.getTables(null, null, "%", null);
+        ResultSet schemaResults = schemaMetadata.getTables(databaseSchemas, null, "%", null);
 
         String schemaAsString = "";
 

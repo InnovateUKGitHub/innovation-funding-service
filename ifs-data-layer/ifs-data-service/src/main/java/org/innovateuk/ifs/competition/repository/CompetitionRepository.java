@@ -25,16 +25,16 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     String LIVE_QUERY_WHERE_CLAUSE =
             "WHERE CURRENT_TIMESTAMP >= " +
-            "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) " +
-            "AND NOT EXISTS " +
-            "(SELECT m.date FROM Milestone m WHERE (m.type = 'FEEDBACK_RELEASED') AND m.competition.id = c.id) " +
-            "AND NOT EXISTS " +
-            "(SELECT m.date FROM Milestone m WHERE m.type = 'SUBMISSION_DATE' " +
+                    "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) " +
+                    "AND NOT EXISTS " +
+                    "(SELECT m.date FROM Milestone m WHERE (m.type = 'FEEDBACK_RELEASED') AND m.competition.id = c.id) " +
+                    "AND NOT EXISTS " +
+                    "(SELECT m.date FROM Milestone m WHERE m.type = 'SUBMISSION_DATE' " +
                     "AND c.completionStage = org.innovateuk.ifs.competition.resource.CompetitionCompletionStage.COMPETITION_CLOSE " +
                     "AND m.date <= CURRENT_TIMESTAMP " +
                     "AND m.competition.id = c.id) " +
-            "AND " +
-            "c.setupComplete = TRUE AND c.nonIfs = FALSE";
+                    "AND " +
+                    "c.setupComplete = TRUE AND c.nonIfs = FALSE";
 
 
     /*  Filters competitions to those with at least one in-flight project*/
@@ -58,7 +58,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     /* Filters competitions to those in feedback released state */
     String PREVIOUS_WHERE_CLAUSE = "WHERE " +
-            "( " + PREVIOUS_PROJECT_CLAUSE +  " OR " + COMPETITION_CLOSE_CLAUSE + " OR " +
+            "( " + PREVIOUS_PROJECT_CLAUSE + " OR " + COMPETITION_CLOSE_CLAUSE + " OR " +
             "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id)) AND " +
             "c.setupComplete = TRUE AND c.nonIfs = FALSE";
 
@@ -150,7 +150,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "    SELECT p.thread.id, MAX(p.createdOn) " +
             "    FROM Post p " +
             "    WHERE p.thread.id = t.id " +
-            "    GROUP BY p.thread.id) "  +
+            "    GROUP BY p.thread.id) " +
             "AND NOT EXISTS (SELECT id FROM SpendProfileProcess sp WHERE sp.target.id = pr.id AND sp.event != 'project-created') ";
 
     String COUNT_OPEN_QUERIES = "SELECT COUNT(DISTINCT t.classPk) " +
@@ -175,7 +175,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "ORDER BY pr.application.id, o.name";
 
     String GET_PENDING_SPEND_PROFILES_CRITERIA =
-                    " from project p, application a, competition c, process pp " +
+            " from project p, application a, competition c, process pp " +
                     " where c.id = :competitionId " +
                     " and a.competition = c.id " +
                     " and p.application_id = a.id " +
@@ -184,66 +184,66 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
                     // where all Viability is either Approved or Not Required
                     " and not exists (select v.id from process v " +
-                                    " where v.process_type = 'ViabilityProcess' " +
-                                    " and v.target_id in (select po.id from partner_organisation po " +
-                                                        " where po.project_id = p.id " +
-                                                        " ) " +
-                                    " and v.event = 'project-created' " +
-                                    " ) " +
+                    " where v.process_type = 'ViabilityProcess' " +
+                    " and v.target_id in (select po.id from partner_organisation po " +
+                    " where po.project_id = p.id " +
+                    " ) " +
+                    " and v.event = 'project-created' " +
+                    " ) " +
 
                     // and where all Eligibility is either Approved or Not Required
                     " and not exists (select e.id from process e " +
-                                    " where e.process_type = 'EligibilityProcess' " +
-                                    " and e.target_id in (select po.id from partner_organisation po " +
-                                                        " where po.project_id = p.id " +
-                                                        " ) " +
-                                    " and e.event = 'project-created' " +
-                                    " ) " +
+                    " where e.process_type = 'EligibilityProcess' " +
+                    " and e.target_id in (select po.id from partner_organisation po " +
+                    " where po.project_id = p.id " +
+                    " ) " +
+                    " and e.event = 'project-created' " +
+                    " ) " +
 
                     // and where Spend Profile is not yet generated
                     " and not exists (select sp.id from spend_profile sp " +
-                                    " where sp.project_id = p.id) " +
+                    " where sp.project_id = p.id) " +
                     " and p.id not in " +
                     " ( " +
-                        " select result.project_id " +
-                        " from " +
-                        " ( " +
-                                // This is selection of all organisations which are seeking funding. In other words,
-                                // whose grant claim percentage is > 0
-                                " select po.* " +
-                                " from project p, partner_organisation po, application_finance af, finance_row fr " +
-                                " where po.project_id = p.id " +
-                                " and af.application_id = p.application_id " +
-                                " and af.organisation_id = po.organisation_id " +
-                                " and fr.target_id = af.id " +
-                                " and fr.row_type = 'ApplicationFinanceRow' " +
-                                " and fr.name = 'grant-claim' " +
-                                " and fr.quantity > 0 " +
+                    " select result.project_id " +
+                    " from " +
+                    " ( " +
+                    // This is selection of all organisations which are seeking funding. In other words,
+                    // whose grant claim percentage is > 0
+                    " select po.* " +
+                    " from project p, partner_organisation po, application_finance af, finance_row fr " +
+                    " where po.project_id = p.id " +
+                    " and af.application_id = p.application_id " +
+                    " and af.organisation_id = po.organisation_id " +
+                    " and fr.target_id = af.id " +
+                    " and fr.row_type = 'ApplicationFinanceRow' " +
+                    " and fr.name = 'grant-claim' " +
+                    " and fr.quantity > 0 " +
 
-                                // and this has to be combined with
-                                " union " +
+                    // and this has to be combined with
+                    " union " +
 
-                                // This is a selection of all organisations which are Research Organisations.
-                                // Research Organisations always seek funding and their 'seeking funding' nature is not
-                                // determined by the grant claim percentage used in the previous query.
-                                " select po.* " +
-                                " from project p, partner_organisation po, organisation o, organisation_type ot " +
-                                " where po.project_id = p.id " +
-                                " and o.id = po.organisation_id " +
-                                " and ot.id = o.organisation_type_id " +
-                                " and ot.name = 'Research' " +
-                        " ) as result " +
+                    // This is a selection of all organisations which are Research Organisations.
+                    // Research Organisations always seek funding and their 'seeking funding' nature is not
+                    // determined by the grant claim percentage used in the previous query.
+                    " select po.* " +
+                    " from project p, partner_organisation po, organisation o, organisation_type ot " +
+                    " where po.project_id = p.id " +
+                    " and o.id = po.organisation_id " +
+                    " and ot.id = o.organisation_type_id " +
+                    " and ot.name = 'Research' " +
+                    " ) as result " +
 
-                        // For the above selection of organisations, bank details are either expected to be manually approved
-                        // or automatically approved via Experian
-                        " where not exists (select bd.id " +
-                                            " from bank_details bd " +
-                                            " where bd.project_id = result.project_id " +
-                                            " and bd.organisation_id = result.organisation_id " +
-                                            " and (bd.manual_approval = TRUE " +
-                                                " or (bd.verified = TRUE and bd.registration_number_matched = TRUE and bd.company_name_score > 6 and bd.address_score > 6) " +
-                                                " ) " +
-                                         " ) " +
+                    // For the above selection of organisations, bank details are either expected to be manually approved
+                    // or automatically approved via Experian
+                    " where not exists (select bd.id " +
+                    " from bank_details bd " +
+                    " where bd.project_id = result.project_id " +
+                    " and bd.organisation_id = result.organisation_id " +
+                    " and (bd.manual_approval = TRUE " +
+                    " or (bd.verified = TRUE and bd.registration_number_matched = TRUE and bd.company_name_score > 6 and bd.address_score > 6) " +
+                    " ) " +
+                    " ) " +
                     " ) ";
 
 

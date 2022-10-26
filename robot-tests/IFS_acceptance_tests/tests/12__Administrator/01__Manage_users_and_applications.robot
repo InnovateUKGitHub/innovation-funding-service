@@ -478,7 +478,6 @@ Comp Admin should be able to see the details of assessor with new role profile o
     When the user clicks the button/link        link = View details
     Then the user should see the element        jQuery = td:contains("Knowledge transfer adviser") ~ td:contains("Active")
     And the user should not see the element     jQuery = button:contains("Save and return")
-
 *** Keywords ***
 the KTA should see all relevant links on assessment dashboard
     the user should see the element     link = your skills
