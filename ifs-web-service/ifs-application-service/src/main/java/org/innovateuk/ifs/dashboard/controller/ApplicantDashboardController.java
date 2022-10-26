@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.dashboard.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.log4j.Log4j2;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.dashboard.populator.ApplicantDashboardPopulator;
@@ -14,10 +13,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.Optional;
 
 import static java.lang.String.format;
@@ -31,9 +32,9 @@ import static java.lang.String.format;
 @SecuredBySpring(value = "Controller", description = "Each applicant has permission to view their own dashboard",
         securedType = ApplicantDashboardController.class)
 @PreAuthorize("hasAuthority('applicant')")
+@Log4j2
 public class ApplicantDashboardController {
 
-    private static final Log LOG = LogFactory.getLog(ApplicantDashboardController.class);
 
     @Autowired
     private ApplicantDashboardPopulator applicantDashboardPopulator;
@@ -74,8 +75,8 @@ public class ApplicantDashboardController {
     @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/loansCommunity")
     public String loansToApplicationsOverviewPage(Model model,
-                            UserResource user,
-                            HttpServletRequest request) {
+                                                  UserResource user,
+                                                  HttpServletRequest request) {
 
         if (isLoanPartBEnabled) {
             Optional<String> url = pageHistoryService.getApplicationOverviewPage(request)
@@ -83,8 +84,21 @@ public class ApplicantDashboardController {
             if (url.isPresent()) {
                 return "redirect:" + url.get();
             }
-            LOG.error("Application overview redirection failed due to URL issue" + url);
+            log.error("Application overview redirection failed due to URL issue" + url);
         }
-      return dashboard(model, user);
+        return dashboard(model, user);
+    }
+
+    @SecuredBySpring(value = "GENERIC_APPLICATION_OVERVIEW_PAGE", description = "external endpoint to redirect user to application overview page ")
+    @PreAuthorize("hasAuthority('applicant')")
+    @GetMapping("/overview")
+    public String impactToApplicationsOverviewPage(Model model,
+                                                   UserResource user,
+                                                   HttpServletRequest request) {
+
+        log.info("Received redirection request from host:" + request.getRemoteHost());
+        Optional<String> url = pageHistoryService.getApplicationOverviewPage(request)
+                .map(PageHistory::buildUrl);
+        return url.map(s -> "redirect:" + s).orElseGet(() -> dashboard(model, user));
     }
 }

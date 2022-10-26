@@ -120,12 +120,28 @@ public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVC
                 .andExpect(view().name("redirect:/application/1"));
     }
 
-
     @Test
     public void redirectToApplicantDashboardWhenInCorrectURLReturns() throws Exception {
         setLoansFeatureToggleAndRedirectionURL(null);
 
         mockMvc.perform(get("/applicant/dashboard/loansCommunity"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("applicant-dashboard"));
+    }
+
+    @Test
+    public void redirectToApplicationOverviewWithCorrectURLReturnsGeneric() throws Exception {
+        setRedirectionURL("/application/1");
+
+        mockMvc.perform(get("/applicant/dashboard/overview"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/application/1"));
+    }
+    @Test
+    public void redirectToApplicationOverviewWithIncorrectURLReturnsGeneric() throws Exception {
+        setRedirectionURL(null);
+
+        mockMvc.perform(get("/applicant/dashboard/overview"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("applicant-dashboard"));
     }
@@ -139,4 +155,10 @@ public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVC
         when(pageHistoryService.getApplicationOverviewPage(any())).thenReturn(Optional.of(new PageHistory(redirectURL)));
     }
 
+    private void setRedirectionURL(String redirectionURL) {
+        setLoggedInUser(applicant);
+        ApplicantDashboardViewModel viewModel = mock(ApplicantDashboardViewModel.class);
+        when(populator.populate(applicant.getId())).thenReturn(viewModel);
+        when(pageHistoryService.getApplicationOverviewPage(any())).thenReturn(Optional.of(new PageHistory(redirectionURL)));
+    }
 }
