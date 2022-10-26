@@ -93,7 +93,7 @@ spec:
                 name: web-config
                 key: IFS_WEB_BASEURL
           - name: JAVA_TOOL_OPTIONS
-            value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
+            value: -Xms400m -Xmx400m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
             value: 'ifs-$(NEW_RELIC_ENV)-assessment-service'
           - name: IFS_EDI_SALESFORCE_PAGE_URL
@@ -106,6 +106,7 @@ spec:
         resources:
           limits:
             cpu: 1000m
+            memory: 700Mi
           requests:
-            cpu: 100m
-            memory: 1G
+            cpu: 250m
+            memory: 500Mi

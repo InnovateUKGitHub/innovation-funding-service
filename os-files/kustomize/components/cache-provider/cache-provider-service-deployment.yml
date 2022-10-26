@@ -51,10 +51,12 @@ spec:
             - mountPath: /redis-master
               name: config
           resources:
-            requests:
-              memory: 50M
             limits:
-              memory: 100M
+              cpu: 250m
+              memory: 150Mi
+            requests:
+              cpu: 100m
+              memory: 50Mi
       volumes:
         - name: data
           emptyDir: {}
