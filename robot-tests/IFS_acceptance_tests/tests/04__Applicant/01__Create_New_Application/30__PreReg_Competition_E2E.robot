@@ -512,7 +512,6 @@ Existing user creates and submits new application for unsuccessful EOI journey
     the user completes the application details section                        ${unSuccessPreregAppName}  ${tomorrowday}  ${month}  ${nextyear}   23
     the applicant completes Application Team                                  COMPLETE  steve.smith@empire.com
     the user complete pre reg work programme
-#    the user is able to complete horizon grant agreement section
     the lead applicant fills all the questions and marks as complete(prereg)
     the user completes prereg project finances                                ${unSuccessPreregAppName}   no
     the user clicks the button/link                                           id = application-overview-submit-cta
