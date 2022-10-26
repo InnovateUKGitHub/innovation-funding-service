@@ -7,6 +7,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
+import org.innovateuk.ifs.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
+import org.innovateuk.ifs.financecheck.viewmodel.FinanceCheckOverviewViewModel;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.ProjectService;
@@ -19,6 +21,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.web.servlet.MvcResult;
+
+import java.util.Map;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -30,6 +35,8 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilde
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.project.financechecks.controller.ProjectFinanceChecksOverviewController.PROJECT_FINANCE_CHECKS_BASE_URL;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -84,10 +91,16 @@ public class ProjectFinanceChecksOverviewControllerTest extends BaseControllerMo
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
 
-        mockMvc.perform(get(PROJECT_FINANCE_CHECKS_BASE_URL, project.getId()))
+        MvcResult result = mockMvc.perform(get(PROJECT_FINANCE_CHECKS_BASE_URL, project.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/finance-checks-overview"))
                 .andReturn();
+
+        Map<String, Object> model = result.getModelAndView().getModel();
+
+        FinanceCheckOverviewViewModel viewModel = (FinanceCheckOverviewViewModel) model.get("model");
+
+        assertFalse(viewModel.isCompTypeOfgemAndFundingTypeThirdParty());
     }
 
     @Override

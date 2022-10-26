@@ -203,6 +203,8 @@ public class FinanceChecksViabilityController {
         Integer fundingSought = toZeroScaleInt(financesForOrganisation.getTotalFundingSought());
         Integer otherPublicSectorFunding = toZeroScaleInt(financesForOrganisation.getTotalOtherFunding());
         Integer contributionToProject = toZeroScaleInt(financesForOrganisation.getTotalContribution());
+        BigDecimal contributionToProjectPercentage = financesForOrganisation.getContributionToProjectPercentage();
+        BigDecimal contributionsInKind = financesForOrganisation.getTotalContributionsInKind();
 
         String companyRegistrationNumber = organisation.getCompaniesHouseNumber();
 
@@ -248,7 +250,10 @@ public class FinanceChecksViabilityController {
                 projectFinances,
                 resetableGolState,
                 user.hasAuthority(Authority.AUDITOR),
-                competition.isThirdPartyOfgem());
+                competition.isThirdPartyOfgem(),
+                competition.isCompTypeOfgemAndFundingTypeThirdParty(),
+                contributionToProjectPercentage,
+                contributionsInKind);
     }
 
     private String name(String firstName, String lastName) {

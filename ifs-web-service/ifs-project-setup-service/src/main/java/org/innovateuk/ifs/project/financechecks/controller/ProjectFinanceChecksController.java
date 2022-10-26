@@ -563,7 +563,8 @@ public class ProjectFinanceChecksController {
                 false,
                 false,
                 competition.isThirdPartyOfgem(),
-                competition.isHorizonEuropeGuarantee()));
+                competition.isHorizonEuropeGuarantee(),
+                competition.isCompTypeOfgemAndFundingTypeThirdParty()));
 
         model.addAttribute("eligibilityForm", eligibilityForm);
 

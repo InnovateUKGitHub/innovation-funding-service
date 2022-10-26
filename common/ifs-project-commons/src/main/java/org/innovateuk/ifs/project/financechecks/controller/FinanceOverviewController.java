@@ -107,7 +107,8 @@ public class FinanceOverviewController {
                 getExternalUser(loggedInUser),
                 getExternalUserLinkUrl(loggedInUser, projectId),
                 competition.isThirdPartyOfgem(),
-                competition.isHorizonEuropeGuarantee());
+                competition.isHorizonEuropeGuarantee(),
+                competition.isCompTypeOfgemAndFundingTypeThirdParty());
     }
 
     private ProjectFinanceOverviewViewModel getProjectFinanceOverviewViewModel(long projectId) {
