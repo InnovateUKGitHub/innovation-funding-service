@@ -21,12 +21,12 @@ ${evidenceSubmittedEmailSubject}                Evidence file submitted
 ${evidenceSubmittedEmailDescription}            You have successfully submitted your evidence file to Innovate UK’s ${hecpPreregCompName} competition.
 
 *** Test Cases ***
-Comp Admin creates a prereg competitionarden.pimenta@innovateuk.test
+Comp Admin creates a prereg competition
     [Documentation]  IFS-13025
     Given The user logs-in in new browser                    &{Comp_admin1_credentials}
     Then the competition admin creates prereg competition    ${BUSINESS_TYPE_ID}  ${hecpPreregCompName}  Pre Registration  ${compType_HESTA}  NOT_AID  HECP  Competition_close  no  50  false  single-or-collaborative
 
-Com admin can see readonly view of expression of intrest question selection
+Comp admin can see readonly view of expression of intrest question selection
     [Documentation]  IFS-13025
     [Setup]  Get competitions id and set it as suite variable     ${hecpPreregCompName}
     Given the user navigates to the page                          ${server}/management/competition/setup/${preregCompetitionId}/section/application/landing-page
@@ -51,7 +51,7 @@ Applicant can not view hidden question, section and subsection
     [Documentation]  IFS-13025
     Given log in as a different user                &{lead_applicant_credentials}
     When logged in user applies to competition      ${hecpPreregCompName}  1
-#    Then the user should not see the element        link = Participating Organisation project region
+    Then the user should not see the element        link = Participating Organisation project region
     And the user should not see the element         link = Award terms and conditions
     And the user should not see the element         jQuery = h2:contains("Terms and conditions")
     And the user should not see subsection          Your project location
