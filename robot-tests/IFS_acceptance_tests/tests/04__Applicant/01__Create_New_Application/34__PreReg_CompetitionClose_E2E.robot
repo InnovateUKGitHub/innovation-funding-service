@@ -294,14 +294,14 @@ Lead applicant completes remaining questions and submits full application
     Then the user should see the element                        jQuery = h2:contains("Application submitted")
     And the user reads his email                                steve.smith@empire.com  ${preregApplicationID}: Successful submission of application   You have successfully submitted an application for funding to ${hecpPreregCompName}.
 
-Internal user marks the full application as successful and sent a notification
-    [Documentation]  IFS-12380
-    Given Log in as a different user                                &{Comp_admin1_credentials}
-    And The user clicks the button/link                             link = ${hecpPreregCompName}
-    When the internal team mark the application as successful       ${hecpPreregAppName}   FUNDED
-    And the user clicks the button/link                             link = Competition
-    And the internal team notifies all applicants                   ${preregApplicationID}
-    Then the user reads his email                                   steve.smith@empire.com  Important message about your application '${hecpPreregAppName}' for the competition '${hecpPreregCompName}'  ${fullApplicationSuccessfulEmail}
+#Internal user marks the full application as successful and sent a notification
+#    [Documentation]  IFS-12380
+#    Given Log in as a different user                                &{Comp_admin1_credentials}
+#    And The user clicks the button/link                             link = ${hecpPreregCompName}
+#    When the internal team mark the application as successful       ${hecpPreregAppName}   FUNDED
+#    And the user clicks the button/link                             link = Competition
+#    And the internal team notifies all applicants                   ${preregApplicationID}
+#    Then the user reads his email                                   steve.smith@empire.com  Important message about your application '${hecpPreregAppName}' for the competition '${hecpPreregCompName}'  ${fullApplicationSuccessfulEmail}
 
 Auditor can view and download evidence file submitted
     [Documentation]  IFS-12523
