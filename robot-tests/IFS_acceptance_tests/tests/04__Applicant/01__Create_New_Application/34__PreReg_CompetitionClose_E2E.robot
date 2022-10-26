@@ -500,9 +500,9 @@ the internal team mark the application as successful
     the user clicks the button/link     css = [type="submit"][value="${decision}"]
 
 Update competition to have evidence required
-    execute sql string    INSERT INTO `ifs`.`competition_eoi_evidence_config` (`id`, `evidence_required`, `evidence_title`, `evidence_guidance`) VALUES ('50', 1, 'Eoi Evidence', 'upload eoi evidence');
-    execute sql string    UPDATE `ifs`.`competition` SET `competition_eoi_evidence_config_id` = '50' WHERE id = '${preregCompetitionId}';
-    execute sql string    INSERT INTO `ifs`.`eoi_evidence_config_file_type` (`id`, `competition_eoi_evidence_config_id`, `file_type_id`) VALUES ('40', '50', '1');
+    execute sql string    INSERT INTO `ifs`.`competition_eoi_evidence_config` (`id`, `evidence_required`, `evidence_title`, `evidence_guidance`) VALUES ('52', 1, 'Eoi Evidence', 'upload eoi evidence');
+    execute sql string    UPDATE `ifs`.`competition` SET `competition_eoi_evidence_config_id` = '52' WHERE id = '${preregCompetitionId}';
+    execute sql string    INSERT INTO `ifs`.`eoi_evidence_config_file_type` (`id`, `competition_eoi_evidence_config_id`, `file_type_id`) VALUES ('40', '52', '1');
 
 Partner applicant completes prereg project finances
     [Arguments]   ${application_title}  ${collaboratorEmail}  ${collaboratorPassword}
