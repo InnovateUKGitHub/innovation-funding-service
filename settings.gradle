@@ -1,3 +1,10 @@
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+    }
+}
+
 // Try and keep these in dependency order!
 
 // API - some is mixed in with resources etc. so this is more recent additions only
