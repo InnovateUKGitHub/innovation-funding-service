@@ -58,7 +58,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
     public GenericQuestionReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         Collection<FormInputResource> formInputs = data.getQuestionIdToApplicationFormInputs().get(question.getId());
         Optional<FormInputResource> answerInput = formInputs.stream().filter(formInput -> formInput.getType().equals(TEXTAREA)
-                || formInput.getType().equals(MULTIPLE_CHOICE))
+                        || formInput.getType().equals(MULTIPLE_CHOICE))
                 .findAny();
 
         Optional<FormInputResource> appendix = formInputs.stream().filter(formInput -> formInput.getType().equals(FILEUPLOAD))
@@ -111,7 +111,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
                 hasScope(data, question),
                 isLoanPartBEnabled,
                 isWorkProgrammeQuestionMarkedAsComplete(question, data.getApplicationId())
-            );
+        );
     }
 
     private Boolean isWorkProgrammeQuestionMarkedAsComplete(QuestionResource question, Long applicationId) {
@@ -163,9 +163,9 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
 
         boolean markedAsComplete = questionStatusesForOrg != null && questionStatusesForOrg.stream().anyMatch(status -> Boolean.TRUE.equals(status.getMarkedAsComplete()));
 
-        String answer = null;
+        String answer = question.getQuestionSetupType().equals(IMPACT_MANAGEMENT_SURVEY) ? (markedAsComplete ? "Complete" : "Incomplete") : null;
 
-        for (ProcessRoleResource pr: processRoles) {
+        for (ProcessRoleResource pr : processRoles) {
             if (answerInput.isPresent() && textResponses.isPresent()) {
                 Optional<FormInputResponseResource> respForPr = textResponses.get().stream().filter(resp -> resp.getUpdatedBy().equals(pr.getId())).findAny();
                 if (respForPr.isPresent()) {
