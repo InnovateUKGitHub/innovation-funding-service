@@ -147,7 +147,6 @@ Lead applicant completes the application sections
     And the user clicks the button/link                                             link = ${hecpPreregAppName}
     When the applicant completes Application Team                                   COMPLETE  steve.smith@empire.com
     And the user complete the work programme
-    And The user is able to complete horizon grant agreement section
     And the lead applicant fills all the questions and marks as complete(prereg)
     And the user completes prereg project finances                                  ${hecpPreregAppName}   no
     Then the user should see the element                                            jQuery = .progress:contains("100%")
@@ -513,7 +512,7 @@ Existing user creates and submits new application for unsuccessful EOI journey
     the user completes the application details section                        ${unSuccessPreregAppName}  ${tomorrowday}  ${month}  ${nextyear}   23
     the applicant completes Application Team                                  COMPLETE  steve.smith@empire.com
     the user complete pre reg work programme
-    the user is able to complete horizon grant agreement section
+#    the user is able to complete horizon grant agreement section
     the lead applicant fills all the questions and marks as complete(prereg)
     the user completes prereg project finances                                ${unSuccessPreregAppName}   no
     the user clicks the button/link                                           id = application-overview-submit-cta

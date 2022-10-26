@@ -70,21 +70,21 @@ Comp admin can select the competition type option Horizon Europe in Initial deta
 Comp admin can view Horizon Europe competition type in Initial details read only view
     [Documentation]  IFS-10688
     Given the user clicks the button/link    link = Initial details
-    Then the user can view Horizon Europe competition type in Initial details read only view
+    Then the user can view Horizon competition type in Initial details read only view
 
 Comp admin creates Horizon Europe competition
     [Documentation]  IFS-8751  IFS-11486
     Given the user clicks the button/link                            link = Back to competition details
-    Then the competition admin creates Horizon Europe competition    ${BUSINESS_TYPE_ID}  ${horizonCompetitionName}  ${compType_HORIZON_EUROPE}  ${compType_HORIZON_EUROPE}  STATE_AID  HECP  PROJECT_SETUP  no  50  false  single-or-collaborative
+    Then The Competition Admin Creates Horizon Competition           ${BUSINESS_TYPE_ID}  ${horizonCompetitionName}  ${compType_HORIZON_EUROPE}  ${compType_HORIZON_EUROPE}  STATE_AID  HECP  PROJECT_SETUP  no  50  false  single-or-collaborative
     [Teardown]  Get competition id and set open date to yesterday    ${horizonCompetitionName}
 
 the lead applicant can view answer yet to be provided when work programme question is incomplete in readonly view
     [Documentation]  IFS-11686
     Given the user logs out if they are logged in
-    And the user applys to the competition          tim   timmy   ${leadApplicantEmail}   ${horizonApplicationName}
-    When the user clicks the button/link            link = Review and submit
-    And the user clicks the button/link             jQuery = button:contains("Work programme")
-    Then the user should see the element            jQuery = p:contains("Answer yet to be provided")
+    And The User Applies To The Competition	          tim   timmy   ${leadApplicantEmail}   ${horizonApplicationName}
+    When the user clicks the button/link              link = Review and submit
+    And the user clicks the button/link               jQuery = button:contains("Work programme")
+    Then the user should see the element              jQuery = p:contains("Answer yet to be provided")
 
 lead applicant views work programme answers provided in review and submit page
     [Documentation]  IFS-11686  IFS-11791  IFS-11794
@@ -97,7 +97,6 @@ Lead applicant can view funding conversion tool in project costs
     [Documentation]  IFS-11508  IFS-11686  IFS-11791
     Given the user clicks the button/link                                       link = Application overview
     And the user completes the application research category                    Feasibility studies
-    And the user is able to complete horizon grant agreement section
     And the user should see Participating Organisation project region
     And the lead applicant fills all the questions and marks as complete(Hecp)
     And the user accept the competition terms and conditions                    Back to application overview
@@ -127,16 +126,16 @@ Applicant receives successful message of an application
 
 The Application Summary page must not include the Reopen Application link when the internal team mark the application as successful / unsuccessful
     [Documentation]  IFS-10697  IFS-11406  IFS-11486
-    When Log in as a different user                                                email=${leadApplicantEmail}   password=${short_password}
+    When Log in as a different user                                                   email=${leadApplicantEmail}   password=${short_password}
     Then the application summary page must not include the reopen application link
-    And the user should see the element                                             jQuery = h1:contains("Application status")
+    And the user should see the element                                               jQuery = h1:contains("Application status")
     And the user is presented with the Application Summary page
 
 Lead applicant receives email notifiction when internal user marks application unsuccessful
     [Documentation]  IFS-10695  IFS-11341  IFS-11486
     Given the user logs out if they are logged in
     And Requesting IDs of this competition                                          ${horizonCompetitionName}
-    And the user applys to the competition                                          barry   barrington   ${newLeadApplicantEmail}   ${newHorizonApplicationName}
+    And The User Applies To The Competition                                         barry   barrington   ${newLeadApplicantEmail}   ${newHorizonApplicationName}
     And the user successfully completes application
     And the user clicks the button/link                                             link = Your project finances
     And the user completes hecp project finances                                    ${horizonApplicationName}  no
@@ -175,9 +174,9 @@ Lead applicant views hecp related cost categoires in project setup finances
 
 Internal users can view workp programmes section in view application
     [Documentation]  IFS-11686
-    Given log in as a different user            &{internal_finance_credentials}
+    Given log in as a different user                               &{internal_finance_credentials}
     And Requesting Project ID of this Project
-    When the user navigates to the page         ${server}/management/competition/${competitionId}/application/${horizonApplicationID}
+    When the user navigates to the page                            ${server}/management/competition/${competitionId}/application/${horizonApplicationID}
     Then the user can see the read only view of work programme
 
 Internal users can edit the project costs
@@ -358,7 +357,6 @@ the user can see the read only view of work programme
 the user successfully completes application
     the user completes the application research category            Feasibility studies
     the user complete the work programmes
-    the user is able to complete horizon grant agreement section
     the lead applicant fills all the questions and marks as complete(Hecp)
     the user accept the competition terms and conditions            Back to application overview
 
@@ -380,7 +378,6 @@ the user successfully completes applications
     the applicant completes Application Team                        COMPLETE  ${email}
     the user completes the application research category            Feasibility studies
     the user complete the work programmes
-    The user is able to complete horizon grant agreement section
     the lead applicant fills all the questions and marks as complete(Hecp)
     the user accept the competition terms and conditions            Back to application overview
 
@@ -650,7 +647,7 @@ the user edit the spend profile mothly values
 
 the user reverted the edited values in spend profile
     the user clicks the button/link                 link = Edit spend profile
-    the user edit the spend profile monthly values   615  615  246  369  246  492  123
+    The User Edit The Spend Profile Mothly Values   615  615  246  369  246  492  123
 
 the user should see Participating Organisation project region
     the user clicks the button/link  jQuery = a:contains("Participating Organisation project region")
