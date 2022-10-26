@@ -41,8 +41,9 @@
 
                     <th:block th:if="${model.hasAnswerNotMarkedAsComplete()}">
                         <div class="warning-alert">
-                            <p class="govuk-body">The following organisations have not yet marked this question as
-                                complete:</p>
+                            <p class="govuk-body"  th:if="${model.isImpactManagementQuestion()}">These organisations have not completed the project impact survey:</p>
+                            <p class="govuk-body"  th:unless="${model.isImpactManagementQuestion()}">The following organisations have not yet marked this question as complete:</p>
+
                             <ul class="govuk-list govuk-list--bullet">
                                 <th:block
                                         th:each="nonMarkedAsCompletePartner : ${model.nonMarkedAsCompletePartners}">
@@ -51,7 +52,8 @@
                                     </li>
                                 </th:block>
                             </ul>
-                            <p class="govuk-body">This application cannot be submitted until all partners mark this
+                            <p class="govuk-body" th:if="${model.isImpactManagementQuestion()}">This application cannot be submitted until all partners complete the survey.</p>
+                            <p class="govuk-body" th:unless="${model.isImpactManagementQuestion()}">This application cannot be submitted until all partners mark this
                                 question as complete.</p>
                         </div>
                     </th:block>
@@ -61,7 +63,7 @@
                             <thead class="govuk-table__head">
                             <tr class="govuk-table__row">
                                 <th scope="col" class="govuk-table__header">Partner</th>
-                                <th scope="col" class="govuk-table__header">Answer</th>
+                                <th scope="col" class="govuk-table__header"   th:text="${model.isImpactManagementQuestion()?'Status' : 'Answer'}">Answer</th>
                             </tr>
                             </thead>
                             <tbody class="govuk-table__body">
