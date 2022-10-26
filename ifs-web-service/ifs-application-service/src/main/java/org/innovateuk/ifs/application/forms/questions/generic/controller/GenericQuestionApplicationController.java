@@ -41,6 +41,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -362,7 +363,7 @@ public class GenericQuestionApplicationController {
     }
 
     private void recordApplicationOverviewPageHistory(long applicationId, HttpServletRequest request, HttpServletResponse response, ApplicantQuestionResource question) {
-        if (eligibleForExternalRedirection.contains(question.getQuestion().getQuestionSetupType())) {
+        if (Objects.nonNull(question.getQuestion()) && eligibleForExternalRedirection.contains(question.getQuestion().getQuestionSetupType())) {
             pageHistoryService.recordApplicationOverviewPageHistory(request, response, APPLICATION_OVERVIEW_PAGE, "/application/" + applicationId);
         }
     }
