@@ -14,9 +14,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.ui.Model;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 import static java.lang.String.valueOf;
@@ -96,7 +97,7 @@ public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVC
         when(applicationRestService.hideApplication(applicationId, userId)).thenReturn(RestResult.restSuccess());
 
         mockMvc.perform(post("/applicant/dashboard")
-                .param("hide-application", valueOf(applicationId)))
+                        .param("hide-application", valueOf(applicationId)))
                 .andExpect(status().is3xxRedirection());
     }
 
@@ -111,6 +112,11 @@ public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVC
                 .andExpect(status().is3xxRedirection());
     }
 
+
+    /**
+     * TODO remove this test cases once {@link ApplicantDashboardController#loansToApplicationsOverviewPage(Model, UserResource, HttpServletRequest)}  is removed
+     */
+    @Deprecated
     @Test
     public void redirectToApplicationOverviewWhenCorrectURLReturns() throws Exception {
         setLoansFeatureToggleAndRedirectionURL("/application/1");
@@ -120,6 +126,10 @@ public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVC
                 .andExpect(view().name("redirect:/application/1"));
     }
 
+    /**
+     * TODO remove this test cases once {@link ApplicantDashboardController#loansToApplicationsOverviewPage(Model, UserResource, HttpServletRequest)}  is removed
+     */
+    @Deprecated
     @Test
     public void redirectToApplicantDashboardWhenInCorrectURLReturns() throws Exception {
         setLoansFeatureToggleAndRedirectionURL(null);
@@ -137,6 +147,7 @@ public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVC
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/application/1"));
     }
+
     @Test
     public void redirectToApplicationOverviewWithIncorrectURLReturnsGeneric() throws Exception {
         setRedirectionURL(null);

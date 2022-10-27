@@ -71,6 +71,13 @@ public class ApplicantDashboardController {
         return format("redirect:/applicant/dashboard");
     }
 
+
+    /**
+     * @deprecated  As of release 1.3, replaced by {@link #applicationsOverviewPage(Model, UserResource, HttpServletRequest)} ()}
+     * To be removed once existing consumer of this API (SF Loans community) is moved to generic endpoint applicationsOverviewPage()
+     */
+
+    @Deprecated(since ="1.1.89",forRemoval = true)
     @SecuredBySpring(value = "LOANS_COMMUNITY_TO_APPLICATION_OVERVIEW", description = "Loans applicant will be redirected to application overview from SalesForce")
     @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/loansCommunity")
@@ -89,12 +96,12 @@ public class ApplicantDashboardController {
         return dashboard(model, user);
     }
 
-    @SecuredBySpring(value = "GENERIC_APPLICATION_OVERVIEW_PAGE", description = "external endpoint to redirect user to application overview page ")
+    @SecuredBySpring(value = "GENERIC_APPLICATION_OVERVIEW_PAGE", description = "external endpoint to redirect user to application overview page from external site")
     @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/overview")
-    public String impactToApplicationsOverviewPage(Model model,
-                                                   UserResource user,
-                                                   HttpServletRequest request) {
+    public String applicationsOverviewPage(Model model,
+                                           UserResource user,
+                                           HttpServletRequest request) {
 
         log.info("Received redirection request from host:" + request.getRemoteHost());
         Optional<String> url = pageHistoryService.getApplicationOverviewPage(request)
