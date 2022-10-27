@@ -73,11 +73,11 @@ public class ApplicantDashboardController {
 
 
     /**
-     * @deprecated  As of release 1.3, replaced by {@link #applicationsOverviewPage(Model, UserResource, HttpServletRequest)} ()}
+     * @deprecated  As of release 1.1.189, replaced by {@link #applicationsOverviewPage(Model, UserResource, HttpServletRequest)} ()}
      * To be removed once existing consumer of this API (SF Loans community) is moved to generic endpoint applicationsOverviewPage()
      */
 
-    @Deprecated(since ="1.1.89",forRemoval = true)
+    @Deprecated(since ="1.1.189",forRemoval = true)
     @SecuredBySpring(value = "LOANS_COMMUNITY_TO_APPLICATION_OVERVIEW", description = "Loans applicant will be redirected to application overview from SalesForce")
     @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/loansCommunity")
