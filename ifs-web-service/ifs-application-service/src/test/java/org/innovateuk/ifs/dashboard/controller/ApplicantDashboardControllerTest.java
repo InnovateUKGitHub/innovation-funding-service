@@ -114,7 +114,7 @@ public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVC
 
 
     /**
-     * TODO remove this test cases once {@link ApplicantDashboardController#loansToApplicationsOverviewPage(Model, UserResource, HttpServletRequest)}  is removed
+     * TODO remove this test case once {@link ApplicantDashboardController#loansToApplicationsOverviewPage(Model, UserResource, HttpServletRequest)}  is removed
      */
     @Deprecated
     @Test
@@ -127,7 +127,7 @@ public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVC
     }
 
     /**
-     * TODO remove this test cases once {@link ApplicantDashboardController#loansToApplicationsOverviewPage(Model, UserResource, HttpServletRequest)}  is removed
+     * TODO remove this test case once {@link ApplicantDashboardController#loansToApplicationsOverviewPage(Model, UserResource, HttpServletRequest)}  is removed
      */
     @Deprecated
     @Test
