@@ -2,7 +2,10 @@ package org.innovateuk.ifs.form.repository;
 
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,4 +34,8 @@ public interface SectionRepository extends PagingAndSortingRepository<Section, L
     List<Section> findByCompetitionIdAndDisplayInAssessmentApplicationSummaryTrueOrderByPriorityAsc(Long competitionId);
 
     Optional<Section> findByTypeAndCompetitionId(SectionType type, long competitionId);
+
+    @Modifying
+    @Query(value = "DELETE FROM Section s WHERE s.id = :id")
+    void deleteUsingId(@Param("id") long id);
 }

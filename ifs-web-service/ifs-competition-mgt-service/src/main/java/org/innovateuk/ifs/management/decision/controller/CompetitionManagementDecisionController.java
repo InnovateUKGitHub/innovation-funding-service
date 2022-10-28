@@ -212,6 +212,10 @@ public abstract class CompetitionManagementDecisionController extends Competitio
     }
 
     private List<Long> getAllApplicationIdsByFilters(long competitionId, DecisionFilterForm filterForm) {
+        if (filterForm.isEoi()) {
+            return applicationSummaryRestService.getAllSubmittedEoiApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter(), filterForm.getSendFilter()).getOrElse(emptyList());
+        }
+
         if(alwaysOpenCompetitionEnabled) {
             CompetitionResource competition = getCompetitionIfExist(competitionId);
             if (competition.isAlwaysOpen() && competition.isHasAssessmentStage()) {

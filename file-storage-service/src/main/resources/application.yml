@@ -29,7 +29,7 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
   datasource:
-    url: ${FSS_DB_URL:jdbc:mysql://ifs-database:3306/ifs_file_storage}
+    url: ${FSS_DB_URL:jdbc:mysql://ifs-database:3306/ifs_file_storage?permitMysqlScheme}
     username: ${FSS_DB_USER:root}
     password: ${FSS_DB_PASS:password}
     test-on-borrow: true

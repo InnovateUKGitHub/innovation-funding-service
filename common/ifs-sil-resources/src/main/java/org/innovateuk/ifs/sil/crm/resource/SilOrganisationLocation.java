@@ -25,6 +25,9 @@ public class SilOrganisationLocation {
     @JsonProperty("organisationSize")
     private String organisationSize;
 
+    @JsonProperty("organisationType")
+    private String organisationType;
+
     @JsonProperty("internationalLocation")
     private String internationalLocation;
 

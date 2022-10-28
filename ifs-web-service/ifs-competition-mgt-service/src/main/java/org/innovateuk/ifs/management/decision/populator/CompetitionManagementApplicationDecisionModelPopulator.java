@@ -14,7 +14,6 @@ import org.innovateuk.ifs.management.decision.form.DecisionSelectionForm;
 import org.innovateuk.ifs.management.decision.viewmodel.ManageFundingApplicationsViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.user.resource.Authority;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -83,6 +82,9 @@ public class CompetitionManagementApplicationDecisionModelPopulator {
     private ApplicationSummaryPageResource getApplicationsByFilters(long competitionId,
                                                                     DecisionPaginationForm paginationForm,
                                                                     DecisionFilterForm decisionFilterForm) {
+        if (decisionFilterForm.isEoi()) {
+            return getSubmittedEoiApplications(competitionId, paginationForm, decisionFilterForm);
+        }
 
         if (alwaysOpenCompetitionEnabled) {
             CompetitionResource competition = getCompetitionIfExist(competitionId);
@@ -100,11 +102,13 @@ public class CompetitionManagementApplicationDecisionModelPopulator {
         return getSubmittedApplications(competitionId, paginationForm, decisionFilterForm);
     }
 
+    private ApplicationSummaryPageResource getSubmittedEoiApplications(long competitionId, DecisionPaginationForm paginationForm, DecisionFilterForm decisionFilterForm) {
+        return applicationSummaryRestService.getSubmittedEoiApplications(competitionId, "id", paginationForm.getPage(),
+                PAGE_SIZE, decisionFilterForm.getStringFilter(), decisionFilterForm.getFundingFilter(), decisionFilterForm.getSendFilter()).getSuccess();
+    }
+
     private ApplicationSummaryPageResource getSubmittedApplications(long competitionId, DecisionPaginationForm paginationForm, DecisionFilterForm decisionFilterForm) {
-        return decisionFilterForm.isEoi()
-                ? applicationSummaryRestService.getSubmittedEoiApplications(competitionId, "id", paginationForm.getPage(),
-                    PAGE_SIZE, decisionFilterForm.getStringFilter(), decisionFilterForm.getFundingFilter(), decisionFilterForm.getSendFilter()).getSuccess()
-                : applicationSummaryRestService.getSubmittedApplications(competitionId, "id", paginationForm.getPage(),
+        return applicationSummaryRestService.getSubmittedApplications(competitionId, "id", paginationForm.getPage(),
                     PAGE_SIZE, decisionFilterForm.getStringFilter(), decisionFilterForm.getFundingFilter()).getSuccess();
     }
 
@@ -121,6 +125,11 @@ public class CompetitionManagementApplicationDecisionModelPopulator {
     }
 
     private List<Long> getAllApplicationIdsByFilters(long competitionId, DecisionFilterForm filterForm) {
+
+        if (filterForm.isEoi()) {
+            return getAllSubmittedEoiApplicationIds(competitionId, filterForm);
+        }
+
         if(alwaysOpenCompetitionEnabled) {
             CompetitionResource competition = getCompetitionIfExist(competitionId);
             if (competition.isAlwaysOpen() && competition.isHasAssessmentStage()) {
@@ -130,10 +139,12 @@ public class CompetitionManagementApplicationDecisionModelPopulator {
         return getAllSubmittedApplicationIds(competitionId, filterForm);
     }
 
+    public List<Long> getAllSubmittedEoiApplicationIds(long competitionId, DecisionFilterForm filterForm) {
+        return applicationSummaryRestService.getAllSubmittedEoiApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter(), filterForm.getSendFilter()).getOrElse(emptyList());
+    }
+
     public List<Long> getAllSubmittedApplicationIds(long competitionId, DecisionFilterForm filterForm) {
-        return filterForm.isEoi()
-                ? applicationSummaryRestService.getAllSubmittedEoiApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter(), filterForm.getSendFilter()).getOrElse(emptyList())
-                : applicationSummaryRestService.getAllSubmittedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter()).getOrElse(emptyList());
+        return applicationSummaryRestService.getAllSubmittedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter()).getOrElse(emptyList());
     }
 
     protected boolean limitIsExceeded(long amountOfIds) {

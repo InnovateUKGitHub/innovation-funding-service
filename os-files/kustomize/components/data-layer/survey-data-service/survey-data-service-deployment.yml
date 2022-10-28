@@ -89,15 +89,16 @@ spec:
                 name: web-secrets
                 key: IFS_WEB_SYSTEM_USER_UID
           - name: JAVA_TOOL_OPTIONS
-            value: -Xms800m -Xmx800m -javaagent:/newrelic.jar
+            value: -Xms400m -Xmx400m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
             value: 'ifs-$(NEW_RELIC_ENV)-survey-data-service'
         ports:
           - containerPort: 8080
         resources:
           limits:
-            cpu: 500m
+            cpu: 1000m
+            memory: 700Mi
           requests:
-            cpu: 100m
-            memory: 400M
+            cpu: 250m
+            memory: 500Mi
 

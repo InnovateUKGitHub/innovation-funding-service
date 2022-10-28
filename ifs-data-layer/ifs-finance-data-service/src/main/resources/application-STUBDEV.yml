@@ -2,7 +2,7 @@ server:
   port: 8092
 spring:
   datasoure:
-    url: jdbc:mysql://localhost:3306/ifs_finance
+    url: jdbc:mysql://localhost:3306/ifs_finance?permitMysqlScheme
     username: root
     password: password
   flyway:

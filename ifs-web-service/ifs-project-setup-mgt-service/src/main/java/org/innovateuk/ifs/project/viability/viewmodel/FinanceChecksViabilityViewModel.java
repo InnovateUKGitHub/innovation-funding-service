@@ -50,6 +50,9 @@ public class FinanceChecksViabilityViewModel {
     private final boolean resetableGolState;
     private final boolean auditor;
     private final boolean isThirdPartyOfgem;
+    private final boolean compTypeOfgemAndFundingTypeThirdParty;
+    private final BigDecimal contributionToProjectPercentage;
+    private final BigDecimal contributionsInKind;
 
     public FinanceChecksViabilityViewModel(ProjectResource project,
                                            CompetitionResource competition,
@@ -75,7 +78,10 @@ public class FinanceChecksViabilityViewModel {
                                            List<ProjectFinanceResource> projectFinances,
                                            boolean resetableGolState,
                                            boolean auditor,
-                                           boolean isThirdPartyOfgem) {
+                                           boolean isThirdPartyOfgem,
+                                           boolean compTypeOfgemAndFundingTypeThirdParty,
+                                           BigDecimal contributionToProjectPercentage,
+                                           BigDecimal contributionsInKind) {
 
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
@@ -108,6 +114,9 @@ public class FinanceChecksViabilityViewModel {
         this.resetableGolState = resetableGolState;
         this.auditor = auditor;
         this.isThirdPartyOfgem = isThirdPartyOfgem;
+        this.compTypeOfgemAndFundingTypeThirdParty = compTypeOfgemAndFundingTypeThirdParty;
+        this.contributionToProjectPercentage = contributionToProjectPercentage;
+        this.contributionsInKind = contributionsInKind;
     }
 
     public String getOrganisationName() {
@@ -256,6 +265,18 @@ public class FinanceChecksViabilityViewModel {
 
     public boolean isThirdPartyOfgem() {
         return isThirdPartyOfgem;
+    }
+
+    public boolean isCompTypeOfgemAndFundingTypeThirdParty() {
+        return compTypeOfgemAndFundingTypeThirdParty;
+    }
+
+    public BigDecimal getContributionToProjectPercentage() {
+        return contributionToProjectPercentage;
+    }
+
+    public BigDecimal getContributionsInKind() {
+        return contributionsInKind;
     }
 
     private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {

@@ -47,7 +47,7 @@ spring:
         driver-class-name: org.mariadb.jdbc.Driver
         password: password
         test-on-borrow: true
-        url: jdbc:mysql://ifs-database:3306/ifs_survey?useMysqlMetadata=true&characterEncoding=utf8
+        url: jdbc:mysql://ifs-database:3306/ifs_survey?useMysqlMetadata=true&characterEncoding=utf8&permitMysqlScheme
         username: root
         validation-query: SELECT 1
     flyway:
@@ -57,7 +57,7 @@ spring:
         locations: db/migration
         password: password
         table: schema_version
-        url: jdbc:mysql://ifs-database:3306/ifs_survey?useMysqlMetadata=true&characterEncoding=utf8
+        url: jdbc:mysql://ifs-database:3306/ifs_survey?useMysqlMetadata=true&characterEncoding=utf8&permitMysqlScheme
         user: root
     jpa:
         database-platform: org.hibernate.dialect.MySQL57Dialect

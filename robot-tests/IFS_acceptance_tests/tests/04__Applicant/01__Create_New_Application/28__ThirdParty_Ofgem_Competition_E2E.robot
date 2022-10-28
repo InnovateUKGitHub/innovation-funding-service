@@ -30,6 +30,9 @@ Documentation   IFS-11442 OFGEM: Create a "ThirdParty" generic template
 ...             IFS-12795 Ofgem - Third party finances - Contributions in kind
 ...
 ...             IFS-12806 Ofgem - Discovery 2 - Contributions in kind date secured validation
+...
+...             IFS-13073 Ofgem - Discovery 2 - Finance summary changes - All IFS roles
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -171,7 +174,6 @@ the user marks the your funding section as complete with contributions in kind w
     When the user clicks the button/link                                            link = Your funding
     Then the user should see the element                                             jQuery = th:contains("Lottery funding") ~ td:contains("")+td:contains("£20,000")
 
-
 the user marks the your funding section as complete with contributions in kind
     [Documentation]  IFS-11481  IFS-12765  IFS-12795
     Given the user clicks the button/link                               jQuery = button:contains("Edit your funding")
@@ -180,7 +182,6 @@ the user marks the your funding section as complete with contributions in kind
     Then the user should see the element                                jQuery = td:contains("53,220") ~ td:contains("25,678") ~ td:contains("51.75") ~ td:contains("27,542") ~ td:contains("20,000")
     And the user should see the element                                 jQuery = th:contains("Contribution to project (%)")
     And the user should see the element                                 jQuery = th:contains("Contributions in kind (£)")
-
 
 Ofgem application finance overview
     [Documentation]  IFS-11481  IFS-12765  IFS-12796
@@ -256,6 +257,37 @@ New partner can join the ofgem project via project setup
     When the user clicks the button/link                                id = submit-join-project-button
     Then the user should see the element                                jQuery = h1:contains("Set up your project") span:contains("${thirdPartyOfgemApplicationName}")
 
+Internal user views ofgem related finance summary
+    [Documentation]  IFS-13073
+    Given log in as a different user        &{internal_finance_credentials}
+    And the user navigates to the page      ${server}/project-setup-management/project/${thirdPartyProjId}/finance-check-overview
+    Then the user should see the element    jQuery = th:contains("Total costs")+th:contains("Funding sought (£)")+th:contains("Contribution to project (%)")+th:contains("Contribution to project (£)")+th:contains("Contributions in kind (£)")
+    And the user should see the element     jQuery = th:contains("Empire Ltd") +td:contains("£54,220")+td:contains("25,678")+td:contains("52.64%")+td:contains("28,542")+td:contains("20,000")
+    And the user should see the element     jQuery = th:contains("ROYAL MAIL PLC") +td:contains("£0")+td:contains("250")+td:contains("0.00%")+td:contains("0")+td:contains("20,000")
+    And the user should see the element     jQuery = th:contains("Total") +td:contains("£54,220")+td:contains("25,928")+td+td:contains("28,542")+td:contains("40,000")
+    And the user should see the element     jQuery = th:contains("Start date") +th:contains("Duration")+th:contains("Total project cost")+th:contains("Funding sought (£)")+th:contains("Contributions in kind (£)")+th:contains("Total % grant")
+    And the user should see the element     jQuery = td:contains("24 months")+td:contains("£54,220")+td:contains("25,928")+td:contains("40,000")+td:contains("47.82%")
+
+Lead applicant view ofgem finance overview in the finance checks
+    [Documentation]  IFS-13073
+    Given log in as a different user                                                    &{lead_applicant_credentials}
+    When the user navigates to the page                                                 ${server}/project-setup/project/${thirdPartyProjId}
+    And project lead submits project address                                            ${thirdPartyProjId}
+    And project lead submits project details and team                                   ${thirdPartyProjId}  projectManager1
+    And navigate to external finance contact page, choose finance contact and save      ${EMPIRE_LTD_ID}   financeContact1  ${thirdPartyProjId}
+    And the user navigates to the page                                                  ${server}/project-setup/project/${thirdPartyProjId}/finance-check/overview
+    Then the user should see the element                                                jQuery = th:contains("Total costs")+th:contains("Funding sought (£)")+th:contains("Contribution to project (%)")+th:contains("Contribution to project (£)")+th:contains("Contributions in kind (£)")
+    And the user should see the element                                                 jQuery = th:contains("Empire Ltd") +td:contains("£54,220")+td:contains("25,678")+td:contains("52.64%")+td:contains("28,542")+td:contains("20,000")
+    And the user should see the element                                                 jQuery = th:contains("ROYAL MAIL PLC") +td:contains("£0")+td:contains("250")+td:contains("0.00%")+td:contains("0")+td:contains("20,000")
+    And the user should see the element                                                 jQuery = th:contains("Total") +td:contains("£54,220")+td:contains("25,928")+td+td:contains("28,542")+td:contains("40,000")
+
+Lead applicant view ofgem finance summary in the finance checks
+    [Documentation]  IFS-13073
+    When the user navigates to the page     ${server}/project-setup/project/${thirdPartyProjId}/finance-check/eligibility
+    Then the user should see the element    jQuery = th:contains("Project duration") +th:contains("Total costs")+th:contains("Funding sought (£)")+th:contains("Contribution to project (%)")+th:contains("Contribution to project (£)")+th:contains("Contributions in kind (£)")
+    And the user should see the element     jQuery = td:contains("24 months")+td:contains("£54,220")+td:contains("25,678")+td:contains("52.64%")+td:contains("28,542")+td:contains("20,000")
+
+
 *** Keywords ***
 Custom suite setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
@@ -279,6 +311,7 @@ Requesting project ID of this project
 comp admin creates ofgem competition
     the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}    100   false   single-or-collaborative
     the user fills in the CS funding eligibility            false   Ofgem   STATE_AID
+    the user completes project impact section               No
     the user selects the organisational eligibility to no   false
     the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}  No
     the user marks the Application as done                  no   Ofgem   ${thirdPartyOfgemCompetitionName}

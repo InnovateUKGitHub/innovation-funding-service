@@ -184,7 +184,9 @@ public class ProjectFinanceChangesViewModelPopulator {
         }
         List<CostChangeViewModel> entries = new ArrayList<>();
 
-        if(competition.isThirdPartyOfgem()) {
+        if (competition.isCompTypeOfgemAndFundingTypeThirdParty()) {
+            entries.add(new CostChangeViewModel("Funding sought (£)", appFinanceResource.getTotalFundingSought(), eligibilityOverview.getFundingSought()));
+        } else if(competition.isThirdPartyOfgem()) {
             entries.add(new CostChangeViewModel("Funding sought (£)", appFinanceResource.getTotalFundingSought(), eligibilityOverview.getFundingSought()));
             entries.add(new CostChangeViewModel("Funding level (%)", appFinanceResource.getGrantClaimPercentage(), eligibilityOverview.getPercentageGrant()));
         } else {
@@ -192,7 +194,10 @@ public class ProjectFinanceChangesViewModelPopulator {
             entries.add(new CostChangeViewModel("Funding sought (£)", appFinanceResource.getTotalFundingSought(), eligibilityOverview.getFundingSought()));
         }
 
-        entries.add(new CostChangeViewModel("Other funding (£)", appFinanceResource.getTotalOtherFunding(), eligibilityOverview.getOtherPublicSectorFunding()));
+        if (!competition.isCompTypeOfgemAndFundingTypeThirdParty()) {
+            entries.add(new CostChangeViewModel("Other funding (£)", appFinanceResource.getTotalOtherFunding(), eligibilityOverview.getOtherPublicSectorFunding()));
+        }
+
         if (competition.isKtp()) {
             if (isLead) {
                 entries.add(new CostChangeViewModel("Company contribution (%)", BigDecimal.ZERO, BigDecimal.ZERO));
@@ -202,9 +207,14 @@ public class ProjectFinanceChangesViewModelPopulator {
                 entries.add(new CostChangeViewModel("Company contribution (%)", contributionPercentage, eligibilityOverview.getContributionPercentage()));
                 entries.add(new CostChangeViewModel("Company contribution (£)", appFinanceResource.getTotalContribution(), eligibilityOverview.getContributionToProject()));
             }
+        } else if (competition.isCompTypeOfgemAndFundingTypeThirdParty()) {
+            entries.add(new CostChangeViewModel("Contribution to project (%)", appFinanceResource.getContributionToProjectPercentage(), eligibilityOverview.getContributionToProjectPercentage()));
+            entries.add(new CostChangeViewModel("Contribution to project (£)", appFinanceResource.getTotalContribution(), eligibilityOverview.getContributionToProject()));
+            entries.add(new CostChangeViewModel("Contributions in kind (£)", appFinanceResource.getTotalContributionsInKind(), eligibilityOverview.getContributionsInKind()));
         } else {
             entries.add(new CostChangeViewModel("Contribution to project (£)", appFinanceResource.getTotalContribution(), eligibilityOverview.getContributionToProject()));
         }
+
         return new ProjectFinanceChangesFinanceSummaryViewModel(totalProjectCosts, fundingRuleChange, entries);
     }
 

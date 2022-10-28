@@ -30,6 +30,7 @@ public class GrantOfferLetterTemplateViewModel {
     private final boolean isProcurement;
     private final boolean thirdPartyOfgem;
     private final String leadOrganisationNumber;
+    private final boolean compTypeOfgemAndFundingTypeThirdParty;
 
     public GrantOfferLetterTemplateViewModel(long applicationId,
                                              String projectManagerFirstName,
@@ -47,7 +48,8 @@ public class GrantOfferLetterTemplateViewModel {
                                              boolean subsidyControlGOLEnabled,
                                              SubsidyControlModel subsidyControlModel,
                                              boolean isProcurement,
-                                             boolean thirdPartyOfgem) {
+                                             boolean thirdPartyOfgem,
+                                             boolean compTypeOfgemAndFundingTypeThirdParty) {
         this.applicationId = applicationId;
         this.projectManagerFirstName = projectManagerFirstName;
         this.projectManagerLastName = projectManagerLastName;
@@ -65,6 +67,7 @@ public class GrantOfferLetterTemplateViewModel {
         this.subsidyControlModel = subsidyControlModel;
         this.isProcurement = isProcurement;
         this.thirdPartyOfgem = thirdPartyOfgem;
+        this.compTypeOfgemAndFundingTypeThirdParty = compTypeOfgemAndFundingTypeThirdParty;
     }
 
     public long getApplicationId() {
@@ -141,6 +144,10 @@ public class GrantOfferLetterTemplateViewModel {
 
     public boolean isThirdPartyOfgem() {
         return thirdPartyOfgem;
+    }
+
+    public boolean isCompTypeOfgemAndFundingTypeThirdParty() {
+        return compTypeOfgemAndFundingTypeThirdParty;
     }
 
     @JsonIgnore

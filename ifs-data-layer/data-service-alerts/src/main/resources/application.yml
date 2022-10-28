@@ -46,7 +46,7 @@ spring:
         driver-class-name: org.mariadb.jdbc.Driver
         password: ${DB_PASS:password}
         test-on-borrow: true
-        url: ${DB_URL:jdbc:mysql://ifs-database:3306/ifs}
+        url: ${DB_URL:jdbc:mysql://ifs-database:3306/ifs?permitMysqlScheme}
         username: ${DB_USER:root}
         validation-query: SELECT 1
     flyway:

@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.application.readonly.populator;
 
+import com.google.common.collect.Lists;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
 import org.innovateuk.ifs.application.readonly.viewmodel.GenericQuestionReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationExpressionOfInterestConfigResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.assessment.builder.ApplicationAssessmentsResourceBuilder;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
@@ -16,7 +19,10 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -40,13 +46,16 @@ import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBu
 import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GenericQuestionReadOnlyViewModelPopulatorTest {
@@ -59,6 +68,8 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
 
     @Mock
     private OrganisationRestService organisationRestService;
+    @Mock
+    private QuestionStatusRestService questionStatusRestService;
 
     private ApplicationResource application;
 
@@ -66,7 +77,7 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
 
     private QuestionResource question;
 
-    private  UserResource user;
+    private UserResource user;
 
     @Before
     public void setup() {
@@ -81,6 +92,7 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
                 .withQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION)
                 .build();
         user = newUserResource().withRoleGlobal(Role.IFS_ADMINISTRATOR).build();
+
     }
 
     @Test
@@ -123,9 +135,9 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
         FormInputResponseResource appendixResponse = newFormInputResponseResource()
                 .withFormInputs(appendix.getId())
                 .withFileEntries(newFileEntryResource()
-                                .withName("Appendix1.pdf", "Appendix2.pdf")
-                                .build(2))
-                        .build();
+                        .withName("Appendix1.pdf", "Appendix2.pdf")
+                        .build(2))
+                .build();
         FormInputResponseResource templateDocumentResponse = newFormInputResponseResource()
                 .withFormInputs(templateDocument.getId())
                 .withFileEntries(newFileEntryResource()
@@ -358,5 +370,202 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
 
         assertNotNull(viewModel);
         assertEquals("1. Question short name 1", viewModel.getDisplayName());
+    }
+
+    @Test
+    public void populateImpactManagementApplicationWithIncompleteStatus() {
+        Long questionId = 1L;
+
+        ApplicationExpressionOfInterestConfigResource applicationExpressionOfInterestConfig = newApplicationExpressionOfInterestConfigResource()
+                .withEnabledForExpressionOfInterest(false)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withResearchCategory(newResearchCategoryResource()
+                        .withName("Research category")
+                        .build())
+                .withApplicationExpressionOfInterestConfigResource(applicationExpressionOfInterestConfig)
+                .build();
+        CompetitionResource competition = newCompetitionResource()
+                .build();
+        QuestionResource question = newQuestionResource()
+                .withId(questionId)
+                .withMultipleStatuses(true)
+                .withShortName("Question short name 1")
+                .withQuestionSetupType(QuestionSetupType.IMPACT_MANAGEMENT_SURVEY)
+                .withEnabledForPreRegistration(false)
+                .build();
+
+
+        UserResource userResource = newUserResource().build();
+        List<ProcessRoleResource> processRoleResources = newProcessRoleResource()
+                .withOrganisation(1L)
+                .withUserId(userResource.getId())
+                .withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR)
+                .build(2);
+
+
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, userResource,
+                processRoleResources, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), Optional.empty());
+
+        ApplicationReadOnlySettings settings = defaultSettings()
+                .setIncludeAllAssessorFeedback(true)
+                .setIncludeQuestionNumber(true);
+
+
+        OrganisationResource organisation = new OrganisationResource();
+        organisation.setName("A");
+        organisation.setId(1L);
+        when(organisationRestService.getOrganisationById(1L)).thenReturn(restSuccess(organisation));
+        QuestionStatusResource status = new QuestionStatusResource();
+        status.setQuestion(question.getId());
+        status.setApplication(application.getId());
+        status.setId(1L);
+        status.setMarkedAsComplete(false);
+
+        when(questionStatusRestService.findByQuestionAndApplicationAndOrganisation(questionId, application.getId(), organisation.getId())).thenReturn(restSuccess(Lists.newArrayList(status)));
+
+        GenericQuestionReadOnlyViewModel viewModel = populator.populate(question, data, settings);
+
+        assertNotNull(viewModel);
+        assertFalse(viewModel.isComplete());
+        assertEquals("GenericQuestionAnswerRowReadOnlyViewModel should be populated with false", "Incomplete", viewModel.getAnswers().get(0).getAnswer());
+    }
+
+    @Test
+    public void populateImpactManagementApplicationWithCompleteStatus() {
+        Long questionId = 1L;
+
+        ApplicationExpressionOfInterestConfigResource applicationExpressionOfInterestConfig = newApplicationExpressionOfInterestConfigResource()
+                .withEnabledForExpressionOfInterest(false)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withResearchCategory(newResearchCategoryResource()
+                        .withName("Research category")
+                        .build())
+                .withApplicationExpressionOfInterestConfigResource(applicationExpressionOfInterestConfig)
+                .build();
+        CompetitionResource competition = newCompetitionResource()
+                .build();
+        QuestionResource question = newQuestionResource()
+                .withId(questionId)
+                .withMultipleStatuses(true)
+                .withShortName("Question short name 1")
+                .withQuestionSetupType(QuestionSetupType.IMPACT_MANAGEMENT_SURVEY)
+                .withEnabledForPreRegistration(false)
+                .build();
+
+
+        UserResource userResource = newUserResource().build();
+        List<ProcessRoleResource> processRoleResources = newProcessRoleResource()
+                .withOrganisation(1L)
+                .withUserId(userResource.getId())
+                .withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR)
+                .build(2);
+
+
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, userResource,
+                processRoleResources, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), Optional.empty());
+
+        ApplicationReadOnlySettings settings = defaultSettings()
+                .setIncludeAllAssessorFeedback(true)
+                .setIncludeQuestionNumber(true);
+
+
+        OrganisationResource organisation = new OrganisationResource();
+        organisation.setName("A");
+        organisation.setId(1L);
+        when(organisationRestService.getOrganisationById(1L)).thenReturn(restSuccess(organisation));
+        QuestionStatusResource status = new QuestionStatusResource();
+        status.setQuestion(question.getId());
+        status.setApplication(application.getId());
+        status.setId(1L);
+        status.setMarkedAsComplete(true);
+
+
+        when(questionStatusRestService.findByQuestionAndApplicationAndOrganisation(questionId, application.getId(), organisation.getId())).thenReturn(restSuccess(Lists.newArrayList(status)));
+
+        GenericQuestionReadOnlyViewModel viewModel = populator.populate(question, data, settings);
+
+        assertNotNull(viewModel);
+        assertTrue(viewModel.isComplete());
+        assertEquals("GenericQuestionAnswerRowReadOnlyViewModel should be populated with true", "Complete", viewModel.getAnswers().get(0).getAnswer());
+    }
+    @Test
+    public void populateImpactManagementApplicationWithIncompleteAndCompleteStatus() {
+        Long questionId = 1L;
+
+        ApplicationExpressionOfInterestConfigResource applicationExpressionOfInterestConfig = newApplicationExpressionOfInterestConfigResource()
+                .withEnabledForExpressionOfInterest(false)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withResearchCategory(newResearchCategoryResource()
+                        .withName("Research category")
+                        .build())
+                .withApplicationExpressionOfInterestConfigResource(applicationExpressionOfInterestConfig)
+                .build();
+        CompetitionResource competition = newCompetitionResource()
+                .build();
+        QuestionResource question = newQuestionResource()
+                .withId(questionId)
+                .withMultipleStatuses(true)
+                .withShortName("Question short name 1")
+                .withQuestionSetupType(QuestionSetupType.IMPACT_MANAGEMENT_SURVEY)
+                .withEnabledForPreRegistration(false)
+                .build();
+
+
+        UserResource userResource = newUserResource().build();
+        UserResource userResource2 = newUserResource().build();
+        List<ProcessRoleResource> processRoleResources = newProcessRoleResource()
+                .withOrganisation(1L,2L)
+                .withUserId(userResource.getId(),userResource2.getId())
+                .withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR)
+                .build(2);
+
+
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, userResource,
+                processRoleResources, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), Optional.empty());
+
+        ApplicationReadOnlySettings settings = defaultSettings()
+                .setIncludeAllAssessorFeedback(true)
+                .setIncludeQuestionNumber(true);
+
+
+        OrganisationResource organisation = new OrganisationResource();
+        organisation.setName("A2");
+        organisation.setId(1L);
+
+        OrganisationResource organisation2 = new OrganisationResource();
+        organisation2.setName("A4");
+        organisation2.setId(2L);
+
+        when(organisationRestService.getOrganisationById(1L)).thenReturn(restSuccess(organisation));
+        when(organisationRestService.getOrganisationById(2L)).thenReturn(restSuccess(organisation2));
+
+        QuestionStatusResource status = new QuestionStatusResource();
+        status.setQuestion(question.getId());
+        status.setApplication(application.getId());
+        status.setId(1L);
+        status.setMarkedAsComplete(true);
+
+        QuestionStatusResource status2 = new QuestionStatusResource();
+        status2.setQuestion(question.getId());
+        status2.setApplication(application.getId());
+        status2.setId(2L);
+        status2.setMarkedAsComplete(false);
+
+
+        when(questionStatusRestService.findByQuestionAndApplicationAndOrganisation(questionId, application.getId(), organisation.getId())).thenReturn(restSuccess(Lists.newArrayList(status)));
+        when(questionStatusRestService.findByQuestionAndApplicationAndOrganisation(questionId, application.getId(), organisation2.getId())).thenReturn(restSuccess(Lists.newArrayList(status2)));
+
+        GenericQuestionReadOnlyViewModel viewModel = populator.populate(question, data, settings);
+
+        assertNotNull(viewModel);
+        assertFalse(viewModel.isComplete());
+        assertEquals("GenericQuestionAnswerRowReadOnlyViewModel should be populated with true", "Complete", viewModel.getAnswers().get(0).getAnswer());
+        assertEquals("GenericQuestionAnswerRowReadOnlyViewModel should be populated with false", "Incomplete", viewModel.getAnswers().get(1).getAnswer());
     }
 }

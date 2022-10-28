@@ -94,5 +94,8 @@ public interface CompetitionService {
     @NotSecured(value = "Anyone can check if competition has EDI questions", mustBeSecuredByOtherServices = false)
     ServiceResult<Boolean> hasEDIQuestion(long competitionId);
 
-
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
+    @SecuredBySpring(value = "UPDATE_IMPACT_MANAGEMENT_STATE", securedType = CompetitionResource.class,
+            description = "Only Comp Admins are able to update impact management for the given competitions")
+    ServiceResult<Void> includeSupportingInformationSectionForCompetition(long competitionId, boolean projectImpactSurveyApplicable);
 }

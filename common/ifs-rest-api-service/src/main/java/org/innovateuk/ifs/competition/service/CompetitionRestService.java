@@ -33,4 +33,6 @@ public interface CompetitionRestService {
 
     RestResult<ByteArrayResource> downloadTerms(long competitionId);
     RestResult<Boolean> hasEDIQuestion(Long competitionId);
+    RestResult<Void> updateImpactManagementForCompetition(long competitionId,boolean projectImpactSurveyApplicable);
+
 }

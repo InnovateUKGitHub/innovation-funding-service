@@ -20,6 +20,7 @@ import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.IntStream;
@@ -157,6 +158,7 @@ public class CommonBuilders {
         return aSection()
                 .withName("Supporting information")
                 .withType(SectionType.SUPPORTING_INFORMATION)
+                .withQuestions(Collections.singletonList(impactManagementSurvey()))
                 .withDescription("This section is not scored but will provide background to your project.");
     }
 
@@ -166,6 +168,7 @@ public class CommonBuilders {
                 .withShortName("Project impact")
                 .withName("Understanding the benefits of the projects Innovate UK supports")
                 .withMarkAsCompletedEnabled(true)
+                .withMultipleStatuses(true)
                 .withDescription(
                         "<p>The purpose of these questions is to understand the economic impacts and societal benefits provided by the projects and people Innovate UK support.</p>" +
                                 "<p>The number of questions is limited to the minimum possible and this varies depending on the competition. </p>" +
