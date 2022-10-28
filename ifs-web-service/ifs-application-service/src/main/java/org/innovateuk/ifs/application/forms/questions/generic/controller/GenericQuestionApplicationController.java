@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.forms.questions.generic.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.log4j.Log4j2;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.forms.questions.generic.form.GenericQuestionApplicationForm;
@@ -56,6 +57,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.negate;
  * This controller handles application questions which are built up of form inputs.
  */
 
+
+@Log4j2
 @Controller
 @RequestMapping({APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/generic",
         APPLICATION_BASE_URL + "{applicationId}/form/organisation/{organisationId}/question/{questionId}/generic"})
@@ -365,6 +368,9 @@ public class GenericQuestionApplicationController {
     private void recordApplicationOverviewPageHistory(long applicationId, HttpServletRequest request, HttpServletResponse response, ApplicantQuestionResource question) {
         if (Objects.nonNull(question.getQuestion()) && eligibleForExternalRedirection.contains(question.getQuestion().getQuestionSetupType())) {
             pageHistoryService.recordApplicationOverviewPageHistory(request, response, APPLICATION_OVERVIEW_PAGE, "/application/" + applicationId);
+        } else {
+            log.info("Ignoring, as {} is not eligible to be recorded in cookie",
+                    Objects.nonNull(question.getQuestion()) ? question.getQuestion().getQuestionSetupType() : question);
         }
     }
 }
