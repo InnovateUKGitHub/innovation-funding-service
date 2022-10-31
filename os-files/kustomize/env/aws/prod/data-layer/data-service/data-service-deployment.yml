@@ -19,14 +19,3 @@ spec:
     metadata:
       labels:
         app: data-service
-    spec:
-      containers:
-        - name: spring-boot-service-container
-          image: data-service
-          imagePullPolicy: IfNotPresent
-          resources:
-            limits:
-              cpu: 2000m
-            requests:
-              cpu: 400m
-              memory: 1500M
