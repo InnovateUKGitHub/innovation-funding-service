@@ -24,6 +24,7 @@ public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService
             competition.setIncludeJesForm(compSetupFinanceRes.getIncludeJesForm());
             competition.setIncludeProjectGrowthTable(compSetupFinanceRes.getIncludeGrowthTable());
             competition.setIncludeYourOrganisationSection(compSetupFinanceRes.getIncludeYourOrganisationSection());
+            competition.setIncludePaymentMilestone(compSetupFinanceRes.getIncludePaymentMilestone());
             return serviceSuccess();
         });
     }
@@ -40,6 +41,7 @@ public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService
         competitionSetupFinanceResource.setIncludeJesForm(competition.getIncludeJesForm());
         competitionSetupFinanceResource.setIncludeGrowthTable(competition.getIncludeProjectGrowthTable());
         competitionSetupFinanceResource.setIncludeYourOrganisationSection(competition.getIncludeYourOrganisationSection());
+        competitionSetupFinanceResource.setIncludePaymentMilestone(competition.getIncludePaymentMilestone());
         return competitionSetupFinanceResource;
     }
 }

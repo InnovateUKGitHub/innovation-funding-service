@@ -202,6 +202,44 @@
                         </div>
                     </fieldset>
                 </div>
+                <div class="govuk-form-group" id="include-payment-milestones"
+                     th:classappend="${#fields.hasErrors('includePaymentMilestones')} ? 'govuk-form-group--error'">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="includePaymentMilestones">
+                            <h2 class="govuk-fieldset__heading">Include payment milestones</h2>
+                            <th:block th:if="${#fields.hasErrors('includePaymentMilestones')}">
+                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('includePaymentMilestones')}" th:text="${err}"></span>
+                            </th:block>
+                        </legend>
+
+                        <div class="govuk-radios">
+                            <div class="govuk-radios__item">
+                                <input id="include-payment-milestone-no-yes"
+                                       class="govuk-radios__input"
+                                       value="true"
+                                       type="radio"
+                                       th:field="*{includePaymentMilestones}"
+                                       required="required" />
+                                <label for="include-payment-milestone-no-yes"
+                                       class="govuk-label govuk-radios__label">
+                                    Yes
+                                </label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input id="include-payment-milestone-no"
+                                       class="govuk-radios__input"
+                                       value="false"
+                                       type="radio"
+                                       th:field="*{includePaymentMilestones}"
+                                       required="required"/>
+                                <label for="include-payment-milestone-no"
+                                       class="govuk-label govuk-radios__label">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
 
                 <div class="govuk-form-group"
                      th:classappend="${#fields.hasErrors('fundingRules')} ? 'govuk-form-group--error'">
