@@ -1,4 +1,4 @@
-FROM docker-ifs.devops.innovateuk.org/releases/ubuntu:20.04
+FROM docker-ifs.devops.innovateuk.org/releases/ubuntu:20.04@sha256:376209074d481dca0a9cf4282710cd30a9e7ff402dea8261acdaaf57a18971dd
 
 USER root
 
