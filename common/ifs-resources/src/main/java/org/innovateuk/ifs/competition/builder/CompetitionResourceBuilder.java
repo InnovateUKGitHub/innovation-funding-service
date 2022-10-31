@@ -239,6 +239,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((includeJesForm, competitionSetupFinance) -> setField("includeJesForm", includeJesForm, competitionSetupFinance), includeJesForms);
     }
 
+    public CompetitionResourceBuilder withIncludePaymentMilestone(Boolean... includePaymentMilestones) {
+        return withArray((includePaymentMilestone, competitionSetupFinance) -> setField("includePaymentMilestone", includePaymentMilestone, competitionSetupFinance), includePaymentMilestones);
+    }
+
     public CompetitionResourceBuilder withIncludeProjectGrowthTable(Boolean... includeProjectGrowthTable) {
         return withArraySetFieldByReflection("includeProjectGrowthTable", includeProjectGrowthTable);
     }
