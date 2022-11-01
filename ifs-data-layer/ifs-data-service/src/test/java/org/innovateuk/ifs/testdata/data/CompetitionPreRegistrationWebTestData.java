@@ -66,10 +66,6 @@ public class CompetitionPreRegistrationWebTestData {
                         .withSectionName("Application questions")
                         .withQuestionName("Participating Organisation project region"),
                 aPreRegistrationSectionLine()
-                        .withCompetitionName("Horizon Europe Guarantee Pre Registration Competition with Evidence Enabled")
-                        .withSectionName("Project details")
-                        .withQuestionName("Work programme"),
-                aPreRegistrationSectionLine()
                         .withCompetitionName("Horizon Europe Guarantee Pre Registration Competition with EOI Decision")
                         .withSectionName("Application questions")
                         .withQuestionName("What EIC call have you been successfully evaluated for?"),
@@ -97,6 +93,10 @@ public class CompetitionPreRegistrationWebTestData {
                         .withCompetitionName("Horizon Europe Guarantee Pre Registration Competition with EOI Decision")
                         .withSectionName("Application questions")
                         .withQuestionName("How much budget is allocated for PhD students employed at your institution on this project?"),
+                aPreRegistrationSectionLine()
+                        .withCompetitionName("Horizon Europe Guarantee Pre Registration Competition with Evidence Enabled")
+                        .withSectionName("Project details")
+                        .withQuestionName("Work programme"),
                 aPreRegistrationSectionLine()
                         .withCompetitionName("Horizon Europe Guarantee Pre Registration Competition with Evidence Enabled")
                         .withSectionName("Terms and conditions"),
