@@ -17,7 +17,7 @@ spec:
           emptyDir:
             medium: Memory
       containers:
-        - image: selenium/standalone-chrome:3.14.0-arsenic
+        - image: selenium/standalone-chrome:3.14.0-arsenic@sha256:8ea147878016fb200dd07d92d39f11d6522707d630202a1b1c15d748a2bee06f
           name: chrome
           imagePullPolicy: IfNotPresent
           volumeMounts:
