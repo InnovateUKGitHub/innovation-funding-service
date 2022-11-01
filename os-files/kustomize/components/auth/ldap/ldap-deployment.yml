@@ -24,7 +24,7 @@ spec:
             - name: LDAP_PORT
               value: "8389"
           name: ldap
-          image: docker-ifs.devops.innovateuk.org/releases/ldap-service:ARCHIVE-BIL-SKAFFOLDBUILD-162_4c1c95090fb3ca2c9c03357024e085b9538cbe11
+          image: docker-ifs.devops.innovateuk.org/releases/ldap-service:ARCHIVE-BIL-SKAFFOLDBUILD-162_4c1c95090fb3ca2c9c03357024e085b9538cbe11@sha256:256256714fbcf2d48acd2ca1528d91c47e4e3ceef6ef7d546f756de0133aeb59
           volumeMounts:
             - name: ldap-keys-volume
               mountPath: /var/certs
