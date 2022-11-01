@@ -154,7 +154,7 @@ public class PageHistoryServiceTest {
         history = new LinkedList<>();
         when(encodedCookieService.getCookieAs(eq(request), eq(APPLICATION_OVERVIEW_PAGE_HISTORY), any()))
                .thenReturn(Optional.of(history));
-        pageHistoryService.recordLoanApplicationOverviewPageHistory(request, response, "Application Overview", "/url/applicationOverview");
+        pageHistoryService.recordApplicationOverviewPageHistory(request, response, "Application Overview", "/url/applicationOverview");
 
         assertEquals(1, history.size());
         verify(encodedCookieService).saveToCookie(response, APPLICATION_OVERVIEW_PAGE_HISTORY, JsonUtil.getSerializedObject(history));
