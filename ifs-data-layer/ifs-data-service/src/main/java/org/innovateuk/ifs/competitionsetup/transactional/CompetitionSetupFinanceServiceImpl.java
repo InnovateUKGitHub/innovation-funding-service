@@ -7,6 +7,8 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
@@ -24,7 +26,7 @@ public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService
             competition.setIncludeJesForm(compSetupFinanceRes.getIncludeJesForm());
             competition.setIncludeProjectGrowthTable(compSetupFinanceRes.getIncludeGrowthTable());
             competition.setIncludeYourOrganisationSection(compSetupFinanceRes.getIncludeYourOrganisationSection());
-            competition.setIncludePaymentMilestone(compSetupFinanceRes.getIncludePaymentMilestone());
+            Optional.ofNullable(compSetupFinanceRes.getIncludePaymentMilestone()).ifPresent(competition::setIncludePaymentMilestone);
             return serviceSuccess();
         });
     }

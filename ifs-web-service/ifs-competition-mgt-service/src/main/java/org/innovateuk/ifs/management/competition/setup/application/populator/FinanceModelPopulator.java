@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.competition.setup.application.populator;
 
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.management.competition.setup.application.viewmodel.FinanceViewModel;
@@ -23,7 +24,7 @@ public class FinanceModelPopulator implements CompetitionSetupSubsectionModelPop
 	@Override
 	public CompetitionSetupSubsectionViewModel populateModel(CompetitionResource competitionResource, Optional<Long> objectId) {
         return new FinanceViewModel(
-                competitionResource.isNonFinanceType(), competitionResource.isKtp()
+                competitionResource.isNonFinanceType(), competitionResource.isKtp(), competitionResource.isCompTypeOfgemAndFundingTypeThirdParty()
         );
     }
 }
