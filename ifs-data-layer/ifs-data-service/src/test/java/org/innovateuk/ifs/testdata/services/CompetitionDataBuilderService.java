@@ -184,7 +184,8 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                 .withPreRegistrationSections(line, preRegistrationSectionLines)
                 .withImSurveyEnabled(line)
                 .withEoiEvidenceConfig(line)
-                .withImpactManagement(line);
+                .withImpactManagement(line)
+                .withPaymentMilestone(line);
 
         CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(line, competitionBeforeMilestones);
 
