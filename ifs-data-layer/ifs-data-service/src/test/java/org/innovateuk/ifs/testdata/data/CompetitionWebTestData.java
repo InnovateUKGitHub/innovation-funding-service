@@ -502,7 +502,7 @@ public class CompetitionWebTestData {
                         .withAssessmentStage(false)
                         .withPreRegistration(true)
                         .withEoiEvidenceRequired(true),
-                ofGemCompetition()
+                thirdPartyOfgemCompetition()
                         .withName("Ofgem competition with payment milestones")
                         .withIncludePaymentMilestone(true)
         )
