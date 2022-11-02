@@ -66,12 +66,9 @@ public class FinanceModelPopulatorTest {
                 .build();
 
         assertTrue(competition.isNonFinanceType());
-
         FinanceViewModel viewModel = (FinanceViewModel) populator.populateModel(competition, Optional.empty());
-
         assertEquals(FinanceViewModel.class, viewModel.getClass());
-
-        assertTrue("Payment Milestones should  be enabled for third part ofgem competition", viewModel.isShowPaymentMilestonesInCompetition());
+        assertTrue("Payment Milestones view should  be enabled for third part ofgem competition", viewModel.isShowPaymentMilestonesInCompetition());
 
     }
 
@@ -91,12 +88,9 @@ public class FinanceModelPopulatorTest {
                 .build();
 
         assertTrue(competition.isNonFinanceType());
-
         FinanceViewModel viewModel = (FinanceViewModel) populator.populateModel(competition, Optional.empty());
-
         assertEquals(FinanceViewModel.class, viewModel.getClass());
-
-        assertFalse("Payment Milestones should  not be enabled for non third part ofgem competition", viewModel.isShowPaymentMilestonesInCompetition());
+        assertFalse("Payment Milestones view should  not be enabled for non third part ofgem competition", viewModel.isShowPaymentMilestonesInCompetition());
 
     }
 }
