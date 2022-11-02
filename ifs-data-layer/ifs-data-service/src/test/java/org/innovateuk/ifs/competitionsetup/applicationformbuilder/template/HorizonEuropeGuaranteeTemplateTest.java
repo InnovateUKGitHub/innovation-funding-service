@@ -53,7 +53,7 @@ public class HorizonEuropeGuaranteeTemplateTest {
 
         SectionBuilder applicationQuestions = optionalApplicationQuestions.get();
 
-        assertEquals(2, applicationQuestions.getQuestions().size());
+        assertEquals(3, applicationQuestions.getQuestions().size());
 
         QuestionBuilder organisation = applicationQuestions.getQuestions().get(0);
         assertEquals("Tell us where your organisation is based", organisation.getName());
@@ -66,5 +66,11 @@ public class HorizonEuropeGuaranteeTemplateTest {
         assertEquals("Participating Organisation project region", projectRegion.getShortName());
         assertEquals("Please type the region your project is being carried out in.", projectRegion.getDescription());
         assertEquals(QuestionSetupType.ASSESSED_QUESTION, projectRegion.getQuestionSetupType());
+
+        QuestionBuilder horizonEuropeDefaultQuestion = applicationQuestions.getQuestions().get(2);
+        assertEquals("Horizon Europe placeholder question", horizonEuropeDefaultQuestion.getName());
+        assertEquals("Horizon Europe placeholder question", horizonEuropeDefaultQuestion.getShortName());
+        assertEquals("Horizon Europe placeholder question description", horizonEuropeDefaultQuestion.getDescription());
+        assertEquals(QuestionSetupType.ASSESSED_QUESTION, horizonEuropeDefaultQuestion.getQuestionSetupType());
     }
 }
