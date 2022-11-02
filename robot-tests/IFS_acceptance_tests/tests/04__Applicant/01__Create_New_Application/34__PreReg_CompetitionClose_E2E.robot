@@ -409,6 +409,7 @@ the user should not see subsection
     the user should not see the element     link = ${subSectionName}
 
 Comp admin set the competion as prereg comp and hide the question, section and subsection
+    set competition as non open ended                    ${preregCompetitionId}
     set competition as pre reg                           ${preregCompetitionId}
     set question as hidden in pre reg application        ${preregCompetitionId}
     set subsection as hidden in pre reg application      ${preregCompetitionId}
@@ -555,3 +556,7 @@ the user fills in the competition close Milestones
       \    the user enters text to a text field     jQuery = th:contains("${ELEMENT}") ~ td.year input  ${nextyear}
       \    ${i} =   Evaluate   ${i} + 1
     the user clicks the button/link     jQuery = button:contains("Done")
+
+set competition as non open ended
+    [Arguments]  ${competitionId}
+    execute sql string  UPDATE `${database_name}`.`competition` SET `always_open` = 0 WHERE `id` = ${competitionId};
