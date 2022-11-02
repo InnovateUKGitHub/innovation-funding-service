@@ -211,7 +211,7 @@
                                             ktp-year(form=${form}, field='preTaxProfit', rowName='Net pre-tax profits (£)', readOnly=${readOnly})" />
                     <th:block th:if="${form.ktpPhase2Enabled}">
                         <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
-                                                ktp-year(form=${form}, field='currentAssets', rowName='Liabilities (£) / Net current assets (£)', readOnly=${readOnly})" />
+                                                ktp-year(form=${form}, field='currentAssets', rowName='Net current assets / Liabilities (£)', readOnly=${readOnly})" />
                     </th:block>
                     <th:block th:unless="${form.ktpPhase2Enabled}">
                         <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::

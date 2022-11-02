@@ -261,7 +261,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             "LEFT JOIN a.applicationExpressionOfInterestConfig eoiConfig " +
             "LEFT JOIN a.projectToBeCreated projectToBeCreated " +
             COMP_FUNDING_FILTER +
-            " AND NOT ((a.manageDecisionEmailDate != null AND a.decision = org.innovateuk.ifs.fundingdecision.domain.DecisionStatus.FUNDED)" +
+            " AND NOT ((a.manageDecisionEmailDate != null AND (a.decision = org.innovateuk.ifs.fundingdecision.domain.DecisionStatus.FUNDED OR a.decision = org.innovateuk.ifs.fundingdecision.domain.DecisionStatus.EOI_APPROVED))" +
             " OR (projectToBeCreated IS NOT NULL" +
             " AND a.competition.fundingType NOT IN (org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP, org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP_AKT)))")
     List<Long> getWithDecisionIsChangeableApplicationIdsByCompetitionId(@Param("compId") long competitionId,
