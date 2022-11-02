@@ -39,7 +39,6 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
         competition.setResubmission(false);
         competition.setMinProjectDuration(1);
         competition.setMaxProjectDuration(84);
-        competition.setAlwaysOpen(true);
         competition.setApplicationFinanceType(STANDARD);
         competition.setIncludeProjectGrowthTable(false);
         competition.setIncludeJesForm(false);
