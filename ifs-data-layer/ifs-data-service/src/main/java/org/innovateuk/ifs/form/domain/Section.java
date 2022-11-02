@@ -112,7 +112,7 @@ public class Section implements Comparable<Section> {
         return this.childSections!= null && !this.childSections.isEmpty();
     }
 
-    public void setParentSection(SectionType parentSection) {
+    public void setParentSection(Section parentSection) {
         this.parentSection = parentSection;
     }
 
