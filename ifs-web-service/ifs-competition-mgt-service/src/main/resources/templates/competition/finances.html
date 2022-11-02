@@ -278,8 +278,10 @@
                     <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.includeJesForm ? 'Yes' :  'No'}" />
                     <dt class="govuk-grid-column-one-third clear-floats">Include the 'Your organisation' section for research organisations</dt>
                     <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.includeYourOrganisationSection ? 'Yes' :  'No'}" />
-                    <dt th:if="${model.subsection.isShowPaymentMilestonesInCompetition}" class="govuk-grid-column-one-third clear-floats">Include payment milstones</dt>
-                    <dd th:if="${model.subsection.isShowPaymentMilestonesInCompetition}" class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.includePaymentMilestones ? 'Yes' :  'No'}" />
+                    <th:block th:if="${model.subsection.isShowPaymentMilestonesInCompetition}">
+                    <dt class="govuk-grid-column-one-third clear-floats">Include payment milestones</dt>
+                    <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.includePaymentMilestones ? 'Yes' :  'No'}" />
+                    </th:block>
                     <dt class="govuk-grid-column-full govuk-!-margin-0">Funding rules for this competition</dt>
                     <dd class="govuk-grid-column-full wysiwyg-styles" ifs:utext="${competitionSetupForm.fundingRules}" />
                 </th:block>
