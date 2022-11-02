@@ -1,4 +1,4 @@
-FROM boxfuse/flyway:5.2.4
+FROM boxfuse/flyway:5.2.4@sha256:f41c3c73e917ef5eddbbccaa67537dcad40e81bc51dfad972533318d9c5dade6
 VOLUME /tmp
 RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
 RUN sed -i '/jessie-updates/d' /etc/apt/sources.list

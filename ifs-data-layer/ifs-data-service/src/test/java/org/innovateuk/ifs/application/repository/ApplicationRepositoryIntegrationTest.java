@@ -680,6 +680,37 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
     }
 
     @Test
+    public void getWithDecisionIsChangeableApplicationIdsByCompetitionId() {
+        loginCompAdmin();
+
+        Competition competition = competitionRepository.save(newCompetition().with(id(null))
+                .withFundingType(FundingType.HECP)
+                .build());
+
+        List<Application> applications = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withActivityState(SUBMITTED)
+                .withActivityState(SUBMITTED)
+                .withDecision(FUNDED, null, UNFUNDED)
+                .withManageDecisionEmailDate(ZonedDateTime.now(), null, null)
+                .build(3);
+
+        applicationRepository.saveAll(applications);
+
+        ProjectToBeCreated projectToBeCreated = new ProjectToBeCreated(applications.get(0), null);
+        projectToBeCreatedRepository.save(projectToBeCreated);
+
+        List<Long> foundApplications = repository.getWithDecisionIsChangeableApplicationIdsByCompetitionId(competition.getId(), "", null, FUNDED, false);
+
+        assertEquals(0, foundApplications.size());
+
+        foundApplications = repository.getWithDecisionIsChangeableApplicationIdsByCompetitionId(competition.getId(), "", null, UNFUNDED, false);
+
+        assertEquals(1, foundApplications.size());
+    }
+
+    @Test
     public void getWithDecisionIsChangeableKTPApplicationIdsByCompetitionId() {
         loginCompAdmin();
 
@@ -731,6 +762,37 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         List<Long> foundApplications = repository.getWithDecisionIsChangeableApplicationIdsByCompetitionId(competition.getId(), "", null, FUNDED, false);
 
         assertEquals(0, foundApplications.size());
+    }
+
+    @Test
+    public void getWithDecisionIsChangeableEoiApplicationIdsByCompetitionId() {
+        loginCompAdmin();
+
+        Competition competition = competitionRepository.save(newCompetition().with(id(null))
+                .withFundingType(FundingType.HECP)
+                .build());
+
+        List<Application> applications = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withActivityState(SUBMITTED)
+                .withActivityState(SUBMITTED)
+                .withDecision(EOI_APPROVED, null, EOI_REJECTED)
+                .withManageDecisionEmailDate(ZonedDateTime.now(), null, null)
+                .build(3);
+
+        applicationRepository.saveAll(applications);
+
+        ProjectToBeCreated projectToBeCreated = new ProjectToBeCreated(applications.get(0), null);
+        projectToBeCreatedRepository.save(projectToBeCreated);
+
+        List<Long> foundApplications = repository.getWithDecisionIsChangeableApplicationIdsByCompetitionId(competition.getId(), "", null, EOI_APPROVED, false);
+
+        assertEquals(0, foundApplications.size());
+
+        foundApplications = repository.getWithDecisionIsChangeableApplicationIdsByCompetitionId(competition.getId(), "", null, EOI_REJECTED, false);
+
+        assertEquals(1, foundApplications.size());
     }
 
     @Test

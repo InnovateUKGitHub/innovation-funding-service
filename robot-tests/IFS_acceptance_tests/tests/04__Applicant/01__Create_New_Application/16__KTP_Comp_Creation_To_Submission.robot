@@ -1410,18 +1410,6 @@ the user can see project cost breakdown of lead organisation
     the user should see the element     jQuery = th:contains("Total") ~ td:contains("2,369")
 
 the user can view lead and partner finance summary calculations
-#    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("2,369")
-#    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("10.00")
-#    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("237")
-#    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("20,000")
-#    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("2,132")
-#    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("90")
-#    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("20,000")
-#    the user should see the element     jQuery = th:contains("Total") ~ td:contains("2,369")
-#    the user should see the element     jQuery = th:contains("Total") ~ td:contains("90")
-#    the user should see the element     jQuery = th:contains("Total") ~ td:contains("40,000")
-#    the user should see the element     jQuery = th:contains("Total") ~ td:contains("237")
-#    the user should see the element     jQuery = th:contains("Total") ~ td:contains("2,132")
     the user should see the element    jQuery = th:contains("${ktpOrgName}")+td:contains("2,369")+td:contains("10.00")+td:contains("237")+td:contains("0")+td:contains("0")+td:contains("20,000")
     the user should see the element    jQuery = th:contains("${newPartnerOrgName}")+td:contains("0")+td:contains("0.00")+td:contains("0")+td:contains("90")+td:contains("2,132")+td:contains("20,000")
     the user should see the element    jQuery = th:contains("Total")+td:contains("£2,369")+td+td:contains("237")+td:contains("90")+td:contains("2,132")+td:contains("40,000")
@@ -1551,7 +1539,6 @@ the user checks the read-only page
     the user should see the element               jQuery = h3:contains("When does your fEC certificate expire?") ~ div p:contains("1 December 2500")
     the user should see the element               jQuery = h3:contains("When does your fEC certificate expire?") ~ div:contains("Change")
     Wait Until Page Contains Without Screenshots  Last updated:
-#    the user should see the element               jQuery = div:contains("Last updated: ${dayInNumber} ${monthWord}")
     the user should see the element               link = Return to project finances
 
 the user should see the right values

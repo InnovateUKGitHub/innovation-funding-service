@@ -12,6 +12,8 @@ Resource          ../../resources/common/Applicant_Commons.robot
 ${quarantine_warning}    This file has been found to be unsafe
 ${openCompetitionPreRegApplicationName}        Horizon Europe Guarantee Eoi Application3
 ${openCompetitionPreRegApplicationId}          ${application_ids["${openCompetitionPreRegApplicationName}"]}
+${openCompetitionPreRegApplicationName2}        Horizon Europe Guarantee Eoi Application2
+${openCompetitionPreRegApplicationId2}          ${application_ids["${openCompetitionPreRegApplicationName2}"]}
 ${openCompetitionPreRegName}                   Horizon Europe Guarantee Pre Registration Competition with EOI Decision
 ${openCompetitionPreReg}                       ${competition_ids['${openCompetitionPreregName}']}
 *** Test Cases ***
@@ -96,6 +98,13 @@ Pagination Expression of Interest notifications page
     And the user clicks the button/link         jQuery = span:contains("Previous")
     And the user should see the element         jQuery = td:contains(${openCompetitionPreRegApplicationId})
 
+Non checked EOI applications appear in the recipient list when sending EOI notifications
+    [Documentation]    IFS-13193
+    Given Internal user selects Select all applications
+    When the user clicks the button/link                         jQuery = span:contains("Review list of recipients")
+    Then the user should see the element                         jQuery = td:contains("${openCompetitionPreRegApplicationId2}") ~ td:contains("Horizon Europe Guarantee Eoi Application2")
+    And the user should not see the element                      jQuery = td:contains("${openCompetitionPreRegApplicationId}") ~ td:contains("Horizon Europe Guarantee Eoi Application3")
+
 *** Keywords ***
 Internal user marks the EOI as successful/unsuccessful
     [Arguments]  ${applicationName}  ${decision}
@@ -113,4 +122,8 @@ Internal user makes decision on EOI
     Internal user marks the EOI as successful/unsuccessful      Horizon Europe Guarantee Eoi Application16   EOI_REJECTED
     Internal user marks the EOI as successful/unsuccessful      Horizon Europe Guarantee Eoi Application18   EOI_APPROVED
     Internal user marks the EOI as successful/unsuccessful      Horizon Europe Guarantee Eoi Application20   EOI_REJECTED
+
+Internal user selects Select all applications
+    the user selects the checkbox               select-all-1
+    the user clicks the button/link             jQuery = button:contains("Write and send email")
 

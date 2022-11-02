@@ -62,11 +62,11 @@ public class PageHistoryService {
     }
 
     private Optional<Deque<PageHistory>> getApplicationOverviewPageHistory(HttpServletRequest request) {
-        return encodedCookieService.getCookieAs(request, APPLICATION_OVERVIEW_PAGE_HISTORY, new TypeReference<Deque<PageHistory>>() {
+        return encodedCookieService.getCookieAs(request, APPLICATION_OVERVIEW_PAGE_HISTORY, new TypeReference<>() {
         });
     }
 
-    public void recordLoanApplicationOverviewPageHistory(HttpServletRequest request, HttpServletResponse response, String name, String uri) {
+    public void recordApplicationOverviewPageHistory(HttpServletRequest request, HttpServletResponse response, String name, String uri) {
         Deque<PageHistory> appOverviewHistory = getApplicationOverviewPageHistory(request).orElse(new LinkedList<>());
         appOverviewHistory.push(new PageHistory(name, uri, null));
         this.encodedCookieService.saveToCookie(response, APPLICATION_OVERVIEW_PAGE_HISTORY, JsonUtil.getSerializedObject(appOverviewHistory));
@@ -74,8 +74,6 @@ public class PageHistoryService {
 
     public Optional<PageHistory> getApplicationOverviewPage(HttpServletRequest request) {
         return getApplicationOverviewPageHistory(request)
-                .map(queue -> {
-                    return queue.pop();
-                });
+                .map(Deque::pop);
     }
 }
