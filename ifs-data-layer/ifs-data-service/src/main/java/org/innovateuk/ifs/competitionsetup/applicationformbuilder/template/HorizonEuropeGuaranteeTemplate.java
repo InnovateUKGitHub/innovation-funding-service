@@ -67,8 +67,16 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
     public static List<QuestionBuilder> horizonEuropeDefaultQuestions() {
         return newArrayList(
                 organisation(),
-                projectRegion()
+                projectRegion(),
+                horizonEuropeDefaultQuestion()
         );
+    }
+
+    public static QuestionBuilder horizonEuropeDefaultQuestion() {
+        return genericQuestion()
+                .withShortName("Direct award placeholder question")
+                .withName("Direct award placeholder question")
+                .withDescription("Direct award placeholder question description");
     }
 
     public static QuestionBuilder organisation() {
