@@ -12,5 +12,4 @@ components:
   - ../../../patches/rabbitmq-config-secrets-patch
 
 patchesStrategicMerge:
-  - data-layer/data-service/data-service-deployment.yml
   - web-layer/registration-service/registration-service-deployment.yml
