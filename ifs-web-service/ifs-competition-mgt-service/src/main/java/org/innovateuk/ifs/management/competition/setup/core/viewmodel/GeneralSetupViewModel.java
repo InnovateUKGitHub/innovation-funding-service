@@ -18,12 +18,22 @@ public class GeneralSetupViewModel {
             CompetitionSetupSection.COMPLETION_STAGE,
             CompetitionSetupSection.CONTENT);
 
+    // TODO: To remove the when IM toggle is set to true in Prod
+    private static final List<CompetitionSetupSection> COMPETITION_SETUP_SECTIONS_WITHOUT_IM = asList(
+            CompetitionSetupSection.TERMS_AND_CONDITIONS,
+            CompetitionSetupSection.ADDITIONAL_INFO,
+            CompetitionSetupSection.PROJECT_ELIGIBILITY,
+            CompetitionSetupSection.FUNDING_ELIGIBILITY,
+            CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY,
+            CompetitionSetupSection.APPLICATION_FORM);
+
     private static final List<CompetitionSetupSection> COMPETITION_SETUP_SECTIONS = asList(
             CompetitionSetupSection.TERMS_AND_CONDITIONS,
             CompetitionSetupSection.ADDITIONAL_INFO,
             CompetitionSetupSection.PROJECT_ELIGIBILITY,
             CompetitionSetupSection.FUNDING_ELIGIBILITY,
             CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY,
+            CompetitionSetupSection.PROJECT_IMPACT,
             CompetitionSetupSection.APPLICATION_FORM);
 
     private static final List<CompetitionSetupSection> ASSESSMENT_SECTIONS = singletonList(
@@ -129,10 +139,8 @@ public class GeneralSetupViewModel {
     }
 
     public List<CompetitionSetupSection> getCompetitionSetupSections() {
-        if (isProjectImpactEnabled) {
-            COMPETITION_SETUP_SECTIONS.add(CompetitionSetupSection.PROJECT_IMPACT);
-        }
-        return COMPETITION_SETUP_SECTIONS;
+
+        return isProjectImpactEnabled ? COMPETITION_SETUP_SECTIONS : COMPETITION_SETUP_SECTIONS_WITHOUT_IM;
     }
 
     public static List<CompetitionSetupSection> getAssessmentSections() {
