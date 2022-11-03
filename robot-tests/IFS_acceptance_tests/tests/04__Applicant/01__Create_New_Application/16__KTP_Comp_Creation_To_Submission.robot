@@ -182,10 +182,10 @@ The applicants should not see knowledge based organisations when creating a non-
 
 The applicants should not see knowledge based organisations when joining a non-ktp applications
     [Documentation]  IFS-8035
-    Given the user clicks the button/link                    id = save-organisation-button
-    And the lead invites already registered user             ${collaborator1_credentials["email"]}   ${nonKTPCompetitionName}
+    Given the existing user continue with existing organisation
+    And the lead invites already registered user                    ${collaborator1_credentials["email"]}   ${nonKTPCompetitionName}
     When partner login to see your organisation details
-    Then the user should not see the element                 jQuery = dt:contains("${ktpOrgName}")
+    Then the user should not see the element                        jQuery = dt:contains("${ktpOrgName}")
 
 The applicants should not see knowledge based organisations when joining a non-ktp applications from project setup
     [Documentation]  IFS-8035
@@ -1573,4 +1573,8 @@ the user enters empty data into date fields
     the user enters text to a text field   id = fecCertExpiryMonth   ${month}
     the user enters text to a text field   id = fecCertExpiryYear  ${year}
 
+the existing user continue with existing organisation
+    ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  jQuery = label:contains("Ward Ltd")
+    Run Keyword if  '${status}' == 'PASS'   the user clicks the button twice   jQuery = label:contains("Ward Ltd")
+    the user clicks the button/link         jQuery = button:contains("Save and continue")
 
