@@ -24,7 +24,6 @@ public class GeneralSetupViewModel {
             CompetitionSetupSection.PROJECT_ELIGIBILITY,
             CompetitionSetupSection.FUNDING_ELIGIBILITY,
             CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY,
-            CompetitionSetupSection.PROJECT_IMPACT,
             CompetitionSetupSection.APPLICATION_FORM);
 
     private static final List<CompetitionSetupSection> ASSESSMENT_SECTIONS = singletonList(
@@ -41,6 +40,7 @@ public class GeneralSetupViewModel {
     private boolean ifsAdmin;
     private boolean isAssessmentStageEnabled;
     private boolean isExpressionOfInterestEnabled;
+    private boolean isProjectImpactEnabled;
 
     public GeneralSetupViewModel(boolean editable,
                                  boolean firstTimeInForm,
@@ -50,7 +50,8 @@ public class GeneralSetupViewModel {
                                  boolean isInitialComplete,
                                  boolean ifsAdmin,
                                  boolean isAssessmentStageEnabled,
-                                 boolean isExpressionOfInterestEnabled) {
+                                 boolean isExpressionOfInterestEnabled,
+                                 boolean isProjectImpactEnabled) {
         this.editable = editable;
         this.firstTimeInForm = firstTimeInForm;
         this.competition = competition;
@@ -60,6 +61,7 @@ public class GeneralSetupViewModel {
         this.ifsAdmin = ifsAdmin;
         this.isAssessmentStageEnabled = isAssessmentStageEnabled;
         this.isExpressionOfInterestEnabled = isExpressionOfInterestEnabled;
+        this.isProjectImpactEnabled = isProjectImpactEnabled;
     }
 
     public void setCurrentSectionFragment(String currentSectionFragment) {
@@ -118,11 +120,18 @@ public class GeneralSetupViewModel {
         return isExpressionOfInterestEnabled;
     }
 
+    public boolean isProjectImpactEnabled() {
+        return isProjectImpactEnabled;
+    }
+
     public static List<CompetitionSetupSection> getPublishSections() {
         return PUBLISH_SECTIONS;
     }
 
-    public static List<CompetitionSetupSection> getCompetitionSetupSections() {
+    public List<CompetitionSetupSection> getCompetitionSetupSections() {
+        if (isProjectImpactEnabled) {
+            COMPETITION_SETUP_SECTIONS.add(CompetitionSetupSection.PROJECT_IMPACT);
+        }
         return COMPETITION_SETUP_SECTIONS;
     }
 

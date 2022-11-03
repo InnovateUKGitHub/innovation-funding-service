@@ -87,11 +87,20 @@
             </a>
         </li>
         <li class="next">
-            <a rel="next" title="Navigate to next part"
-               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='project-impact')}">
-                <span class="pagination-label">Next</span>
-                <span class="pagination-part-title">Project impact</span>
-            </a>
+            <th:block th:if="${model.general.isProjectImpactEnabled}">
+                <a rel="next" title="Navigate to next part"
+                   th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='project-impact')}">
+                    <span class="pagination-label">Next</span>
+                    <span class="pagination-part-title">Project impact</span>
+                </a>
+            </th:block>
+            <th:block th:unless="${model.general.isProjectImpactEnabled}">
+                <a rel="next" title="Navigate to next part"
+                   th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='application')}">
+                    <span class="pagination-label">Next</span>
+                    <span class="pagination-part-title">Application</span>
+                </a>
+            </th:block>
         </li>
     </ul>
 </th:block>
