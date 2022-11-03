@@ -59,6 +59,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         return FundingRules.SUBSIDY_CONTROL;
     }
 
+    private static String organisationName = "Innovate UK";
     private static final String SUBSIDYBASIS = "Subsidy basis";
     private static final String YES = "Yes";
     private static final String NO = "No";
@@ -66,7 +67,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
     private static final String QUESTION3_TITLE = "Does your enterprise trade directly with customers in Northern Ireland?";
     private static final String QUESTION3_GUIDANCE =
             "Note: if you have not made any sales or you do not intend to sell to Northern Ireland " +
-                    "or you consider it possible to say that any effect of the Innovate UK funding upon: " + "\n" +
+                    "or you consider it possible to say that any effect of the " + organisationName + " funding upon: " + "\n" +
                     "goods that will be traded between Northern Ireland and the EU " + "\n" +
                     "or \n" +
                     "the single electricity market of Ireland, " + "\n" +
@@ -86,11 +87,11 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
                     "of agricultural products; or active in the fisheries and aquaculture sector and " +
                     "involved in trade in such products with Northern Ireland?";
     private static final String QUESTION6_TITLE =
-            "Can you confirm that the Innovate UK funding will be directed towards " +
+            "Can you confirm that the " + organisationName + " funding will be directed towards " +
                     "activities other than the production, processing or marketing of agricultural products or " +
                     "the fisheries and aquaculture sector?";
     private static final String QUESTION6_GUIDANCE =
-            "If your activities do come under these sectors, prior to receipt of the Innovate UK funding you must " +
+            "If your activities do come under these sectors, prior to receipt of the " + organisationName + " funding you must " +
                     "establish accounting segregations to ensure that the funding does not cross-subsidise " +
                     "any of those activities." +
                     "\n" +
@@ -103,6 +104,8 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         if (competitionTypeSections.stream().noneMatch(section -> section.getType() == SectionType.FINANCES)) {
             return competitionTypeSections;
         }
+
+        setOrganisationName(competition);
 
         if (!northernIrelandSubsidyControlToggle || generatingWebtestDataForComp(competition)) {
             insertNorthernIrelandTacticalDeclaration(competitionTypeSections);
@@ -122,6 +125,14 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         return competitionTypeSections;
     }
 
+    private static void setOrganisationName(Competition competition) {
+        boolean isHorizonEurope = competition.isHorizonEuropeGuarantee();
+
+        if (isHorizonEurope) {
+            organisationName = "UKRI";
+        }
+    }
+
     private boolean generatingWebtestDataForComp(Competition competition) {
         return Arrays.stream(environment.getActiveProfiles()).anyMatch(IfsProfileConstants.INTEGRATION_TEST::equals)
                 && competition.getName().contains("Subsidy control tactical");
@@ -138,8 +149,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         return aQuestion()
                 .withShortName(SUBSIDYBASIS)
                 .withName(
-                        "Will the project, including any related activities you want Innovate UK to fund, " +
-                        "affect trade between Northern Ireland and the EU?")
+                        "Will the project, including any related activities you want " + organisationName + " to fund, affect trade between Northern Ireland and the EU?")
                 .withAssignEnabled(false)
                 .withMarkAsCompletedEnabled(true)
                 .withMultipleStatuses(true)
@@ -192,7 +202,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         QuestionnaireQuestionResource fundingDirectlyOrIndirectlyQuestion = new QuestionnaireQuestionResource();
         fundingDirectlyOrIndirectlyQuestion.setTitle(SUBSIDYBASIS);
         fundingDirectlyOrIndirectlyQuestion.setQuestion(
-                "Will the Innovate UK funding directly or indirectly have an effect upon either:" + "\n" +
+                "Will the " + organisationName + " funding directly or indirectly have an effect upon either:" + "\n" +
                         "goods that will be traded between Northern Ireland and the EU" + "\n" +
                         "and/or the single electricity market (of Ireland)?");
         fundingDirectlyOrIndirectlyQuestion.setQuestionnaire(questionnaire.getId());
@@ -204,7 +214,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         intendingToTradeAnyGoodsQuestion.setTitle(SUBSIDYBASIS);
         intendingToTradeAnyGoodsQuestion.setQuestion(
                 "Are you intending to trade any goods arising from the activities " +
-                "funded by Innovate UK with the European Union through Northern Ireland?");
+                "funded by " + organisationName + " with the European Union through Northern Ireland?");
         intendingToTradeAnyGoodsQuestion.setQuestionnaire(questionnaire.getId());
         intendingToTradeAnyGoodsQuestion = questionnaireQuestionService.create(intendingToTradeAnyGoodsQuestion).getSuccess();
 
