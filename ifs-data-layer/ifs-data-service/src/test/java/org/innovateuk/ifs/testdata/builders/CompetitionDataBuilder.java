@@ -216,31 +216,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withPaymentMilestone(CompetitionLine line) {
-        return asCompAdmin(data -> {
-            CompetitionResource competitionResource = data.getCompetition();
-            if (line != null &&
-                    line.isIncludePaymentMilestone()) {
-                Optional<Competition> competition = competitionRepository.findById(competitionResource.getId());
-                competition.ifPresentOrElse(comp -> {
-                    Optional<Section> financeSection = sectionRepository.findByTypeAndCompetitionId(SectionType.FINANCES, competition.get().getId());
-                    Section section = new Section();
-                    section.setCompetition(comp);
-                    section.setName("Payment milestone");
-                    section.setParentSection(financeSection.get());
-                    section.setType(SectionType.PAYMENT_MILESTONES);
-                    section.setPriority(4);
-                    sectionRepository.save(section);
-                    },
-                    () -> {
-                            throw new RuntimeException("Competition not found for id" + competitionResource.getId());
-                    }
-
-                );
-            }
-        });
-    }
-
     public CompetitionDataBuilder withImpactManagement(CompetitionLine line) {
 
         return asCompAdmin(data -> {
