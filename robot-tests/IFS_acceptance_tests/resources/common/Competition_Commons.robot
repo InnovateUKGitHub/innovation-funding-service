@@ -456,7 +456,7 @@ the user fills in the Finances questions
     the user clicks the button/link       link = Finances
     ${status}   ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = h2:contains("Include payment milestones")
     Run Keyword If  '${status}' == 'PASS'  run keywords  the user sees that the radio button is selected    includePaymentMilestones  false
-    ...                             AND                  the user clicks the button twice   css = label[for="include-payment-milestone-no-yes"]
+    ...                             AND                  the user clicks the button twice   css = label[for="include-payment-milestone-yes"]
     the user clicks the button twice      css = label[for = "include-growth-table-${growthTable}"]
     the user selects the radio button     applicationFinanceType  STANDARD
     the user selects the radio button     includeYourOrganisationSection  ${organisation}
