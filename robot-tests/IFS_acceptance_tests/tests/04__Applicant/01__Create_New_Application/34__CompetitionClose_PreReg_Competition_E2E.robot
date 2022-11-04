@@ -365,6 +365,7 @@ the competition admin creates prereg competition
     the user fills in the CS Initial details                    ${competition}  ${month}  ${nextyear}  ${compType_HESTA}  ${fundingRule}  HECP
     the user selects the Terms and Conditions                   ${compType}  ${fundingRule}
     the user fills in the CS Funding Information
+    the user completes project impact section                   No
     the user fills in the CS Project eligibility                ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user fills in the CS funding eligibility                false   ${compType_HESTA}  ${fundingRule}
     the user selects the organisational eligibility to no       false
