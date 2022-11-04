@@ -133,10 +133,10 @@ spec:
                 name: feature-toggle-config
                 key: IFS_EXPRESSION_OF_INTEREST_ENABLED
           - name: IFS_PROJECT_IMPACT_ENABLED
-              valueFrom:
-                configMapKeyRef:
-                  name: feature-toggle-config
-                  key: IFS_PROJECT_IMPACT_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: feature-toggle-config
+                key: IFS_PROJECT_IMPACT_ENABLED
           - name: JAVA_TOOL_OPTIONS
             value: -Xms400m -Xmx400m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
