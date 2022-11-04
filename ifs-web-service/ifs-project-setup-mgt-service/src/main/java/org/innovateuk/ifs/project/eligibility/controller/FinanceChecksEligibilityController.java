@@ -237,7 +237,8 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                     canEditProjectCosts,
                     user.hasAuthority(Authority.AUDITOR),
                     competition.get().isThirdPartyOfgem(),
-                    competition.get().isHorizonEuropeGuarantee()
+                    competition.get().isHorizonEuropeGuarantee(),
+                    competition.get().isCompTypeOfgemAndFundingTypeThirdParty()
             ));
 
             model.addAttribute("eligibilityForm", eligibilityForm);

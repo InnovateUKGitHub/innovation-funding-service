@@ -14,15 +14,3 @@ spec:
     metadata:
       labels:
         app: survey-data-svc
-    spec:
-      containers:
-      - image: survey-data-service
-        name: spring-boot-service-container
-        imagePullPolicy: IfNotPresent
-        resources:
-          limits:
-            cpu: 1000m
-          requests:
-            cpu: 300m
-            memory: 800M
-

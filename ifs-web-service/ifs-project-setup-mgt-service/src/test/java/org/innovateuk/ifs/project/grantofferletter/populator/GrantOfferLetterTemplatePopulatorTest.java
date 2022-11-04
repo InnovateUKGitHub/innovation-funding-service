@@ -138,6 +138,72 @@ public class GrantOfferLetterTemplatePopulatorTest {
         assertEquals(academicFinanceTable, model.getAcademicFinanceTable());
         assertEquals(summaryFinanceTable, model.getSummaryFinanceTable());
         assertEquals(subsidyControlModel, model.getSubsidyControlModel());
+        assertFalse(model.isCompTypeOfgemAndFundingTypeThirdParty());
+    }
+
+    @Test
+    public void populateOfgem() {
+
+        GrantTermsAndConditionsResource tsAndCs =
+                newGrantTermsAndConditionsResource()
+                        .withTemplate("Terms and conditions template")
+                        .build();
+
+        CompetitionResource competition =
+                newCompetitionResource()
+                        .withName("Competition name")
+                        .withTermsAndConditions(tsAndCs)
+                        .withCompTypeOfgemAndFundingTypeThirdParty(true)
+                        .build();
+
+        AddressResource address = address();
+        ProjectResource project = project(competition, address);
+        OrganisationResource leadOrg = leadOrg();
+        UserResource projectManager = projectManager();
+        ProjectUserResource projectManagerProjectUser = projectManagerProjectUser(leadOrg, projectManager);
+
+        List<ProjectFinanceResource> projectFinances =
+                newProjectFinanceResource()
+                        .withProject(project.getId())
+                        .build(1);
+
+        List<NoteResource> notes = newNoteResource().build(2);
+        Map<String, ProjectFinanceResource> finances = asMap(leadOrg.getName(), projectFinances);
+        IndustrialFinanceTableModel industrialFinanceTable = industrialFinanceTable(leadOrg, finances);
+        AcademicFinanceTableModel academicFinanceTable = academicFinanceTable(leadOrg, finances);
+        SummaryFinanceTableModel summaryFinanceTable = summaryFinanceTable();
+        SubsidyControlModel subsidyControlModel = subsidyControlModel();
+
+        when(organisationRestService.getOrganisationById(leadOrg.getId())).thenReturn(restSuccess(leadOrg));
+        when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of(projectManagerProjectUser));
+        when(userRestService.retrieveUserById(projectManager.getId())).thenReturn(restSuccess(projectManager));
+        when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(projectFinances));
+        when(projectFinanceNotesRestService.findAll(projectFinances.get(0).getId())).thenReturn(restSuccess(notes));
+
+        when(industrialFinanceTableModelPopulator.createTable(any(), any())).thenReturn(industrialFinanceTable);
+        when(academicFinanceTableModelPopulator.createTable(any(), any())).thenReturn(academicFinanceTable);
+        when(summaryFinanceTableModelPopulator.createTable(any(), any())).thenReturn(summaryFinanceTable);
+        when(subsidyControlModelPopulator.populate(any())).thenReturn(subsidyControlModel);
+
+        GrantOfferLetterTemplateViewModel model = populator.populate(project, competition);
+
+        assertEquals(APPLICATION_ID, model.getApplicationId());
+        assertEquals(projectManager.getFirstName(), model.getProjectManagerFirstName());
+        assertEquals(projectManager.getLastName(), model.getProjectManagerLastName());
+        assertEquals(project.getName(), model.getProjectName());
+        assertEquals(project.getCompetitionName(), model.getCompetitionName());
+        assertEquals(address.getAddressLine1(), model.getProjectAddress().get(0));
+        assertEquals(address.getAddressLine2(), model.getProjectAddress().get(1));
+        assertEquals(leadOrg.getName(), model.getLeadOrgName());
+        assertEquals(notes, model.getNotes());
+        assertEquals(project.getName(), model.getProjectName());
+        assertTrue(model.isSingleTermsAndConditionsTemplatePresent());
+        assertEquals(tsAndCs.getTemplate(), model.getSingleTermsAndConditionsTemplate());
+        assertEquals(industrialFinanceTable, model.getIndustrialFinanceTable());
+        assertEquals(academicFinanceTable, model.getAcademicFinanceTable());
+        assertEquals(summaryFinanceTable, model.getSummaryFinanceTable());
+        assertEquals(subsidyControlModel, model.getSubsidyControlModel());
+        assertTrue(model.isCompTypeOfgemAndFundingTypeThirdParty());
     }
 
     @Test

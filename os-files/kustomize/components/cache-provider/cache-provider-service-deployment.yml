@@ -20,7 +20,7 @@ spec:
         app: cache-provider
     spec:
       containers:
-        - image: redis:5
+        - image: redis:5@sha256:9034effd6cfedf9f08846fbe9eab7aa8c1ea871d37b5173e2110cb5be05a7674
           name: cache-container
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -51,10 +51,12 @@ spec:
             - mountPath: /redis-master
               name: config
           resources:
-            requests:
-              memory: 50M
             limits:
-              memory: 100M
+              cpu: 250m
+              memory: 150Mi
+            requests:
+              cpu: 100m
+              memory: 50Mi
       volumes:
         - name: data
           emptyDir: {}

@@ -3,7 +3,9 @@ package org.innovateuk.ifs.project.viability.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
@@ -227,6 +229,68 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         assertEquals(Integer.valueOf(1000), viewModel.getOtherPublicSectorFunding());
         assertEquals(Integer.valueOf(4675), viewModel.getContributionToProject());
         assertTrue(viewModel.isReadOnly());
+        assertFalse(viewModel.isCompTypeOfgemAndFundingTypeThirdParty());
+
+        FinanceChecksViabilityForm form = (FinanceChecksViabilityForm) model.get("form");
+        assertEquals(viability.getViabilityRagStatus(), form.getRagStatus());
+        assertFalse(form.isCreditReportConfirmed());
+        assertTrue(form.isConfirmViabilityChecked());
+
+        assertEquals((Long) 2L, viewModel.getTurnover());
+        assertEquals((Long) 1L, viewModel.getHeadCount());
+    }
+
+    @Test
+    public void viewViabilityIndustrialOfgem() throws Exception {
+
+        competitionResource = newCompetitionResource()
+                .withName("Competition")
+                .withFinanceRowTypes(Collections.singletonList(FinanceRowType.FINANCE))
+                .withCompetitionTypeEnum(CompetitionTypeEnum.OFGEM)
+                .withFundingType(FundingType.THIRDPARTY)
+                .withCompTypeOfgemAndFundingTypeThirdParty(true)
+                .build();
+
+        ViabilityResource viability = new ViabilityResource(ViabilityState.APPROVED, ViabilityRagStatus.GREEN);
+
+        when(organisationRestService.getOrganisationById(industrialOrganisation.getId())).thenReturn(restSuccess(industrialOrganisation));
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
+        when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(competitionResource));
+        when(projectFinanceService.getProjectFinances(project.getId())).thenReturn(restSuccess(projectFinances));
+        when(financeCheckRestService.getViability(project.getId(), industrialOrganisation.getId())).thenReturn(restSuccess(viability));
+        when(projectFinanceService.isCreditReportConfirmed(project.getId(), industrialOrganisation.getId())).thenReturn(restSuccess(false));
+
+        when(projectService.getById(project.getId())).thenReturn(project);
+
+        GrantOfferLetterStateResource grantOfferLetterStateResource = GrantOfferLetterStateResource.stateInformationForPartnersView(GrantOfferLetterState.PENDING, null);
+
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/viability",
+                        project.getId(), industrialOrganisation.getId())).
+                andExpect(status().isOk()).
+                andExpect(model().attributeExists("model")).
+                andExpect(view().name("project/financecheck/viability")).
+                andReturn();
+
+        Map<String, Object> model = result.getModelAndView().getModel();
+
+        FinanceChecksViabilityViewModel viewModel = (FinanceChecksViabilityViewModel) model.get("model");
+
+        assertTrue(viewModel.isLeadPartnerOrganisation());
+        assertTrue(viewModel.isShowApprovalMessage());
+        assertTrue(viewModel.isShowBackToFinanceCheckButton());
+        assertFalse(viewModel.isShowSaveAndContinueButton());
+
+        assertOrganisationDetails(industrialOrganisation, viewModel);
+
+        assertEquals(Integer.valueOf(6678), viewModel.getTotalCosts());
+        assertEquals(BigDecimal.valueOf(30), viewModel.getPercentageGrant());
+        assertEquals(Integer.valueOf(1003), viewModel.getFundingSought());
+        assertEquals(Integer.valueOf(1000), viewModel.getOtherPublicSectorFunding());
+        assertEquals(Integer.valueOf(4675), viewModel.getContributionToProject());
+        assertEquals(new BigDecimal("70.00"), viewModel.getContributionToProjectPercentage());
+        assertEquals(new BigDecimal("1000"), viewModel.getContributionsInKind());
+        assertTrue(viewModel.isReadOnly());
+        assertTrue(viewModel.isCompTypeOfgemAndFundingTypeThirdParty());
 
         FinanceChecksViabilityForm form = (FinanceChecksViabilityForm) model.get("form");
         assertEquals(viability.getViabilityRagStatus(), form.getRagStatus());

@@ -38,6 +38,10 @@ public class SilIMApplicationLocationInfo {
     @JsonSerialize(using = ZonedDateTimeSerializer.class)
     private ZonedDateTime applicationStartDate;
 
+    @JsonProperty("appSubmittedDate")
+    @JsonSerialize(using = ZonedDateTimeSerializer.class)
+    private ZonedDateTime applicationSubmittedDate;
+
     @JsonProperty("compID")
     private String competitionID;
 

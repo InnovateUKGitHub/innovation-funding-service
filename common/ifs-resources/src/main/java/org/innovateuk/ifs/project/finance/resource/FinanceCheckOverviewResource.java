@@ -16,7 +16,9 @@ FinanceCheckOverviewResource {
     private BigDecimal totalPercentageGrant;
     private BigDecimal researchParticipationPercentage;
     private BigDecimal competitionMaximumResearchPercentage;
-
+    private BigDecimal totalContributionToProjectPercentage;
+    private BigDecimal totalContributionToProject;
+    private BigDecimal totalContributionsInKind;
 
     public FinanceCheckOverviewResource() {
     }
@@ -24,7 +26,8 @@ FinanceCheckOverviewResource {
     public FinanceCheckOverviewResource(Long projectId, String projectName, LocalDate projectStartDate,
                                         int durationInMonths, BigDecimal totalProjectCost, BigDecimal grantAppliedFor,
                                         BigDecimal fundingAppliedFor, BigDecimal otherPublicSectorFunding, BigDecimal totalPercentageGrant,
-                                        BigDecimal researchParticipationPercentage, BigDecimal competitionMaximumResearchPercentage) {
+                                        BigDecimal researchParticipationPercentage, BigDecimal competitionMaximumResearchPercentage,
+                                        BigDecimal totalContributionToProjectPercentage, BigDecimal totalContributionToProject, BigDecimal totalContributionsInKind) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.projectStartDate = projectStartDate;
@@ -36,6 +39,9 @@ FinanceCheckOverviewResource {
         this.totalPercentageGrant = totalPercentageGrant;
         this.researchParticipationPercentage = researchParticipationPercentage;
         this.competitionMaximumResearchPercentage = competitionMaximumResearchPercentage;
+        this.totalContributionToProjectPercentage = totalContributionToProjectPercentage;
+        this.totalContributionToProject = totalContributionToProject;
+        this.totalContributionsInKind = totalContributionsInKind;
     }
 
     public Long getProjectId() {
@@ -124,5 +130,17 @@ FinanceCheckOverviewResource {
 
     public void setFundingAppliedFor(BigDecimal fundingAppliedFor) {
         this.fundingAppliedFor = fundingAppliedFor;
+    }
+
+    public BigDecimal getTotalContributionToProjectPercentage() {
+        return totalContributionToProjectPercentage;
+    }
+
+    public BigDecimal getTotalContributionToProject() {
+        return totalContributionToProject;
+    }
+
+    public BigDecimal getTotalContributionsInKind() {
+        return totalContributionsInKind;
     }
 }

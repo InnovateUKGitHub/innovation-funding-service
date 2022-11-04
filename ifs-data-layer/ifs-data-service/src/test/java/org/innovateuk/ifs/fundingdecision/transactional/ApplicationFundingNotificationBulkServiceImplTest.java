@@ -140,6 +140,13 @@ public class ApplicationFundingNotificationBulkServiceImplTest {
                 .build();
         long successfulApplicationId = 1L;
         long unsuccessfulApplicationId = 2L;
+
+        ApplicationResource application = newApplicationResource()
+                .withId(successfulApplicationId)
+                .withApplicationExpressionOfInterestConfigResource(ApplicationExpressionOfInterestConfigResource.builder()
+                        .enabledForExpressionOfInterest(false)
+                        .build())
+                .build();
         Map<Long, Decision> decisions = ImmutableMap.<Long, Decision> builder()
                 .put(successfulApplicationId, FUNDED)
                 .put(unsuccessfulApplicationId, UNFUNDED)
@@ -148,6 +155,7 @@ public class ApplicationFundingNotificationBulkServiceImplTest {
 
         when(competitionService.getCompetitionByApplicationId(successfulApplicationId)).thenReturn(serviceSuccess(competition));
         when(applicationFundingService.notifyApplicantsOfDecisions(resource)).thenReturn(serviceSuccess());
+        when(applicationService.getApplicationById(successfulApplicationId)).thenReturn(serviceSuccess(application));
 
         ServiceResult<Void> result = service.sendBulkFundingNotifications(resource);
 
@@ -155,5 +163,82 @@ public class ApplicationFundingNotificationBulkServiceImplTest {
 
         verify(applicationFundingService).notifyApplicantsOfDecisions(resource);
     }
+
+    @Test
+    public void sendBulkEoiNotificationsWithReleaseFeedbackStage() {
+        String messageBody = "EOIReleaseFeedbackNotification";
+        CompetitionResource competition = newCompetitionResource()
+                .withCompletionStage(CompetitionCompletionStage.RELEASE_FEEDBACK)
+                .withEnabledForExpressionOfInterest(true)
+                .build();
+        long successfulApplicationId = 1L;
+
+        ApplicationResource application = newApplicationResource()
+                .withId(successfulApplicationId)
+                .withApplicationExpressionOfInterestConfigResource(ApplicationExpressionOfInterestConfigResource.builder()
+                        .enabledForExpressionOfInterest(true)
+                        .build())
+                .build();
+        Map<Long, Decision> decisions = ImmutableMap.<Long, Decision> builder()
+                .put(successfulApplicationId, EOI_APPROVED)
+                .build();
+        FundingNotificationResource resource = new FundingNotificationResource(messageBody, decisions);
+        FundingNotificationResource fundedResource = new FundingNotificationResource(messageBody,
+                ImmutableMap.<Long, Decision> builder()
+                        .put(successfulApplicationId, EOI_APPROVED)
+                        .build());
+
+        when(competitionService.getCompetitionByApplicationId(successfulApplicationId)).thenReturn(serviceSuccess(competition));
+        when(applicationFundingService.notifyApplicantsOfDecisions(fundedResource)).thenReturn(serviceSuccess());
+        when(applicationEoiService.createFullApplicationFromEoi(successfulApplicationId)).thenReturn(serviceSuccess(anyLong()));
+        when(applicationService.getApplicationById(successfulApplicationId)).thenReturn(serviceSuccess(application));
+
+        ServiceResult<Void> result = service.sendBulkFundingNotifications(resource);
+
+        assertTrue(result.isSuccess());
+
+        verify(applicationFundingService).notifyApplicantsOfDecisions(fundedResource);
+        verify(applicationEoiService).createFullApplicationFromEoi(successfulApplicationId);
+        verifyNoInteractions(projectToBeCreatedService);
+    }
+
+    @Test
+    public void sendBulkEoiNotificationsWithCompCloseStage() {
+        String messageBody = "EOICompCloseNotification";
+        CompetitionResource competition = newCompetitionResource()
+                .withCompletionStage(CompetitionCompletionStage.COMPETITION_CLOSE)
+                .withEnabledForExpressionOfInterest(true)
+                .build();
+        long successfulApplicationId = 1L;
+
+        ApplicationResource application = newApplicationResource()
+                .withId(successfulApplicationId)
+                .withApplicationExpressionOfInterestConfigResource(ApplicationExpressionOfInterestConfigResource.builder()
+                        .enabledForExpressionOfInterest(true)
+                        .build())
+                .build();
+        Map<Long, Decision> decisions = ImmutableMap.<Long, Decision> builder()
+                .put(successfulApplicationId, EOI_APPROVED)
+                .build();
+        FundingNotificationResource resource = new FundingNotificationResource(messageBody, decisions);
+        FundingNotificationResource fundedResource = new FundingNotificationResource(messageBody,
+                ImmutableMap.<Long, Decision> builder()
+                        .put(successfulApplicationId, EOI_APPROVED)
+                        .build());
+
+        when(competitionService.getCompetitionByApplicationId(successfulApplicationId)).thenReturn(serviceSuccess(competition));
+        when(applicationFundingService.notifyApplicantsOfDecisions(fundedResource)).thenReturn(serviceSuccess());
+        when(applicationEoiService.createFullApplicationFromEoi(successfulApplicationId)).thenReturn(serviceSuccess(anyLong()));
+        when(applicationService.getApplicationById(successfulApplicationId)).thenReturn(serviceSuccess(application));
+
+        ServiceResult<Void> result = service.sendBulkFundingNotifications(resource);
+
+        assertTrue(result.isSuccess());
+
+        verify(applicationFundingService).notifyApplicantsOfDecisions(fundedResource);
+        verify(applicationEoiService).createFullApplicationFromEoi(successfulApplicationId);
+        verifyNoInteractions(projectToBeCreatedService);
+    }
+
 
 }

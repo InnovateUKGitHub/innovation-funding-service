@@ -480,7 +480,7 @@
                     </tr>
                     <th:block th:if="${model.industrialFinanceTable.showOtherFundingRow()}">
                         <tr>
-                            <th>Other public sector funding</th>
+                            <th th:text="${model.isCompTypeOfgemAndFundingTypeThirdParty() ? 'Contributions in kind' : 'Other public sector funding'}">Other public sector funding</th>
                             <td style="text-align:right;"
                                 th:each="(organisation : ${model.industrialFinanceTable.organisations})"
                                 th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">

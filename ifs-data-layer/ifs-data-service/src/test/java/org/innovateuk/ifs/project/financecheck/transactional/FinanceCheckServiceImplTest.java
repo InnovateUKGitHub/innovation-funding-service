@@ -62,6 +62,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
@@ -719,6 +720,90 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertEquals(new BigDecimal("10000066"), overview.getTotalProjectCost());
         assertEquals(new BigDecimal("2998020"), overview.getGrantAppliedFor());
         assertEquals(new BigDecimal("2000"), overview.getOtherPublicSectorFunding());
+        assertEquals(new BigDecimal("29.98"), overview.getTotalPercentageGrant());
+        assertEquals(BigDecimal.valueOf(2), overview.getCompetitionMaximumResearchPercentage());
+        assertEquals(BigDecimal.valueOf(0), overview.getResearchParticipationPercentage());
+    }
+
+    @Test
+    public void getFinanceCheckOverviewOfgem() {
+
+        Competition competition = newCompetition()
+                .withCompetitionType(newCompetitionType()
+                        .withName("Ofgem")
+                        .build())
+                .withFundingType(FundingType.THIRDPARTY)
+                .withMaxResearchRatio(2)
+                .build();
+        Application application = newApplication()
+                .withId(applicationId)
+                .withCompetition(competition)
+                .withDurationInMonths(5L)
+                .build();
+        Project project = newProject()
+                .withId(projectId)
+                .withApplication(application)
+                .withDuration(6L)
+                .withName("Project1")
+                .build();
+
+        Organisation[] organisations = newOrganisation().
+                withOrganisationType(BUSINESS, RESEARCH, BUSINESS).
+                buildArray(3, Organisation.class);
+
+        List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().
+                withProject(project).
+                withOrganisation(organisations).
+                build(3);
+
+        Map<FinanceRowType, FinanceRowCostCategory> projectFinances = createProjectFinance();
+
+        Map<FinanceRowType, FinanceRowCostCategory> applicationFinances = asMap(
+                FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
+                                newLabourCost().
+                                        withGrossEmployeeCost(new BigDecimal("1.0"), BigDecimal.ZERO).
+                                        withDescription("Developers", WORKING_DAYS_PER_YEAR).
+                                        withLabourDays(1, 200).
+                                        build(2)).
+                        build(),
+                FinanceRowType.MATERIALS, newDefaultCostCategory().withCosts(
+                                newMaterials().
+                                        withCost(new BigDecimal("1.0")).
+                                        withQuantity(1).
+                                        build(1)).
+                        build(),
+                FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory().withCosts(
+                                newOtherFunding().
+                                        withOtherPublicFunding("Yes", "").
+                                        withFundingSource(OTHER_FUNDING, "other funding").
+                                        withFundingAmount(null, BigDecimal.valueOf(2)).
+                                        build(2)).
+                        build());
+
+        projectFinances.forEach((type, category) -> category.calculateTotal());
+        applicationFinances.forEach((type, category) -> category.calculateTotal());
+
+        List<ProjectFinanceResource> projectFinanceResource = newProjectFinanceResource().
+                withProject(projectId).
+                withFinanceOrganisationDetails(projectFinances).
+                build(2);
+
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(projectFinanceService.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
+        when(financeService.financeTotals(project.getApplication().getId())).thenReturn(serviceSuccess(emptyList()));
+        when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceFailure(GENERAL_FORBIDDEN));
+
+        ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
+        assertTrue(result.isSuccess());
+
+        FinanceCheckOverviewResource overview = result.getSuccess();
+        assertEquals(projectId, overview.getProjectId());
+        assertEquals(6, overview.getDurationInMonths());
+        assertEquals(new BigDecimal("10000066"), overview.getTotalProjectCost());
+        assertEquals(new BigDecimal("2998020"), overview.getGrantAppliedFor());
+        assertEquals(new BigDecimal("2000"), overview.getTotalContributionsInKind());
+        assertEquals(new BigDecimal("140.00"), overview.getTotalContributionToProjectPercentage());
+        assertEquals(new BigDecimal("7000046"), overview.getTotalContributionToProject());
         assertEquals(new BigDecimal("29.98"), overview.getTotalPercentageGrant());
         assertEquals(BigDecimal.valueOf(2), overview.getCompetitionMaximumResearchPercentage());
         assertEquals(BigDecimal.valueOf(0), overview.getResearchParticipationPercentage());

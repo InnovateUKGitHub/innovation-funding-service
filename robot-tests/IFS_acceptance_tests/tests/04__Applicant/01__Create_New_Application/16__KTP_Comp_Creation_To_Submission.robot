@@ -182,10 +182,10 @@ The applicants should not see knowledge based organisations when creating a non-
 
 The applicants should not see knowledge based organisations when joining a non-ktp applications
     [Documentation]  IFS-8035
-    Given the user clicks the button/link                    id = save-organisation-button
-    And the lead invites already registered user             ${collaborator1_credentials["email"]}   ${nonKTPCompetitionName}
+    Given the existing user continue with existing organisation
+    And the lead invites already registered user                    ${collaborator1_credentials["email"]}   ${nonKTPCompetitionName}
     When partner login to see your organisation details
-    Then the user should not see the element                 jQuery = dt:contains("${ktpOrgName}")
+    Then the user should not see the element                        jQuery = dt:contains("${ktpOrgName}")
 
 The applicants should not see knowledge based organisations when joining a non-ktp applications from project setup
     [Documentation]  IFS-8035
@@ -1410,18 +1410,6 @@ the user can see project cost breakdown of lead organisation
     the user should see the element     jQuery = th:contains("Total") ~ td:contains("2,369")
 
 the user can view lead and partner finance summary calculations
-#    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("2,369")
-#    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("10.00")
-#    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("237")
-#    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("20,000")
-#    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("2,132")
-#    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("90")
-#    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("20,000")
-#    the user should see the element     jQuery = th:contains("Total") ~ td:contains("2,369")
-#    the user should see the element     jQuery = th:contains("Total") ~ td:contains("90")
-#    the user should see the element     jQuery = th:contains("Total") ~ td:contains("40,000")
-#    the user should see the element     jQuery = th:contains("Total") ~ td:contains("237")
-#    the user should see the element     jQuery = th:contains("Total") ~ td:contains("2,132")
     the user should see the element    jQuery = th:contains("${ktpOrgName}")+td:contains("2,369")+td:contains("10.00")+td:contains("237")+td:contains("0")+td:contains("0")+td:contains("20,000")
     the user should see the element    jQuery = th:contains("${newPartnerOrgName}")+td:contains("0")+td:contains("0.00")+td:contains("0")+td:contains("90")+td:contains("2,132")+td:contains("20,000")
     the user should see the element    jQuery = th:contains("Total")+td:contains("£2,369")+td+td:contains("237")+td:contains("90")+td:contains("2,132")+td:contains("40,000")
@@ -1551,7 +1539,6 @@ the user checks the read-only page
     the user should see the element               jQuery = h3:contains("When does your fEC certificate expire?") ~ div p:contains("1 December 2500")
     the user should see the element               jQuery = h3:contains("When does your fEC certificate expire?") ~ div:contains("Change")
     Wait Until Page Contains Without Screenshots  Last updated:
-#    the user should see the element               jQuery = div:contains("Last updated: ${dayInNumber} ${monthWord}")
     the user should see the element               link = Return to project finances
 
 the user should see the right values
@@ -1586,4 +1573,8 @@ the user enters empty data into date fields
     the user enters text to a text field   id = fecCertExpiryMonth   ${month}
     the user enters text to a text field   id = fecCertExpiryYear  ${year}
 
+the existing user continue with existing organisation
+    ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  jQuery = label:contains("Ward Ltd")
+    Run Keyword if  '${status}' == 'PASS'   the user clicks the button twice   jQuery = label:contains("Ward Ltd")
+    the user clicks the button/link         jQuery = button:contains("Save and continue")
 

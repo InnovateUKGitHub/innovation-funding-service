@@ -18,7 +18,7 @@ spec:
         - env:
             - name: MYSQL_ROOT_PASSWORD
               value: password
-          image: mysql:8.0
+          image: mysql:8.0@sha256:5c60ca175aa10f2b203b950036000969a8440743ff8d2320f13dfd8f7f99e88f
           name: mysql
           args: []
           imagePullPolicy: IfNotPresent
@@ -33,10 +33,12 @@ spec:
               mountPath: /etc/mysql/my.cnf
               subPath: my.cnf
           resources:
-            requests:
-              memory: 600M
             limits:
-              memory: 1500M
+              cpu: 2000m
+              memory: 1500Mi
+            requests:
+              cpu: 250m
+              memory: 600Mi
       volumes:
         - name: mysql-tmp-storage
           emptyDir: {}

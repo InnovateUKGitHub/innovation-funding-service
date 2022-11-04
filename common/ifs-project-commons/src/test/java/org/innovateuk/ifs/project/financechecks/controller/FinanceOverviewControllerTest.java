@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
@@ -84,6 +85,37 @@ public class FinanceOverviewControllerTest extends BaseControllerMockMVCTest<Fin
         assertEquals("test-project", financeCheckOverviewViewModel.getOverview().getProjectName());
         assertFalse(financeCheckOverviewViewModel.isExternalUser());
         assertEquals("/project/123/finance-check", financeCheckOverviewViewModel.getExternalUserLinkUrl());
+        assertFalse(financeCheckOverviewViewModel.isCompTypeOfgemAndFundingTypeThirdParty());
+
+        verify(financeCheckServiceMock).getFinanceCheckOverview(projectId);
+        verify(financeCheckServiceMock, times(3)).getFinanceCheckEligibilityDetails(anyLong(), isNull());
+        verify(projectFinanceService).getProjectFinances(projectId);
+    }
+
+    @Test
+    public void internalViewsOfgem() throws Exception {
+        long projectId = 123L;
+        long organisationId = 456L;
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.THIRDPARTY)
+                .withCompetitionTypeEnum(CompetitionTypeEnum.OFGEM)
+                .withFinanceRowTypes(singletonList(FinanceRowType.GRANT_CLAIM_AMOUNT))
+                .withCompTypeOfgemAndFundingTypeThirdParty(true)
+                .build();
+
+        setLoggedInUser(admin);
+
+        setExpectedMocks(projectId, organisationId, competition);
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check-overview", projectId))
+                .andExpect(view().name("project/financecheck/overview"))
+                .andReturn();
+
+        FinanceCheckOverviewViewModel financeCheckOverviewViewModel = (FinanceCheckOverviewViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(LocalDate.of(2016, 1, 1), financeCheckOverviewViewModel.getOverview().getProjectStartDate());
+        assertEquals("test-project", financeCheckOverviewViewModel.getOverview().getProjectName());
+        assertFalse(financeCheckOverviewViewModel.isExternalUser());
+        assertEquals("/project/123/finance-check", financeCheckOverviewViewModel.getExternalUserLinkUrl());
+        assertTrue(financeCheckOverviewViewModel.isCompTypeOfgemAndFundingTypeThirdParty());
 
         verify(financeCheckServiceMock).getFinanceCheckOverview(projectId);
         verify(financeCheckServiceMock, times(3)).getFinanceCheckEligibilityDetails(anyLong(), isNull());

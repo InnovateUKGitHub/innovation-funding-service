@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.forms.questions.generic.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.log4j.Log4j2;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.forms.questions.generic.form.GenericQuestionApplicationForm;
@@ -41,6 +42,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -55,12 +57,18 @@ import static org.innovateuk.ifs.util.CollectionFunctions.negate;
  * This controller handles application questions which are built up of form inputs.
  */
 
+
+@Log4j2
 @Controller
 @RequestMapping({APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/generic",
-                APPLICATION_BASE_URL + "{applicationId}/form/organisation/{organisationId}/question/{questionId}/generic"})
+        APPLICATION_BASE_URL + "{applicationId}/form/organisation/{organisationId}/question/{questionId}/generic"})
 @SecuredBySpring(value = "Controller", description = "Only applicants can edit generic question", securedType = GenericQuestionApplicationController.class)
 @PreAuthorize("hasAnyAuthority('applicant')")
 public class GenericQuestionApplicationController {
+
+    static final List<QuestionSetupType> eligibleForExternalRedirection = List.of(QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION,
+            QuestionSetupType.IMPACT_MANAGEMENT_SURVEY);
+
     private static final String APPLICATION_OVERVIEW_PAGE = "Application Overview";
 
     @Autowired
@@ -136,13 +144,13 @@ public class GenericQuestionApplicationController {
 
     @PostMapping
     public String saveAndReturn(@ModelAttribute(value = "form") GenericQuestionApplicationForm form,
-                                 BindingResult bindingResult,
-                                 ValidationHandler validationHandler,
-                                 Model model,
-                                 @PathVariable long applicationId,
-                                 @PathVariable Optional<Long> organisationId,
-                                 @PathVariable long questionId,
-                                 UserResource user) {
+                                BindingResult bindingResult,
+                                ValidationHandler validationHandler,
+                                Model model,
+                                @PathVariable long applicationId,
+                                @PathVariable Optional<Long> organisationId,
+                                @PathVariable long questionId,
+                                UserResource user) {
         save(form, applicationId, questionId, user);
         return redirectToApplicationOverview(applicationId);
     }
@@ -205,7 +213,7 @@ public class GenericQuestionApplicationController {
                       @PathVariable long applicationId,
                       @PathVariable Optional<Long> organisationId,
                       @PathVariable long questionId,
-                       UserResource user) {
+                      UserResource user) {
         save(form, applicationId, questionId, user);
         return new ObjectMapper().createObjectNode();
     }
@@ -237,26 +245,26 @@ public class GenericQuestionApplicationController {
 
     @PostMapping(params = "uploadAppendix")
     public String uploadAppendix(@ModelAttribute(name = "form") GenericQuestionApplicationForm form,
-                                         @SuppressWarnings("unused") BindingResult bindingResult,
-                                         ValidationHandler validationHandler,
-                                         Model model,
-                                         @PathVariable long applicationId,
-                                         @PathVariable Optional<Long> organisationId,
-                                         @PathVariable long questionId,
-                                         UserResource user) {
+                                 @SuppressWarnings("unused") BindingResult bindingResult,
+                                 ValidationHandler validationHandler,
+                                 Model model,
+                                 @PathVariable long applicationId,
+                                 @PathVariable Optional<Long> organisationId,
+                                 @PathVariable long questionId,
+                                 UserResource user) {
         return handleFileUpload("appendix", FormInputType.FILEUPLOAD, form.getAppendix(), questionId, applicationId, organisationId, user, validationHandler, model);
     }
 
     @PostMapping(params = "removeAppendix")
     public String removeAppendix(@ModelAttribute(name = "form") GenericQuestionApplicationForm form,
-                                         @SuppressWarnings("unused") BindingResult bindingResult,
-                                         ValidationHandler validationHandler,
-                                         @RequestParam("removeAppendix") long fileEntryId,
-                                         Model model,
-                                         @PathVariable long applicationId,
-                                         @PathVariable Optional<Long> organisationId,
-                                         @PathVariable long questionId,
-                                         UserResource user) {
+                                 @SuppressWarnings("unused") BindingResult bindingResult,
+                                 ValidationHandler validationHandler,
+                                 @RequestParam("removeAppendix") long fileEntryId,
+                                 Model model,
+                                 @PathVariable long applicationId,
+                                 @PathVariable Optional<Long> organisationId,
+                                 @PathVariable long questionId,
+                                 UserResource user) {
         return handleRemoveFile("appendix", FormInputType.FILEUPLOAD, questionId, applicationId, organisationId, fileEntryId, user, validationHandler, model);
     }
 
@@ -356,9 +364,13 @@ public class GenericQuestionApplicationController {
     private String redirectToApplicationOverview(long applicationId) {
         return String.format("redirect:/application/%d", applicationId);
     }
+
     private void recordApplicationOverviewPageHistory(long applicationId, HttpServletRequest request, HttpServletResponse response, ApplicantQuestionResource question) {
-        if (isLoanPartBEnabled && QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION == question.getQuestion().getQuestionSetupType()) {
-            pageHistoryService.recordLoanApplicationOverviewPageHistory(request, response, APPLICATION_OVERVIEW_PAGE, "/application/" + applicationId);
+        if (Objects.nonNull(question.getQuestion()) && eligibleForExternalRedirection.contains(question.getQuestion().getQuestionSetupType())) {
+            pageHistoryService.recordApplicationOverviewPageHistory(request, response, APPLICATION_OVERVIEW_PAGE, "/application/" + applicationId);
+        } else {
+            log.info("Ignoring, as {} is not eligible to be recorded in cookie",
+                    Objects.nonNull(question.getQuestion()) ? question.getQuestion().getQuestionSetupType() : question);
         }
     }
 }
