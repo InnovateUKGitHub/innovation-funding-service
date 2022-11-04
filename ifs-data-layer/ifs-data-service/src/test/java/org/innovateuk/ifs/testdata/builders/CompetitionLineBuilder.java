@@ -52,6 +52,7 @@ public final class CompetitionLineBuilder {
     private boolean preRegistration;
     private boolean imSurveyEnabled;
     private boolean eoiEvidenceRequired;
+    private boolean includePaymentMilestone;
     private BuilderOrder builderOrder = BuilderOrder.ANYWHERE;
 
     private CompetitionLineBuilder() {
@@ -281,6 +282,11 @@ public final class CompetitionLineBuilder {
         return this;
     }
 
+    public CompetitionLineBuilder withIncludePaymentMilestone(boolean includePaymentMilestone) {
+        this.includePaymentMilestone = includePaymentMilestone;
+        return this;
+    }
+
     public CompetitionLine build() {
         CompetitionLine competitionLine = new CompetitionLine();
         competitionLine.setId(id);
@@ -326,6 +332,7 @@ public final class CompetitionLineBuilder {
         competitionLine.setPreRegistration(preRegistration);
         competitionLine.setImSurveyEnabled(imSurveyEnabled);
         competitionLine.setEoiEvidenceRequired(eoiEvidenceRequired);
+        competitionLine.setIncludePaymentMilestone(includePaymentMilestone);
 
         return competitionLine;
     }

@@ -52,6 +52,7 @@ public class CompetitionLine {
     private boolean imSurveyEnabled;
     private boolean priority;
     private boolean eoiEvidenceRequired;
+    private boolean includePaymentMilestone;
 
     public CompetitionLine() {
     }
@@ -398,5 +399,13 @@ public class CompetitionLine {
 
     public void setEoiEvidenceRequired(boolean eoiEvidenceRequired) {
         this.eoiEvidenceRequired = eoiEvidenceRequired;
+    }
+
+    public boolean isIncludePaymentMilestone() {
+        return includePaymentMilestone;
+    }
+
+    public void setIncludePaymentMilestone(boolean includePaymentMilestone) {
+        this.includePaymentMilestone = includePaymentMilestone;
     }
 }
