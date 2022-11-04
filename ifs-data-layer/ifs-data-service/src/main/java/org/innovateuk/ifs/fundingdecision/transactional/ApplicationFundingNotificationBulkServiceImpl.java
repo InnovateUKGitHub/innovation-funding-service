@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.fundingdecision.transactional;
 
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.Decision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationEoiService;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -40,7 +42,9 @@ public class ApplicationFundingNotificationBulkServiceImpl implements Applicatio
 
     @Override
     public ServiceResult<Void> sendBulkFundingNotifications(FundingNotificationResource fundingNotificationResource) {
-        if (!fundingNotificationTriggersProjectSetup(fundingNotificationResource.getDecisions())) {
+        Optional<Boolean> isEOI = isEOIApplication(fundingNotificationResource.getDecisions());
+        boolean isEOIApp = isEOI.isPresent() ? isEOI.get() : false;
+       if (!fundingNotificationTriggersProjectSetup(fundingNotificationResource.getDecisions()) && !isEOIApp) {
             return applicationFundingService.notifyApplicantsOfDecisions(fundingNotificationResource);
         } else {
             Map<Long, Decision> successfulDecisions = fundingNotificationResource.getDecisions()
@@ -56,8 +60,17 @@ public class ApplicationFundingNotificationBulkServiceImpl implements Applicatio
             if (!otherDecisions.isEmpty()) {
                 result.andOnSuccess(() -> applicationFundingService.notifyApplicantsOfDecisions(new FundingNotificationResource(fundingNotificationResource.getMessageBody(), otherDecisions)));
             }
+
+            Optional<Boolean> isPSStage = isProjectSetupStage(fundingNotificationResource.getDecisions());
+            boolean isProjectSetupStage = isPSStage.isPresent() ? isPSStage.get() : false;
+
             if (!successfulDecisions.isEmpty()) {
-                result.andOnSuccess(() -> handleSuccessfulNotificationsCreatingProjects(new FundingNotificationResource(fundingNotificationResource.getMessageBody(), successfulDecisions)));
+               if (isProjectSetupStage) {
+                    result.andOnSuccess(() -> handleSuccessfulNotificationsCreatingProjects(new FundingNotificationResource(fundingNotificationResource.getMessageBody(), successfulDecisions)));
+                }
+                else {
+                   result.andOnSuccess(() -> notifyWithFullApplicationCreation(new FundingNotificationResource(fundingNotificationResource.getMessageBody(), successfulDecisions)));
+                }
             }
             return result;
         }
@@ -88,8 +101,31 @@ public class ApplicationFundingNotificationBulkServiceImpl implements Applicatio
         return decisions.keySet().stream().findFirst().map(applicationId -> {
             CompetitionResource competition = competitionService.getCompetitionByApplicationId(applicationId).getSuccess();
             return CompetitionCompletionStage.PROJECT_SETUP.equals(competition.getCompletionStage())
-                    && !competition.isKtp();
+                    && !competition.isKtp() ;
         }).orElse(false);
     }
 
+    private Optional<Boolean> isProjectSetupStage(Map<Long, Decision> decisions) {
+        return decisions.keySet().stream().findFirst().map(applicationId -> {
+            CompetitionResource competition = competitionService.getCompetitionByApplicationId(applicationId).getSuccess();
+            return  CompetitionCompletionStage.PROJECT_SETUP.equals(competition.getCompletionStage());
+        });
+    }
+
+    private ServiceResult<Void> notifyWithFullApplicationCreation(FundingNotificationResource fundingNotificationResource) {
+        return aggregate(fundingNotificationResource.getDecisions().keySet().stream()
+                .map(applicationId -> applicationService.getApplicationById(applicationId).getSuccess())
+                .map(application -> application.isEnabledForExpressionOfInterest()
+                        ? sendEoiNotificationAndCreateFullApplication(application.getId(), fundingNotificationResource.getMessageBody())
+                        : applicationFundingService.notifyApplicantsOfDecisions(fundingNotificationResource))
+                .collect(toList()))
+                .andOnSuccessReturnVoid();
+    }
+
+    private Optional<Boolean> isEOIApplication(Map<Long, Decision> decisions) {
+        return decisions.keySet().stream().findFirst().map(applicationId -> {
+            ApplicationResource applicationResource = applicationService.getApplicationById(applicationId).getSuccess();
+            return applicationResource.isEnabledForExpressionOfInterest();
+        });
+    }
 }

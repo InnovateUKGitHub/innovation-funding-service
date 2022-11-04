@@ -210,7 +210,7 @@ Comp admin updates the assessment period
 
 Internal user notify the assessors of their assigned applications
     [Documentation]  IFS-9008  IFS-8852  IFS-8853  IFS-9758 IFS-10825 IFS-10859
-    Given assign the application to assessor                 1   Always open application decision pending
+    Given assign the application to assessor                 label:contains("20 January to 20 March 2021")   Always open application decision pending
     When the user clicks the button/link                     jQuery = button:contains("Notify assessors")
     And the user logs out if they are logged in
     Then the user reads his email and clicks the link        ${assessorEmail}  Applications assigned to you for competition '${webTestCompName}'  We have assigned applications for you to assess for this competition:   1
@@ -222,7 +222,7 @@ Internal user can not assign same application in two different assessment period
     Given log in as a different user             &{ifs_admin_user_credentials}
     And the user navigates to the page           ${server}/management/assessment/competition/${webTestCompID}
     When the user clicks the button/link         link = Manage assessors
-    And the user clicks the button twice         jQuery = label:contains("Assessment period 2")
+    And the user clicks the button twice         jQuery = label:contains("20 April to 20 June 2021")
     And the user clicks the button/link          jQuery = button:contains("Save and continue")
     And the user clicks the button/link          jQuery = td:contains("Another Person") ~ td a:contains("View progress")
     Then the user should not see the element     jQuery = td:contains('Always open application decision pending')
@@ -237,18 +237,18 @@ Internal user closes assessment period one
 Internal user can not select the closed assessment periods to assign assessors
     [Documentation]  IFS-10860
     When the user clicks the button/link        link = Manage assessors
-    Then the element should be disabled        css = #assessment-period-0
+    Then the user should see the element        jQuery = input:disabled +label:contains("20 January to 20 March 2021")
 
 Internal user can not select the closed assessment periods to assign applications
     [Documentation]  IFS-10860
     Given the user clicks the button/link       link = Back to manage assessments
     When the user clicks the button/link        link = Manage applications
-    Then the element should be disabled         css = #assessment-period-0
+    Then the user should see the element        jQuery = input:disabled +label:contains("20 January to 20 March 2021")
 
 Assessor should see batch assessment number and valid assessment dates related to assessment periods
     [Documentation]  IFS-9729
     Given the user clicks the button/link       link = Back to manage assessments
-    And assign the application to assessor      2   	Always open application awaiting assessment
+    And assign the application to assessor      label:contains("20 April to 20 June 2021")  	Always open application awaiting assessment
     When the user clicks the button/link        jQuery = button:contains("Notify assessors")
     And log in as a different user              ${assessorEmail}   ${short_password}
     And the user navigates to the page          ${server}/assessment/assessor/dashboard/competition/${webTestCompID}
@@ -297,7 +297,7 @@ Comp admin manages the assessors
     Given log in as a different user           &{ifs_admin_user_credentials}
     And the user navigates to the page         ${server}/management/assessment/competition/${webTestCompID}
     And the user clicks the button/link        link = Manage assessors
-    When the user clicks the button twice      jQuery = label:contains("Assessment period 2")
+    When the user clicks the button twice      jQuery = label:contains("20 April to 20 June 2021")
     And the user clicks the button/link        jQuery = button:contains("Save and continue")
     And the user clicks the button/link        jQuery = td:contains("Another Person") ~ td a:contains("View progress")
     Then the user should see the element       jQuery = h2:contains('Assigned') ~ div td:contains('Always open application awaiting assessment')
@@ -462,9 +462,9 @@ the user adds a partner organisation and application details
     partner applicant completes the project finances     ${applicationName}  no  ${collaborator1_credentials["email"]}  ${short_password}
 
 assign the application to assessor
-    [Arguments]  ${assessmentPeriod}   ${applicationName}
+    [Arguments]  ${assessmentPeriodSelector}   ${applicationName}
     the user clicks the button/link     link = Manage applications
-    the user clicks the button twice    jQuery = label:contains("Assessment period ${assessmentPeriod}")
+    the user clicks the button twice    jQuery = ${assessmentPeriodSelector}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user clicks the button/link     jQuery = td:contains("${applicationName}") ~ td a:contains("View progress")
     the user selects the checkbox       assessor-row-1
