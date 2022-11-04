@@ -26,7 +26,7 @@ public class OrganisationalEligibilitySectionUpdater extends AbstractSectionUpda
     @Autowired
     private CompetitionOrganisationConfigRestService competitionOrganisationConfigRestService;
 
-    @Value("${ifs.impact.management.enabled}")
+    @Value("${ifs.project.impact.enabled}")
     private boolean isProjectImpactEnabled;
 
     @Override

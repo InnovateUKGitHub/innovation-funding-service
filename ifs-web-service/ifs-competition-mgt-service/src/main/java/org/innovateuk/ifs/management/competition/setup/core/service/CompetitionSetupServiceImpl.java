@@ -53,7 +53,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    @Value("${ifs.impact.management.enabled}")
+    @Value("${ifs.project.impact.enabled}")
     private boolean isProjectImpactEnabled;
 
     private Map<CompetitionSetupSection, CompetitionSetupFormPopulator> formPopulators;

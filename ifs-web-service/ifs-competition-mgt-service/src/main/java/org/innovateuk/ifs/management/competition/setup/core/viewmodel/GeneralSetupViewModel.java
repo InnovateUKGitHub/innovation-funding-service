@@ -18,7 +18,7 @@ public class GeneralSetupViewModel {
             CompetitionSetupSection.COMPLETION_STAGE,
             CompetitionSetupSection.CONTENT);
 
-    // TODO: To remove the when IM toggle is set to true in Prod
+    // TODO: To be removed when Project Impact toggle is set to true in Prod
     private static final List<CompetitionSetupSection> COMPETITION_SETUP_SECTIONS_WITHOUT_IM = asList(
             CompetitionSetupSection.TERMS_AND_CONDITIONS,
             CompetitionSetupSection.ADDITIONAL_INFO,

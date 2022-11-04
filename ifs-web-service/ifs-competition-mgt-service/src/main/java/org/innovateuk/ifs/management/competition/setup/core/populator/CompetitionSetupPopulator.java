@@ -34,7 +34,7 @@ public class CompetitionSetupPopulator {
     @Value("${ifs.expression.of.interest.enabled}")
     private boolean isExpressionOfInterestEnabled;
 
-    @Value("${ifs.impact.management.enabled}")
+    @Value("${ifs.project.impact.enabled}")
     private boolean isProjectImpactEnabled;
 
     public GeneralSetupViewModel populateGeneralModelAttributes(CompetitionResource competitionResource, UserResource userResource, CompetitionSetupSection section) {
