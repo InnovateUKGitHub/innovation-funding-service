@@ -155,6 +155,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     private Boolean includeJesForm;
 
+    @Column(nullable = false)
+    private boolean includePaymentMilestone = false;
+
     @Enumerated(EnumType.STRING)
     private ApplicationFinanceType applicationFinanceType;
 
@@ -982,6 +985,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setIncludeJesForm(Boolean includeJesForm) {
         this.includeJesForm = includeJesForm;
+    }
+
+    public Boolean getIncludePaymentMilestone() {
+        return includePaymentMilestone;
+    }
+
+    public void setIncludePaymentMilestone(Boolean includePaymentMilestone) {
+        this.includePaymentMilestone = includePaymentMilestone;
     }
 
     public Boolean getIncludeProjectGrowthTable() {
