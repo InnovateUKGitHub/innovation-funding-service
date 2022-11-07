@@ -87,20 +87,13 @@
             </a>
         </li>
         <li class="next">
-            <th:block th:if="${model.general.isProjectImpactEnabled}">
-                <a rel="next" title="Navigate to next part"
-                   th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='project-impact')}">
-                    <span class="pagination-label">Next</span>
-                    <span class="pagination-part-title">Project impact</span>
-                </a>
-            </th:block>
-            <th:block th:unless="${model.general.isProjectImpactEnabled}">
-                <a rel="next" title="Navigate to next part"
-                   th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='application')}">
-                    <span class="pagination-label">Next</span>
-                    <span class="pagination-part-title">Application</span>
-                </a>
-            </th:block>
+            <a rel="next" title="Navigate to next part"
+               th:href="${model.general.isProjectImpactEnabled} ?
+               @{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='project-impact')} :
+               @{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='application')}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title" th:text="${model.general.isProjectImpactEnabled ? 'Project impact' : 'Application'}"></span>
+            </a>
         </li>
     </ul>
 </th:block>
