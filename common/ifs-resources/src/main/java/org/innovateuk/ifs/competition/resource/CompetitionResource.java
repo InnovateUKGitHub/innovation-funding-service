@@ -103,6 +103,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private String modifiedBy;
     private ZonedDateTime modifiedOn;
     private Boolean includeJesForm;
+    private Boolean includePaymentMilestone;
     private boolean nonFinanceType;
     private CompetitionCompletionStage completionStage;
     private FundingType fundingType;
@@ -826,6 +827,14 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     public void setIncludeJesForm(Boolean includeJesForm) {
         this.includeJesForm = includeJesForm;
+    }
+
+    public Boolean getIncludePaymentMilestone() {
+        return includePaymentMilestone;
+    }
+
+    public void setIncludePaymentMilestone(Boolean includePaymentMilestone) {
+        this.includePaymentMilestone = includePaymentMilestone;
     }
 
     public CompetitionCompletionStage getCompletionStage() {
