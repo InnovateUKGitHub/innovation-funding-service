@@ -66,24 +66,32 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
     private static final String NORTHERN_IRELAND_TACTICAL_DECLARATION_NAME =
             "Will the project, including any related activities you want Innovate UK to fund, affect trade between Northern Ireland and the EU?";
 
+
     private static final String NORTHERN_IRELAND_TACTICAL_DECLARATION_NAME_UKRI =
             "Will the project, including any related activities you want UKRI to fund, affect trade between Northern Ireland and the EU?";
+
     private static final String QUESTION1_TITLE =
             "Will the Innovate UK funding directly or indirectly have an effect upon either:" + "\n" +
                     "goods that will be traded between Northern Ireland and the EU" + "\n" +
                     "and/or the single electricity market (of Ireland)?";
+
     private static final String QUESTION1_TITLE_UKRI =
             "Will the UKRI funding directly or indirectly have an effect upon either:" + "\n" +
             "goods that will be traded between Northern Ireland and the EU" + "\n" +
             "and/or the single electricity market (of Ireland)?";
+
     private static final String QUESTION1_5_TITLE =
             "Are you intending to trade any goods arising from the activities " +
             "funded by Innovate UK with the European Union through Northern Ireland?";
+
     private static final String QUESTION1_5_TITLE_UKRI =
             "Are you intending to trade any goods arising from the activities " +
                     "funded by UKRI with the European Union through Northern Ireland?";
+
     private static final String QUESTION2_TITLE = "Is your enterprise based in or active in Northern Ireland?";
+
     private static final String QUESTION3_TITLE = "Does your enterprise trade directly with customers in Northern Ireland?";
+
     private static final String QUESTION3_GUIDANCE =
             "Note: if you have not made any sales or you do not intend to sell to Northern Ireland " +
                     "or you consider it possible to say that any effect of the Innovate UK funding upon: " + "\n" +
@@ -93,6 +101,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
                     "will be merely \"hypothetical, presumed, or without a genuine and direct link to Northern Ireland\", " +
                     "then answer No to this question.";
 
+
     private static final String QUESTION3_GUIDANCE_UKRI =
             "Note: if you have not made any sales or you do not intend to sell to Northern Ireland " +
                     "or you consider it possible to say that any effect of the UKRI funding upon: " + "\n" +
@@ -101,19 +110,23 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
                     "the single electricity market of Ireland, " + "\n" +
                     "will be merely \"hypothetical, presumed, or without a genuine and direct link to Northern Ireland\", " +
                     "then answer No to this question.";
+
     private static final String QUESTION4_TITLE =
             "Does your enterprise make goods or provide services to third parties with a view to: " + "\n" +
                     "enabling them to manufacture goods that will be traded between Northern Ireland and the EU" + "\n" +
                     "or" + "\n" +
                     "effect the single electricity market of Ireland?";
+
     private static final String QUESTION4_GUIDANCE =
             "Note: this question seeks to understand if you are carrying out activities that may indirectly lead " +
                     "to effects on trade in goods to Northern Ireland or the single electricity market of Ireland. " +
                     "If you are not aware of any such impact answer No to this question.";
+
     private static final String QUESTION5_TITLE =
             "Is your enterprise engaged in the production, processing or marketing " +
                     "of agricultural products; or active in the fisheries and aquaculture sector and " +
                     "involved in trade in such products with Northern Ireland?";
+
     private static final String QUESTION6_TITLE =
             "Can you confirm that the Innovate UK funding will be directed towards " +
                     "activities other than the production, processing or marketing of agricultural products or " +
@@ -123,6 +136,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
             "Can you confirm that the UKRI funding will be directed towards " +
                     "activities other than the production, processing or marketing of agricultural products or " +
                     "the fisheries and aquaculture sector?";
+
     private static final String QUESTION6_GUIDANCE =
             "If your activities do come under these sectors, prior to receipt of the Innovate UK funding you must " +
                     "establish accounting segregations to ensure that the funding does not cross-subsidise " +
