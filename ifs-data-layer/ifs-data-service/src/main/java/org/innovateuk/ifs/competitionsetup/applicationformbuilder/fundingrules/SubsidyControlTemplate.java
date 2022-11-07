@@ -352,6 +352,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         String question6Guidance = isHorizonEuropeCompetition ? QUESTION6_GUIDANCE_UKRI : QUESTION6_GUIDANCE;
 
         confirmInnovateFundingQuestion1.setTitle(SUBSIDYBASIS);
+        confirmInnovateFundingQuestion1.setQuestion(question6Title);
         confirmInnovateFundingQuestion1.setQuestionnaire(questionnaire.getId());
         confirmInnovateFundingQuestion1.setGuidance(question6Guidance);
         confirmInnovateFundingQuestion1 = questionnaireQuestionService.create(confirmInnovateFundingQuestion1).getSuccess();
