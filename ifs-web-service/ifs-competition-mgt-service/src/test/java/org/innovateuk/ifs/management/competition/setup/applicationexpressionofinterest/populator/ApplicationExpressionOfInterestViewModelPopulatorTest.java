@@ -29,7 +29,7 @@ public class ApplicationExpressionOfInterestViewModelPopulatorTest {
                 build();
 
         GeneralSetupViewModel generalSetupViewModel = new GeneralSetupViewModel(false, false, competition,
-                CompetitionSetupSection.APPLICATION_EXPRESSION_OF_INTEREST, null, false, false, true, true);
+                CompetitionSetupSection.APPLICATION_EXPRESSION_OF_INTEREST, null, false, false, true, true, true);
 
         ApplicationExpressionOfInterestViewModel viewModel = applicationExpressionOfInterestViewModelPopulator.populateModel(generalSetupViewModel, competition);
 

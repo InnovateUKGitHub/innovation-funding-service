@@ -21,6 +21,7 @@ import org.innovateuk.ifs.management.competition.setup.core.viewmodel.Competitio
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +52,9 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
     @Autowired
     private CompetitionRestService competitionRestService;
+
+    @Value("${ifs.project.impact.enabled}")
+    private boolean isProjectImpactEnabled;
 
     private Map<CompetitionSetupSection, CompetitionSetupFormPopulator> formPopulators;
     private Map<CompetitionSetupSubsection, CompetitionSetupSubsectionFormPopulator> subsectionFormPopulators;
@@ -303,7 +307,9 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
         requiredSections.add(CompetitionSetupSection.MILESTONES);
         requiredSections.add(CompetitionSetupSection.APPLICATION_FORM);
         requiredSections.add(CompetitionSetupSection.CONTENT);
-        requiredSections.add(PROJECT_IMPACT);
+        if (isProjectImpactEnabled) {
+            requiredSections.add(PROJECT_IMPACT);
+        }
         return requiredSections;
     }
 

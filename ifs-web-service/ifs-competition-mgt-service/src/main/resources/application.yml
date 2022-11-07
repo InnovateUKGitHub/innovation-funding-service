@@ -49,6 +49,9 @@ ifs:
         of:
             interest:
                 enabled: true
+    project:
+        impact:
+            enabled: true
 server:
     servlet:
         context-path: /management

@@ -168,6 +168,7 @@ public class ProjectEligibilityModelPopulatorTest {
                 Boolean.TRUE,
                 Boolean.FALSE,
                 true,
+                true,
                 true
         );
     }
