@@ -37,6 +37,8 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11758 HECP Phase 2- Spend profile cost categories validations
 ...
+...               IFS-13198 HECP Phase 2 - Update to Horizon Europe T&Cs & grant offer letter template
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -224,12 +226,12 @@ Lead applicant submits spen profile to internal user for review
     Then the user should see the element    jQuery = p:contains("We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners ​which estimates how you think costs will be spread out over the duration of your project")
 
 Internal user can view hecp GOL template
-    [Documentation]  IFS-11299
+    [Documentation]  IFS-11299  IFS-13198
     Given ifs admin approves the spend profiles for hestaApplication    ${hestaProjectID}
     When the user clicks the button/link                                jQuery = td:contains("Review")
     And user clicks on View the grant offer letter page
     And Select Window                                                   NEW
-    Then the user should see the element                                xpath = //h2[text()='Annex 1: acceptance of award']
+    Then the user should see the element                                xpath = //h2[text()='ANNEX 1: Acceptance of grant award']
     [Teardown]  the user closes the last opened tab
 
 Lead Applicant can view banner message for a successfull application
