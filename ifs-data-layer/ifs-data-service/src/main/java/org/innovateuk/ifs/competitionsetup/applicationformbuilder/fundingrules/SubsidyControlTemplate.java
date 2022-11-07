@@ -346,10 +346,10 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
 
         /* ---------------------- QUESTION 6 --------------------------------------------------- */
 
-        QuestionnaireQuestionResource confirmInnovateFundingQuestion1 = new QuestionnaireQuestionResource();
-
         String question6Title = isHorizonEuropeCompetition ? QUESTION6_TITLE_UKRI : QUESTION6_TITLE;
         String question6Guidance = isHorizonEuropeCompetition ? QUESTION6_GUIDANCE_UKRI : QUESTION6_GUIDANCE;
+
+        QuestionnaireQuestionResource confirmInnovateFundingQuestion1 = new QuestionnaireQuestionResource();
 
         confirmInnovateFundingQuestion1.setTitle(SUBSIDYBASIS);
         confirmInnovateFundingQuestion1.setQuestion(question6Title);
@@ -359,7 +359,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
 
         QuestionnaireQuestionResource confirmInnovateFundingQuestion2 = new QuestionnaireQuestionResource();
         confirmInnovateFundingQuestion2.setTitle(SUBSIDYBASIS);
-        confirmInnovateFundingQuestion2.setGuidance(question6Title);
+        confirmInnovateFundingQuestion2.setQuestion(question6Title);
         confirmInnovateFundingQuestion2.setQuestionnaire(questionnaire.getId());
         confirmInnovateFundingQuestion2.setGuidance(question6Guidance);
         confirmInnovateFundingQuestion2 = questionnaireQuestionService.create(confirmInnovateFundingQuestion2).getSuccess();
