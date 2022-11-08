@@ -10,7 +10,7 @@ Resource          ../../../resources/common/Competition_Commons.robot
 
 *** Variables ***
 ${hecpPreregReleaseFeedbackCompName}                    Hecp Pre Registration Competition with Release feedback
-${hecpPreregReleaseFeedbackAppName}                     preRegApplication with Release feedback
+${hecpPreregReleaseFeedbackAppName}                     release feedback EOI Application
 ${unSuccessPreregReleaseFeedbackAppName}                unSuccessfulPreRegApplication with Release feedback
 ${unSubmittedPreregReleaseFeedbackAppName}              unSubmittedPreRegApplication with Release feedback
 ${preRegApplicationUnsuccessfulEmailReleaseFeedback}    You have been unsuccessful in the expression of interest stage for funding to Innovate UK's ${hecpPreregReleaseFeedbackCompName} competition.
