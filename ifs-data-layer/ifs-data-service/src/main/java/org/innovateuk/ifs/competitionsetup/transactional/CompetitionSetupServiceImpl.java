@@ -2,11 +2,9 @@ package org.innovateuk.ifs.competitionsetup.transactional;
 
 import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionThirdPartyConfig;
-import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
-import org.innovateuk.ifs.competition.domain.InnovationLead;
+import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.*;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
@@ -168,6 +166,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         competition = setCompetitionAuditableFields(competition, existingCompetition);
         saveFunders(competitionResource);
         competition = saveConfigs(existingCompetition, competition);
+        setPaymentMilestoneData(competition);
         competition = competitionRepository.save(competition);
         return serviceSuccess(competitionMapper.mapToResource(competition))
                 .andOnSuccess(c -> {
@@ -177,6 +176,10 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                     }
                     return serviceSuccess(c);
                 });
+    }
+
+    private void setPaymentMilestoneData(Competition competition) {
+        competition.setIncludePaymentMilestone(competition.getFundingType() == FundingType.PROCUREMENT);
     }
 
     private void saveFunders(CompetitionResource competitionResource) {
@@ -399,12 +402,12 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     public ServiceResult<FileEntryResource> uploadCompetitionTerms(String contentType, String contentLength, String originalFilename, long competitionId, HttpServletRequest request) {
         return findCompetition(competitionId)
                 .andOnSuccess(competition -> fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypes, maxFileSize, request,
-                        (fileAttributes, inputStreamSupplier) -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
-                                .andOnSuccessReturn(created -> {
-                                    competition.setCompetitionTerms(created);
-                                    return fileEntryMapper.mapToResource(created);
-                                })
-                        )
+                                        (fileAttributes, inputStreamSupplier) -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
+                                                .andOnSuccessReturn(created -> {
+                                                    competition.setCompetitionTerms(created);
+                                                    return fileEntryMapper.mapToResource(created);
+                                                })
+                                )
                                 .toServiceResult()
                 );
     }
@@ -487,6 +490,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private void deleteCompetitionFinanceRowsTypesForCompetition(Competition competition) {
         competitionFinanceRowsTypesRepository.deleteAllByCompetitionFinanceRowTypesIdCompetition(competition);
     }
+
     private void deleteGrantProcessConfiguration(Competition competition) {
         grantProcessConfigurationRepository.deleteByCompetitionId(competition.getId());
     }

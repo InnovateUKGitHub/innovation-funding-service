@@ -7,6 +7,8 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
@@ -24,6 +26,7 @@ public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService
             competition.setIncludeJesForm(compSetupFinanceRes.getIncludeJesForm());
             competition.setIncludeProjectGrowthTable(compSetupFinanceRes.getIncludeGrowthTable());
             competition.setIncludeYourOrganisationSection(compSetupFinanceRes.getIncludeYourOrganisationSection());
+            Optional.ofNullable(compSetupFinanceRes.getIncludePaymentMilestone()).ifPresent(competition::setIncludePaymentMilestone);
             return serviceSuccess();
         });
     }
@@ -40,6 +43,7 @@ public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService
         competitionSetupFinanceResource.setIncludeJesForm(competition.getIncludeJesForm());
         competitionSetupFinanceResource.setIncludeGrowthTable(competition.getIncludeProjectGrowthTable());
         competitionSetupFinanceResource.setIncludeYourOrganisationSection(competition.getIncludeYourOrganisationSection());
+        competitionSetupFinanceResource.setIncludePaymentMilestone(competition.getIncludePaymentMilestone());
         return competitionSetupFinanceResource;
     }
 }

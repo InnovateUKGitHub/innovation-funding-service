@@ -18,6 +18,15 @@ public class GeneralSetupViewModel {
             CompetitionSetupSection.COMPLETION_STAGE,
             CompetitionSetupSection.CONTENT);
 
+    // TODO: To be removed when Project Impact toggle is set to true in Prod
+    private static final List<CompetitionSetupSection> COMPETITION_SETUP_SECTIONS_WITHOUT_IM = asList(
+            CompetitionSetupSection.TERMS_AND_CONDITIONS,
+            CompetitionSetupSection.ADDITIONAL_INFO,
+            CompetitionSetupSection.PROJECT_ELIGIBILITY,
+            CompetitionSetupSection.FUNDING_ELIGIBILITY,
+            CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY,
+            CompetitionSetupSection.APPLICATION_FORM);
+
     private static final List<CompetitionSetupSection> COMPETITION_SETUP_SECTIONS = asList(
             CompetitionSetupSection.TERMS_AND_CONDITIONS,
             CompetitionSetupSection.ADDITIONAL_INFO,
@@ -41,6 +50,7 @@ public class GeneralSetupViewModel {
     private boolean ifsAdmin;
     private boolean isAssessmentStageEnabled;
     private boolean isExpressionOfInterestEnabled;
+    private boolean isProjectImpactEnabled;
 
     public GeneralSetupViewModel(boolean editable,
                                  boolean firstTimeInForm,
@@ -50,7 +60,8 @@ public class GeneralSetupViewModel {
                                  boolean isInitialComplete,
                                  boolean ifsAdmin,
                                  boolean isAssessmentStageEnabled,
-                                 boolean isExpressionOfInterestEnabled) {
+                                 boolean isExpressionOfInterestEnabled,
+                                 boolean isProjectImpactEnabled) {
         this.editable = editable;
         this.firstTimeInForm = firstTimeInForm;
         this.competition = competition;
@@ -60,6 +71,7 @@ public class GeneralSetupViewModel {
         this.ifsAdmin = ifsAdmin;
         this.isAssessmentStageEnabled = isAssessmentStageEnabled;
         this.isExpressionOfInterestEnabled = isExpressionOfInterestEnabled;
+        this.isProjectImpactEnabled = isProjectImpactEnabled;
     }
 
     public void setCurrentSectionFragment(String currentSectionFragment) {
@@ -118,12 +130,17 @@ public class GeneralSetupViewModel {
         return isExpressionOfInterestEnabled;
     }
 
+    public boolean isProjectImpactEnabled() {
+        return isProjectImpactEnabled;
+    }
+
     public static List<CompetitionSetupSection> getPublishSections() {
         return PUBLISH_SECTIONS;
     }
 
-    public static List<CompetitionSetupSection> getCompetitionSetupSections() {
-        return COMPETITION_SETUP_SECTIONS;
+    public List<CompetitionSetupSection> getCompetitionSetupSections() {
+
+        return isProjectImpactEnabled ? COMPETITION_SETUP_SECTIONS : COMPETITION_SETUP_SECTIONS_WITHOUT_IM;
     }
 
     public static List<CompetitionSetupSection> getAssessmentSections() {

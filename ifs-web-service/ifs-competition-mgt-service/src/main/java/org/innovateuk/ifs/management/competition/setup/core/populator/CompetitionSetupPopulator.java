@@ -34,6 +34,9 @@ public class CompetitionSetupPopulator {
     @Value("${ifs.expression.of.interest.enabled}")
     private boolean isExpressionOfInterestEnabled;
 
+    @Value("${ifs.project.impact.enabled}")
+    private boolean isProjectImpactEnabled;
+
     public GeneralSetupViewModel populateGeneralModelAttributes(CompetitionResource competitionResource, UserResource userResource, CompetitionSetupSection section) {
 
         Map<CompetitionSetupSection, Optional<Boolean>> statuses = competitionSetupRestService.getSectionStatuses(competitionResource.getId())
@@ -48,7 +51,7 @@ public class CompetitionSetupPopulator {
         boolean isIfsAdmin = SecurityRuleUtil.hasIFSAdminAuthority(userResource);
 
         GeneralSetupViewModel viewModel = new GeneralSetupViewModel(editable, firstTimeInForm, competitionResource, section, CompetitionSetupSection.values(),
-                isInitialComplete, isIfsAdmin, isAssessmentStageEnabled, isExpressionOfInterestEnabled);
+                isInitialComplete, isIfsAdmin, isAssessmentStageEnabled, isExpressionOfInterestEnabled, isProjectImpactEnabled);
 
         if (section.hasDisplayableSetupFragment()) {
             viewModel.setCurrentSectionFragment("section-" + section.getPath());

@@ -29,7 +29,7 @@ public class ApplicationAssessmentViewModelPopulatorTest {
                 build();
 
         GeneralSetupViewModel generalSetupViewModel = new GeneralSetupViewModel(false, false, competition,
-                CompetitionSetupSection.APPLICATION_ASSESSMENT, null, false, false, true, true);
+                CompetitionSetupSection.APPLICATION_ASSESSMENT, null, false, false, true, true, true);
 
         ApplicationAssessmentViewModel viewModel = applicationAssessmentViewModelPopulator.populateModel(generalSetupViewModel, competition);
 

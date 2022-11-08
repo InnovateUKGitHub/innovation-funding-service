@@ -501,7 +501,10 @@ public class CompetitionWebTestData {
                         .withName("Horizon Europe Guarantee Pre Registration Competition with Evidence Enabled")
                         .withAssessmentStage(false)
                         .withPreRegistration(true)
-                        .withEoiEvidenceRequired(true)
+                        .withEoiEvidenceRequired(true),
+                thirdPartyOfgemCompetition()
+                        .withName("Ofgem competition with payment milestones")
+                        .withIncludePaymentMilestone(true)
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.OPEN))

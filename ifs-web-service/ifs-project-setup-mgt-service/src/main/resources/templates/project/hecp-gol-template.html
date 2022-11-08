@@ -121,13 +121,12 @@
     </style>
 
     <div class="letter-size">
-        <p>[Internal Guidance Note: This template has been produced for grants to UK organisations that apply to
-            Horizon Europe calls open to third county participation. It must only be used where the Recipient’s
-            project has an Horizon Europe Grant Agreement in place and has undergone UKRI’s due diligence to confirm
-            eligibility under UKRI’s Horizon Europe Guarantee.]
+        <p>[This template has been produced for grants to UK organisations that apply to Horizon Europe calls open to
+            third country participation. It must only be used where the Recipient’s project has a Horizon Europe Grant
+            Agreement in place and has undergone UKRI’s due diligence to confirm eligibility under UKRI’s Horizon Europe
+            Contingency programme.]
         </p>
 
-        <p><strong>Date:</strong> <th:block th:text="${#temporals.format(model.getNow(), 'd MMMM yyyy')}" /><br></p>
         <p>
             <th:block th:text="${model.projectManagerFirstName}" /> <th:block th:text="${model.projectManagerLastName}" /><br>
             <th:block th:text="${model.leadOrgName}" /><br>
@@ -135,10 +134,13 @@
                 <th:block th:text="${addressLine}" /><br th:unless="${addressLine == ''}" />
             </th:block>
         </p>
+
+        <p><strong>Date:</strong> <th:block th:text="${#temporals.format(model.getNow(), 'd MMMM yyyy')}" /><br></p>
+
         <p>
             <strong>UKRI Reference Number:</strong> <th:block th:text="${model.applicationId}" /><br>
+            <strong>Competition:</strong> <th:block th:text="${model.competitionName}" /><br>
             <strong>Project Title:</strong> <th:block th:text="${model.projectName}" /><br>
-            <strong>Programme:</strong> Horizon Europe Guarantee<br>
         </p>
         <p>
             Dear <th:block th:text="${model.projectManagerFirstName}" />,
@@ -150,21 +152,21 @@
         </p>
         <p>This Grant Offer Letter sets out the terms of the funding award between:</p>
         <br>
-        <p>(1) United Kingdom Research and Innovation (“UKRI”), a statutory corporation whose registered office is at Polaris House, North Star Avenue, Swindon, England, SN2 1FL; and</p>
+        <p>(1) United Kingdom Research and Innovation (<strong>“UKRI”</strong>), a statutory corporation whose registered office is at Polaris House, North Star Avenue, Swindon, England, SN2 1FL; and</p>
         <br>
         <p>(2) <th:block th:text="${model.projectManagerFirstName}" /> <th:block th:text="${model.projectManagerLastName}" />,
             <th:block th:each="addressLine : ${model.projectAddress}">
                 <th:block th:text="${addressLine}" /><br th:unless="${addressLine == ''}" />
             </th:block>,
             <th:block th:if="${model.leadOrganisationNumber != null}" th:text="${model.leadOrganisationNumber}" />
-            (the "Recipient").
+            (the <strong>"Recipient"</strong>).
         </p>
         <br>
         <p>Unless the context otherwise requires, capitalised expressions used in this Grant Offer Letter have the same meanings as set out in Annex 2 (Terms and Conditions of Grant).</p>
         <p>To confirm you wish to accept the grant funding on the terms set out in Annex 2, please complete and sign Annex 1 attached to this letter, then return it through the Innovation Funding Service.</p>
         <p>Acceptance includes confirming your project Start Date and End Date. Once your acceptance is approved these can only be changed by submitting a request through your Monitoring Officer.
-            Annex 1 also details your individual award allocations. Subject to clause 5.4 of Annex 2, these are final and cannot be negotiated. This grant offer letter provides the maximum project costs which could be claimed under this award. All participants must make sure that project costs are incremental and directly attributable to the project. In signing this letter you confirm that evidence will be provided by the Recipient to support the eligibility of these costs with each claim made.</p>
-        <p>Your award will be withdrawn if you do not confirm your start date within a calendar month of this letter. Any costs incurred before that start date will not be eligible for grant funding.</p>
+            Annex 1 also details your individual award allocations. Subject to clause 5.3 of Annex 2, these are final and cannot be negotiated. This grant offer letter provides the maximum project costs which could be claimed under this award. All participants must make sure that project costs are incremental and directly attributable to the project. In signing this letter you confirm that evidence will be provided by the Recipient to support the eligibility of these costs with each claim made.</p>
+        <p>Your award will be withdrawn if you do not confirm your Start Date within a calendar month of this letter. Any costs incurred before that Start Date will not be eligible for grant funding.</p>
         <p>We wish you every success with your project.</p>
 
         <table th:if="${not #lists.isEmpty(model.notes)}">
@@ -194,7 +196,7 @@
         </p>
         <div class="letter-page-break"></div>
 
-        <h2 class="heading-medium">Annex 1: acceptance of award</h2>
+        <h2 class="heading-medium">ANNEX 1: Acceptance of grant award</h2>
         <p>
             <strong>UKRI Reference Number:</strong> <th:block th:text="${model.applicationId}" /><br>
             <strong>Date:</strong> <th:block th:text="${#temporals.format(model.getNow(), 'd MMMM yyyy')}" /><br>
@@ -205,16 +207,16 @@
         <p>I am authorised on behalf of the Recipient to accept this offer on the terms set out in the Grant Offer Letter.</p>
         <p>For the purposes of the offer:</p>
         <p>
-            (i) Project start date	______________________________________________ <br><br>
-            (ii) Project end date	______________________________________________ <br>
+            (i) Project Start Date	______________________________________________ <br><br>
+            (ii) Project End Date	______________________________________________ <br>
         </p>
 
-        <p>Please note: to make administration simpler, the project start date must be the first day of a calendar month. Please also make sure the project end date falls on the last day of a calendar month, by selecting an appropriate project length.</p>
+        <p>Please note: to make administration simpler, the project Start Date must be the first day of a calendar month. Please also make sure the project End Date falls on the last day of a calendar month, by selecting an appropriate project length.</p>
 
         <br><br><br><br>
 
         <p>
-            <strong>Signed for and on behalf of:</strong> ______________________________________________ <br><br>
+            <strong th:text="|Signed for and on behalf of ${model.leadOrgName}|" />
         </p>
 
         <br><br>
@@ -245,7 +247,6 @@
         <h2 class="heading-medium">Eligible costs and grant allocations</h2>
 
         <p>
-            <strong>File reference:</strong> [file_reference]<br>
             <strong>Application number:</strong> <th:block th:text="${model.applicationId}" /><br>
             <strong>Date:</strong> <th:block th:text="${#temporals.format(model.getNow(), 'd MMMM yyyy')}" /><br>
             <strong>Competition:</strong> <th:block th:text="${model.competitionName}" /><br>
@@ -256,7 +257,7 @@
             <table class="letter-table">
                 <thead>
                     <tr>
-                        <th>Industry costs</th>
+                        <th>Industry costs/Academic costs</th>
                         <th style="text-align:right;"
                             th:each="(organisation : ${model.industrialFinanceTable.organisations})"
                             th:text="${organisation}">Super Tech Ltd</th>
@@ -722,12 +723,14 @@
             </table>
         </th:block>
 
+        <p>** Please see clause 5.6(b) of Annex 2 for information about Independent Accountant’s Reports.</p>
+
         <br><br><br>
     </div>
     <!-- terms start -->
     <div class="terms-and-conditions letter-size letter-size--terms">
         <th:block th:if="${model.singleTermsAndConditionsTemplatePresent}">
-            <h2 style="font-size: 24px">Terms and conditions</h2>
+            <h2 class="heading-medium">ANNEX 2 - TERMS AND CONDITIONS OF GRANT</h2>
             <th:block th:insert="competition/info/__${model.singleTermsAndConditionsTemplate}__ :: terms-and-conditions-content" th:with="hideProcurementLink=${true}"/>
         </th:block>
         <th:block th:unless="${model.singleTermsAndConditionsTemplatePresent}" th:each="termsTemplate : ${model.termsAndConditionsTemplates.entrySet()}">

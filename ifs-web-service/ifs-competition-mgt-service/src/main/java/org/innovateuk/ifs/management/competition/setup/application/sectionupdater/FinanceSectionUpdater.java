@@ -70,6 +70,7 @@ public class FinanceSectionUpdater extends AbstractSectionUpdater implements Com
             competitionSetupFinanceResource.setIncludeGrowthTable(form.getIncludeGrowthTable());
             competitionSetupFinanceResource.setIncludeYourOrganisationSection(form.getIncludeYourOrganisationSection());
             competitionSetupFinanceResource.setIncludeJesForm(form.getIncludeJesForm());
+            competitionSetupFinanceResource.setIncludePaymentMilestone(form.getIncludePaymentMilestones());
         }
 
         return competitionSetupFinanceRestService.save(competitionSetupFinanceResource).toServiceResult();
@@ -77,9 +78,9 @@ public class FinanceSectionUpdater extends AbstractSectionUpdater implements Com
 
     private void updateFundingRulesQuestion(String fundingRules, Long competitionId) {
         Optional<QuestionResource> question = questionRestService.getQuestionsBySectionIdAndType(
-                getOverviewFinancesSectionId(competitionId),
-                QuestionType.GENERAL
-        ).getSuccess()
+                        getOverviewFinancesSectionId(competitionId),
+                        QuestionType.GENERAL
+                ).getSuccess()
                 .stream()
                 .filter(questionResource -> questionResource.getName() == null)
                 .findFirst();
@@ -92,9 +93,9 @@ public class FinanceSectionUpdater extends AbstractSectionUpdater implements Com
 
     private Long getOverviewFinancesSectionId(Long competitionId) {
         Optional<SectionResource> section = sectionService.getSectionsForCompetitionByType(
-                competitionId,
-                SectionType.OVERVIEW_FINANCES
-        )
+                        competitionId,
+                        SectionType.OVERVIEW_FINANCES
+                )
                 .stream()
                 .findFirst();
 

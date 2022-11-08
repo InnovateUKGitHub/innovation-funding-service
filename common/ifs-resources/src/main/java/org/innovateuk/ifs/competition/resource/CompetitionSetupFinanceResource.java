@@ -12,6 +12,7 @@ public class CompetitionSetupFinanceResource {
     private Boolean includeGrowthTable;
     private Boolean includeYourOrganisationSection;
     private Boolean includeJesForm;
+    private Boolean includePaymentMilestone;
 
     public Long getCompetitionId() {
         return competitionId;
@@ -53,6 +54,14 @@ public class CompetitionSetupFinanceResource {
         this.includeJesForm = includeJesForm;
     }
 
+    public Boolean getIncludePaymentMilestone() {
+        return includePaymentMilestone;
+    }
+
+    public void setIncludePaymentMilestone(Boolean includePaymentMilestone) {
+        this.includePaymentMilestone = includePaymentMilestone;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -67,6 +76,7 @@ public class CompetitionSetupFinanceResource {
                 .append(includeGrowthTable, that.includeGrowthTable)
                 .append(includeYourOrganisationSection, that.includeYourOrganisationSection)
                 .append(includeJesForm, that.includeJesForm)
+                .append(includePaymentMilestone, that.includePaymentMilestone)
                 .isEquals();
     }
 
@@ -78,6 +88,7 @@ public class CompetitionSetupFinanceResource {
                 .append(includeGrowthTable)
                 .append(includeYourOrganisationSection)
                 .append(includeJesForm)
+                .append(includePaymentMilestone)
                 .toHashCode();
     }
 
@@ -89,6 +100,7 @@ public class CompetitionSetupFinanceResource {
                 ", includeGrowthTable=" + includeGrowthTable +
                 ", includeYourOrganisationSection=" + includeYourOrganisationSection +
                 ", includeJesForm=" + includeJesForm +
+                ", includePaymentMilestone=" + includePaymentMilestone +
                 '}';
     }
 }
