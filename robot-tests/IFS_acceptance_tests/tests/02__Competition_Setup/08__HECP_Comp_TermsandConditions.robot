@@ -28,7 +28,7 @@ HECP terms and conditions pre selected for hecp funding or competition type
     [Documentation]  IFS-10696
     Given the user navigates to the page             ${CA_UpcomingComp}
     And the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
-    And the user fills in the CS Initial details     ${hecpKICsCompetitionName}  ${month}  ${nextyear}  ${compType_HESTA}  STATE_AID  HECP
+    And the user fills in the CS Initial details     ${hecpKICsCompetitionName}  ${month}  ${nextyear}  ${compType_HORIZON_EUROPE}  STATE_AID  HECP
     When the user clicks the button/link             link = Terms and conditions
     Then the user should see the element             css = [id="termsAndConditionsId12"]:checked ~ label
 
