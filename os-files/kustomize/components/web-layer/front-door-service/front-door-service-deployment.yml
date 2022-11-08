@@ -95,13 +95,13 @@ spec:
             - name: NEW_RELIC_APP_NAME
               value: 'ifs-$(NEW_RELIC_ENV)-front-door-service'
             - name: JAVA_TOOL_OPTIONS
-              value: -Xms400m -Xmx400m -javaagent:/newrelic.jar
+              value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
           ports:
             - containerPort: 8080
           resources:
             limits:
               cpu: 1000m
-              memory: 700Mi
+              memory: 1000Mi
             requests:
               cpu: 250m
-              memory: 500Mi
+              memory: 800Mi

@@ -183,9 +183,11 @@
         <ul class="govuk-list pagination">
             <li class="prev">
                 <a rel="prev" title="Navigate to previous part"
-                   th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='project-impact')}">
+                   th:href="${model.general.isProjectImpactEnabled} ?
+                   @{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='project-impact')} :
+                   @{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='organisational-eligibility')}">
                     <span class="pagination-label">Previous</span>
-                    <span class="pagination-part-title">Project impact</span>
+                    <span class="pagination-part-title" th:text="${model.general.isProjectImpactEnabled ? 'Project impact' : 'Organisational Eligibility'}">Organisational Eligibility</span>
                 </a>
             </li>
         </ul>

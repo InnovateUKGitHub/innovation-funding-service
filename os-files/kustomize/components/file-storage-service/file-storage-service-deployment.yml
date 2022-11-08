@@ -53,7 +53,7 @@ spec:
               name: file-storage-service-config
         env:
         - name: JAVA_TOOL_OPTIONS
-          value: -Xms1250m -Xmx1250m -javaagent:/newrelic.jar
+          value: -Xms2500m -Xmx2500m -javaagent:/newrelic.jar
         - name: NEW_RELIC_APP_NAME
           value: 'ifs-$(NEW_RELIC_ENV)-file-storage-service'
         ports:
@@ -61,8 +61,8 @@ spec:
         resources:
           limits:
             cpu: 1000m
-            memory: 2000Mi
+            memory: 3125Mi
           requests:
             cpu: 500m
-            memory: 1600Mi
+            memory: 2500Mi
 

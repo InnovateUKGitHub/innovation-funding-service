@@ -3,6 +3,7 @@ package org.innovateuk.ifs.management.competition.setup.application.populator;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.management.competition.setup.application.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
@@ -46,5 +47,50 @@ public class FinanceModelPopulatorTest {
         assertEquals(FinanceViewModel.class, viewModel.getClass());
         assertTrue(viewModel.isNoFinancesCompetition());
         assertTrue(viewModel.isKtpCompetition());
+
+    }
+
+    @Test
+    public void testPopulateModelWithPaymentMilestoneForThirdPartyOfgem() {
+        long competitionId = 8L;
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionCode("code")
+                .withName("name")
+                .withId(competitionId)
+                .withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
+                .withNonFinanceType(true)
+                .withFundingType(FundingType.THIRDPARTY)
+                .withCompetitionType()
+                .withCompetitionTypeEnum(CompetitionTypeEnum.OFGEM)
+                .withCompTypeOfgemAndFundingTypeThirdParty(true)
+                .build();
+
+        assertTrue(competition.isNonFinanceType());
+        FinanceViewModel viewModel = (FinanceViewModel) populator.populateModel(competition, Optional.empty());
+        assertEquals(FinanceViewModel.class, viewModel.getClass());
+        assertTrue("Payment Milestones view should  be enabled for third part ofgem competition", viewModel.isShowPaymentMilestonesInCompetition());
+
+    }
+
+    @Test
+    public void testPopulateModelWithPaymentMilestoneForNonThirdPartyOfgem() {
+        long competitionId = 8L;
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionCode("code")
+                .withName("name")
+                .withId(competitionId)
+                .withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
+                .withNonFinanceType(true)
+                .withFundingType(FundingType.KTP)
+                .withCompetitionType()
+                .withCompTypeOfgemAndFundingTypeThirdParty(false)
+                .withCompetitionTypeEnum(CompetitionTypeEnum.OFGEM)
+                .build();
+
+        assertTrue(competition.isNonFinanceType());
+        FinanceViewModel viewModel = (FinanceViewModel) populator.populateModel(competition, Optional.empty());
+        assertEquals(FinanceViewModel.class, viewModel.getClass());
+        assertFalse("Payment Milestones view should  not be enabled for non third part ofgem competition", viewModel.isShowPaymentMilestonesInCompetition());
+
     }
 }

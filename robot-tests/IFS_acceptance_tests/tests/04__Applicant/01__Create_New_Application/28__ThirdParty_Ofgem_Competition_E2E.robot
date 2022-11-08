@@ -33,6 +33,8 @@ Documentation   IFS-11442 OFGEM: Create a "ThirdParty" generic template
 ...
 ...             IFS-13073 Ofgem - Discovery 2 - Finance summary changes - All IFS roles
 ...
+...             IFS-13148 Ofgem - Discovery 2 - Payment milestones question - Competition setup configuration
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -69,7 +71,7 @@ Comp admin can configure third party procurement terms and conditions
     And the user should see the element                                   jQuery = li:contains("Terms and conditions") .task-status-complete
 
 Comp admin selects third party funder in funding information and completes the competition
-    [Documentation]   IFS-11442
+    [Documentation]   IFS-11442  IFS-13148
     Given comp admin creates ofgem competition
     When the user fills in funding information for the third party comp
     Then the user navigates to the page                                     ${CA_UpcomingComp}
