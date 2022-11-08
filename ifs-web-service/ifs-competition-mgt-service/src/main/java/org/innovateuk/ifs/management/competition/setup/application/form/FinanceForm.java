@@ -21,7 +21,7 @@ public class FinanceForm extends CompetitionSetupForm {
     private Boolean includeGrowthTable;
 
     private Boolean includeYourOrganisationSection;
-
+    private Boolean includePaymentMilestones;
     private String fundingRules;
 
     private boolean growthTableRequired;
@@ -80,5 +80,13 @@ public class FinanceForm extends CompetitionSetupForm {
 
     public void setGrowthTableRequired(boolean growthTableRequired) {
         this.growthTableRequired = growthTableRequired;
+    }
+
+    public Boolean getIncludePaymentMilestones() {
+        return includePaymentMilestones;
+    }
+
+    public void setIncludePaymentMilestones(Boolean includePaymentMilestones) {
+        this.includePaymentMilestones = includePaymentMilestones;
     }
 }

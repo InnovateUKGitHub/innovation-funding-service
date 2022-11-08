@@ -39,6 +39,9 @@ public class CompetitionSetupFinanceResourceBuilder extends BaseBuilder<Competit
     public CompetitionSetupFinanceResourceBuilder withIncludeJesForm(Boolean... includeJesForms) {
         return withArray((includeJesForm, competitionSetupFinance) -> competitionSetupFinance.setIncludeJesForm(includeJesForm), includeJesForms);
     }
+    public CompetitionSetupFinanceResourceBuilder withIncludePaymentMilestones(Boolean... includePaymentMilestones) {
+        return withArray((includePaymentMilestone, competitionSetupFinance) -> competitionSetupFinance.setIncludePaymentMilestone(includePaymentMilestone), includePaymentMilestones);
+    }
 
     @Override
     protected CompetitionSetupFinanceResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionSetupFinanceResource>> actions) {

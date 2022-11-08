@@ -37,12 +37,14 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         boolean isIncludeGrowthTable = false;
         boolean isIncludeYourOrganisationSection = false;
         boolean includeJesForm = true;
+        boolean includePaymentMilestones = true;
         CompetitionSetupFinanceResource compSetupFinanceRes = newCompetitionSetupFinanceResource()
                 .withCompetitionId(competitionId)
                 .withIncludeGrowthTable(isIncludeGrowthTable)
                 .withIncludeJesForm(includeJesForm)
                 .withIncludeYourOrganisationSection(isIncludeYourOrganisationSection)
                 .withApplicationFinanceType(STANDARD)
+                .withIncludePaymentMilestones(includePaymentMilestones)
                 .build();
 
         // Make sure that the values in the competition and the form inputs are the negation of what we are changing
@@ -62,6 +64,7 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         assertFalse(c.getIncludeProjectGrowthTable());
         assertFalse(c.getIncludeYourOrganisationSection());
         assertEquals(c.getIncludeJesForm(), includeJesForm);
+        assertEquals(c.getIncludePaymentMilestone(), includePaymentMilestones);
     }
 
     @Test
