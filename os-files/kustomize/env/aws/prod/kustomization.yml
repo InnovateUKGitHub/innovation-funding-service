@@ -15,6 +15,7 @@ patchesStrategicMerge:
   - data-layer/data-service/data-service-deployment.yml
   - data-layer/finance-data-service/finance-data-service-deployment.yml
   - data-layer/survey-data-service/survey-data-service-deployment.yml
+  - file-storage-service/file-storage-service-deployment.yml
   - web-layer/application-service/application-service-deployment.yml
   - web-layer/assessment-service/assessment-service-deployment.yml
   - web-layer/competition-mgt-service/competition-mgt-service-deployment.yml
