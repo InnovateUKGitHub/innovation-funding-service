@@ -54,7 +54,7 @@ ${fundingEligibilityTitle}                                  Funding eligibility
 ${organisationalEligibilityTitle}                           Organisational eligibility
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}     Aerospace technology investment sector
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}          ${competition_ids['${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}']}
-${hestaCompetitionName}                                     Hesta competition
+${horizonCompetitionName}                                   Horizon Europe competition
 # Using double quotes below, cause there's an apostrophe in the title
 ${OPEN_COMPETITION_APPLICATION_NAME}                            Climate science the history of Greenland\'s ice
 ${OPEN_COMPETITION_APPLICATION_1_NUMBER}                        ${application_ids["${OPEN_COMPETITION_APPLICATION_NAME}"]}
@@ -308,7 +308,7 @@ ${compType_APC}        Advanced Propulsion Centre
 ${compType_ATI}        Aerospace Technology Institute
 ${compType_PT}         The Prince's Trust
 ${compType_H2020}      Horizon 2020
-${compType_HESTA}      Horizon Europe Guarantee
+${compType_HORIZON_EUROPE}      Horizon Europe Guarantee
 ${compType_DirectAward}  Direct award
 
 # Competition and Applicant lists
@@ -321,10 +321,10 @@ ${compType_DirectAward}  Direct award
 @{EOI_questions}                          Business opportunity and potential market  Innovation  Project team  Funding and adding value
 @{APC_questions}                          How innovative is your project?   Your approach regarding innovation.   Your technical approach.
 @{project_details}                        Project summary  Public description  Scope
-@{Hecp_questions}                         Tell us where your organisation is based   Participating Organisation project region  What EIC call have you been successfully evaluated for?  Application reference number  UK Funding contribution applied for (GBP)  Have the tasks assigned to your institution changed significantly since the original application?   If this amount has changed please tell us how?  Will you, as a UK institution, be employing PhD students as part of this project?   If so, how many PhD students will be employed at your institution on this project?   How much budget is allocated for PhD students employed at your institution on this project?
+@{Hecp_questions}                         Tell us where your organisation is based   Participating Organisation project region
 @{Thirdparty_questions}                   How innovative is your project?  Your approach regarding innovation.  Your technical approach.
 @{Directaward_questions}                  Direct award placeholder question
-@{prereg_questions}                       Tell us where your organisation is based  What EIC call have you been successfully evaluated for?  Application reference number  UK Funding contribution applied for (GBP)  Have the tasks assigned to your institution changed significantly since the original application?   If this amount has changed please tell us how?  Will you, as a UK institution, be employing PhD students as part of this project?   If so, how many PhD students will be employed at your institution on this project?   How much budget is allocated for PhD students employed at your institution on this project?
+@{prereg_questions}                       Tell us where your organisation is based
 
 #SBRI Type 1 competition milestones
 @{sbriType1Milestones}     Open date  Briefing event  Submission date

@@ -409,6 +409,8 @@ the user marks the Application details section as complete
 
 the user marks each question as complete
     [Arguments]  ${question_link}
+    ${status}   ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = h4:contains("Horizon Europe placeholder question")
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link     jQuery = .task:contains("Horizon Europe placeholder question") ~ .task-status:contains("Remove")
     the user clicks the button/link  jQuery = h4 a:contains("${question_link}")
     Run Keyword If  '${question_link}' in ["Technical approach", "Innovation"]   the user selects the radio button     numberOfUploads  3
     Run Keyword If  '${question_link}' in ["Technical approach", "Innovation"]   the user selects the checkbox         question.allowedAppendixResponseFileTypes2

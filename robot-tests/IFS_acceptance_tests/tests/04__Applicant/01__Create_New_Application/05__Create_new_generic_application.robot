@@ -20,7 +20,7 @@ Resource          ../../../resources/common/Competition_Commons.robot
 ${competitionName}  Generic competition for TsnCs
 
 *** Test Cases ***
-User can edit the assesed question
+User can edit the assessed question
     [Documentation]    IFS-747
     [Tags]
     [Setup]  logged in user applies to competition    ${openGenericCompetition}  1
