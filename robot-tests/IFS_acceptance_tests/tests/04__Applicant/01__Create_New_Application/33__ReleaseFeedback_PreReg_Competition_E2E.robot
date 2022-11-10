@@ -9,27 +9,27 @@ Resource          ../../../resources/common/PS_Common.robot
 Resource          ../../../resources/common/Competition_Commons.robot
 
 *** Variables ***
-${hecpPreregReleaseFeedbackCompName}            Hecp Pre Registration Competition with Release feedback
-${hecpPreregReleaseFeedbackAppName}             preRegApplication with Release feedback
-${unSuccessPreregAppName}                       unSuccessfulPreRegApplication with Release feedback
-${unSubmittedPreregAppName}                     unSubmittedPreRegApplication with Release feedback
-${preRegApplicationUnsuccessfulEmail}           You have been unsuccessful in the expression of interest stage for funding to Innovate UK's ${hecpPreregReleaseFeedbackCompName} competition.
-${preRegApplicationSuccessfulEmail}             We are pleased to inform you that your expression of interest application has been successful.
-${preregApplicationSubmissionEmail}             You have successfully submitted an application for funding to
-${fullApplicationSuccessfulEmail}               We are pleased to inform you that your application for the Horizon Europe collaborative competition has been successful and passed the technical assessment phase.
-${evidenceSubmittedEmailSubject}                Evidence file submitted
-${evidenceSubmittedEmailDescription}            You have successfully submitted your evidence file to ${hecpPreregReleaseFeedbackCompName} competition.
+${hecpPreregReleaseFeedbackCompName}                    Hecp Pre Registration Competition with Release feedback
+${hecpPreregReleaseFeedbackAppName}                     release feedback EOI Application
+${unSuccessPreregReleaseFeedbackAppName}                unSuccessfulPreRegApplication with Release feedback
+${unSubmittedPreregReleaseFeedbackAppName}              unSubmittedPreRegApplication with Release feedback
+${preRegApplicationUnsuccessfulEmailReleaseFeedback}    You have been unsuccessful in the expression of interest stage for funding to Innovate UK's ${hecpPreregReleaseFeedbackCompName} competition.
+${preRegApplicationSuccessfulEmail}                     We are pleased to inform you that your expression of interest application has been successful.
+${preregApplicationSubmissionEmail}                     You have successfully submitted an application for funding to
+${fullApplicationSuccessfulEmail}                       We are pleased to inform you that your application for the Horizon Europe collaborative competition has been successful and passed the technical assessment phase.
+${evidenceSubmittedEmailSubject}                        Evidence file submitted
+${evidenceSubmittedEmailDescriptionReleaseFeedback}     You have successfully submitted your evidence file to ${hecpPreregReleaseFeedbackCompName} competition.
 
 *** Test Cases ***
 Comp Admin creates a prereg competition
     [Documentation]  IFS-12958
     Given The user logs-in in new browser                    &{Comp_admin1_credentials}
-    Then the competition admin creates prereg competition    ${BUSINESS_TYPE_ID}  ${hecpPreregReleaseFeedbackCompName}  Pre Registration  ${compType_HESTA}  NOT_AID  HECP  Release_Feedback  no  50  false  single-or-collaborative
+    Then the competition admin creates prereg competition    ${BUSINESS_TYPE_ID}  ${hecpPreregReleaseFeedbackCompName}  Pre Registration  ${compType_HORIZON_EUROPE}  NOT_AID  HECP  Release_Feedback  no  50  false  single-or-collaborative
 
 Comp admin can see readonly view of expression of intrest question selection
     [Documentation]  IFS-12958
     [Setup]  Get competitions id and set it as suite variable     ${hecpPreregReleaseFeedbackCompName}
-    Given the user navigates to the page                          ${server}/management/competition/setup/${preregCompetitionId}/section/application/landing-page
+    Given the user navigates to the page                          ${server}/management/competition/setup/${preregReleaseFeedbackCompetitionId}/section/application/landing-page
     When the user clicks the button/link                          link = 2. Participating Organisation project region
     Then the user should see the element                          jQuery = dt:contains("Is this also an expression of interest question?") + dd:contains("Yes")
 
@@ -53,7 +53,7 @@ Applicants should view prereg related content when competition is opened
 
 Internal users should see EOI specifc content on funding decision page
     [Documentation]    IFS-12958
-    Given the user navigates to the page            ${server}/management/competition/${preregCompetitionId}/applications
+    Given the user navigates to the page            ${server}/management/competition/${preregReleaseFeedbackCompetitionId}/applications
     When the user clicks the button/link            link = Expressions of interest
     Then User should see EOI Related content
     And the user should see the element             jQuery = td:contains("No applications found.")
@@ -73,7 +73,7 @@ Applicants views expression of interest labels in application overview page for 
     When the user completes the application details section       ${hecpPreregReleaseFeedbackAppName}  ${tomorrowday}  ${month}  ${nextyear}   23
     And Requesting application ID of prereg application           ${hecpPreregReleaseFeedbackAppName}
     Then the user should see EOI labels for prereg application
-    And the user should see the element                           jQuery = dt:contains("Application number:")+dd:contains("${preregApplicationID}")
+    And the user should see the element                           jQuery = dt:contains("Application number:")+dd:contains("${preregReleaseFeedbackApplicationID}")
 
 Applicant should view EOI label on dashboard for expression of interest applications
     [Documentation]  IFS-12958
@@ -103,7 +103,6 @@ Lead applicant completes the application sections
     And the user clicks the button/link                                             link = ${hecpPreregReleaseFeedbackAppName}
     When the applicant completes Application Team                                   COMPLETE  steve.smith@empire.com
     And the user complete the work programme
-    And The user is able to complete horizon grant agreement section
     And the lead applicant fills all the questions and marks as complete(prereg)
     And the user completes prereg project finances                                  ${hecpPreregReleaseFeedbackAppName}   no
     Then the user should see the element                                            jQuery = .progress:contains("100%")
@@ -126,11 +125,11 @@ Applicant submits the expression of interest application
     And the user should see the element         jQuery = h1:contains("Expression of interest status")
     And the user should see the element         link = View expression of interest
     And the user should see the element         link = Print expression of interest
-    And the user reads his email                steve.smith@empire.com  ${preregApplicationID}: Successful submission of expression of interest   You have successfully submitted an expression of interest for funding to Innovate UK’s ${hecpPreregReleaseFeedbackCompName}.
+    And the user reads his email                steve.smith@empire.com  ${preregReleaseFeedbackApplicationID}: Successful submission of expression of interest   You have successfully submitted an expression of interest for funding to Innovate UK’s ${hecpPreregReleaseFeedbackCompName}.
 
 Applicant can not view hidden question, section and subsection in print application
     [Documentation]  IFS-12958
-    When the user navigates to the page without the usual headers      ${SERVER}/application/${preregApplicationID}/print?noprint
+    When the user navigates to the page without the usual headers      ${SERVER}/application/${preregReleaseFeedbackApplicationID}/print?noprint
     Then the user should see the element                               xpath = //*[contains(text(),'Expression of interest questions')]
     And the user should not see the element                            xpath = //h2[contains(text(),'Terms and conditions')]
     And the user should not see the element                            xpath = //span[contains(text(),'Award terms and conditions')]
@@ -160,17 +159,17 @@ Parter applicant can not view evidence upload section
 Internal users can see submitted expression of interest applications without checkbox when the eveidence is not uploaded
     [Documentation]  IFS-12958
     Given log in as a different user            &{ifs_admin_user_credentials}
-    And the user navigates to the page          ${server}/management/competition/${preregCompetitionId}
+    And the user navigates to the page          ${server}/management/competition/${preregReleaseFeedbackCompetitionId}
     And the user clicks the button/link         link = Applications: All, submitted, expression of interest, ineligible
     When the user clicks the button/link        link = Expressions of interest
-    Then the user should see the element        jQuery = td:contains("${preregApplicationID}") + td:contains("${hecpPreregReleaseFeedbackAppName}")
+    Then the user should see the element        jQuery = td:contains("${preregReleaseFeedbackApplicationID}") + td:contains("${hecpPreregReleaseFeedbackAppName}")
     And the user should see the element         jQuery = .highlight-panel:contains("Expressions of interest") span:contains("1")
     And the user should not see the element     jQuery = label[for = "app-row-1"]
 
 Expression of interest evidence upload validation : wrong file upload
     [Documentation]  IFS-12958
     Given log in as a different user                        &{lead_applicant_credentials}
-    And the user navigates to the page                      ${server}/application/${preregApplicationID}/track
+    And the user navigates to the page                      ${server}/application/${preregReleaseFeedbackApplicationID}/track
     When the user uploads the file                          eoiEvidenceFile    ${excel_file}
     Then the user should not see a field error              Your upload must be a PDF.
     And The user should see valid evidence upload content
@@ -184,31 +183,31 @@ Applicant can remove the file uploaded
 Comp admin can not view mark as ineligible application link
     [Documentation]  IFS-12958
     Given log in as a different user                &{ifs_admin_user_credentials}
-    When the user navigates to the page             ${server}/management/competition/${preregCompetitionId}/application/${preregApplicationID}
+    When the user navigates to the page             ${server}/management/competition/${preregReleaseFeedbackCompetitionId}/application/${preregReleaseFeedbackApplicationID}
     Then the user should not see the element        jQuery = span:contains("Mark application as ineligible")
 
 Internal users can see expression of interest statistics
     [Documentation]  IFS-12958
-    Given the user navigates to the page        ${server}/management/competition/${preregCompetitionId}
+    Given the user navigates to the page        ${server}/management/competition/${preregReleaseFeedbackCompetitionId}
     When the user clicks the button/link        link = Applications: All, submitted, expression of interest, ineligible
     Then the user should see the element        jQuery = .highlight-panel:contains("Expressions of interest") span:contains("1")
 
 Lead organisation should get notified on submitting the EOI evidence
     [Documentation]  IFS-12958
-    When Lead applicant submits evidence for review    ${preregApplicationID}   ${contract_pdf}
+    When Lead applicant submits evidence for review    ${preregReleaseFeedbackApplicationID}   ${contract_pdf}
     Then the user should see the element               link = Contract.pdf (opens in a new window)
-    And the user reads his email                       ${lead_applicant_credentials["email"]}  ${evidenceSubmittedEmailSubject}  ${evidenceSubmittedEmailDescription}
+    And the user reads his email                       ${lead_applicant_credentials["email"]}  ${evidenceSubmittedEmailSubject}  ${evidenceSubmittedEmailDescriptionReleaseFeedback}
 
 Lead applicant views read only evidence file submitted for review
     [Documentation]  IFS-12958
-    When the user navigates to the page         ${server}/application/${preregApplicationID}/summary
+    When the user navigates to the page         ${server}/application/${preregReleaseFeedbackApplicationID}/summary
     Then the user checks file is downloaded     ${contract_pdf}
     And the user should see the element         jQuery = h3:contains("Eoi Evidence")
 
 Partner applicant can not view read only evidence uploaded by lead applicant
     [Documentation]  IFS-12958
     Given log in as a different user             ${collaborator1_credentials["email"]}  ${short_password}
-    When the user navigates to the page          ${server}/application/${preregApplicationID}/summary
+    When the user navigates to the page          ${server}/application/${preregReleaseFeedbackApplicationID}/summary
     Then the user should not see the element     jQuery = h3:contains("Eoi Evidence")
     And the user should not see the element      jQuery = a:contains("${contract_pdf}")
 
@@ -216,19 +215,19 @@ Internal user submit the EOI applications funding decision after evidence is upl
     [Documentation]  IFS-12958
     Given Existing user creates and submits new application for unsuccessful EOI journey
     And Requesting application ID of unsuccessful prereg application
-    When Lead applicant submits evidence for review                                         ${unSuccessfulPreRegApplicationID}   ${contract_pdf}
+    When Lead applicant submits evidence for review                                         ${unSuccessfulReleaseFeedbackPreRegApplicationID}   ${contract_pdf}
     And Log in as a different user                                                          &{Comp_admin1_credentials}
-    And Internal user marks the EOI as successful/unsuccessful                              ${unSuccessPreregAppName}   EOI_REJECTED
+    And Internal user marks the EOI as successful/unsuccessful                              ${unSuccessPreregReleaseFeedbackAppName}   EOI_REJECTED
     And Internal user marks the EOI as successful/unsuccessful                              ${hecpPreregReleaseFeedbackAppName}   EOI_APPROVED
-    Then the user should see the element                                                    jQuery = td:contains("${preregApplicationID}")+td:contains("${hecpPreregReleaseFeedbackAppName}")+td:contains("Empire Ltd")+td:contains("Successful")
-    And the user should see the element                                                     jQuery = td:contains("${unSuccessfulPreRegApplicationID}")+td:contains("${unSuccessPreregAppName}")+td:contains("Empire Ltd")+td:contains("Unsuccessful")
+    Then the user should see the element                                                    jQuery = td:contains("${preregReleaseFeedbackApplicationID}")+td:contains("${hecpPreregReleaseFeedbackAppName}")+td:contains("Empire Ltd")+td:contains("Successful")
+    And the user should see the element                                                     jQuery = td:contains("${unSuccessfulReleaseFeedbackPreRegApplicationID}")+td:contains("${unSuccessPreregReleaseFeedbackAppName}")+td:contains("Empire Ltd")+td:contains("Unsuccessful")
 
 Write and send email button enabled for internal users
     [Documentation]    IFS-12958
     When the user clicks the button/link        Link = Manage notifications
     Then the user should see the element        jQuery = h1:contains("Expression of interest notifications")
     And User should see EOI Related content
-    And the user selects the checkbox           app-row-${preregApplicationID}
+    And the user selects the checkbox           app-row-${preregReleaseFeedbackApplicationID}
     And The user should not see the element     css = .govuk-button[disabled]
 
 Internal user should view EOI related content in the notification template
@@ -244,31 +243,31 @@ Internal user sends a successful notification of an EOI application
     And the user clicks the button/link                     jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
     And the user refreshes until element appears on page    jQuery = td:contains("${hecpPreregReleaseFeedbackAppName}") ~ td:contains("Sent")
     Then the user reads his email                           steve.smith@empire.com  Notification regarding your expression of interest application '${hecpPreregReleaseFeedbackAppName}' for the competition '${hecpPreregReleaseFeedbackCompName}'  ${preRegApplicationSuccessfulEmail}
-    And the user navigates to the page                      ${server}/management/competition/${preregCompetitionId}/applications/all
-    And the user should see the element                     jQuery = td:contains("${preregApplicationID}")+td:contains("${hecpPreregReleaseFeedbackAppName}")
+    And the user navigates to the page                      ${server}/management/competition/${preregReleaseFeedbackCompetitionId}/applications/all
+    And the user should see the element                     jQuery = td:contains("${preregReleaseFeedbackApplicationID}")+td:contains("${hecpPreregReleaseFeedbackAppName}")
 
 Internal user sends a unsuccessful notification of an EOI application
     [Documentation]    IFS-12958
-    Given the user navigates to the page                    ${server}/management/competition/${preregCompetitionId}/eoi/notification
-    And the user selects the checkbox                       app-row-${unSuccessfulPreRegApplicationID}
+    Given the user navigates to the page                    ${server}/management/competition/${preregReleaseFeedbackCompetitionId}/eoi/notification
+    And the user selects the checkbox                       app-row-${unSuccessfulReleaseFeedbackPreRegApplicationID}
     When the user clicks the button/link                    jQuery = button:contains("Write and send email")
     And the user clicks the button/link                     jQuery = button:contains("Send notification")[data-js-modal = "send-to-all-applicants-modal"]
     And the user clicks the button/link                     jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
-    And the user refreshes until element appears on page    jQuery = td:contains("${unSuccessPreregAppName}") ~ td:contains("Sent")
-    Then the user reads his email                           steve.smith@empire.com  Notification regarding your expression of interest application '${unSuccessPreregAppName}' for the competition '${hecpPreregReleaseFeedbackCompName}'  ${preRegApplicationUnsuccessfulEmail}
+    And the user refreshes until element appears on page    jQuery = td:contains("${unSuccessPreregReleaseFeedbackAppName}") ~ td:contains("Sent")
+    Then the user reads his email                           steve.smith@empire.com  Notification regarding your expression of interest application '${unSuccessPreregReleaseFeedbackAppName}' for the competition '${hecpPreregReleaseFeedbackCompName}'  ${preRegApplicationUnsuccessfulEmailReleaseFeedback}
 
 Lead applicant views unsuccessful applications in previous dashboard
     [Documentation]  IFS-12958
     Given log in as a different user                            &{lead_applicant_credentials}
     When the user clicks the application tile if displayed
-    Then the user should see the element                        jQuery = li:contains("${unSuccessPreregAppName}") .status-msg:contains("Unsuccessful")
-    And the user should see the element                         jQuery = li:contains("${unSuccessPreregAppName}") .status-msg:contains("Expression of interest")
+    Then the user should see the element                        jQuery = li:contains("${unSuccessPreregReleaseFeedbackAppName}") .status-msg:contains("Unsuccessful")
+    And the user should see the element                         jQuery = li:contains("${unSuccessPreregReleaseFeedbackAppName}") .status-msg:contains("Expression of interest")
 
 Lead applicant can view full application details in dashboard
     [Documentation]  IFS-12958
     When the user navigates to the page         ${APPLICANT_DASHBOARD_URL}
     Then the user should see the element        jQuery = .in-progress li:contains("${hecpPreregReleaseFeedbackAppName}") .status:contains("% complete")
-    And the user should not see the element     jQuery = li:contains("${preregApplicationID}") .status-msg:contains("Expression of interest")
+    And the user should not see the element     jQuery = li:contains("${preregReleaseFeedbackApplicationID}") .status-msg:contains("Expression of interest")
 
 Lead applicant can view the answers provided in EOI applications in full application along with new application questions
     [Documentation]  IFS-12958
@@ -289,21 +288,21 @@ Lead applicant can navigate to orginal EOI application from full application
 Partner completes project finances and terms and conditions in full application
     [Documentation]  IFS-12958
     Given log in as a different user                             ${collaborator1_credentials["email"]}  ${short_password}
-    When the user navigates to the page                          ${server}/application/${preregApplicationID}
+    When the user navigates to the page                          ${server}/application/${preregReleaseFeedbackApplicationID}
     Then the user completes the project location
     And the user accept the competition terms and conditions     Back to application overview
 
 Lead applicant completes remaining questions and submits full application
     [Documentation]  IFS-12958
     Given log in as a different user                            &{lead_applicant_credentials}
-    When the user navigates to the page                         ${server}/application/${preregApplicationID}
+    When the user navigates to the page                         ${server}/application/${preregReleaseFeedbackApplicationID}
     And the user completes remaining application questions
     And the user completes the project location
     And the user accept the competition terms and conditions    Back to application overview
     And the user clicks the button/link                         id = application-overview-submit-cta
     And the user clicks the button/link                         id = submit-application-button
     Then the user should see the element                        jQuery = h2:contains("Application submitted")
-    And the user reads his email                                steve.smith@empire.com  ${preregApplicationID}: Successful submission of application   You have successfully submitted an application for funding to ${hecpPreregReleaseFeedbackCompName}.
+    And the user reads his email                                steve.smith@empire.com  ${preregReleaseFeedbackApplicationID}: Successful submission of application   You have successfully submitted an application for funding to ${hecpPreregReleaseFeedbackCompName}.
 
 Internal user marks the full application as successful and sent a notification
     [Documentation]  IFS-12958
@@ -311,13 +310,13 @@ Internal user marks the full application as successful and sent a notification
     And The user clicks the button/link                             link = ${hecpPreregReleaseFeedbackCompName}
     When the internal team mark the application as successful       ${hecpPreregReleaseFeedbackAppName}   FUNDED
     And the user clicks the button/link                             link = Competition
-    And the internal team notifies all applicants                   ${preregApplicationID}
+    And the internal team notifies all applicants                   ${preregReleaseFeedbackApplicationID}
     Then the user reads his email                                   steve.smith@empire.com  Important message about your application '${hecpPreregReleaseFeedbackAppName}' for the competition '${hecpPreregReleaseFeedbackCompName}'  ${fullApplicationSuccessfulEmail}
 
 Auditor can view and download evidence file submitted
     [Documentation]  IFS-12958
     Given log in as a different user            &{auditorCredentials}
-    When the user navigates to the page         ${server}/management/competition/${preregCompetitionId}/application/${preregApplicationID}
+    When the user navigates to the page         ${server}/management/competition/${preregReleaseFeedbackCompetitionId}/application/${preregReleaseFeedbackApplicationID}
     And the user clicks the button/link         link = Expression of interest
     Then the user checks file is downloaded     ${contract_pdf}
     And the user should see the element         jQuery = h3:contains("Eoi Evidence")
@@ -340,12 +339,12 @@ Custom Suite Teardown
 
 Requesting application ID of prereg application
     [Arguments]  ${applicationName}
-    ${preregApplicationID} =  get application id by name  ${applicationName}
-    Set suite variable    ${preregApplicationID}
+    ${preregReleaseFeedbackApplicationID} =  get application id by name  ${applicationName}
+    Set suite variable    ${preregReleaseFeedbackApplicationID}
 
 Requesting application ID of unsuccessful prereg application
-    ${unSuccessfulPreRegApplicationID} =  get application id by name  ${unSuccessPreregAppName}
-    Set suite variable    ${unSuccessfulPreRegApplicationID}
+    ${unSuccessfulReleaseFeedbackPreRegApplicationID} =  get application id by name  ${unSuccessPreregReleaseFeedbackAppName}
+    Set suite variable    ${unSuccessfulReleaseFeedbackPreRegApplicationID}
 
 the user should see EOI labels for prereg application
     the user should see the element      jQuery = h1:contains("Expression of interest overview")
@@ -383,12 +382,12 @@ the competition admin creates prereg competition
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingRule}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user navigates to the page                              ${CA_UpcomingComp}
     the user clicks the button/link                             jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details                    ${competition}  ${month}  ${nextyear}  ${compType_HESTA}  ${fundingRule}  HECP
+    the user fills in the CS Initial details                    ${competition}  ${month}  ${nextyear}  ${compType_HORIZON_EUROPE}  ${fundingRule}  HECP
     the user selects the Terms and Conditions                   ${compType}  ${fundingRule}
     the user fills in the CS Funding Information
     the user completes project impact section                   No
     the user fills in the CS Project eligibility                ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
-    the user fills in the CS funding eligibility                false   ${compType_HESTA}  ${fundingRule}
+    the user fills in the CS funding eligibility                false   ${compType_HORIZON_EUROPE}  ${fundingRule}
     the user selects the organisational eligibility to no       false
     the user completes milestones with out assessment
     the user marks the prereg application question as done
@@ -424,8 +423,8 @@ the user completes milestones with out assessment
 
 Get competitions id and set it as suite variable
     [Arguments]  ${competitionTitle}
-    ${preregCompetitionId} =  get comp id from comp title  ${competitionTitle}
-    Set suite variable  ${preregCompetitionId}
+    ${preregReleaseFeedbackCompetitionId} =  get comp id from comp title  ${competitionTitle}
+    Set suite variable  ${preregReleaseFeedbackCompetitionId}
 
 the user should not see subsection
     [Arguments]   ${subSectionName}
@@ -433,46 +432,46 @@ the user should not see subsection
     the user should not see the element     link = ${subSectionName}
 
 Comp admin set the competion as prereg comp and hide the question, section and subsection
-    set subsection as hidden in pre reg application      ${preregCompetitionId}
-    set section as hidden in pre reg application         ${preregCompetitionId}
-    update milestone to yesterday                        ${preregCompetitionId}  OPEN_DATE
+    set subsection as hidden in pre reg application      ${preregReleaseFeedbackCompetitionId}
+    set section as hidden in pre reg application         ${preregReleaseFeedbackCompetitionId}
+    update milestone to yesterday                        ${preregReleaseFeedbackCompetitionId}  OPEN_DATE
 
 Existing user creates and submits new application for unsuccessful EOI journey
     log in as a different user                                                &{lead_applicant_credentials}
     Existing applicant creates a new application with same organisation       ${hecpPreregReleaseFeedbackCompName}
-    the user completes the application details section                        ${unSuccessPreregAppName}  ${tomorrowday}  ${month}  ${nextyear}   23
+    the user completes the application details section                        ${unSuccessPreregReleaseFeedbackAppName}  ${tomorrowday}  ${month}  ${nextyear}   23
     the applicant completes Application Team                                  COMPLETE  steve.smith@empire.com
     the user complete pre reg work programme
-    the user is able to complete horizon grant agreement section
+    #the user is able to complete horizon grant agreement section
     the lead applicant fills all the questions and marks as complete(prereg)
-    the user completes prereg project finances                                ${unSuccessPreregAppName}   no
+    the user completes prereg project finances                                ${unSuccessPreregReleaseFeedbackAppName}   no
     the user clicks the button/link                                           id = application-overview-submit-cta
     the user clicks the button/link                                           id = submit-application-button
 
 Internal user marks the EOI as successful/unsuccessful
     [Arguments]  ${applicationName}  ${decision}
-    the user navigates to the page                      ${server}/management/competition/${preregCompetitionId}/applications/eoi
+    the user navigates to the page                      ${server}/management/competition/${preregReleaseFeedbackCompetitionId}/applications/eoi
     the user clicks the button/link                     jQuery = tr:contains("${applicationName}") label
     the user clicks the button/link                     css = [type="submit"][value="${decision}"]
 
 Internal user sends a decision notifications to applicants
     Requesting application ID of prereg application     ${applicationName}
-    the internal team notifies all applicants           ${preregApplicationID}
+    the internal team notifies all applicants           ${preregReleaseFeedbackApplicationID}
 
 Internal user closes the competition
     log in as a different user          &{ifs_admin_user_credentials}
-    update milestone to yesterday       ${preregCompetitionId}  SUBMISSION_DATE
-    the user navigates to the page      ${server}/management/competition/${preregCompetitionId}
+    update milestone to yesterday       ${preregReleaseFeedbackCompetitionId}  SUBMISSION_DATE
+    the user navigates to the page      ${server}/management/competition/${preregReleaseFeedbackCompetitionId}
     the user clicks the button/link     link = Close competition
     the user clicks the button/link     jQuery = button:contains("Close competition")
 
 Lead applicant deletes the unsubmitted EOI application
     log in as a different user                          &{lead_applicant_credentials}
     the user clicks the application tile if displayed
-    the user should see the element                     jQuery = li:contains("${unSubmittedPreregAppName}") .status-msg:contains("Expression of interest")
-    Requesting application ID of prereg application     ${unSubmittedPreregAppName}
-    the user clicks the button/link                     name = delete-application-${preregApplicationID}
-    the user clicks the button/link                     jQuery = li:contains("${unSubmittedPreregAppName}") button:contains("Delete application")
+    the user should see the element                     jQuery = li:contains("${unSubmittedPreregReleaseFeedbackAppName}") .status-msg:contains("Expression of interest")
+    Requesting application ID of prereg application     ${unSubmittedPreregReleaseFeedbackAppName}
+    the user clicks the button/link                     name = delete-application-${preregReleaseFeedbackApplicationID}
+    the user clicks the button/link                     jQuery = li:contains("${unSubmittedPreregReleaseFeedbackAppName}") button:contains("Delete application")
 
 the user complete pre reg work programme
     the user clicks the button/link     jQuery = a:contains("Work programme")
@@ -516,14 +515,14 @@ the user completes the project location
 
 the internal team mark the application as successful
     [Arguments]   ${applicationName}   ${decision}
-    the user navigates to the page      ${server}/management/competition/${preregCompetitionId}
+    the user navigates to the page      ${server}/management/competition/${preregReleaseFeedbackCompetitionId}
     the user clicks the button/link     link = Input and review funding decision
     the user clicks the button/link     jQuery = tr:contains("${applicationName}") label
     the user clicks the button/link     css = [type="submit"][value="${decision}"]
 
 Update competition to have evidence required
     execute sql string    INSERT INTO `ifs`.`competition_eoi_evidence_config` (`id`, `evidence_required`, `evidence_title`, `evidence_guidance`) VALUES ('51', 1, 'Eoi Evidence', 'upload eoi evidence');
-    execute sql string    UPDATE `ifs`.`competition` SET `competition_eoi_evidence_config_id` = '51' WHERE id = '${preregCompetitionId}';
+    execute sql string    UPDATE `ifs`.`competition` SET `competition_eoi_evidence_config_id` = '51' WHERE id = '${preregReleaseFeedbackCompetitionId}';
     execute sql string    INSERT INTO `ifs`.`eoi_evidence_config_file_type` (`id`, `competition_eoi_evidence_config_id`, `file_type_id`) VALUES ('41', '51', '1');
 
 Partner applicant completes prereg project finances

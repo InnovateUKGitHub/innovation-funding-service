@@ -28,7 +28,7 @@ HECP terms and conditions pre selected for hecp funding or competition type
     [Documentation]  IFS-10696
     Given the user navigates to the page             ${CA_UpcomingComp}
     And the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
-    And the user fills in the CS Initial details     ${hecpKICsCompetitionName}  ${month}  ${nextyear}  ${compType_HESTA}  STATE_AID  HECP
+    And the user fills in the CS Initial details     ${hecpKICsCompetitionName}  ${month}  ${nextyear}  ${compType_HORIZON_EUROPE}  STATE_AID  HECP
     When the user clicks the button/link             link = Terms and conditions
     Then the user should see the element             css = [id="termsAndConditionsId12"]:checked ~ label
 
@@ -51,7 +51,7 @@ HECP KICs terms and conditions not pre selected for any funding or competition t
     [Documentation]  IFS-10926
     Given the user navigates to the page             ${CA_UpcomingComp}
     And the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
-    And the user fills in the CS Initial details     ${hecpCompetitionName}  ${month}  ${nextyear}  ${compType_HESTA}  STATE_AID  GRANT
+    And the user fills in the CS Initial details     ${hecpCompetitionName}  ${month}  ${nextyear}  ${compType_HORIZON_EUROPE}  STATE_AID  GRANT
     When the user clicks the button/link             link = Terms and conditions
     Then the user should see the element             css = [id="termsAndConditionsId14"]:not(:checked) ~ label
 
@@ -74,7 +74,7 @@ HECP subsidy control terms and conditions not pre selected for any funding or co
     [Documentation]  IFS-13212
     Given the user navigates to the page             ${CA_UpcomingComp}
     And the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
-    And the user fills in the CS Initial details     ${hecpSubsidyControlCompetitionName}  ${month}  ${nextyear}  ${compType_HESTA}  STATE_AID  HECP
+    And the user fills in the CS Initial details     ${hecpKICsCompetitionName}  ${month}  ${nextyear}  ${compType_HORIZON_EUROPE}  STATE_AID  HECP
     When the user clicks the button/link             link = Terms and conditions
     Then the user should see the element             css = [id="termsAndConditionsId13"]:not(:checked) ~ label
 
