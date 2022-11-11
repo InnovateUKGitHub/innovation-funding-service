@@ -62,8 +62,36 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
     private static final String SUBSIDYBASIS = "Subsidy basis";
     private static final String YES = "Yes";
     private static final String NO = "No";
+
+    private static final String NORTHERN_IRELAND_TACTICAL_DECLARATION_NAME =
+            "Will the project, including any related activities you want Innovate UK to fund, affect trade between Northern Ireland and the EU?";
+
+
+    private static final String NORTHERN_IRELAND_TACTICAL_DECLARATION_NAME_UKRI =
+            "Will the project, including any related activities you want UKRI to fund, affect trade between Northern Ireland and the EU?";
+
+    private static final String QUESTION1_TITLE =
+            "Will the Innovate UK funding directly or indirectly have an effect upon either:" + "\n" +
+                    "goods that will be traded between Northern Ireland and the EU" + "\n" +
+                    "and/or the single electricity market (of Ireland)?";
+
+    private static final String QUESTION1_TITLE_UKRI =
+            "Will the UKRI funding directly or indirectly have an effect upon either:" + "\n" +
+            "goods that will be traded between Northern Ireland and the EU" + "\n" +
+            "and/or the single electricity market (of Ireland)?";
+
+    private static final String QUESTION1_5_TITLE =
+            "Are you intending to trade any goods arising from the activities " +
+            "funded by Innovate UK with the European Union through Northern Ireland?";
+
+    private static final String QUESTION1_5_TITLE_UKRI =
+            "Are you intending to trade any goods arising from the activities " +
+                    "funded by UKRI with the European Union through Northern Ireland?";
+
     private static final String QUESTION2_TITLE = "Is your enterprise based in or active in Northern Ireland?";
+
     private static final String QUESTION3_TITLE = "Does your enterprise trade directly with customers in Northern Ireland?";
+
     private static final String QUESTION3_GUIDANCE =
             "Note: if you have not made any sales or you do not intend to sell to Northern Ireland " +
                     "or you consider it possible to say that any effect of the Innovate UK funding upon: " + "\n" +
@@ -72,25 +100,53 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
                     "the single electricity market of Ireland, " + "\n" +
                     "will be merely \"hypothetical, presumed, or without a genuine and direct link to Northern Ireland\", " +
                     "then answer No to this question.";
+
+
+    private static final String QUESTION3_GUIDANCE_UKRI =
+            "Note: if you have not made any sales or you do not intend to sell to Northern Ireland " +
+                    "or you consider it possible to say that any effect of the UKRI funding upon: " + "\n" +
+                    "goods that will be traded between Northern Ireland and the EU " + "\n" +
+                    "or \n" +
+                    "the single electricity market of Ireland, " + "\n" +
+                    "will be merely \"hypothetical, presumed, or without a genuine and direct link to Northern Ireland\", " +
+                    "then answer No to this question.";
+
     private static final String QUESTION4_TITLE =
             "Does your enterprise make goods or provide services to third parties with a view to: " + "\n" +
                     "enabling them to manufacture goods that will be traded between Northern Ireland and the EU" + "\n" +
                     "or" + "\n" +
                     "effect the single electricity market of Ireland?";
+
     private static final String QUESTION4_GUIDANCE =
             "Note: this question seeks to understand if you are carrying out activities that may indirectly lead " +
                     "to effects on trade in goods to Northern Ireland or the single electricity market of Ireland. " +
                     "If you are not aware of any such impact answer No to this question.";
+
     private static final String QUESTION5_TITLE =
             "Is your enterprise engaged in the production, processing or marketing " +
                     "of agricultural products; or active in the fisheries and aquaculture sector and " +
                     "involved in trade in such products with Northern Ireland?";
+
     private static final String QUESTION6_TITLE =
             "Can you confirm that the Innovate UK funding will be directed towards " +
                     "activities other than the production, processing or marketing of agricultural products or " +
                     "the fisheries and aquaculture sector?";
+
+    private static final String QUESTION6_TITLE_UKRI =
+            "Can you confirm that the UKRI funding will be directed towards " +
+                    "activities other than the production, processing or marketing of agricultural products or " +
+                    "the fisheries and aquaculture sector?";
+
     private static final String QUESTION6_GUIDANCE =
             "If your activities do come under these sectors, prior to receipt of the Innovate UK funding you must " +
+                    "establish accounting segregations to ensure that the funding does not cross-subsidise " +
+                    "any of those activities." +
+                    "\n" +
+                    "Note: You may be required to supply evidence of such accounting segregation for up to 10 years " +
+                    "from the date the award is granted.";
+
+    private static final String QUESTION6_GUIDANCE_UKRI =
+            "If your activities do come under these sectors, prior to receipt of the UKRI funding you must " +
                     "establish accounting segregations to ensure that the funding does not cross-subsidise " +
                     "any of those activities." +
                     "\n" +
@@ -105,7 +161,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         }
 
         if (!northernIrelandSubsidyControlToggle || generatingWebtestDataForComp(competition)) {
-            insertNorthernIrelandTacticalDeclaration(competitionTypeSections);
+            insertNorthernIrelandTacticalDeclaration(competitionTypeSections, competition);
         } else if (northernIrelandSubsidyControlToggle) {
             competitionTypeSections.get(0)
                     .getQuestions().add(0,
@@ -117,7 +173,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
                             .withMultipleStatuses(true)
                             .withAssignEnabled(false)
                             .withQuestionSetupType(QuestionSetupType.SUBSIDY_BASIS)
-                            .withQuestionnaire(northernIrelandDeclaration()));
+                            .withQuestionnaire(northernIrelandDeclaration(competition)));
         }
         return competitionTypeSections;
     }
@@ -127,19 +183,24 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
                 && competition.getName().contains("Subsidy control tactical");
     }
 
-    private static void insertNorthernIrelandTacticalDeclaration(List<SectionBuilder> sectionBuilders) {
+    private static void insertNorthernIrelandTacticalDeclaration(List<SectionBuilder> sectionBuilders, Competition competition) {
         sectionBuilders.stream()
                 .filter(section -> SectionType.PROJECT_DETAILS == section.getType())
                 .findAny()
-                .ifPresent(section -> section.getQuestions().add(0, northernIrelandTacticalDeclaration()));
+                .ifPresent(section -> section.getQuestions().add(0, northernIrelandTacticalDeclaration(competition)));
     }
 
-    private static QuestionBuilder northernIrelandTacticalDeclaration() {
+    private static QuestionBuilder northernIrelandTacticalDeclaration(Competition competition) {
+
+        boolean isHorizonEuropeCompetition = competition.isHorizonEuropeGuarantee();
+
+        String northernIrelandTacticalDeclarationName = isHorizonEuropeCompetition
+                ? NORTHERN_IRELAND_TACTICAL_DECLARATION_NAME_UKRI
+                : NORTHERN_IRELAND_TACTICAL_DECLARATION_NAME;
+
         return aQuestion()
                 .withShortName(SUBSIDYBASIS)
-                .withName(
-                        "Will the project, including any related activities you want Innovate UK to fund, " +
-                        "affect trade between Northern Ireland and the EU?")
+                .withName(northernIrelandTacticalDeclarationName)
                 .withAssignEnabled(false)
                 .withMarkAsCompletedEnabled(true)
                 .withMultipleStatuses(true)
@@ -159,7 +220,9 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
                 ));
     }
 
-    private Questionnaire northernIrelandDeclaration() {
+    private Questionnaire northernIrelandDeclaration(Competition competition) {
+
+        boolean isHorizonEuropeCompetition = competition.isHorizonEuropeGuarantee();
 
         /* ---------------------- LANDING PAGE --------------------------------------------------- */
 
@@ -189,22 +252,21 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
 
         /* ---------------------- QUESTION 1 --------------------------------------------------- */
 
+        String question1Title = isHorizonEuropeCompetition ? QUESTION1_TITLE_UKRI : QUESTION1_TITLE;
+
         QuestionnaireQuestionResource fundingDirectlyOrIndirectlyQuestion = new QuestionnaireQuestionResource();
         fundingDirectlyOrIndirectlyQuestion.setTitle(SUBSIDYBASIS);
-        fundingDirectlyOrIndirectlyQuestion.setQuestion(
-                "Will the Innovate UK funding directly or indirectly have an effect upon either:" + "\n" +
-                        "goods that will be traded between Northern Ireland and the EU" + "\n" +
-                        "and/or the single electricity market (of Ireland)?");
+        fundingDirectlyOrIndirectlyQuestion.setQuestion(question1Title);
         fundingDirectlyOrIndirectlyQuestion.setQuestionnaire(questionnaire.getId());
         fundingDirectlyOrIndirectlyQuestion = questionnaireQuestionService.create(fundingDirectlyOrIndirectlyQuestion).getSuccess();
 
         /* ---------------------- QUESTION 1.5 ------------------------------------------------- */
 
+        String question1_5Title = isHorizonEuropeCompetition ? QUESTION1_5_TITLE_UKRI : QUESTION1_5_TITLE;
+
         QuestionnaireQuestionResource intendingToTradeAnyGoodsQuestion = new QuestionnaireQuestionResource();
         intendingToTradeAnyGoodsQuestion.setTitle(SUBSIDYBASIS);
-        intendingToTradeAnyGoodsQuestion.setQuestion(
-                "Are you intending to trade any goods arising from the activities " +
-                "funded by Innovate UK with the European Union through Northern Ireland?");
+        intendingToTradeAnyGoodsQuestion.setQuestion(question1_5Title);
         intendingToTradeAnyGoodsQuestion.setQuestionnaire(questionnaire.getId());
         intendingToTradeAnyGoodsQuestion = questionnaireQuestionService.create(intendingToTradeAnyGoodsQuestion).getSuccess();
 
@@ -223,18 +285,20 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
 
         /* ---------------------- QUESTION 3 --------------------------------------------------- */
 
+        String question3Guidance = isHorizonEuropeCompetition ? QUESTION3_GUIDANCE_UKRI : QUESTION3_GUIDANCE;
+
         QuestionnaireQuestionResource enterpriseTradeDirectlyQuestion1 = new QuestionnaireQuestionResource();
         enterpriseTradeDirectlyQuestion1.setTitle(SUBSIDYBASIS);
         enterpriseTradeDirectlyQuestion1.setQuestion(QUESTION3_TITLE);
         enterpriseTradeDirectlyQuestion1.setQuestionnaire(questionnaire.getId());
-        enterpriseTradeDirectlyQuestion1.setGuidance(QUESTION3_GUIDANCE);
+        enterpriseTradeDirectlyQuestion1.setGuidance(question3Guidance);
         enterpriseTradeDirectlyQuestion1 = questionnaireQuestionService.create(enterpriseTradeDirectlyQuestion1).getSuccess();
 
         QuestionnaireQuestionResource enterpriseTradeDirectlyQuestion2 = new QuestionnaireQuestionResource();
         enterpriseTradeDirectlyQuestion2.setTitle(SUBSIDYBASIS);
         enterpriseTradeDirectlyQuestion2.setQuestion(QUESTION3_TITLE);
         enterpriseTradeDirectlyQuestion2.setQuestionnaire(questionnaire.getId());
-        enterpriseTradeDirectlyQuestion2.setGuidance(QUESTION3_GUIDANCE);
+        enterpriseTradeDirectlyQuestion2.setGuidance(question3Guidance);
         enterpriseTradeDirectlyQuestion2 = questionnaireQuestionService.create(enterpriseTradeDirectlyQuestion2).getSuccess();
 
         /* ---------------------- QUESTION 4 --------------------------------------------------- */
@@ -282,18 +346,22 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
 
         /* ---------------------- QUESTION 6 --------------------------------------------------- */
 
+        String question6Title = isHorizonEuropeCompetition ? QUESTION6_TITLE_UKRI : QUESTION6_TITLE;
+        String question6Guidance = isHorizonEuropeCompetition ? QUESTION6_GUIDANCE_UKRI : QUESTION6_GUIDANCE;
+
         QuestionnaireQuestionResource confirmInnovateFundingQuestion1 = new QuestionnaireQuestionResource();
+
         confirmInnovateFundingQuestion1.setTitle(SUBSIDYBASIS);
-        confirmInnovateFundingQuestion1.setQuestion(QUESTION6_TITLE);
+        confirmInnovateFundingQuestion1.setQuestion(question6Title);
         confirmInnovateFundingQuestion1.setQuestionnaire(questionnaire.getId());
-        confirmInnovateFundingQuestion1.setGuidance(QUESTION6_GUIDANCE);
+        confirmInnovateFundingQuestion1.setGuidance(question6Guidance);
         confirmInnovateFundingQuestion1 = questionnaireQuestionService.create(confirmInnovateFundingQuestion1).getSuccess();
 
         QuestionnaireQuestionResource confirmInnovateFundingQuestion2 = new QuestionnaireQuestionResource();
         confirmInnovateFundingQuestion2.setTitle(SUBSIDYBASIS);
-        confirmInnovateFundingQuestion2.setQuestion(QUESTION6_TITLE);
+        confirmInnovateFundingQuestion2.setQuestion(question6Title);
         confirmInnovateFundingQuestion2.setQuestionnaire(questionnaire.getId());
-        confirmInnovateFundingQuestion2.setGuidance(QUESTION6_GUIDANCE);
+        confirmInnovateFundingQuestion2.setGuidance(question6Guidance);
         confirmInnovateFundingQuestion2 = questionnaireQuestionService.create(confirmInnovateFundingQuestion2).getSuccess();
 
         /* ------------------------------------------------------------------------------------ */
