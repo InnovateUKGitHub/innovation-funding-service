@@ -20,7 +20,7 @@ openpyxl==2.5.9
 pdfminer.six==20160614
 
 #SauceLabs dependencies
-requests==2.22.0
+requests==2.31.0
 simplejson==3.16.0
 
 #Timezones
